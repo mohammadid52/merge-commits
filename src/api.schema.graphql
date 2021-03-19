@@ -624,6 +624,8 @@ type Lesson @model @key(fields: ["id"]) {
   connectionTitle: String
   lessonPlan: [LessonComponents]
   measurements: [LessonRubrics]! @connection(keyName: "byLesson", fields: ["id"])
+  institutionID: ID!
+  institution: Institution @connection(fields: ["institutionID"])
 }
 
 type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {

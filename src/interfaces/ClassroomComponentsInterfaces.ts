@@ -6,7 +6,7 @@ export interface Quote {
 export interface Link {
   [key: string]: any;
   text?: string;
-  url: string;
+  url?: string;
 }
 export interface Widget {
   [key: string]: any;

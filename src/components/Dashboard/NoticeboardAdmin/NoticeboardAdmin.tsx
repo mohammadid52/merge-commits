@@ -9,7 +9,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import NoticeboardAdminContent from './NoticeboardAdminContent';
 import RoomSwitch from './RoomSwitch';
 
-import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
 
 export interface NoticeboardAdmin {}
 //
@@ -28,7 +28,7 @@ export interface NoticeboardAdmin {}
 // }
 
 export type ViewEditMode = {
-  mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
+  mode: 'view' | 'edit' | 'save' | 'create' | 'delete' | 'savenew' | '';
   widgetID: string;
 };
 
@@ -131,7 +131,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         }, []);
         setWidgetData(updatedWidgetData);
         break;
-      case 'create':  // final step to saving author!
+      case 'create': // final step to saving author!
         const updatedNewWidgetData = {
           ...newWidgetData,
           [basekey]: newWidgetData[basekey].map((nestedObj: any, idx: number) => {
@@ -188,6 +188,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
    *         = nestkey2 => second nester property
    * */
   const handleEditUpdateWYSIWYG = (id: string, value: string, basekey: string, nestkey1: string, nestkey2: string) => {
+    console.log('handleEdit -> ', [id, value, basekey, nestkey1, nestkey2]);
     switch (viewEditMode.mode) {
       case 'create':
         if (viewEditMode.mode === 'create') {
@@ -274,9 +275,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       description: getWidgetObj.description,
       title: getWidgetObj.title,
       type: getWidgetObj.type,
-      /**
-       * description & content ?
-       */
     };
     try {
       const noticeboardWidgetUpdate: any = await API.graphql(
@@ -299,7 +297,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       roomID: activeRoom,
       placement: subSectionKey[subSection],
     };
-    console.log('creating widget...', input)
+    console.log('creating widget...', input);
     try {
       const noticeboardWidgetCreate: any = await API.graphql(
         graphqlOperation(mutations.createNoticeboardWidget, {
@@ -313,13 +311,38 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     }
   };
 
+  const noticeboardDelete = async () => {
+    const getWidgetObj = widgetData.find((widgetObj: any) => widgetObj.id === viewEditMode.widgetID);
+    const input = {
+      id: getWidgetObj.id,
+    };
+
+    console.log('deleting widget...');
+    try {
+      const noticeboardWidgetDelete: any = await API.graphql(
+        graphqlOperation(mutations.deleteNoticeboardWidget, {
+          input: input,
+        })
+      );
+    } catch (e) {
+      console.error('error deleting widget, -> ', e);
+    } finally {
+      setViewEditMode({ mode: '', widgetID: '' });
+    }
+  };
+
   // UseEffect for monitoring save/create new changes and calling functions
   useEffect(() => {
     const manageSaveAndCreate = async () => {
       if (viewEditMode.mode === 'save') {
         await noticeboardUpdate();
-      } else if (viewEditMode.mode === 'savenew') {
+      }
+      if (viewEditMode.mode === 'savenew') {
         await noticeboardCreate();
+        await listNoticeboardWidgets();
+      }
+      if (viewEditMode.mode === 'delete') {
+        await noticeboardDelete();
         await listNoticeboardWidgets();
       }
     };

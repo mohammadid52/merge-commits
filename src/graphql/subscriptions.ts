@@ -76,6 +76,7 @@ export const onChangePersonLocation = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -225,6 +226,7 @@ export const onChangeStudentData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -482,6 +484,25 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
         }
         measurements {
           nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -5359,6 +5380,43 @@ export const onCreateLesson = /* GraphQL */ `
         }
         nextToken
       }
+      institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -5574,6 +5632,43 @@ export const onUpdateLesson = /* GraphQL */ `
           updatedAt
         }
         nextToken
+      }
+      institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -5791,6 +5886,43 @@ export const onDeleteLesson = /* GraphQL */ `
         }
         nextToken
       }
+      institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -5910,6 +6042,25 @@ export const onCreateLessonRubrics = /* GraphQL */ `
         }
         measurements {
           nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -6056,6 +6207,25 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -6200,6 +6370,25 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
         }
         measurements {
           nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -6347,6 +6536,25 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -6491,6 +6699,25 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -6634,6 +6861,25 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         }
         measurements {
           nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -6785,6 +7031,25 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -6915,6 +7180,25 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -7044,6 +7328,25 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
         }
         measurements {
           nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -7285,6 +7588,25 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -7471,6 +7793,25 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
         }
         measurements {
           nextToken
+        }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
@@ -7659,6 +8000,25 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -7807,6 +8167,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -7920,6 +8281,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -8033,6 +8395,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -8537,6 +8900,7 @@ export const onCreateFeedback = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -8612,6 +8976,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -8687,6 +9052,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -9053,6 +9419,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -9233,6 +9600,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -9413,6 +9781,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -9538,6 +9907,10 @@ export const onCreateNoticeboardWidget = /* GraphQL */ `
         text
         author
       }
+      links {
+        text
+        url
+      }
       active
       teacher {
         id
@@ -9593,6 +9966,10 @@ export const onUpdateNoticeboardWidget = /* GraphQL */ `
         text
         author
       }
+      links {
+        text
+        url
+      }
       active
       teacher {
         id
@@ -9647,6 +10024,10 @@ export const onDeleteNoticeboardWidget = /* GraphQL */ `
       quotes {
         text
         author
+      }
+      links {
+        text
+        url
       }
       active
       teacher {

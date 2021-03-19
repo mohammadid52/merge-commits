@@ -28,6 +28,7 @@ interface AddNewLessonFormProps {
   lessonMeasurements: any[]
   setLessonMeasurements: (obj: any[]) => void
   lessonId: string
+  institutionList: any[]
 }
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
@@ -42,7 +43,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     allMeasurement,
     lessonMeasurements,
     setLessonMeasurements,
-    lessonId
+    lessonId,
+    institutionList
   } = props;
 
   const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
@@ -58,6 +60,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     type: '',
     languages: '',
     message: '',
+    institution: '',
     isError: true
   });
 
@@ -93,7 +96,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       setValidation({
         ...validation,
         type: '',
-        languages: ''
+        languages: '',
+        institution: '',
       })
     }
   }
@@ -178,6 +182,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         name: '',
         type: '',
         languages: '',
+        institution: '',
         message: 'Error while adding measurement,please try later.',
         isError: true
       });
@@ -198,6 +203,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       msgs.type = 'Lesson type is required';
     } else {
       msgs.type = ''
+    }
+    if (!formData.institution?.value.trim().length) {
+      isValid = false;
+      msgs.institution = 'Institute is required field.';
+    } else {
+      msgs.institution = ''
     }
     if (!formData.languages?.length) {
       isValid = false;
@@ -222,6 +233,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           objectives: [formData.objectiveHtml],
           language: formData.languages.map(item => item.value),
           designers: selectedDesigners.map(item => item.id),
+          institutionID: formData.institution?.id,
           artistID: "0",
           doFirstID: "0",
           warmUpId: "0",
@@ -244,6 +256,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           setValidation({
             name: '',
             type: '',
+            institution: '',
             languages: '',
             message: 'Lesson details saved successfully.',
             isError: false
@@ -253,6 +266,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         setValidation({
           name: '',
           type: '',
+          institution: '',
           languages: '',
           message: 'Unable to save Lesson details, Please try again later.',
           isError: true
@@ -270,7 +284,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   }, [lessonMeasurements, allMeasurement])
 
-  const { name, type, languages, purpose, purposeHtml, objective, objectiveHtml } = formData;
+  const { name, type, languages, purposeHtml, objectiveHtml, institution } = formData;
 
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
@@ -300,10 +314,20 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+              Select Institution <span className="text-red-500"> * </span>
+            </label>
+            <Selector selectedItem={institution.name} placeholder="Institution" list={institutionList} onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')} />
+            {validation.institution && <p className="text-red-600 text-sm">{validation.institution}</p>}
+          </div>
+          <div>
+            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
               Select Language <span className="text-red-500"> * </span>
             </label>
             <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
           </div>
+        </div>
+
+        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
               Select Designers

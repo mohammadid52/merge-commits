@@ -3,7 +3,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import ContentCard from '../../Atoms/ContentCard';
 import useDictionary from '../../../customHooks/dictionary';
 import { ViewEditMode } from './NoticeboardAdmin';
-import {Widget as NoticeboardWidgetMapItem} from '../../../interfaces/ClassroomComponentsInterfaces';
+import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { ViewModeView } from './WidgetFormViews/viewWidget';
 import { EditModeView } from './WidgetFormViews/editWidget';
 import { CreateModeView } from './WidgetFormViews/createWidget';
@@ -26,16 +26,17 @@ export interface NoticeboardContentCardProps {
 }
 
 export interface NoticeboardFormProps {
-  widgetObj: NoticeboardWidgetMapItem;
-  setEditorContent: any;
-  handleActivation: any;
+  widgetObj?: NoticeboardWidgetMapItem;
+  setEditorContent?: any;
+  handleActivation?: any;
   handleEditUpdateDefault?: any;
+  handleEditUpdateWYSIWYG?: any;
   handleEditUpdateQuotes?: (e: React.ChangeEvent<Element>) => void;
-  viewEditMode: { widgetID?: string; mode: string };
-  newWidgetData: NoticeboardWidgetMapItem;
-  setNewWidgetData: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem>>;
-  widgetData: any;
-  setWidgetData: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem[]>>;
+  viewEditMode?: { widgetID?: string; mode: string };
+  newWidgetData?: NoticeboardWidgetMapItem;
+  setNewWidgetData?: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem>>;
+  widgetData?: any;
+  setWidgetData?: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem[]>>;
 }
 
 const NoticeboardContent = (props: NoticeboardContentCardProps) => {
@@ -69,12 +70,13 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
            * CREATE WIDGET VIEW
            */}
 
-          <div id={`anthology_${subSection}_create`} className={`flex flex-col p-2`}>
+          <div id={`anthology_${subSection}_create`} className={`flex flex-col`}>
             {viewEditMode && viewEditMode.mode === 'create' ? (
               <CreateModeView
                 viewEditMode={viewEditMode}
                 handleEditUpdateDefault={handleEditUpdateDefault}
                 handleEditUpdateQuotes={handleEditUpdateQuotes}
+                handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
                 setEditorContent={setEditorContent}
                 handleActivation={handleActivation}
                 newWidgetData={newWidgetData}
@@ -88,7 +90,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
             {/**
              *  section:  VIEW/EDIT BUTTON
              */}
-            <div className={`flex ${viewEditMode.mode === 'create' ? 'pt-2 mt-2' : ''}`}>
+            <div className={`flex ${viewEditMode.mode === 'create' ? 'mt-2' : ''}`}>
               {viewEditMode.mode === 'create' && viewEditMode.widgetID === createTemplate.widgetID ? (
                 <p
                   onClick={() => handleEditToggle('', '')}
@@ -148,7 +150,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                   {/**
                    *  section:  VIEW/EDIT BUTTON
                    */}
-                  <div className={`flex pt-2 mt-2`}>
+                  <div className={`flex mt-2`}>
                     {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
                       <p
                         onClick={() => handleEditToggle('', '')}
@@ -162,6 +164,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                         {anthologyDict[userLanguage].ACTIONS.EDIT}
                       </p>
                     )}
+
                     {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
                       <>
                         <span className={`w-auto mr-2`}>/</span>
@@ -169,6 +172,17 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                           onClick={() => handleEditToggle('save', widgetObj.id)}
                           className={`w-auto cursor-pointer font-semibold text-blueberry`}>
                           {anthologyDict[userLanguage].ACTIONS.SAVE}
+                        </p>
+                      </>
+                    ) : null}
+
+                    {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
+                      <>
+                        <span className={`w-auto ml-2`}>/</span>
+                        <p
+                          onClick={() => handleEditToggle('delete', widgetObj.id)}
+                          className={`w-auto cursor-pointer font-semibold text-blueberry`}>
+                          {anthologyDict[userLanguage].ACTIONS.DELETE}
                         </p>
                       </>
                     ) : null}
