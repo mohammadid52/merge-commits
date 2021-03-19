@@ -47,7 +47,8 @@ const BreadcrumsTitles: any = {
     EditTopic:'Edit Topic',
     AddExistingCheckpoint:'Add Existing Checkpoint',
     PeopleManagment:'People Management',
-    AddNewUser:'Add New User'
+    AddNewUser:'Add New User',
+    UserInfo:'User Information',
   },
   'ES': {
     HOME: 'CASA',
@@ -74,7 +75,8 @@ const BreadcrumsTitles: any = {
     EditTopic:'TBD',
     AddExistingCheckpoint:'TBD',
     PeopleManagment:'TBD',
-    AddNewUser:'TBD'
+    AddNewUser:'TBD',
+    UserInfo:'TBD',
   }
 }
 // Profile Display and edit section
@@ -2072,6 +2074,130 @@ const RegistrationDict:any={
     }
   }
 }
+
+
+const UserDict:any={
+  'EN':{
+    title:'USER INFORMATION',
+
+  },
+  'ES':{
+    title:'TBD',
+  }
+}
+
+const UserEditDict:any={
+  'EN':{
+    heading:'Edit Information',
+    firstname:'First Name',
+    lastname:'Last Name',
+    nickname:'Nickname',
+    status:'Status',
+    role:'Role',
+
+    button:{
+      save:'Save',
+      cancel:'Cancel'
+    }
+
+  },
+  'ES':{
+    heading:'TBD',
+    firstname:'TBD',
+    lastname:'TBD',
+    nickname:'TBD',
+    status:'TBD',
+    role:'TBD',
+
+    button:{
+      save:'TBD',
+      cancel:'TBD'
+    }
+  }
+}
+
+const UserInformationDict:any={
+  'EN':{
+    heading:'Personal Information',
+    fullname:'Full Name',
+    nickname:'Nickname',
+    role:'Role',
+    status:'Status',
+    email:'Email Address',
+    account:'Account Created',
+
+  
+  },
+  'ES':{
+    heading:'TBD',
+    fullname:'TBD',
+    nickname:'TBD',
+    role:'TBD',
+    status:'TBD',
+    email:'TBD',
+    account:'TBD',
+  }
+}
+const UserLookupDict:any={
+  'EN':{
+    title:'USER MANAGEMENT',
+    subtitle:"People's List",
+    sortby:'Sort By',
+    name:'Name',
+    role:'Role',
+    status:'Status',
+    action:'Actions',
+    noresult:'No Results',
+    button:{
+      add:'Add New Person',
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:"TBD",
+    sortby:'TBD',
+    name:'TBD',
+    role:'TBD',
+    status:'TBD',
+    action:'TBD',
+    noresult:'TBD',
+    button:{
+      add:'TBD',
+    }
+  }
+}
+
+const UserLookupWithTokenDict:any={
+  'EN':{
+    title:'USER MANAGEMENT',
+    subtitle:"People's List",
+    sortby:'Sort By',
+    name:'Name',
+    role:'Role',
+    institution:'Institution',
+    status:'Status',
+    action:'Actions',
+    noresult:'No Results',
+    button:{
+      add:'Add New Person',
+    }
+  },
+  'ES':{
+    title:'TBD',
+    subtitle:"TBD",
+    sortby:'TBD',
+    name:'TBD',
+    role:'TBD',
+    status:'TBD',
+    action:'TBD',
+    noresult:'TBD',
+    button:{
+      add:'TBD',
+    }
+  }
+}
+
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -2125,7 +2251,12 @@ export {
   EditSyllabusDict,
   EditTopicDict,
   ProfileCheckpointlookupDict,
-  RegistrationDict
+  RegistrationDict,
+  UserDict,
+  UserEditDict,
+  UserInformationDict,
+  UserLookupDict,
+  UserLookupWithTokenDict
   
   
 };

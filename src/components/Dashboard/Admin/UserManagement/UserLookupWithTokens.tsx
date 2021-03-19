@@ -18,6 +18,7 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
+import useDictionary from '../../../../customHooks/dictionary';
 
 
 {/* 
@@ -28,7 +29,7 @@ import Selector from '../../../Atoms/Form/Selector';
 */}
 
 const UserLookup = () => {
-	const { state, theme, clientKey } = useContext(GlobalContext);
+	const { state, theme, clientKey,userLanguage } = useContext(GlobalContext);
 	const themeColor = getAsset(clientKey, 'themeClassName');
 	const history = useHistory();
 	const [status, setStatus] = useState('');
@@ -52,10 +53,11 @@ const UserLookup = () => {
 		name: '',
 		asc: true
 	});
-
+	const { UserLookupWithTokenDict,paginationPage,BreadcrumsTitles  } = useDictionary(clientKey);
+	
 	const breadCrumsList = [
-		{ title: 'Home', url: '/dashboard', last: false },
-		{ title: 'People', url: '/dashboard/manage-users', last: true },
+		{ title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+		{ title: BreadcrumsTitles[userLanguage]['PEOPLE'], url: '/dashboard/manage-users', last: true },
 	]
 
 	const sortByList = [
@@ -222,16 +224,16 @@ const UserLookup = () => {
 			<div className={`w-full h-full mt-4`}>
 				<BreadCrums items={breadCrumsList} />
 				<div className="flex justify-between">
-					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
+					<SectionTitle title={UserLookupWithTokenDict[userLanguage]['title']} subtitle={UserLookupWithTokenDict[userLanguage]['subtitle']} />
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
+						<Selector placeholder={UserLookupWithTokenDict[userLanguage]['sortby']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
 						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
 							<IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
 								<AiOutlineArrowUp />
 							</IconContext.Provider>
 						</button>
-						<Buttons label="Add New Person" onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
+						<Buttons label={UserLookupWithTokenDict[userLanguage]['button']['add']} onClick={handleLink} btnClass="mr-4 w-full" Icon={AiOutlineUsergroupAdd} />
 					</div>
 				</div>
 				<div className="flex flex-col">
@@ -240,19 +242,19 @@ const UserLookup = () => {
 							<div className="h-8/10 px-4">
 								<div className="w-full flex justify-between border-b border-gray-200 ">
 									<div className="w-3.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span>Name</span>
+										<span>{UserLookupWithTokenDict[userLanguage]['name']}</span>
 									</div>
 									<div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">Role</span>
+										<span className="w-auto">{UserLookupWithTokenDict[userLanguage]['role']}</span>
 									</div>
 									<div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">Institution</span>
+										<span className="w-auto">{UserLookupWithTokenDict[userLanguage]['institution']}</span>
 									</div>
 									<div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">Status</span>
+										<span className="w-auto">{UserLookupWithTokenDict[userLanguage]['status']}</span>
 									</div>
 									<div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										Actions
+										{UserLookupWithTokenDict[userLanguage]['action']}
 									</div>
 								</div>
 								{
@@ -266,7 +268,7 @@ const UserLookup = () => {
 										</div>
 									)) : (
 											<div className="flex p-12 mx-auto justify-center">
-												No Results
+												{UserLookupWithTokenDict[userLanguage]['noresult']}
 											</div>)
 								}
 							</div>
