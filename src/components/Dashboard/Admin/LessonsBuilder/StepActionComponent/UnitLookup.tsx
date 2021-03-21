@@ -103,7 +103,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           </div>
         </div>
 
-        <p className="text-sm p-8 text-gray-700">NOTE: Please select Curricular and then units to add lesson into.</p>
+        <p className="text-sm p-8 text-gray-700">NOTE: Please select Curricular and then units to add current lesson to that unit.</p>
 
         <div className="px-4">
           <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
