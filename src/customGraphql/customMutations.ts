@@ -537,6 +537,9 @@ export const createSyllabusLesson = /* GraphQL */ `
       unit
       status
       sequence
+      complete
+      roster
+      viewing
       createdAt
       updatedAt
     }

@@ -791,10 +791,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             </div>
           </div>
         </div>
-
-
-
-
       </PageWrapper>
     </div>
   )
