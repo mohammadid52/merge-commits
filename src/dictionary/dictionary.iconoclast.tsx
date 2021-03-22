@@ -155,6 +155,7 @@ const anthologyDict: any = {
       EDIT: 'Edit',
       SAVE: 'Save',
       CREATE: 'Create New',
+      ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete'
     },
@@ -170,6 +171,7 @@ const anthologyDict: any = {
       EDIT: 'Editar',
       SAVE: 'Salvar',
       CREATE: 'Crear',
+      ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar'
     },

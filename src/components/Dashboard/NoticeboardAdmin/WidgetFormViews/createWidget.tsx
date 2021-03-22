@@ -34,7 +34,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 p-2`}>
+      <div className={`mt-2 py-2 px-2`}>
         <Fragment>
           <label htmlFor={widgetObj.id} className="block text-sm font-semibold leading-5 text-gray-700">
             {`Title`}
@@ -69,7 +69,6 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
       ) : null}
 
       {widgetObj.type === 'quote' || widgetObj.type === 'call' ? (
-        <div className={`p-2`}>
           <EditQuoteContent
             handleEditUpdateQuotes={handleEditUpdateQuotes}
             viewEditMode={viewEditMode}
@@ -81,7 +80,6 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
             setWidgetData={setWidgetData}
             widgetData={widgetData}
           />
-        </div>
       ) : null}
     </>
   );

@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
-import { AiFillPlusCircle } from 'react-icons/all';
+import { AiFillPlusCircle, AiOutlineSave, AiOutlineStop } from 'react-icons/all';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
+import Buttons from '../../../Atoms/Buttons';
 
 const CreateNewButton = (props: NoticeboardFormProps) => {
   const { subSection, viewEditMode, handleEditToggle, widgetObj } = props;
@@ -12,11 +13,13 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
   return (
     <div className={`flex p-2 ${viewEditMode.mode === 'create' ? 'mt-2' : ''}`}>
       {viewEditMode.mode === 'create' && viewEditMode.widgetID === widgetObj.widgetID ? (
-        <p
+        <Buttons
           onClick={() => handleEditToggle('', '')}
-          className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
-          {anthologyDict[userLanguage].ACTIONS.CANCEL}
-        </p>
+          label={anthologyDict[userLanguage].ACTIONS.CANCEL}
+          type={`button`}
+          Icon={AiOutlineStop}
+          btnClass={`mr-4`}
+        />
       ) : (
         <div
           className={`flex flex-row w-auto mr-0 cursor-pointer`}
@@ -31,12 +34,12 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
       )}
       {viewEditMode.mode === 'create' && viewEditMode.widgetID === widgetObj.widgetID ? (
         <>
-          <span className={`w-auto mr-2`}>/</span>
-          <p
-            onClick={() => handleEditToggle('savenew', `custom_${subSection}`)}
-            className={`w-auto cursor-pointer font-semibold text-blueberry`}>
-            {anthologyDict[userLanguage].ACTIONS.SAVE}
-          </p>
+          <Buttons
+            onClick={() => handleEditToggle('save', widgetObj.id)}
+            label={anthologyDict[userLanguage].ACTIONS.SAVE}
+            type={`button`}
+            Icon={AiOutlineSave}
+          />
         </>
       ) : null}
     </div>
