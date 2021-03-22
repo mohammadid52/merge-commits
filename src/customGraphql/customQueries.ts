@@ -2035,3 +2035,28 @@ export const getInstitutionCurriculars = /* GraphQL */ `
     }
   }
 `;
+
+export const listFilteredSyllabusLessons = /* GraphQL */ `
+  query ListSyllabusLessons(
+    $filter: ModelSyllabusLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        complete
+        roster
+        viewing
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

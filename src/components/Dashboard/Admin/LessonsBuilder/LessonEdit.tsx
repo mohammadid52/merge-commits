@@ -108,7 +108,7 @@ const LessonEdit = (props: LessonEditProps) => {
   ];
   const lessonScrollerStep = [
     { name: "Overview", icon: <IoCardSharp /> },
-    { name: "Assign Unit", icon: <FaUnity /> },
+    // { name: "Assign Unit", icon: <FaUnity /> },
     { name: "Preview Details", icon: <FaRegEye /> },
   ];
 
@@ -264,7 +264,9 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonName={formData.name}
           lessonId={lessonId || assessmentId}
           institution={formData.institution}
-        />;
+          lessonType={formData.type?.value}
+          lessonPlans={savedLessonDetails.lessonPlans}
+          />;
       // default:
       //   return <GeneralInformation
       //     formData={formData}
