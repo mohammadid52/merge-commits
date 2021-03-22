@@ -44,7 +44,7 @@ const initialNewWidgetData = {
   quotes: [{}],
   links: [{}],
   active: true,
-}
+};
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const {} = props;
@@ -86,7 +86,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       );
       const response = await noticeboardWidgetsFetch;
       const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-      console.log('listNoticebaordWidgets -> ', arrayOfResponseObjects);
+      // console.log('listNoticebaordWidgets -> ', arrayOfResponseObjects);
       setWidgetData(arrayOfResponseObjects);
     } catch (e) {
       console.error('listNoticeboardWidgetsFetch: -> ', e);
@@ -98,7 +98,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   useEffect(() => {
     setViewEditMode({ mode: '', widgetID: '' });
     setNewWidgetData(initialNewWidgetData);
-    
+
     const initializeWidgetData = async () => {
       if (state.user.authId) {
         await listNoticeboardWidgets();
@@ -127,27 +127,27 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
     switch (viewEditMode.mode) {
       case 'edit':
-        const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
-          if (widgetObj.id === id) {
-            return [
-              ...acc,
-              {
-                ...widgetObj,
-                [basekey]: widgetObj[basekey].map((nestedObj: any, idx: number) => {
-                  if (idx === parseInt(nestkey2)) {
-                    return { ...nestedObj, [nestkey1]: value };
-                  } else {
-                    return nestedObj;
-                  }
-                }),
-              },
-            ];
-          } else {
-            return [...acc, widgetObj];
-          }
-        }, []);
-        setWidgetData(updatedWidgetData);
-        break;
+      // const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
+      //   if (widgetObj.id === id) {
+      //     return [
+      //       ...acc,
+      //       {
+      //         ...widgetObj,
+      //         [basekey]: widgetObj[basekey].map((nestedObj: any, idx: number) => {
+      //           if (idx === parseInt(nestkey2)) {
+      //             return { ...nestedObj, [nestkey1]: value };
+      //           } else {
+      //             return nestedObj;
+      //           }
+      //         }),
+      //       },
+      //     ];
+      //   } else {
+      //     return [...acc, widgetObj];
+      //   }
+      // }, []);
+      // setWidgetData(updatedWidgetData);
+      // break;
       case 'create': // final step to saving author!
         const updatedNewWidgetData = {
           ...newWidgetData,
@@ -174,15 +174,15 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     const nestkey1 = e.target.getAttribute('data-nestkey1');
     const nestkey2 = e.target.getAttribute('data-nestkey2');
 
-    const usableValue = (typeof value !== 'undefined') ? value : dataVal;
+    const usableValue = typeof value !== 'undefined' ? value : dataVal;
 
     switch (viewEditMode.mode) {
-        case 'edit':
-            if (basekey && nestkey1) {
-              setNewWidgetData({ ...newWidgetData, [basekey]: { [nestkey1]: usableValue } });
-            } else {
-              setNewWidgetData( { ...newWidgetData, [basekey]: usableValue });
-            }
+      case 'edit':
+        if (basekey && nestkey1) {
+          setNewWidgetData({ ...newWidgetData, [basekey]: { [nestkey1]: usableValue } });
+        } else {
+          setNewWidgetData({ ...newWidgetData, [basekey]: usableValue });
+        }
         break;
       case 'create':
         const updatedNewWidgetData = { ...newWidgetData, [basekey]: usableValue };
@@ -204,35 +204,35 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     switch (viewEditMode.mode) {
       case 'create':
       case 'edit':
-          if (basekey !== '' && basekey !== undefined) {
-            if (nestkey1 !== '' && nestkey1 !== undefined) {
-              if (nestkey2 !== '' && nestkey2 !== undefined) {
-                const updatedNewWidgetData = {
-                  ...newWidgetData,
-                  [basekey]: {
-                    // @ts-ignore
-                    ...newWidgetData[basekey],
-                    // @ts-ignore
-                    [nestkey1]: { ...newWidgetData[basekey][nestkey1], [nestkey2]: value },
-                  },
-                };
-                setNewWidgetData(updatedNewWidgetData);
-              } else {
-                // @ts-ignore
-                const updatedNewWidgetData = {
-                  ...newWidgetData,
+        if (basekey !== '' && basekey !== undefined) {
+          if (nestkey1 !== '' && nestkey1 !== undefined) {
+            if (nestkey2 !== '' && nestkey2 !== undefined) {
+              const updatedNewWidgetData = {
+                ...newWidgetData,
+                [basekey]: {
                   // @ts-ignore
-                  [basekey]: { ...newWidgetData[basekey], [nestkey1]: value },
-                };
-                setNewWidgetData(updatedNewWidgetData);
-              }
+                  ...newWidgetData[basekey],
+                  // @ts-ignore
+                  [nestkey1]: { ...newWidgetData[basekey][nestkey1], [nestkey2]: value },
+                },
+              };
+              setNewWidgetData(updatedNewWidgetData);
             } else {
-              const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
+              // @ts-ignore
+              const updatedNewWidgetData = {
+                ...newWidgetData,
+                // @ts-ignore
+                [basekey]: { ...newWidgetData[basekey], [nestkey1]: value },
+              };
               setNewWidgetData(updatedNewWidgetData);
             }
           } else {
-            console.error('create err0r -> ', ' no basekey provided for update function...');
+            const updatedNewWidgetData = { ...newWidgetData, [basekey]: value };
+            setNewWidgetData(updatedNewWidgetData);
           }
+        } else {
+          console.error('create err0r -> ', ' no basekey provided for update function...');
+        }
         break;
       default:
         console.log('handleWYSIWYGudpate ->', 'does not work');
@@ -240,11 +240,12 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const handleEditToggle = (editMode: ViewEditMode['mode'], widgetID: string) => {
+    setNewWidgetData(initialNewWidgetData);
     setViewEditMode({ mode: editMode, widgetID: widgetID });
   };
 
   const handleActivation = (id: string) => {
-    const updatedWidgetData = {...newWidgetData, active: !newWidgetData.active};
+    const updatedWidgetData = { ...newWidgetData, active: !newWidgetData.active };
     setNewWidgetData(updatedWidgetData);
   };
 
@@ -368,7 +369,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         setActiveRoomName={setActiveRoomName}
       />
 
-      <SectionTitle title={`Modify`} />
+      <SectionTitle title={`Modify Widgets`} />
 
       {/*
         Tabs to select between:
@@ -382,6 +383,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       />
 
       <NoticeboardAdminContent
+        activeRoom={activeRoom}
         viewEditMode={viewEditMode}
         handleEditToggle={handleEditToggle}
         handleEditUpdateDefault={handleEditUpdateDefault}

@@ -10,9 +10,9 @@ import { CreateModeView } from './WidgetFormViews/createWidget';
 import CancelSaveDelete from './WidgetFormViews/cancelSaveDeleteButtons';
 import CreateNewButton from './WidgetFormViews/createNewButton';
 import { create } from 'domain';
-import SectionTitle from '../../Atoms/SectionTitleV2';
 
 export interface NoticeboardContentCardProps {
+  activeRoom?: string;
   viewEditMode?: ViewEditMode;
   handleEditToggle?: (editMode: string, widgetID: string) => void;
   handleEditUpdateDefault?: (e: React.ChangeEvent) => void;
@@ -30,6 +30,7 @@ export interface NoticeboardContentCardProps {
 }
 
 export interface NoticeboardFormProps {
+  activeRoom?: string;
   subSection?: string;
   widgetObj?: NoticeboardWidgetMapItem;
   setEditorContent?: any;
@@ -52,6 +53,7 @@ export interface NoticeboardFormProps {
 
 const NoticeboardContent = (props: NoticeboardContentCardProps) => {
   const {
+    activeRoom,
     viewEditMode,
     handleEditToggle,
     handleEditUpdateDefault,
@@ -67,7 +69,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     content,
   } = props;
   const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
+  const { anthologyDict, classRoomDict } = useDictionary(clientKey);
 
   const setEditorContent = (html: string, text: string, idKey: string) => {
     handleEditUpdateWYSIWYG(idKey, html, 'content', 'text', '');
@@ -77,7 +79,6 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     <>
       {
         <ContentCard>
-
           {/**
            * CREATE WIDGET VIEW
            */}
@@ -102,12 +103,16 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
             {/**
              *  section:  VIEW/EDIT BUTTON
              */}
-            <CreateNewButton
-              subSection={subSection}
-              widgetObj={createTemplate}
-              viewEditMode={viewEditMode}
-              handleEditToggle={handleEditToggle}
-            />
+            {activeRoom ? (
+              <CreateNewButton
+                subSection={subSection}
+                widgetObj={createTemplate}
+                viewEditMode={viewEditMode}
+                handleEditToggle={handleEditToggle}
+              />
+            ) : (
+              <>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM}...</>
+            )}
           </div>
         </ContentCard>
       }
@@ -125,19 +130,19 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                 <div id={widgetObj.id} className={`flex flex-col p-2`}>
                   {viewEditMode && viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
                     <>
-                    <EditModeView
-                      widgetObj={widgetObj}
-                      viewEditMode={viewEditMode}
-                      handleEditUpdateDefault={handleEditUpdateDefault}
-                      handleEditUpdateQuotes={handleEditUpdateQuotes}
-                      handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
-                      handleActivation={handleActivation}
-                      setEditorContent={setEditorContent}
-                      newWidgetData={newWidgetData}
-                      setNewWidgetData={setNewWidgetData}
-                      setWidgetData={setWidgetData}
-                      widgetData={widgetData}
-                    />
+                      <EditModeView
+                        widgetObj={widgetObj}
+                        viewEditMode={viewEditMode}
+                        handleEditUpdateDefault={handleEditUpdateDefault}
+                        handleEditUpdateQuotes={handleEditUpdateQuotes}
+                        handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+                        handleActivation={handleActivation}
+                        setEditorContent={setEditorContent}
+                        newWidgetData={newWidgetData}
+                        setNewWidgetData={setNewWidgetData}
+                        setWidgetData={setWidgetData}
+                        widgetData={widgetData}
+                      />
                     </>
                   ) : (
                     <ViewModeView widgetObj={widgetObj} />

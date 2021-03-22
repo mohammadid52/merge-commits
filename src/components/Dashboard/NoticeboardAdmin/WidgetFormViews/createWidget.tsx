@@ -68,7 +68,10 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
         />
       ) : null}
 
-      {widgetObj.type === 'quote' || widgetObj.type === 'call' ? (
+      {
+        widgetObj.type === 'quote' ||
+        widgetObj.type === 'call' ||
+        widgetObj.type === 'file' ? (
           <EditQuoteContent
             handleEditUpdateQuotes={handleEditUpdateQuotes}
             viewEditMode={viewEditMode}
@@ -80,7 +83,8 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
             setWidgetData={setWidgetData}
             widgetData={widgetData}
           />
-      ) : null}
+      ) : null
+      }
     </>
   );
 };

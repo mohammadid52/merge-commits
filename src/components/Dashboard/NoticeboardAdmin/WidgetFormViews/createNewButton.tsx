@@ -35,7 +35,7 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
       {viewEditMode.mode === 'create' && viewEditMode.widgetID === widgetObj.widgetID ? (
         <>
           <Buttons
-            onClick={() => handleEditToggle('save', widgetObj.id)}
+            onClick={() => handleEditToggle('savenew', widgetObj.id)}
             label={anthologyDict[userLanguage].ACTIONS.SAVE}
             type={`button`}
             Icon={AiOutlineSave}
