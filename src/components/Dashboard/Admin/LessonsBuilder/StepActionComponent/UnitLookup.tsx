@@ -130,14 +130,20 @@ const UnitLookup = (props: UnitLookupProps) => {
 
       const selectedSyllabusId: any = previouslySelectedUnits?.map((item: any) => item.syllabusID);
       const selectedList: any = previouslySelectedUnits.map((item: any) => {
-        const relatedCurricular: any = curricularsList.find((curricular: any) => curricular?.syllabi?.items.find((unit: any) => item.syllabusID === unit?.id))
-        console.log(relatedCurricular, "relatedCurricular******");
-        // TODO: NEED TO FIX BUG IN SYLLABUS NAME.
+        let syllabusName = '-'
+        const relatedCurricular: any = curricularsList.find((curricular: any) => curricular?.syllabi?.items.find((unit: any) => {
+          if (item.syllabusID === unit?.id) {
+            syllabusName = unit.name
+            return true
+          } else {
+            return false
+          }
+        }))
         return {
           ...item,
           curricularName: relatedCurricular?.name || '-',
           curricularId: relatedCurricular?.id || null,
-          syllabusName: relatedCurricular?.syllabi?.items[0]?.name || '-'
+          syllabusName: syllabusName
         }
       });
       const filteredList: any = curricularsList.map((item: any) => {
