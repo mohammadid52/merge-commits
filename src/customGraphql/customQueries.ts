@@ -2035,3 +2035,26 @@ export const getInstitutionCurriculars = /* GraphQL */ `
     }
   }
 `;
+
+export const getChatRooms = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      id
+      classes {
+        items {
+          id
+          classID
+          class {
+            id
+            rooms {
+              items {
+                id
+                name
+              }
+            }          
+          }
+        }
+      }
+    }
+  }
+`;
