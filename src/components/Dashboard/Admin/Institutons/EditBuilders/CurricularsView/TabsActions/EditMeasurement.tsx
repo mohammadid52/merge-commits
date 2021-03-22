@@ -126,7 +126,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.updateRubric, { input }));
       const updatedItem = item.data.updateRubric
       if (updatedItem) {
-        history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+      history.goBack()
       } else {
         console.log('Could not update topic');
       }

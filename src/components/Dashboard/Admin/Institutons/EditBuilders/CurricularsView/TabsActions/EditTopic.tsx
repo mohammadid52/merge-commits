@@ -77,7 +77,7 @@ const EditTopic = (props: EditTopicProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.updateTopic, { input }));
       const updatedItem = item.data.updateTopic
       if (updatedItem) {
-        history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+        history.goBack()
       } else {
         console.log('Could not update topic');
       }
