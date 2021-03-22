@@ -1,10 +1,13 @@
 import React, { useEffect, useState, Fragment, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import { useHistory } from 'react-router'
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
+import { reorder } from '../../../../../utilities/strings';
 
 import { getInitialsFromString, initials, stringToHslColor, createFilterToFetchSpecificItemsOnly } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
@@ -25,9 +28,10 @@ interface StaffBuilderProps {
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const { instName } = props;
+  const { instName, instituteId } = props;
   const { userLanguage, clientKey, theme } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const history = useHistory();
   const { staffBuilderDict } = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage]
   const [availableUsers, setAvailableUsers] = useState([]);
@@ -68,6 +72,21 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   }
 
+  const onDragEnd = async (result: any) => {
+    // Change staff sequence
+    if (result.source.index !== result.destination.index) {
+      const previousList= [...activeStaffList]
+      let staffIDs = previousList?.map(item => item.userId);
+      const list = reorder(staffIDs, result.source.index, result.destination.index)
+      let updatedList = previousList.map((t: any) => {
+        let index = list.indexOf(t.userId)
+        return { ...t, index }
+      }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1))
+      setActiveStaffList(updatedList);
+      updateStaffSequence(list);
+    }
+  }
+  
   const getPersonsList = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
@@ -87,6 +106,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     } catch {
       console.log('Error while fetching staff details')
     }
+  }
+  const getStaffSequence = async () => {
+    let sequence: any = await API.graphql(graphqlOperation(queries.getCSequences,
+      { id: `staff_${instituteId}` }));
+    sequence = sequence?.data?.getCSequences?.sequence;
+    return sequence ? [...sequence] : []
+  }
+  const updateStaffSequence = async (newList: any) => {
+    let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `staff_${instituteId}`, sequence: newList } }));
+  }
+
+  const createStaffSequence = async (newList: any) => {
+    let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `staff_${instituteId}`, sequence: newList } }));
   }
 
   const getStaff = async () => {
@@ -162,12 +194,30 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   }
 
+  const gotoProfilePage = (profileId: string) => {
+    history.push(`/dashboard/manage-users/user?id=${profileId}`);
+  }
+
   const fetchStaffData = async () => {
-    const staffMembers = await getStaff()
-    const staffMembersIds = staffMembers.map((item: any) => item.userId)
+    // const staffMembers = await getStaff()
+    let [staffLists, staffSequence]: any = await Promise.all([
+      await getStaff(),
+      await getStaffSequence()
+    ])
+    const staffMembersIds = staffLists.map((item: any) => item.userId)
+    if (staffSequence?.length === 0) {
+      createStaffSequence(staffMembersIds);
+    } else if (staffLists?.length !== staffSequence?.length) {
+      updateStaffSequence(staffMembersIds);
+    }
+    staffLists = staffLists.map((item: any) => {
+      let index = staffSequence.indexOf(item.userId);
+      return { ...item, index }
+    }).sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
     let users = await getPersonsList()
     let availableUsersList = users.filter((item: any) => staffMembersIds.indexOf(item.id) < 0)
-    setActiveStaffList(staffMembers)
+    setActiveStaffList(staffLists);
     setAvailableUsers(availableUsersList)
     // saving the initial all users list for future use. see removeStaff member function for use.
     setAllAvailableUsers(users)
@@ -206,7 +256,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
                 </div>
 
-                {activeStaffList.length > 0 ? (
+                {activeStaffList?.length > 0 ? (
                   <Fragment>
                     <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -227,55 +277,81 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                     </div>
 
                     <div className="w-full m-auto max-h-88 overflow-y-auto">
-                      {activeStaffList.map((item, index) =>
-                        <div key={index} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                      {/* Drag and drop listing */}
+                      <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable">
+                          {(provided, snapshot) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                            >
 
-                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                              {activeStaffList.map((item, index) =>
+                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                  {(provided, snapshot) => (
+                                    <div
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <div key={index} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
 
-                          <div className="flex w-3/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                            <div className="flex-shrink-0 h-10 w-10 flex items-center">
-                              {!item.image ? (
-                                <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
-                                  {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
-                                </div>
-                              ) : (
-                                  <div className="h-8 w-8 rounded-full flex justify-center items-center" >
-                                    <img src={item.image} className="rounded-full" />
-                                  </div>
-                                )}
-                            </div>
-                            <div className="ml-2">
-                              <div className="hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900">
-                                {item.name}
-                              </div>
-                              <div className="text-sm leading-5 text-gray-500">
-                                {item.email}
-                              </div>
-                            </div>
-                          </div>
+                                        <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
 
-                          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
-                          {
-                            statusEdit === item.id ? (
-                              <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)} />
-                              </div>) :
-                              <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                {item.status || 'Active'}
-                              </div>
-                          }
-                          <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
-                            {statusEdit === item.id ?
-                              <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
-                              :
-                              <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
-                                Edit
+                                        <div className="flex w-3/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer " onClick={() => gotoProfilePage(item.userId)}>
+                                          <div className="flex-shrink-0 h-10 w-10 flex items-center">
+                                            {!item.image ? (
+                                              <div className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold" style={{ background: `${stringToHslColor(getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1])}`, textShadow: '0.1rem 0.1rem 2px #423939b3' }} >
+                                                {item.name ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1]) : initials('N', 'A')}
+                                              </div>
+                                            ) : (
+                                                <div className="h-8 w-8 rounded-full flex justify-center items-center" >
+                                                  <img src={item.image} className="rounded-full" />
+                                                </div>
+                                              )}
+                                          </div>
+                                          <div className="ml-2">
+                                            <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
+                                              {item.name}
+                                            </div>
+                                            <div className="text-sm leading-5 text-gray-500">
+                                              {item.email}
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center">{item.role ? getStaffRole(item.role) : ''}</div>
+                                        {
+                                          statusEdit === item.id ? (
+                                            <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                              <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)} />
+                                            </div>) :
+                                            <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                              {item.status || 'Active'}
+                                            </div>
+                                        }
+                                        <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
+                                          {statusEdit === item.id ?
+                                            <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                                            :
+                                            <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
+                                              Edit
                               </span>
-                            }
-                          </div>
-                        </div>)
-                      }
+                                          }
+                                        </div>
+                                      </div>
 
+                                    </div>
+                                  )}
+                                </Draggable>
+
+                              )
+                              }
+                              {provided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </DragDropContext>
                     </div>
                   </Fragment>
                 ) : (

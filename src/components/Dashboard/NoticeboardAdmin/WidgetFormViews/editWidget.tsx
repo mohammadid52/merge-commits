@@ -1,8 +1,10 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { EditDefaultContent } from './EditContentViews/EditDefaultContent';
 import { EditQuoteContent } from './EditContentViews/EditQuoteContent';
+import EditWidgetToolbar from './editWidgetToolbar';
+import SectionTitle from '../../../Atoms/SectionTitleV2';
 
 // Standard widget card view
 export const EditModeView = (props: NoticeboardFormProps) => {
@@ -12,6 +14,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     handleActivation,
     handleEditUpdateDefault,
     handleEditUpdateQuotes,
+    handleEditUpdateWYSIWYG,
     viewEditMode,
     newWidgetData,
     setNewWidgetData,
@@ -19,41 +22,36 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     setWidgetData,
   } = props;
   const { theme } = useContext(GlobalContext);
+
+  useEffect(() => {
+    setNewWidgetData(widgetObj);
+  }, [widgetObj]);
+
   return (
+    widgetObj &&
+    newWidgetData && (
+
     <>
+
+      <SectionTitle title={`Type: ${widgetObj.type?.toUpperCase()} Widget`} />
+
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
-        <span className={`text-left ${theme.lessonCard.subtitle}`}>
-          Widget Status:
-          {widgetObj.active ? (
-            <span className="ml-2 text-xs font-semibold text-green-400">Active</span>
-          ) : (
-            <span className="ml-2 text-xs font-semibold text-gray-400">Inactive</span>
-          )}
-        </span>
-        <span className={`text-center ${theme.lessonCard.subtitle}`}>
-          {widgetObj.active ? (
-            <span
-              onClick={() => handleActivation(widgetObj.id)}
-              className="ml-2 cursor-pointer text-base text-ketchup font-semibold">
-              Deactivate
-            </span>
-          ) : (
-            <span
-              onClick={() => handleActivation(widgetObj.id)}
-              className="ml-2 cursor-pointer text-base text-blueberry font-semibold">
-              Activate
-            </span>
-          )}
-        </span>
-        <span className={`text-right ${theme.lessonCard.subtitle}`}>Placement: {widgetObj.placement}</span>
-      </div>
+
+       <EditWidgetToolbar
+         widgetObj={newWidgetData}
+         newWidgetData={newWidgetData}
+         setNewWidgetData={setNewWidgetData}
+         handleActivation={handleActivation}
+         handleEditUpdateDefault={handleEditUpdateDefault}
+         handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+       />
+
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 `}>
+      <div className={`mt-2 px-2 `}>
         <Fragment>
           <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
             {`Title`}
@@ -72,7 +70,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
+      <div className={`mt-2 px-2 overflow-ellipsis overflow-hidden ellipsis`}>
         <Fragment>
           <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
             {`Description`}
@@ -94,9 +92,11 @@ export const EditModeView = (props: NoticeboardFormProps) => {
        */}
       {widgetObj.type === 'default' ? (
         <EditDefaultContent
-          widgetObj={widgetObj}
+          widgetObj={newWidgetData}
           setEditorContent={setEditorContent}
           handleActivation={handleActivation}
+          handleEditUpdateQuotes={handleEditUpdateQuotes}
+          handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
           newWidgetData={newWidgetData}
           setNewWidgetData={setNewWidgetData}
           setWidgetData={setWidgetData}
@@ -114,13 +114,15 @@ export const EditModeView = (props: NoticeboardFormProps) => {
             widgetData={widgetData}
             setWidgetData={setWidgetData}
             handleEditUpdateQuotes={handleEditUpdateQuotes}
+            handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
             viewEditMode={viewEditMode}
-            widgetObj={widgetObj}
+            widgetObj={newWidgetData}
             setEditorContent={setEditorContent}
             handleActivation={handleActivation}
           />
         ) : null
       }
     </>
+    )
   );
 };

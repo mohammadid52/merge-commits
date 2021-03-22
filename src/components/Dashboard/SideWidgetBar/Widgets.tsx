@@ -68,23 +68,30 @@ export const CallLinkWidget = (props: {
 }) => {
   const { title, links, card, classProp, widgetObj } = props;
 
-  const getShortenedCallLabel = (url: string) => {
+  const getCallInfo = (url: string) => {
     if (url.includes('web.zoom')) {
       return {
         iconLabel: 'Zoom',
+        iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/zoom_icon.svg',
         joinLabel: 'Join Zoom Call',
       };
-    }
-    if (url.includes('meet.google')) {
+    } else if (url.includes('meet.google')) {
       return {
         iconLabel: 'Meet',
+        iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/meet_icon.svg',
         joinLabel: 'Join Meet Call',
       };
-    }
-    if (url.includes('teams.microsoft')) {
+    } else if (url.includes('teams.microsoft')) {
       return {
         iconLabel: 'Teams',
+        iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/teams_icon.svg',
         joinLabel: 'Join Teams Call',
+      };
+    } else {
+      return {
+        iconLabel: 'Call',
+        iconUrl: null,
+        joinLabel: 'Join Call',
       };
     }
   };
@@ -106,31 +113,52 @@ export const CallLinkWidget = (props: {
         {links &&
           links.length > 0 &&
           links.map((link: Link, idx: number) => (
-            <div className={`max-w-1/3`}>
+            <div className={`
+            ${
+              idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                ? 'border-b border-dark-gray border-opacity-10'
+                : ''
+            } 
+              max-w-1/3
+            `}>
               {/**
                * MOBILE VERSION WIDGET ICON
                */}
-              <span className={`${mobileShowClass} w-full mr-0 mb-2 flex flex-col`}>
+              <span className={`w-full mr-0 mb-2 flex flex-col`}>
                 <a
                   id={`links_${links.id}_mini`}
                   className={`text-xs font-semibold text-blueberry hover:underline`}
                   href={link.url}
                   target={`_blank`}>
-                  <IconContext.Provider value={{ className: 'mx-auto' }}>
-                    <IoCallOutline size={24} />
-                  </IconContext.Provider>
-                  <p className={`text-center`}>{getShortenedCallLabel(link.url).iconLabel}</p>
+                  {getCallInfo(link.url)?.iconUrl === null ? (
+                    <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
+                      <IoCallOutline size={24} />
+                    </IconContext.Provider>
+                  ) : (
+                    <div className={`w-8 h-8 mx-auto my-2`}>
+                      <img
+                        className={`pointer-events-none`}
+                        src={getCallInfo(link.url)?.iconUrl}
+                        alt={`call_link_icon`}
+                      />
+                    </div>
+                  )}
+                  <p className={`text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
                 </a>
               </span>
 
               {/**
                * WIDGET
                */}
-              <div
+              {/*<div
                 key={`links_${links.id}_idx`}
                 className={`
               ${responsiveClass} 
-              ${idx < links.length - 1 && widgetObj.placement === 'sidebar' ? 'border-b border-dark-gray border-opacity-10' : ''} 
+              ${
+                idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                  ? 'border-b border-dark-gray border-opacity-10'
+                  : ''
+              } 
               p-2 break-all`}>
                 <a
                   id={`links_${links.id}_idx`}
@@ -139,7 +167,7 @@ export const CallLinkWidget = (props: {
                   target={`_blank`}>
                   {link.text}
                 </a>
-              </div>
+              </div>*/}
             </div>
           ))}
       </div>

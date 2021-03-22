@@ -106,7 +106,7 @@ const InstitutionsHome = () => {
           render={() => <AddSyllabus />}           // Add new syllabus to curricular
         />
         <Route
-          path={`${match.url}/curricular/:curricularId/syllabus/edit`}
+          path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/edit`}
           render={() => <EditSyllabus />}          // Edit curricular syllabus
         />
         <Route
@@ -122,7 +122,7 @@ const InstitutionsHome = () => {
           render={() => <ProfileCheckpointlookup />}          // Add existing Checkpoint to curricular
         />
         <Route
-          path={`${match.url}/curricular`}
+          path={`${match.url}/:institutionId/curricular`}
           render={() => <CurricularView tabProps={tabProps} />}     // Curricular information view.
         />
       </Switch>

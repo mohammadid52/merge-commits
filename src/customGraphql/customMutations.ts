@@ -537,6 +537,9 @@ export const createSyllabusLesson = /* GraphQL */ `
       unit
       status
       sequence
+      complete
+      roster
+      viewing
       createdAt
       updatedAt
     }
@@ -551,6 +554,10 @@ export const createTopic = /* GraphQL */ `
       learningObjectiveID
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }

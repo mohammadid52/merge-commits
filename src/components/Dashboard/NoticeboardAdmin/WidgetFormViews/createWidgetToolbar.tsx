@@ -6,7 +6,7 @@ import { GoTextSize } from 'react-icons/go';
 import { AiOutlinePhone } from 'react-icons/ai';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 
-const CreateEditDropdown = (props: NoticeboardFormProps) => {
+const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
   const { state, theme } = useContext(GlobalContext);
   const { widgetObj, handleEditUpdateDefault, handleEditUpdateWYSIWYG } = props;
 
@@ -139,4 +139,4 @@ const CreateEditDropdown = (props: NoticeboardFormProps) => {
   );
 };
 
-export default CreateEditDropdown;
+export default CreateWidgetToolbar;

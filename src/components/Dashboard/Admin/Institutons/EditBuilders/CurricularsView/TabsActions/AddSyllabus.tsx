@@ -168,7 +168,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         setSyllabusData(initialData);
         setIsLoading(false);
         if (newItem) {
-          history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+          history.goBack()
         } else {
           console.log('Could not add unit');
         }
