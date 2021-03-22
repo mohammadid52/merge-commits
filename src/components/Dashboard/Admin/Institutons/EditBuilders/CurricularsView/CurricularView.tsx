@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation, useHistory, useRouteMatch } from 'react-router';
+import { useLocation, useHistory, useRouteMatch, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { BiNotepad } from 'react-icons/bi';
 import { MdSpeakerNotes } from 'react-icons/md';
@@ -52,8 +52,9 @@ const CurricularView = (props: CurricularViewProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
+  const urlParams: any = useParams();
   const currID = params.get('id');
-
+  const institutionId = urlParams.institutionId;
   const initialData = {
     id: '',
     name: '',
@@ -75,10 +76,10 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Curriculum Builder', url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
+    { title: 'Curriculum Builder', url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Units', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
+    { index: 0, title: 'Units', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} institutionId={institutionId} /> },
     { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
     { index: 2, title: 'Demographics & Information', icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
   ]

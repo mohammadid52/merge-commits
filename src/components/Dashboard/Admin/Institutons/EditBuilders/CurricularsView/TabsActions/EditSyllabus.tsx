@@ -107,10 +107,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const syllabusId = params.get('id');
   const curricularId = urlParams.curricularId;
+  const institutionId = urlParams.institutionId;
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Unit Builder', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
+    { title: 'Unit Builder', url: `/dashboard/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
 
   const onDragEnd = async (result: any) => {
@@ -400,7 +401,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const fetchLessonsList = async () => {
     try {
-      const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles))
+      const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles, {
+        filter: { institutionID: { eq: institutionId } }
+      }))
       const savedData = result.data.listLessons;
       const sortedList = savedData?.items?.sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1)
       const updatedList = sortedList?.filter((item: any) => item.lessonPlan ? true : false).map((item: { id: string, title: string, type: string }) => (

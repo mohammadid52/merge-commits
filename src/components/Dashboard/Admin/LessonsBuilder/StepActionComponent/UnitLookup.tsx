@@ -39,7 +39,7 @@ const UnitLookup = (props: UnitLookupProps) => {
   });
 
   const gotoCurricularUnit = (syllabusId: string, curricularId: string) => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`);
+    history.push(`/dashboard/manage-institutions/${institution.id}/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`);
   }
 
   const onSelectorChange = (val: string, name: string, id: string, field: string) => {
