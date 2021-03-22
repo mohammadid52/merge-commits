@@ -4,6 +4,7 @@ import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { EditDefaultContent } from './EditContentViews/EditDefaultContent';
 import { EditQuoteContent } from './EditContentViews/EditQuoteContent';
 import EditWidgetToolbar from './editWidgetToolbar';
+import SectionTitle from '../../../Atoms/SectionTitleV2';
 
 // Standard widget card view
 export const EditModeView = (props: NoticeboardFormProps) => {
@@ -31,6 +32,9 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     newWidgetData && (
 
     <>
+
+      <SectionTitle title={`Type: ${widgetObj.type?.toUpperCase()} Widget`} />
+
       {/**
        *  section: TOP INFO
        */}

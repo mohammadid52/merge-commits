@@ -10,6 +10,7 @@ import { CreateModeView } from './WidgetFormViews/createWidget';
 import CancelSaveDelete from './WidgetFormViews/cancelSaveDeleteButtons';
 import CreateNewButton from './WidgetFormViews/createNewButton';
 import { create } from 'domain';
+import SectionTitle from '../../Atoms/SectionTitleV2';
 
 export interface NoticeboardContentCardProps {
   viewEditMode?: ViewEditMode;
@@ -76,11 +77,12 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     <>
       {
         <ContentCard>
+
           {/**
            * CREATE WIDGET VIEW
            */}
 
-          <div id={`anthology_${subSection}_create`} className={`flex flex-col`}>
+          <div id={`anthology_${subSection}_create`} className={`flex flex-col p-2`}>
             {viewEditMode && viewEditMode.mode === 'create' ? (
               <CreateModeView
                 viewEditMode={viewEditMode}
@@ -122,6 +124,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
               <ContentCard key={`noticeboardwidget_${subSection}${idx}`}>
                 <div id={widgetObj.id} className={`flex flex-col p-2`}>
                   {viewEditMode && viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
+                    <>
                     <EditModeView
                       widgetObj={widgetObj}
                       viewEditMode={viewEditMode}
@@ -135,6 +138,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                       setWidgetData={setWidgetData}
                       widgetData={widgetData}
                     />
+                    </>
                   ) : (
                     <ViewModeView widgetObj={widgetObj} />
                   )}
