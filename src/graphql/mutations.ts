@@ -2022,6 +2022,10 @@ export const createTopic = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -2082,6 +2086,10 @@ export const updateTopic = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -2142,6 +2150,10 @@ export const deleteTopic = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -2271,6 +2283,10 @@ export const createRubric = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -2320,6 +2336,10 @@ export const updateRubric = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -2369,6 +2389,10 @@ export const deleteRubric = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -5827,6 +5851,10 @@ export const createLessonRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }
@@ -5994,6 +6022,10 @@ export const updateLessonRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }
@@ -6161,6 +6193,10 @@ export const deleteLessonRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }

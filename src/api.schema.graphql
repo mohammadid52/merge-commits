@@ -163,6 +163,10 @@ type Topic @model @key(fields: ["id"]) @key(name: "topicByCurriculum", fields: [
   learningObjective: LearningObjective @connection(fields: ["learningObjectiveID"])
   name: String!
   description: String
+  distinguished: String
+  excelled: String
+  adequite: String
+  basic: String
 }
 
 type CSequences @key(fields: ["id"]) @model {
