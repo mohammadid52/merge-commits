@@ -5,6 +5,7 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineDelete } from 'react-icons/all';
+import AddRemoveButton from '../addRemoveButton';
 
 // Standard widget card view
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
@@ -87,9 +88,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
   return (
     <div className={`mt-2 mb-2 p-2`}>
-      {
-        theSwitchObj &&
-        widgetObj[theSwitchObj.key].length > 0 ? (
+      {theSwitchObj && widgetObj[theSwitchObj.key].length > 0 ? (
         widgetObj[theSwitchObj.key].map((widgetQuote: Quote, idx: number) => {
           return (
             <div
@@ -98,7 +97,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
               }`}>
               <div className={`w-8`}>
                 <p className={`text-center text-xl font-semibold`}>{idx}.</p>
-                <div className={`cursor-pointer`} onClick={()=>decreaseQuoteCount(idx)}>
+                <div className={`cursor-pointer`} onClick={() => decreaseQuoteCount(idx)}>
                   <IconContext.Provider value={{ className: 'w-auto pointer-events-none' }}>
                     <AiOutlineDelete size={24} />
                   </IconContext.Provider>
@@ -164,11 +163,8 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
         <>
           <p>No quotes added...</p>
         </>
-      )
-      }
-      <p onClick={increaseQuoteCount} className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
-        {anthologyDict[userLanguage].ACTIONS.CREATE}?
-      </p>
+      )}
+      <AddRemoveButton clickFunction={increaseQuoteCount} label={anthologyDict[userLanguage].ACTIONS.ADD} />
     </div>
   );
 };

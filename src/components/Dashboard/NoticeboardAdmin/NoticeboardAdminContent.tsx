@@ -45,6 +45,8 @@ export interface NoticeboardFormProps {
     editMode: 'view' | 'edit' | 'save' | 'create' | 'delete' | 'savenew' | '',
     widgetID: string
   ) => void;
+  clickFunction?: (param?: any) => any;
+  label?: string;
 }
 
 const NoticeboardContent = (props: NoticeboardContentCardProps) => {
