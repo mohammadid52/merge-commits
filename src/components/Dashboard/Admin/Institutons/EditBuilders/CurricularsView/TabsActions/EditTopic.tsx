@@ -27,7 +27,15 @@ const EditTopic = (props: EditTopicProps) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [topic, setTopic] = useState({
-    id: topicId, name: '', description: '', curriculumID: curricularId, learning: { id: '', name: '', value: '' }
+    id: topicId,
+    name: '',
+    description: '',
+    distinguished: '',
+    excelled: '',
+    adequite: '',
+    basic: '',
+    curriculumID: curricularId,
+    learning: { id: '', name: '', value: '' }
   })
   const [learnings, setLearnings] = useState([]);
   const [validation, setValidation] = useState({ name: '', learning: '' })
@@ -72,7 +80,11 @@ const EditTopic = (props: EditTopicProps) => {
         id: topic.id,
         name: topic.name,
         description: topic.description,
-        learningObjectiveID: topic.learning.id
+        learningObjectiveID: topic.learning.id,
+        distinguished: topic.distinguished,
+        excelled: topic.excelled,
+        adequite: topic.adequite,
+        basic: topic.basic,
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.updateTopic, { input }));
       const updatedItem = item.data.updateTopic
@@ -100,6 +112,10 @@ const EditTopic = (props: EditTopicProps) => {
         ...topic,
         name: item.name,
         description: item.description,
+        distinguished: item.distinguished,
+        excelled: item.excelled,
+        adequite: item.adequite,
+        basic: item.basic,
         learning: {
           id: item.learningObjective?.id || '',
           name: item.learningObjective?.name || '',
@@ -145,7 +161,7 @@ const EditTopic = (props: EditTopicProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC OVERVIEW</h3>
         </div>
         {!loading ? <>
           <div className="w-6/10 m-auto">
@@ -177,6 +193,21 @@ const EditTopic = (props: EditTopicProps) => {
               <div className="px-3 py-4">
                 <TextArea id='description' value={topic.description} onChange={onInputChange} name='description' label="Description" />
               </div>
+
+              <div className="px-3 py-4">
+                <TextArea id='distinguished' value={topic.distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
+              </div>
+              <div className="px-3 py-4">
+                <TextArea id='excelled' value={topic.excelled} onChange={onInputChange} name='excelled' label="Excelled" />
+              </div>
+              <div className="px-3 py-4">
+                <TextArea id='adequite' value={topic.adequite} onChange={onInputChange} name='adequite' label="Adequate" />
+              </div>
+              <div className="px-3 py-4">
+                <TextArea id='basic' value={topic.basic} onChange={onInputChange} name='basic' label="Basic" />
+              </div>
+
+
             </div>
           </div>
           <div className="flex my-8 justify-center">

@@ -187,7 +187,8 @@ const AddMeasurement = (props: AddMeasurementProps) => {
             <div className="px-3 py-4">
               <TextArea rows={3} id='criteria' value={criteria} onChange={onInputChange} name='criteria' label="Criteria" />
             </div>
-            <div className="px-3 py-4">
+            {/* TODO: NEED TO REMOVE FIELDS FROM RUBRICS TABLE. */}
+            {/* <div className="px-3 py-4">
               <TextArea rows={3} id='distinguished' value={distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
             </div>
             <div className="px-3 py-4">
@@ -198,7 +199,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
             </div>
             <div className="px-3 py-4">
               <TextArea rows={3} id='basic' value={basic} onChange={onInputChange} name='basic' label="Basic" />
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex my-8 justify-center">

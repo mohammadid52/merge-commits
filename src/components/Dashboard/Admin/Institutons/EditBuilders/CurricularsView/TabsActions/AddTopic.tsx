@@ -40,14 +40,24 @@ const AddTopic = (props: AddTopicProps) => {
   const [validation, setValidation] = useState({ name: '', learning: '' })
   const [learnings, setLearnings] = useState([]);
   const [topicIds, setTopicIds] = useState([]);
-
+  const [evalution, setEvalution] = useState({
+    distinguished: '',
+    excelled: '',
+    adequite: '',
+    basic: ''
+  })
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
       const value = e.target.value
       setName(value)
       if (value.length && validation.name) setValidation({ ...validation, name: '' });
+    } else if (e.target.name === 'description') setDescription(e.target.value)
+    else {
+      setEvalution({
+        ...evalution,
+        [e.target.name]: e.target.value
+      })
     }
-    if (e.target.name === 'description') setDescription(e.target.value)
   }
 
   const validateForm = () => {
@@ -73,7 +83,9 @@ const AddTopic = (props: AddTopicProps) => {
     const isValid = validateForm()
     if (isValid) {
       const input = {
-        name, description, curriculumID: curricularId, learningObjectiveID: learning.id
+        name, description, distinguished, excelled, adequite, basic,
+        curriculumID: curricularId,
+        learningObjectiveID: learning.id,
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
       const addedItem = item.data.createTopic
@@ -87,7 +99,7 @@ const AddTopic = (props: AddTopicProps) => {
         console.log('seqItem', seqItem)
       }
       if (addedItem) {
-      history.goBack()
+        history.goBack()
       } else {
         console.log('Could not add topic');
       }
@@ -130,6 +142,8 @@ const AddTopic = (props: AddTopicProps) => {
     }
   }, [learning.id])
 
+  const { distinguished, excelled, adequite, basic } = evalution;
+
   return (
     <div className="w-8/10 h-full mt-4 p-4">
 
@@ -145,7 +159,7 @@ const AddTopic = (props: AddTopicProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC OVERVIEW</h3>
           <div className="">
 
             <div className="px-3 py-4">
@@ -167,6 +181,19 @@ const AddTopic = (props: AddTopicProps) => {
 
             <div className="px-3 py-4">
               <TextArea id='description' value={description} onChange={onInputChange} name='description' label="Description" />
+            </div>
+
+            <div className="px-3 py-4">
+              <TextArea id='distinguished' value={distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea id='excelled' value={excelled} onChange={onInputChange} name='excelled' label="Excelled" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea id='adequite' value={adequite} onChange={onInputChange} name='adequite' label="Adequate" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea id='basic' value={basic} onChange={onInputChange} name='basic' label="Basic" />
             </div>
 
           </div>

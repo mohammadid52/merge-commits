@@ -554,6 +554,10 @@ export const createTopic = /* GraphQL */ `
       learningObjectiveID
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
