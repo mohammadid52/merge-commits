@@ -34,7 +34,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 p-2`}>
+      <div className={`mt-2 py-2 px-4`}>
         <Fragment>
           <label htmlFor={widgetObj.id} className="block text-sm font-semibold leading-5 text-gray-700">
             {`Title`}

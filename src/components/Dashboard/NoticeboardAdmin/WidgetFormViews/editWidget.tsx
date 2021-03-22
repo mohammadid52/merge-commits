@@ -47,7 +47,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
       {/**
        *  section: TITLE
        */}
-      <div className={`mt-2 `}>
+      <div className={`mt-2 px-2 `}>
         <Fragment>
           <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
             {`Title`}
@@ -66,7 +66,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`mt-2 overflow-ellipsis overflow-hidden ellipsis`}>
+      <div className={`mt-2 px-2 overflow-ellipsis overflow-hidden ellipsis`}>
         <Fragment>
           <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
             {`Description`}

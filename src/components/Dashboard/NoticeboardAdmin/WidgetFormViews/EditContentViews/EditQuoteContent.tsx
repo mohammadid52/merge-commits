@@ -95,66 +95,74 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
               className={`flex flex-row p-2 rounded my-2 ${
                 idx % 2 ? 'bg-grayscale-light bg-opacity-20' : 'bg-gray-400 bg-opacity-20'
               }`}>
-              <div className={`w-8`}>
-                <p className={`text-center text-xl font-semibold`}>{idx}.</p>
-                <div className={`cursor-pointer`} onClick={() => decreaseQuoteCount(idx)}>
+              <div className={`w-8 m-1`}>
+                {/* NUMBER */}
+                <div className={`w-6 h-6 p-2 mb-2 rounded-full bg-blueberry flex justify-center items-center`}>
+                  <span className={`w-auto h-auto text-center text-white text-lg font-semibold `}>{idx}</span>
+                </div>
+                {/* TRASH ICON */}
+                <div className={`mt-4 cursor-pointer`} onClick={() => decreaseQuoteCount(idx)}>
                   <IconContext.Provider value={{ className: 'w-auto pointer-events-none' }}>
                     <AiOutlineDelete size={24} />
                   </IconContext.Provider>
                 </div>
               </div>
+
               <div className={`w-full`}>
-                <label
-                  htmlFor={`text_${idx}_${widgetObj.id}`}
-                  className="block text-xs font-semibold leading-5 text-gray-700">
-                  {`${theSwitchObj.label} #${idx}`}
-                </label>
+                <div className={`flex flex-row`}>
+                  <label
+                    htmlFor={`text_${idx}_${widgetObj.id}`}
+                    className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
+                    {`${theSwitchObj.label}`}
+                  </label>
 
-                <textarea
-                  id={`${widgetObj.id}`}
-                  onChange={handleEditUpdateQuotes}
-                  data-basekey={`${theSwitchObj.key}`}
-                  data-nestkey1={`${theSwitchObj.key2}`}
-                  data-nestkey2={idx}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                  value={
-                    widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                      ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                      : ''
-                  }
-                  placeholder={
-                    widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                      ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                      : `Please add ${theSwitchObj.label}...`
-                  }
-                  rows={1}
-                />
+                  <input
+                    id={`${widgetObj.id}`}
+                    onChange={handleEditUpdateQuotes}
+                    data-basekey={`${theSwitchObj.key}`}
+                    data-nestkey1={`${theSwitchObj.key2}`}
+                    data-nestkey2={idx}
+                    className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                    value={
+                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                        : ''
+                    }
+                    placeholder={
+                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                        : `Please add ${theSwitchObj.label}...`
+                    }
+                  />
+                </div>
 
-                <label
-                  htmlFor={`text_${idx}_${widgetObj.id}`}
-                  className="block text-xs font-semibold leading-5 text-gray-700">
-                  {`${theSwitchObj.label2} #${idx}`}
-                </label>
+                <div className={`flex flex-row`}>
+                  <label
+                    htmlFor={`text_${idx}_${widgetObj.id}`}
+                    className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
+                    {`${theSwitchObj.label2}`}
+                  </label>
 
-                <textarea
-                  id={`${widgetObj.id}`}
-                  onChange={handleEditUpdateQuotes}
-                  data-basekey={`${theSwitchObj.key}`}
-                  data-nestkey1={`${theSwitchObj.key3}`}
-                  data-nestkey2={idx}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                  value={
-                    widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                      ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                      : ''
-                  }
-                  placeholder={
-                    widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                      ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                      : `Please add ${theSwitchObj.label2}...`
-                  }
-                  rows={2}
-                />
+                  <textarea
+                    id={`${widgetObj.id}`}
+                    onChange={handleEditUpdateQuotes}
+                    data-basekey={`${theSwitchObj.key}`}
+                    data-nestkey1={`${theSwitchObj.key3}`}
+                    data-nestkey2={idx}
+                    className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                    value={
+                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        : ''
+                    }
+                    placeholder={
+                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        : `Please add ${theSwitchObj.label2}...`
+                    }
+                    rows={2}
+                  />
+                </div>
               </div>
             </div>
           );
