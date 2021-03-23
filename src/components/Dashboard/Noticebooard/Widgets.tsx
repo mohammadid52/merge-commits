@@ -151,7 +151,7 @@ export const CallLinkWidget = (props: {
                       />
                     </div>
                   )}
-                  <p className={`text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
+                  <p className={`${responsiveClass} text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
                 </a>
               </span>
             </div>
@@ -255,7 +255,7 @@ export const FileLinkWidget = (props: {
                * MOBILE VERSION WIDGET ICON
                */}
               <span className={`w-full mr-0 mb-2 flex flex-col`}>
-                <p className={`text-center text-xs`}>{link.text}</p>
+                <p className={`${responsiveClass} mt-2 text-center text-xs`}>{link.text}</p>
                 <a
                   id={`links_${links.id}_mini`}
                   className={`text-xs font-semibold text-blueberry hover:underline`}
@@ -270,7 +270,7 @@ export const FileLinkWidget = (props: {
                       {getFileInfo(link.url)?.icon}
                     </IconContext.Provider>
                   )}
-                  <p className={`text-center`}>{getFileInfo(link.url)?.downloadLabel}</p>
+                  <p className={`${responsiveClass} text-center`}>{getFileInfo(link.url)?.downloadLabel}</p>
                 </a>
               </span>
             </div>
