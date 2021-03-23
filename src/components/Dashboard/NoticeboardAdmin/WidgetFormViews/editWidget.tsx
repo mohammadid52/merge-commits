@@ -25,10 +25,9 @@ export const EditModeView = (props: NoticeboardFormProps) => {
   } = props;
   const { theme } = useContext(GlobalContext);
 
-  // useEffect(() => {
-  //   // setNewWidgetData(widgetObj);
-  //   return ()=> resetNewWidgetData();
-  // }, []);
+  useEffect(() => {
+    setNewWidgetData(widgetObj);
+  }, []);
 
   return (
     widgetObj &&
