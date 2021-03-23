@@ -119,7 +119,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                 handleEditToggle={handleEditToggle}
               />
             ) : (
-              <>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM}...</>
+              <>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM_WIDGETS}...</>
             )}
           </div>
         </ContentCard>

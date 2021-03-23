@@ -12,8 +12,6 @@ import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './Noticebooard/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
-import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
-import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -213,6 +211,7 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <Classroom
                     currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
                     activeRoom={activeRoom}
                     activeRoomInfo={activeRoomInfo}
                     setActiveRoom={setActiveRoom}

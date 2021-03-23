@@ -81,6 +81,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     isTeacher,
     currentPage,
+    setCurrentPage,
     activeRoom,
     activeRoomInfo,
     setActiveRoom,
@@ -106,6 +107,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     upcoming: '0',
     completed: '0',
   });
+
+
+  //  INITIALIZE CURRENT PAGE LOCATION
+  useEffect(()=>{
+    setCurrentPage('classroom');
+  },[])
 
 
 
@@ -317,7 +324,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       ) : null}
 
-      {!isTeacher &&
+      {
+        !isTeacher &&
         state.roomData.lessons &&
         state.roomData.lessons.length > 0 &&
         visibleLessonGroup === 'upcoming' ? (
@@ -328,9 +336,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 lessons={upcomingLessons} />
             </div>
           </div>
-        ) : null}
+        ) : null
+      }
 
-      {state.roomData.lessons && state.roomData.lessons.length > 0 && visibleLessonGroup === 'completed' ? (
+      {
+        state.roomData.lessons &&
+        state.roomData.lessons.length > 0 &&
+        visibleLessonGroup === 'completed' ? (
         <div className={`bg-grayscale-light bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
