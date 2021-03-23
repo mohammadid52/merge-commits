@@ -117,6 +117,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                 widgetObj={createTemplate}
                 viewEditMode={viewEditMode}
                 handleEditToggle={handleEditToggle}
+                resetNewWidgetData={resetNewWidgetData}
               />
             ) : (
               <>⬆ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM_WIDGETS}...</>
@@ -164,6 +165,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                     handleEditToggle={handleEditToggle}
                     widgetObj={widgetObj}
                     viewEditMode={viewEditMode}
+                    resetNewWidgetData={resetNewWidgetData}
                   />
                 </div>
               </ContentCard>

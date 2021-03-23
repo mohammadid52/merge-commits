@@ -11,7 +11,9 @@ import RoomSwitch from './RoomSwitch';
 
 import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
 
-export interface NoticeboardAdmin {}
+export interface NoticeboardAdmin {
+  setCurrentPage: any;
+}
 //
 // export interface NoticeboardWidgetMapItem {
 //   id?: string;
@@ -47,8 +49,8 @@ const initialNewWidgetData = {
 };
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
-  const {} = props;
-  const { state, userLanguage, clientKey } = useContext(GlobalContext);
+  const {setCurrentPage} = props;
+  const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
   const {} = useDictionary(clientKey);
   //
   const [activeRoom, setActiveRoom] = useState<string>('');
@@ -77,6 +79,10 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
+  useEffect(()=>{
+    setCurrentPage('noticeboard');
+  },[])
+
   //  TOP Function to load widgets
   const listNoticeboardWidgets = async () => {
     setLoading(true);
@@ -86,8 +92,16 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       );
       const response = await noticeboardWidgetsFetch;
       const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-      // console.log('listNoticebaordWidgets -> ', arrayOfResponseObjects);
       setWidgetData(arrayOfResponseObjects);
+
+      // dispatch to context to show widsgets in noticeboard-admin
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'widgets',
+          data: arrayOfResponseObjects,
+        },
+      });
     } catch (e) {
       console.error('listNoticeboardWidgetsFetch: -> ', e);
     } finally {
@@ -128,27 +142,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
     switch (viewEditMode.mode) {
       case 'edit':
-      // const updatedWidgetData = widgetData.reduce((acc: NoticeboardWidgetMapItem[], widgetObj: any) => {
-      //   if (widgetObj.id === id) {
-      //     return [
-      //       ...acc,
-      //       {
-      //         ...widgetObj,
-      //         [basekey]: widgetObj[basekey].map((nestedObj: any, idx: number) => {
-      //           if (idx === parseInt(nestkey2)) {
-      //             return { ...nestedObj, [nestkey1]: value };
-      //           } else {
-      //             return nestedObj;
-      //           }
-      //         }),
-      //       },
-      //     ];
-      //   } else {
-      //     return [...acc, widgetObj];
-      //   }
-      // }, []);
-      // setWidgetData(updatedWidgetData);
-      // break;
       case 'create': // final step to saving author!
         const updatedNewWidgetData = {
           ...newWidgetData,
@@ -340,6 +333,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     const manageSaveAndCreate = async () => {
       if (viewEditMode.mode === 'save') {
         await noticeboardUpdate();
+        await listNoticeboardWidgets();
       }
       if (viewEditMode.mode === 'savenew') {
         await noticeboardCreate();
@@ -355,7 +349,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   return (
     <React.Fragment>
-      <SectionTitle title={`Noticeboard Room`} />
+      <SectionTitle title={`Room Selector`} />
 
       {/*
         Boetons to select between rooms
@@ -368,7 +362,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         setActiveRoomName={setActiveRoomName}
       />
 
-      <SectionTitle title={`Modify Widgets`} />
+      <SectionTitle title={`Widget Manager`} />
 
       {/*
         Tabs to select between:

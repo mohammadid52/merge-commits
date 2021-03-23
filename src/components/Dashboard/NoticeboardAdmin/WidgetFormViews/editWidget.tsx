@@ -65,7 +65,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
               id={`${widgetObj.id}`}
               data-basekey={`title`}
               onChange={handleEditUpdateDefault}
-              value={widgetObj.title ? widgetObj.title : ''}
+              value={newWidgetData.title ? newWidgetData.title : ''}
               className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
               placeholder={widgetObj.title ? widgetObj.title : `Please add title...`}
             />
@@ -74,7 +74,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
         {/**
          *  section: DESCRIPTION
          */}
-        <div className={`mt-2 px-2 overflow-ellipsis overflow-hidden ellipsis`}>
+        {/*<div className={`mt-2 px-2 overflow-ellipsis overflow-hidden ellipsis`}>
           <Fragment>
             <label htmlFor={widgetObj.id} className="block text-xs font-semibold leading-5 text-gray-700">
               {`Description`}
@@ -89,7 +89,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
               placeholder={widgetObj.description ? widgetObj.description : `Please add title...`}
             />
           </Fragment>
-        </div>
+        </div>*/}
         {/**
          *  section:  CONTENT
          *  - Toggles between differnet edit forms

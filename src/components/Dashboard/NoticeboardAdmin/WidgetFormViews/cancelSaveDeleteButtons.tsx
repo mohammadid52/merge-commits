@@ -6,15 +6,20 @@ import { AiOutlineDelete, AiOutlineEdit, AiOutlineSave, AiOutlineStop } from 're
 import Buttons from '../../../Atoms/Buttons';
 
 const CancelSaveDelete = (props: NoticeboardFormProps) => {
-  const { widgetObj, viewEditMode, handleEditToggle } = props;
+  const { widgetObj, viewEditMode, handleEditToggle, resetNewWidgetData } = props;
   const { state, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict } = useDictionary(clientKey);
+
+  const handleCancel = () =>{
+    resetNewWidgetData();
+  }
+
   return (
     <div className={`flex p-2 mt-2`}>
       <div className={`flex flex-row w-full`}>
         {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
           <Buttons
-            onClick={() => handleEditToggle('', '')}
+            onClick={handleCancel}
             label={anthologyDict[userLanguage].ACTIONS.CANCEL}
             type={`button`}
             Icon={AiOutlineStop}
