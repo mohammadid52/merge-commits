@@ -215,7 +215,7 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
               <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
-              <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin />} />
+              <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage}/>} />
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
               <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
@@ -253,7 +253,10 @@ const Dashboard = (props: DashboardProps) => {
          */}
         {
           currentPage === 'classroom' ||
-          currentPage === 'lesson-planner' ? <SideWidgetBar currentPage={currentPage} /> : null
+          currentPage === 'lesson-planner' ||
+          currentPage === 'noticeboard' ?
+            <SideWidgetBar currentPage={currentPage} /> :
+            null
         }
       </div>
     </div>

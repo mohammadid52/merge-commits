@@ -11,7 +11,6 @@ import { useWindowSize } from '../../../customHooks/windowSize';
 const SideWidgetBar = (props: DashboardProps) => {
   const { currentPage, setVisibleLessonGroup } = props;
   const { state, clientKey } = useContext(GlobalContext);
-  const windowSize = useWindowSize();
 
   const getSideWidgets = () => {
     const thereAreWidgets = state.roomData.widgets.length > 0;
@@ -69,7 +68,9 @@ const SideWidgetBar = (props: DashboardProps) => {
         {/**
          * DYNAMIC MAP
          */}
-        {getSideWidgets().length > 0 &&
+        {
+          state.roomData && state.roomData.widgets.length > 0 &&
+          getSideWidgets().length > 0 &&
           getSideWidgets().map((widgetObj: Widget, idx: number) => {
             return switchWidgets(widgetObj, idx);
           })}
