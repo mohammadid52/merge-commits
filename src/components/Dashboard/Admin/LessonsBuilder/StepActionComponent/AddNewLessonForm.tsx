@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaTrash } from 'react-icons/fa';
@@ -15,6 +15,8 @@ import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 import { languageList } from '../../../../../utilities/staticData';
 import { InitialData, InputValueObject } from '../LessonBuilder';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface AddNewLessonFormProps {
   formData: InitialData
@@ -49,11 +51,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
   const [measurementList, setMeasurementList] = useState(allMeasurement);
+  const {  clientKey,userLanguage } = useContext(GlobalContext);
+  const { AddNewLessonFormDict ,BreadcrumsTitles } = useDictionary(clientKey);
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
     state: false,
-    message: 'Are you sure you want to remove this measurement?'
+    message: AddNewLessonFormDict[userLanguage]['MESSAGES']['REMOVE']
   });
   const [validation, setValidation] = useState({
     name: '',
@@ -183,7 +187,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         type: '',
         languages: '',
         institution: '',
-        message: 'Error while adding measurement,please try later.',
+        message: AddNewLessonFormDict[userLanguage]['ADDERR'],
         isError: true
       });
     }
@@ -194,25 +198,25 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const msgs = validation;
     if (!formData.name?.trim().length) {
       isValid = false;
-      msgs.name = 'Lessson name is required';
+      msgs.name = AddNewLessonFormDict[userLanguage]['VALIDATION']['NAME'];
     } else {
       msgs.name = ''
     }
     if (!formData.type?.value.trim().length) {
       isValid = false;
-      msgs.type = 'Lesson type is required';
+      msgs.type = AddNewLessonFormDict[userLanguage]['VALIDATION']['TYPE'];
     } else {
       msgs.type = ''
     }
     if (!formData.institution?.value.trim().length) {
       isValid = false;
-      msgs.institution = 'Institute is required field.';
+      msgs.institution = AddNewLessonFormDict[userLanguage]['VALIDATION']['INSTITUTE'];
     } else {
       msgs.institution = ''
     }
     if (!formData.languages?.length) {
       isValid = false;
-      msgs.languages = 'Language selection is required';
+      msgs.languages = AddNewLessonFormDict[userLanguage]['VALIDATION']['LANGUAGE'];;
     } else {
       msgs.languages = ''
     }
@@ -258,7 +262,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             type: '',
             institution: '',
             languages: '',
-            message: 'Lesson details saved successfully.',
+            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVE'],
             isError: false
           })
         }
@@ -268,7 +272,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           type: '',
           institution: '',
           languages: '',
-          message: 'Unable to save Lesson details, Please try again later.',
+          message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVEERR'],
           isError: true
         });
         setLoading(false)
@@ -290,23 +294,23 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
       <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Lesson Overview </h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">{AddNewLessonFormDict[userLanguage]['TITLE']} </h3>
       </div>
 
       <div className="p-4">
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Name <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['NAME']} <span className="text-red-500"> * </span>
             </label>
             <FormInput value={name} id='name' onChange={onInputChange} name='name' />
             {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Select Type <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['SELECTTYPE']} <span className="text-red-500"> * </span>
             </label>
-            <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
+            <Selector selectedItem={type.name} placeholder={AddNewLessonFormDict[userLanguage]['TYPE']} list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
             {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
           </div>
         </div>
@@ -314,49 +318,49 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Select Institution <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']} <span className="text-red-500"> * </span>
             </label>
-            <Selector selectedItem={institution.name} placeholder="Institution" list={institutionList} onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')} />
+            <Selector selectedItem={institution.name} placeholder={AddNewLessonFormDict[userLanguage]['INSTITUTION']} list={institutionList} onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')} />
             {validation.institution && <p className="text-red-600 text-sm">{validation.institution}</p>}
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Select Language <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['SELECTLANG']}<span className="text-red-500"> * </span>
             </label>
-            <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
+            <MultipleSelector selectedItems={languages} placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']} list={languageList} onChange={selectLanguage} />
           </div>
         </div>
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Select Designers
+              {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
             </label>
-            <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+            <MultipleSelector selectedItems={selectedDesigners} placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']} list={designersList} onChange={selectDesigner} />
           </div>
         </div>
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              Purpose
+              {AddNewLessonFormDict[userLanguage]['PURPOSE']}
             </label>
             <RichTextEditor initialValue={purposeHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')} />
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              Objective
+              {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
             </label>
             <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
           </div>
         </div>
 
         {formData.type?.id === '1' && (< div className="p-6 border-gray-400 border my-4 border-dashed">
-          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Lesson Measurements</p>
+          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">{AddNewLessonFormDict[userLanguage]['MEASUREMENTLESSON']}</p>
 
           <div className="my-12 w-6/10 m-auto flex items-center justify-center">
             <div className="mr-4">
-              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder="Select Measurement" onChange={selectMeasurement} />
+              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder={AddNewLessonFormDict[userLanguage]['SELECTMEASURE']} onChange={selectMeasurement} />
             </div>
             <div className="ml-4 w-auto">
               <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewMeasurement} disabled={selectedMeasu.value ? false : true} />
@@ -367,16 +371,16 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               {/* Table header */}
               <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
                 <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>No.</span>
+                  <span>{AddNewLessonFormDict[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Measurement</span>
+                  <span>{AddNewLessonFormDict[userLanguage]['MEASUREMENT']}</span>
                 </div>
                 <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Topic</span>
+                  <span>{AddNewLessonFormDict[userLanguage]['TOPIC']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Action</span>
+                  <span>{AddNewLessonFormDict[userLanguage]['ACTION']}</span>
                 </div>
                 {/** <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Action</span>
@@ -409,7 +413,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               </div>
             </div>) : (
                 <div className="py-12 my-6 text-center">
-                  <p className="text-gray-600 font-medium"> This lesson does not have any measurements, please add new one.</p>
+                  <p className="text-gray-600 font-medium"> {AddNewLessonFormDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}</p>
                 </div>
               )}
           </div>
@@ -423,7 +427,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           <ModalPopUp deleteModal deleteLabel="Remove" closeAction={toggleModal} saveAction={deleteMeasurement} message={showDeleteModal.message} />
         }
         <div className="flex mb-8 mt-4 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveFormData} disabled={(loading || lessonId) ? true : false} />
+          <Buttons btnClass="py-3 px-10" label={loading ? AddNewLessonFormDict[userLanguage]['SAVING'] : AddNewLessonFormDict[userLanguage]['SAVE']} onClick={saveFormData} disabled={(loading || lessonId) ? true : false} />
         </div>
       </div>
 

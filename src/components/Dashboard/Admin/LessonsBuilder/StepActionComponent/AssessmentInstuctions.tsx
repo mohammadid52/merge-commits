@@ -9,6 +9,7 @@ import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import { InstructionInitialState } from '../LessonEdit';
 import { getAsset } from '../../../../../assets';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface AssessmentInstuctionsProps {
   savedInstructions?: InstructionInitialState
@@ -22,9 +23,9 @@ interface AssessmentInstuctionsProps {
 const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
 
   const { savedInstructions, lessonId, updateParentState, lessonType, lessonName } = props;
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-
+  const { AssessmentInstuctionsDict ,BreadcrumsTitles } = useDictionary(clientKey);
   const [formData, setFormData] = useState<InstructionInitialState>(savedInstructions);
   const [loading, setLoading] = useState(false);
   const [selectedBlock, setSelectedBlock] = useState('1')
@@ -111,7 +112,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       const lessonsData = results?.data?.updateLesson;
       setValidation({
         ...validation,
-        message: 'Instructions details saved.',
+        message: AssessmentInstuctionsDict[userLanguage]['MESSAGES']['INSTRUCTIONSAVE'],
         isError: false
       });
       updateParentState(formData);
@@ -119,7 +120,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
     } catch {
       setValidation({
         ...validation,
-        message: 'Error while updating instructions, please try again later.',
+        message: AssessmentInstuctionsDict[userLanguage]['MESSAGES']['UPDATEERR'],
         isError: true
       })
       setLoading(false)
@@ -135,12 +136,12 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
       <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions - {lessonName}</h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900"> {lessonType === 'survey' ? 'Survey' : 'Assessment'} {AssessmentInstuctionsDict[userLanguage]['INSTRUCTION']} - {lessonName}</h3>
       </div>
 
       <div className="p-4">
         <div className="flex justify-between">
-          <p className="text-sm text-gray-500 flex items-center px-4 my-6">INSTRUCTIONS: Complete the following to provide information about your {lessonType === 'survey' ? 'Survey' : 'Assessment'}.</p>
+          <p className="text-sm text-gray-500 flex items-center px-4 my-6">{AssessmentInstuctionsDict[userLanguage]['HEADING']} {lessonType === 'survey' ? 'Survey' : 'Assessment'}.</p>
         </div>
 
         {/* New accordion */}
@@ -178,7 +179,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
           <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
         </div>}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={updateInstructions} disabled={loading ? true : false} />
+          <Buttons btnClass="py-3 px-10" label={loading ? AssessmentInstuctionsDict[userLanguage]['SAVING'] : AssessmentInstuctionsDict[userLanguage]['SAVE']} onClick={updateInstructions} disabled={loading ? true : false} />
         </div>
       </div>
 

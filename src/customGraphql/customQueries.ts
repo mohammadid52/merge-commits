@@ -1356,9 +1356,7 @@ export const listLessonsTitles = /* GraphQL */ `
         designers
         lessonPlan {
           type
-          LessonComponentID
-          sequence
-          stage
+         
         }
         institutionID
       }

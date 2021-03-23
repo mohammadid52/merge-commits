@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, Fragment, useContext } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
@@ -21,6 +21,8 @@ import UnitLookup from './StepActionComponent/UnitLookup';
 import { InitialData } from './LessonBuilder';
 import { languageList } from '../../../../utilities/staticData'
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 interface LessonEditProps {
   designersList: any[]
@@ -85,16 +87,18 @@ const LessonEdit = (props: LessonEditProps) => {
   const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const { theme, clientKey ,userLanguage} = useContext(GlobalContext);
+  const { BreadcrumsTitles, LessonEditDict } = useDictionary(clientKey);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: "You have unsaved changes, do you still want to continue?"
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE']
   });
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lessons', url: '/dashboard/lesson-builder', last: false },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['LESSONS'], url: '/dashboard/lesson-builder', last: false },
     {
-      title: 'Lesson Plan Builder',
+      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`}`,
       last: true
     },
@@ -285,7 +289,7 @@ const LessonEdit = (props: LessonEditProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="LESSON PLAN BUILDER" subtitle="Build lessons, surveys or assessments here." />
+        <SectionTitle title={LessonEditDict[userLanguage]['TITLE']} subtitle={LessonEditDict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>

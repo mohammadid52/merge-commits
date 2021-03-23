@@ -10,6 +10,7 @@ import CheckBox from '../../../../Atoms/Form/CheckBox';
 import Selector from '../../../../Atoms/Form/Selector';
 import { getAsset } from '../../../../../assets';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface AddQuestionModalProps {
   closeAction: () => void
@@ -35,8 +36,9 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
 
   const { closeAction, saveAction, setActiveStep } = props;
 
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { AddQuestionModalDict ,BreadcrumsTitles } = useDictionary(clientKey);
   
   const initialState = {
     question: '',
@@ -75,30 +77,30 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
   const { question, notes, label, type, language } = questionData;
 
   return (
-    <Modal showHeader={true} title="ADD QUESTION" showHeaderBorder={true} showFooter={false}
+    <Modal showHeader={true} title={AddQuestionModalDict[userLanguage]['TITLE']} showHeaderBorder={true} showFooter={false}
       closeAction={closeAction}
     >
       <div className="">
-        <a className="text-sm text-indigo-600 px-6 cursor-pointer" onClick={() => setActiveStep('Previously Used Questions')}>*Click here to add Question, directly from previously created questions.</a>
+        <a className="text-sm text-indigo-600 px-6 cursor-pointer" onClick={() => setActiveStep('Previously Used Questions')}>{AddQuestionModalDict[userLanguage]['HEADING']}</a>
         <div className="grid grid-cols-2 min-w-256 py-4">
           <div className="px-6">
-            <TextArea value={""} rows={3} id='question' onChange={onInputChange} name='question' label="Question" isRequired />
+            <TextArea value={""} rows={3} id='question' onChange={onInputChange} name='question' label={AddQuestionModalDict[userLanguage]['QUESTION']} isRequired />
           </div>
           <div className="px-6">
-            <TextArea value={""} rows={3} id='notes' onChange={onInputChange} name='notes' label="Notes" />
+            <TextArea value={""} rows={3} id='notes' onChange={onInputChange} name='notes' label={AddQuestionModalDict[userLanguage]['NOTELABEL']} />
           </div>
         </div>
 
         <div className="grid grid-cols-2 min-w-256 py-4">
           <div className="px-6">
-            <FormInput value={""} id='Label' onChange={onInputChange} name='label' label="Question Label" isRequired />
+            <FormInput value={""} id='Label' onChange={onInputChange} name='label' label={AddQuestionModalDict[userLanguage]['QUESTIONLABEL']} isRequired />
           </div>
 
           <div className="px-6">
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
               Select Language
             </label>
-            <Selector selectedItem={""} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
+            <Selector selectedItem={""} placeholder={AddQuestionModalDict[userLanguage]['LANGUAGE']} list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
           </div>
         </div>
 
@@ -107,16 +109,16 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
               Select Type
             </label>
-            <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
+            <Selector selectedItem={type.name} placeholder={AddQuestionModalDict[userLanguage]['TYPE']} list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
           </div>
           <div className="px-6 flex items-center">
-            <CheckBox value={true} onChange={() => console.log("onChange")} name='isRequired' label="Make this question required" />
+            <CheckBox value={true} onChange={() => console.log("onChange")} name='isRequired' label={AddQuestionModalDict[userLanguage]['MAKEQUESTIONREQUIRED']} />
           </div>
         </div>
 
         {(type.id === '3' || type.id === '4') && (<div className="p-6">
           <div className="p-6 border-gray-400 border">
-            <p className="text-m font-medium leading-5 text-gray-700 mb-1">Add Options: </p>
+            <p className="text-m font-medium leading-5 text-gray-700 mb-1">{AddQuestionModalDict[userLanguage]['ADDOPTION']} </p>
 
             <div className="flex w-9/10 mx-auto mt-4">
               <div className="w-8/10">
@@ -175,10 +177,10 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
 
             <div className="flex w-9/10 mx-auto mt-4">
               <div className="w-2/4 flex items-center">
-                <CheckBox value={true} onChange={() => console.log("onChange")} name='otherOpt' label={`Add an "Other" Answer Option or Comment Field`} />
+                <CheckBox value={true} onChange={() => console.log("onChange")} name='otherOpt' label={AddQuestionModalDict[userLanguage]['ADDOTHEROPTION']} />
               </div>
               <div className="w-2/4 flex items-center">
-                <CheckBox value={true} onChange={() => console.log("onChange")} name='isRequired' label={`Add a "None of the above" Answer Option`} />
+                <CheckBox value={true} onChange={() => console.log("onChange")} name='isRequired' label={AddQuestionModalDict[userLanguage]['ADDNOTEABOVE']} />
               </div>
             </div>
           </div>
@@ -186,11 +188,11 @@ const AddQuestionModal = (props: AddQuestionModalProps) => {
 
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="">
-            <Buttons btnClass="py-1 px-2 text-xs ml-4" label="Next Question" onClick={saveAction} Icon={IoMdAddCircleOutline} />
+            <Buttons btnClass="py-1 px-2 text-xs ml-4" label={AddQuestionModalDict[userLanguage]['BUTTON']['NEXT']} onClick={saveAction} Icon={IoMdAddCircleOutline} />
           </div>
           <div className="flex justify-end">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={closeAction} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={saveAction} />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']} onClick={closeAction} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']} onClick={saveAction} />
           </div>
         </div>
       </div>

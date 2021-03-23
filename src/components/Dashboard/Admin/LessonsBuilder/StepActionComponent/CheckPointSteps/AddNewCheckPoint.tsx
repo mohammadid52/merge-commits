@@ -20,6 +20,7 @@ import { LessonPlansProps } from '../../LessonEdit';
 import { getTypeString, reorder } from '../../../../../../utilities/strings';
 import { getAsset } from '../../../../../../assets';
 import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
 export interface AddNewCheckPointProps {
   changeStep: (step: string) => void
   updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void
@@ -96,8 +97,10 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     isError: true
   });
 
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { AddNewCheckPointDict ,BreadcrumsTitles } = useDictionary(clientKey);
+  
 
   const languageList = [
     { id: 1, name: 'English', value: 'EN' },
@@ -226,7 +229,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         title: '',
         label: '',
         estTime: '',
-        message: 'Unable to save Checkpoint details, Please try again later.',
+        message: AddNewCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
         isError: true
       });
     }
@@ -237,32 +240,32 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     const msgs = validation;
     if (!checkPointData.title?.trim().length) {
       isValid = false;
-      msgs.title = 'Checkpoint title is required';
+      msgs.title = AddNewCheckPointDict[userLanguage]['VALIDATION']['TITLE'];
     } else {
       msgs.title = ''
     }
     if (!checkPointData.label?.trim().length) {
       isValid = false;
-      msgs.label = 'Checkpoint label is required';
+      msgs.label = AddNewCheckPointDict[userLanguage]['VALIDATION']['LABEL'];
     } else {
       msgs.label = ''
     }
     if (!checkPointData.estTime?.trim().length) {
       isValid = false;
-      msgs.estTime = 'Checkpoint estimated time is required';
+      msgs.estTime = AddNewCheckPointDict[userLanguage]['VALIDATION']['ESTIMATETIME'];
     } else {
       const estTime = checkPointData.estTime?.trim();
       const isInValidNumber = isNaN(parseInt(estTime));
       if (isInValidNumber) {
         isValid = false;
-        msgs.estTime = 'Please enter valid number i.e. 30.';
+        msgs.estTime = AddNewCheckPointDict[userLanguage]['VALIDATION']['VALIDNUMBER'];
       } else {
         msgs.estTime = ''
       }
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
-      msgs.message = 'You need to add minimum one question to create a checkpoint.';
+      msgs.message = AddNewCheckPointDict[userLanguage]['VALIDATION']['ONEQUESTION'];
     } else {
       msgs.message = ''
     }
@@ -351,7 +354,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             title: '',
             label: '',
             estTime: '',
-            message: 'Unable to save Checkpoint details, Please try again later.',
+            message: AddNewCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
             isError: true
           });
         }
@@ -363,7 +366,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           title: '',
           label: '',
           estTime: '',
-          message: 'Unable to save Checkpoint details, Please try again later.',
+          message: AddNewCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
           isError: true
         });
         setLoading(false)
@@ -389,13 +392,13 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} {AddNewCheckPointDict[userLanguage]['BUILDER']} - {lessonName}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Create New Checkpoint</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{AddNewCheckPointDict[userLanguage]['CREATENEW']}</span>
 
         </h4>
       </div>
@@ -406,14 +409,14 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Title <span className="text-red-500"> *</span>
+                {AddNewCheckPointDict[userLanguage]['TITLE']} <span className="text-red-500"> *</span>
               </label>
               <FormInput value={title} id='title' onChange={onInputChange} name='title' />
               {validation.title && <p className="text-red-600 text-sm">{validation.title}</p>}
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Checkpoint Label <span className="text-red-500"> *</span>
+                {AddNewCheckPointDict[userLanguage]['CHECKPOINTLABEL']} <span className="text-red-500"> *</span>
               </label>
               <FormInput value={label} id='label' onChange={onInputChange} name='label' />
               {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
@@ -423,13 +426,13 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Subtitle
+                {AddNewCheckPointDict[userLanguage]['SUBTITLE']}
               </label>
               <FormInput value={subtitle} id='subtitle' onChange={onInputChange} name='subtitle' />
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Language
+              {AddNewCheckPointDict[userLanguage]['LANGUAGE']}
               </label>
               <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={selectLanguage} />
             </div>
@@ -438,13 +441,13 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Select Designers
+               {AddNewCheckPointDict[userLanguage]['DESIGNER']}
             </label>
               <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                Estimated Time (min) <span className="text-red-500"> *</span>
+                {AddNewCheckPointDict[userLanguage]['ESTIMATE']}<span className="text-red-500"> *</span>
               </label>
               <FormInput value={estTime} id='estTime' onChange={onInputChange} name='estTime' />
               {validation.estTime && <p className="text-red-600 text-sm">{validation.estTime}</p>}
@@ -494,13 +497,13 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
 
         {/* Question table */}
         <div className="p-6 border-gray-400 border my-4 border-dashed">
-          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Checkpoint Questions: </p>
+          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">{AddNewCheckPointDict[userLanguage]['CHECKPOINTQUESTION']} </p>
           {!checkpQuestions?.length ? (
             <div className="my-8">
-              <p className="text-center p-8"> Please add questions to checkpoint builder</p>
+              <p className="text-center p-8"> {AddNewCheckPointDict[userLanguage]['ADDQUESTION']}</p>
               <div className="flex w-full mx-auto p-8 justify-center ">
-                <Buttons btnClass="mr-4" onClick={() => changeStep('QuestionLookup')} label="Add Existing Questions" />
-                <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewQuestion')} label="Create New Question" />
+                <Buttons btnClass="mr-4" onClick={() => changeStep('QuestionLookup')} label={AddNewCheckPointDict[userLanguage]['BUTTON']['ADDEXIST']} />
+                <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewQuestion')} label={AddNewCheckPointDict[userLanguage]['BUTTON']['CREATE']} />
               </div>
             </div>
           ) : (
@@ -508,19 +511,19 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                 <div className="max-h-112 overflow-auto">
                   <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>No.</span>
+                      <span>{AddNewCheckPointDict[userLanguage]['NO']}</span>
                     </div>
                     <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Question</span>
+                      <span>{AddNewCheckPointDict[userLanguage]['QUESTION']}</span>
                     </div>
                     <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Type</span>
+                      <span>{AddNewCheckPointDict[userLanguage]['TYPE']}</span>
                     </div>
                     <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Is Required</span>
+                      <span>{AddNewCheckPointDict[userLanguage]['REQUIRED']}</span>
                     </div>
                     <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Options</span>
+                      <span>{AddNewCheckPointDict[userLanguage]['OPTION']}</span>
                     </div>
                   </div>
 
@@ -580,14 +583,14 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
 
                     ) : (
                         <div className="py-12 my-6 text-center">
-                          <p> This checkpoint does not have any questions</p>
+                          <p> {AddNewCheckPointDict[userLanguage]['NOQUESTION']}</p>
                         </div>
                       )}
                   </div>
                 </div>
                 <div className="flex w-full mx-auto p-8 justify-center ">
-                  <Buttons btnClass="mr-4" onClick={() => changeStep('QuestionLookup')} label="Add Existing Questions" />
-                  <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewQuestion')} label="Create New Question" />
+                  <Buttons btnClass="mr-4" onClick={() => changeStep('QuestionLookup')} label={AddNewCheckPointDict[userLanguage]['BUTTON']['ADDEXIST']} />
+                  <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewQuestion')} label={AddNewCheckPointDict[userLanguage]['BUTTON']['CREATE']} />
                 </div>
               </Fragment>
             )}
@@ -599,8 +602,8 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
           </div>}
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={gobackToPreviousStep} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveNewCheckPoint} disabled={loading ? true : false} />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={AddNewCheckPointDict[userLanguage]['BUTTON']['CANCEL']} onClick={gobackToPreviousStep} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? AddNewCheckPointDict[userLanguage]['BUTTON']['SAVING'] : AddNewCheckPointDict[userLanguage]['BUTTON']['SAVE']} onClick={saveNewCheckPoint} disabled={loading ? true : false} />
           </div>
         </div>
       </div>
