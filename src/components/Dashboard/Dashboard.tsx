@@ -251,7 +251,10 @@ const Dashboard = (props: DashboardProps) => {
         {/**
          *  SIDEWIDGETSBAR
          */}
-        {currentPage === 'classroom' ? <SideWidgetBar currentPage={currentPage} /> : null}
+        {
+          currentPage === 'classroom' ||
+          currentPage === 'lesson-planner' ? <SideWidgetBar currentPage={currentPage} /> : null
+        }
       </div>
     </div>
   );
