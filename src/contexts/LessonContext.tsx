@@ -11,7 +11,7 @@ import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
 import * as queries from '../graphql/queries';
-import { createFilterToFetchSpecificItemsOnly } from '../utilities/strings';
+import { createFilterToFetchSpecificItemsOnly, getClientKey } from '../utilities/strings';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -28,23 +28,27 @@ interface DataObject {
 export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
-  const urlParams: any = useParams()
+  const [state, dispatch] = useReducer(lessonReducer, lessonState);
+  const theme = standardTheme;
+  // const location = useLocation();
+  const history = useHistory();
+  const urlParams: any = useParams();
+
+  // Subscription for teacher/syllabusLesson changes
+  let subscription: any;
+
+  // Dictionary
+  const userLanguage = /*state.user.language ||*/ 'EN'; // TODO: add 'user' property & info to state
+  const uLang = userLanguage;
+  const clientKey = getClientKey();
+
   const [data, setData] = useState<DataObject>();
   const [lesson, setLesson] = useState<DataObject>();
   const [subscriptionData, setSubscriptionData] = useState<any>();
-
-  const [state, dispatch] = useReducer(lessonReducer, lessonState);
-  const location = useLocation();
-  const history = useHistory();
-  let subscription: any;
-
-  const theme = standardTheme;
-
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
   const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
-
   const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
 
   // INIT PERSON LOCATION STATE
@@ -503,6 +507,9 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         theme,
         subscription,
         subscribeToSyllabusLesson,
+        userLanguage,
+        uLang,
+        clientKey
       }}>
       {children}
     </LessonContext.Provider>

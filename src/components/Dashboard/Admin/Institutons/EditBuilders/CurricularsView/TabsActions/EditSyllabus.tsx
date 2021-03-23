@@ -22,6 +22,7 @@ import * as customQueries from '../../../../../../../customGraphql/customQueries
 import * as customMutations from '../../../../../../../customGraphql/customMutations'
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 interface EditSyllabusProps {
 
@@ -75,6 +76,17 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const [savedLessonsList, setSavedLessonsList] = useState([]);
   const [lessonsIds, setLessonsIds] = useState([])
   const [sequenceId, setSequenceId] = useState('')
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [editLesson, setEditLesson] = useState({
+    type: '',
+    id: ''
+  });
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    lessonPlan: false,
+    lessonEdit: false,
+    message: 'Do you want to save changes before moving forward?'
+  })
   const [selecetedLesson, setSelectedLesson] = useState({
     id: '',
     name: '',
@@ -95,19 +107,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const syllabusId = params.get('id');
   const curricularId = urlParams.curricularId;
+  const institutionId = urlParams.institutionId;
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Unit Builder', url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
+    { title: 'Unit Builder', url: `/dashboard/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
-
-  const gotoLessonBuilder = (id: string, type: string) => {
-    if (type === 'lesson') {
-      history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${id}`);
-    } else {
-      history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${id}`)
-    }
-  }
 
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
@@ -129,7 +134,10 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     setSyllabusData({
       ...syllabusData,
       [e.target.name]: e.target.value
-    })
+    });
+    if (!unsavedChanges) {
+      setUnsavedChanges(true);
+    }
     if (messages.show) {
       setMessages({
         show: false,
@@ -150,7 +158,10 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     setSyllabusData({
       ...syllabusData,
       languages: updatedList
-    })
+    });
+    if (!unsavedChanges) {
+      setUnsavedChanges(true);
+    }
   }
 
   const selectDesigner = (id: string, name: string, value: string) => {
@@ -162,7 +173,10 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     } else {
       updatedList = currentDesigners.filter(item => item.id !== id);
     }
-    setSelectedDesigners(updatedList)
+    setSelectedDesigners(updatedList);
+    if (!unsavedChanges) {
+      setUnsavedChanges(true);
+    }
   }
 
   const selectLesson = (value: string, name: string, id: string) => {
@@ -196,12 +210,14 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         })
         setSyllabusData(initialData);
         setIsLoading(false);
+        return true;
       } catch {
         setMessages({
           show: true,
           message: 'Unable to update unit details please try again later.',
           isError: true
         })
+        return false
       }
     }
   }
@@ -332,7 +348,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       tableList = {
         ...item,
         status: selectedLesson?.status || '',
-        uniqlessonId: selectedLesson?.id
+        uniqlessonId: selectedLesson?.id,
+        measurements: selectedLesson?.lesson?.measurements
       }
       return tableList;
     });
@@ -351,7 +368,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
     if (syllabusId) {
       try {
-        const result: any = await API.graphql(graphqlOperation(queries.getSyllabus, { id: syllabusId }))
+        const result: any = await API.graphql(graphqlOperation(customQueries.getSyllabus, { id: syllabusId }))
         const savedData = result.data.getSyllabus;
         setSyllabusData({
           ...syllabusData,
@@ -384,17 +401,18 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const fetchLessonsList = async () => {
     try {
-      const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles))
+      const result: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles, {
+        filter: { institutionID: { eq: institutionId } }
+      }))
       const savedData = result.data.listLessons;
       const sortedList = savedData?.items?.sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1)
-      const updatedList = sortedList?.map((item: { id: string, title: string, type: string }) => (
+      const updatedList = sortedList?.filter((item: any) => item.lessonPlan ? true : false).map((item: { id: string, title: string, type: string }) => (
         {
           id: item.id,
           name: `${item.title} - ${item.type && getLessonType(item.type)}`,
           value: item.title
         }))
       setAllLessonsList([...sortedList])
-      // console.log(sortedList, savedData)
       setDropdownLessonsList([...updatedList])
     } catch {
       setMessages({
@@ -441,11 +459,102 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     setLessonsIds(lessonsID)
   }
 
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      lessonPlan: false,
+      show: false,
+      lessonEdit: false
+    });
+  }
+  const createNewLesson = () => {
+    if (unsavedChanges) {
+      setWarnModal({
+        ...warnModal,
+        lessonPlan: true,
+        show: !warnModal.show,
+        lessonEdit: false
+      });
+    } else {
+      history.push('/dashboard/lesson-builder/lesson/add');
+    }
+  }
+
+  const backtoPreviousStep = () => {
+    if (unsavedChanges) {
+      setWarnModal({
+        ...warnModal,
+        lessonPlan: false,
+        show: !warnModal.show,
+        lessonEdit: false
+      });
+    } else {
+      history.goBack();
+    }
+  }
+  const gotoLessonBuilder = (id: string, type: string) => {
+    if (unsavedChanges) {
+      setWarnModal({
+        ...warnModal,
+        lessonPlan: false,
+        show: !warnModal.show,
+        lessonEdit: true
+      });
+      setEditLesson({
+        type, id
+      })
+    } else {
+      if (type === 'lesson') {
+        history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${id}`);
+      } else {
+        history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${id}`)
+      }
+    }
+  }
+  const saveAndGoback = async () => {
+    const result: boolean = await saveSyllabusDetails();
+    if (result) {
+      history.goBack();
+    } else {
+      toggleModal();
+    }
+  }
+  const saveAndCreateNew = async () => {
+    const result: boolean = await saveSyllabusDetails();
+    if (result) {
+      history.push('/dashboard/lesson-builder/lesson/add');
+    } else {
+      toggleModal();
+    }
+  }
+  const saveAndEditLesson = async () => {
+    const result: boolean = await saveSyllabusDetails();
+    if (result) {
+      if (editLesson.type === 'lesson') {
+        history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${editLesson.id}`);
+      } else {
+        history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${editLesson.id}`)
+      }
+    } else {
+      toggleModal();
+    }
+  }
+  const cancelSaveAction = () => {
+    if (editLesson.type === 'lesson') {
+      history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${editLesson.id}`);
+    } else {
+      history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${editLesson.id}`)
+    }
+  }
+
   useEffect(() => {
-    fetchLessonsList();
-    fetchPersonsList();
-    fetchLessonsSequence();
-    fetchSyllabusData();
+    Promise.all([
+      fetchLessonsList(),
+      fetchPersonsList(),
+      fetchLessonsSequence()
+    ]).then(() =>
+      fetchSyllabusData()
+    ).catch((err) => console.log(err))
   }, []);
 
   useEffect(() => {
@@ -476,17 +585,17 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     }
   }, [designersList, designerIds])
 
-
   const { name, languages, description, purpose, objectives, methodology, policies } = syllabusData;
+
   return (
-    <div className="w-9/10 h-full mt-4 p-4">
+    <div className="w-full h-full px-4">
 
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title="Unit Builder" subtitle="Update curriculum units here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="mr-4" onClick={backtoPreviousStep} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -518,7 +627,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Language
-                  </label>
+                    </label>
                     <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
                   </div>
 
@@ -549,9 +658,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                 {(messages.show && !messages.lessonError) ? (<div className="py-2 m-auto text-center">
                   <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
                 </div>) : null}
-                <div className="flex my-8 justify-center">
+                {/* <div className="flex my-8 justify-center">
                   <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -562,7 +671,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   LESSON PLAN MANAGER
                 </h3>
               </div>
-              <div className="w-9.5/10 m-auto p-4">
+              <div className="w-full m-auto p-4">
 
                 {/* Add new lesson section */}
                 <div className="my-12 w-6/10 m-auto flex items-center justify-center">
@@ -581,16 +690,19 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   {(selectedLessonsList && selectedLessonsList.length > 0) ? (
                     <div>
                       <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>No.</span>
                         </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Lesson Name</span>
                         </div>
-                        <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                          <span>Measurements</span>
+                        </div>
+                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Type</span>
                         </div>
-                        <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-center justify-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>Status</span>
                         </div>
                         <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -617,14 +729,19 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                         {...provided.dragHandleProps}
                                       >
                                         <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
-                                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
+                                          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
+                                          <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
                                             {item.title ? item.title : '--'}
                                           </div>
-                                          <div className="flex w-2/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
+                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal text-gray-500">
+                                            {item?.measurements?.items?.length > 0 ?
+                                              item?.measurements?.items?.map((rubric: any, index: number) => (index === (item?.measurements?.items?.length - 1)) ? (rubric?.rubric?.name + '.') : (rubric?.rubric?.name + ', '))
+                                              : '-'}
+                                          </div>
+                                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal cursor-pointer" >
                                             {item.type ? item.type : '--'}
                                           </div>
-                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium ">
+                                          <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
                                             {(editState.id !== item.id) ?
                                               (item.status ? item.status : '--')
                                               : (
@@ -656,21 +773,27 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
                       </div>
 
+                      {warnModal.show && (
+                        warnModal.lessonPlan ? <ModalPopUp closeAction={() => history.push('/dashboard/lesson-builder/lesson/add')} saveAction={saveAndCreateNew} saveLabel='SAVE' message={warnModal.message} cancelLabel='DISCARD' />
+                          :
+                          warnModal.lessonEdit ? <ModalPopUp closeAction={cancelSaveAction} saveAction={saveAndEditLesson} saveLabel='SAVE' cancelLabel='DISCARD' message={warnModal.message} />
+                            :
+                            <ModalPopUp closeAction={history.goBack} saveAction={saveAndGoback} saveLabel='SAVE' cancelLabel='DISCARD' message={warnModal.message} />
+                      )}
                     </div>
                   ) : (
                       <div className="text-center p-16 mt-4">
                         No lessons selected.
                       </div>
                     )}
+                  <div className="flex my-8 justify-center">
+                    <Buttons btnClass="py-3 px-10" label='Create New Lesson' onClick={createNewLesson} disabled={loading ? true : false} />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-
-
       </PageWrapper>
     </div>
   )

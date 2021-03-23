@@ -1,8 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
+import useDictionary from '../../../../customHooks/dictionary';
+import { LessonComponentsInterface } from '../../../../interfaces/LessonComponentsInterfaces';
+import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
-const Keyword = () => {
-  const { userLanguage, clientKey, state, theme } = useContext(LessonContext);
+const Keyword = (props: LessonComponentsInterface) => {
+  const {isTeacher} = props;
+  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext)
+  const {state, theme, userLanguage, clientKey } = switchContext;
+  const { lessonDict } = useDictionary(clientKey);
+
   const keywords = state.data.lesson?.keywords?.items;
   const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
 
@@ -40,7 +47,7 @@ const Keyword = () => {
   return (
     <div className={`flex flex-col md:w-full ${theme.block.text} rounded-r-lg`}>
       <div className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-        <h3>Keywords:</h3> {/*  e.g. 'Keywords' we will cover this lesson */}
+        <h3>{lessonDict[userLanguage].KEYWORDS}:</h3> {/*  e.g. 'Keywords' we will cover this lesson */}
       </div>
 
       <div className={`flex flex-row`}>

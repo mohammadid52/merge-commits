@@ -10,7 +10,6 @@ import FormInput from '../../../../../../Atoms/Form/FormInput'
 import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
 
-import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
@@ -30,7 +29,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
   const [topics, setTopics] = useState([]);
   const [measurement, setMeasurement] = useState({
     id: measurementId, name: '', curriculumID: curricularId, topic: { id: '', name: '', value: '' },
-    criteria: '', distinguished: '', basic: '', adequite: '', excelled: ''
+    criteria: '',
   })
 
   const breadCrumsList = [
@@ -78,10 +77,6 @@ const EditMeasurement = (props: EditMeasurementProps) => {
         name: item.name,
         topic: { id: item.topic.id, name: item.topic.name, value: item.topic.name },
         criteria: item.criteria,
-        distinguished: item.distinguished,
-        adequite: item.adequite,
-        excelled: item.excelled,
-        basic: item.basic
       })
       setLoading(false)
     } else {
@@ -116,17 +111,13 @@ const EditMeasurement = (props: EditMeasurementProps) => {
         id: measurement.id,
         name: measurement.name,
         criteria: measurement.criteria,
-        distinguished: measurement.distinguished,
-        basic: measurement.basic,
-        adequite: measurement.adequite,
-        excelled: measurement.excelled,
         topicID: measurement.topic.id,
         curriculumID: curricularId
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.updateRubric, { input }));
       const updatedItem = item.data.updateRubric
       if (updatedItem) {
-        history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+        history.goBack()
       } else {
         console.log('Could not update topic');
       }
@@ -180,18 +171,6 @@ const EditMeasurement = (props: EditMeasurementProps) => {
 
                   <div className="px-3 py-4">
                     <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label="Criteria" />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='distinguished' value={measurement.distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='excelled' value={measurement.excelled} onChange={onInputChange} name='excelled' label="Excelled" />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label="Adequate" />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label="Basic" />
                   </div>
                 </div>
               </div>

@@ -10,7 +10,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
 import { Auth } from '@aws-amplify/auth';
 import * as mutations from '../graphql/mutations';
-import { createFilterToFetchSpecificItemsOnly } from '../utilities/strings';
+import { createFilterToFetchSpecificItemsOnly, getClientKey } from '../utilities/strings';
 
 interface LessonControlProps {
   children: React.ReactNode;
@@ -24,16 +24,22 @@ export const LessonControlContext = React.createContext(null);
 
 export const LessonControlContextProvider = ({ children }: LessonControlProps) => {
   const [state, dispatch] = useReducer(lessonControlReducer, lessonControlState);
-  const [lesson, setLesson] = useState<LessonObject>();
-  const [updatedLesson, setUpdatedLesson] = useState<any>();
-  const history = useHistory();
-  const location = useLocation();
-  const urlParams: any = useParams()
-  //console.log('urlParams', urlParams)
+  const theme = standardTheme;
 
+  // const location = useLocation();
+  const history = useHistory();
+  const urlParams: any = useParams()
+
+  // Subscription for student->teacher interaction
   let subscription: any;
 
-  const theme = standardTheme;
+  // Dictionary
+  const userLanguage = /*state.user.language ||*/ 'EN'; // TODO: add 'user' property & info to state
+  const uLang = userLanguage;
+  const clientKey = getClientKey();
+
+  const [lesson, setLesson] = useState<LessonObject>();
+  const [updatedLesson, setUpdatedLesson] = useState<any>();
 
   async function getSyllabusLesson() {
     const { lessonID } = urlParams
@@ -144,5 +150,17 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
     };
   }, []);
 
-  return <LessonControlContext.Provider value={{ state, dispatch, theme }}>{children}</LessonControlContext.Provider>;
+  return (
+    <LessonControlContext.Provider
+      value={{
+        state,
+        dispatch,
+        theme,
+        userLanguage,
+        uLang,
+        clientKey
+      }}>
+      {children}
+    </LessonControlContext.Provider>
+  );
 };

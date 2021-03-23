@@ -6,7 +6,7 @@ import useDictionary from '../../../customHooks/dictionary';
 
 const Today: React.FC<LessonProps> = (props: LessonProps) => {
   const { activeRoom, activeRoomInfo, isTeacher, lessonLoading, lessons } = props;
-  const { state, theme, clientKey, userLanguage  } = useContext(GlobalContext);
+  const { state, theme, clientKey, userLanguage } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
   const [accessible, setAccessible] = useState<boolean>(true);
 
@@ -22,18 +22,18 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
 
       {!lessonLoading && lessons.length > 0
         ? lessons.map((lesson: any, key: number) => {
-            return (
-              <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
-                <StandardLessonCard
-                  isTeacher={isTeacher}
-                  keyProps={`todayLesson_${key}`}
-                  activeRoomInfo={activeRoomInfo}
-                  lessonProps={lesson}
-                  accessible={accessible}
-                  lessonType={lesson.lesson.type}
-                />
-              </div>
-            );
+          return (
+            <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
+              <StandardLessonCard
+                isTeacher={isTeacher}
+                keyProps={`todayLesson_${key}`}
+                activeRoomInfo={activeRoomInfo}
+                lessonProps={lesson}
+                accessible={accessible}
+                lessonType={lesson.lesson.type}
+              />
+            </div>
+          );
           })
         : null}
 

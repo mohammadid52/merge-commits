@@ -6,6 +6,7 @@ export interface globalStateType {
     rooms: any[];
     syllabus: any[];
     lessons: any[];
+    widgets: any[];
   };
   status: string;
   error: string;
@@ -31,6 +32,7 @@ export const globalState: globalStateType = {
     rooms: [],
     syllabus: [],
     lessons: [],
+    widgets: []
   },
   status: '',
   error: '',

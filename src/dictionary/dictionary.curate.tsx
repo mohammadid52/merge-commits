@@ -5,6 +5,8 @@ const BUTTONS: any = {
     EDIT: 'Edit',
     SAVE: 'Save',
     CANCEL: 'Cancel',
+    PUBLISH: 'Publish',
+    YES: 'Yes'
   },
   'ES': {
     ADD: 'Añadir',
@@ -12,6 +14,8 @@ const BUTTONS: any = {
     EDIT: 'Edit',
     SAVE: 'Salvar',
     CANCEL: 'Cancelar',
+    PUBLISH: 'TBD',
+    YES: 'TBD'
   },
 };
 
@@ -150,7 +154,9 @@ const anthologyDict: any = {
       EDIT: 'Edit',
       SAVE: 'Save',
       CREATE: 'Create New',
+      ADD: 'Add More',
       CANCEL: 'Cancel',
+      DELETE: 'Delete'
     },
   },
   'ES': {
@@ -164,7 +170,9 @@ const anthologyDict: any = {
       EDIT: 'Editar',
       SAVE: 'Salvar',
       CREATE: 'Crear',
+      ADD: 'Añadir más',
       CANCEL: 'Cancelar',
+      DELETE: 'Deletar'
     },
   },
 };
@@ -293,12 +301,16 @@ const editClassDict: any = {
 
 const lessonDict: any = {
   'EN': {
+    CLASS: 'Session',
     TOPIC_CONNECTION: 'Objectives',
     KEYWORDS: 'Framing',
+    REFLECTION_QUESTIONS: 'Focus Questions',
   },
   'ES': {
+    CLASS: 'Session',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
+    REFLECTION_QUESTIONS: 'Focus Questions',
   },
 };
 
@@ -328,6 +340,7 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
     },
   },
   'ES': {
@@ -355,6 +368,7 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
     },
   },
 };
@@ -418,6 +432,21 @@ const lessonPlannerDict: any = {
   },
 };
 
+const lessonBuilderDict: any = {
+  'EN': {
+      PREVIEW_DETAILS: {
+          WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected units, Do you want to continue?',
+          TITLE: 'Preview Details',
+      }
+  },
+  'ES': {
+      PREVIEW_DETAILS: {
+          WARN_MESSAGE: 'TBD',
+          TITLE: 'TBD',
+      }
+  }
+}
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -439,4 +468,5 @@ export {
   lessonDict,
   classRoomDict,
   lessonPlannerDict,
+  lessonBuilderDict
 };

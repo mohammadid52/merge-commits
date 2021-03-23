@@ -537,6 +537,9 @@ export const createSyllabusLesson = /* GraphQL */ `
       unit
       status
       sequence
+      complete
+      roster
+      viewing
       createdAt
       updatedAt
     }
@@ -551,6 +554,10 @@ export const createTopic = /* GraphQL */ `
       learningObjectiveID
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -673,6 +680,7 @@ export const createLesson = /* GraphQL */ `
       coreLessonId
       activityId
       assessmentID
+      institutionID
     }
   }
 `;
@@ -720,6 +728,7 @@ export const updateLesson = /* GraphQL */ `
         }
         nextToken
       }
+      assessmentID
     }
   }
 `;
@@ -931,3 +940,13 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
     }
   }
 `;
+
+// delete once lessons table updated in production
+// export const updateLessonInsts= /* GraphQL */ `
+//   mutation UpdateLesson($input: UpdateLessonInput!, $condition: ModelLessonConditionInput) {
+//     updateLesson(input: $input, condition: $condition) {
+//       id
+//       institutionID
+//     }
+//   }
+// `;
