@@ -105,23 +105,19 @@ export const CallLinkWidget = (props: {
   };
 
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
-      <div className={`${responsiveClass} `}>
+    <div>
+      <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
         <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
-          <span className={`w-full`}>{title}:</span>
-          {/*<span className={`w-auto mr-0`}>
-            <IconContext.Provider value={{ className: 'w-auto ' }}>
-              <IoCallOutline size={18} />
-            </IconContext.Provider>
-          </span>*/}
+          <span className={`w-full text-white`}>{title}:</span>
         </div>
       </div>
-
-      <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
-        {links &&
-          links.length > 0 &&
-          links.map((link: Link, idx: number) => (
-            <div className={`
+      <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+        <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
+          {links &&
+            links.length > 0 &&
+            links.map((link: Link, idx: number) => (
+              <div
+                className={`
             ${
               idx < links.length - 1 && widgetObj.placement === 'sidebar'
                 ? 'border-b border-dark-gray border-opacity-10'
@@ -129,33 +125,34 @@ export const CallLinkWidget = (props: {
             } 
               max-w-1/3
             `}>
-              {/**
-               * MOBILE VERSION WIDGET ICON
-               */}
-              <span className={`w-full mr-0 mb-2 flex flex-col`}>
-                <a
-                  id={`links_${links.id}_mini`}
-                  className={`text-xs font-semibold text-blueberry hover:underline`}
-                  href={link.url}
-                  target={`_blank`}>
-                  {getCallInfo(link.url)?.iconUrl === null ? (
-                    <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
-                      <IoCallOutline size={24} />
-                    </IconContext.Provider>
-                  ) : (
-                    <div className={`w-8 h-8 mx-auto my-2`}>
-                      <img
-                        className={`pointer-events-none`}
-                        src={getCallInfo(link.url)?.iconUrl}
-                        alt={`call_link_icon`}
-                      />
-                    </div>
-                  )}
-                  <p className={`${responsiveClass} text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
-                </a>
-              </span>
-            </div>
-          ))}
+                {/**
+                 * MOBILE VERSION WIDGET ICON
+                 */}
+                <span className={`w-full mr-0 mb-2 flex flex-col`}>
+                  <a
+                    id={`links_${links.id}_mini`}
+                    className={`text-xs font-semibold text-blueberry hover:underline`}
+                    href={link.url}
+                    target={`_blank`}>
+                    {getCallInfo(link.url)?.iconUrl === null ? (
+                      <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
+                        <IoCallOutline size={24} />
+                      </IconContext.Provider>
+                    ) : (
+                      <div className={`w-8 h-8 mx-auto my-2`}>
+                        <img
+                          className={`pointer-events-none`}
+                          src={getCallInfo(link.url)?.iconUrl}
+                          alt={`call_link_icon`}
+                        />
+                      </div>
+                    )}
+                    <p className={`${responsiveClass} text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
+                  </a>
+                </span>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
@@ -171,49 +168,40 @@ export const FileLinkWidget = (props: {
   const { title, links, classProp, widgetObj } = props;
 
   const getFileInfo = (url: string) => {
-    if (
-      url.includes('document') ||
-      url.includes('word')) {
+    if (url.includes('document') || url.includes('word')) {
       return {
         iconLabel: 'Document',
-        icon: <AiOutlineFileWord size={24}/>,
+        icon: <AiOutlineFileWord size={24} />,
         downloadLabel: 'Download File',
       };
-    } else if (
-      url.includes('spreadsheet') ||
-      url.includes('excel')) {
+    } else if (url.includes('spreadsheet') || url.includes('excel')) {
       return {
         iconLabel: 'Spreadsheet',
-        icon: <AiOutlineFileExcel size={24}/>,
+        icon: <AiOutlineFileExcel size={24} />,
         downloadLabel: 'Download File',
       };
-    } else if (
-      url.includes('powerpoint') ||
-      url.includes('presentation')) {
+    } else if (url.includes('powerpoint') || url.includes('presentation')) {
       return {
         iconLabel: 'Spreadsheet',
-        icon: <FaRegFilePowerpoint size={24}/>,
+        icon: <FaRegFilePowerpoint size={24} />,
         downloadLabel: 'Download File',
       };
-    } else if (
-      url.includes('.zip')) {
+    } else if (url.includes('.zip')) {
       return {
         iconLabel: 'Archive',
-        icon: <AiOutlineFileZip size={24}/>,
+        icon: <AiOutlineFileZip size={24} />,
         downloadLabel: 'Download File',
       };
-    } else if (
-      url.includes('1drv') ||
-      url.includes('onedrive')) {
+    } else if (url.includes('1drv') || url.includes('onedrive')) {
       return {
         iconLabel: 'Onedrive',
-        icon: <ImOnedrive size={24}/>,
+        icon: <ImOnedrive size={24} />,
         downloadLabel: 'Download File',
       };
     } else if (url.includes('dropbox')) {
       return {
         iconLabel: 'Dropbox',
-        icon: <AiOutlineDropbox size={24}/>,
+        icon: <AiOutlineDropbox size={24} />,
         downloadLabel: 'Download File',
       };
     } else {
@@ -226,24 +214,19 @@ export const FileLinkWidget = (props: {
   };
 
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
-      <div className={`${responsiveClass} `}>
+    <div>
+      <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
         <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
-          <span className={`w-full`}>{title}:</span>
-         {/* <span className={`w-auto mr-0`}>
-            <IconContext.Provider value={{ className: 'w-auto ' }}>
-              <IoCallOutline size={18} />
-            </IconContext.Provider>
-          </span>*/}
+          <span className={`w-full text-white`}>{title}:</span>
         </div>
       </div>
-
-      <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
-        {
-          links &&
-          links.length > 0 &&
-          links.map((link: Link, idx: number) => (
-            <div className={`
+      <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+        <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
+          {links &&
+            links.length > 0 &&
+            links.map((link: Link, idx: number) => (
+              <div
+                className={`
             ${
               idx < links.length - 1 && widgetObj.placement === 'sidebar'
                 ? 'border-b border-dark-gray border-opacity-10'
@@ -251,31 +234,31 @@ export const FileLinkWidget = (props: {
             } 
               max-w-1/3
             `}>
-              {/**
-               * MOBILE VERSION WIDGET ICON
-               */}
-              <span className={`w-full mr-0 mb-2 flex flex-col`}>
-                <p className={`${responsiveClass} mt-2 text-center text-xs`}>{link.text}</p>
-                <a
-                  id={`links_${links.id}_mini`}
-                  className={`text-xs font-semibold text-blueberry hover:underline`}
-                  href={link.url}
-                  target={`_blank`}>
-                  {getFileInfo(link.url)?.icon === null ? (
-                    <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
-                      <AiOutlineFile size={24} />
-                    </IconContext.Provider>
-                  ) : (
-                    <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
-                      {getFileInfo(link.url)?.icon}
-                    </IconContext.Provider>
-                  )}
-                  <p className={`${responsiveClass} text-center`}>{getFileInfo(link.url)?.downloadLabel}</p>
-                </a>
-              </span>
-            </div>
-          ))
-        }
+                {/**
+                 * MOBILE VERSION WIDGET ICON
+                 */}
+                <span className={`w-full mr-0 mb-2 flex flex-col`}>
+                  <p className={`${responsiveClass} mt-2 text-center text-xs`}>{link.text}</p>
+                  <a
+                    id={`links_${links.id}_mini`}
+                    className={`text-xs font-semibold text-blueberry hover:underline`}
+                    href={link.url}
+                    target={`_blank`}>
+                    {getFileInfo(link.url)?.icon === null ? (
+                      <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
+                        <AiOutlineFile size={24} />
+                      </IconContext.Provider>
+                    ) : (
+                      <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
+                        {getFileInfo(link.url)?.icon}
+                      </IconContext.Provider>
+                    )}
+                    <p className={`${responsiveClass} text-center`}>{getFileInfo(link.url)?.downloadLabel}</p>
+                  </a>
+                </span>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
