@@ -267,7 +267,7 @@ const LessonsList = () => {
                     <span className="w-auto">Label</span>
                   </div> */}
                   <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Type</span>
+                    <span className="w-auto">Lesson Type</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Created Date</span>
