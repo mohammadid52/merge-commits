@@ -54,6 +54,10 @@ const EditClass = (props: EditClassProps) => {
   const { editClassDict } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
 
+  const gotoProfileInfo = (profileId: string) => {
+    history.push(`/dashboard/manage-users/user?id=${profileId}`)
+  }
+
   const fetchClassData = async (classId: string) => {
     try {
       const result: any = await API.graphql(graphqlOperation(customQueries.getClassDetails, { id: classId }))
@@ -74,7 +78,7 @@ const EditClass = (props: EditClassProps) => {
         return {
           id: stu.id,
           status: stu.status,
-          student: { ...stu.student, name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}` }
+          student: { ...stu.student, email: stu.studentEmail, name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}` }
         }
       })
       let students: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
@@ -308,7 +312,7 @@ const EditClass = (props: EditClassProps) => {
                         classStudents.map((item, index) => (
                           <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal">
+                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer" onClick={() => gotoProfileInfo(item.student.id)}>
                               <div className="flex-shrink-0 h-10 w-10 flex items-center">
                                 {item.student.avatar ?
                                   (<img
@@ -318,7 +322,15 @@ const EditClass = (props: EditClassProps) => {
                                     {item.student.name ? initials(getInitialsFromString(item.student.name)[0], getInitialsFromString(item.student.name)[1]) : initials('N', 'A')}
                                   </div>}
                               </div>
-                              <div className="ml-4">{item.student.name}</div>
+                              <div className="ml-4">
+                                {/* {item.student.name} */}
+                                <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
+                                  {item.student.name}
+                                </div>
+                                <div className="text-sm leading-5 text-gray-500">
+                                  {item.student.email}
+                                </div>
+                              </div>
                             </div>
 
                             {
