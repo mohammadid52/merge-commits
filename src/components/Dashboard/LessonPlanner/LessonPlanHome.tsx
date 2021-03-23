@@ -25,6 +25,7 @@ export interface CurriculumInfo {
 const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     currentPage,
+    setCurrentPage,
     activeRoom,
     activeRoomInfo,
     visibleLessonGroup,
@@ -104,6 +105,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       activeRoom={activeRoom}
       activeRoomInfo={activeRoomInfo}
       currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
       isTeacher={true}
       visibleLessonGroup={visibleLessonGroup}
       setVisibleLessonGroup={setVisibleLessonGroup}

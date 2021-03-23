@@ -234,6 +234,7 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <LessonPlanHome
                     currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
                     activeRoom={activeRoom}
                     activeRoomInfo={activeRoomInfo}
                     activeRoomName={activeRoomName}
