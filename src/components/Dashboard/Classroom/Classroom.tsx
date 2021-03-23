@@ -117,7 +117,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     if(state.user.role === 'TR'|| state.user.role === 'FLW'){
       setCurrentPage('lesson-planner');
     }
-  },[])
+  },[state.user.role])
 
 
 

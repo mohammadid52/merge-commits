@@ -76,13 +76,13 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
 
-  useEffect(()=>{
+  useEffect(() => {
     // copyLessonPlans();
-  },[])
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     // initRosterSyllabusLessons();
-  },[])
+  }, []);
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -134,15 +134,6 @@ const Dashboard = (props: DashboardProps) => {
         role: state.user?.role,
         image: state.user?.image,
       });
-      if (state.user?.role === 'FLW' || state.user?.role === 'TR') {
-        setCurrentPage('lesson-planner');
-      }
-      if (userData.role === 'ST') {
-        setCurrentPage('classroom');
-      }
-      if(userData.role === 'ADM'){
-        setCurrentPage('manage-institutions');
-      }
     }
   }, [state.user.role]);
 
@@ -156,10 +147,9 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      {
-        (currentPage === 'lesson-planner' && userData.role === 'TR') ||
-        (currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-        (userData.role === 'ST' && currentPage === 'classroom') ? (
+      {(currentPage === 'lesson-planner' && userData.role === 'TR') ||
+      (currentPage === 'lesson-planner' && userData.role === 'FLW') ||
+      (userData.role === 'ST' && currentPage === 'classroom') ? (
         <SideRoomSelector
           currentPage={currentPage}
           activeRoom={activeRoom}
@@ -228,7 +218,7 @@ const Dashboard = (props: DashboardProps) => {
               <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin />} />
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
-              <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState}/>} />
+              <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
               <Route
                 path={`${match.url}/lesson-planner`}
                 render={() => (
@@ -248,7 +238,10 @@ const Dashboard = (props: DashboardProps) => {
                   />
                 )}
               />
-              <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
+              <Route
+                path={`${match.url}/manage-institutions`}
+                render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+              />
               <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
               <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
             </Switch>
@@ -258,13 +251,7 @@ const Dashboard = (props: DashboardProps) => {
         {/**
          *  SIDEWIDGETSBAR
          */}
-        {
-          currentPage === 'classroom' ? (
-          <SideWidgetBar
-            currentPage={currentPage}
-          />
-        ) : null
-        }
+        {currentPage === 'classroom' ? <SideWidgetBar currentPage={currentPage} /> : null}
       </div>
     </div>
   );
