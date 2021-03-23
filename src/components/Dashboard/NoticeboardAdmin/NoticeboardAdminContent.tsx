@@ -23,6 +23,7 @@ export interface NoticeboardContentCardProps {
   widgetData?: any;
   setWidgetData?: any;
   createTemplate?: any;
+  initialNewWidgetData?: any;
   newWidgetData?: any;
   setNewWidgetData?: any;
   content?: any;
@@ -38,6 +39,7 @@ export interface NoticeboardFormProps {
   handleEditUpdateWYSIWYG?: any;
   handleEditUpdateQuotes?: (e: React.ChangeEvent<Element>) => void;
   viewEditMode?: { widgetID?: string; mode: string };
+  resetNewWidgetData?: ()=>void;
   newWidgetData?: NoticeboardWidgetMapItem;
   setNewWidgetData?: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem>>;
   widgetData?: any;
@@ -62,12 +64,17 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     widgetData,
     setWidgetData,
     createTemplate,
+    initialNewWidgetData,
     newWidgetData,
     setNewWidgetData,
     content,
   } = props;
   const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict } = useDictionary(clientKey);
+
+  const resetNewWidgetData = ():void => {
+    setNewWidgetData(initialNewWidgetData);
+  }
 
   const setEditorContent = (html: string, text: string, idKey: string) => {
     handleEditUpdateWYSIWYG(idKey, html, 'content', 'text', '');
@@ -91,6 +98,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                 handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
                 setEditorContent={setEditorContent}
                 handleActivation={handleActivation}
+                resetNewWidgetData={resetNewWidgetData}
                 newWidgetData={newWidgetData}
                 setNewWidgetData={setNewWidgetData}
                 setWidgetData={setWidgetData}
@@ -133,6 +141,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                       handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
                       handleActivation={handleActivation}
                       setEditorContent={setEditorContent}
+                      resetNewWidgetData={resetNewWidgetData}
                       newWidgetData={newWidgetData}
                       setNewWidgetData={setNewWidgetData}
                       setWidgetData={setWidgetData}

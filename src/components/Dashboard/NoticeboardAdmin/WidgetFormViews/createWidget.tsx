@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { EditDefaultContent } from './EditContentViews/EditDefaultContent';
@@ -15,12 +15,18 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
     handleEditUpdateQuotes,
     handleEditUpdateWYSIWYG,
     viewEditMode,
+    resetNewWidgetData,
     newWidgetData,
     setNewWidgetData,
     setWidgetData,
     widgetData,
   } = props;
   const { theme } = useContext(GlobalContext);
+
+  useEffect(()=>{
+    return ()=> resetNewWidgetData();
+  },[widgetObj])
+
   return (
     <>
       {/**

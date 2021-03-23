@@ -392,6 +392,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         widgetData={widgetData}
         setWidgetData={setWidgetData}
         createTemplate={newWidgetData}
+        initialNewWidgetData={initialNewWidgetData}
         newWidgetData={newWidgetData}
         setNewWidgetData={setNewWidgetData}
         content={widgetData.length > 0 && filterWidgetContentBySubsection}

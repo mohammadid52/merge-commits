@@ -16,6 +16,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     handleEditUpdateQuotes,
     handleEditUpdateWYSIWYG,
     viewEditMode,
+    resetNewWidgetData,
     newWidgetData,
     setNewWidgetData,
     widgetData,
@@ -25,6 +26,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
 
   useEffect(() => {
     setNewWidgetData(widgetObj);
+    return ()=> resetNewWidgetData();
   }, [widgetObj]);
 
   return (
@@ -107,7 +109,8 @@ export const EditModeView = (props: NoticeboardFormProps) => {
       {
         widgetObj.type === 'quote' ||
         widgetObj.type === 'links' ||
-        widgetObj.type === 'call' ? (
+        widgetObj.type === 'call'||
+        widgetObj.type === 'file' ? (
           <EditQuoteContent
             newWidgetData={newWidgetData}
             setNewWidgetData={setNewWidgetData}
