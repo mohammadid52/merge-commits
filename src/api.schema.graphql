@@ -185,10 +185,6 @@ type Rubric @model @key(fields: ["id"]) {
   id: ID!
   name: String
   criteria: String
-  distinguished: String
-  excelled: String
-  adequite: String
-  basic: String
   topicID: ID!
   topic: Topic @connection(fields: ["topicID"])
   curriculumID: ID!
