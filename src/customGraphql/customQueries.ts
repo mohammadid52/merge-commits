@@ -1379,6 +1379,10 @@ export const getTopicDetails = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
