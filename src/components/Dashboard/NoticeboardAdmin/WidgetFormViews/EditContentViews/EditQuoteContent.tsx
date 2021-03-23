@@ -24,6 +24,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
   const quoteItem = { text: '', author: '' };
   const callItem = { text: '', url: '' };
+  const fileItem = { text: '', url: '' };
 
   const switchKey = (): {
     key: string;
@@ -54,6 +55,16 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           label: 'Link Text',
           label2: 'Url',
           label3: 'Call Link',
+        };
+        case 'file':
+        return {
+          key: `links`,
+          key2: `text`,
+          key3: `url`,
+          expander: fileItem,
+          label: 'Label',
+          label2: 'File Link',
+          label3: 'File Link',
         };
       default:
         return null;
@@ -88,17 +99,22 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
   return (
     <div className={`mt-2 mb-2 p-2`}>
-      {theSwitchObj && widgetObj[theSwitchObj.key].length > 0 ? (
-        widgetObj[theSwitchObj.key].map((widgetQuote: Quote, idx: number) => {
+      {
+        theSwitchObj &&
+        theSwitchObj?.key &&
+        widgetObj &&
+        widgetObj[theSwitchObj?.key].length > 0 ? (
+        widgetObj[theSwitchObj?.key].map((widgetQuote: Quote, idx: number) => {
           return (
             <div
+              key={`editQuote_${widgetQuote.id}_${idx}`}
               className={`flex flex-row p-2 rounded my-2 ${
                 idx % 2 ? 'bg-grayscale-light bg-opacity-20' : 'bg-gray-400 bg-opacity-20'
               }`}>
               <div className={`w-8 m-1`}>
                 {/* NUMBER */}
                 <div className={`w-6 h-6 p-2 mb-2 rounded-full bg-blueberry flex justify-center items-center`}>
-                  <span className={`w-auto h-auto text-center text-white text-lg font-semibold `}>{idx}</span>
+                  <span className={`w-auto h-auto text-center text-white text-lg font-semibold `}>{idx+1}</span>
                 </div>
                 {/* TRASH ICON */}
                 <div className={`mt-4 cursor-pointer`} onClick={() => decreaseQuoteCount(idx)}>

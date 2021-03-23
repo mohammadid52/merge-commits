@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import { DashboardProps } from '../Dashboard';
 
-import { CallLinkWidget, DefaultTextWidget, ImageWidget, LogoWidget } from './Widgets';
+import { CallLinkWidget, DefaultTextWidget, FileLinkWidget, ImageWidget, LogoWidget } from './Widgets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
-import { QuoteWidget } from '../TopWidgetBar/TopWidgets';
+import { QuoteWidget } from './TopWidgets';
 import { useWindowSize } from '../../../customHooks/windowSize';
 
 const SideWidgetBar = (props: DashboardProps) => {
@@ -36,6 +36,10 @@ const SideWidgetBar = (props: DashboardProps) => {
       case 'call':
         return (
           <CallLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>
+        );
+      case 'file':
+        return (
+          <FileLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>
         );
       default:
         return null;

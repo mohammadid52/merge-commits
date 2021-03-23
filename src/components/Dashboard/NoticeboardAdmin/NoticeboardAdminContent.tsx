@@ -10,9 +10,9 @@ import { CreateModeView } from './WidgetFormViews/createWidget';
 import CancelSaveDelete from './WidgetFormViews/cancelSaveDeleteButtons';
 import CreateNewButton from './WidgetFormViews/createNewButton';
 import { create } from 'domain';
-import SectionTitle from '../../Atoms/SectionTitleV2';
 
 export interface NoticeboardContentCardProps {
+  activeRoom?: string;
   viewEditMode?: ViewEditMode;
   handleEditToggle?: (editMode: string, widgetID: string) => void;
   handleEditUpdateDefault?: (e: React.ChangeEvent) => void;
@@ -31,6 +31,7 @@ export interface NoticeboardContentCardProps {
 }
 
 export interface NoticeboardFormProps {
+  activeRoom?: string;
   subSection?: string;
   widgetObj?: NoticeboardWidgetMapItem;
   setEditorContent?: any;
@@ -54,6 +55,7 @@ export interface NoticeboardFormProps {
 
 const NoticeboardContent = (props: NoticeboardContentCardProps) => {
   const {
+    activeRoom,
     viewEditMode,
     handleEditToggle,
     handleEditUpdateDefault,
@@ -70,7 +72,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     content,
   } = props;
   const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
+  const { anthologyDict, classRoomDict } = useDictionary(clientKey);
 
   const resetNewWidgetData = ():void => {
     setNewWidgetData(initialNewWidgetData);
@@ -84,7 +86,6 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     <>
       {
         <ContentCard>
-
           {/**
            * CREATE WIDGET VIEW
            */}
@@ -110,12 +111,16 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
             {/**
              *  section:  VIEW/EDIT BUTTON
              */}
-            <CreateNewButton
-              subSection={subSection}
-              widgetObj={createTemplate}
-              viewEditMode={viewEditMode}
-              handleEditToggle={handleEditToggle}
-            />
+            {activeRoom ? (
+              <CreateNewButton
+                subSection={subSection}
+                widgetObj={createTemplate}
+                viewEditMode={viewEditMode}
+                handleEditToggle={handleEditToggle}
+              />
+            ) : (
+              <>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM}...</>
+            )}
           </div>
         </ContentCard>
       }

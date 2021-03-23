@@ -10,7 +10,7 @@ import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
+import SideWidgetBar from './Noticebooard/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
 import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
 import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
