@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 /**
  *
  *
- * FORGIVE ME FATHER(andrew) FOR I HAVE SINNED...
+ * FORGIVE ME FATHER FOR I HAVE SINNED...
  *
  * I'VE DIRECTLY COPY & PASTED THIS CODE FROM:
  *

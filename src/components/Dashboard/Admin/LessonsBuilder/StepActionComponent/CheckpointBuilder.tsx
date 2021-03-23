@@ -23,6 +23,8 @@ interface CheckpointBuilderProps {
   updateLessonPlan: (plan: LessonPlansProps[]) => void
   setUnsavedChanges?: (val: boolean) => void
   activeStep?: string
+  lessonName: string
+  lessonType: string
 }
 
 // TODO: Replace type any with actual type wherever required.
@@ -35,7 +37,7 @@ interface CheckpointBuilderProps {
 
 
 const CheckpointBuilder = (props: CheckpointBuilderProps) => {
-  const { designersList, lessonID, lessonPlans, updateLessonPlan, setUnsavedChanges, activeStep } = props;
+  const { designersList, lessonID, lessonPlans, updateLessonPlan, setUnsavedChanges, activeStep, lessonName, lessonType } = props;
 
   const initialCheckpData = {
     title: '',
@@ -78,12 +80,16 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           DeleteCheckpoint={(id) => DeleteCheckpoint(id, lessonPlans)}
           editCheckPoint={fetchCheckDetails}
           onDragEnd={onDragEnd}
+          lessonName={lessonName}
+          lessonType={lessonType}
         />;
       case 'CheckpointLookup':
         return <CheckpointLookup
           checkpointList={fileredCheckpointList}
           changeStep={changeBuilderStep}
           onSave={saveCheckpoints}
+          lessonName={lessonName}
+          lessonType={lessonType}
         />;
       case 'AddNewCheckPoint':
         return <AddNewCheckPoint
@@ -99,6 +105,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           checkpQuestions={checkpQuestions}
           setCheckpQuestions={setCheckpQuestions}
           setUnsavedChanges={setUnsavedChanges}
+          lessonName={lessonName}
+          lessonType={lessonType}
         />;
 
       case 'EditCheckPoint':
@@ -114,12 +122,26 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           setSelectedDesigners={setSelectedDesigners}
           checkpQuestions={checkpQuestions}
           setCheckpQuestions={setCheckpQuestions}
-          previouslySelectedId={previouslySelectedId} />;
+          previouslySelectedId={previouslySelectedId}
+          lessonName={lessonName}
+          lessonType={lessonType}
+        />;
 
       case 'AddNewQuestion':
-        return <AddNewQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} goBackToPreviousStep={goBackToPreviousStep} />;
+        return <AddNewQuestion
+          changeStep={changeBuilderStep}
+          setCheckpQuestions={onAddNewQuestion}
+          goBackToPreviousStep={goBackToPreviousStep}
+          lessonName={lessonName}
+          lessonType={lessonType} />;
       case 'QuestionLookup':
-        return <QuestionLookup selecteList={checkpQuestions} changeStep={changeBuilderStep} onSave={saveQuestionsList} goBackToPreviousStep={goBackToPreviousStep} />;
+        return <QuestionLookup
+          selecteList={checkpQuestions}
+          changeStep={changeBuilderStep}
+          onSave={saveQuestionsList}
+          goBackToPreviousStep={goBackToPreviousStep}
+          lessonName={lessonName}
+          lessonType={lessonType} />;
       // case 'EditQuestion':
       //   return <EditQuestion changeStep={changeBuilderStep} setCheckpQuestions={onAddNewQuestion} />;
       default:
@@ -129,6 +151,8 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
           DeleteCheckpoint={(id) => DeleteCheckpoint(id, lessonPlans)}
           editCheckPoint={fetchCheckDetails}
           onDragEnd={onDragEnd}
+          lessonName={lessonName}
+          lessonType={lessonType}
         />;
     }
   }

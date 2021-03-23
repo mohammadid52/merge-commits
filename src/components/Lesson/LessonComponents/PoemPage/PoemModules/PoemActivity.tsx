@@ -1,12 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import { useCookies } from 'react-cookie';
 import WritingBlock from './WritingBlock';
 import InstructionBlock from './InstructionBlock';
-import ToolBar from './ToolBar';
-import Banner from './Banner';
 import EditBlock from './EditBlock';
-import InstructionsPopup from '../../../Popup/InstructionsPopup';
+import Banner from '../../Banner';
 
 type storageObject = {
   title: string;
@@ -22,27 +20,23 @@ type storageObject = {
 
 const PoemActivity = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
+  const title = state.data.lesson?.activity?.title;
+
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [editMode, setEditMode] = useState({
-    open:
-      state.componentState.poem && state.componentState.poem.editMode
-        ? state.componentState.poem.editMode
-        : false,
-    input:
-      state.componentState.poem && state.componentState.poem.editInput
-        ? state.componentState.poem.editInput
-        : '',
+    open: state.componentState.poem && state.componentState.poem.editMode ? state.componentState.poem.editMode : false,
+    input: state.componentState.poem && state.componentState.poem.editInput ? state.componentState.poem.editInput : '',
   });
   const { video, link, text } = state.data.lesson.activity.instructions;
   const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
-     /**
-     * 
-     * 
+    /**
+     *
+     *
      * IF YES COOKIE SET
-     * 
-     * 
+     *
+     *
      */
     if (cookies[`lesson-${state.syllabusLessonID}`]?.poem) {
       if (!cookies[`lesson-${state.syllabusLessonID}`]?.poem?.editMode) {
@@ -75,11 +69,11 @@ const PoemActivity = () => {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * IF NO COOKIE SET
-     * 
-     * 
+     *
+     *
      */
     if (!cookies[`lesson-${state.syllabusLessonID}`]?.poem && !state.componentState.poem) {
       let storageObj: storageObject = {
@@ -140,18 +134,15 @@ const PoemActivity = () => {
 
   return (
     <>
-      {/* <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup}/> */}
       <div className={theme.section}>
-        <Banner />
+        <Banner title={title} />
         <InstructionBlock editMode={editMode.open} />
-        <div className='relative flex flex-col justify-between items-center'>
+        <div className="relative flex flex-col justify-between items-center">
           {!editMode.open ? (
             <WritingBlock editMode={editMode} setEditMode={setEditMode} />
           ) : (
             <EditBlock editMode={editMode} />
           )}
-
-          {/* <ToolBar editMode={editMode} setEditMode={setEditMode} /> */}
         </div>
       </div>
     </>

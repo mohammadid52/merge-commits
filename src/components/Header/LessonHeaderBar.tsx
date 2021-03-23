@@ -7,12 +7,8 @@ import { LessonContext } from '../../contexts/LessonContext';
 import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
 import SurveyTopMenu from '../Lesson/Header/SurveyTopMenu';
+import { LessonHeaderBarProps } from '../../interfaces/LessonComponentsInterfaces';
 
-export interface LessonHeaderBarProps {
-  handlePopup?: () => void;
-  setOverlay?: React.Dispatch<SetStateAction<string>>;
-  overlay?: string;
-}
 
 const LessonHeaderBar = (props: LessonHeaderBarProps) => {
   const {overlay, setOverlay} = props;

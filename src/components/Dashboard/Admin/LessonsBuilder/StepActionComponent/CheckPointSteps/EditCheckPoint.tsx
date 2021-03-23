@@ -39,7 +39,9 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     setSelectedDesigners,
     checkpQuestions,
     setCheckpQuestions,
-    previouslySelectedId
+    previouslySelectedId,
+    lessonName,
+    lessonType
   } = props;
 
   const { theme, clientKey } = useContext(GlobalContext);
@@ -373,7 +375,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>Assessment Builder</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />

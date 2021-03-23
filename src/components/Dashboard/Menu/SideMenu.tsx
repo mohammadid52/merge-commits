@@ -26,7 +26,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
         <NavLink id="dashboard" to="/dashboard" onClick={handleLink}>
           <img
             id="dashboard"
-            className="p-2 h-full"
+            className="bg-white p-2 h-full"
             src={getAsset(clientKey, 'main_logo')}
             alt="Logo"
           />

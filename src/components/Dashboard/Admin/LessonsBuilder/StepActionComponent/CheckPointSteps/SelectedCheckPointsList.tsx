@@ -12,10 +12,12 @@ interface SelectedCheckPointsListProps {
   DeleteCheckpoint: (id: string) => void
   editCheckPoint: (id: string) => void
   onDragEnd: (result: any) => void
+  lessonName: string
+  lessonType: string
 }
 
 const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
-  const { activeCheckpoints, changeStep, DeleteCheckpoint, editCheckPoint, onDragEnd } = props;
+  const { activeCheckpoints, changeStep, DeleteCheckpoint, editCheckPoint, onDragEnd, lessonName, lessonType } = props;
   const [savedCheckpoint, setSavedCheckpoint] = useState(activeCheckpoints);
 
   useEffect(() => {
@@ -41,14 +43,14 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0">Assessment Builder</span>
+          <span className="w-auto flex-shrink-0">{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
         </h4>
       </div>
 
       <div className="p-4">
         {!activeCheckpoints?.length ? (
           <div className="my-8">
-            <p className="text-center p-8"> Please add checkpoints to assessment builder</p>
+            <p className="text-center p-8"> Please add checkpoints to {lessonType === 'survey' ? 'survey' : 'assessment'}  builder</p>
             <div className="flex w-full mx-auto p-8 justify-center">
               <Buttons btnClass="mr-4" onClick={() => changeStep('CheckpointLookup')} label="Add Existing Checkpoint" />
               <Buttons btnClass="ml-4" onClick={() => changeStep('AddNewCheckPoint')} label="Create New Checkpoint" />
