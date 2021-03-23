@@ -59,7 +59,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
         case 'file':
         return {
           key: `links`,
-          key2: `label`,
+          key2: `text`,
           key3: `url`,
           expander: fileItem,
           label: 'Label',

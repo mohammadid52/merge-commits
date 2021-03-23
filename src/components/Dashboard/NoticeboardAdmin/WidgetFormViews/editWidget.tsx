@@ -107,19 +107,23 @@ export const EditModeView = (props: NoticeboardFormProps) => {
             widgetData={widgetData}
           />
         ) : null}
-        {widgetObj.type === 'quote' || widgetObj.type === 'links' || widgetObj.type === 'call' ? (
-          <EditQuoteContent
-            newWidgetData={newWidgetData}
-            setNewWidgetData={setNewWidgetData}
-            widgetData={widgetData}
-            setWidgetData={setWidgetData}
-            handleEditUpdateQuotes={handleEditUpdateQuotes}
-            handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
-            viewEditMode={viewEditMode}
-            widgetObj={newWidgetData}
-            setEditorContent={setEditorContent}
-            handleActivation={handleActivation}
-          />
+        {
+          widgetObj.type === 'quote' ||
+          widgetObj.type === 'links' ||
+          widgetObj.type === 'call' ||
+          widgetObj.type === 'file' ? (
+            <EditQuoteContent
+              newWidgetData={newWidgetData}
+              setNewWidgetData={setNewWidgetData}
+              widgetData={widgetData}
+              setWidgetData={setWidgetData}
+              handleEditUpdateQuotes={handleEditUpdateQuotes}
+              handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+              viewEditMode={viewEditMode}
+              widgetObj={newWidgetData}
+              setEditorContent={setEditorContent}
+              handleActivation={handleActivation}
+            />
         ) : null}
       </>
     )

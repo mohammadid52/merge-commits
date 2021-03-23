@@ -21,6 +21,9 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
     widgetData,
   } = props;
   const { theme } = useContext(GlobalContext);
+
+
+
   return (
     <>
       {/**

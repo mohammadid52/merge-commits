@@ -9,7 +9,7 @@ import Today from './TodayLesson';
 import UpcomingLessons from './UpcomingLessons';
 import CompletedLessons from './CompletedLessons';
 import { DashboardProps } from '../Dashboard';
-import TopWidgetBar from '../TopWidgetBar/TopWidgetBar';
+import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import useDictionary from '../../../customHooks/dictionary';

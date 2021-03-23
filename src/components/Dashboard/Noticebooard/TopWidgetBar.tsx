@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { QuoteWidget } from './TopWidgets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { CallLinkWidget, DefaultTextWidget } from '../SideWidgetBar/Widgets';
+import { CallLinkWidget, DefaultTextWidget } from './Widgets';
 
 const TopWidgetBar = () => {
   const { state } = useContext(GlobalContext);

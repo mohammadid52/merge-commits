@@ -109,6 +109,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     }
   }, [activeRoom]);
 
+
   /*
    * Function group to handle updating widget data
    *
@@ -240,7 +241,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const handleEditToggle = (editMode: ViewEditMode['mode'], widgetID: string) => {
-    setNewWidgetData(initialNewWidgetData);
     setViewEditMode({ mode: editMode, widgetID: widgetID });
   };
 
@@ -295,14 +295,13 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const noticeboardCreate = async () => {
-    const getWidgetObj = widgetData.find((widgetObj: any) => widgetObj.id === viewEditMode.widgetID);
     const input = {
       ...newWidgetData,
       teacherAuthID: state.user.authId,
       teacherEmail: state.user.email,
       roomID: activeRoom,
     };
-    console.log('creating widget...', input);
+    // console.log('creating widget...', newWidgetData);
     try {
       const noticeboardWidgetCreate: any = await API.graphql(
         graphqlOperation(mutations.createNoticeboardWidget, {
