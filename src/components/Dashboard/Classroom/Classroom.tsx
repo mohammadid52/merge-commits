@@ -111,7 +111,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(()=>{
-    setCurrentPage('classroom');
+    if(state.user.role === 'ST'){
+      setCurrentPage('classroom');
+    }
+    if(state.user.role === 'TR'|| state.user.role === 'FLW'){
+      setCurrentPage('lesson-planner');
+    }
   },[])
 
 

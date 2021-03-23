@@ -340,6 +340,7 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
     },
   },
   'ES': {
@@ -367,6 +368,7 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
     },
   },
 };
