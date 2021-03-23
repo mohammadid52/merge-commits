@@ -10,7 +10,7 @@ import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
+import SideWidgetBar from './Noticebooard/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
 import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
 import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
@@ -71,7 +71,7 @@ const Dashboard = (props: DashboardProps) => {
   const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
 
   // Page switching
-  const [currentPage, setCurrentPage] = useState<string>('classroom');
+  const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
@@ -146,7 +146,7 @@ const Dashboard = (props: DashboardProps) => {
         setCurrentPage('manage-institutions');
       }
     }
-  }, []);
+  }, [state.user.role]);
 
   return (
     <div className={`w-screen md:w-full h-screen md:h-full flex`}>
@@ -158,7 +158,10 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+      {
+        (currentPage === 'lesson-planner' && userData.role === 'TR') ||
+        (currentPage === 'lesson-planner' && userData.role === 'FLW') ||
+        (userData.role === 'ST' && currentPage === 'classroom') ? (
         <SideRoomSelector
           currentPage={currentPage}
           activeRoom={activeRoom}

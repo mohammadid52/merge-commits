@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
-import { AiOutlineDelete } from 'react-icons/all';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlineDelete, AiOutlineEdit, AiOutlineSave, AiOutlineStop } from 'react-icons/all';
+import Buttons from '../../../Atoms/Buttons';
 
 const CancelSaveDelete = (props: NoticeboardFormProps) => {
   const { widgetObj, viewEditMode, handleEditToggle } = props;
@@ -11,44 +11,45 @@ const CancelSaveDelete = (props: NoticeboardFormProps) => {
   const { anthologyDict } = useDictionary(clientKey);
   return (
     <div className={`flex p-2 mt-2`}>
-
       <div className={`flex flex-row w-full`}>
-      {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
-        <p
-          onClick={() => handleEditToggle('', '')}
-          className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
-          {anthologyDict[userLanguage].ACTIONS.CANCEL}
-        </p>
-      ) : (
-        <p
-          onClick={() => handleEditToggle('edit', widgetObj.id)}
-          className={`w-auto cursor-pointer font-semibold text-blueberry`}>
-          {anthologyDict[userLanguage].ACTIONS.EDIT}
-        </p>
-      )}
+        {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
+          <Buttons
+            onClick={() => handleEditToggle('', '')}
+            label={anthologyDict[userLanguage].ACTIONS.CANCEL}
+            type={`button`}
+            Icon={AiOutlineStop}
+            btnClass={`mr-4`}
+          />
+        ) : (
+          <Buttons
+            onClick={() => handleEditToggle('edit', widgetObj.id)}
+            label={anthologyDict[userLanguage].ACTIONS.EDIT}
+            type={`button`}
+            Icon={AiOutlineEdit}
+          />
+        )}
 
-      {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
-        <>
-          <span className={`w-auto mr-2`}>/</span>
-          <p
-            onClick={() => handleEditToggle('save', widgetObj.id)}
-            className={`w-auto cursor-pointer font-semibold text-blueberry`}>
-            {anthologyDict[userLanguage].ACTIONS.SAVE}
-          </p>
-        </>
-      ) : null}
+        {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
+          <>
+            <Buttons
+              onClick={() => handleEditToggle('save', widgetObj.id)}
+              label={anthologyDict[userLanguage].ACTIONS.SAVE}
+              type={`button`}
+              Icon={AiOutlineSave}
+            />
+          </>
+        ) : null}
       </div>
 
       {viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
         <>
-          <div className={`flex flex-row w-auto mr-0 cursor-pointer`} onClick={() => handleEditToggle('delete', widgetObj.id)}>
-            <p className={`w-autofont-semibold text-ketchup pointer-events-none`}>
-              {anthologyDict[userLanguage].ACTIONS.DELETE}
-            </p>
-            <IconContext.Provider value={{ className: 'w-auto text-ketchup pointer-events-none ' }}>
-              <AiOutlineDelete size={24} />
-            </IconContext.Provider>
-          </div>
+          <Buttons
+            onClick={() => handleEditToggle('delete', widgetObj.id)}
+            label={anthologyDict[userLanguage].ACTIONS.DELETE}
+            type={`button`}
+            Icon={AiOutlineDelete}
+            btnClass={`bg-ketchup`}
+          />
         </>
       ) : null}
     </div>

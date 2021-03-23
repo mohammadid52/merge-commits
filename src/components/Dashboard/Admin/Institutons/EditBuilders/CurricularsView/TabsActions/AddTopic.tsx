@@ -44,14 +44,24 @@ const AddTopic = (props: AddTopicProps) => {
   const [validation, setValidation] = useState({ name: '', learning: '' })
   const [learnings, setLearnings] = useState([]);
   const [topicIds, setTopicIds] = useState([]);
-
+  const [evalution, setEvalution] = useState({
+    distinguished: '',
+    excelled: '',
+    adequite: '',
+    basic: ''
+  })
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
       const value = e.target.value
       setName(value)
       if (value.length && validation.name) setValidation({ ...validation, name: '' });
+    } else if (e.target.name === 'description') setDescription(e.target.value)
+    else {
+      setEvalution({
+        ...evalution,
+        [e.target.name]: e.target.value
+      })
     }
-    if (e.target.name === 'description') setDescription(e.target.value)
   }
 
   const validateForm = () => {
@@ -77,7 +87,9 @@ const AddTopic = (props: AddTopicProps) => {
     const isValid = validateForm()
     if (isValid) {
       const input = {
-        name, description, curriculumID: curricularId, learningObjectiveID: learning.id
+        name, description, distinguished, excelled, adequite, basic,
+        curriculumID: curricularId,
+        learningObjectiveID: learning.id,
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
       const addedItem = item.data.createTopic
@@ -91,7 +103,7 @@ const AddTopic = (props: AddTopicProps) => {
         console.log('seqItem', seqItem)
       }
       if (addedItem) {
-        history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+        history.goBack()
       } else {
         console.log('Could not add topic');
       }
@@ -134,9 +146,7 @@ const AddTopic = (props: AddTopicProps) => {
     }
   }, [learning.id])
 
-  const cancelEvent = () => {
-    history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
-  }
+  const { distinguished, excelled, adequite, basic } = evalution;
 
   return (
     <div className="w-8/10 h-full mt-4 p-4">
@@ -177,10 +187,23 @@ const AddTopic = (props: AddTopicProps) => {
               <TextArea id='description' value={description} onChange={onInputChange} name='description' label={AddTopicDict[userLanguage]['description']} />
             </div>
 
+            <div className="px-3 py-4">
+              <TextArea id='distinguished' value={distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea id='excelled' value={excelled} onChange={onInputChange} name='excelled' label="Excelled" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea id='adequite' value={adequite} onChange={onInputChange} name='adequite' label="Adequate" />
+            </div>
+            <div className="px-3 py-4">
+              <TextArea id='basic' value={basic} onChange={onInputChange} name='basic' label="Basic" />
+            </div>
+
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10 mr-4" label={AddTopicDict[userLanguage]['button']['cancel']} onClick={cancelEvent} transparent />
+          <Buttons btnClass="py-3 px-10 mr-4" label={AddTopicDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
           <Buttons btnClass="py-3 px-10 ml-4" label={AddTopicDict[userLanguage]['button']['save']} onClick={saveTopicDetails} />
         </div>
       </PageWrapper>

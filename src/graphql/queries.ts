@@ -1025,6 +1025,10 @@ export const getTopic = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -1071,6 +1075,10 @@ export const listTopics = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -1189,6 +1197,10 @@ export const getRubric = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -1228,6 +1240,10 @@ export const listRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }
@@ -2791,6 +2807,10 @@ export const getLessonRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }

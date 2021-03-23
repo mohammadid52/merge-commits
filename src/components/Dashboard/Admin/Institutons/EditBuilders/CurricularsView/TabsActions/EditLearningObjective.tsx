@@ -60,7 +60,7 @@ const EditLearningObjective = (props: EditLearningObjectiveProps) => {
     const item: any = await API.graphql(graphqlOperation(mutations.updateLearningObjective, { input }));
     const updatedItem = item?.data?.updateLearningObjective
     if (updatedItem) {
-      history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+      history.goBack()
     } else {
       console.log('Could not update learning objective');
     }

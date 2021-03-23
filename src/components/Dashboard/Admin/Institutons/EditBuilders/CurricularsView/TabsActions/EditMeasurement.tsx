@@ -130,7 +130,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       const item: any = await API.graphql(graphqlOperation(customMutations.updateRubric, { input }));
       const updatedItem = item.data.updateRubric
       if (updatedItem) {
-        history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+      history.goBack()
       } else {
         console.log('Could not update topic');
       }
@@ -185,8 +185,8 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                   <div className="px-3 py-4">
                     <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label={EditMeasurementDict[userLanguage]['criteria']} />
                   </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='distinguished' value={measurement.distinguished} onChange={onInputChange} name='distinguished' label={EditMeasurementDict[userLanguage]['distinguished']} />
+                  {/* <div className="px-3 py-4">
+                    <TextArea rows={3} id='distinguished' value={measurement.distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
                   </div>
                   <div className="px-3 py-4">
                     <TextArea rows={3} id='excelled' value={measurement.excelled} onChange={onInputChange} name='excelled' label={EditMeasurementDict[userLanguage]['excell']} />
@@ -195,8 +195,8 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                     <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label={EditMeasurementDict[userLanguage]['adequite']} />
                   </div>
                   <div className="px-3 py-4">
-                    <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label={EditMeasurementDict[userLanguage]['basic']} />
-                  </div>
+                    <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label="Basic" />
+                  </div> */}
                 </div>
               </div>
               <div className="flex my-8 justify-center">

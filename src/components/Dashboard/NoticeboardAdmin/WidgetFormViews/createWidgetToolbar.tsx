@@ -50,6 +50,12 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
       description:
         "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
     },
+    {
+      type: 'file',
+      label: 'Files',
+      description:
+        "This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.",
+    },
   ];
 
   const switchIcon = (type: string) => {

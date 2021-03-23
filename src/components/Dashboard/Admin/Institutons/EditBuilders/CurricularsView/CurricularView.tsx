@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation, useHistory, useRouteMatch } from 'react-router';
+import { useLocation, useHistory, useRouteMatch, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { BiNotepad } from 'react-icons/bi';
 import { MdSpeakerNotes } from 'react-icons/md';
@@ -54,8 +54,9 @@ const CurricularView = (props: CurricularViewProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
+  const urlParams: any = useParams();
   const currID = params.get('id');
-
+  const institutionId = urlParams.institutionId;
   const initialData = {
     id: '',
     name: '',

@@ -27,14 +27,14 @@ const CurriculumList = (props: CurriculumListProps) => {
   }
 
   const editCurrentCurricular = (id: string) => {
-    history.push(`/dashboard/manage-institutions/curricular?id=${id}`)
+    history.push(`/dashboard/manage-institutions/${instId}/curricular?id=${id}`)
   }
 
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{InstitueCurriculam[userLanguage]['TITLE']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName ? instName.toUpperCase() : 'INSTITUTE'} CURRICULA</h3>
           {(curricular.items && curricular.items.length > 0) ? (
             <Fragment>
               <div className="flex justify-end w-8/10 m-auto ">

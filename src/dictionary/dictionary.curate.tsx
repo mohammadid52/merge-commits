@@ -204,6 +204,7 @@ const anthologyDict: any = {
       EDIT: 'Edit',
       SAVE: 'Save',
       CREATE: 'Create New',
+      ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete'
     },
@@ -219,6 +220,7 @@ const anthologyDict: any = {
       EDIT: 'Editar',
       SAVE: 'Salvar',
       CREATE: 'Crear',
+      ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar'
     },
@@ -2017,6 +2019,10 @@ const EditTopicDict:any={
     learningobjective:'Learning objective',
     desc:'Description',
     fetching:'Fetching data...',
+    Distinguished:'Distinguished',
+    Excelled:'Excelled',
+    Adequate:'Adequate',
+    Basic:'Basic',
     button:{
       cancel:'Cancel',
       save:'Save'
@@ -2035,6 +2041,10 @@ const EditTopicDict:any={
     learningobjective:'TBD',
     desc:'TBD',
     fetching:'TBD',
+    Distinguished:'TBD',
+    Excelled:'TBD',
+    Adequate:'TBD',
+    Basic:'TBD',
     button:{
       cancel:'TBD',
       save:'TBD'

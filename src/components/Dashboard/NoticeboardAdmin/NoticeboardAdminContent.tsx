@@ -12,6 +12,7 @@ import CreateNewButton from './WidgetFormViews/createNewButton';
 import { create } from 'domain';
 
 export interface NoticeboardContentCardProps {
+  activeRoom?: string;
   viewEditMode?: ViewEditMode;
   handleEditToggle?: (editMode: string, widgetID: string) => void;
   handleEditUpdateDefault?: (e: React.ChangeEvent) => void;
@@ -22,6 +23,7 @@ export interface NoticeboardContentCardProps {
   widgetData?: any;
   setWidgetData?: any;
   createTemplate?: any;
+  initialNewWidgetData?: any;
   newWidgetData?: any;
   setNewWidgetData?: any;
   content?: any;
@@ -29,6 +31,7 @@ export interface NoticeboardContentCardProps {
 }
 
 export interface NoticeboardFormProps {
+  activeRoom?: string;
   subSection?: string;
   widgetObj?: NoticeboardWidgetMapItem;
   setEditorContent?: any;
@@ -37,6 +40,7 @@ export interface NoticeboardFormProps {
   handleEditUpdateWYSIWYG?: any;
   handleEditUpdateQuotes?: (e: React.ChangeEvent<Element>) => void;
   viewEditMode?: { widgetID?: string; mode: string };
+  resetNewWidgetData?: ()=>void;
   newWidgetData?: NoticeboardWidgetMapItem;
   setNewWidgetData?: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem>>;
   widgetData?: any;
@@ -45,10 +49,13 @@ export interface NoticeboardFormProps {
     editMode: 'view' | 'edit' | 'save' | 'create' | 'delete' | 'savenew' | '',
     widgetID: string
   ) => void;
+  clickFunction?: (param?: any) => any;
+  label?: string;
 }
 
 const NoticeboardContent = (props: NoticeboardContentCardProps) => {
   const {
+    activeRoom,
     viewEditMode,
     handleEditToggle,
     handleEditUpdateDefault,
@@ -59,12 +66,17 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     widgetData,
     setWidgetData,
     createTemplate,
+    initialNewWidgetData,
     newWidgetData,
     setNewWidgetData,
     content,
   } = props;
   const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
+  const { anthologyDict, classRoomDict } = useDictionary(clientKey);
+
+  const resetNewWidgetData = ():void => {
+    setNewWidgetData(initialNewWidgetData);
+  }
 
   const setEditorContent = (html: string, text: string, idKey: string) => {
     handleEditUpdateWYSIWYG(idKey, html, 'content', 'text', '');
@@ -78,7 +90,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
            * CREATE WIDGET VIEW
            */}
 
-          <div id={`anthology_${subSection}_create`} className={`flex flex-col`}>
+          <div id={`anthology_${subSection}_create`} className={`flex flex-col p-2`}>
             {viewEditMode && viewEditMode.mode === 'create' ? (
               <CreateModeView
                 viewEditMode={viewEditMode}
@@ -87,6 +99,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                 handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
                 setEditorContent={setEditorContent}
                 handleActivation={handleActivation}
+                resetNewWidgetData={resetNewWidgetData}
                 newWidgetData={newWidgetData}
                 setNewWidgetData={setNewWidgetData}
                 setWidgetData={setWidgetData}
@@ -98,12 +111,16 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
             {/**
              *  section:  VIEW/EDIT BUTTON
              */}
-            <CreateNewButton
-              subSection={subSection}
-              widgetObj={createTemplate}
-              viewEditMode={viewEditMode}
-              handleEditToggle={handleEditToggle}
-            />
+            {activeRoom ? (
+              <CreateNewButton
+                subSection={subSection}
+                widgetObj={createTemplate}
+                viewEditMode={viewEditMode}
+                handleEditToggle={handleEditToggle}
+              />
+            ) : (
+              <>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM}...</>
+            )}
           </div>
         </ContentCard>
       }
@@ -120,6 +137,7 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
               <ContentCard key={`noticeboardwidget_${subSection}${idx}`}>
                 <div id={widgetObj.id} className={`flex flex-col p-2`}>
                   {viewEditMode && viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
+                    <>
                     <EditModeView
                       widgetObj={widgetObj}
                       viewEditMode={viewEditMode}
@@ -128,11 +146,13 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
                       handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
                       handleActivation={handleActivation}
                       setEditorContent={setEditorContent}
+                      resetNewWidgetData={resetNewWidgetData}
                       newWidgetData={newWidgetData}
                       setNewWidgetData={setNewWidgetData}
                       setWidgetData={setWidgetData}
                       widgetData={widgetData}
                     />
+                    </>
                   ) : (
                     <ViewModeView widgetObj={widgetObj} />
                   )}
