@@ -50,8 +50,13 @@ const EditTopic = (props: EditTopicProps) => {
     if (e.target.name === 'name') {
       setTopic({ ...topic, name: value })
       if (value.length && validation.name) setValidation({ ...validation, name: '' })
+    } else if (e.target.name === 'description') setTopic({ ...topic, description: value })
+    else {
+      setTopic({
+        ...topic,
+        [e.target.name]: e.target.value
+      })
     }
-    if (e.target.name === 'description') setTopic({ ...topic, description: value })
   }
 
   const validateForm = () => {

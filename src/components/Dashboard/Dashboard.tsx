@@ -10,10 +10,8 @@ import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import SideWidgetBar from './SideWidgetBar/SideWidgetBar';
+import SideWidgetBar from './Noticebooard/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
-import { copyLessonPlans } from '../../uniqueScripts/CopyLessonPlans_to_SyllabusLessons';
-import { initRosterSyllabusLessons } from '../../uniqueScripts/InitRoster_in_SyllabusLessons';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -71,20 +69,20 @@ const Dashboard = (props: DashboardProps) => {
   const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
 
   // Page switching
-  const [currentPage, setCurrentPage] = useState<string>('classroom');
+  const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
 
-  useEffect(()=>{
+  useEffect(() => {
     // copyLessonPlans();
-  },[])
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     // initRosterSyllabusLessons();
-  },[])
+  }, []);
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -136,17 +134,8 @@ const Dashboard = (props: DashboardProps) => {
         role: state.user?.role,
         image: state.user?.image,
       });
-      if (state.user?.role === 'FLW' || state.user?.role === 'TR') {
-        setCurrentPage('lesson-planner');
-      }
-      if (userData.role === 'ST') {
-        setCurrentPage('classroom');
-      }
-      if(userData.role === 'ADM'){
-        setCurrentPage('manage-institutions');
-      }
     }
-  }, []);
+  }, [state.user.role]);
 
   return (
     <div className={`w-screen md:w-full h-screen md:h-full flex`}>
@@ -158,7 +147,9 @@ const Dashboard = (props: DashboardProps) => {
         <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
       </SideMenu>
 
-      {currentPage === 'lesson-planner' || currentPage === 'classroom' ? (
+      {(currentPage === 'lesson-planner' && userData.role === 'TR') ||
+      (currentPage === 'lesson-planner' && userData.role === 'FLW') ||
+      (userData.role === 'ST' && currentPage === 'classroom') ? (
         <SideRoomSelector
           currentPage={currentPage}
           activeRoom={activeRoom}
@@ -210,6 +201,7 @@ const Dashboard = (props: DashboardProps) => {
                 render={() => (
                   <Classroom
                     currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
                     activeRoom={activeRoom}
                     activeRoomInfo={activeRoomInfo}
                     setActiveRoom={setActiveRoom}
@@ -223,15 +215,16 @@ const Dashboard = (props: DashboardProps) => {
                 )}
               />
               <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
-              <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin />} />
+              <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage}/>} />
               <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
               <Route path={`${match.url}/registration`} render={() => <Registration />} />
-              <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState}/>} />
+              <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
               <Route
                 path={`${match.url}/lesson-planner`}
                 render={() => (
                   <LessonPlanHome
                     currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
                     activeRoom={activeRoom}
                     activeRoomInfo={activeRoomInfo}
                     activeRoomName={activeRoomName}
@@ -245,7 +238,10 @@ const Dashboard = (props: DashboardProps) => {
                   />
                 )}
               />
-              <Route path={`${match.url}/manage-institutions`} render={() => <InstitutionsHome />} />
+              <Route
+                path={`${match.url}/manage-institutions`}
+                render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+              />
               <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
               <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
             </Switch>
@@ -256,11 +252,11 @@ const Dashboard = (props: DashboardProps) => {
          *  SIDEWIDGETSBAR
          */}
         {
-          currentPage === 'classroom' ? (
-          <SideWidgetBar
-            currentPage={currentPage}
-          />
-        ) : null
+          currentPage === 'classroom' ||
+          currentPage === 'lesson-planner' ||
+          currentPage === 'noticeboard' ?
+            <SideWidgetBar currentPage={currentPage} /> :
+            null
         }
       </div>
     </div>

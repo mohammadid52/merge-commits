@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { QuoteWidget } from './TopWidgets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { CallLinkWidget, DefaultTextWidget } from '../SideWidgetBar/Widgets';
+import { CallLinkWidget, DefaultTextWidget, FileLinkWidget } from './Widgets';
 
 const TopWidgetBar = () => {
   const { state } = useContext(GlobalContext);
@@ -28,7 +28,23 @@ const TopWidgetBar = () => {
       case 'quote':
         return <QuoteWidget key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
       case 'call':
-        return <CallLinkWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>;
+        return (
+          <CallLinkWidget
+            key={`sidebar_widget_${idx}`}
+            title={widgetObj.title}
+            links={widgetObj.links}
+            widgetObj={widgetObj}
+          />
+        );
+      case 'file':
+        return (
+          <FileLinkWidget
+            key={`sidebar_widget_${idx}`}
+            title={widgetObj.title}
+            links={widgetObj.links}
+            widgetObj={widgetObj}
+          />
+        );
       default:
         return null;
     }

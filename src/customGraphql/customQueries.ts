@@ -1361,6 +1361,8 @@ export const listLessonsTitles = /* GraphQL */ `
           stage
         }
         institutionID
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -1379,6 +1381,10 @@ export const getTopicDetails = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -1392,10 +1398,6 @@ export const listRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id

@@ -2252,10 +2252,6 @@ export const createRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       topic {
         id
@@ -2305,10 +2301,6 @@ export const updateRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       topic {
         id
@@ -2358,10 +2350,6 @@ export const deleteRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       topic {
         id
@@ -5840,10 +5828,6 @@ export const createLessonRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id
@@ -6011,10 +5995,6 @@ export const updateLessonRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id
@@ -6182,10 +6162,6 @@ export const deleteLessonRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id
