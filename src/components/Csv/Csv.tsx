@@ -117,9 +117,18 @@ const Csv = (props: Csv) => {
                 })
             })
             setDemographicsQuestions(demographicsQues)
+            // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
+            getStudentsDemographicsQuestionsResponse(cCheckpoints, '999999')
         } catch (err) {
             console.log('fetch units (syllabus) error', err)
         }
+    }
+
+    const getStudentsDemographicsQuestionsResponse = (checkpointIds: any, syllabusLessonID: string) => {
+        // let curriculumData: any = await API.graphql(graphqlOperation(customQueries.getStudentResponse, {
+        //     id: curriculumId
+        // }))
+
     }
 
     const onUnitSelect = (id: string, name: string, value: string) => {

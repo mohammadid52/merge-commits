@@ -1955,10 +1955,6 @@ export const getSyllabus = /* GraphQL */ `
                   id
                   name
                   criteria
-                  distinguished
-                  excelled
-                  adequite
-                  basic
                   topicID
                 }
                 createdAt
@@ -2228,6 +2224,34 @@ export const fetchClassStudents = /* GraphQL */ `
         }
         nextToken
       }
+    }
+  }
+`;
+
+export const getStudentResponse = /* GraphQL */ `
+  query ListQuestionDatas(
+    $filter: ModelQuestionDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;
