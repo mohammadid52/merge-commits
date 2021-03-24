@@ -1,12 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { DashboardProps } from '../Dashboard';
 
-import { CallLinkWidget, DefaultTextWidget, FileLinkWidget, ImageWidget, LogoWidget } from './Widgets';
+import { CallLinkWidget, DefaultTextWidget, ImageWidget, LogoWidget } from './Widgets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { QuoteWidget } from './TopWidgets';
 import { useWindowSize } from '../../../customHooks/windowSize';
+import { FileLinkWidget } from './Widgets/FilesWidget';
 
 const SideWidgetBar = (props: DashboardProps) => {
   const { currentPage, setVisibleLessonGroup } = props;

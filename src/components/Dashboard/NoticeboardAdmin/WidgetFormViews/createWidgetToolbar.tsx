@@ -3,7 +3,7 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
 import { GrBlockQuote } from 'react-icons/gr';
 import { GoTextSize } from 'react-icons/go';
-import { AiOutlinePhone } from 'react-icons/ai';
+import { AiOutlineFileZip, AiOutlinePhone } from 'react-icons/ai';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
@@ -66,6 +66,8 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
         return <GrBlockQuote />;
       case 'default':
         return <GoTextSize />;
+      case 'file':
+        return <AiOutlineFileZip />
       default:
         return null;
     }
@@ -122,9 +124,10 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
               <div
                 key={`typeOption_${idx}`}
                 className={`
-              ${selectorClass}
-              ${widgetObj.type === option.type ? 'text-white font-semibold bg-blueberry' : ''}
-            `}
+                cursor-pointer
+                ${selectorClass}
+                ${widgetObj.type === option.type ? 'text-white font-semibold bg-blueberry' : ''}
+                `}
                 data-basekey="type"
                 onClick={() => handleEditUpdateWYSIWYG('type', option.type, 'type', '', '')}>
                 <p className={`underline`}>
