@@ -1955,10 +1955,6 @@ export const getSyllabus = /* GraphQL */ `
                   id
                   name
                   criteria
-                  distinguished
-                  excelled
-                  adequite
-                  basic
                   topicID
                 }
                 createdAt
