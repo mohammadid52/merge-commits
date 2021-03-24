@@ -8,6 +8,7 @@ import * as customQueries from '../../../customGraphql/customQueries';
 import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 import useDictionary from '../../../customHooks/dictionary';
+import * as queries from '../../../graphql/queries';
 
 export interface Room {
   id: string;
@@ -46,6 +47,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   const [syllabusId, setSyllabusId] = useState<string[]>([]);
   // Menu state
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
@@ -171,6 +173,35 @@ const SideRoomSelector = (props: SideMenuProps) => {
     };
     listRoomCurriculums();
   }, [activeRoom]);
+
+  // Fetch widgets for current room & put in context
+  useEffect(()=>{
+    const listRoomWidgets = async() => {
+      setWidgetLoading(true);
+      //
+      try {
+        const noticeboardWidgetsFetch: any = await API.graphql(
+          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoom } } })
+        );
+        const response = await noticeboardWidgetsFetch;
+        const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'widgets',
+            data: arrayOfResponseObjects,
+          },
+        });
+      } catch (e) {
+        console.error('listNoticeboardWidgetsFetch: -> ', e);
+      } finally {
+        setWidgetLoading(false);
+      }
+    }
+    if(activeRoom && widgetLoading === false){
+      listRoomWidgets();
+    }
+  },[activeRoom])
 
   // Save info of selected room to cookie
   useEffect(() => {

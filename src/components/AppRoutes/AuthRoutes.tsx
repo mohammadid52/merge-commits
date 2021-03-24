@@ -5,7 +5,8 @@ import PrivateRoute from '../Auth/PrivateRoute';
 const Dashboard = lazy(() => import('../Dashboard/Dashboard'));
 const Lesson = lazy(() => import('../Lesson/Lesson'));
 const TeacherView = lazy(() => import('../TeacherView/TeacherView'));
-const RoomChat = lazy(() => import('../RoomChat/RoomChat'))
+const Chat = lazy(() => import('../RoomChat/Chat'))
+const Csv = lazy(() => import('../Csv/Csv'))
 interface AuthRoutesProps {
     updateAuthState: Function
 }
@@ -35,7 +36,10 @@ const AuthRoutes = ({ updateAuthState }: AuthRoutesProps) => {
                 )}
             />
             <PrivateRoute path='/chat'>
-                <RoomChat />
+                <Chat />
+            </PrivateRoute>
+            <PrivateRoute path='/csv'>
+                <Csv />
             </PrivateRoute>
             <Route render={() => <Redirect to="/" />} />
         </Switch>

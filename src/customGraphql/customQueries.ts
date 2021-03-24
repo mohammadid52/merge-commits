@@ -14,7 +14,6 @@ export const getPerson = /* GraphQL */ `
   }
 `;
 
-
 export const listLessonPlans = /* GraphQL */ `
   query ListClassrooms {
     listClassrooms {
@@ -501,7 +500,7 @@ export const getSyllabusLesson = /* GraphQL */ `
         id
         title
         type
-         instructions
+        instructions
         instructionsTitle
         instructions
         filters
@@ -775,9 +774,9 @@ export const listSyllabusLessons = /* GraphQL */ `
             bio
           }
           summary
-        purpose
-        designers
-        objectives
+          purpose
+          designers
+          objectives
         }
         endDate
         startDate
@@ -1361,6 +1360,9 @@ export const listLessonsTitles = /* GraphQL */ `
           sequence
           stage
         }
+        institutionID
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -1379,6 +1381,10 @@ export const getTopicDetails = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -1392,10 +1398,6 @@ export const listRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id
@@ -1528,6 +1530,11 @@ export const getLesson = /* GraphQL */ `
         sequence
         stage
       }
+      institutionID
+      institution {
+        id
+        name
+        }
       measurements {
         nextToken
       }
@@ -1542,6 +1549,7 @@ export const listCheckpoints = /* GraphQL */ `
         subtitle
         id
         type
+        language
         questions {
           nextToken
           items {
@@ -1757,11 +1765,7 @@ export const getCheckpointDetails = /* GraphQL */ `
 `;
 
 export const listQuestionDatas = /* GraphQL */ `
-  query ListQuestionDatas(
-    $filter: ModelQuestionDataFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListQuestionDatas($filter: ModelQuestionDataFilterInput, $limit: Int, $nextToken: String) {
     listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -1814,6 +1818,439 @@ export const listQuestionDatas = /* GraphQL */ `
           endDate
           createdAt
           updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getCompleteLesson = /* GraphQL */ `
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      title
+      type
+      label
+      instructions
+      instructionsTitle
+      grades
+      artistID
+      language
+      SELStructure
+      connection
+      summary
+      purpose
+      designers
+      objectives
+      checkpoints {
+        items {
+          id
+          lessonID
+          checkpointID
+          position
+          createdAt
+          updatedAt
+          checkpoint {
+            id
+            label
+            title
+            subtitle
+            stage
+            type
+            instructionsTitle
+            instructions
+            questions {
+              items {
+                id
+                checkpointID
+                questionID
+                required
+                question {
+                  id
+                  label
+                  type
+                  question
+                  designers
+                  language
+                  sourceId
+                  note
+                  options {
+                    text
+                    label
+                    icon
+                    color
+                  }
+                }
+              }
+            }
+            purpose
+            objectives
+            designers
+            language
+            estTime
+          }
+        }
+        nextToken
+      }
+      doFirstID
+      warmUpId
+      coreLessonId
+      filters
+      coverImage
+      summaryTitle
+      introductionTitle
+      introduction
+      connectionTitle
+      lessonPlan {
+        type
+        LessonComponentID
+        sequence
+        stage
+      }
+      measurements {
+        items {
+          id
+          lessonID
+          rubricID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getSyllabus = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          lesson {
+            title
+            measurements {
+              items {
+                id
+                lessonID
+                rubricID
+                rubric {
+                  id
+                  name
+                  criteria
+                  distinguished
+                  excelled
+                  adequite
+                  basic
+                  topicID
+                }
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+          }
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+// delete once lessons table updated in production
+// export const listLessonsIds = /* GraphQL */ `
+//   query ListLessons(
+//     $id: ID
+//     $filter: ModelLessonFilterInput
+//     $limit: Int
+//     $nextToken: String
+//     $sortDirection: ModelSortDirection
+//   ) {
+//     listLessons(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken, sortDirection: $sortDirection) {
+//       items {
+//         id
+//       }
+//       nextToken
+//     }
+//   }
+// `;
+
+export const getInstitutionCurriculars = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+      type
+      curricula {
+        items {
+          id
+          institutionID
+          name
+          type
+          languages
+          designers
+          syllabi {
+            items{
+              id
+              name
+              type      
+            }
+          }
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getChatRooms = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      id
+      classes {
+        items {
+          id
+          classID
+          class {
+            id
+            rooms {
+              items {
+                id
+                name
+              }
+            }          
+          }
+        }
+      }
+    }
+  }
+`;
+export const listFilteredSyllabusLessons = /* GraphQL */ `
+  query ListSyllabusLessons(
+    $filter: ModelSyllabusLessonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusID
+        lessonID
+        unit
+        sequence
+        status
+        complete
+        roster
+        viewing
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getInstitutionsList = /* GraphQL */ `
+  query ListInstitutions(
+    $nextToken: String
+  ) {
+    listInstitutions(nextToken: $nextToken) {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getInstClassRooms = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      rooms {
+        items {
+          id
+          name
+          classID
+          class {
+            id
+            name
+          }
+          curricula {
+            items {
+              id
+              curriculumID
+              curriculum {
+                id
+                name
+              }
+            }
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const listUnits = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpoint {
+            id
+            questions {
+              items {
+                id
+                question {
+                  id
+                  label
+                  type
+                  question
+                }
+              }
+            }
+          }
+        }
+      }
+      syllabi {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const listSurveys = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      lessons {
+        items {
+          id
+          lessonID
+          lesson {
+            id
+            title
+            type
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const getSurveyQuestions = /* GraphQL */ `
+query GetLesson($id: ID!) {
+  getLesson(id: $id) {
+    id
+    checkpoints {
+      items {
+        checkpointID
+        checkpoint {
+          questions {
+            items {
+              questionID
+              question {
+                id
+                label
+                type
+                question
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const fetchClassStudents = /* GraphQL */ `
+  query GetClass($id: ID!) {
+    getClass(id: $id) {
+      id
+      students {
+        items {
+          student {
+            id
+            authId
+            email
+            firstName
+            lastName
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const getStudentResponse = /* GraphQL */ `
+  query ListQuestionDatas(
+    $filter: ModelQuestionDataFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        syllabusLessonID
+        checkpointID
+        email
+        authID
+        componentType
+        scheduleID
+        lessonID
+        responseObject {
+          qid
+          response
         }
         createdAt
         updatedAt

@@ -62,7 +62,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       console.log('seqItem', seqItem)
     }
     if (addedItem) {
-      history.push(`/dashboard/manage-institutions/curricular?id=${curricularId}`);
+      history.goBack()
     } else {
       console.log('Could not add learning objective');
     }

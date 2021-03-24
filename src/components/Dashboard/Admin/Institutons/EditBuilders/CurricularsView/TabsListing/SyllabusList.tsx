@@ -15,10 +15,11 @@ interface SyllabusListProps {
   savedSyllabi?: any[]
   curricularId?: string
   loading: boolean
+  institutionId: string
 }
 
 const SyllabusList = (props: SyllabusListProps) => {
-  const { curricularId, savedSyllabi, loading } = props;
+  const { curricularId, savedSyllabi, loading, institutionId } = props;
   const [isLoading, setLoading] = useState(loading);
   const [syllabusList, setSyllabusList] = useState(savedSyllabi);
   const [syllabusIds, setSyllabusIds] = useState([]);
@@ -47,7 +48,7 @@ const SyllabusList = (props: SyllabusListProps) => {
   }
 
   const editCurrentSyllabus = (id: string) => {
-    history.push(`/dashboard/manage-institutions/curricular/${curricularId}/syllabus/edit?id=${id}`)
+    history.push(`/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${id}`)
   }
 
   const setSyllabusSequence = async () => {

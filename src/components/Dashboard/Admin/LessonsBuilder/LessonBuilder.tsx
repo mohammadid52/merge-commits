@@ -27,6 +27,7 @@ export interface InitialData {
   objective: string,
   objectiveHtml: string,
   languages: { id: string, name: string, value: string }[]
+  institution?: InputValueObject
 }
 export interface InputValueObject {
   id: string,
@@ -35,16 +36,17 @@ export interface InputValueObject {
 }
 interface LessonBuilderProps {
   designersList: any[]
+  institutionList: any[]
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const { designersList } = props;
+  const { designersList, institutionList } = props;
   const history = useHistory();
   const match = useRouteMatch();
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lessons', url: '/dashborad/lesson-builder', last: false },
+    { title: 'Lessons', url: '/dashboard/lesson-builder', last: false },
     { title: 'Lesson Plan Builder', url: `${match.url}`, last: true },
   ]
 
@@ -55,7 +57,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
-    languages: [{ id: '1', name: "English", value: 'EN' }]
+    languages: [{ id: '1', name: "English", value: 'EN' }],
+    institution: { id: '', name: '', value: '' },
   }
   const instructionInitialState = {
     introductionTitle: '',
@@ -117,6 +120,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           allMeasurement={measurementList}
           lessonMeasurements={selectedMeasurement}
           setLessonMeasurements={setSelectedMeasurement}
+          institutionList={institutionList}
         />;
       case 'Instructions':
         return <AssessmentInstuctions
@@ -124,6 +128,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           savedInstructions={savedLessonDetails?.lessonInstructions}
           updateParentState={(obj) => onInstructionSaved(obj)}
           lessonType={formData.type?.value}
+          lessonName={formData.name}
         />;
       case 'Builder':
         return <CheckpointBuilder
@@ -133,9 +138,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           updateLessonPlan={updateLessonPlan}
           setUnsavedChanges={setUnsavedChanges}
           activeStep={activeStep}
+          lessonName={formData.name}
+          lessonType={formData.type?.value}
         />;
       case 'Preview Details':
-        return <PreviewForm />;
+        return <PreviewForm
+          lessonName={formData.name}
+          lessonID={lessonId}
+          lessonPlans={savedLessonDetails.lessonPlans}
+          lessonType={formData.type?.value}
+        />;
       // default:
       //   return <AddNewLessonForm
       //     changeLessonType={changeLessonType}

@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
-import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
+import { FaRegEye, FaQuestionCircle, FaUnity } from 'react-icons/fa';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 
@@ -16,6 +16,8 @@ import GeneralInformation from './StepActionComponent/GeneralInformation';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
+import UnitLookup from './StepActionComponent/UnitLookup';
+
 import { InitialData } from './LessonBuilder';
 import { languageList } from '../../../../utilities/staticData'
 import ModalPopUp from '../../../Molecules/ModalPopUp';
@@ -60,6 +62,7 @@ const LessonEdit = (props: LessonEditProps) => {
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
+    institution: { id: '', name: '', value: '' },
     languages: [{ id: '1', name: "English", value: 'EN' }]
   }
   const instructionInitialState = {
@@ -78,7 +81,7 @@ const LessonEdit = (props: LessonEditProps) => {
   const [measurementList, setMeasurementList] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  // const [activeStep, setActiveStep] = useState('Builder');
+  // const [activeStep, setActiveStep] = useState('Assign Unit');
   const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -89,7 +92,7 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lessons', url: '/dashborad/lesson-builder', last: false },
+    { title: 'Lessons', url: '/dashboard/lesson-builder', last: false },
     {
       title: 'Lesson Plan Builder',
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`}`,
@@ -100,11 +103,13 @@ const LessonEdit = (props: LessonEditProps) => {
     { name: "Overview", icon: <IoCardSharp /> },
     { name: "Instructions", icon: <IoDocumentText /> },
     { name: "Builder", icon: <FaQuestionCircle /> },
-    { name: "Preview Details", icon: <FaRegEye /> }
+    { name: "Assign Unit", icon: <FaUnity /> },
+    { name: "Preview Details", icon: <FaRegEye /> },
   ];
   const lessonScrollerStep = [
     { name: "Overview", icon: <IoCardSharp /> },
-    { name: "Preview Details", icon: <FaRegEye /> }
+    // { name: "Assign Unit", icon: <FaUnity /> },
+    { name: "Preview Details", icon: <FaRegEye /> },
   ];
 
   const typeList: any = [
@@ -161,7 +166,8 @@ const LessonEdit = (props: LessonEditProps) => {
         type: savedData.type && typeList.find((item: any) => item.value === savedData.type),
         purposeHtml: savedData?.purpose ? savedData.purpose : '<p></p>',
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
-        languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : []
+        languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : [],
+        institution: { id: savedData?.institution?.id, name: savedData?.institution?.name, value: savedData?.institution?.name }
       });
       setSavedLessonDetails({
         ...savedLessonDetails,
@@ -232,6 +238,7 @@ const LessonEdit = (props: LessonEditProps) => {
           savedInstructions={savedLessonDetails?.lessonInstructions}
           updateParentState={updateInstructions}
           lessonType={formData.type?.value}
+          lessonName={formData.name}
         />;
       case 'Builder':
         return <CheckpointBuilder
@@ -241,9 +248,25 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonID={lessonId || assessmentId}
           setUnsavedChanges={setUnsavedChanges}
           activeStep={activeStep}
+          lessonName={formData.name}
+          lessonType={formData.type?.value}
         />;
       case 'Preview Details':
-        return <PreviewForm />;
+        return <PreviewForm
+          lessonName={formData.name}
+          enablePublish
+          lessonID={lessonId || assessmentId}
+          lessonPlans={savedLessonDetails.lessonPlans}
+          lessonType={formData.type?.value}
+        />;
+      case 'Assign Unit':
+        return <UnitLookup
+          lessonName={formData.name}
+          lessonId={lessonId || assessmentId}
+          institution={formData.institution}
+          lessonType={formData.type?.value}
+          lessonPlans={savedLessonDetails.lessonPlans}
+          />;
       // default:
       //   return <GeneralInformation
       //     formData={formData}

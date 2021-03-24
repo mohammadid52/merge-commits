@@ -15,8 +15,16 @@ const SelfDisplay = () => {
 
   return (
     <div className={theme.section}>
-      <ReflectionQuestions questions={state.data.lesson.activity.breakdown.reflectionQuestions}  />
-      <Banner title={displayProps.title ? displayProps.title : 'Activity Breakdown'} iconName={`FaPenFancy`}/>
+      <ReflectionQuestions questions={state.data.lesson.activity.breakdown.reflectionQuestions} />
+
+      {/**
+       * HIDE BANNER IF NO TITLE
+       */}
+      {
+        displayProps && displayProps.title && (
+          <Banner title={displayProps.title} iconName={`FaPenFancy`} />
+        )
+      }
       <PoemOutput poem={typeof displayProps !== 'undefined' ? displayProps.editInput : 'Your Poem :)'} />
     </div>
   );

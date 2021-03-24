@@ -24,8 +24,6 @@ const Story = (props: props) => {
   const { fullscreen } = props;
   const { state, theme } = useContext(LessonControlContext);
   const inputs = state.data.lesson.warmUp.inputs;
-  const video = state.data.lesson.warmUp.instructions.link;
-  const [openPopup, setOpenPopup] = useState(false);
   const [dataProps, setDataProps] = useState<{ title?: string; story?: string[]; [key: string]: any }>();
 
   let displayStudentData = state.studentViewing.live

@@ -1025,6 +1025,10 @@ export const getTopic = /* GraphQL */ `
       }
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -1071,6 +1075,10 @@ export const listTopics = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -1158,10 +1166,6 @@ export const getRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       topic {
         id
@@ -1189,6 +1193,10 @@ export const getRubric = /* GraphQL */ `
         }
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         createdAt
         updatedAt
       }
@@ -1217,10 +1225,6 @@ export const listRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id
@@ -1228,6 +1232,10 @@ export const listRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }
@@ -2447,6 +2455,43 @@ export const getLesson = /* GraphQL */ `
         }
         nextToken
       }
+      institutionID
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -2576,6 +2621,25 @@ export const listLessons = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -2698,6 +2762,25 @@ export const getLessonRubrics = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -2705,10 +2788,6 @@ export const getLessonRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id
@@ -2716,6 +2795,10 @@ export const getLessonRubrics = /* GraphQL */ `
           learningObjectiveID
           name
           description
+          distinguished
+          excelled
+          adequite
+          basic
           createdAt
           updatedAt
         }
@@ -2766,6 +2849,7 @@ export const listLessonRubricss = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -2773,10 +2857,6 @@ export const listLessonRubricss = /* GraphQL */ `
           id
           name
           criteria
-          distinguished
-          excelled
-          adequite
-          basic
           topicID
           curriculumID
           createdAt
@@ -2983,6 +3063,25 @@ export const getSyllabusLesson = /* GraphQL */ `
         measurements {
           nextToken
         }
+        institutionID
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }
@@ -3093,6 +3192,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3169,6 +3269,7 @@ export const getStudentData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3486,6 +3587,7 @@ export const getQuestionData = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3627,6 +3729,7 @@ export const getFeedback = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -3926,6 +4029,7 @@ export const getPersonLocation = /* GraphQL */ `
           introductionTitle
           introduction
           connectionTitle
+          institutionID
           createdAt
           updatedAt
         }
@@ -4141,6 +4245,10 @@ export const getNoticeboardWidget = /* GraphQL */ `
         text
         author
       }
+      links {
+        text
+        url
+      }
       active
       teacher {
         id
@@ -4204,6 +4312,10 @@ export const listNoticeboardWidgets = /* GraphQL */ `
         quotes {
           text
           author
+        }
+        links {
+          text
+          url
         }
         active
         teacher {
