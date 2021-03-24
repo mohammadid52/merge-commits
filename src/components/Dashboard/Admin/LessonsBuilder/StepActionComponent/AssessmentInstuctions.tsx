@@ -15,12 +15,13 @@ interface AssessmentInstuctionsProps {
   lessonId: string
   updateParentState?: (obj: InstructionInitialState) => void
   lessonType: string
+  lessonName: string
 }
 
 
 const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
 
-  const { savedInstructions, lessonId, updateParentState, lessonType } = props;
+  const { savedInstructions, lessonId, updateParentState, lessonType, lessonName } = props;
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -115,7 +116,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
       });
       updateParentState(formData);
       setLoading(false)
-    } catch{
+    } catch {
       setValidation({
         ...validation,
         message: 'Error while updating instructions, please try again later.',
@@ -134,7 +135,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
       <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instruction </h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900"> {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions - {lessonName}</h3>
       </div>
 
       <div className="p-4">
@@ -150,7 +151,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
                 <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                   <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                     <div className="flex items-center justify-center">
-                      <span className={`text-xs md:text-base font-medium cursor-pointer text-center ${theme.textColor[themeColor] } ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`} onClick={() => setSelectedBlock(item.id)}>
+                      <span className={`text-xs md:text-base font-medium cursor-pointer text-center ${theme.textColor[themeColor]} ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`} onClick={() => setSelectedBlock(item.id)}>
                         {item.header}
                       </span>
                     </div>

@@ -23,7 +23,6 @@ export const standardTheme = {
     textInput: 'bg-darker-gray text-blue-100 py-2 px-4',
     shadow: 'shadow-elem-dark',
     card: 'rounded-lg bg-white bg-opacity-20',
-    cardIn: 'rounded-lg p-2 bg-black bg-opacity-20',
   },
   toolbar: {
     bg: 'bg-black',
@@ -107,6 +106,16 @@ export const standardTheme = {
     footer: 'flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200',
     content: 'border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
   },
+  notice:{
+    bar: '',
+    category:{
+      error: '',
+      alert: '',
+      info:'',
+      help: '',
+      tip: ''
+    }
+  }
 };
 
 // TODO: replace dashboard.sectionTitle with << font-medium h-12 justify-center items-center text-left >>
@@ -128,7 +137,6 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const clientKey = getClientKey();
 
   useEffect(() => {
-
     if (state.user && state.user.location && state.user.location.length > 0) {
       updatePersonLocation();
     } else {

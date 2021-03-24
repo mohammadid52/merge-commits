@@ -3,6 +3,7 @@ import API, { graphqlOperation } from '@aws-amplify/api'
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
+import * as queries from '../../../../graphql/queries';
 
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
@@ -11,7 +12,8 @@ import LessonEdit from './LessonEdit';
 const LessonsBuilderHome = () => {
   const match = useRouteMatch();
   const [designersList, setDesignersList] = useState([]);
-  
+  const [institutionList, setInstitutionList] = useState([]);
+
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
       filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "BLD" } }] }
@@ -25,8 +27,20 @@ const LessonsBuilderHome = () => {
     setDesignersList(updatedList);
   }
 
+  const fetchInstitutionsList = async () => {
+    const result: any = await API.graphql(graphqlOperation(queries.listInstitutions));
+    const savedData = result.data.listInstitutions;
+    const updatedList = savedData?.items.map((item: { id: string, name: string }) => ({
+      id: item?.id,
+      name: item?.name || '',
+      value: item?.name || ''
+    }))
+    setInstitutionList(updatedList);
+  }
+
   useEffect(() => {
     fetchPersonsList();
+    fetchInstitutionsList();
   }, []);
 
   return (
@@ -40,7 +54,7 @@ const LessonsBuilderHome = () => {
         <Route
           exact
           path={`${match.url}/lesson/add`}
-          render={() => <LessonBuilder designersList={designersList} />}    // Add new lesson form
+          render={() => <LessonBuilder designersList={designersList} institutionList={institutionList} />}    // Add new lesson form
         />
         <Route
           exact

@@ -6,8 +6,10 @@ import { LessonContext } from '../../../contexts/LessonContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
-import NotesWidget from '../LessonComponents/Notes/NotesWidget';
-import { LessonHeaderBarProps } from '../../Header/LessonHeaderBar';
+import NotesWidget from './SideMenu/NotesWidget';
+import { LessonHeaderBarProps } from '../../../interfaces/LessonComponentsInterfaces';
+import HomeWidget from './SideMenu/HomeWidget';
+
 
 const SideMenu = (props: LessonHeaderBarProps) => {
   const {overlay, setOverlay} = props;
@@ -76,9 +78,10 @@ const SideMenu = (props: LessonHeaderBarProps) => {
     state: state,
   });
 
+  // @ts-ignore
   return (
     <>
-      <div className={`absolute w-auto content-end px-6 ${state.data.lesson.type === 'survey' ? 'mt-20' : ''}`}>
+      <div className={`absolute w-16 content-end ${state.data.lesson.type === 'survey' ? 'mt-20' : ''}`}>
 
         {/**
          * AUTOSAVE
@@ -97,14 +100,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * HOME
          */}
-        <div className={`cursor-pointer flex flex-col justify-center items-center mb-4`} onClick={props.handlePopup}>
-          {/* <NavLink to='/dashboard'> */}
-          <IconContext.Provider value={{ size: '1.5rem' }}>
-            <AiOutlineHome />
-          </IconContext.Provider>
-          {/* </NavLink> */}
-          <p className='text-xs text-gray-200 text-center'>Home</p>
-        </div>
+        <HomeWidget overlay={overlay} setOverlay={setOverlay} handlePopup={props.handlePopup}/>
 
         {/**
          * NOTES

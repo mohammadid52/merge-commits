@@ -26,7 +26,7 @@ const LessonsList = () => {
 
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  
+
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -232,7 +232,7 @@ const LessonsList = () => {
   }
   {
     return (
-      <div className={`w-9/10 h-full`}>
+      <div className={`w-full h-full`}>
 
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
@@ -267,15 +267,15 @@ const LessonsList = () => {
                     <span className="w-auto">Label</span>
                   </div> */}
                   <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Type</span>
-                  </div>
-                  {/* <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Source</span>
+                    <span className="w-auto">Lesson Type</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Topics</span>
-                  </div> */}
-                  <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">Created Date</span>
+                  </div>
+                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">Last Edit Date</span>
+                  </div>
+                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Language</span>
                   </div>
                   <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -292,6 +292,8 @@ const LessonsList = () => {
                       title={lessonsObject.title}
                       type={lessonsObject.type && getType(lessonsObject.type)}
                       languages={lessonsObject?.language && lessonsObject?.language.map((item: string) => getLanguageString(item))}
+                      createdAt={lessonsObject.createdAt}
+                      updatedAt={lessonsObject.updatedAt}
                     />
                   ))
                   : (

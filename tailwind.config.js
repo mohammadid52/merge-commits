@@ -159,7 +159,7 @@ module.exports = {
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
         'demo-bg':
-          "url('https://zoiqclients.s3.amazonaws.com/demo/demologos/LoginImage_PC.jpg')",
+          "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',

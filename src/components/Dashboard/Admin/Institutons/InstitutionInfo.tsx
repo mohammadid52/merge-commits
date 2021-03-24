@@ -41,15 +41,15 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const [imageUrl, setImageUrl] = useState();
 
   const tabs = [
-    { index: 0, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} /> },
-    { index: 1, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} /> },
-    { index: 2, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} instName={institute?.name}/> },
-    { index: 3, title: 'Curricula', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} instName={institute?.name}/> },
-    { index: 4, title: 'Classrooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name}/> }
+    { index: 0, title: 'Staff', icon: <IoPeople />, active: true, content: <StaffBuilder serviceProviders={institute.serviceProviders} instituteId={instProps?.institute?.id} instName={institute?.name} /> },
+    { index: 1, title: 'Classes', icon: <FaChalkboardTeacher />, active: false, content: <ClassList classes={institute?.classes} instId={institute?.id} instName={institute?.name} /> },
+    { index: 2, title: 'Curricula', icon: <FaGraduationCap />, active: false, content: <CurriculumList curricular={instProps?.institute?.curricula} instId={institute?.id} instName={institute?.name} /> },
+    { index: 3, title: 'Service Providers', icon: <FaHandshake />, active: false, content: <ServiceProviders serviceProviders={institute.serviceProviders} instId={institute?.id} updateServiceProviders={instProps.updateServiceProviders} instName={institute?.name} /> },
+    { index: 4, title: 'Classrooms', icon: <FaHotel />, active: false, content: <RoomsList instId={institute?.id} instName={institute?.name} /> }
   ]
 
   const updateTab = (tab: number) => {
-    tabProps.setTabsData({...tabProps.tabsData, inst: tab})
+    tabProps.setTabsData({ ...tabProps.tabsData, inst: tab })
   }
 
   useEffect(() => {
