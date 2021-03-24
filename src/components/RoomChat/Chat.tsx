@@ -6,14 +6,10 @@ import RoomChat from './RoomChat';
 interface Chat { }
 
 const Chat = (props: Chat) => {
-    const { state, dispatch } = useContext(GlobalContext);
     const [selectedRoom, setSelectedRoom] = useState(null);
-
-
     const selectRoom = (room: any) => {
         setSelectedRoom({ ...room });
     }
-
 
     return (
         <>

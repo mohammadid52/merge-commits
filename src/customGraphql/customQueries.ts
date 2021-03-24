@@ -2082,3 +2082,150 @@ export const listFilteredSyllabusLessons = /* GraphQL */ `
     }
   }
 `;
+
+export const getInstitutionsList = /* GraphQL */ `
+  query ListInstitutions(
+    $nextToken: String
+  ) {
+    listInstitutions(nextToken: $nextToken) {
+      items {
+        id
+        name
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getInstClassRooms = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      rooms {
+        items {
+          id
+          name
+          classID
+          class {
+            id
+            name
+          }
+          curricula {
+            items {
+              id
+              curriculumID
+              curriculum {
+                id
+                name
+              }
+            }
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const listUnits = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      checkpoints {
+        items {
+          id
+          type
+          typeID
+          checkpoint {
+            id
+            questions {
+              items {
+                id
+                question {
+                  id
+                  label
+                  type
+                  question
+                }
+              }
+            }
+          }
+        }
+      }
+      syllabi {
+        items {
+          id
+          name
+          type
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const listSurveys = /* GraphQL */ `
+  query GetSyllabus($id: ID!) {
+    getSyllabus(id: $id) {
+      id
+      lessons {
+        items {
+          id
+          lessonID
+          lesson {
+            id
+            title
+            type
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
+
+export const getSurveyQuestions = /* GraphQL */ `
+query GetLesson($id: ID!) {
+  getLesson(id: $id) {
+    id
+    checkpoints {
+      items {
+        checkpointID
+        checkpoint {
+          questions {
+            items {
+              questionID
+              question {
+                id
+                label
+                type
+                question
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`;
+
+export const fetchClassStudents = /* GraphQL */ `
+  query GetClass($id: ID!) {
+    getClass(id: $id) {
+      id
+      students {
+        items {
+          student {
+            id
+            authId
+            email
+            firstName
+            lastName
+          }
+        }
+        nextToken
+      }
+    }
+  }
+`;
