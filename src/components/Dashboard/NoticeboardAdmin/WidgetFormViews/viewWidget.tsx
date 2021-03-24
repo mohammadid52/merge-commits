@@ -31,9 +31,9 @@ export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {
       {/**
        *  section: DESCRIPTION
        */}
-      <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
+      {/*<div className={`overflow-ellipsis overflow-hidden ellipsis`}>
         {widgetObj.description ? widgetObj.description : `No description`}
-      </div>
+      </div>*/}
     </>
   );
 };
