@@ -29,11 +29,6 @@ const AddTopic = (props: AddTopicProps) => {
   const urlGetParams: any = useQuery();
   const learningId = urlGetParams.get('lid'); // Find a code from params.
 
-  const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Topic', url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
-  ];
-
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [learning, setLearning] = useState({ id: '', name: '', value: '' });
@@ -46,6 +41,13 @@ const AddTopic = (props: AddTopicProps) => {
     adequite: '',
     basic: ''
   })
+
+  const breadCrumsList = [
+    { title: 'Home', url: '/dashboard', last: false },
+    { title: learning?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
+    { title: 'Add Topic', url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
+  ];
+
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
       const value = e.target.value
@@ -169,7 +171,7 @@ const AddTopic = (props: AddTopicProps) => {
               }
             </div>
 
-            <div className="px-3 py-4">
+            {/* <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 Select Learning objective <span className="text-red-500">*</span>
               </label>
@@ -177,7 +179,7 @@ const AddTopic = (props: AddTopicProps) => {
               {
                 validation.learning && <p className="text-red-600">{validation.learning}</p>
               }
-            </div>
+            </div> */}
 
             <div className="px-3 py-4">
               <TextArea id='description' value={description} onChange={onInputChange} name='description' label="Description" />
