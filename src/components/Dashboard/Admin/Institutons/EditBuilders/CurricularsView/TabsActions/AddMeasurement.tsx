@@ -39,6 +39,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
+    { title: topic?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
     { title: 'Add Measurement', url: `/dashboard/curricular/${curricularId}/measurement/add`, last: true }
   ];
 
@@ -69,8 +70,8 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       value: item.name
     }));
     setTopics(list)
-    if(topicId){
-      setTopic(list.find((item:any) => item.id === topicId))
+    if (topicId) {
+      setTopic(list.find((item: any) => item.id === topicId))
     }
   }
   const fetchMeasurementSequence = async (topicId: string) => {
@@ -121,7 +122,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
         console.log('seqItem', seqItem)
       }
       if (addedItem) {
-      history.goBack()
+        history.goBack()
       } else {
         console.log('Could not add measurement');
       }
@@ -164,7 +165,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
                 validation.name && <p className="text-red-600">{validation.name}</p>
               }
             </div>
-            <div className="px-3 py-4">
+            {/* <div className="px-3 py-4">
               <div>
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Select Topic <span className="text-red-500">*</span>
@@ -174,7 +175,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
                   validation.topic && <p className="text-red-600">{validation.topic}</p>
                 }
               </div>
-            </div>
+            </div> */}
 
             <div className="px-3 py-4">
               <TextArea rows={3} id='criteria' value={criteria} onChange={onInputChange} name='criteria' label="Criteria" />

@@ -34,6 +34,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
+    { title: measurement.topic.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
     { title: 'Edit Measurement', url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`, last: true }
   ];
 
@@ -154,20 +155,20 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                   <div className="px-3 py-4">
                     <FormInput id='name' value={measurement.name} onChange={onInputChange} name='name' label="Measurement Name" isRequired />
                   </div>
-                  <div className="px-3 py-4">
-                    {/* <div>
+                  {/* <div className="px-3 py-4">
+                    <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Sequence
                     </label>
                     <Selector selectedItem={measurement.topic.value} placeholder="topic" list={topics} onChange={selectTopic} />
-                  </div> */}
+                  </div>
                     <div>
                       <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                         Select Topic
                     </label>
                       <Selector selectedItem={measurement.topic.value} placeholder="Topic" list={topics} onChange={selectTopic} />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="px-3 py-4">
                     <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label="Criteria" />
