@@ -131,9 +131,13 @@ const ConfirmCode = () => {
     }
   };
 
-  const sendNewCode = async (username: string) => {
+  const sendNewCode = async (username: string, isSignupError?: boolean) => {
     try {
-      await Auth.forgotPassword(username);
+      if (isSignupError) {
+        await Auth.resendSignUp(username);
+      } else {
+        await Auth.forgotPassword(username);
+      }
     } catch (error) {
       setMessage(() => {
         return {
@@ -191,6 +195,14 @@ const ConfirmCode = () => {
                 type: 'error',
                 message: 'Invalid account confirmation URL. Please check your email or Register first',
               };
+            case 'ExpiredCodeException': 
+              setExpiredLink(true);
+              sendNewCode(username, true)
+              return {
+                show: true,
+                type: 'error',
+                message: 'The link has expired. A new link is sent to your email.',
+              }
           }
         });
         toggleLoading(false);
