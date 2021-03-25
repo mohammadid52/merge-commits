@@ -11,16 +11,11 @@ import AddRemoveButton from '../addRemoveButton';
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
   const {
     widgetObj,
-    setEditorContent,
-    viewEditMode,
-    newWidgetData,
     setNewWidgetData,
-    widgetData,
-    setWidgetData,
     handleEditUpdateQuotes,
   } = props;
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
+  const { theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const { anthologyDict, noticeboardDict } = useDictionary(clientKey);
 
   const quoteItem = { text: '', author: '' };
   const callItem = { text: '', url: '' };
@@ -83,7 +78,6 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
   };
 
   const decreaseQuoteCount = (idx: number) => {
-    // if (viewEditMode.mode === 'create') {
     if (true) {
       const filtered = widgetObj[switchKey().key].filter((linkObj: any, idx1: number) => {
         if (idx1 !== idx) return linkObj;
@@ -154,7 +148,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
                     placeholder={
                       widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
                         ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        : `Please add ${theSwitchObj.label}...`
+                        : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label}...`
                     }
                   />
                 </div>
@@ -182,7 +176,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
                       placeholder={
                         widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
                           ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                          : `Please add ${theSwitchObj.label2}...`
+                          : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label2}...`
                       }
                       rows={2}
                     />
