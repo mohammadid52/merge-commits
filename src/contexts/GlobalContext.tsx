@@ -83,7 +83,7 @@ export const standardTheme = {
   },
   textColor: {
     iconoclastIndigo: 'text-indigo-600',
-    curateBlue: ' text-theme-blue',
+    curateBlue: 'text-theme-blue',
   },
   borderColor: {
     iconoclastIndigo: 'border-indigo-600',
