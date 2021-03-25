@@ -1417,10 +1417,6 @@ export const getRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       topic {
         id
