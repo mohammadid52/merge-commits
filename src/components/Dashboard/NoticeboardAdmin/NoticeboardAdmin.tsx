@@ -49,7 +49,7 @@ const initialNewWidgetData = {
 };
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
-  const {setCurrentPage} = props;
+  const { setCurrentPage } = props;
   const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
   const {} = useDictionary(clientKey);
   //
@@ -75,13 +75,17 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Sidebar Widgets');
+  const [widgetTypeCount, setWidgetTypeCount] = useState<{ sidebar: number; topbar: number }>({
+    sidebar: 0,
+    topbar: 0,
+  });
 
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
-  useEffect(()=>{
+  useEffect(() => {
     setCurrentPage('noticeboard');
-  },[])
+  }, []);
 
   //  TOP Function to load widgets
   const listNoticeboardWidgets = async () => {
@@ -109,6 +113,32 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     }
   };
 
+  const countWidgetTypes = (widgetArray: any[]) => {
+    if(widgetArray){
+      console.log('widgetArray - ', widgetArray)
+      return widgetArray.reduce((acc: { sidebar: number; topbar: number }, widgetObj: any) => {
+        if(widgetObj.placement === 'sidebar'){
+          return {...acc, sidebar: acc.sidebar + 1}
+        } else if (widgetObj.placement === 'topbar'){
+          return {...acc, topbar: acc.topbar + 1}
+        } else {
+          return acc;
+        }
+      },{sidebar: 0, topbar: 0})
+    } else {
+      return {
+        sidebar: 0,
+        topbar: 0,
+      }
+    }
+  }
+
+  useEffect(()=>{
+    if(widgetData.length > 0){
+      setWidgetTypeCount(countWidgetTypes(widgetData))
+    }
+  },[widgetData])
+
   useEffect(() => {
     setViewEditMode({ mode: '', widgetID: '' });
     setNewWidgetData(initialNewWidgetData);
@@ -122,7 +152,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       initializeWidgetData();
     }
   }, [activeRoom]);
-
 
   /*
    * Function group to handle updating widget data
@@ -314,7 +343,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       id: getWidgetObj.id,
     };
 
-    console.log('deleting widget...');
     try {
       const noticeboardWidgetDelete: any = await API.graphql(
         graphqlOperation(mutations.deleteNoticeboardWidget, {
@@ -349,7 +377,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   return (
     <React.Fragment>
-      <SectionTitle title={`Room Selector`} />
+      <SectionTitle title={`1. Room Selector`} />
 
       {/*
         Boetons to select between rooms
@@ -362,7 +390,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         setActiveRoomName={setActiveRoomName}
       />
 
-      <SectionTitle title={`Widget Manager`} />
+      <SectionTitle title={`2. Widget Manager`} />
 
       {/*
         Tabs to select between:
@@ -373,6 +401,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         subSection={subSection}
         subSectionList={['Top Widgets', 'Sidebar Widgets']}
         handleTabClick={handleTabClick}
+        widgetTypeCount={widgetTypeCount}
       />
 
       <NoticeboardAdminContent

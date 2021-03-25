@@ -102,10 +102,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   });
 
   const [status, setStatus] = useState('today');
-  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: string; upcoming: string; completed: string }>({
-    today: '0',
-    upcoming: '0',
-    completed: '0',
+  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: number; upcoming: number; completed: number }>({
+    today: 0,
+    upcoming: 0,
+    completed: 0,
   });
 
 
@@ -120,32 +120,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   },[state.user.role])
 
 
-
-  /**
-   * LIFECYCLE - on mount
-   */
-
-  // useEffect(() => {
-  //   if (state.roomData.lessons && state.roomData.lessons.length > 0) {
-  //     const todayCount = todayLessons.length.toString();
-  //     const upcomingCount = upcomingLessons.length.toString();
-  //     const completedCount = completedLessons.length.toString();
-  //
-  //     setLessonGroupCount({
-  //       today: todayCount,
-  //       upcoming: upcomingCount,
-  //       completed: completedCount,
-  //     });
-  //
-  //     dispatch({
-  //       type: 'UPDATE_SIDEBAR',
-  //       payload: {
-  //         section: 'upcomingLessons',
-  //         data: upcomingLessons,
-  //       },
-  //     });
-  //   }
-  // }, [state.roomData.lessons]);
 
   /**
    * ASSESSMENTS & SURVEYS
@@ -207,6 +181,20 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         }
       })
       : [];
+
+
+
+  useEffect(()=>{
+    if(state.roomData.lessons.length > 0){
+      setLessonGroupCount({
+        today: todayLessons.length,
+        upcoming: upcomingLessons.length,
+        completed: completedLessons.length
+      })
+    }
+  },[state.roomData.lessons])
+
+
 
   const sortedLessons = (lessonArray: any[], sortProperty: string) => {
     return lessonArray.sort((a: any, b: any) => {
