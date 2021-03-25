@@ -9,6 +9,7 @@ import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
 import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
+import { Syllabus } from '../Classroom/Classroom';
 
 export interface Room {
   id: string;
@@ -44,9 +45,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
   const [curriculumIds, setCurriculumIds] = useState<string[]>([]);
-  const [syllabusId, setSyllabusId] = useState<string[]>([]);
+  const [syllabusLessonSequence, setSyllabusLessonSequence] = useState<string[]>(['']);
   // Menu state
-  const [loaded, setLoaded] = useState<boolean>(false);
+  const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
 
   /**
@@ -56,7 +57,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     const userAuthID = state.user.authId;
     const userRole = state.user.role;
     if (userRole === 'ADM') {
-      setLoaded(true);
+      setRoomsLoading(true);
     }
   }, []);
 
@@ -116,63 +117,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
     (userRole === 'FLW' || userRole === 'TR') && listRoomTeacher();
   }, []);
 
-  useEffect(() => {
-    const userRole = state.user.role;
 
-    const listRooms = async () => {
-      if (classIds.length > 0) {
-        try {
-          const roomsFetch: any = await API.graphql(
-            graphqlOperation(customQueries.listRooms, {
-              filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
-            })
-          );
-          const response = await roomsFetch;
-          const arrayOfResponseObjects = response?.data?.listRooms?.items;
-          setRooms(arrayOfResponseObjects);
-          // Dispatch to context
-          // TODO: remove storage of rooms in SideRoomSelector.tsx
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'rooms',
-              data: arrayOfResponseObjects,
-            },
-          });
-          // console.log('2 --> ', arrayOfResponseObjects);
-        } catch (e) {
-          console.error('Rooms Fetch ERR: ', e);
-        } finally {
-          setLoaded(true);
-        }
-      }
-    };
-    userRole === 'ST' && listRooms();
-  }, [classIds]);
-
-  // List curriculums associated with selected room
-  useEffect(() => {
-    const listRoomCurriculums = async () => {
-      if (rooms.length > 0 && activeRoom !== '') {
-        try {
-          const roomIds = getArrayOfUniqueValueByProperty(rooms, 'id');
-          const roomCurriculumsFetch: any = API.graphql(
-            graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { roomID: { contains: activeRoom } },
-            })
-          );
-          const response = await roomCurriculumsFetch;
-          const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
-          const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
-          setCurriculumIds(arrayOfCurriculumIds);
-          // console.log('3 --> ', arrayOfCurriculumIds);
-        } catch (e) {
-          console.error('RoomCurriculums fetch ERR: ', e);
-        }
-      }
-    };
-    listRoomCurriculums();
-  }, [activeRoom]);
 
   // Fetch widgets for current room & put in context
   useEffect(()=>{
@@ -203,6 +148,68 @@ const SideRoomSelector = (props: SideMenuProps) => {
     }
   },[activeRoom])
 
+
+
+  useEffect(() => {
+    const userRole = state.user.role;
+
+    const listRooms = async () => {
+      if (classIds.length > 0) {
+        try {
+          const roomsFetch: any = await API.graphql(
+            graphqlOperation(customQueries.listRooms, {
+              filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
+            })
+          );
+          const response = await roomsFetch;
+          const arrayOfResponseObjects = response?.data?.listRooms?.items;
+          setRooms(arrayOfResponseObjects);
+          // Dispatch to context
+          // TODO: remove storage of rooms in SideRoomSelector.tsx
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'rooms',
+              data: arrayOfResponseObjects,
+            },
+          });
+          // console.log('2 --> ', arrayOfResponseObjects);
+        } catch (e) {
+          console.error('Rooms Fetch ERR: ', e);
+        } finally {
+          setRoomsLoading(true);
+        }
+      }
+    };
+    userRole === 'ST' && listRooms();
+  }, [classIds]);
+
+  // List curriculums associated with selected room
+  useEffect(() => {
+    const listRoomCurriculums = async () => {
+      if (rooms.length > 0 && activeRoom !== '') {
+        try {
+          const roomIds = getArrayOfUniqueValueByProperty(rooms, 'id');
+          const roomCurriculumsFetch: any = API.graphql(
+            graphqlOperation(customQueries.listRoomCurriculums, {
+              filter: { roomID: { contains: activeRoom } },
+            })
+          );
+          const response = await roomCurriculumsFetch;
+          const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+          const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
+          setCurriculumIds(arrayOfCurriculumIds);
+          // console.log('3 --> ', arrayOfCurriculumIds);
+        } catch (e) {
+          console.error('RoomCurriculums fetch ERR: ', e);
+        }
+      }
+    };
+    listRoomCurriculums();
+  }, [activeRoom]);
+
+
+
   // Save info of selected room to cookie
   useEffect(() => {
     const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoom);
@@ -221,14 +228,31 @@ const SideRoomSelector = (props: SideMenuProps) => {
     const listSyllabus = async () => {
       if (curriculumIds.length > 0) {
         try {
+          const syllabusCSequenceFetch: any = await API.graphql(graphqlOperation(queries.getCSequences,
+            { id: `s_${curriculumIds[0]}` }))
           const syllabusMultiFetch: any = API.graphql(
             graphqlOperation(customQueries.listSyllabuss, {
               filter: { ...createFilterToFetchSpecificItemsOnly(curriculumIds, 'curriculumID') },
             })
           );
-          const response = await syllabusMultiFetch;
-          const arrayOfResponseObjects = response?.data?.listSyllabuss?.items;
-          // console.log('4 --> ', arrayOfResponseObjects);
+
+          const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
+          const responseRoomSyllabus = await syllabusMultiFetch;
+
+          // console.log('responseRoomSyllabusSequence - = >', responseRoomSyllabusSequence)
+
+          const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
+          const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
+
+          // SOMETHING TO REFACTOR
+          const roomSyllabusReordered = arrayOfRoomSyllabusSequence.reduce((acc: any[], syllabusID: string, idx: number) => {
+            const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
+            if(matchedSyllabus){
+              return [...acc, matchedSyllabus]
+            } else {
+              return acc;
+            }
+          },[])
 
           /**
            * mappedResponseObjects explanation:
@@ -239,10 +263,10 @@ const SideRoomSelector = (props: SideMenuProps) => {
            *      show this
            *      OTHERWISE no syllabus will be active on mount
            */
-          const mappedResponseObjects = arrayOfResponseObjects.map((responseObject: any, idx: number) => {
-            const activeSyllabusAll = rooms.reduce((acc: any[], room: any, idx2: number) => {
-              return { ...acc, [room.id]: room.activeSyllabus };
-            }, []);
+          const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
+            // const activeSyllabusAll = rooms.reduce((acc: any[], room: any, idx2: number) => {
+            //   return { ...acc, [room.id]: room.activeSyllabus };
+            // }, []);
 
             if (activeRoomSyllabus === responseObject.id) {
               return { ...responseObject, active: true };
@@ -266,72 +290,118 @@ const SideRoomSelector = (props: SideMenuProps) => {
       }
     };
 
-    if (currentPage === 'lesson-planner') {
+    // if (currentPage === 'lesson-planner') {
       listSyllabus();
-    }
+    // }
   }, [curriculumIds]);
 
-  useEffect(() => {
-    const listSyllabusLessons = async () => {
-      /**
-       * getActiveSyllabus explanation:
-       *  IF we're on the lesson-planner page, that means the teacher has the ability to activate
-       *  a syllabus
-       *    SO the first filter will return an array with max length 1 if any syllabus for that room are active
-       *    BUT it will return array with length 0 if no syllabus for that room are active
-       *  IF we're on the classroom page, multiple syllabus will not be loaded
-       *    SO the room objects in room array should contain an activeSyllabus property
-       *    THEREFORE if there is an active syllabus, this filter will return a string OR []
-       *  FINALLY if there are no active syllabus anywhere, return empty array
-       */
-      const lessonPlannerSyllabus =
-        state.roomData.syllabus.length > 0
-          ? state.roomData.syllabus.filter((syllabusObject: any) => {
-              if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
-                return syllabusObject;
-              }
-            })
-          : [];
-      const classRoomActiveSyllabus = rooms
-        .filter((room: any) => room.id === activeRoom)
-        .map((room: any) => {
-          return { id: room.activeSyllabus };
+
+
+  const getSyllabusLessonCSequence = async (syllabusID: string) => {
+    try {
+      const syllabusLessonCSequenceFetch: any = await API.graphql(graphqlOperation(queries.getCSequences,
+        { id: `lesson_${syllabusID}` }))
+      const response = await syllabusLessonCSequenceFetch;
+      const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
+      setSyllabusLessonSequence(arrayOfResponseObjects);
+    } catch(e){
+      console.error('getSyllabusLessonCSequence -> ',e)
+    }
+  }
+
+
+  const listSyllabusLessons = async (lessonPlannerSyllabus: any, classRoomActiveSyllabus: any) => {
+    /**
+     * getActiveSyllabus explanation:
+     *  IF we're on the lesson-planner page, that means the teacher has the ability to activate
+     *  a syllabus
+     *    SO the first filter will return an array with max length 1 if any syllabus for that room are active
+     *    BUT it will return array with length 0 if no syllabus for that room are active
+     *  IF we're on the classroom page, multiple syllabus will not be loaded
+     *    SO the room objects in room array should contain an activeSyllabus property
+     *    THEREFORE if there is an active syllabus, this filter will return a string OR []
+     *  FINALLY if there are no active syllabus anywhere, return empty array
+     */
+
+    const getActiveSyllabus = currentPage === 'lesson-planner' ? lessonPlannerSyllabus : classRoomActiveSyllabus;
+    /**
+     * IF there are any syllabus active, do a fetch for lessons
+     */
+    if (getActiveSyllabus.length > 0) {
+      try {
+        const syllabusLessonFetch: any = API.graphql(
+          graphqlOperation(customQueries.listSyllabusLessons, {
+            syllabusID: getActiveSyllabus[0].id,
+          })
+        );
+        const response = await syllabusLessonFetch;
+        const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
+        // SOMETHING TO REFACTOR
+        const syllabusLessonsReordered = syllabusLessonSequence.reduce((acc: any[], syllabusLessonID: string, idx: number) => {
+          const matchedLesson = arrayOfResponseObjects.find((responseObj: any) => responseObj.id === syllabusLessonID);
+          if(matchedLesson){
+            return [...acc, matchedLesson]
+          } else {
+            return acc;
+          }
+        },[])
+
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'lessons',
+            data: syllabusLessonsReordered,
+          },
         });
-
-      const getActiveSyllabus = currentPage === 'lesson-planner' ? lessonPlannerSyllabus : classRoomActiveSyllabus;
-      /**
-       * IF there are any syllabus active, do a fetch for lessons
-       */
-      if (getActiveSyllabus.length > 0) {
-        try {
-          // console.log('attempting fetch of listSyllabusLessons :: ', getActiveSyllabus[0].id)
-          const syllabusLessonFetch: any = API.graphql(
-            graphqlOperation(customQueries.listSyllabusLessons, {
-              syllabusID: getActiveSyllabus[0].id,
-            })
-          );
-          const response = await syllabusLessonFetch;
-          const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
-
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'lessons',
-              data: arrayOfResponseObjects,
-            },
-          });
-        } catch (e) {
-          console.error('syllabus lessons: ', e);
-        } finally {
-          setLessonLoading(false);
-        }
+      } catch (e) {
+        console.error('syllabus lessons: ', e);
+      } finally {
+        setLessonLoading(false);
       }
-    };
+    }
+  };
 
-    listSyllabusLessons();
 
-    // TODO: update listener below for activeRoom state
-  }, [curriculumIds, state.roomData.syllabus]);
+  const lessonPlannerSyllabus =
+    state.roomData.syllabus.length > 0
+      ? state.roomData.syllabus.filter((syllabusObject: any) => {
+        if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
+          return syllabusObject;
+        }
+      })
+      : [];
+
+  const classRoomActiveSyllabus = rooms
+    .filter((room: any) => room.id === activeRoom)
+    .map((room: any) => {
+      return { id: room.activeSyllabus };
+    });
+
+
+  useEffect(()=>{
+    const getSyllabusLessonsAndCSequence = async () =>{
+      await getSyllabusLessonCSequence(classRoomActiveSyllabus[0].id);
+    }
+
+    if(
+      state.roomData.syllabus &&
+      state.roomData.syllabus.length > 0
+    ){
+      getSyllabusLessonsAndCSequence();
+    }
+  },[state.roomData.syllabus])
+
+
+
+
+  useEffect(()=>{
+    if(
+      syllabusLessonSequence.length > 0
+    ){
+      listSyllabusLessons(lessonPlannerSyllabus, classRoomActiveSyllabus);
+    }
+  },[syllabusLessonSequence])
+
 
   const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;
@@ -367,7 +437,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
             </div>
           );
         })
-      ) : loaded === false ? (
+      ) : roomsLoading === false ? (
         <>
           <p className={`${linkClass}`}>Loading {classRoomDict[userLanguage]['LIST_TITLE']}...</p>
         </>
