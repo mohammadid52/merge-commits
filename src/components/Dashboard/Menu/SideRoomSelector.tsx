@@ -62,7 +62,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   }, []);
 
   /**
-   * INIT STUDENT ROOM
+   * 1.1 LIST ALL CLASSES-id STUDENT IS IN
    */
   useEffect(() => {
     const standardUserID = state.user.id;
@@ -87,7 +87,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   }, []);
 
   /**
-   * INIT TEACHER ROOM
+   * 1.2 LIST ALL ROOMS TEACHER IS IN
    */
   useEffect(() => {
     const userAuthID = state.user.authId;
@@ -118,8 +118,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
   }, []);
 
 
-
-  // Fetch widgets for current room & put in context
+  /**
+   * 2. LIST ALL ROOM WIDGETS
+   */
   useEffect(()=>{
     const listRoomWidgets = async() => {
       setWidgetLoading(true);
@@ -149,7 +150,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
   },[activeRoom])
 
 
-
+  /**
+   * 3. LIST ALL ROOMS STUDENT IS IN BASED ON CLASS ID
+   */
   useEffect(() => {
     const userRole = state.user.role;
 
@@ -184,7 +187,9 @@ const SideRoomSelector = (props: SideMenuProps) => {
     userRole === 'ST' && listRooms();
   }, [classIds]);
 
-  // List curriculums associated with selected room
+  /**
+   * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
+   */
   useEffect(() => {
     const listRoomCurriculums = async () => {
       if (rooms.length > 0 && activeRoom !== '') {
@@ -222,7 +227,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
   }, [activeRoom]);
 
   /**
-   * LISTSYLLABUS SHOULD ONLY BE DONE FOR TEACHER
+   * 5. LIST AVAILABLE SYLLABUS and GET SEQUENCE TO SORT SYLLABI
    */
   useEffect(() => {
     const listSyllabus = async () => {
@@ -254,20 +259,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
             }
           },[])
 
-          /**
-           * mappedResponseObjects explanation:
-           *   the activeSyllabusAll reduce loops over all the rooms in the array of room objects
-           *    IF the activeSyllabus property which comes from the database, is set with a string ->
-           *    return that string.
-           *      SO if any rooms come from the database with activeSyllabus ID's, the context will
-           *      show this
-           *      OTHERWISE no syllabus will be active on mount
-           */
           const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
-            // const activeSyllabusAll = rooms.reduce((acc: any[], room: any, idx2: number) => {
-            //   return { ...acc, [room.id]: room.activeSyllabus };
-            // }, []);
-
             if (activeRoomSyllabus === responseObject.id) {
               return { ...responseObject, active: true };
             } else {
@@ -290,13 +282,13 @@ const SideRoomSelector = (props: SideMenuProps) => {
       }
     };
 
-    // if (currentPage === 'lesson-planner') {
       listSyllabus();
-    // }
   }, [curriculumIds]);
 
 
-
+  /**
+   * 6. GET SEQUENCE OF SYLLABUS LESSONS
+   */
   const getSyllabusLessonCSequence = async (syllabusID: string) => {
     try {
       const syllabusLessonCSequenceFetch: any = await API.graphql(graphqlOperation(queries.getCSequences,
@@ -309,7 +301,10 @@ const SideRoomSelector = (props: SideMenuProps) => {
     }
   }
 
-
+  /**
+   * 7. LIST ACTUAL SYLLABUS LESSONS WHICH ARE
+   * ASSOCIATED WITH THE ACTIVE SYLLABUS
+   */
   const listSyllabusLessons = async (lessonPlannerSyllabus: any, classRoomActiveSyllabus: any) => {
     /**
      * getActiveSyllabus explanation:
