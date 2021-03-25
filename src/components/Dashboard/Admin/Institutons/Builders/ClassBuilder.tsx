@@ -364,7 +364,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Create New Class" subtitle="Add new class to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

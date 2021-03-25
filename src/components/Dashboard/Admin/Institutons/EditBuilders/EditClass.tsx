@@ -269,7 +269,7 @@ const EditClass = (props: EditClassProps) => {
       <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -349,7 +349,7 @@ const EditClass = (props: EditClassProps) => {
                                 :
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                                   Edit
-                          </span>
+                                </span>
                               }
                             </div>
                           </div>)
