@@ -313,6 +313,35 @@ const lessonDict: any = {
   },
 };
 
+
+const noticeboardDict: any = {
+  EN: {
+    JOIN_CALL: {
+      DEFAULT: 'Join Call',
+      ZOOM: 'Join Zoom Call',
+      MEET: 'Join Meet Call',
+      TEAMS:'Join Teams Call'
+    },
+    DOWNLOAD: 'Download',
+    ROOMS: {
+      NONE: 'No rooms found'
+    }
+  },
+  ES: {
+    JOIN_CALL: {
+      DEFAULT: 'Unirse a la llamada',
+      ZOOM: 'Unirse a la llamada Zoom',
+      MEET: 'Unirse a la llamada Meet',
+      TEAMS:'Unirse a la llamada Teams'
+    },
+    DOWNLOAD: 'Descargar',
+    ROOMS: {
+      NONE: 'No se encontraron habitaciones'
+    }
+  }
+}
+
+
 const classRoomDict: any = {
   EN: {
     TITLE: 'Classroom',
@@ -470,6 +499,7 @@ export {
   anthologyDict,
   sideBarLinksDict,
   dashboardProfileDict,
+  noticeboardDict,
   staffBuilderDict,
   editClassDict,
   spBuilderDict,

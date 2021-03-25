@@ -51,7 +51,7 @@ const initialNewWidgetData = {
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const { setCurrentPage } = props;
   const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
-  const {} = useDictionary(clientKey);
+  const {noticeboardDict} = useDictionary(clientKey);
   //
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
@@ -323,7 +323,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       teacherEmail: state.user.email,
       roomID: activeRoom,
     };
-    // console.log('creating widget...', newWidgetData);
     try {
       const noticeboardWidgetCreate: any = await API.graphql(
         graphqlOperation(mutations.createNoticeboardWidget, {
@@ -377,7 +376,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   return (
     <React.Fragment>
-      <SectionTitle title={`1. Room Selector`} />
+      <SectionTitle title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`} />
 
       {/*
         Boetons to select between rooms
@@ -390,7 +389,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         setActiveRoomName={setActiveRoomName}
       />
 
-      <SectionTitle title={`2. Widget Manager`} />
+      <SectionTitle title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`} />
 
       {/*
         Tabs to select between:

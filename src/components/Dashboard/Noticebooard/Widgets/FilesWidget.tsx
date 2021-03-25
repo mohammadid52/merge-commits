@@ -8,8 +8,10 @@ import {
 } from 'react-icons/ai';
 import { FaRegFilePowerpoint, ImOnedrive } from 'react-icons/all';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import React from 'react';
+import React, { useContext } from 'react';
 import { responsiveClass } from '../Widgets';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 export const FileLinkWidget = (props: {
   title: string;
@@ -19,49 +21,51 @@ export const FileLinkWidget = (props: {
   widgetObj?: Widget;
 }) => {
   const { title, links, classProp, widgetObj } = props;
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {noticeboardDict} = useDictionary(clientKey);
 
   const getFileInfo = (url: string) => {
     if (url.includes('document') || url.includes('word')) {
       return {
         iconLabel: 'Document',
         icon: <AiOutlineFileWord size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else if (url.includes('spreadsheet') || url.includes('excel')) {
       return {
         iconLabel: 'Spreadsheet',
         icon: <AiOutlineFileExcel size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else if (url.includes('powerpoint') || url.includes('presentation')) {
       return {
         iconLabel: 'Spreadsheet',
         icon: <FaRegFilePowerpoint size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else if (url.includes('.zip')) {
       return {
         iconLabel: 'Archive',
         icon: <AiOutlineFileZip size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else if (url.includes('1drv') || url.includes('onedrive')) {
       return {
         iconLabel: 'Onedrive',
         icon: <ImOnedrive size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else if (url.includes('dropbox')) {
       return {
         iconLabel: 'Dropbox',
         icon: <AiOutlineDropbox size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     } else {
       return {
         iconLabel: 'File',
         icon: <AiOutlineFile size={24} />,
-        downloadLabel: 'Download File',
+        downloadLabel: noticeboardDict[userLanguage].DOWNLOAD,
       };
     }
   };
@@ -106,7 +110,6 @@ export const FileLinkWidget = (props: {
                         {getFileInfo(link.url)?.icon}
                       </IconContext.Provider>
                     )}
-                    {/*<p className={`${responsiveClass} text-center`}>{getFileInfo(link.url)?.downloadLabel}</p>*/}
                   </a>
                 </span>
             </div>

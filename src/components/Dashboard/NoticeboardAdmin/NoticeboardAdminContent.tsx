@@ -71,8 +71,8 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     setNewWidgetData,
     content,
   } = props;
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict, classRoomDict } = useDictionary(clientKey);
+  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const { classRoomDict } = useDictionary(clientKey);
 
   const resetNewWidgetData = ():void => {
     setNewWidgetData(initialNewWidgetData);

@@ -314,6 +314,77 @@ const lessonDict: any = {
   },
 };
 
+
+const noticeboardDict: any = {
+  EN: {
+    JOIN_CALL: {
+      DEFAULT: 'Join Call',
+      ZOOM: 'Join Zoom Call',
+      MEET: 'Join Meet Call',
+      TEAMS:'Join Teams Call'
+    },
+    DOWNLOAD: 'Download',
+    SECTION_TITLE: {
+      ROOM_SELECTOR: 'Room Selector',
+      WIDGET_MANAGER: 'Widget Manager'
+    },
+    ROOMS: {
+      NONE: 'No rooms found'
+    },
+    FORM: {
+      WIDGET_STATUS: 'Widget Status',
+      ACTIVE: 'Active',
+      INACTIVE: 'Inactive',
+      PLACEMENT: 'Placement',
+      IN_SIDEBAR: 'In the sidebar',
+      ABOVE_LESSONS: 'Above the lessons',
+      PLEASE_ADD_TITLE: 'Please add title',
+      TITLE: 'Title',
+      TYPE: 'Type'
+    },
+    WIDGET_DESCRIPTION:{
+      TEXT:'This is the default text widget. Use this if you want to show a text message/notice to students in your room.',
+      QUOTES:'Add multiple quotes above the lessons or to the side widget bar to inspire your students.',
+      CALL:'This is a basic widget to post the zoom/meet/teams links you\'ll use to communicate with your students.',
+      FILE:'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.'
+    }
+  },
+  ES: {
+    JOIN_CALL: {
+      DEFAULT: 'Unirse a la llamada',
+      ZOOM: 'Unirse a la llamada Zoom',
+      MEET: 'Unirse a la llamada Meet',
+      TEAMS:'Unirse a la llamada Teams'
+    },
+    DOWNLOAD: 'Descargar',
+    SECTION_TITLE: {
+      ROOM_SELECTOR: 'Selector de Habitación',
+      WIDGET_MANAGER: 'Administrador de Widgets'
+    },
+    ROOMS: {
+      NONE: 'No se encontraron habitaciones'
+    },
+    FORM: {
+      WIDGET_STATUS: 'Estado del Widgeto',
+      ACTIVE: 'Activo',
+      INACTIVE: 'Inactivo',
+      PLACEMENT: 'Colocación',
+      IN_SIDEBAR: 'En el sidebar',
+      ABOVE_LESSONS: 'Sobre el Lessons',
+      PLEASE_ADD_TITLE: 'Por favor agregue un título',
+      TITLE: 'Título',
+      TYPE: 'Type'
+    },
+    WIDGET_DESCRIPTION:{
+      TEXT:'',
+      QUOTES:'',
+      CALL:'',
+      FILE:''
+    }
+  }
+}
+
+
 const classRoomDict: any = {
   'EN': {
     TITLE: 'Cohort',
@@ -459,6 +530,7 @@ export {
   BreadcrumsTitles,
   appDict,
   anthologyDict,
+  noticeboardDict,
   sideBarLinksDict,
   dashboardProfileDict,
   staffBuilderDict,

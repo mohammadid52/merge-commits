@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import {
@@ -10,6 +10,8 @@ import {
 } from 'react-icons/ai';
 import { IoCallOutline } from 'react-icons/io5';
 import { FaRegFilePowerpoint, GrDocumentWord, ImOnedrive } from 'react-icons/all';
+import { GlobalContext } from '../../../contexts/GlobalContext';
+import useDictionary from '../../../customHooks/dictionary';
 
 export const responsiveClass = 'md:hidden lg:inline-block xl:inline-block';
 export const mobileShowClass = 'xs:inline-block md:inline-block lg:hidden xl:hidden';
@@ -75,31 +77,33 @@ export const CallLinkWidget = (props: {
   widgetObj?: Widget;
 }) => {
   const { title, links, card, classProp, widgetObj } = props;
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const { noticeboardDict } = useDictionary(clientKey);
 
   const getCallInfo = (url: string) => {
     if (url.includes('web.zoom')) {
       return {
         iconLabel: 'Zoom',
         iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/zoom_icon.svg',
-        joinLabel: 'Join Zoom Call',
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.ZOOM,
       };
     } else if (url.includes('meet.google')) {
       return {
         iconLabel: 'Meet',
         iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/meet_icon.svg',
-        joinLabel: 'Join Meet Call',
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.MEET,
       };
     } else if (url.includes('teams.microsoft')) {
       return {
         iconLabel: 'Teams',
         iconUrl: 'https://selready.s3.us-east-2.amazonaws.com/teams_icon.svg',
-        joinLabel: 'Join Teams Call',
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.TEAMS,
       };
     } else {
       return {
         iconLabel: 'Call',
         iconUrl: null,
-        joinLabel: 'Join Call',
+        joinLabel: noticeboardDict[userLanguage].JOIN_CALL.DEFAULT,
       };
     }
   };
