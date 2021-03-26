@@ -23,6 +23,12 @@ type globalActions =
       };
     }
   | {
+      type: 'UPDATE_ACTIVEROOM';
+      payload: {
+        data: string;
+      };
+    }
+  | {
       type: 'TOGGLE_LESSON';
       payload: {
         property: string;
@@ -77,10 +83,15 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           [action.payload.property]: action.payload.data,
         },
       };
-      case 'UPDATE_CURRENTPAGE':
+    case 'UPDATE_CURRENTPAGE':
       return {
         ...state,
         currentPage: action.payload.data,
+      };
+    case 'UPDATE_ACTIVEROOM':
+      return {
+        ...state,
+        activeRoom: action.payload.data,
       };
     case 'TOGGLE_LESSON':
       return {

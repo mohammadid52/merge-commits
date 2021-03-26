@@ -14,6 +14,7 @@ import SideWidgetBar from './Noticebooard/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
+import Home from './Home/Home';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -180,6 +181,7 @@ const Dashboard = (props: DashboardProps) => {
                 </div>
               }>
               <Switch>
+
                 <Route
                   path={`${match.url}`}
                   exact
@@ -189,6 +191,7 @@ const Dashboard = (props: DashboardProps) => {
                         return <Redirect to={`${match.url}/lesson-planner`} />;
                       } else if (userData.role === 'ST') {
                         return <Redirect to={`${match.url}/classroom`} />;
+                        // return <Redirect to={`${match.url}/home`} />;
                       } else return <Redirect to={`${match.url}/manage-institutions`} />;
                     } else
                       return (
@@ -198,6 +201,15 @@ const Dashboard = (props: DashboardProps) => {
                       );
                   }}
                 />
+
+                <Route
+                  exact
+                  path={`${match.url}/home`}
+                  render={() => (
+                    <Home/>
+                  )}
+                />
+
                 <Route
                   exact
                   path={`${match.url}/classroom`}
@@ -217,14 +229,20 @@ const Dashboard = (props: DashboardProps) => {
                     />
                   )}
                 />
+
                 <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+
                 <Route
                   path={`${match.url}/noticeboard`}
                   render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
                 />
+
                 <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
+
                 <Route path={`${match.url}/registration`} render={() => <Registration />} />
+
                 <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
+
                 <Route
                   path={`${match.url}/lesson-planner`}
                   render={() => (
@@ -244,12 +262,16 @@ const Dashboard = (props: DashboardProps) => {
                     />
                   )}
                 />
+
                 <Route
                   path={`${match.url}/manage-institutions`}
                   render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
                 />
+
                 <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+
                 <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
+
               </Switch>
             </Suspense>
           </div>
