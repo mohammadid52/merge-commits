@@ -141,7 +141,7 @@ const Dashboard = (props: DashboardProps) => {
   return (
     <>
       <Noticebar inputContext={'global'} />
-      <div className={`w-screen md:w-full h-screen md:h-full flex`}>
+      <div className={`w-screen md:w-full h-screen md:h-full flex overflow-hidden`}>
         {/**
          *  SIDEMENU
          */}
