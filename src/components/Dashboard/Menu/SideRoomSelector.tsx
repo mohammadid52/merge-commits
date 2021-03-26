@@ -318,7 +318,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
      *  FINALLY if there are no active syllabus anywhere, return empty array
      */
 
-    const getActiveSyllabus = currentPage === 'lesson-planner' ? lessonPlannerSyllabus : classRoomActiveSyllabus;
+    const getActiveSyllabus = state.currentPage === 'lesson-planner' ? lessonPlannerSyllabus : classRoomActiveSyllabus;
     /**
      * IF there are any syllabus active, do a fetch for lessons
      */

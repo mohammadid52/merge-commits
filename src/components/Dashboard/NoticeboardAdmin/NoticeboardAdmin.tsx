@@ -84,7 +84,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
   useEffect(() => {
-    setCurrentPage('noticeboard');
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'noticeboard'}})
   }, []);
 
   //  TOP Function to load widgets

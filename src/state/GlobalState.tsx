@@ -8,6 +8,7 @@ export interface globalStateType {
     lessons: any[];
     widgets: any[];
   };
+  currentPage: string;
   status: string;
   error: string;
   isAuthenticated: boolean;
@@ -34,6 +35,7 @@ export const globalState: globalStateType = {
     lessons: [],
     widgets: []
   },
+  currentPage: '',
   status: '',
   error: '',
   isAuthenticated: false,

@@ -112,10 +112,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(()=>{
     if(state.user.role === 'ST'){
-      setCurrentPage('classroom');
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
     }
     if(state.user.role === 'TR'|| state.user.role === 'FLW'){
-      setCurrentPage('lesson-planner');
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}})
     }
   },[state.user.role])
 
@@ -209,7 +209,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <>
-      {isTeacher && currentPage === 'lesson-planner' ? (
+      {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
             <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
@@ -219,7 +219,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       ) : null}
 
-      {isTeacher && currentPage === 'lesson-planner' ? (
+      {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <SyllabusSwitch

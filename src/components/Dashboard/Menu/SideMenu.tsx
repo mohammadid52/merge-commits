@@ -11,12 +11,12 @@ interface SideMenuProps {
 
 const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps) => {
   const { currentPage, setCurrentPage } = props;
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { dispatch, theme, clientKey } = useContext(GlobalContext);
 
   const handleLink = (e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
 
-    setCurrentPage('classroom');
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
   };
 
   return (

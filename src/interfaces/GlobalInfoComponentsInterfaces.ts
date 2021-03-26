@@ -1,7 +1,10 @@
-export interface Notification {
-  category: 'error' | 'alert' | 'info' | 'help' | 'tip';
-  message: string;
-  link?: string | '';
-  linkText?: string | '';
-  linkFunction?: () => any;
+export interface NotificationListItem {
+  check: boolean;
+  notification:{
+    label?: string;
+    message?: string;
+    type?: string;
+    cta?: string;
+  };
+  action?: () => any;
 }

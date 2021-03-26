@@ -15,7 +15,14 @@ type globalActions =
         property: string;
         data: any;
       };
-    }| {
+    }
+  | {
+      type: 'UPDATE_CURRENTPAGE';
+      payload: {
+        data: string;
+      };
+    }
+  | {
       type: 'TOGGLE_LESSON';
       payload: {
         property: string;
@@ -70,13 +77,18 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           [action.payload.property]: action.payload.data,
         },
       };
-      case 'TOGGLE_LESSON':
+      case 'UPDATE_CURRENTPAGE':
+      return {
+        ...state,
+        currentPage: action.payload.data,
+      };
+    case 'TOGGLE_LESSON':
       return {
         ...state,
         roomData: {
           ...state.roomData,
           [action.payload.property]: action.payload.data,
-        }
+        },
       };
     case 'SET_USER':
       return {
@@ -91,7 +103,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
           role: action.payload.role,
           onBoardSurvey: action.payload.onBoardSurvey,
           image: action.payload.image,
-          location: action.payload.location
+          location: action.payload.location,
         },
       };
     case 'LOG_IN':

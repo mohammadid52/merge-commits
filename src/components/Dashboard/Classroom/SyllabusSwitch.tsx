@@ -9,10 +9,6 @@ const SyllabusSwitch = (props: DashboardProps) => {
   const { state, theme, clientKey, userLanguage  } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
 
-  useEffect(()=>{
-    console.log('classroomDict ->? ', classRoomDict)
-  },[])
-
   return (
     <>
       {syllabusLoading ? (
