@@ -2237,6 +2237,11 @@ export const getStudentResponse = /* GraphQL */ `
         checkpointID
         email
         authID
+        person {
+          id
+          email
+          authId
+        }
         componentType
         scheduleID
         lessonID

@@ -1,10 +1,7 @@
 exports.handler = (event, context, callback) => {
     try {
         const email = event.request.userAttributes.email;
-        let url = `https://iconoclast.selready.com/confirm-code?email=${email}&&code=${event.request.codeParameter}`
-        if (process.env.ENV === 'uatenv') {
-            url = `https://sandbox-iconoclast.selready.com/confirm-code?email=${email}&&code=${event.request.codeParameter}`
-        }
+        let url = `https://demo.edgesfirst.io/confirm-code?email=${email}&&code=${event.request.codeParameter}`
         const signUpMessage = `
         <!DOCTYPE html>
         <html>
