@@ -218,7 +218,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           <TopWidgetBar />
         </div>
       </div>
-      
+
       {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>

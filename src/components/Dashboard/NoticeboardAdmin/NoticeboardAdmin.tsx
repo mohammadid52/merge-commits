@@ -297,7 +297,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
   });
 
-
   // TODO: move this function to utils and improve functionality
   const appendHttp = (inputUrl: string) => {
     const splitUrl = inputUrl.split('://');
@@ -310,13 +309,11 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     }
   };
 
-  const linkArrayMap = (inputArray: any[])=> {
+  const linkArrayMap = (inputArray: any[]) => {
     return inputArray.map((elem: any) => {
-      return {...elem, url: appendHttp(elem.url) }
-    })
-  }
-
-
+      return { ...elem, url: appendHttp(elem.url) };
+    });
+  };
 
   const noticeboardUpdate = async () => {
     const input = {
@@ -324,7 +321,10 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       active: newWidgetData.active,
       placement: newWidgetData.placement,
       quotes: newWidgetData.quotes,
-      links: newWidgetData.type !== 'file' && newWidgetData.type !== 'call' ? newWidgetData.links : linkArrayMap(newWidgetData.links),
+      links:
+        newWidgetData.type !== 'file' && newWidgetData.type !== 'call'
+          ? newWidgetData.links
+          : linkArrayMap(newWidgetData.links),
       content: newWidgetData.content,
       description: newWidgetData.description,
       title: newWidgetData.title,
@@ -346,7 +346,10 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const noticeboardCreate = async () => {
     const input = {
       ...newWidgetData,
-      links: newWidgetData.type !== 'file' && newWidgetData.type !== 'call' ? newWidgetData.links : linkArrayMap(newWidgetData.links),
+      links:
+        newWidgetData.type !== 'file' && newWidgetData.type !== 'call'
+          ? newWidgetData.links
+          : linkArrayMap(newWidgetData.links),
       teacherAuthID: state.user.authId,
       teacherEmail: state.user.email,
       roomID: activeRoom,
@@ -403,55 +406,55 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   }, [viewEditMode]);
 
   return (
-    <ContentCard additionalClass={`flex-col`}>
+    <>
       <TopWidgetBar />
+      <ContentCard additionalClass={`flex-col`}>
+        <SectionTitle title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`} />
 
-
-      <SectionTitle title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`} />
-
-      {/*
+        {/*
         Boetons to select between rooms
       */}
-      <RoomSwitch
-        loading={loading}
-        activeRoom={activeRoom}
-        setActiveRoom={setActiveRoom}
-        activeRoomName={activeRoomName}
-        setActiveRoomName={setActiveRoomName}
-      />
+        <RoomSwitch
+          loading={loading}
+          activeRoom={activeRoom}
+          setActiveRoom={setActiveRoom}
+          activeRoomName={activeRoomName}
+          setActiveRoomName={setActiveRoomName}
+        />
 
-      <SectionTitle title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`} />
+        <SectionTitle title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`} />
 
-      {/*
+        {/*
         Tabs to select between:
           - Top widgets
           - Sidebar widgets
       */}
-      <SubSectionTabs
-        subSection={subSection}
-        subSectionList={['Top Widgets', 'Sidebar Widgets']}
-        handleTabClick={handleTabClick}
-        widgetTypeCount={widgetTypeCount}
-      />
+        <SubSectionTabs
+          subSection={subSection}
+          subSectionList={['Top Widgets', 'Sidebar Widgets']}
+          handleTabClick={handleTabClick}
+          widgetTypeCount={widgetTypeCount}
+        />
 
-      <NoticeboardAdminContent
-        activeRoom={activeRoom}
-        viewEditMode={viewEditMode}
-        handleEditToggle={handleEditToggle}
-        handleEditUpdateDefault={handleEditUpdateDefault}
-        handleEditUpdateQuotes={handleEditUpdateQuotes}
-        handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
-        handleActivation={handleActivation}
-        subSection={subSection}
-        widgetData={widgetData}
-        setWidgetData={setWidgetData}
-        createTemplate={newWidgetData}
-        initialNewWidgetData={initialNewWidgetData}
-        newWidgetData={newWidgetData}
-        setNewWidgetData={setNewWidgetData}
-        content={widgetData.length > 0 && filterWidgetContentBySubsection}
-      />
-    </ContentCard>
+        <NoticeboardAdminContent
+          activeRoom={activeRoom}
+          viewEditMode={viewEditMode}
+          handleEditToggle={handleEditToggle}
+          handleEditUpdateDefault={handleEditUpdateDefault}
+          handleEditUpdateQuotes={handleEditUpdateQuotes}
+          handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+          handleActivation={handleActivation}
+          subSection={subSection}
+          widgetData={widgetData}
+          setWidgetData={setWidgetData}
+          createTemplate={newWidgetData}
+          initialNewWidgetData={initialNewWidgetData}
+          newWidgetData={newWidgetData}
+          setNewWidgetData={setNewWidgetData}
+          content={widgetData.length > 0 && filterWidgetContentBySubsection}
+        />
+      </ContentCard>
+    </>
   );
 };
 
