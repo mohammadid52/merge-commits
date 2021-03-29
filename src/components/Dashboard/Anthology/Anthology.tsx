@@ -36,7 +36,7 @@ export type ViewEditMode = {
 }
 
 const Anthology = () => {
-  const { state, userLanguage, clientKey } = useContext(GlobalContext);
+  const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict } = useDictionary(clientKey);
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
@@ -58,6 +58,15 @@ const Anthology = () => {
   const [subSection, setSubSection] = useState<string>('Journal');
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', studentDataID: '', idx: 0 });
+
+
+
+  useEffect(()=>{
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload:{data: 'anthology'}})
+  },[])
+
+
+
 
   // TOP Function to load student data
   const listStudentData = async () => {

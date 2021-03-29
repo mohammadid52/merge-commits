@@ -1,16 +1,15 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { DashboardProps } from '../Dashboard';
 
-import { CallLinkWidget, DefaultTextWidget, ImageWidget, LogoWidget } from './Widgets';
+import { CallLinkWidget, DefaultTextWidget, LogoWidget } from './Widgets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { QuoteWidget } from './TopWidgets';
-import { useWindowSize } from '../../../customHooks/windowSize';
 import { FileLinkWidget } from './Widgets/FilesWidget';
 
 const SideWidgetBar = (props: DashboardProps) => {
-  const { currentPage, setVisibleLessonGroup } = props;
+
   const { state, clientKey } = useContext(GlobalContext);
 
   const getSideWidgets = () => {
@@ -75,19 +74,6 @@ const SideWidgetBar = (props: DashboardProps) => {
           getSideWidgets().map((widgetObj: Widget, idx: number) => {
             return switchWidgets(widgetObj, idx);
           })}
-
-        {/**
-         * FURTHER DEVELOPMENT
-         *  TODO: This meme widget should be built
-         *    out in the future
-         */}
-        {/*<ImageWidget
-          source={`https://iconoclastimages141704-uat.s3.amazonaws.com/public/CurateImage.jpg`}
-          altdesc={`fun-meme`}
-          title={`Reflection`}
-          card={true}
-          classProp={`w-auto h-auto sm:hidden lg:visible`}
-        />*/}
       </div>
     </>
   );

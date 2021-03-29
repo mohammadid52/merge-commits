@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import {Widget as NoticeboardWidgetMapItem} from '../../../../interfaces/ClassroomComponentsInterfaces';
+import useDictionary from '../../../../customHooks/dictionary';
 
 // Standard widget card view
 export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {
   const {widgetObj} = props;
-  const { theme } = useContext(GlobalContext);
+  const { theme,clientKey, userLanguage } = useContext(GlobalContext);
+  const {noticeboardDict} = useDictionary(clientKey);
   return (
     <>
       {/**
@@ -13,14 +15,16 @@ export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {
        */}
       <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
         <span className={`text-left ${theme.lessonCard.subtitle}`}>
-          Widget Status:
+
+          {noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:
+
           {widgetObj.active ? (
-            <span className="ml-2 text-xs font-semibold text-green-400">Active</span>
+            <span className="ml-2 text-xs font-semibold text-green-400">{noticeboardDict[userLanguage].FORM.ACTIVE}:</span>
           ) : (
-            <span className="ml-2 text-xs font-semibold text-gray-400">Inactive</span>
+            <span className="ml-2 text-xs font-semibold text-gray-400">{noticeboardDict[userLanguage].FORM.INACTIVE}</span>
           )}
         </span>
-        <span className={`text-right ${theme.lessonCard.subtitle}`}>Placement: {widgetObj.placement}</span>
+        <span className={`text-right ${theme.lessonCard.subtitle}`}>{noticeboardDict[userLanguage].FORM.PLACEMENT}: {widgetObj.placement}</span>
       </div>
       {/**
        *  section: TITLE
@@ -31,9 +35,6 @@ export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {
       {/**
        *  section: DESCRIPTION
        */}
-      {/*<div className={`overflow-ellipsis overflow-hidden ellipsis`}>
-        {widgetObj.description ? widgetObj.description : `No description`}
-      </div>*/}
     </>
   );
 };

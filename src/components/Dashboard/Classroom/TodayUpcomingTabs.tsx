@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
+import SubSectionTab from '../../Atoms/SubSectionTab';
 
 interface TodayUpcomingTabs {
   isTeacher?: boolean;
-  lessonGroupCount: { today: string; upcoming: string; completed: string };
+  lessonGroupCount: { today: number; upcoming: number; completed: number };
   visibleLessonGroup: string;
   setVisibleLessonGroup: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -30,34 +31,32 @@ const TodayUpcomingTabs = (props: TodayUpcomingTabs) => {
 
   return (
     <div id={`lessonGroupTabs`} className={`flex flex-row`} onClick={handleTabClick}>
-      <h2
+      <SubSectionTab
         id={`today`}
-        className={`w-auto cursor-pointer ${theme.dashboard.sectionTitle} ${visibleLessonGroup === 'today'
-            ? 'text-black'
-            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-          }`}>
-        {!isTeacher ? classRoomDict[userLanguage]['LESSON_TABS']['TAB_ONE'] : classRoomDict[userLanguage]['LESSON_TABS']['TAB_TWO']}
-      </h2>
+        selectedCondition={visibleLessonGroup === 'today'}
+        label={
+          !isTeacher
+            ? classRoomDict[userLanguage]['LESSON_TABS']['TAB_ONE']
+            : classRoomDict[userLanguage]['LESSON_TABS']['TAB_TWO']
+        }
+        counter={lessonGroupCount.today}
+      />
 
       {!isTeacher ? (
-        <h2
+        <SubSectionTab
           id={`upcoming`}
-          className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${visibleLessonGroup === 'upcoming'
-              ? 'text-black'
-              : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-            }`}>
-          Upcoming ({lessonGroupCount.upcoming})
-        </h2>
+          selectedCondition={visibleLessonGroup === 'upcoming'}
+          label={`Upcoming`}
+          counter={lessonGroupCount.upcoming}
+        />
       ) : null}
 
-      <h2
+      <SubSectionTab
         id={`completed`}
-        className={`w-auto ml-4 cursor-pointer ${theme.dashboard.sectionTitle} ${visibleLessonGroup === 'completed'
-            ? 'text-black'
-            : 'text-gray-400 hover:text-gray-800 transition duration-500 ease-in-out'
-          }`}>
-        Completed ({lessonGroupCount.completed})
-      </h2>
+        selectedCondition={visibleLessonGroup === 'completed'}
+        label={`Completed`}
+        counter={lessonGroupCount.completed}
+      />
     </div>
   );
 };

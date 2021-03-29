@@ -5,30 +5,32 @@ import { GrBlockQuote } from 'react-icons/gr';
 import { GoTextSize } from 'react-icons/go';
 import { AiOutlineFileZip, AiOutlinePhone } from 'react-icons/ai';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
-  const { state, theme } = useContext(GlobalContext);
-  const { widgetObj, handleEditUpdateDefault, handleEditUpdateWYSIWYG } = props;
+  const { theme,clientKey, userLanguage } = useContext(GlobalContext);
+  const {noticeboardDict} = useDictionary(clientKey);
+  const { widgetObj, handleEditUpdateWYSIWYG } = props;
 
   const statusOptions = [
     {
       value: true,
-      label: 'Active',
+      label: noticeboardDict[userLanguage].FORM.ACTIVE,
     },
     {
       value: false,
-      label: 'Inactive',
+      label: noticeboardDict[userLanguage].FORM.INACTIVE,
     },
   ];
 
   const placementOptions = [
     {
       location: 'sidebar',
-      label: 'In the Sidebar',
+      label: noticeboardDict[userLanguage].FORM.IN_SIDEBAR,
     },
     {
       location: 'topbar',
-      label: 'Above the Lessons',
+      label: noticeboardDict[userLanguage].FORM.ABOVE_LESSONS,
     },
   ];
 
@@ -36,25 +38,22 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
     {
       type: 'default',
       label: 'Text',
-      description:
-        'This is the default text widget. Use this if you want to show a text message/notice to students in your room.',
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.TEXT,
     },
     {
       type: 'quote',
       label: 'Quotes',
-      description: 'Add multiple quotes above the lessons or to the side widget bar to inspire your students.',
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.QUOTES,
     },
     {
       type: 'call',
       label: 'Call',
-      description:
-        "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.CALL,
     },
     {
       type: 'file',
       label: 'Files',
-      description:
-        "This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.",
+      description: noticeboardDict[userLanguage].WIDGET_DESCRIPTION.FILE,
     },
   ];
 
@@ -80,7 +79,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
 
       <div className={`grid grid-cols-2 gap-2`}>
       <div className={`mb-2`}>
-        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>Widget Status:</p>
+        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:</p>
         <div className={`grid grid-cols-2 gap-2 ${theme.lessonCard.subtitle}`}>
           {statusOptions.map((option: any, idx: number) => (
             <div
@@ -98,7 +97,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
       </div>
 
       <div className={`mb-2`}>
-        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>Placement:</p>
+        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.PLACEMENT}:</p>
         <div className={`grid grid-cols-2 gap-2 ${theme.lessonCard.subtitle}`}>
           {placementOptions.map((option: any, idx: number) => (
             <div
@@ -117,7 +116,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
       </div>
 
       <div className={`mb-2`}>
-        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>Type:</p>
+        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.TYPE}:</p>
         <div className={`grid grid-cols-4 gap-2 ${theme.lessonCard.subtitle}`}>
           {widgetOptions.map((option: any, idx: number) => (
             <>

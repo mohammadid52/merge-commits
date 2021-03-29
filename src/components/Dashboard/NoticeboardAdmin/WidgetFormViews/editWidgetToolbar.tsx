@@ -1,17 +1,18 @@
 import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import { NoticeboardFormProps } from '../NoticeboardAdminContent';
+import useDictionary from '../../../../customHooks/dictionary';
 
 const EditWidgetToolbar = (props: NoticeboardFormProps) => {
   const {
     widgetObj,
     newWidgetData,
-    setNewWidgetData,
     handleActivation,
     handleEditUpdateDefault,
-    handleEditUpdateWYSIWYG,
+
   } = props;
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {noticeboardDict} = useDictionary(clientKey);
 
   const selectorClass = `p-2 rounded border border-medium-gray border-opacity-20`;
 
@@ -22,7 +23,7 @@ const EditWidgetToolbar = (props: NoticeboardFormProps) => {
 
         {/* STATUS TOGGLE */}
         <div className={`mb-2`}>
-          <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>Widget Status:</p>
+          <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:</p>
           <div
             className={`
                 z-50  grid grid-cols-2 gap-2 cursor-pointer ${theme.lessonCard.subtitle}`}
@@ -32,14 +33,14 @@ const EditWidgetToolbar = (props: NoticeboardFormProps) => {
               ${selectorClass}
               ${widgetObj.active ? 'text-white font-semibold bg-sea-green' : ''}
             p-2  text-sm font-semibold`}>
-              Active
+              {noticeboardDict[userLanguage].FORM.ACTIVE}
             </div>
             <div
               className={`
               ${selectorClass}
               ${!widgetObj.active ? 'text-white font-semibold bg-ketchup' : ''}
             p-2  text-sm font-semibold`}>
-              Inactive
+              {noticeboardDict[userLanguage].FORM.INACTIVE}
             </div>
           </div>
         </div>

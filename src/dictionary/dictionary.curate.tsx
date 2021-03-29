@@ -1,32 +1,32 @@
 const BUTTONS: any = {
-  'EN': {
+  EN: {
     ADD: 'Add',
     ADD_NEW: 'Add New',
     EDIT: 'Edit',
     SAVE: 'Save',
     CANCEL: 'Cancel',
     PUBLISH: 'Publish',
-    YES: 'Yes'
+    YES: 'Yes',
   },
-  'ES': {
+  ES: {
     ADD: 'Añadir',
     ADD_NEW: 'Añadir nuevo',
     EDIT: 'Edit',
     SAVE: 'Salvar',
     CANCEL: 'Cancelar',
     PUBLISH: 'TBD',
-    YES: 'TBD'
+    YES: 'TBD',
   },
 };
 
 // Breadcrumbs
 const BreadcrumsTitles: any = {
-  'EN': {
+  EN: {
     HOME: 'HOME',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
   },
-  'ES': {
+  ES: {
     HOME: 'CASA',
     PROFILE: 'PERFIL',
     PEOPLE: 'PERSONAS',
@@ -34,7 +34,7 @@ const BreadcrumsTitles: any = {
 };
 // Profile Display and edit section
 const dashboardProfileDict: any = {
-  'EN': {
+  EN: {
     PROFILE: 'Profile',
     TITLE: 'USER PROFILE',
     PROFILE_INSTRUCTON: 'Click the circle above to update profile picture.',
@@ -87,7 +87,7 @@ const dashboardProfileDict: any = {
       },
     },
   },
-  'ES': {
+  ES: {
     PROFILE: 'Perfil',
     TITLE: 'PERFIL DEL USUARIO',
     PROFILE_INSTRUCTON: 'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
@@ -143,7 +143,7 @@ const dashboardProfileDict: any = {
 };
 
 const anthologyDict: any = {
-  'EN': {
+  EN: {
     TITLE: 'Notebook',
     TABS: {
       A: 'Journal',
@@ -156,10 +156,10 @@ const anthologyDict: any = {
       CREATE: 'Create New',
       ADD: 'Add More',
       CANCEL: 'Cancel',
-      DELETE: 'Delete'
+      DELETE: 'Delete',
     },
   },
-  'ES': {
+  ES: {
     TITLE: 'Cuaderno',
     TABS: {
       A: 'Diario',
@@ -172,16 +172,16 @@ const anthologyDict: any = {
       CREATE: 'Crear',
       ADD: 'Añadir más',
       CANCEL: 'Cancelar',
-      DELETE: 'Deletar'
+      DELETE: 'Deletar',
     },
   },
 };
 
 // People - User management list
 const manageusersDict: any = {
-  'EN': {
+  EN: {
     TITLE: 'USER MANAGEMENT',
-    SUBTITLE: 'People\'s List',
+    SUBTITLE: "People's List",
     TABLE: {
       NAME: 'Name',
       ROLE: 'Role',
@@ -191,7 +191,7 @@ const manageusersDict: any = {
     },
     ADD_NEW: 'Add New Person',
   },
-  'ES': {
+  ES: {
     TITLE: 'GESTIÓN DE USUARIOS',
     SUBTITLE: 'Lista de personas',
     TABLE: {
@@ -207,7 +207,7 @@ const manageusersDict: any = {
 
 // sidebar links
 const sideBarLinksDict: any = {
-  'EN': {
+  EN: {
     REGISTRATION: 'Registration',
     INSTITUTIONS: 'Organizations',
     PEOPLE: 'People',
@@ -217,7 +217,7 @@ const sideBarLinksDict: any = {
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Dashboard',
   },
-  'ES': {
+  ES: {
     REGISTRATION: 'Registro',
     INSTITUTIONS: 'Institución',
     PEOPLE: 'Personas',
@@ -230,24 +230,23 @@ const sideBarLinksDict: any = {
 };
 
 const appDict: any = {
-  'EN': {
+  EN: {
     LOG_OUT: 'Log Out',
     LOADING: 'Give us one second, this section is loading...',
   },
-  'ES': {
+  ES: {
     LOG_OUT: 'Cerrar sesión',
     LOADING: 'esta sección se está cargando...',
   },
 };
 
 const staffBuilderDict: any = {
-  'EN': {
+  EN: {
     TITLE: 'Project Team',
     ADD_PLACEHOLDER: 'Add new',
     ADD_BUTTON: 'ADD',
-
   },
-  'ES': {
+  ES: {
     TITLE: 'MIEMBROS DEL PERSONAL',
     ADD_PLACEHOLDER: 'Añadir nuevo',
     ADD_BUTTON: 'Añadir',
@@ -255,13 +254,12 @@ const staffBuilderDict: any = {
 };
 
 const spBuilderDict: any = {
-  'EN': {
+  EN: {
     TITLE: 'SERVICE PROVIDERS',
     ADD_PLACEHOLDER: 'Add a new service provider',
     ADD_BUTTON: 'ADD',
-
   },
-  'ES': {
+  ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
     ADD_PLACEHOLDER: 'Agregar un nuevo proveedor de servicios',
     ADD_BUTTON: 'Añadir',
@@ -269,7 +267,7 @@ const spBuilderDict: any = {
 };
 
 const editClassDict: any = {
-  'EN': {
+  EN: {
     TITLE: 'EDIT Cohort',
     SUBTITLE: 'Edit cohort information',
     NAME_INPUT_LABEL: 'Cohort Name',
@@ -283,7 +281,7 @@ const editClassDict: any = {
       ACTIONS: 'Actions',
     },
   },
-  'ES': {
+  ES: {
     TITLE: 'EDITAR CLASE',
     SUBTITLE: 'Editar la información de la clase',
     NAME_INPUT_LABEL: 'Nombre de la clase',
@@ -300,13 +298,13 @@ const editClassDict: any = {
 };
 
 const lessonDict: any = {
-  'EN': {
+  EN: {
     CLASS: 'Session',
     TOPIC_CONNECTION: 'Objectives',
     KEYWORDS: 'Framing',
     REFLECTION_QUESTIONS: 'Focus Questions',
   },
-  'ES': {
+  ES: {
     CLASS: 'Session',
     TOPIC_CONNECTION: 'SEL Connection',
     KEYWORDS: 'Keywords',
@@ -314,8 +312,86 @@ const lessonDict: any = {
   },
 };
 
+const noticeboardDict: any = {
+  EN: {
+    JOIN_CALL: {
+      DEFAULT: 'Join Call',
+      ZOOM: 'Join Zoom Call',
+      MEET: 'Join Meet Call',
+      TEAMS: 'Join Teams Call',
+    },
+    DOWNLOAD: 'Download',
+    SECTION_TITLE: {
+      ROOM_SELECTOR: 'Room Selector',
+      WIDGET_MANAGER: 'Widget Manager',
+    },
+    ROOMS: {
+      NONE: 'No rooms found',
+    },
+    FORM: {
+      WIDGET_STATUS: 'Widget Status',
+      ACTIVE: 'Active',
+      INACTIVE: 'Inactive',
+      PLACEMENT: 'Placement',
+      CONTENT: 'Content',
+      IN_SIDEBAR: 'In the sidebar',
+      ABOVE_LESSONS: 'Above the lessons',
+      PLEASE_ADD_TITLE: 'Please add title',
+      TITLE: 'Title',
+      TYPE: 'Type',
+      PLEASE_ADD: 'Please add'
+    },
+    WIDGET_DESCRIPTION: {
+      TEXT:
+        'This is the default text widget. Use this if you want to show a text message/notice to students in your room.',
+      QUOTES: 'Add multiple quotes above the lessons or to the side widget bar to inspire your students.',
+      CALL: "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
+      FILE: 'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.',
+    },
+  },
+  ES: {
+    JOIN_CALL: {
+      DEFAULT: 'Unirse a la llamada',
+      ZOOM: 'Unirse a la llamada Zoom',
+      MEET: 'Unirse a la llamada Meet',
+      TEAMS: 'Unirse a la llamada Teams',
+    },
+    DOWNLOAD: 'Descargar',
+    SECTION_TITLE: {
+      ROOM_SELECTOR: 'Selector de Habitación',
+      WIDGET_MANAGER: 'Administrador de Widgets',
+    },
+    ROOMS: {
+      NONE: 'No se encontraron habitaciones',
+    },
+    FORM: {
+      WIDGET_STATUS: 'Estado del Widgeto',
+      ACTIVE: 'Activo',
+      INACTIVE: 'Inactivo',
+      PLACEMENT: 'Colocación',
+      CONTENT: 'El Contenido',
+      IN_SIDEBAR: 'En el sidebar',
+      ABOVE_LESSONS: 'Sobre el Lessons',
+      PLEASE_ADD_TITLE: 'Por favor agregue un título',
+      TITLE: 'Título',
+      TYPE: 'Type',
+      PLEASE_ADD: 'Por favor añadir'
+    },
+    WIDGET_DESCRIPTION: {
+      TEXT:
+        'Este es el widget de texto predeterminado. Use esto si desea mostrar un mensaje de texto / aviso a los estudiantes en su habitación.',
+      QUOTES:
+        'Agregue varias citas sobre las lecciones o en la barra de widgets lateral para inspirar a sus estudiantes.',
+      CALL:
+        'Este es un widget básico para publicar los enlaces zoom / meet / teams que usará para comunicarse con sus estudiantes.',
+      FILE:
+        'Este es un widget básico para compartir sus archivos de drive / onedrive / dropbox para tareas de estudiantes, etc..',
+    },
+  },
+};
+
 const classRoomDict: any = {
-  'EN': {
+  EN: {
     TITLE: 'Cohort',
     LIST_TITLE: 'Cohorts',
     LESSON: 'Session',
@@ -340,10 +416,10 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
-      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
     },
   },
-  'ES': {
+  ES: {
     TITLE: 'TBD',
     LIST_TITLE: 'TBD',
     LESSON: 'TBD',
@@ -368,13 +444,13 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
-      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
     },
   },
 };
 
 const lessonPlannerDict: any = {
-  'EN': {
+  EN: {
     INTRO: 'Begin',
     WARM_UP: 'Check-In',
     CORE_LESSON: 'Topic',
@@ -397,12 +473,13 @@ const lessonPlannerDict: any = {
         IN_CLASS: 'In Class',
         NOT_IN_CLASS: 'Not In Class',
       },
-    }, ACCESS_BUTTONS: {
+    },
+    ACCESS_BUTTONS: {
       START: 'Start',
       COMPLETE: 'Complete',
     },
   },
-  'ES': {
+  ES: {
     INTRO: 'TBD ',
     WARM_UP: 'TBD',
     CORE_LESSON: 'TBD',
@@ -425,7 +502,8 @@ const lessonPlannerDict: any = {
         IN_CLASS: 'In Class',
         NOT_IN_CLASS: 'Not In Class',
       },
-    }, ACCESS_BUTTONS: {
+    },
+    ACCESS_BUTTONS: {
       START: 'Start',
       COMPLETE: 'Complete',
     },
@@ -433,19 +511,20 @@ const lessonPlannerDict: any = {
 };
 
 const lessonBuilderDict: any = {
-  'EN': {
-      PREVIEW_DETAILS: {
-          WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected units, Do you want to continue?',
-          TITLE: 'Preview Details',
-      }
+  EN: {
+    PREVIEW_DETAILS: {
+      WARN_MESSAGE:
+        'Publishing your changes will update lesson plans in all the connected units, Do you want to continue?',
+      TITLE: 'Preview Details',
+    },
   },
-  'ES': {
-      PREVIEW_DETAILS: {
-          WARN_MESSAGE: 'TBD',
-          TITLE: 'TBD',
-      }
-  }
-}
+  ES: {
+    PREVIEW_DETAILS: {
+      WARN_MESSAGE: 'TBD',
+      TITLE: 'TBD',
+    },
+  },
+};
 
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
@@ -459,6 +538,7 @@ export {
   BreadcrumsTitles,
   appDict,
   anthologyDict,
+  noticeboardDict,
   sideBarLinksDict,
   dashboardProfileDict,
   staffBuilderDict,
@@ -468,5 +548,5 @@ export {
   lessonDict,
   classRoomDict,
   lessonPlannerDict,
-  lessonBuilderDict
+  lessonBuilderDict,
 };
