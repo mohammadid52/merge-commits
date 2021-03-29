@@ -10,6 +10,7 @@ import NoticeboardAdminContent from './NoticeboardAdminContent';
 import RoomSwitch from './RoomSwitch';
 
 import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
+import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 
 export interface NoticeboardAdmin {
   setCurrentPage: any;
@@ -49,9 +50,10 @@ const initialNewWidgetData = {
 };
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
+  const { theme } = useContext(GlobalContext);
   const { setCurrentPage } = props;
   const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+  const { noticeboardDict } = useDictionary(clientKey);
   //
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
@@ -84,7 +86,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
   useEffect(() => {
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'noticeboard'}})
+    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'noticeboard' } });
   }, []);
 
   //  TOP Function to load widgets
@@ -114,30 +116,33 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   };
 
   const countWidgetTypes = (widgetArray: any[]) => {
-    if(widgetArray){
-      console.log('widgetArray - ', widgetArray)
-      return widgetArray.reduce((acc: { sidebar: number; topbar: number }, widgetObj: any) => {
-        if(widgetObj.placement === 'sidebar'){
-          return {...acc, sidebar: acc.sidebar + 1}
-        } else if (widgetObj.placement === 'topbar'){
-          return {...acc, topbar: acc.topbar + 1}
-        } else {
-          return acc;
-        }
-      },{sidebar: 0, topbar: 0})
+    if (widgetArray) {
+      console.log('widgetArray - ', widgetArray);
+      return widgetArray.reduce(
+        (acc: { sidebar: number; topbar: number }, widgetObj: any) => {
+          if (widgetObj.placement === 'sidebar') {
+            return { ...acc, sidebar: acc.sidebar + 1 };
+          } else if (widgetObj.placement === 'topbar') {
+            return { ...acc, topbar: acc.topbar + 1 };
+          } else {
+            return acc;
+          }
+        },
+        { sidebar: 0, topbar: 0 }
+      );
     } else {
       return {
         sidebar: 0,
         topbar: 0,
-      }
+      };
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(widgetData.length > 0){
-      setWidgetTypeCount(countWidgetTypes(widgetData))
+  useEffect(() => {
+    if (widgetData.length > 0) {
+      setWidgetTypeCount(countWidgetTypes(widgetData));
     }
-  },[widgetData])
+  }, [widgetData]);
 
   useEffect(() => {
     setViewEditMode({ mode: '', widgetID: '' });
@@ -402,6 +407,12 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         handleTabClick={handleTabClick}
         widgetTypeCount={widgetTypeCount}
       />
+
+      {
+        subSection === 'Top Widgets'
+        &&
+        <TopWidgetBar />
+      }
 
       <NoticeboardAdminContent
         activeRoom={activeRoom}
