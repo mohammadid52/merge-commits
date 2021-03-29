@@ -11,7 +11,13 @@ export const getDashboardData = /* GraphQL */ `
                   firstName
                   lastName
                   image
+                  email
+                  role
+                  phone
                 }
+                activeSyllabus
+                name
+                id
               }
             }
             students {

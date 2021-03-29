@@ -3,7 +3,7 @@ import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../utilities/services';
 
-import { firstInitialFunc } from '../../../utilities/strings';
+import { firstInitialFunc, stringToHslColor } from '../../../utilities/strings';
 
 import { LinkProps } from './Links';
 
@@ -19,16 +19,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     return firstInitial + lastInitial;
   };
 
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
 
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
-  };
 
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
