@@ -1,8 +1,16 @@
 import ContentCard from '../../Atoms/ContentCard';
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 const RoomTiles = (props: {classList: any}) => {
   const {classList} = props;
+  const {dispatch} = useContext(GlobalContext);
+
+  const handleRoomSelection = (e: React.MouseEvent, i: number) => {
+    const t = e.target as HTMLElement;
+    dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
+  }
+
   return (
     <ContentCard>
       <div className={`grid grid-cols-4 gap-2`}>

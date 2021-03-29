@@ -11,6 +11,7 @@ import RoomSwitch from './RoomSwitch';
 
 import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
 import TopWidgetBar from '../Noticebooard/TopWidgetBar';
+import ContentCard from '../../Atoms/ContentCard';
 
 export interface NoticeboardAdmin {
   setCurrentPage: any;
@@ -296,13 +297,34 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
   });
 
+
+  // TODO: move this function to utils and improve functionality
+  const appendHttp = (inputUrl: string) => {
+    const splitUrl = inputUrl.split('://');
+    if (splitUrl.length > 1) {
+      return `https://${splitUrl[1]}`;
+    } else if (splitUrl.length === 1) {
+      return `https://${splitUrl[0]}`;
+    } else {
+      return `https://`;
+    }
+  };
+
+  const linkArrayMap = (inputArray: any[])=> {
+    return inputArray.map((elem: any) => {
+      return {...elem, url: appendHttp(elem.url) }
+    })
+  }
+
+
+
   const noticeboardUpdate = async () => {
     const input = {
       id: newWidgetData.id,
       active: newWidgetData.active,
       placement: newWidgetData.placement,
       quotes: newWidgetData.quotes,
-      links: newWidgetData.links,
+      links: newWidgetData.type !== 'file' && newWidgetData.type !== 'call' ? newWidgetData.links : linkArrayMap(newWidgetData.links),
       content: newWidgetData.content,
       description: newWidgetData.description,
       title: newWidgetData.title,
@@ -324,6 +346,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const noticeboardCreate = async () => {
     const input = {
       ...newWidgetData,
+      links: newWidgetData.type !== 'file' && newWidgetData.type !== 'call' ? newWidgetData.links : linkArrayMap(newWidgetData.links),
       teacherAuthID: state.user.authId,
       teacherEmail: state.user.email,
       roomID: activeRoom,
@@ -380,7 +403,10 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   }, [viewEditMode]);
 
   return (
-    <React.Fragment>
+    <ContentCard additionalClass={`flex-col`}>
+      <TopWidgetBar />
+
+
       <SectionTitle title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`} />
 
       {/*
@@ -408,12 +434,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         widgetTypeCount={widgetTypeCount}
       />
 
-      {
-        subSection === 'Top Widgets'
-        &&
-        <TopWidgetBar />
-      }
-
       <NoticeboardAdminContent
         activeRoom={activeRoom}
         viewEditMode={viewEditMode}
@@ -431,7 +451,7 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
         setNewWidgetData={setNewWidgetData}
         content={widgetData.length > 0 && filterWidgetContentBySubsection}
       />
-    </React.Fragment>
+    </ContentCard>
   );
 };
 

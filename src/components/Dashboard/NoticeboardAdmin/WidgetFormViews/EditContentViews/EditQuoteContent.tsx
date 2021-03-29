@@ -9,11 +9,7 @@ import AddRemoveButton from '../addRemoveButton';
 
 // Standard widget card view
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
-  const {
-    widgetObj,
-    setNewWidgetData,
-    handleEditUpdateQuotes,
-  } = props;
+  const { widgetObj, setNewWidgetData, handleEditUpdateQuotes } = props;
   const { theme, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict, noticeboardDict } = useDictionary(clientKey);
 
@@ -126,32 +122,37 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
               </div>
 
               <div className={`w-full`}>
-                <div className={`flex flex-row`}>
-                  <label
-                    htmlFor={`text_${idx}_${widgetObj.id}`}
-                    className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
-                    {`${theSwitchObj.label}`}
-                  </label>
+                {
+                  widgetObj.type !== 'call' && (
+                    <div className={`flex flex-row`}>
+                      <label
+                        htmlFor={`text_${idx}_${widgetObj.id}`}
+                        className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
+                        {`${theSwitchObj.label}`}
+                      </label>
 
-                  <input
-                    id={`${widgetObj.id}`}
-                    onChange={handleEditUpdateQuotes}
-                    data-basekey={`${theSwitchObj.key}`}
-                    data-nestkey1={`${theSwitchObj.key2}`}
-                    data-nestkey2={idx}
-                    className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                    value={
-                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        : ''
-                    }
-                    placeholder={
-                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label}...`
-                    }
-                  />
-                </div>
+                      <input
+                        id={`${widgetObj.id}`}
+                        onChange={handleEditUpdateQuotes}
+                        data-basekey={`${theSwitchObj.key}`}
+                        data-nestkey1={`${theSwitchObj.key2}`}
+                        data-nestkey2={idx}
+                        className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                        value={
+                          widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            : ''
+                        }
+                        placeholder={
+                          widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label}...`
+                        }
+                      />
+                    </div>
+                  )
+                }
+
 
                 <div className={`flex flex-col`}>
                   <div className={`flex flex-row`}>
@@ -168,11 +169,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
                       data-nestkey1={`${theSwitchObj.key3}`}
                       data-nestkey2={idx}
                       className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                      value={
-                        widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                          ? appendHttp(widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`])
-                          : ''
-                      }
+                      value={widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]}
                       placeholder={
                         widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
                           ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
@@ -182,11 +179,14 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
                     />
                   </div>
                   {/* EXAMPLE URL */}
-                  <p className={`text-center w-full ${theme.lessonCard.subtitle}`}>
-                    {widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                      ? appendHttp(widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`])
-                      : 'https://'}
-                  </p>
+
+                  {widgetObj.type !== 'quote' && (
+                    <p className={`text-center w-full ${theme.lessonCard.subtitle}`}>
+                      {widgetObj.type !== 'quote' && widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        ? appendHttp(widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`])
+                        : 'https://'}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

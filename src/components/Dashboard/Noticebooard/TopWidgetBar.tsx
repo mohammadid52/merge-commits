@@ -52,16 +52,15 @@ const TopWidgetBar = () => {
     }
   };
 
-  return (
+  return getTopWidgets().length > 0 ? (
     <ContentCard hasBackground={false}>
       <div className={`w-full h-auto min-h-16`}>
-        {getTopWidgets().length > 0 &&
-          getTopWidgets().map((widgetObj: Widget, idx: number) => {
-            return switchWidgets(widgetObj, idx);
-          })}
+        {getTopWidgets().map((widgetObj: Widget, idx: number) => {
+          return switchWidgets(widgetObj, idx);
+        })}
       </div>
     </ContentCard>
-  );
+  ) : null;
 };
 
 export default TopWidgetBar;
