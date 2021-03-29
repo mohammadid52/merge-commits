@@ -14,7 +14,7 @@ const useGlobalNotifications = () => {
 
   const watchlist = [
     {
-      check: state.user.image !== null,
+      check: state.user.image !== null && state.user.image !== '',
       notification:{
         label: 'Avatar not set',
         message: 'Please set up your avatar to complete your profile!',
