@@ -33,13 +33,7 @@ export const EditModeView = (props: NoticeboardFormProps) => {
     widgetObj &&
     newWidgetData && (
       <>
-        <ContentCardTitle
-          title={`Type: ${props.widgetObj.type?.toUpperCase()} Widget`}
-          theme={theme}
-          widgetObj={widgetObj}
-        />
-
-        {/**
+               {/**
          *  section: TOP INFO
          */}
 

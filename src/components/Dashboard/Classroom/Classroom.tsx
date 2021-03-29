@@ -209,6 +209,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <>
+      {/**
+       *  TOP WIDGET BAR
+       *  - Hide for teacher
+       */}
+      <div className={`bg-opacity-10`}>
+        <div className={`${theme.section} px-4 pb-4 m-auto`}>
+          <TopWidgetBar />
+        </div>
+      </div>
+      
       {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
@@ -246,17 +256,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       </div>
 
-      {/**
-       *  TOP WIDGET BAR
-       *  - Hide for teacher
-       */}
-      {!isTeacher && (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <TopWidgetBar />
-          </div>
-        </div>
-      )}
+
 
       {/**
        *  ASSESSMENTS/SURVEYS
