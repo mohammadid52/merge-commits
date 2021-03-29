@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import { QuoteWidget } from './TopWidgets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import { CallLinkWidget, DefaultTextWidget} from './Widgets';
+import { CallLinkWidget, DefaultTextWidget } from './Widgets';
 import { FileLinkWidget } from './Widgets/FilesWidget';
+import ContentCard from '../../Atoms/ContentCard';
 
 const TopWidgetBar = () => {
   const { state } = useContext(GlobalContext);
@@ -51,14 +52,15 @@ const TopWidgetBar = () => {
     }
   };
 
-  return (
-    <div className={`w-full h-auto min-h-16`}>
-      {getTopWidgets().length > 0 &&
-        getTopWidgets().map((widgetObj: Widget, idx: number) => {
+  return getTopWidgets().length > 0 ? (
+    <ContentCard hasBackground={false}>
+      <div className={`w-full h-auto min-h-16`}>
+        {getTopWidgets().map((widgetObj: Widget, idx: number) => {
           return switchWidgets(widgetObj, idx);
         })}
-    </div>
-  );
+      </div>
+    </ContentCard>
+  ) : null;
 };
 
 export default TopWidgetBar;

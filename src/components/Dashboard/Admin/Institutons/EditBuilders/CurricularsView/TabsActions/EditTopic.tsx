@@ -42,6 +42,7 @@ const EditTopic = (props: EditTopicProps) => {
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
+    { title: topic?.learning?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
     { title: 'Edit Topic', url: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`, last: true }
   ];
 
@@ -178,7 +179,7 @@ const EditTopic = (props: EditTopicProps) => {
                 }
               </div>
 
-              <div className="px-3 py-4">
+              {/* <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Select Learning objective <span className="text-red-500">*</span>
                 </label>
@@ -186,7 +187,7 @@ const EditTopic = (props: EditTopicProps) => {
                 {
                   validation.learning && <p className="text-red-600">{validation.learning}</p>
                 }
-              </div>
+              </div> */}
 
               {/* <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">

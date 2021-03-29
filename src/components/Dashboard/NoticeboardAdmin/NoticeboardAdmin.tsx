@@ -10,6 +10,8 @@ import NoticeboardAdminContent from './NoticeboardAdminContent';
 import RoomSwitch from './RoomSwitch';
 
 import { Widget as NoticeboardWidgetMapItem } from '../../../interfaces/ClassroomComponentsInterfaces';
+import TopWidgetBar from '../Noticebooard/TopWidgetBar';
+import ContentCard from '../../Atoms/ContentCard';
 
 export interface NoticeboardAdmin {
   setCurrentPage: any;
@@ -49,9 +51,10 @@ const initialNewWidgetData = {
 };
 
 const NoticeboardAdmin = (props: NoticeboardAdmin) => {
-  const {setCurrentPage} = props;
+  const { theme } = useContext(GlobalContext);
+  const { setCurrentPage } = props;
   const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
-  const {} = useDictionary(clientKey);
+  const { noticeboardDict } = useDictionary(clientKey);
   //
   const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomName, setActiveRoomName] = useState<string>('');
@@ -75,13 +78,17 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
 
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Sidebar Widgets');
+  const [widgetTypeCount, setWidgetTypeCount] = useState<{ sidebar: number; topbar: number }>({
+    sidebar: 0,
+    topbar: 0,
+  });
 
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', widgetID: '' });
 
-  useEffect(()=>{
-    setCurrentPage('noticeboard');
-  },[])
+  useEffect(() => {
+    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'noticeboard' } });
+  }, []);
 
   //  TOP Function to load widgets
   const listNoticeboardWidgets = async () => {
@@ -109,6 +116,35 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     }
   };
 
+  const countWidgetTypes = (widgetArray: any[]) => {
+    if (widgetArray) {
+      console.log('widgetArray - ', widgetArray);
+      return widgetArray.reduce(
+        (acc: { sidebar: number; topbar: number }, widgetObj: any) => {
+          if (widgetObj.placement === 'sidebar') {
+            return { ...acc, sidebar: acc.sidebar + 1 };
+          } else if (widgetObj.placement === 'topbar') {
+            return { ...acc, topbar: acc.topbar + 1 };
+          } else {
+            return acc;
+          }
+        },
+        { sidebar: 0, topbar: 0 }
+      );
+    } else {
+      return {
+        sidebar: 0,
+        topbar: 0,
+      };
+    }
+  };
+
+  useEffect(() => {
+    if (widgetData.length > 0) {
+      setWidgetTypeCount(countWidgetTypes(widgetData));
+    }
+  }, [widgetData]);
+
   useEffect(() => {
     setViewEditMode({ mode: '', widgetID: '' });
     setNewWidgetData(initialNewWidgetData);
@@ -122,7 +158,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       initializeWidgetData();
     }
   }, [activeRoom]);
-
 
   /*
    * Function group to handle updating widget data
@@ -262,13 +297,34 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
     if (widgetObj.placement === subSectionKey[subSection]) return widgetObj;
   });
 
+  // TODO: move this function to utils and improve functionality
+  const appendHttp = (inputUrl: string) => {
+    const splitUrl = inputUrl.split('://');
+    if (splitUrl.length > 1) {
+      return `https://${splitUrl[1]}`;
+    } else if (splitUrl.length === 1) {
+      return `https://${splitUrl[0]}`;
+    } else {
+      return `https://`;
+    }
+  };
+
+  const linkArrayMap = (inputArray: any[]) => {
+    return inputArray.map((elem: any) => {
+      return { ...elem, url: appendHttp(elem.url) };
+    });
+  };
+
   const noticeboardUpdate = async () => {
     const input = {
       id: newWidgetData.id,
       active: newWidgetData.active,
       placement: newWidgetData.placement,
       quotes: newWidgetData.quotes,
-      links: newWidgetData.links,
+      links:
+        newWidgetData.type !== 'file' && newWidgetData.type !== 'call'
+          ? newWidgetData.links
+          : linkArrayMap(newWidgetData.links),
       content: newWidgetData.content,
       description: newWidgetData.description,
       title: newWidgetData.title,
@@ -290,11 +346,14 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   const noticeboardCreate = async () => {
     const input = {
       ...newWidgetData,
+      links:
+        newWidgetData.type !== 'file' && newWidgetData.type !== 'call'
+          ? newWidgetData.links
+          : linkArrayMap(newWidgetData.links),
       teacherAuthID: state.user.authId,
       teacherEmail: state.user.email,
       roomID: activeRoom,
     };
-    // console.log('creating widget...', newWidgetData);
     try {
       const noticeboardWidgetCreate: any = await API.graphql(
         graphqlOperation(mutations.createNoticeboardWidget, {
@@ -314,7 +373,6 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
       id: getWidgetObj.id,
     };
 
-    console.log('deleting widget...');
     try {
       const noticeboardWidgetDelete: any = await API.graphql(
         graphqlOperation(mutations.deleteNoticeboardWidget, {
@@ -348,51 +406,55 @@ const NoticeboardAdmin = (props: NoticeboardAdmin) => {
   }, [viewEditMode]);
 
   return (
-    <React.Fragment>
-      <SectionTitle title={`Room Selector`} />
+    <>
+      <TopWidgetBar />
+      <ContentCard additionalClass={`flex-col`}>
+        <SectionTitle title={`1. ${noticeboardDict[userLanguage].SECTION_TITLE.ROOM_SELECTOR}`} />
 
-      {/*
+        {/*
         Boetons to select between rooms
       */}
-      <RoomSwitch
-        loading={loading}
-        activeRoom={activeRoom}
-        setActiveRoom={setActiveRoom}
-        activeRoomName={activeRoomName}
-        setActiveRoomName={setActiveRoomName}
-      />
+        <RoomSwitch
+          loading={loading}
+          activeRoom={activeRoom}
+          setActiveRoom={setActiveRoom}
+          activeRoomName={activeRoomName}
+          setActiveRoomName={setActiveRoomName}
+        />
 
-      <SectionTitle title={`Widget Manager`} />
+        <SectionTitle title={`2. ${noticeboardDict[userLanguage].SECTION_TITLE.WIDGET_MANAGER}`} />
 
-      {/*
+        {/*
         Tabs to select between:
           - Top widgets
           - Sidebar widgets
       */}
-      <SubSectionTabs
-        subSection={subSection}
-        subSectionList={['Top Widgets', 'Sidebar Widgets']}
-        handleTabClick={handleTabClick}
-      />
+        <SubSectionTabs
+          subSection={subSection}
+          subSectionList={['Top Widgets', 'Sidebar Widgets']}
+          handleTabClick={handleTabClick}
+          widgetTypeCount={widgetTypeCount}
+        />
 
-      <NoticeboardAdminContent
-        activeRoom={activeRoom}
-        viewEditMode={viewEditMode}
-        handleEditToggle={handleEditToggle}
-        handleEditUpdateDefault={handleEditUpdateDefault}
-        handleEditUpdateQuotes={handleEditUpdateQuotes}
-        handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
-        handleActivation={handleActivation}
-        subSection={subSection}
-        widgetData={widgetData}
-        setWidgetData={setWidgetData}
-        createTemplate={newWidgetData}
-        initialNewWidgetData={initialNewWidgetData}
-        newWidgetData={newWidgetData}
-        setNewWidgetData={setNewWidgetData}
-        content={widgetData.length > 0 && filterWidgetContentBySubsection}
-      />
-    </React.Fragment>
+        <NoticeboardAdminContent
+          activeRoom={activeRoom}
+          viewEditMode={viewEditMode}
+          handleEditToggle={handleEditToggle}
+          handleEditUpdateDefault={handleEditUpdateDefault}
+          handleEditUpdateQuotes={handleEditUpdateQuotes}
+          handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+          handleActivation={handleActivation}
+          subSection={subSection}
+          widgetData={widgetData}
+          setWidgetData={setWidgetData}
+          createTemplate={newWidgetData}
+          initialNewWidgetData={initialNewWidgetData}
+          newWidgetData={newWidgetData}
+          setNewWidgetData={setNewWidgetData}
+          content={widgetData.length > 0 && filterWidgetContentBySubsection}
+        />
+      </ContentCard>
+    </>
   );
 };
 

@@ -1,20 +1,18 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { DashboardProps } from '../Dashboard';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useLoadRooms from '../../../customHooks/loadRooms';
 import { Room } from '../Menu/SideRoomSelector';
+import useDictionary from '../../../customHooks/dictionary';
 
 const RoomSwitch = (props: DashboardProps) => {
-  const { loading, activeRoom, setActiveRoom, activeRoomName, setActiveRoomName } = props;
-  const { state, theme } = useContext(GlobalContext);
+  const { loading, activeRoom, setActiveRoom, setActiveRoomName } = props;
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {noticeboardDict} = useDictionary(clientKey);
   const rooms = useLoadRooms();
-  //
 
-  // useEffect(() => {
-  //   console.log('rooms hook - ', rooms);
-  // }, [rooms]);
 
-  const handleRoomSelection = (e: React.MouseEvent, i: number) => {
+  const handleRoomSelection = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
     if (activeRoom !== t.id && loading === false) {
@@ -34,7 +32,7 @@ const RoomSwitch = (props: DashboardProps) => {
                 key={`room_button_sb${i}`}
                 id={room.id}
                 data-name={room.name}
-                onClick={(e) => handleRoomSelection(e, i)}
+                onClick={(e) => handleRoomSelection(e)}
                 className={`rounded p-2 cursor-pointer truncate ...
                 ${linkClass} 
                 ${activeRoom === room.id 
@@ -44,7 +42,7 @@ const RoomSwitch = (props: DashboardProps) => {
                 {room.name}
               </div>
             ))
-          : 'No rooms...'}
+          : noticeboardDict[userLanguage].ROOMS.NONE}
       </div>
     </div>
   );

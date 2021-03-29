@@ -22,6 +22,7 @@ import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 interface EditClassProps { }
 
@@ -42,7 +43,15 @@ const EditClass = (props: EditClassProps) => {
   const [statusEdit, setStatusEdit] = useState('');
   const [loading, setLoading] = useState(true);
   const [updateStatus, setUpdateStatus] = useState(false)
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [previousName, setPreviousName] = useState('')
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    profile: false,
+    profileId: '',
+    goBack: false,
+    message: 'Do you want to save changes before moving forward?'
+  });
 
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
@@ -116,7 +125,8 @@ const EditClass = (props: EditClassProps) => {
     setClassData({
       ...classData,
       name: e.target.value
-    })
+    });
+    setUnsavedChanges(true);
     if (messages.show) {
       setMessages({ show: false, message: '', isError: false })
     }
@@ -261,6 +271,52 @@ const EditClass = (props: EditClassProps) => {
     }
   }
 
+  const goBack = () => {
+    if (unsavedChanges) {
+      setWarnModal({
+        show: true,
+        profile: false,
+        profileId: '',
+        goBack: true,
+        message: 'Do you want to save changes before going back?'
+      })
+    } else {
+      history.goBack();
+    }
+  }
+
+  const movetoStudentProfile = (profileID: string) => {
+    if (unsavedChanges) {
+      setWarnModal({
+        show: true,
+        profile: true,
+        profileId: profileID,
+        goBack: false,
+        message: 'Do you want to save changes before leaving the page?'
+      })
+    } else {
+      gotoProfileInfo(profileID)
+    }
+  }
+
+  const DiscardChanges = () => {
+    if (warnModal.goBack) {
+      history.goBack()
+    } else if (warnModal.profile) {
+      gotoProfileInfo(warnModal.profileId);
+    }
+  }
+
+  const saveAndMove = async () => {
+    if (warnModal.goBack) {
+      await saveClassDetails();
+      history.goBack()
+    } else if (warnModal.profile) {
+      await saveClassDetails();
+      gotoProfileInfo(warnModal.profileId);
+    }
+  }
+
   return (
     <div className="w-8/10 h-full mt-4 p-4">
 
@@ -269,7 +325,7 @@ const EditClass = (props: EditClassProps) => {
       <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -279,7 +335,7 @@ const EditClass = (props: EditClassProps) => {
           <div className="">
             <div className="w-7/10 m-auto px-2">
               <FormInput value={classData.name} id='className' onChange={onNameChange} name='className' label={dictionary.NAME_INPUT_LABEL} isRequired />
-              <Buttons btnClass="my-6 mx-auto py-1" label="Save" onClick={saveClassDetails} />
+              <Buttons btnClass="my-6 mx-auto py-1" label="Save" onClick={saveClassDetails} transparent={!unsavedChanges}/>
             </div>
           </div>
         </div>
@@ -298,7 +354,7 @@ const EditClass = (props: EditClassProps) => {
               (classStudents.length ?
                 (
                   <Fragment>
-                    <div className="mt-8 w-full m-auto px-2">
+                    <div className="mt-8 w-9/10 m-auto px-2">
                       <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
                         <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
@@ -307,12 +363,12 @@ const EditClass = (props: EditClassProps) => {
                       </div>
                     </div>
 
-                    <div className="mb-4 w-full m-auto px-2 max-h-88 overflow-y-scroll">
+                    <div className="mb-4 w-9/10 m-auto px-2 max-h-88 overflow-y-scroll">
                       {
                         classStudents.map((item, index) => (
                           <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer" onClick={() => gotoProfileInfo(item.student.id)}>
+                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer" onClick={() => movetoStudentProfile(item.student.id)}>
                               <div className="flex-shrink-0 h-10 w-10 flex items-center">
                                 {item.student.avatar ?
                                   (<img
@@ -335,21 +391,21 @@ const EditClass = (props: EditClassProps) => {
 
                             {
                               statusEdit === item.id ? (
-                                <div className="w-3/10 mr-6">
+                                <div className="w-3/10 mr-6 px-3">
                                   <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onClassStudentStatusChange(val, name, id, item.id)} />
                                 </div>) :
-                                <div className="w-3/10">
+                                <div className="w-3/10 px-3">
                                   {item.status || 'Active'}
                                 </div>
                             }
 
-                            <div className="w-1/10">
+                            <div className="w-1/10 px-3">
                               {statusEdit === item.id ?
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
                                 :
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                                   Edit
-                          </span>
+                                </span>
                               }
                             </div>
                           </div>)
@@ -365,6 +421,9 @@ const EditClass = (props: EditClassProps) => {
               <div className="py-2 m-auto text-center">
                 <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
               </div>)
+            }
+            {
+              warnModal.show && <ModalPopUp closeAction={DiscardChanges} saveAction={saveAndMove} saveLabel='SAVE' cancelLabel='DISCARD' message={warnModal.message} />
             }
           </Fragment>
         ) : null}

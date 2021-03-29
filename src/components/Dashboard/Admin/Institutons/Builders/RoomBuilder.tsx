@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -17,6 +17,7 @@ import { getFilterORArray } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import { getAsset } from '../../../../../assets';
 
 interface RoomBuilderProps {
 
@@ -24,6 +25,7 @@ interface RoomBuilderProps {
 
 const RoomBuilder = (props: RoomBuilderProps) => {
   const { } = props;
+  const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
   const initialData = {
@@ -35,7 +37,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     curricular: { id: '', name: '', value: '' },
     maxPersons: ''
   }
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const [roomData, setRoomData] = useState(initialData)
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
@@ -53,9 +56,18 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Classroom Creation', url: '/dashboard/room-creation', last: true }
+    { title: 'Classroom Creation', url: `${match.url}`, last: true }
   ];
 
+  const createNewEntry = (field: string) => {
+    if (field === 'teacher') {
+      history.push('/dashboard/registration');
+    } else if (field === 'curricular') {
+      history.push(`/dashboard/manage-institutions/institution/curricular-creation?id=${roomData?.institute?.id}`);
+    } else if (field === 'class') {
+      history.push(`/dashboard/manage-institutions/institution/class-creation?id=${roomData?.institute?.id}`);
+    }
+  }
   const selectTeacher = (val: string, name: string, id: string) => {
     setRoomData({
       ...roomData,
@@ -516,18 +528,21 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   Teacher  <span className="text-red-500"> *</span>
                 </label>
                 <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder="Select teacher" onChange={selectTeacher} />
+                <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('teacher')}>Add new teacher</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Class Name  <span className="text-red-500"> *</span>
                 </label>
                 <Selector selectedItem={classRoom.value} placeholder="Select Class" list={classList} onChange={selectClass} />
+                <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('class')}>Add new class</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   Curriculum
-              </label>
+                </label>
                 <Selector selectedItem={curricular.value} placeholder="Select Curriculum" list={curricularList} onChange={selectCurriculum} />
+                <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('curricular')}>Add new curriculum</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">

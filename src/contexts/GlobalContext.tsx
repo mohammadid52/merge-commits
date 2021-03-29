@@ -32,6 +32,7 @@ export const standardTheme = {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
     card: 'p-2 relative bg-white rounded border border-dark-gray border-opacity-10 h-auto flex',
+    cardNoBG: 'relative h-auto p-2 flex'
   },
   lessonCard: {
     title: 'flex items-center text-2xl text-black font-open text-left',
@@ -83,7 +84,7 @@ export const standardTheme = {
   },
   textColor: {
     iconoclastIndigo: 'text-indigo-600',
-    curateBlue: ' text-theme-blue',
+    curateBlue: 'text-theme-blue',
   },
   borderColor: {
     iconoclastIndigo: 'border-indigo-600',

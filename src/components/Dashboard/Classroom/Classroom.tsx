@@ -102,50 +102,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   });
 
   const [status, setStatus] = useState('today');
-  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: string; upcoming: string; completed: string }>({
-    today: '0',
-    upcoming: '0',
-    completed: '0',
+  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: number; upcoming: number; completed: number }>({
+    today: 0,
+    upcoming: 0,
+    completed: 0,
   });
 
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(()=>{
     if(state.user.role === 'ST'){
-      setCurrentPage('classroom');
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
     }
     if(state.user.role === 'TR'|| state.user.role === 'FLW'){
-      setCurrentPage('lesson-planner');
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}})
     }
   },[state.user.role])
 
 
-
-  /**
-   * LIFECYCLE - on mount
-   */
-
-  // useEffect(() => {
-  //   if (state.roomData.lessons && state.roomData.lessons.length > 0) {
-  //     const todayCount = todayLessons.length.toString();
-  //     const upcomingCount = upcomingLessons.length.toString();
-  //     const completedCount = completedLessons.length.toString();
-  //
-  //     setLessonGroupCount({
-  //       today: todayCount,
-  //       upcoming: upcomingCount,
-  //       completed: completedCount,
-  //     });
-  //
-  //     dispatch({
-  //       type: 'UPDATE_SIDEBAR',
-  //       payload: {
-  //         section: 'upcomingLessons',
-  //         data: upcomingLessons,
-  //       },
-  //     });
-  //   }
-  // }, [state.roomData.lessons]);
 
   /**
    * ASSESSMENTS & SURVEYS
@@ -208,6 +182,20 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       })
       : [];
 
+
+
+  useEffect(()=>{
+    if(state.roomData.lessons.length > 0){
+      setLessonGroupCount({
+        today: todayLessons.length,
+        upcoming: upcomingLessons.length,
+        completed: completedLessons.length
+      })
+    }
+  },[state.roomData.lessons])
+
+
+
   const sortedLessons = (lessonArray: any[], sortProperty: string) => {
     return lessonArray.sort((a: any, b: any) => {
       if (a[sortProperty] > b[sortProperty]) {
@@ -221,7 +209,17 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <>
-      {isTeacher && currentPage === 'lesson-planner' ? (
+      {/**
+       *  TOP WIDGET BAR
+       *  - Hide for teacher
+       */}
+      <div className={`bg-opacity-10`}>
+        <div className={`${theme.section} px-4 pb-4 m-auto`}>
+          <TopWidgetBar />
+        </div>
+      </div>
+
+      {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
             <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
@@ -231,7 +229,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       ) : null}
 
-      {isTeacher && currentPage === 'lesson-planner' ? (
+      {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <SyllabusSwitch
@@ -258,17 +256,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       </div>
 
-      {/**
-       *  TOP WIDGET BAR
-       *  - Hide for teacher
-       */}
-      {!isTeacher && (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <TopWidgetBar />
-          </div>
-        </div>
-      )}
+
 
       {/**
        *  ASSESSMENTS/SURVEYS

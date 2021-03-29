@@ -1,3 +1,41 @@
+export const getDashboardData = /* GraphQL */ `
+  query GetPerson($email: String!, $authId: String!) {
+    getPerson(email: $email, authId: $authId) {
+      classes {
+        items {
+          class {
+            name
+            rooms {
+              items {
+                teacher {
+                  firstName
+                  lastName
+                  image
+                  email
+                  role
+                  phone
+                }
+                activeSyllabus
+                name
+                id
+              }
+            }
+            students {
+              items {
+                student {
+                  firstName
+                  lastName
+                  image
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const getPerson = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
@@ -1417,10 +1455,6 @@ export const getRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       topic {
         id
@@ -1534,7 +1568,7 @@ export const getLesson = /* GraphQL */ `
       institution {
         id
         name
-        }
+      }
       measurements {
         nextToken
       }
@@ -2017,10 +2051,10 @@ export const getInstitutionCurriculars = /* GraphQL */ `
           languages
           designers
           syllabi {
-            items{
+            items {
               id
               name
-              type      
+              type
             }
           }
           createdAt
@@ -2049,7 +2083,7 @@ export const getChatRooms = /* GraphQL */ `
                 id
                 name
               }
-            }          
+            }
           }
         }
       }
@@ -2057,11 +2091,7 @@ export const getChatRooms = /* GraphQL */ `
   }
 `;
 export const listFilteredSyllabusLessons = /* GraphQL */ `
-  query ListSyllabusLessons(
-    $filter: ModelSyllabusLessonFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListSyllabusLessons($filter: ModelSyllabusLessonFilterInput, $limit: Int, $nextToken: String) {
     listSyllabusLessons(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
@@ -2082,9 +2112,7 @@ export const listFilteredSyllabusLessons = /* GraphQL */ `
 `;
 
 export const getInstitutionsList = /* GraphQL */ `
-  query ListInstitutions(
-    $nextToken: String
-  ) {
+  query ListInstitutions($nextToken: String) {
     listInstitutions(nextToken: $nextToken) {
       items {
         id
@@ -2183,21 +2211,22 @@ export const listSurveys = /* GraphQL */ `
 `;
 
 export const getSurveyQuestions = /* GraphQL */ `
-query GetLesson($id: ID!) {
-  getLesson(id: $id) {
-    id
-    checkpoints {
-      items {
-        checkpointID
-        checkpoint {
-          questions {
-            items {
-              questionID
-              question {
-                id
-                label
-                type
-                question
+  query GetLesson($id: ID!) {
+    getLesson(id: $id) {
+      id
+      checkpoints {
+        items {
+          checkpointID
+          checkpoint {
+            questions {
+              items {
+                questionID
+                question {
+                  id
+                  label
+                  type
+                  question
+                }
               }
             }
           }
@@ -2205,7 +2234,6 @@ query GetLesson($id: ID!) {
       }
     }
   }
-}
 `;
 
 export const fetchClassStudents = /* GraphQL */ `
@@ -2229,11 +2257,7 @@ export const fetchClassStudents = /* GraphQL */ `
 `;
 
 export const getStudentResponse = /* GraphQL */ `
-  query ListQuestionDatas(
-    $filter: ModelQuestionDataFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListQuestionDatas($filter: ModelQuestionDataFilterInput, $limit: Int, $nextToken: String) {
     listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id

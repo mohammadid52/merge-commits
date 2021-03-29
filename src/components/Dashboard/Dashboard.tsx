@@ -13,6 +13,8 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import SideWidgetBar from './Noticebooard/SideWidgetBar';
 import SideRoomSelector from './Menu/SideRoomSelector';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
+import Noticebar from '../Noticebar/Noticebar';
+import Home from './Home/Home';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -138,128 +140,156 @@ const Dashboard = (props: DashboardProps) => {
   }, [state.user.role]);
 
   return (
-    <div className={`w-screen md:w-full h-screen md:h-full flex`}>
-      {/**
-       *  SIDEMENU
-       */}
-      <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}>
-        <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
-        <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
-      </SideMenu>
+    <>
+      <Noticebar inputContext={'global'} />
+      <div className={`w-screen md:w-full h-screen md:h-full flex overflow-hidden`}>
+        {/**
+         *  SIDEMENU
+         */}
+        <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}>
+          <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
+          <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
+        </SideMenu>
 
-      {(currentPage === 'lesson-planner' && userData.role === 'TR') ||
-      (currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-      (userData.role === 'ST' && currentPage === 'classroom') ? (
-        <SideRoomSelector
-          currentPage={currentPage}
-          activeRoom={activeRoom}
-          setActiveRoom={setActiveRoom}
-          setActiveRoomInfo={setActiveRoomInfo}
-          setActiveRoomName={setActiveRoomName}
-          lessonLoading={lessonLoading}
-          setLessonLoading={setLessonLoading}
-          syllabusLoading={syllabusLoading}
-          setSyllabusLoading={setsyllabusLoading}
-          activeRoomSyllabus={activeRoomSyllabus}
-          setActiveRoomSyllabus={setActiveRoomSyllabus}
-        />
-      ) : null}
-
-      {/**
-       *  MAIN CONTENT
-       */}
-      <div className={`flex flex-row overflow-x-hidden overflow-y-scroll`}>
-        <div className={`height h-full flex flex-col`}>
-          <Suspense
-            fallback={
-              <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                <ComponentLoading />
-              </div>
-            }>
-            <Switch>
-              <Route
-                path={`${match.url}`}
-                exact
-                render={() => {
-                  if (userData && userData.role !== '') {
-                    if (userData.role === 'FLW' || userData.role === 'TR') {
-                      return <Redirect to={`${match.url}/lesson-planner`} />;
-                    } else if (userData.role === 'ST') {
-                      return <Redirect to={`${match.url}/classroom`} />;
-                    } else return <Redirect to={`${match.url}/manage-institutions`} />;
-                  } else
-                    return (
-                      <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                        <ComponentLoading />
-                      </div>
-                    );
-                }}
-              />
-              <Route
-                exact
-                path={`${match.url}/classroom`}
-                render={() => (
-                  <Classroom
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    activeRoom={activeRoom}
-                    activeRoomInfo={activeRoomInfo}
-                    setActiveRoom={setActiveRoom}
-                    activeRoomName={activeRoomName}
-                    setActiveRoomName={setActiveRoomName}
-                    visibleLessonGroup={visibleLessonGroup}
-                    setVisibleLessonGroup={setVisibleLessonGroup}
-                    lessonLoading={lessonLoading}
-                    syllabusLoading={syllabusLoading}
-                  />
-                )}
-              />
-              <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
-              <Route path={`${match.url}/noticeboard`} render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage}/>} />
-              <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
-              <Route path={`${match.url}/registration`} render={() => <Registration />} />
-              <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
-              <Route
-                path={`${match.url}/lesson-planner`}
-                render={() => (
-                  <LessonPlanHome
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    activeRoom={activeRoom}
-                    activeRoomInfo={activeRoomInfo}
-                    activeRoomName={activeRoomName}
-                    setActiveRoomName={setActiveRoomName}
-                    visibleLessonGroup={visibleLessonGroup}
-                    setVisibleLessonGroup={setVisibleLessonGroup}
-                    lessonLoading={lessonLoading}
-                    setLessonLoading={setLessonLoading}
-                    syllabusLoading={syllabusLoading}
-                    setSyllabusLoading={setsyllabusLoading}
-                  />
-                )}
-              />
-              <Route
-                path={`${match.url}/manage-institutions`}
-                render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
-              />
-              <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
-              <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
-            </Switch>
-          </Suspense>
-        </div>
+        {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
+        (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
+        (userData.role === 'ST' && state.currentPage === 'classroom') ? (
+          <SideRoomSelector
+            currentPage={currentPage}
+            activeRoom={activeRoom}
+            setActiveRoom={setActiveRoom}
+            setActiveRoomInfo={setActiveRoomInfo}
+            setActiveRoomName={setActiveRoomName}
+            lessonLoading={lessonLoading}
+            setLessonLoading={setLessonLoading}
+            syllabusLoading={syllabusLoading}
+            setSyllabusLoading={setsyllabusLoading}
+            activeRoomSyllabus={activeRoomSyllabus}
+            setActiveRoomSyllabus={setActiveRoomSyllabus}
+          />
+        ) : null}
 
         {/**
-         *  SIDEWIDGETSBAR
+         *  MAIN CONTENT
          */}
-        {
-          currentPage === 'classroom' ||
-          currentPage === 'lesson-planner' ||
-          currentPage === 'noticeboard' ?
-            <SideWidgetBar currentPage={currentPage} /> :
-            null
-        }
+        <div className={`flex flex-row overflow-x-hidden overflow-y-scroll`}>
+          <div className={`height h-full flex flex-col`}>
+            <Suspense
+              fallback={
+                <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                  <ComponentLoading />
+                </div>
+              }>
+              <Switch>
+
+                <Route
+                  path={`${match.url}`}
+                  exact
+                  render={() => {
+                    if (userData && userData.role !== '') {
+                      if (userData.role === 'FLW' || userData.role === 'TR') {
+                        return <Redirect to={`${match.url}/lesson-planner`} />;
+                      } else if (userData.role === 'ST') {
+                        return <Redirect to={`${match.url}/classroom`} />;
+                        // return <Redirect to={`${match.url}/home`} />;
+                      } else return <Redirect to={`${match.url}/manage-institutions`} />;
+                    } else
+                      return (
+                        <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                          <ComponentLoading />
+                        </div>
+                      );
+                  }}
+                />
+
+                <Route
+                  exact
+                  path={`${match.url}/home`}
+                  render={() => (
+                    <Home/>
+                  )}
+                />
+
+                <Route
+                  exact
+                  path={`${match.url}/classroom`}
+                  render={() => (
+                    <Classroom
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                      activeRoom={activeRoom}
+                      activeRoomInfo={activeRoomInfo}
+                      setActiveRoom={setActiveRoom}
+                      activeRoomName={activeRoomName}
+                      setActiveRoomName={setActiveRoomName}
+                      visibleLessonGroup={visibleLessonGroup}
+                      setVisibleLessonGroup={setVisibleLessonGroup}
+                      lessonLoading={lessonLoading}
+                      syllabusLoading={syllabusLoading}
+                    />
+                  )}
+                />
+
+                <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+
+                <Route
+                  path={`${match.url}/noticeboard`}
+                  render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
+                />
+
+                <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
+
+                <Route path={`${match.url}/registration`} render={() => <Registration />} />
+
+                <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
+
+                <Route
+                  path={`${match.url}/lesson-planner`}
+                  render={() => (
+                    <LessonPlanHome
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                      activeRoom={activeRoom}
+                      activeRoomInfo={activeRoomInfo}
+                      activeRoomName={activeRoomName}
+                      setActiveRoomName={setActiveRoomName}
+                      visibleLessonGroup={visibleLessonGroup}
+                      setVisibleLessonGroup={setVisibleLessonGroup}
+                      lessonLoading={lessonLoading}
+                      setLessonLoading={setLessonLoading}
+                      syllabusLoading={syllabusLoading}
+                      setSyllabusLoading={setsyllabusLoading}
+                    />
+                  )}
+                />
+
+                <Route
+                  path={`${match.url}/manage-institutions`}
+                  render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+                />
+
+                <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+
+                <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
+
+              </Switch>
+            </Suspense>
+          </div>
+
+          {/**
+           *  SIDEWIDGETSBAR
+           */}
+          {
+            state.currentPage === 'classroom' ||
+            state.currentPage === 'lesson-planner' ||
+            state.currentPage === 'noticeboard' ?
+              (
+                <SideWidgetBar currentPage={state.currentPage} />
+              ) : null
+          }
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

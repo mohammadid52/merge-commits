@@ -9,10 +9,6 @@ const SyllabusSwitch = (props: DashboardProps) => {
   const { state, theme, clientKey, userLanguage  } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
 
-  useEffect(()=>{
-    console.log('classroomDict ->? ', classRoomDict)
-  },[])
-
   return (
     <>
       {syllabusLoading ? (
@@ -29,7 +25,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
                 className={`flex flex-col ${theme.dashboard.card} ${theme.elem.textDark}`}>
                 <div className={``}>
                   <p className={`text-sm text-darker-gray`}><b>Unit Name: </b>{syllabus.name}</p>
-                  <p className={`text-sm text-darker-gray`}><b>Description:</b> {syllabus.description}</p>
+                  <p className={`h-12 overflow-ellipsis overflow-hidden ... text-sm text-darker-gray`}><b>Description:</b> {syllabus.description}...</p>
                 </div>
 
                 {!syllabus.active ? (
