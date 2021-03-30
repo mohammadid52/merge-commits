@@ -9,9 +9,10 @@ import { getImageFromS3 } from '../../../utilities/services';
 import RoomTiles from './RoomTiles';
 import TeacherRows from './TeacherRows';
 import StudentsTiles from './StudentsTiles';
+import { getRoom } from '../../../graphql/queries';
 
 const Home = () => {
-  const { state } = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
   const [homeData, setHomeData] = useState<{ class: any }[]>();
   const [teacherList, setTeacherList] = useState<any[]>();
   const [classList, setClassList] = useState<any[]>();
@@ -113,6 +114,7 @@ const Home = () => {
         }, [])
       : [];
 
+
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
@@ -123,6 +125,25 @@ const Home = () => {
       fetchAndProcessDashboardData();
     }
   }, [homeData]);
+
+  const getRoomsFromClassList =
+    classList && classList.length > 0
+    ? classList.reduce((acc: any[], classObj: any) => {
+        return [...acc, classObj.rooms.items[0]]
+      },[])
+      :[];
+
+
+  useEffect(() => {
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'rooms',
+          data: getRoomsFromClassList,
+        },
+      });
+  }, [classList]);
+
 
   return (
     <>

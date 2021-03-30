@@ -64,27 +64,27 @@ const SideRoomSelector = (props: SideMenuProps) => {
   /**
    * 1.1 LIST ALL CLASSES-id STUDENT IS IN
    */
-  useEffect(() => {
-    const standardUserID = state.user.id;
-    const userRole = state.user.role;
-    const listClassStudents = async () => {
-      if (userRole === 'ST') {
-        try {
-          const classesFetch: any = await API.graphql(
-            graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
-          );
-          const response = await classesFetch;
-          const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
-          const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
-          setClassIds(arrayOfClassIDs);
-          // console.log('1 -> ', 'loadiung student rooms');
-        } catch (e) {
-          console.error('Classes Fetch ERR: ', e);
-        }
-      }
-    };
-    userRole === 'ST' && listClassStudents();
-  }, []);
+  // useEffect(() => {
+  //   const standardUserID = state.user.id;
+  //   const userRole = state.user.role;
+  //   const listClassStudents = async () => {
+  //     if (userRole === 'ST') {
+  //       try {
+  //         const classesFetch: any = await API.graphql(
+  //           graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
+  //         );
+  //         const response = await classesFetch;
+  //         const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
+  //         const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
+  //         setClassIds(arrayOfClassIDs);
+  //         // console.log('1 -> ', 'loadiung student rooms');
+  //       } catch (e) {
+  //         console.error('Classes Fetch ERR: ', e);
+  //       }
+  //     }
+  //   };
+  //   userRole === 'ST' && listClassStudents();
+  // }, []);
 
   /**
    * 1.2 LIST ALL ROOMS TEACHER IS IN
@@ -151,51 +151,57 @@ const SideRoomSelector = (props: SideMenuProps) => {
   /**
    * 3. LIST ALL ROOMS STUDENT IS IN BASED ON CLASS ID
    */
-  useEffect(() => {
-    const userRole = state.user.role;
-
-    const listRooms = async () => {
-      if (classIds.length > 0) {
-        try {
-          const roomsFetch: any = await API.graphql(
-            graphqlOperation(customQueries.listRooms, {
-              filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
-            })
-          );
-          const response = await roomsFetch;
-          const arrayOfResponseObjects = response?.data?.listRooms?.items;
-          setRooms(arrayOfResponseObjects);
-          // Dispatch to context
-          // TODO: remove storage of rooms in SideRoomSelector.tsx
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'rooms',
-              data: arrayOfResponseObjects,
-            },
-          });
-          // console.log('2 --> ', arrayOfResponseObjects);
-        } catch (e) {
-          console.error('Rooms Fetch ERR: ', e);
-        } finally {
-          setRoomsLoading(true);
-        }
-      }
-    };
-    userRole === 'ST' && listRooms();
-  }, [classIds]);
+  // useEffect(() => {
+  //   const userRole = state.user.role;
+  //
+  //   const listRooms = async () => {
+  //     if (classIds.length > 0) {
+  //       try {
+  //         const roomsFetch: any = await API.graphql(
+  //           graphqlOperation(customQueries.listRooms, {
+  //             filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
+  //           })
+  //         );
+  //         const response = await roomsFetch;
+  //         const arrayOfResponseObjects = response?.data?.listRooms?.items;
+  //         setRooms(arrayOfResponseObjects);
+  //         // Dispatch to context
+  //         // TODO: remove storage of rooms in SideRoomSelector.tsx
+  //         dispatch({
+  //           type: 'UPDATE_ROOM',
+  //           payload: {
+  //             property: 'rooms',
+  //             data: arrayOfResponseObjects,
+  //           },
+  //         });
+  //         // console.log('2 --> ', arrayOfResponseObjects);
+  //       } catch (e) {
+  //         console.error('Rooms Fetch ERR: ', e);
+  //       } finally {
+  //         setRoomsLoading(true);
+  //       }
+  //     }
+  //   };
+  //   userRole === 'ST' && listRooms();
+  // }, [classIds]);
 
   /**
    * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
    */
   useEffect(() => {
+    const activeRoomSyllabus = state.roomData.rooms?.find((room: any) => room.id === activeRoom )?.activeSyllabus;
+    setRoomsLoading(true);
+    setSyllabusLoading(true); // Trigger loading ui element
+    setLessonLoading(true);
+    setActiveRoomSyllabus(activeRoomSyllabus);
+
     const listRoomCurriculums = async () => {
-      if (rooms.length > 0 && activeRoom !== '') {
+      if (state.roomData.rooms.length > 0 && state.activeRoom !== '') {
         try {
           const roomIds = getArrayOfUniqueValueByProperty(rooms, 'id');
           const roomCurriculumsFetch: any = API.graphql(
             graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { roomID: { contains: activeRoom } },
+              filter: { roomID: { contains: state.activeRoom } },
             })
           );
           const response = await roomCurriculumsFetch;
@@ -209,18 +215,18 @@ const SideRoomSelector = (props: SideMenuProps) => {
       }
     };
     listRoomCurriculums();
-  }, [activeRoom]);
+  }, [state.activeRoom]);
 
   // Save info of selected room to cookie
   useEffect(() => {
-    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoom);
+    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === state.activeRoom);
     if (getRoomFromState.length === 1) {
       setCookie('room_info', getRoomFromState[0]);
       setActiveRoomInfo(getRoomFromState[0]);
     } else {
       setCookie('room_info', {});
     }
-  }, [activeRoom]);
+  }, [state.activeRoom]);
 
   /**
    * 5. LIST AVAILABLE SYLLABUS and GET SEQUENCE TO SORT SYLLABI
@@ -370,8 +376,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
         })
       : [];
 
-  const classRoomActiveSyllabus = rooms
-    .filter((room: any) => room.id === activeRoom)
+  const classRoomActiveSyllabus = state.roomData.rooms
+    .filter((room: any) => room.id === state.activeRoom)
     .map((room: any) => {
       return { id: room.activeSyllabus };
     });
@@ -396,14 +402,14 @@ const SideRoomSelector = (props: SideMenuProps) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
     if (activeRoom !== t.id) {
-      setActiveRoom(t.id);
-      setActiveRoomName(name);
+      // setActiveRoom(t.id);
+      // setActiveRoomName(name);
 
       dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
 
-      setSyllabusLoading(true); // Trigger loading ui element
-      setLessonLoading(true);
-      setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
+      // setSyllabusLoading(true); // Trigger loading ui element
+      // setLessonLoading(true);
+      // setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
     }
   };
 
@@ -414,8 +420,8 @@ const SideRoomSelector = (props: SideMenuProps) => {
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
       <div className={roomsTitle}>{classRoomDict[userLanguage]['LIST_TITLE']}:</div>
-      {rooms.length > 0 ? (
-        rooms.map((room: Room, i: number) => {
+      {state.roomData.rooms.length > 0 ? (
+        state.roomData.rooms.map((room: Room, i: number) => {
           return (
             <div
               key={`room_button_sb${i}`}
@@ -423,7 +429,7 @@ const SideRoomSelector = (props: SideMenuProps) => {
               data-name={room.name}
               onClick={(e) => handleRoomSelection(e, i)}
               className={`cursor-pointer ${linkClass} 
-              ${activeRoom === room.id ? 'bg-grayscale-light bg-opacity-80' : 'bg-darker-gray bg-opacity-20'} 
+              ${state.activeRoom === room.id ? 'bg-grayscale-light bg-opacity-80' : 'bg-darker-gray bg-opacity-20'} 
               truncate ...`}>
               {room.name}
             </div>
