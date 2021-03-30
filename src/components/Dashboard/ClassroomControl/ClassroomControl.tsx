@@ -34,7 +34,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     lessonLoading,
     setLessonLoading,
     syllabusLoading,
-    setsyllabusLoading,
+    setSyllabusLoading,
     activeRoomSyllabus,
     setActiveRoomSyllabus,
   } = props;
@@ -45,6 +45,9 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const [cookies, setCookie, removeCookie] = useCookies(['room_info']);
 
   // Fetching results
+  const [homeData, setHomeData] = useState<{ class: any }[]>();
+  const [classList, setClassList] = useState<any[]>();
+
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
   const [curriculumIds, setCurriculumIds] = useState<string[]>([]);
@@ -63,65 +66,103 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   }, []);
 
-  /**
-   * 1.1 LIST ALL CLASSES-id STUDENT IS IN
-   */
-  // useEffect(() => {
-  //   const standardUserID = state.user.id;
-  //   const userRole = state.user.role;
-  //   const listClassStudents = async () => {
-  //     if (userRole === 'ST') {
-  //       try {
-  //         const classesFetch: any = await API.graphql(
-  //           graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
-  //         );
-  //         const response = await classesFetch;
-  //         const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
-  //         const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
-  //         setClassIds(arrayOfClassIDs);
-  //         // console.log('1 -> ', 'loadiung student rooms');
-  //       } catch (e) {
-  //         console.error('Classes Fetch ERR: ', e);
-  //       }
-  //     }
-  //   };
-  //   userRole === 'ST' && listClassStudents();
-  // }, []);
+  /******************************************
+   * 1.1 PROCESS STUDENT ROOM FETCHING      *
+   ******************************************/
+  const getDashboardData = async (authId: string, email: string) => {
+    try {
+      const dashboardDataFetch: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, {
+          authId: authId,
+          email: email,
+        })
+      );
+      const response = await dashboardDataFetch;
+      const arrayOfResponseObjects = response?.data.getPerson.classes.items;
+      setHomeData(arrayOfResponseObjects);
+    } catch (e) {
+      console.error('getDashbaordData -> ', e);
+    } finally {
+      // need to do some cleanup
+    }
+  };
 
-  /**
-   * 1.2 LIST ALL ROOMS TEACHER IS IN
-   */
   useEffect(() => {
-    const userAuthID = state.user.authId;
-    const userRole = state.user.role;
-    const listRoomTeacher = async () => {
-      if (userRole === 'FLW' || userRole === 'TR') {
-        try {
-          const classIdFromRoomsFetch: any = await API.graphql(
-            graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: userAuthID } } })
-          );
-          const response = await classIdFromRoomsFetch;
-          const arrayOfResponseObjects = response?.data?.listRooms?.items;
-          setRooms(arrayOfResponseObjects);
-          // console.log('1 -> ', arrayOfResponseObjects);
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'rooms',
-              data: arrayOfResponseObjects,
-            },
-          });
-        } catch (e) {
-          console.error('Classes Fetch ERR: ', e);
-        }
-      }
-    };
-    (userRole === 'FLW' || userRole === 'TR') && listRoomTeacher();
-  }, []);
+    if (state.user.role === 'ST') {
+      const authId = state.user.authId;
+      const email = state.user.email;
+      getDashboardData(authId, email);
+    }
+  }, [state.user.role]);
 
-  /**
-   * 2. LIST ALL ROOM WIDGETS
-   */
+  /******************************************
+   * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
+   ******************************************/
+  const getClassList =
+    homeData && homeData.length > 0
+      ? homeData.reduce((acc: any[], dataObj: any) => {
+          return [...acc, { name: dataObj.class.name, rooms: dataObj.class.rooms, students: dataObj.class.students }];
+        }, [])
+      : [];
+
+  useEffect(() => {
+    if (homeData && homeData.length > 0) {
+      setClassList(getClassList);
+    }
+  }, [homeData]);
+
+  const getRoomsFromClassList =
+    classList && classList.length > 0
+      ? classList.reduce((acc: any[], classObj: any) => {
+          return [...acc, classObj.rooms.items[0]];
+        }, [])
+      : [];
+
+  useEffect(() => {
+    dispatch({
+      type: 'UPDATE_ROOM',
+      payload: {
+        property: 'rooms',
+        data: getRoomsFromClassList,
+      },
+    });
+  }, [classList]);
+
+  /******************************************
+   * 2.1 LIST TEACHER ROOMS                 *
+   ******************************************/
+  const listRoomTeacher = async (teacherAuthID: string) => {
+    try {
+      const classIdFromRoomsFetch: any = await API.graphql(
+        graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: teacherAuthID } } })
+      );
+      const response = await classIdFromRoomsFetch;
+      const arrayOfResponseObjects = response?.data?.listRooms?.items;
+
+      setRooms(arrayOfResponseObjects);
+
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'rooms',
+          data: arrayOfResponseObjects,
+        },
+      });
+    } catch (e) {
+      console.error('Classes Fetch ERR: ', e);
+    }
+  };
+
+  useEffect(() => {
+    if (state.user.role === 'FLW' || state.user.role === 'TR') {
+      const teacherAuthID = state.user.authId;
+      listRoomTeacher(teacherAuthID);
+    }
+  }, [state.user.role]);
+
+  /******************************************
+   * 3.1 LIST ALL WIDGETS FOR ROOM          *
+   ******************************************/
   useEffect(() => {
     const listRoomWidgets = async () => {
       setWidgetLoading(true);
@@ -130,8 +171,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
         const noticeboardWidgetsFetch: any = await API.graphql(
           graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: state.activeRoom } } })
         );
+
         const response = await noticeboardWidgetsFetch;
         const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+
         dispatch({
           type: 'UPDATE_ROOM',
           payload: {
@@ -151,43 +194,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   }, [state.activeRoom]);
 
   /**
-   * 3. LIST ALL ROOMS STUDENT IS IN BASED ON CLASS ID
-   */
-  // useEffect(() => {
-  //   const userRole = state.user.role;
-  //
-  //   const listRooms = async () => {
-  //     if (classIds.length > 0) {
-  //       try {
-  //         const roomsFetch: any = await API.graphql(
-  //           graphqlOperation(customQueries.listRooms, {
-  //             filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
-  //           })
-  //         );
-  //         const response = await roomsFetch;
-  //         const arrayOfResponseObjects = response?.data?.listRooms?.items;
-  //         setRooms(arrayOfResponseObjects);
-  //         // Dispatch to context
-  //         // TODO: remove storage of rooms in ClassroomControl.tsx
-  //         dispatch({
-  //           type: 'UPDATE_ROOM',
-  //           payload: {
-  //             property: 'rooms',
-  //             data: arrayOfResponseObjects,
-  //           },
-  //         });
-  //         // console.log('2 --> ', arrayOfResponseObjects);
-  //       } catch (e) {
-  //         console.error('Rooms Fetch ERR: ', e);
-  //       } finally {
-  //         setRoomsLoading(true);
-  //       }
-  //     }
-  //   };
-  //   userRole === 'ST' && listRooms();
-  // }, [classIds]);
-
-  /**
    * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
    */
   useEffect(() => {
@@ -201,6 +207,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
             })
           );
           const response = await roomCurriculumsFetch;
+          console.log('response curriculums', response)
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
           setCurriculumIds(arrayOfCurriculumIds);
@@ -277,7 +284,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
             },
           });
 
-          setsyllabusLoading(false);
+          setSyllabusLoading(false);
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);
         }
@@ -287,9 +294,12 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     listSyllabus();
   }, [curriculumIds]);
 
-  /**
-   * 6. GET SEQUENCE OF SYLLABUS LESSONS
-   */
+  /******************************************
+   * 6.1 LIST ALL THE SYLLABUS LESSON       *
+   *      - SEQUENCES                       *
+   *      - LESSONS                         *
+   ******************************************/
+
   const getSyllabusLessonCSequence = async (syllabusID: string) => {
     try {
       const syllabusLessonCSequenceFetch: any = await API.graphql(
@@ -303,10 +313,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   };
 
-  /**
-   * 7. LIST ACTUAL SYLLABUS LESSONS WHICH ARE
-   * ASSOCIATED WITH THE ACTIVE SYLLABUS
-   */
   const listSyllabusLessons = async (lessonPlannerSyllabus: any, classRoomActiveSyllabus: any) => {
     /**
      * getActiveSyllabus explanation:
@@ -366,10 +372,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const lessonPlannerSyllabus =
     state.roomData.syllabus.length > 0
       ? state.roomData.syllabus.filter((syllabusObject: any) => {
-        if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
-          return syllabusObject;
-        }
-      })
+          if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
+            return syllabusObject;
+          }
+        })
       : [];
 
   const classRoomActiveSyllabus = state.roomData.rooms
@@ -403,7 +409,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
 
       dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
 
-      setsyllabusLoading(true); // Trigger loading ui element
+      setSyllabusLoading(true); // Trigger loading ui element
       setLessonLoading(true);
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
     }
@@ -413,30 +419,32 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
   const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b border-medium-gray';
 
-  return (
-
-
-        isHomescreen ? (
-          <Home
-            setActiveRoomInfo={setActiveRoomInfo}/>
-        ) : (
-          <SideRoomSelector
-            currentPage={currentPage}
-            activeRoom={state.activeRoom}
-            setActiveRoom={setActiveRoom}
-            setActiveRoomInfo={setActiveRoomInfo}
-            setActiveRoomName={setActiveRoomName}
-            lessonLoading={lessonLoading}
-            setLessonLoading={setLessonLoading}
-            syllabusLoading={syllabusLoading}
-            setSyllabusLoading={setsyllabusLoading}
-            activeRoomSyllabus={activeRoomSyllabus}
-            setActiveRoomSyllabus={setActiveRoomSyllabus}
-            roomsLoading={roomsLoading}
-            handleRoomSelection={handleRoomSelection}
-          />
-        )
-
+  return isHomescreen ? (
+    <Home
+      homeData={homeData}
+      setHomeData={setHomeData}
+      classList={classList}
+      setActiveRoomInfo={setActiveRoomInfo}
+      handleRoomSelection={handleRoomSelection}
+    />
+  ) : (
+    <SideRoomSelector
+      homeData={homeData}
+      setHomeData={setHomeData}
+      currentPage={currentPage}
+      activeRoom={state.activeRoom}
+      setActiveRoom={setActiveRoom}
+      setActiveRoomInfo={setActiveRoomInfo}
+      setActiveRoomName={setActiveRoomName}
+      lessonLoading={lessonLoading}
+      setLessonLoading={setLessonLoading}
+      syllabusLoading={syllabusLoading}
+      setSyllabusLoading={setSyllabusLoading}
+      activeRoomSyllabus={activeRoomSyllabus}
+      setActiveRoomSyllabus={setActiveRoomSyllabus}
+      roomsLoading={roomsLoading}
+      handleRoomSelection={handleRoomSelection}
+    />
   );
 };
 

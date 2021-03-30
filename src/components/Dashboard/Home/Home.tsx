@@ -14,41 +14,16 @@ import { ClassroomControlProps } from '../Dashboard';
 
 const Home = (props: ClassroomControlProps) => {
   const {
+    homeData,
     activeRoom,
     roomsLoading,
+    classList,
     handleRoomSelection,
   } = props;
   const { state, dispatch } = useContext(GlobalContext);
-  const [homeData, setHomeData] = useState<{ class: any }[]>();
+
   const [teacherList, setTeacherList] = useState<any[]>();
-  const [classList, setClassList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
-
-  const getDashboardData = async (authId: string, email: string) => {
-    try {
-      const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, {
-          authId: authId,
-          email: email,
-        })
-      );
-      const response = await dashboardDataFetch;
-      const arrayOfResponseObjects = response?.data.getPerson.classes.items;
-      setHomeData(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashbaordData -> ', e);
-    } finally {
-      // need to do some cleanup
-    }
-  };
-
-  useEffect(() => {
-    if (state.user.authId) {
-      const authId = state.user.authId;
-      const email = state.user.email;
-      getDashboardData(authId, email);
-    }
-  }, [state.user.authId]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -113,42 +88,21 @@ const Home = (props: ClassroomControlProps) => {
     })
   );
 
-  const getClassList =
-    homeData && homeData.length > 0
-      ? homeData.reduce((acc: any[], dataObj: any) => {
-          return [...acc, { name: dataObj.class.name, rooms: dataObj.class.rooms, students: dataObj.class.students }];
-        }, [])
-      : [];
+
 
 
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
       setStudentsList(await studentsListWithImages);
-      setClassList(getClassList);
+
     };
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
     }
   }, [homeData]);
 
-  const getRoomsFromClassList =
-    classList && classList.length > 0
-    ? classList.reduce((acc: any[], classObj: any) => {
-        return [...acc, classObj.rooms.items[0]]
-      },[])
-      :[];
 
-
-  useEffect(() => {
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'rooms',
-          data: getRoomsFromClassList,
-        },
-      });
-  }, [classList]);
 
 
   return (

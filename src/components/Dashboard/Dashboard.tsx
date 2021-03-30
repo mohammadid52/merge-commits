@@ -61,6 +61,7 @@ const Dashboard = (props: DashboardProps) => {
   const { updateAuthState } = props;
   const match = useRouteMatch();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
+
   const [userData, setUserData] = useState({
     role: '',
     image: '',
@@ -69,7 +70,7 @@ const Dashboard = (props: DashboardProps) => {
 
   // For controlling loading transitions
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
-  const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
+  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
 
   // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
@@ -78,14 +79,6 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
-
-  useEffect(() => {
-    // copyLessonPlans();
-  }, []);
-
-  useEffect(() => {
-    // initRosterSyllabusLessons();
-  }, []);
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -165,7 +158,7 @@ const Dashboard = (props: DashboardProps) => {
             lessonLoading={lessonLoading}
             setLessonLoading={setLessonLoading}
             syllabusLoading={syllabusLoading}
-            setSyllabusLoading={setsyllabusLoading}
+            setSyllabusLoading={setSyllabusLoading}
             activeRoomSyllabus={activeRoomSyllabus}
             setActiveRoomSyllabus={setActiveRoomSyllabus}
           />
@@ -209,7 +202,18 @@ const Dashboard = (props: DashboardProps) => {
                   path={`${match.url}/home`}
                   render={() => (
                     <ClassroomControl
-                      isHomescreen={true}/>
+                      isHomescreen={true}
+                      currentPage={currentPage}
+                      activeRoom={activeRoom}
+                      setActiveRoom={setActiveRoom}
+                      setActiveRoomInfo={setActiveRoomInfo}
+                      setActiveRoomName={setActiveRoomName}
+                      lessonLoading={lessonLoading}
+                      setLessonLoading={setLessonLoading}
+                      syllabusLoading={syllabusLoading}
+                      setSyllabusLoading={setSyllabusLoading}
+                      activeRoomSyllabus={activeRoomSyllabus}
+                      setActiveRoomSyllabus={setActiveRoomSyllabus}/>
                   )}
                 />
 
@@ -261,7 +265,7 @@ const Dashboard = (props: DashboardProps) => {
                       lessonLoading={lessonLoading}
                       setLessonLoading={setLessonLoading}
                       syllabusLoading={syllabusLoading}
-                      setSyllabusLoading={setsyllabusLoading}
+                      setSyllabusLoading={setSyllabusLoading}
                     />
                   )}
                 />

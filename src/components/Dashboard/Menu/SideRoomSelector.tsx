@@ -21,6 +21,7 @@ export interface Room {
 const SideRoomSelector = (props: ClassroomControlProps) => {
   // Essentials
   const {
+    homeData,
     activeRoom,
     roomsLoading,
     handleRoomSelection,
