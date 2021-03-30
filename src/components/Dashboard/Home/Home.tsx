@@ -10,8 +10,14 @@ import RoomTiles from './RoomTiles';
 import TeacherRows from './TeacherRows';
 import StudentsTiles from './StudentsTiles';
 import { getRoom } from '../../../graphql/queries';
+import { ClassroomControlProps } from '../Dashboard';
 
-const Home = () => {
+const Home = (props: ClassroomControlProps) => {
+  const {
+    activeRoom,
+    roomsLoading,
+    handleRoomSelection,
+  } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const [homeData, setHomeData] = useState<{ class: any }[]>();
   const [teacherList, setTeacherList] = useState<any[]>();
@@ -148,7 +154,9 @@ const Home = () => {
   return (
     <>
       <SectionTitleV2 title={`Your Classrooms:`} />
-      <RoomTiles classList={classList} />
+      <RoomTiles
+        handleRoomSelection={handleRoomSelection}
+        classList={classList} />
 
       <SectionTitleV2 title={`Your Teachers:`} />
       <TeacherRows teacherList={teacherList} />

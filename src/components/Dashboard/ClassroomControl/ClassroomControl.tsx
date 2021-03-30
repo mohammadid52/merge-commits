@@ -66,27 +66,27 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   /**
    * 1.1 LIST ALL CLASSES-id STUDENT IS IN
    */
-  useEffect(() => {
-    const standardUserID = state.user.id;
-    const userRole = state.user.role;
-    const listClassStudents = async () => {
-      if (userRole === 'ST') {
-        try {
-          const classesFetch: any = await API.graphql(
-            graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
-          );
-          const response = await classesFetch;
-          const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
-          const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
-          setClassIds(arrayOfClassIDs);
-          // console.log('1 -> ', 'loadiung student rooms');
-        } catch (e) {
-          console.error('Classes Fetch ERR: ', e);
-        }
-      }
-    };
-    userRole === 'ST' && listClassStudents();
-  }, []);
+  // useEffect(() => {
+  //   const standardUserID = state.user.id;
+  //   const userRole = state.user.role;
+  //   const listClassStudents = async () => {
+  //     if (userRole === 'ST') {
+  //       try {
+  //         const classesFetch: any = await API.graphql(
+  //           graphqlOperation(customQueries.listClassStudents, { studentID: standardUserID })
+  //         );
+  //         const response = await classesFetch;
+  //         const arrayOfResponseObjects = response?.data?.listClassStudents?.items;
+  //         const arrayOfClassIDs = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'classID');
+  //         setClassIds(arrayOfClassIDs);
+  //         // console.log('1 -> ', 'loadiung student rooms');
+  //       } catch (e) {
+  //         console.error('Classes Fetch ERR: ', e);
+  //       }
+  //     }
+  //   };
+  //   userRole === 'ST' && listClassStudents();
+  // }, []);
 
   /**
    * 1.2 LIST ALL ROOMS TEACHER IS IN
@@ -128,7 +128,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       //
       try {
         const noticeboardWidgetsFetch: any = await API.graphql(
-          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoom } } })
+          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: state.activeRoom } } })
         );
         const response = await noticeboardWidgetsFetch;
         const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
@@ -145,59 +145,59 @@ const ClassroomControl = (props: ClassroomControlProps) => {
         setWidgetLoading(false);
       }
     };
-    if (activeRoom && widgetLoading === false) {
+    if (state.activeRoom && widgetLoading === false) {
       listRoomWidgets();
     }
-  }, [activeRoom]);
+  }, [state.activeRoom]);
 
   /**
    * 3. LIST ALL ROOMS STUDENT IS IN BASED ON CLASS ID
    */
-  useEffect(() => {
-    const userRole = state.user.role;
-
-    const listRooms = async () => {
-      if (classIds.length > 0) {
-        try {
-          const roomsFetch: any = await API.graphql(
-            graphqlOperation(customQueries.listRooms, {
-              filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
-            })
-          );
-          const response = await roomsFetch;
-          const arrayOfResponseObjects = response?.data?.listRooms?.items;
-          setRooms(arrayOfResponseObjects);
-          // Dispatch to context
-          // TODO: remove storage of rooms in ClassroomControl.tsx
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'rooms',
-              data: arrayOfResponseObjects,
-            },
-          });
-          // console.log('2 --> ', arrayOfResponseObjects);
-        } catch (e) {
-          console.error('Rooms Fetch ERR: ', e);
-        } finally {
-          setRoomsLoading(true);
-        }
-      }
-    };
-    userRole === 'ST' && listRooms();
-  }, [classIds]);
+  // useEffect(() => {
+  //   const userRole = state.user.role;
+  //
+  //   const listRooms = async () => {
+  //     if (classIds.length > 0) {
+  //       try {
+  //         const roomsFetch: any = await API.graphql(
+  //           graphqlOperation(customQueries.listRooms, {
+  //             filter: { ...createFilterToFetchSpecificItemsOnly(classIds, 'classID') },
+  //           })
+  //         );
+  //         const response = await roomsFetch;
+  //         const arrayOfResponseObjects = response?.data?.listRooms?.items;
+  //         setRooms(arrayOfResponseObjects);
+  //         // Dispatch to context
+  //         // TODO: remove storage of rooms in ClassroomControl.tsx
+  //         dispatch({
+  //           type: 'UPDATE_ROOM',
+  //           payload: {
+  //             property: 'rooms',
+  //             data: arrayOfResponseObjects,
+  //           },
+  //         });
+  //         // console.log('2 --> ', arrayOfResponseObjects);
+  //       } catch (e) {
+  //         console.error('Rooms Fetch ERR: ', e);
+  //       } finally {
+  //         setRoomsLoading(true);
+  //       }
+  //     }
+  //   };
+  //   userRole === 'ST' && listRooms();
+  // }, [classIds]);
 
   /**
    * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
    */
   useEffect(() => {
     const listRoomCurriculums = async () => {
-      if (rooms.length > 0 && activeRoom !== '') {
+      if (state.roomData.rooms.length > 0 && state.activeRoom !== '') {
         try {
-          const roomIds = getArrayOfUniqueValueByProperty(rooms, 'id');
+          const roomIds = getArrayOfUniqueValueByProperty(state.roomData.rooms, 'id');
           const roomCurriculumsFetch: any = API.graphql(
             graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { roomID: { contains: activeRoom } },
+              filter: { roomID: { contains: state.activeRoom } },
             })
           );
           const response = await roomCurriculumsFetch;
@@ -211,18 +211,18 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       }
     };
     listRoomCurriculums();
-  }, [activeRoom]);
+  }, [state.activeRoom]);
 
   // Save info of selected room to cookie
   useEffect(() => {
-    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoom);
+    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === state.activeRoom);
     if (getRoomFromState.length === 1) {
       setCookie('room_info', getRoomFromState[0]);
       setActiveRoomInfo(getRoomFromState[0]);
     } else {
       setCookie('room_info', {});
     }
-  }, [activeRoom]);
+  }, [state.activeRoom]);
 
   /**
    * 5. LIST AVAILABLE SYLLABUS and GET SEQUENCE TO SORT SYLLABI
@@ -372,8 +372,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       })
       : [];
 
-  const classRoomActiveSyllabus = rooms
-    .filter((room: any) => room.id === activeRoom)
+  const classRoomActiveSyllabus = state.roomData.rooms
+    .filter((room: any) => room.id === state.activeRoom)
     .map((room: any) => {
       return { id: room.activeSyllabus };
     });
@@ -397,8 +397,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
-    if (activeRoom !== t.id) {
-      setActiveRoom(t.id);
+    if (state.activeRoom !== t.id) {
+      // setActiveRoom(t.id);
       setActiveRoomName(name);
 
       dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
@@ -417,11 +417,12 @@ const ClassroomControl = (props: ClassroomControlProps) => {
 
 
         isHomescreen ? (
-          <Home/>
+          <Home
+            setActiveRoomInfo={setActiveRoomInfo}/>
         ) : (
           <SideRoomSelector
             currentPage={currentPage}
-            activeRoom={activeRoom}
+            activeRoom={state.activeRoom}
             setActiveRoom={setActiveRoom}
             setActiveRoomInfo={setActiveRoomInfo}
             setActiveRoomName={setActiveRoomName}

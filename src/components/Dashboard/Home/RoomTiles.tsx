@@ -3,16 +3,16 @@ import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 
-const RoomTiles = (props: {classList: any}) => {
-  const {classList} = props;
+const RoomTiles = (props: {classList: any, handleRoomSelection: any}) => {
+  const {classList, handleRoomSelection} = props;
   const {state, dispatch} = useContext(GlobalContext);
   const history = useHistory();
 
-  // Select room on roomtile click
-  const handleRoomSelection = (e: React.MouseEvent)=> {
-    const t = e.target as HTMLElement;
-    dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
-  }
+  // // Select room on roomtile click
+  // const handleRoomSelection = (e: React.MouseEvent)=> {
+  //   const t = e.target as HTMLElement;
+  //   dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
+  // }
   // Push user to classroom on room change
   useEffect(()=>{
     if(state.activeRoom !== ''){
@@ -39,7 +39,7 @@ const RoomTiles = (props: {classList: any}) => {
 
                 <div
                   id={classObj.rooms.items[0].id}
-                  onClick={handleRoomSelection}
+                  onClick={(e) => handleRoomSelection(e, idx)}
                   className={`
                     w-full h-48 flex justify-center content-center items-center 
                     rounded border border-dark-gray border-opacity-10
