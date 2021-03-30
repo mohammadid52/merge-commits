@@ -250,7 +250,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
           const responseRoomSyllabus = await syllabusMultiFetch;
 
-          // console.log('responseRoomSyllabusSequence - = >', responseRoomSyllabusSequence)
 
           const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
@@ -369,6 +368,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   };
 
+
   const lessonPlannerSyllabus =
     state.roomData.syllabus.length > 0
       ? state.roomData.syllabus.filter((syllabusObject: any) => {
@@ -400,6 +400,11 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   }, [syllabusLessonSequence]);
 
+
+
+  /******************************************
+   * 7.1 SELECT ROOM FUNCTION               *
+   ******************************************/
   const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
