@@ -17,7 +17,7 @@ const Noticebar = (props: { inputContext: 'lesson' | 'lessonControl' | 'global' 
     }
   };
 
-  const basicStyle = `font-semibold text-xs text-white`;
+  const basicStyle = `font-semibold text-sm text-white justify-center`;
   const linkColor = `font-bold cursor-pointer underline text-blue-600 hover:text-blue-800 visited:text-purple-600`;
 
   return (
@@ -25,7 +25,7 @@ const Noticebar = (props: { inputContext: 'lesson' | 'lessonControl' | 'global' 
       {notifications
         ? notifications.map((notificationItem: NotificationListItem, idx: number) => {
             return (
-              <div className={`w-full h-8 ${bgStyle(notificationItem?.notification.type)}`}>
+              <div className={`w-full h-8 p-2 ${bgStyle(notificationItem?.notification.type)}`}>
                 <div className={`h-full flex flex-row items-center content-center`}>
                   <div key={`notification_${idx}`} className={`px-2 flex flex-row ${basicStyle}`}>
                     <span className={`w-auto`}>
