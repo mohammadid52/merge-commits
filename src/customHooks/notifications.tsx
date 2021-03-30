@@ -19,7 +19,7 @@ const useGlobalNotifications = () => {
         label: 'Avatar not set',
         message: 'Please set up your avatar to complete your profile!',
         type: 'alert',
-        cta: 'Fix Now'
+        cta: 'Change Now'
       },
       action: () => {
         history.push('/dashboard/profile')
