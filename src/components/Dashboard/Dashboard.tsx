@@ -15,6 +15,7 @@ import SideRoomSelector from './Menu/SideRoomSelector';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
+import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -51,7 +52,7 @@ export interface DashboardProps {
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface SideMenuProps extends DashboardProps {
+export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
   [key: string]: any;
 }
@@ -154,7 +155,8 @@ const Dashboard = (props: DashboardProps) => {
         {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
         (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
         (userData.role === 'ST' && state.currentPage === 'classroom') ? (
-          <SideRoomSelector
+          <ClassroomControl
+            isHomescreen={false}
             currentPage={currentPage}
             activeRoom={activeRoom}
             setActiveRoom={setActiveRoom}
@@ -206,7 +208,8 @@ const Dashboard = (props: DashboardProps) => {
                   exact
                   path={`${match.url}/home`}
                   render={() => (
-                    <Home/>
+                    <ClassroomControl
+                      isHomescreen={true}/>
                   )}
                 />
 
