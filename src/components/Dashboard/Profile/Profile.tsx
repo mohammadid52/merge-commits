@@ -359,7 +359,7 @@ const Profile = (props: ProfilePageProps) => {
                         </span> */}
                       </button>) :
                     (
-                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light mx-auto`}>
                         {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
                         </IconContext.Provider> : <Loader />}
