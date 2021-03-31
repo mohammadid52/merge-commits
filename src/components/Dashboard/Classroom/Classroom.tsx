@@ -112,10 +112,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(()=>{
     if(state.user.role === 'ST'){
-      setCurrentPage('classroom');
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
     }
     if(state.user.role === 'TR'|| state.user.role === 'FLW'){
-      setCurrentPage('lesson-planner');
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}})
     }
   },[state.user.role])
 
@@ -128,8 +128,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const assessmentsSurveys =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        // if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
-        if (lesson.lesson.type.includes('survey') || lesson.lesson.type.includes('assessment')) {
+        if (lesson?.lesson?.type.includes('survey') || lesson?.lesson?.type.includes('assessment')) {
           return lesson;
         }
       })
@@ -144,9 +143,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const todayLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.status === 'Active' && lesson.lesson.type !== 'survey') {
-          if (!lesson.complete) {
-            return lesson;
+        if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
+          if (lesson?.status === 'Active' && lesson?.lesson.type !== 'survey') {
+            if (!lesson.complete) {
+              return lesson;
+            }
           }
         }
       })
@@ -159,9 +160,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const upcomingLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.status === 'Inactive' && lesson.lesson.type !== 'survey') {
-          if (!lesson.complete) {
-            return lesson;
+        if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null){
+          if (lesson.status === 'Inactive' && lesson.lesson?.type !== 'survey') {
+            if (!lesson.complete) {
+              return lesson;
+            }
           }
         }
       })
@@ -209,7 +212,17 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <>
-      {isTeacher && currentPage === 'lesson-planner' ? (
+      {/**
+       *  TOP WIDGET BAR
+       *  - Hide for teacher
+       */}
+      <div className={`bg-opacity-10`}>
+        <div className={`${theme.section} px-4 pb-4 m-auto`}>
+          <TopWidgetBar />
+        </div>
+      </div>
+
+      {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
             <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
@@ -219,11 +232,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       ) : null}
 
-      {isTeacher && currentPage === 'lesson-planner' ? (
+      {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <SyllabusSwitch
-              activeRoom={activeRoom}
+              activeRoom={state.activeRoom}
               currentPage={currentPage}
               syllabusLoading={syllabusLoading}
               handleSyllabusActivation={handleSyllabusActivation}
@@ -246,17 +259,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       </div>
 
-      {/**
-       *  TOP WIDGET BAR
-       *  - Hide for teacher
-       */}
-      {!isTeacher && (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 pb-4 m-auto`}>
-            <TopWidgetBar />
-          </div>
-        </div>
-      )}
+
 
       {/**
        *  ASSESSMENTS/SURVEYS
@@ -307,7 +310,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <Today
-              activeRoom={activeRoom}
+              activeRoom={state.activeRoom}
               activeRoomInfo={activeRoomInfo}
               isTeacher={isTeacher}
               lessonLoading={lessonLoading}

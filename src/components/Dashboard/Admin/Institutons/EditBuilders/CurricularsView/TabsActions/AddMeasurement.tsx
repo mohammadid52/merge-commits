@@ -147,7 +147,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Add Measurement" subtitle="Add new measurement to curricular." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

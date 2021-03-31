@@ -300,7 +300,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Add Checkpoint" subtitle="Add new checkpoint to curricular." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

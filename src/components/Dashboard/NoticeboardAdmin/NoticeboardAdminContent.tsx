@@ -10,6 +10,12 @@ import { CreateModeView } from './WidgetFormViews/createWidget';
 import CancelSaveDelete from './WidgetFormViews/cancelSaveDeleteButtons';
 import CreateNewButton from './WidgetFormViews/createNewButton';
 import { create } from 'domain';
+import ContentCardTitle from '../../Atoms/ContentCardTitle';
+import { keywordCapitilizer } from '../../../utilities/strings';
+import { AiOutlineFileZip, AiOutlinePhone } from 'react-icons/ai';
+import { GrBlockQuote } from 'react-icons/gr';
+import { GoTextSize } from 'react-icons/go';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
 
 export interface NoticeboardContentCardProps {
   activeRoom?: string;
@@ -40,7 +46,7 @@ export interface NoticeboardFormProps {
   handleEditUpdateWYSIWYG?: any;
   handleEditUpdateQuotes?: (e: React.ChangeEvent<Element>) => void;
   viewEditMode?: { widgetID?: string; mode: string };
-  resetNewWidgetData?: ()=>void;
+  resetNewWidgetData?: () => void;
   newWidgetData?: NoticeboardWidgetMapItem;
   setNewWidgetData?: React.Dispatch<React.SetStateAction<NoticeboardWidgetMapItem>>;
   widgetData?: any;
@@ -71,16 +77,18 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
     setNewWidgetData,
     content,
   } = props;
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict, classRoomDict } = useDictionary(clientKey);
+  const { theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const { classRoomDict } = useDictionary(clientKey);
 
-  const resetNewWidgetData = ():void => {
+  const resetNewWidgetData = (): void => {
     setNewWidgetData(initialNewWidgetData);
-  }
+  };
 
   const setEditorContent = (html: string, text: string, idKey: string) => {
     handleEditUpdateWYSIWYG(idKey, html, 'content', 'text', '');
   };
+
+
 
   return (
     <>
@@ -137,22 +145,32 @@ const NoticeboardContent = (props: NoticeboardContentCardProps) => {
             return (
               <ContentCard key={`noticeboardwidget_${subSection}${idx}`}>
                 <div id={widgetObj.id} className={`flex flex-col p-2`}>
+
+                    <ContentCardTitle
+                      icon={true}
+                      icontype={widgetObj.type}
+                      title={`${keywordCapitilizer(widgetObj.type)} Widget`}
+                      theme={theme}
+                      widgetObj={widgetObj}
+
+                    />
+
                   {viewEditMode && viewEditMode.mode === 'edit' && viewEditMode.widgetID === widgetObj.id ? (
                     <>
-                    <EditModeView
-                      widgetObj={widgetObj}
-                      viewEditMode={viewEditMode}
-                      handleEditUpdateDefault={handleEditUpdateDefault}
-                      handleEditUpdateQuotes={handleEditUpdateQuotes}
-                      handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
-                      handleActivation={handleActivation}
-                      setEditorContent={setEditorContent}
-                      resetNewWidgetData={resetNewWidgetData}
-                      newWidgetData={newWidgetData}
-                      setNewWidgetData={setNewWidgetData}
-                      setWidgetData={setWidgetData}
-                      widgetData={widgetData}
-                    />
+                      <EditModeView
+                        widgetObj={widgetObj}
+                        viewEditMode={viewEditMode}
+                        handleEditUpdateDefault={handleEditUpdateDefault}
+                        handleEditUpdateQuotes={handleEditUpdateQuotes}
+                        handleEditUpdateWYSIWYG={handleEditUpdateWYSIWYG}
+                        handleActivation={handleActivation}
+                        setEditorContent={setEditorContent}
+                        resetNewWidgetData={resetNewWidgetData}
+                        newWidgetData={newWidgetData}
+                        setNewWidgetData={setNewWidgetData}
+                        setWidgetData={setWidgetData}
+                        widgetData={widgetData}
+                      />
                     </>
                   ) : (
                     <ViewModeView widgetObj={widgetObj} />

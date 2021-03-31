@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-// Instituttion 
+// Instituttion
 import InstitutionLookup from './InstitutionLookup';
 import Institution from './Institution';
 import InstitutionAdd from './InstitutionAdd';
@@ -32,7 +32,7 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {setCurrentPage} = props;
-  const {state} = useContext(GlobalContext);
+  const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 })
   const tabProps = { tabsData, setTabsData }
@@ -43,9 +43,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(()=>{
-    // if(state.user.role === 'ADM'){
-      setCurrentPage('manage-institutions');
-    // }
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}})
   },[state.user.role])
 
   return (

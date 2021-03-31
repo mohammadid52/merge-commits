@@ -498,7 +498,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Create New Classroom" subtitle="Add new Classroom to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

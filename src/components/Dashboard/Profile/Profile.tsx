@@ -316,9 +316,9 @@ const Profile = (props: ProfilePageProps) => {
           <div className="flex justify-between">
             <SectionTitle title={dashboardProfileDict[userLanguage]['TITLE']} subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']} />
             <div className="flex justify-end py-4 mb-4 w-5/10">
-              <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+              <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
               {currentPath !== 'edit' ? (
-                <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+                <Buttons btnClass="mr-4 px-6" label="Edit" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
               ) : null
               }
             </div>

@@ -11,18 +11,18 @@ interface SideMenuProps {
 
 const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps) => {
   const { currentPage, setCurrentPage } = props;
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { dispatch, theme, clientKey } = useContext(GlobalContext);
 
   const handleLink = (e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
 
-    setCurrentPage('classroom');
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
   };
 
   return (
     <div className={theme.sidemenu.primary}>
       <div
-        className={`hidden w-full h-12 md:flex justify-center items-center text-2xl font-bold z-50`}>
+        className={`hidden w-full h-12 md:flex justify-center items-start text-2xl font-bold z-50`}>
         <NavLink id="dashboard" to="/dashboard" onClick={handleLink}>
           <img
             id="dashboard"

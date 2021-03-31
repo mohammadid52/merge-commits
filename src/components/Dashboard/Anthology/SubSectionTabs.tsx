@@ -16,6 +16,13 @@ const SubSectionTabs = (props: SubSectionTabs) => {
   const { subSection, subSectionList, handleTabClick, widgetTypeCount } = props;
   const { theme} = useContext(GlobalContext);
 
+  const getLabel = (inputLabel: string) => {
+    if(inputLabel === 'Top Widgets'){
+      return 'Topbar Widgets'
+    } else {
+      return 'Sidebar Widgets'
+    }
+  }
 
   return (
     <div className={`${theme.section} text-xl`}>
@@ -26,7 +33,7 @@ const SubSectionTabs = (props: SubSectionTabs) => {
               key={`subSectionTab_${index}`}
               id={listItem}
               selectedCondition={subSection === listItem}
-              label={listItem}
+              label={getLabel(listItem)}
               counter={
                 listItem.includes('Side')?
                   widgetTypeCount?.sidebar :
