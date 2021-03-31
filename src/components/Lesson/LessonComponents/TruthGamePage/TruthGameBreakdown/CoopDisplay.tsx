@@ -71,7 +71,7 @@ const CoopDisplay = () => {
       <div
         className={`relative ${
           fullscreen ? 'w-full' : ''
-        } h-full flex flex-col justify-between items-center rounded-lg border p-2 my-4 bg-white bg-opacity-20`}>
+        } h-full flex flex-col justify-between items-center rounded-lg  border-0 p-2 my-4 bg-white bg-opacity-20`}>
         <div className="absolute top-2 right-0 cursor-pointer w-full text-xl m-2" onClick={handleFullscreen}>
           <IconContext.Provider
             value={{

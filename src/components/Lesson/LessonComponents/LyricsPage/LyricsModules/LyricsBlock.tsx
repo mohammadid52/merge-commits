@@ -329,7 +329,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
         {/* JUST A HARMLESS DIV WITH INSTRUCTIONS */}
         {/* @ANDREW -- TO BE REVISED */}
         {/* <div className='w-full flex flex-row justify-between mb-1 pb-1'>
-          <div className='w-full flex flex-col justify-between border-b border-white border-opacity-10 mr-4 md:mr-0'>
+          <div className='w-full flex flex-col justify-between border-b-0 border-white border-opacity-10 mr-4 md:mr-0'>
             <p className='text-gray-600 text-sm text-left'>
               - Double click a word to select <b>one</b> word
             </p>

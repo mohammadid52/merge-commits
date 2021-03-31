@@ -460,7 +460,7 @@ const Csv = (props: Csv) => {
 
             {
                 isCSVDownloadReady ?
-                    <button type="submit" className=" mt-5 inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                    <button type="submit" className=" mt-5 inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                         <CSVLink
                             data={CSVData}
                             headers={CSVHeaders}

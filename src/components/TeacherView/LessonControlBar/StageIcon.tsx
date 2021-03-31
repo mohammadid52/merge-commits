@@ -106,7 +106,7 @@ const StageIcon = (props: StageIconProps) => {
 
     if ( type === 'breakdown' ) {
         return (
-            <div className={`h-12 w-12 flex flex-col justify-center items-center rounded-full border border-light-gray`} onClick={() => {handleOpenMenu(stage)}}>
+            <div className={`h-12 w-12 flex flex-col justify-center items-center rounded-full  border-0 border-light-gray`} onClick={() => {handleOpenMenu(stage)}}>
                 <IconContext.Provider value={{ color: iconColor, size: '1.5rem' }}>
                     <div className={`${ coinColor } h-10 w-10 flex justify-center items-center rounded-full `}>
                         { iconSwitch(type) }
@@ -144,7 +144,7 @@ const StageIcon = (props: StageIconProps) => {
 
     return (
         <div className={`${ breakdown ? 'flex-grow' : 'flex-grow-0'} w-auto flex flex-col justify-around items-center`}>
-            <div className={`bg-gray-200 h-16 w-16 rounded-full flex items-center justify-center border border-light-gray`} onClick={() => {handleOpenMenu(stage)}}>
+            <div className={`bg-gray-200 h-16 w-16 rounded-full flex items-center justify-center  border-0 border-light-gray`} onClick={() => {handleOpenMenu(stage)}}>
                  <IconContext.Provider value={{ color: iconColor, size: '2rem' }}>
                     <div className={`h-14 w-14 rounded-full flex flex-col justify-center items-center ${ coinColor }`}>
                         { iconSwitch(type) }

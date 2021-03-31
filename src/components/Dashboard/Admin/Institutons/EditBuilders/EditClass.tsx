@@ -363,7 +363,7 @@ const EditClass = (props: EditClassProps) => {
                 (
                   <Fragment>
                     <div className="mt-8 w-9/10 m-auto px-2">
-                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
+                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
                         <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
                         <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
@@ -374,7 +374,7 @@ const EditClass = (props: EditClassProps) => {
                     <div className="mb-4 w-9/10 m-auto px-2 max-h-88 overflow-y-scroll">
                       {
                         classStudents.map((item, index) => (
-                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                             <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                             <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer" onClick={() => movetoStudentProfile(item.student.id)}>
                               <div className="flex-shrink-0 h-10 w-10 flex items-center">

@@ -9,7 +9,7 @@ const ClassRosterTitleBar: React.FC<ClassRosterTitleBar> = (props: ClassRosterTi
 
   return (
     <div
-      className={`w-full h-8 top-0 font-medium border-r border-white bg-light-gray bg-opacity-40`}>
+      className={`w-full h-8 top-0 font-medium  border-r-0 border-white bg-light-gray bg-opacity-40`}>
       <div className='h-8 pl-2 align-middle font-bold text-xs leading-8 '>Class Roster:</div>
 
     </div>

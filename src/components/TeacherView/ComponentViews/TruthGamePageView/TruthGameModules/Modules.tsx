@@ -85,7 +85,7 @@ const Modules = (props: ModulesProps) => {
       </div>
 
       // <div className={`${fullscreen ? 'md:mb-0 px-4 md:px-8 py-4' : 'p-3'} md:h-5.8/10 w-full bg-dark-blue text-gray-200 shadow-2 rounded-lg`}>
-      //     <h3 className="text-xl font-open font-bold mb-3 border-b border-white mb-2">Focus Questions</h3>
+      //     <h3 className="text-xl font-open font-bold mb-3 border-b-0 border-white mb-2">Focus Questions</h3>
       //     <div className={`${fullscreen ? 'h-full' : 'h-8.5/10'} w-full`}>
       //         {
       //             formInputs ? inputs.map((input, key) => (

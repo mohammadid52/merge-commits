@@ -225,7 +225,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+            <h2 className={`text-xl w-full border-b-0 border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
               {classRoomDict[userLanguage]['UNIT_TITLE']}
             </h2>
           </div>
@@ -247,7 +247,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
       <div className={`bg-opacity-10`}>
         <div className={`${theme.section} px-4 pb-4 m-auto`}>
-          <h2 className={`w-full flex text-xl border-b border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
+          <h2 className={`w-full flex text-xl border-b-0 border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
             <span>
               {!isTeacher ? (activeRoomName !== '' ? activeRoomName : classRoomDict[userLanguage]['TITLE']) : null}
               {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}

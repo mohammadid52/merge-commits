@@ -39,7 +39,7 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
                   key={`home_class_${idx}`}
                   id={classObj.rooms.items[0].id}
                   onClick={(e) => handleRoomSelection(e, idx)}
-                  className="cursor-pointer relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                  className="cursor-pointer relative rounded-lg  border-0 border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                   <div className="flex-1 min-w-0 pointer-events-none">
                     <span
                       className="focus:outline-none"

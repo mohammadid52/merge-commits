@@ -13,7 +13,7 @@ export const ViewModeView = (props: {widgetObj: NoticeboardWidgetMapItem}) => {
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+      <div className={`flex pb-2 mb-2 border-b-0 ${theme.lessonCard.border}`}>
         <span className={`text-left ${theme.lessonCard.subtitle}`}>
 
           {noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:

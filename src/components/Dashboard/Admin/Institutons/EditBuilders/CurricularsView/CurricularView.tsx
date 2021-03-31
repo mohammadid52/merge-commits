@@ -164,7 +164,7 @@ const CurricularView = (props: CurricularViewProps) => {
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-full">
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
                   GENERAL INFORMATION
                 </h3>

@@ -380,7 +380,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
 
   return (
     <Fragment>
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
           <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
             <IoIosKeypad />
@@ -452,11 +452,11 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           </div>
 
           {/* New accordion */}
-          <div className="bg-white mx-auto border border-gray-200 rounded-xl mt-6">
+          <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl mt-6">
             <ul className="rounded-xl">
               {accordionSteps.map((item: { id: string, header: string, textEditorName: string, textEditorValue: string, titleLabel?: string, titleValue?: string, title?: string, }, index) => (
                 <Fragment key={item.id}>
-                  <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
+                  <li className={`relative border-b-0 border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                     <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                       <div className="flex items-center justify-between" onClick={() => toggleView(item.id)}>
                         <span className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor]} ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`}>
@@ -493,7 +493,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         </div>
 
         {/* Question table */}
-        <div className="p-6 border-gray-400 border my-4 border-dashed">
+        <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
           <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Checkpoint Questions: </p>
           {!checkpQuestions?.length ? (
             <div className="my-8">
@@ -506,7 +506,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           ) : (
               <Fragment>
                 <div className="max-h-112 overflow-auto">
-                  <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+                  <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>No.</span>
                     </div>
@@ -544,7 +544,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                       {...provided.dragHandleProps}
                                     >
                                       <Fragment key={item.id}>
-                                        <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
+                                        <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
                                           <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
                                           <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
                                           <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
@@ -561,7 +561,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                             </div>)}
                                           </div>
                                         </div>
-                                        {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b border-gray-200">
+                                        {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
                                           <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
                                           {questionOptions.options?.map((item, index) => (
                                             <span className="px-12 py-2" key={item.label}>{index + 1}. {item.text}</span>

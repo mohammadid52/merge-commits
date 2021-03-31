@@ -21,7 +21,7 @@ const SideImage = (props: LessonCardProps) => {
       <>
         <div className="h-1/10 pl-6">
           <div
-            className="tracking-widest border-b text-gray-300 border-ketchup"
+            className="tracking-widest border-b-0 text-gray-300 border-ketchup"
             style={{ textShadow: '1px 1px black' }}>
             FEATURED PERSON
           </div>

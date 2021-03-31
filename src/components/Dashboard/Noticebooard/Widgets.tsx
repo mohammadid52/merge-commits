@@ -18,9 +18,9 @@ export const LogoWidget = (props: {
 }) => {
   const { source, altdesc, title, card, classProp } = props;
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+    <div className={`p-2 mb-4 bg-white  border-0 border-dark-gray border-opacity-10`}>
       {title && (
-        <p className={`${responsiveClass} text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>
+        <p className={`${responsiveClass} text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           {title}:
         </p>
       )}
@@ -40,8 +40,8 @@ export const ImageWidget = (props: {
 }) => {
   const { source, altdesc, title, card, classProp } = props;
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
-      {title && <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>}
+    <div className={`p-2 mb-4 bg-white  border-0 border-dark-gray border-opacity-10`}>
+      {title && <p className={`text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>{title}:</p>}
       <div className={`bg-white rounded`}>
         <img src={source} alt={altdesc} />
       </div>
@@ -52,8 +52,8 @@ export const ImageWidget = (props: {
 export const DefaultTextWidget = (props: { title: string; content: string; card?: boolean; classProp?: string }) => {
   const { title, content, card, classProp } = props;
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
-      <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>
+    <div className={`p-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
+      <p className={`text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>{title}:</p>
       <div key={`teacher_side_note`} className={`${responsiveClass} p-2`}>
         <p className={`text-xs text-dark-gray`} dangerouslySetInnerHTML={{ __html: content }} />
       </div>
@@ -103,11 +103,11 @@ export const CallLinkWidget = (props: {
   return (
     <div>
       <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
-        <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
+        <div className={`flex flex-row p-2 text-sm font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           <span className={`w-full text-white`}>{title}:</span>
         </div>
       </div>
-      <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+      <div className={`p-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
           {links &&
             links.length > 0 &&

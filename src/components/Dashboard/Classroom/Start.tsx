@@ -94,9 +94,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   };
 
   const buttonClassSurvey =
-    'text-white bg-green-500 hover:bg-green-400 focus:border-green-700 focus:shadow-outline-lime active:bg-green-500 cursor-pointer';
+    'text-white bg-green-500 hover:bg-green-400 focus:border-green-700 focus:ring-lime active:bg-green-500 cursor-pointer';
   const buttonClassLesson =
-    'text-white bg-ketchup hover:bg-red-300 focus:border-red-700 focus:shadow-outline-red active:bg-red-500 cursor-pointer';
+    'text-white bg-ketchup hover:bg-red-300 focus:border-red-700 focus:ring-red active:bg-red-500 cursor-pointer';
   const buttonClassInactive = 'bg-gray-500 text-gray-700 cursor-default';
 
   const classSwitch = () => {

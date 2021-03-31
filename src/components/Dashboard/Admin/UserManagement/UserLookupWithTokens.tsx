@@ -225,8 +225,8 @@ const UserLookup = () => {
 					<SectionTitle title="USER MANAGEMENT" subtitle="People's List" />
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
-						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : 'border-r-0 rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
+						<Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-0 " arrowHidden={true} />
+						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded ${theme.outlineNone} ${sortingType.asc ? 'border-l-0 rounded-l-none' : ' border-r-0  rounded-r-none transform rotate-180'}`} onClick={toggleSortDimention}>
 							<IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
 								<AiOutlineArrowUp />
 							</IconContext.Provider>
@@ -236,9 +236,9 @@ const UserLookup = () => {
 				</div>
 				<div className="flex flex-col">
 					<div className="-my-2 py-2">
-						<div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
+						<div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
 							<div className="h-8/10 px-4">
-								<div className="w-full flex justify-between border-b border-gray-200 ">
+								<div className="w-full flex justify-between border-b-0 border-gray-200 ">
 									<div className="w-3.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
 										<span>Name</span>
 									</div>

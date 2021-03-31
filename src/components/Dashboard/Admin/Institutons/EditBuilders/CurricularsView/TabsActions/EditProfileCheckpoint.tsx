@@ -347,7 +347,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
 
 
                   {/* Question table */}
-                  <div className="p-6 border-gray-400 border my-4 border-dashed">
+                  <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
                     <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Checkpoint Questions: </p>
                     {!checkpQuestions?.length ? (
                       <div className="my-8">
@@ -360,7 +360,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                     ) : (
                         <Fragment>
                           <div className="max-h-112 overflow-auto">
-                            <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+                            <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                               <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                 <span>No.</span>
                               </div>
@@ -378,7 +378,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                             <div className="w-full m-auto">
                               {checkpQuestions.length > 0 ? checkpQuestions.map((item: any, index: number) => (
                                 <Fragment key={item.id}>
-                                  <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
+                                  <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
                                     <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
                                     <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
                                     <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
@@ -395,7 +395,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                       </div>)}
                                     </div>
                                   </div>
-                                  {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b border-gray-200">
+                                  {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
                                     <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
                                     {questionOptions.options?.map((item, index) => (
                                       <span className="px-12 py-2" key={item.label}>{index + 1}. {item.text}</span>

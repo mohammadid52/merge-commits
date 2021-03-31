@@ -73,11 +73,11 @@ export const FileLinkWidget = (props: {
   return (
     <div>
       <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
-        <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
+        <div className={`flex flex-row p-2 text-sm font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           <span className={`w-full text-white`}>{title}:</span>
         </div>
       </div>
-      <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+      <div className={`p-2 mb-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
           {links &&
             links.length > 0 &&
