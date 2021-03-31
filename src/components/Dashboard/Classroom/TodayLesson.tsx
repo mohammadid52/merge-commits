@@ -37,11 +37,11 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
           })
         : null}
 
-      {activeRoom === '' ? (
+      {/*{activeRoom === '' ? (
         <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
           ⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_CLASSROOM}...
         </div>
-      ) : null}
+      ) : null}*/}
 
       {activeRoom !== '' && !lessonLoading && lessons.length === 0 ? (
         <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
