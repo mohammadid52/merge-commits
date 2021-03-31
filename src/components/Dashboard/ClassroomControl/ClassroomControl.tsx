@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
 
-import { ClassroomControlProps } from '../Dashboard';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { API, graphqlOperation } from '@aws-amplify/api';
+import {ClassroomControlProps} from '../Dashboard';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {API, graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
-import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
-import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
+import {getArrayOfUniqueValueByProperty} from '../../../utilities/arrays';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
 import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
-import { Syllabus } from '../Classroom/Classroom';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
 

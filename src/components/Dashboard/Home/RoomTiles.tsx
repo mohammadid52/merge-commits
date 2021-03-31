@@ -3,9 +3,9 @@ import React, { useContext, useEffect } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { useHistory } from 'react-router-dom';
 
-const RoomTiles = (props: {classList: any, handleRoomSelection: any}) => {
-  const {classList, handleRoomSelection} = props;
-  const {state, dispatch} = useContext(GlobalContext);
+const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
+  const { classList, handleRoomSelection } = props;
+  const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
 
   // // Select room on roomtile click
@@ -14,56 +14,50 @@ const RoomTiles = (props: {classList: any, handleRoomSelection: any}) => {
   //   dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
   // }
   // Push user to classroom on room change
-  useEffect(()=>{
-    if(state.activeRoom !== ''){
-      history.push('/dashboard/classroom')
+  useEffect(() => {
+    if (state.activeRoom !== '') {
+      history.push('/dashboard/classroom');
     }
-  },[state.activeRoom])
+  }, [state.activeRoom]);
 
   return (
     <ContentCard>
-      <div className={`grid grid-cols-4 gap-2`}>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {classList &&
-        classList.length > 0 &&
-        classList.map(
-          (
-            classObj: {
-              rooms: any;
-              name: string;
-              students: any[];
-            },
-            idx: number
-          ) => {
-            return (
-              <div key={`home_class_${idx}`} className={`w-full p-2 flex flex-col justify-center items-center`}>
-
+          classList.length > 0 &&
+          classList.map(
+            (
+              classObj: {
+                rooms: any;
+                name: string;
+                students: any[];
+              },
+              idx: number
+            ) => {
+              return (
                 <div
+                  key={`home_class_${idx}`}
                   id={classObj.rooms.items[0].id}
                   onClick={(e) => handleRoomSelection(e, idx)}
-                  className={`
-                    w-full h-48 flex justify-center content-center items-center 
-                    rounded border border-dark-gray border-opacity-10
-                    cursor-pointer
-                    hover:bg-dark-gray
-                    hover:bg-opacity-10
-                  `}>
-                  <span className={`w-full h-auto p-2`}>{'no image'}</span>
+                  className="cursor-pointer relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                  <div className="flex-1 min-w-0 pointer-events-none">
+                    <span
+                      className="focus:outline-none"
+                      >
+                      <span className="absolute inset-0" aria-hidden="true"></span>
+                      <p className="text-sm font-medium text-gray-900">
+                        {classObj.rooms.items.length > 0 ? classObj.rooms.items[0].name : 'No room name'}
+                      </p>
+                      <p className="text-sm text-gray-500 truncate">{classObj.name}</p>
+                    </span>
+                  </div>
                 </div>
-                {/**
-                 * DISPLAY ROOM INFO
-                 */}
-                <div className={`h-16 text-center`}>
-                  <h4>{(classObj.rooms.items.length > 0) ? classObj.rooms.items[0].name : 'No room name'}</h4>
-                  <p>{classObj.name}</p>
-                </div>
-
-              </div>
-            );
-          }
-        )}
+              );
+            }
+          )}
       </div>
     </ContentCard>
-  )
-}
+  );
+};
 
 export default RoomTiles;
