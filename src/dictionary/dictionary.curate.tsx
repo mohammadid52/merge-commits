@@ -272,7 +272,7 @@ const editClassDict: any = {
     SUBTITLE: 'Edit cohort information',
     NAME_INPUT_LABEL: 'Cohort Name',
     STUDENTS: 'Participants',
-    ADD_STUDENT_PLACEHOLDER: 'Add new participant',
+    ADD_STUDENT_PLACEHOLDER: 'Select new participant',
     ADD_STUDENT_BUTTON: 'Add',
     TABLE: {
       SNO: 'No.',
