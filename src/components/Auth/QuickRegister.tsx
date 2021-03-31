@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-// import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
+
+
+/**
+ * About the QuickRegister functionality:
+ *
+ *
+ *
+ */
+
 
 interface newUserInput {
   key: number;
@@ -50,7 +57,6 @@ interface QuickRegisterProps {
 
 const QuickRegister = (props: QuickRegisterProps) => {
   const { active, setQuickRegister } = props;
-  const history = useHistory();
 
   const [newUserInputs, setNewUserInputs] = useState(initialState);
   const [waiting, setWaiting] = useState<boolean>(false);
@@ -88,7 +94,6 @@ const QuickRegister = (props: QuickRegisterProps) => {
       email: newUserInputs.email,
       firstName: newUserInputs.firstName,
       lastName: newUserInputs.lastName,
-      // insitution: '1',
       phone: newUserInputs.phone,
       birthdate: newUserInputs.birthdate,
       externalId: newUserInputs.externalId,
@@ -97,7 +102,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
     };
 
     try {
-      const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }));
+      await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }));
       handleMessage('success', 'User registered successfully');
       setNewUserInputs((prev) => {
         return {
@@ -180,7 +185,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
     setMessage(() => {
       let username = newUserInputs.email;
-      let password = newUserInputs.password;
+
       if (!newUserInputs.firstName) {
         return {
           show: true,
@@ -244,17 +249,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
     });
   };
 
-  const handleChangeRole = (item: { name: string; code: string }) => {
-    setNewUserInputs(() => {
-      return {
-        ...newUserInputs,
-        role: item.code,
-      };
-    });
-  };
 
-  const handleSubmit = (e: any) => {
-    // Wait state so any buttons or messages can show
+
+  const handleSubmit = () => {
     setWaiting(true);
     validation();
   };
