@@ -128,8 +128,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const assessmentsSurveys =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        // if (lesson.lessonID.includes('on-boarding-survey-1') || lesson.lessonID.includes('assessment')) {
-        if (lesson.lesson.type.includes('survey') || lesson.lesson.type.includes('assessment')) {
+        if (lesson?.lesson?.type.includes('survey') || lesson?.lesson?.type.includes('assessment')) {
           return lesson;
         }
       })
@@ -144,9 +143,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const todayLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.status === 'Active' && lesson.lesson.type !== 'survey') {
-          if (!lesson.complete) {
-            return lesson;
+        if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
+          if (lesson?.status === 'Active' && lesson?.lesson.type !== 'survey') {
+            if (!lesson.complete) {
+              return lesson;
+            }
           }
         }
       })
@@ -159,9 +160,11 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const upcomingLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
-        if (lesson.status === 'Inactive' && lesson.lesson.type !== 'survey') {
-          if (!lesson.complete) {
-            return lesson;
+        if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null){
+          if (lesson.status === 'Inactive' && lesson.lesson?.type !== 'survey') {
+            if (!lesson.complete) {
+              return lesson;
+            }
           }
         }
       })
@@ -233,7 +236,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} px-4 pb-4 m-auto`}>
             <SyllabusSwitch
-              activeRoom={activeRoom}
+              activeRoom={state.activeRoom}
               currentPage={currentPage}
               syllabusLoading={syllabusLoading}
               handleSyllabusActivation={handleSyllabusActivation}
@@ -307,7 +310,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <Today
-              activeRoom={activeRoom}
+              activeRoom={state.activeRoom}
               activeRoomInfo={activeRoomInfo}
               isTeacher={isTeacher}
               lessonLoading={lessonLoading}

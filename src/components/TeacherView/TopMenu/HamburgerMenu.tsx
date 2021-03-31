@@ -1,10 +1,8 @@
-import React, { useContext, useState, useEffect, Suspense, lazy } from "react";
+import React, { useState } from 'react';
 
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaHome } from "react-icons/fa";
-import { FiUsers, FiMenu } from "react-icons/fi";
-import QuickRegister from "../../Auth/QuickRegister";
-import { WritingAlertProps } from "../../General/Popup";
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { FiMenu } from 'react-icons/fi';
+
 interface HamburgerMenuProps {
   handleClick: () => void;
   handleHomePopup: () => void;
@@ -53,13 +51,13 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (
               </div>
 
               {/* QUICK REGISTER */}
-              {/* <div
+               <div
                 className="h-8 w-full flex justify-center items-center bg-gray-200 hover:bg-white text-gray-600 text-xs active:shadow-none cursor-pointer"
                 onClick={() => setQuickRegister(true)}
               >
 
                 <span className="w-full text-left pl-2">Quick Register</span>
-              </div> */}
+              </div>
 
               {/* USER MANAGEMENT */}
               <div
