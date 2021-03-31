@@ -1,16 +1,8 @@
-import React, { useContext } from 'react';
-import { Link, Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import {
-  AiOutlineDropbox,
-  AiOutlineFile,
-  AiOutlineFileExcel,
-  AiOutlineFileWord,
-  AiOutlineFileZip,
-} from 'react-icons/ai';
-import { IoCallOutline } from 'react-icons/io5';
-import { FaRegFilePowerpoint, GrDocumentWord, ImOnedrive } from 'react-icons/all';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {Link, Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {IoCallOutline} from 'react-icons/io5';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 
 export const responsiveClass = 'md:hidden lg:inline-block xl:inline-block';
@@ -121,14 +113,13 @@ export const CallLinkWidget = (props: {
             links.length > 0 &&
             links.map((link: Link, idx: number) => (
               <div
-                className={`
-            ${
-              idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                  key={`${widgetObj.id}_${idx}`}
+                className={` ${ idx < links.length - 1 && widgetObj.placement === 'sidebar'
                 ? 'border-b border-dark-gray border-opacity-10'
                 : ''
-            } 
-              max-w-1/3
-            `}>
+                } 
+                max-w-1/3
+                `}>
                 {/**
                  * MOBILE VERSION WIDGET ICON
                  */}
