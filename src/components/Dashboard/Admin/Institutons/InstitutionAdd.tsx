@@ -201,7 +201,7 @@ const InstitutionAdd = () => {
       <div className="flex justify-between">
         <SectionTitle title="Add Institution" subtitle="Add new institution to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -210,7 +210,7 @@ const InstitutionAdd = () => {
         <div className="h-9/10 flex flex-col md:flex-row">
 
           {/* Profile section */}
-          <div className="w-2/10 p-4 mr-6 flex flex-col text-center items-center">
+          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
             {imageUrl ? (
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
                 {!imageLoading ?

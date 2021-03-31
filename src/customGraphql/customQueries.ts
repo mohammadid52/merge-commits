@@ -7,6 +7,14 @@ export const getDashboardData = /* GraphQL */ `
             name
             rooms {
               items {
+                id
+                institutionID
+                classID
+                teacherAuthID
+                teacherEmail
+                name
+                maxPersons
+                activeSyllabus
                 teacher {
                   firstName
                   lastName
@@ -15,9 +23,6 @@ export const getDashboardData = /* GraphQL */ `
                   role
                   phone
                 }
-                activeSyllabus
-                name
-                id
               }
             }
             students {
@@ -2265,6 +2270,11 @@ export const getStudentResponse = /* GraphQL */ `
         checkpointID
         email
         authID
+        person {
+          id
+          email
+          authId
+        }
         componentType
         scheduleID
         lessonID

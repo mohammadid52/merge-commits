@@ -8,6 +8,7 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getAsset } from '../../../../../assets';
+import { statusList } from '../../../../../utilities/staticData'
 
 interface UnitLookupProps {
   lessonName: string
@@ -33,6 +34,10 @@ const UnitLookup = (props: UnitLookupProps) => {
   const [unitsList, setUnitsList] = useState([]);
   const [selectedUnitsList, setSelectedUnitsList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [editState, setEditState] = useState<{ id: string, action?: string }>({
+    id: '',
+    action: ''
+  });
   const [message, setMessage] = useState({
     msg: '',
     isError: false
@@ -47,6 +52,37 @@ const UnitLookup = (props: UnitLookupProps) => {
       ...formState,
       [field]: { id, name, value: val }
     })
+  }
+  const editCurrentUnit = (id: string) => {
+    setEditState({ id });
+  }
+
+  const cancelEdit = () => {
+    setEditState({ id: '', action: '' })
+  }
+  const updateStatusOnTable = (uniqId: string, status: string) => {
+    let updatedList = [...selectedUnitsList];
+    updatedList.find(item => item.id === uniqId).status = status;
+    setSelectedUnitsList(updatedList)
+  }
+  const onStatusChange = async (val: string, name: string, id: string, uniqId: string) => {
+    try {
+      setEditState({ ...editState, action: 'updating...' })
+      const input = {
+        id: uniqId,
+        status: val
+      }
+      const result: any = await API.graphql(graphqlOperation(customMutations.updateSyllabusLesson, { input: input }));
+      const newLesson = result.data.updateSyllabusLesson;
+      setEditState({ id: '' });
+      updateStatusOnTable(newLesson.id, newLesson.status);
+    } catch {
+      setMessage({
+        msg: 'Error while updating unit status please try later.',
+        isError: true,
+      })
+      setEditState({ id: '', action: '' });
+    }
   }
 
   const addLessonToSyllabusLesson = async () => {
@@ -168,10 +204,6 @@ const UnitLookup = (props: UnitLookupProps) => {
     });
   }
 
-  const editCurrentUnit = () => {
-
-  }
-
   useEffect(() => {
     if (formState?.curriculum?.id) {
       const selectedItem = curriculaList?.find((curricular: any) => curricular.curricularId === formState?.curriculum?.id)
@@ -202,13 +234,13 @@ const UnitLookup = (props: UnitLookupProps) => {
 
         <div className="px-4 py-4 grid gap-x-6 grid-cols-5">
           <div className="col-span-2 flex items-center">
-            <Selector selectedItem={curriculum.name} list={curriculaList} placeholder="Select Curriculumm" onChange={(val, name, id) => onSelectorChange(val, name, id, 'curriculum')} />
+            <Selector selectedItem={curriculum.name} list={curriculaList} placeholder="Select Curriculumn" onChange={(val, name, id) => onSelectorChange(val, name, id, 'curriculum')} />
           </div>
           <div className="col-span-2 flex items-center">
             <Selector selectedItem={unit.name} list={unitsList} placeholder="Select Unit" onChange={(val, name, id) => onSelectorChange(val, name, id, 'unit')} />
           </div>
           <div className="col-span-1 flex items-end">
-            <Buttons btnClass="py-3 px-10" label='Add Unit' onClick={addLessonToSyllabusLesson} disabled={(loading || !formState.unit.id) ? true : false} />
+            <Buttons btnClass="py-3 px-6" label='Add Unit' onClick={addLessonToSyllabusLesson} disabled={(loading || !formState.unit.id) ? true : false} />
           </div>
         </div>
 
@@ -244,11 +276,23 @@ const UnitLookup = (props: UnitLookupProps) => {
                     {item.syllabusName ? item.syllabusName : ''}
                   </div>
                   <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                    {item.status ? item.status : ''}
+                    {(editState.id !== item.id) ?
+                      (item.status ? item.status : '--')
+                      : (
+                        <div className="text-gray-900">
+                          <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onStatusChange(val, name, id, item.id)} />
+                        </div>
+                      )}
                   </div>
-                  <span className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`} onClick={editCurrentUnit}>
-                    edit
-                </span>
+                  { (editState.id !== item.id) ? (
+                    <span className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentUnit(item.id)}>
+                      edit
+                    </span>
+                  ) : (
+                      <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={cancelEdit}>
+                        {editState.action ? editState.action : 'Cancel'}
+                      </span>
+                    )}
                 </div>
               ))) : (
                 <p className="text-center p-16 mt-4">

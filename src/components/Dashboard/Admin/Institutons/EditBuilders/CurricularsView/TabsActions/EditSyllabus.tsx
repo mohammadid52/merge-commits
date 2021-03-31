@@ -595,7 +595,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Unit Builder" subtitle="Update curriculum units here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={backtoPreviousStep} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={backtoPreviousStep} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

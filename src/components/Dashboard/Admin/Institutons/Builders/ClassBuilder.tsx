@@ -364,7 +364,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Create New Class" subtitle="Add new class to the list" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" label="Go Back" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -393,7 +393,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         </div>
         <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
         <div className="flex items-center w-6/10 m-auto px-2">
-          <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder="Add new student" onChange={onStudentSelect} />
+          <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder="Select student" onChange={onStudentSelect} />
           <Buttons btnClass="ml-4 py-1" label="Add" onClick={addMemberToList} />
         </div>
         <div className="my-4 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">

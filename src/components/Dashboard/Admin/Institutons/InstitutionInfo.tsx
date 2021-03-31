@@ -66,7 +66,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       <div className="h-9/10 flex flex-col md:flex-row">
 
         {/* Profile section */}
-        <div className="w-2/10 p-4 mr-4 flex flex-col text-center items-center">
+        <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
 
           {image ?
             <img

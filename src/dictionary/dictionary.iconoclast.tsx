@@ -273,7 +273,7 @@ const editClassDict: any = {
     SUBTITLE: 'Edit class information',
     NAME_INPUT_LABEL: 'Class Name',
     STUDENTS: 'STUDENTS',
-    ADD_STUDENT_PLACEHOLDER: 'Add new student',
+    ADD_STUDENT_PLACEHOLDER: 'Select student',
     ADD_STUDENT_BUTTON: 'Add',
     TABLE: {
       SNO: 'No.',

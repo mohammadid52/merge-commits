@@ -151,9 +151,9 @@ const CurricularView = (props: CurricularViewProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Curriculum Builder" subtitle="Build curriculum, units and lesson plans here" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
           {currentPath !== 'edit' ? (
-            <Buttons btnClass="mr-4" onClick={() => history.push(`/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`)} Icon={FaEdit} />
+            <Buttons btnClass="mr-4 px-6" label="Edit" onClick={() => history.push(`/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`)} Icon={FaEdit} />
           ) : null
           }
         </div>
