@@ -226,7 +226,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       <div className="flex justify-between">
         <SectionTitle title="Unit Builder" subtitle="Create curriculum units here." />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

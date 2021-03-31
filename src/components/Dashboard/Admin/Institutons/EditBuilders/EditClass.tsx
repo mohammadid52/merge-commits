@@ -326,7 +326,7 @@ const EditClass = (props: EditClassProps) => {
       <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" label="Go Back" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
