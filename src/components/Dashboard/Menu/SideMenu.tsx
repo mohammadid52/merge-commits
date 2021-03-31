@@ -14,9 +14,9 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
   const { dispatch, theme, clientKey } = useContext(GlobalContext);
 
   const handleLink = (e: React.MouseEvent) => {
-    const {id} = e.target as HTMLElement;
+    const { id } = e.target as HTMLElement;
 
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
+    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'classroom' } })
   };
 
   return (
@@ -26,7 +26,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
         <NavLink id="dashboard" to="/dashboard" onClick={handleLink}>
           <img
             id="dashboard"
-            className="bg-white p-2 h-full"
+            className={` ${clientKey === 'demo' ? 'bg-white' : 'bg-gray-900'} p-2 h-full`}
             src={getAsset(clientKey, 'main_logo')}
             alt="Logo"
           />
