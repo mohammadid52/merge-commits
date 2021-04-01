@@ -83,7 +83,7 @@ const CurricularView = (props: CurricularViewProps) => {
     { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: curricularviewdict[userLanguage]['TAB']['UNIT'], icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} /> },
+    { index: 0, title: curricularviewdict[userLanguage]['TAB']['UNIT'], icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} institutionId={institutionId}/> },
     { index: 1, title: curricularviewdict[userLanguage]['TAB']['LEARINGOBJECTIVE'], icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
     { index: 2, title: curricularviewdict[userLanguage]['TAB']['INFORMATION'], icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
   ]
