@@ -333,14 +333,14 @@ const Profile = (props: ProfilePageProps) => {
                         {!imageLoading ? (<Fragment>
                           <label className="cursor-pointer">
                             <img
-                              className={`profile mx-auto w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                               src={imageUrl}
                             />
                             <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                           </label>
                         </Fragment>)
                           :
-                          <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
+                          <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                             <Loader />
                           </div>
                         }
@@ -359,7 +359,7 @@ const Profile = (props: ProfilePageProps) => {
                         </span> */}
                       </button>) :
                     (
-                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light mx-auto`}>
+                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
                         {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
                         </IconContext.Provider> : <Loader />}
@@ -411,7 +411,7 @@ const Profile = (props: ProfilePageProps) => {
 
                 {/* <div className="absolute w-auto" style={{ right: '0', top: '0' }}>
                   <NavLink to={`/dashboard`}>
-                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                    <button type="submit" className="inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
                       Go Back
                       <span className="w-8 pl-3 h-4 flex items-center">
                         <IconContext.Provider value={{ size: '2rem', color: '#ffffff' }}>

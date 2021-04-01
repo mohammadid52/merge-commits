@@ -218,7 +218,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
                   Email
                 </label>
                 <input
-                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
+                  className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                   placeholder="Email"
                   type="text"
                   id="email"
@@ -250,7 +250,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
                   Password
                 </label>
                 <input
-                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
+                  className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                   placeholder="Password"
                   type={passToggle ? 'text' : 'password'}
                   id="password"

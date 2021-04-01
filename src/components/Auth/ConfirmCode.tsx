@@ -323,7 +323,7 @@ const ConfirmCode = () => {
                   New Password
                 </label>
                 <input
-                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
+                  className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                   placeholder="New Password"
                   type={newPassToggle ? 'text' : 'password'}
                   id="password"

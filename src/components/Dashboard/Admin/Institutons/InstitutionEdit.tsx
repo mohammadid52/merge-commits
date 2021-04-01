@@ -294,12 +294,12 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
             {!imageLoading ?
               <label className="cursor-pointer flex justify-center">
                 <img
-                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                   src={imageUrl}
                 />
                 <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
               </label> :
-              <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
+              <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                 <Loader />
               </div>
             }
@@ -318,7 +318,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
               </span>
             </span> */}
           </button>) :
-          <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+          <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
             {!imageLoading ?
               <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                 <FaPlus />
@@ -335,13 +335,13 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         <form>
           <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
             {/* TITLE */}
-            <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
+            <div className='w-full px-4 py-5 border-b-0 border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
                 Edit Information
               </h3>
             </div>
             {/* FORM */}
-            <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
+            <div className='grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 px-4 py-5'>
               <div className='sm:col-span-6 px-3 py-4'>
                 <div className="w-3/10">
                   <Selector selectedItem={type} placeholder="Institution Type" list={institutionTypeList} onChange={onTypeSelect} />

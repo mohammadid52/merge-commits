@@ -605,7 +605,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-full">
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
                   GENERAL INFORMATION
                 </h3>
@@ -666,7 +666,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
 
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
                   LESSON PLAN MANAGER
                 </h3>
@@ -689,7 +689,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                 <div>
                   {(selectedLessonsList && selectedLessonsList.length > 0) ? (
                     <div>
-                      <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                      <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                         <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>No.</span>
                         </div>
@@ -728,7 +728,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                       >
-                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                                           <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                                           <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
                                             {item.title ? item.title : '--'}

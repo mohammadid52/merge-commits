@@ -28,7 +28,7 @@ const UnderlinedTabs = (props: TabsProps) => {
   }
   return (
     <div className="flex flex-wrap flex-col w-full ">
-      <div className="flex flex-no-wrap flex-row mr-2 bg-white">
+      <div className="flex flex-nowrap flex-row mr-2 bg-white">
         {tabs.map((tab, key) => (
           <div key={key} className="">
             <button

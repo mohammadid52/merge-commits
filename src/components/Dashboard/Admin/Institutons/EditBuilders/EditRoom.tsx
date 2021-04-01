@@ -553,7 +553,7 @@ const EditRoom = (props: EditRoomProps) => {
                   id='maxPersons'
                   name='maxPersons'
                   onChange={editInputField}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
                   value={maxPersons}
                   placeholder='Max students'
                   min="1" max="30" />

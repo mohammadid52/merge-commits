@@ -69,7 +69,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
       {/* LABELS */}
 
       <div
-        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b border-gray-400 flex flex-row items-center`}
+        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b-0 border-gray-400 flex flex-row items-center`}
       >
         {/* LEFT */}
         <LessonInfoTitleBar
@@ -95,10 +95,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
       {/* BUTTONS & CONTENT */}
 
       <div
-        className={`relative w-full h-22 border-b border-gray-400 flex flex-row mt-0 z-50`}
+        className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50`}
       >
         {/* LEFT */}
-        <div className="h-full  w-4/10 min-w-100 max-w-160 border-r border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
+        <div className="h-full  w-4/10 min-w-100 max-w-160  border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
           <div className="w-full flex flex-col my-auto">
             <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}: {studentsOnline()}</p>
             <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity</p>

@@ -129,7 +129,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                   >
-                                    <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-no-wrap border border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
+                                    <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-nowrap  border-0  border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
                                       <div className="flex w-6.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> <span className="w-auto mr-4">{index + 1}.</span>{item.name} </div>
                                       <div className={`flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center justify-end cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentTopic(item.id)}>
                                         Edit
@@ -163,7 +163,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                 </div>
               )
           }
-          <div className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewTopic}>
+          <div className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4  border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewTopic}>
             <span className="w-6 h-6 flex items-center mr-4">
               <IconContext.Provider value={{ size: '1.5rem', color: 'darkgray' }}>
                 <IoAdd />

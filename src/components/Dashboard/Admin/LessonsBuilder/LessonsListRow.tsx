@@ -31,7 +31,7 @@ const LessonsListRow = (props: LessonsListRow) => {
 
   const { id, index, title, type, languages, createdAt, updatedAt } = props;
   return (
-    <div id={id} className="flex justify-between bg-white w-full border-b border-gray-200">
+    <div id={id} className="flex justify-between bg-white w-full border-b-0 border-gray-200">
       <div className="w-.5/10 flex justify-center items-center px-4 py-4 whitespace-normal text-sm leading-5 font-medium" >
         {index + 1}.
       </div>
@@ -69,7 +69,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
+      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
         <span className="w-auto">Edit</span>
       </div>
     </div>

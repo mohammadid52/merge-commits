@@ -296,7 +296,7 @@ const AddQuestion = (props: AddQuestionProps) => {
           </div>
 
           {(type.value === 'selectOne' || type.value === 'selectMany') && (<div className="p-6">
-            <div className="p-6 border-gray-400 border border-dashed">
+            <div className="p-6 border-gray-400  border-0 border-dashed">
               <p className="text-m font-medium leading-5 text-gray-700 mb-1">Add Options: </p>
 
               {/* Options input fields */}

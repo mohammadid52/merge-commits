@@ -33,7 +33,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
   }
 
   return (
-    <div className="bg-white mx-auto border border-gray-200 rounded-xl">
+    <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl">
       <DragDropContext onDragEnd={onItemDrag}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
@@ -47,7 +47,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
 
 
                   <Fragment key={item.id}>
-                    <li className={`relative border-b border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
+                    <li className={`relative border-b-0 border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
 
                       <Draggable key={item.id} draggableId={item.id} index={index}>
                         {(provided, snapshot) => (

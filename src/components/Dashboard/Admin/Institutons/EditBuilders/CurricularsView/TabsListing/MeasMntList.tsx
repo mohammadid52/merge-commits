@@ -90,7 +90,7 @@ const MeasurementList = (props: MeasurementListProps) => {
         <div className='mb-4'>
           {measurements?.length > 0 ?
             <Fragment>
-              <div className="flex justify-between w-8/10 px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-8/10 px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>No.</span>
                 </div>
@@ -119,7 +119,7 @@ const MeasurementList = (props: MeasurementListProps) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                                <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                                   <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 text-gray-600">
                                     {index + 1}.
                                 </div>
@@ -144,7 +144,7 @@ const MeasurementList = (props: MeasurementListProps) => {
             : <div>
               <p className="text-center p-16">  This topic does not have any measurement yet. Please create a new one.</p>
             </div>}
-          <div className="w-8/10 mx-auto my-2 flex justify-center items-center px-8 py-4 border border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewMeasurement}>
+          <div className="w-8/10 mx-auto my-2 flex justify-center items-center px-8 py-4  border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewMeasurement}>
             <span className="w-6 h-6 flex items-center mr-4">
               <IconContext.Provider value={{ size: '1.5rem', color: 'darkgray' }}>
                 <IoAdd />

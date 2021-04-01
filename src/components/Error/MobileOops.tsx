@@ -12,7 +12,7 @@ const MobileOops: React.FC<MobileOops> = (props: MobileOops) => {
   return (
     <div className='fixed w-screen h-screen flex items-center justify-center bg-light-gray bg-opacity-20 p-4 rounded-xl'>
       <div className='h-1/2 max-h-80 max-w-80 my-auto mx-auto shadow-xl rounded-xl'>
-        <div className='h-2.5/10 bg-dark-gray border-b border-dark-red p-4 rounded-t-xl'>
+        <div className='h-2.5/10 bg-dark-gray border-b-0 border-dark-red p-4 rounded-t-xl'>
           <img
             id='dashboard'
             className='h-full mx-auto'

@@ -226,7 +226,7 @@ const UnitLookup = (props: UnitLookupProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Assign Unit - {lessonName}</h3>
       </div>
 
@@ -247,7 +247,7 @@ const UnitLookup = (props: UnitLookupProps) => {
         <p className="text-sm p-8 text-gray-700">NOTE: Please select Curricular and then units to add current lesson to that unit.</p>
 
         <div className="px-4">
-          <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+          <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
             <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
               <span>No.</span>
             </div>
@@ -267,7 +267,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
             {selectedUnitsList?.length > 0 ? (
               selectedUnitsList?.map((item, index) => (
-                <div key={index} className="flex justify-between items-center w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-pointer">
+                <div key={index} className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer">
                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                   <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoCurricularUnit(item.syllabusID, item.curricularId)}>
                     {item.curricularName ? item.curricularName : ''}

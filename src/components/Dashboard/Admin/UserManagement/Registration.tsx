@@ -332,12 +332,12 @@ const Registration = () => {
                 <div className="h-full px-4 pb-5 pt-2 sm:px-6">
                   <div className="text-red-500 pb-2 text-right">* Required fields</div>
 
-                  <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                  <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3 p-2">
                       <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
                         <span className="text-red-500">*</span> First Name
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           type="text"
                           id="firstName"
@@ -353,7 +353,7 @@ const Registration = () => {
                       <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
                         <span className="text-red-500">*</span> Last Name
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           type="text"
                           id="lastName"
@@ -385,7 +385,7 @@ const Registration = () => {
                       <label htmlFor="birthdate" className="block text-m font-medium leading-5 text-gray-700">
                         <span className="text-red-500">*</span> Birthday
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           type="date"
                           id="birthdate"
@@ -413,7 +413,7 @@ const Registration = () => {
                       <label htmlFor="externalId" className="block text-m font-medium leading-5 text-gray-700">
                         Student ID
                                         </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           type="text"
                           id="externalId"
@@ -430,7 +430,7 @@ const Registration = () => {
                       <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
                         Grade
                                         </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           type="text"
                           id="grade"
@@ -446,7 +446,7 @@ const Registration = () => {
                       <label htmlFor="phone" className="block text-m font-medium leading-5 text-gray-700">
                         Phone Number
                                         </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           type="text"
                           id="phone"
@@ -485,7 +485,7 @@ const Registration = () => {
         <div className="w-1.5/10 ml-auto">
           {/* <span className="w-2/10 inline-flex rounded-md shadow-sm">
             <button type="submit" onClick={handleSubmit}
-              className="text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 h-10 inline-flex justify-center py-2 px-4 border border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
+              className="text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 h-10 inline-flex justify-center py-2 px-4  border-0 border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
               Submit
             </button>
           </span> */}
