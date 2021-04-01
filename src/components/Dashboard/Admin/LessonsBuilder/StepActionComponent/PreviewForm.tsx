@@ -118,6 +118,16 @@ const PreviewForm = (props: PreviewFormProps) => {
         id: lessonID
       }));
       const savedData: any = result.data.getLesson;
+      const checkpointSequence = savedData?.checkpoints?.items?.map((checkpoint: any) => {
+        let lessonplanSequence = savedData?.lessonPlan?.find((item: any) => item.LessonComponentID === checkpoint?.checkpointID)?.sequence
+        return ({
+          ...checkpoint,
+          sequence: lessonplanSequence
+        })
+      }).sort((a: any, b: any) => a.sequence > b.sequence ? 1 : -1)
+      savedData.checkpoints = {
+        items: checkpointSequence
+      }
       setLessonDetails({ ...savedData });
       setLoading(false);
     } catch {
@@ -191,7 +201,7 @@ const PreviewForm = (props: PreviewFormProps) => {
                     </h4>
                     <div className="py-2">
                       <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
-                      {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions ) : ''}
+                      {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
                     </div>
                     <div>
                       {item.checkpoint?.questions?.items?.length > 0 ? (

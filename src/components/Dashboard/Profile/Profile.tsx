@@ -325,7 +325,7 @@ const Profile = (props: ProfilePageProps) => {
           </div>
           <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-              <div className="w-auto p-4 flex flex-col text-center items-center justify-center">
+              <div className="w-auto p-4 flex flex-col text-center items-center">
                 <div className='relative' >
                   {person.image ?
                     (
