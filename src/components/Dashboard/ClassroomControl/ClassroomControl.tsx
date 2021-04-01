@@ -394,8 +394,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   }, [state.roomData.syllabus]);
 
   useEffect(() => {
-    if (syllabusLessonSequence.length > 0) {
+    if (syllabusLessonSequence && syllabusLessonSequence.length > 0) {
       listSyllabusLessons(lessonPlannerSyllabus, classRoomActiveSyllabus);
+    } else {
+      setLessonLoading(false);
     }
   }, [syllabusLessonSequence]);
 

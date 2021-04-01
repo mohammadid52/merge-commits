@@ -81,27 +81,23 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     isTeacher,
     currentPage,
-    setCurrentPage,
-    activeRoom,
     activeRoomInfo,
-    setActiveRoom,
     activeRoomName,
     visibleLessonGroup,
     setVisibleLessonGroup,
     handleSyllabusActivation,
     lessonLoading,
-    setLessonLoading,
     syllabusLoading,
-    setSyllabusLoading,
+
   } = props;
   const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
-  const [survey, setSurvey] = useState<any>({
+  const [survey] = useState<any>({
     display: false,
     data: null,
   });
 
-  const [status, setStatus] = useState('today');
+
   const [lessonGroupCount, setLessonGroupCount] = useState<{ today: number; upcoming: number; completed: number }>({
     today: 0,
     upcoming: 0,
@@ -127,7 +123,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const assessmentsSurveys =
     state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+      ? state.roomData.lessons.filter((lesson: Lesson) => {
         if (lesson?.lesson?.type.includes('survey') || lesson?.lesson?.type.includes('assessment')) {
           return lesson;
         }
@@ -142,7 +138,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const todayLessons =
     state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+      ? state.roomData.lessons.filter((lesson: Lesson) => {
         if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
           if (lesson?.status === 'Active' && lesson?.lesson.type !== 'survey') {
             if (!lesson.complete) {
@@ -159,7 +155,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const upcomingLessons =
     state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+      ? state.roomData.lessons.filter((lesson: Lesson) => {
         if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null){
           if (lesson.status === 'Inactive' && lesson.lesson?.type !== 'survey') {
             if (!lesson.complete) {
@@ -178,7 +174,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    */
   const completedLessons =
     state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson, index: number) => {
+      ? state.roomData.lessons.filter((lesson: Lesson) => {
         if (lesson.complete) {
           return lesson;
         }

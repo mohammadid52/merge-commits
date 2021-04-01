@@ -26,7 +26,6 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     currentPage,
     setCurrentPage,
-    activeRoom,
     activeRoomInfo,
     visibleLessonGroup,
     setVisibleLessonGroup,
@@ -35,10 +34,10 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     syllabusLoading,
     setSyllabusLoading,
   } = props;
-  const [status, setStatus] = useState('');
-  const { state, theme, dispatch } = useContext(GlobalContext);
-  const history = useHistory();
-  const [listCurriculum, setListCurriculum] = useState<Array<CurriculumInfo>>();
+
+  const { state, dispatch } = useContext(GlobalContext);
+  useHistory();
+
 
   // useEffect(() => {
   //   getCourse('1');
@@ -56,7 +55,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   // }
 
   const handleSyllabusActivation = async (syllabusID: string) => {
-    const roomID = activeRoom;
+    const roomID = state.activeRoom;
     const syllabusArray = state.roomData.syllabus;
     const updatedSyllabusArray = syllabusArray.map((syllabus: Syllabus) => {
       if (syllabus.id === syllabusID) {
@@ -82,11 +81,12 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       maxPersons: roomStateObject.room.maxPersons,
       activeSyllabus: syllabusID,
     };
+    console.log('lessonplanhome activateSyl --> ', input)
 
     //console.log('lessonplanner -> roomstateObj -> ', roomStateObject )
     try {
       const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));
-      const response = await updateRoomMutation;
+      await updateRoomMutation;
     } catch (e) {
       console.error('handleSyllabusActivation: ', e);
     } finally {
@@ -102,7 +102,6 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <Classroom
-      activeRoom={activeRoom}
       activeRoomInfo={activeRoomInfo}
       currentPage={currentPage}
       setCurrentPage={setCurrentPage}
