@@ -55,7 +55,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
         } min-h-100 p-2 mb-6 rounded h-auto flex flex-col `}>
         {/* CARD CONTAINER */}
         {/* LESSON CARD TOP - WITH IMAGE */}
-        <div className={`border rounded`}>
+        <div className={`border-0 rounded`}>
           <div
             className={`w-full h-40 bg-white  ${theme.dashboard.bg} rounded-t bg-cover flex flex-col place-content-end`}
             style={{

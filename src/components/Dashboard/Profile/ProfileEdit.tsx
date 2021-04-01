@@ -355,7 +355,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CONTACT']}
                       </label>
-                      <div className="border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                      <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.phone}
                         />

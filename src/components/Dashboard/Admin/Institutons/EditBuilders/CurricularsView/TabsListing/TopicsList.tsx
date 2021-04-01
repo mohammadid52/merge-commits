@@ -145,7 +145,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                   </div>
                                 )}
                               </Draggable>
-                              {(openRow === item.id) && <div className="border border-gray-200">
+                              {(openRow === item.id) && <div className="border-0 border-gray-200">
                                 <MeasurementList curricularId={curricularId} topicID={item.id} />
                               </div>}
                             </Fragment>

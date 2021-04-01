@@ -275,7 +275,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
         <form>
           <div>
-            <div className="border border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm">
+            <div className="border-0 border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm">
               <input
                 type="text"
                 id="firstName"
@@ -292,7 +292,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
           </div>
 
           <div>
-            <div className="border border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm">
+            <div className="border-0 border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm">
               <input
                 type="text"
                 id="lastName"
@@ -309,7 +309,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
           </div>
 
           <div>
-            <div className="border border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm">
+            <div className="border-0 border-gray-300 py-2 px-4 my-2  rounded-xl shadow-sm">
               <input
                 type="email"
                 id="email"
