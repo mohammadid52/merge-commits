@@ -9,7 +9,9 @@ interface LessonsListRow {
   index: number,
   title: string,
   type: string,
-  languages: string[]
+  languages: string[],
+  createdAt: Date,
+  updatedAt: Date
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
@@ -29,9 +31,9 @@ const LessonsListRow = (props: LessonsListRow) => {
   }
 
 
-  const { id, index, title, type, languages } = props;
+  const { id, index, title, type, languages, createdAt, updatedAt } = props;
   return (
-    <div id={id} className="flex justify-between bg-white w-full border-b border-gray-200">
+    <div id={id} className="flex justify-between bg-white w-full border-b-0 border-gray-200">
       <div className="w-.5/10 flex justify-center items-center px-4 py-4 whitespace-normal text-sm leading-5 font-medium" >
         {index + 1}.
       </div>
@@ -51,13 +53,25 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+        <span className="w-auto">
+          {createdAt ? new Date(createdAt).toLocaleDateString() : '--'}
+        </span>
+      </div>
+
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+        <span className="w-auto">
+          {updatedAt ? new Date(updatedAt).toLocaleDateString() : '--'}
+        </span>
+      </div>
+
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {languages?.length ? languages.map((language, index) => language + `${index === (languages.length - 1) ? '.' : ', '}`) : '--'}
         </span>
       </div>
 
-      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap ${theme.textColor[themeColor] } text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
+      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
         <span className="w-auto">{BUTTONS['EDIT']}</span>
       </div>
     </div>

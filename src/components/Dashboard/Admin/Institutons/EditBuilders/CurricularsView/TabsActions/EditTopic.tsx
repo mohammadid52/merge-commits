@@ -47,6 +47,7 @@ const EditTopic = (props: EditTopicProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: topic?.learning?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
     { title: BreadcrumsTitles[userLanguage]['EditTopic'], url: `/dashboard/curricular/${curricularId}/topic/edit/${topicId}`, last: true }
   ];
 
@@ -55,8 +56,13 @@ const EditTopic = (props: EditTopicProps) => {
     if (e.target.name === 'name') {
       setTopic({ ...topic, name: value })
       if (value.length && validation.name) setValidation({ ...validation, name: '' })
+    } else if (e.target.name === 'description') setTopic({ ...topic, description: value })
+    else {
+      setTopic({
+        ...topic,
+        [e.target.name]: e.target.value
+      })
     }
-    if (e.target.name === 'description') setTopic({ ...topic, description: value })
   }
 
   const validateForm = () => {
@@ -159,7 +165,7 @@ const EditTopic = (props: EditTopicProps) => {
       <div className="flex justify-between">
         <SectionTitle title={EditTopicDict[userLanguage]['title']} subtitle={EditTopicDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -178,7 +184,7 @@ const EditTopic = (props: EditTopicProps) => {
                 }
               </div>
 
-              <div className="px-3 py-4">
+              {/* <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {EditTopicDict[userLanguage]['selectlearning']} <span className="text-red-500">*</span>
                 </label>
@@ -186,7 +192,7 @@ const EditTopic = (props: EditTopicProps) => {
                 {
                   validation.learning && <p className="text-red-600">{validation.learning}</p>
                 }
-              </div>
+              </div> */}
 
               {/* <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">

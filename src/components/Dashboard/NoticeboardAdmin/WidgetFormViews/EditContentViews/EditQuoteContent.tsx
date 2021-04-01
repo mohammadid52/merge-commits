@@ -9,18 +9,9 @@ import AddRemoveButton from '../addRemoveButton';
 
 // Standard widget card view
 export const EditQuoteContent = (props: NoticeboardFormProps) => {
-  const {
-    widgetObj,
-    setEditorContent,
-    viewEditMode,
-    newWidgetData,
-    setNewWidgetData,
-    widgetData,
-    setWidgetData,
-    handleEditUpdateQuotes,
-  } = props;
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { anthologyDict } = useDictionary(clientKey);
+  const { widgetObj, setNewWidgetData, handleEditUpdateQuotes } = props;
+  const { theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const { anthologyDict, noticeboardDict } = useDictionary(clientKey);
 
   const quoteItem = { text: '', author: '' };
   const callItem = { text: '', url: '' };
@@ -56,7 +47,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
           label2: 'Url',
           label3: 'Call Link',
         };
-        case 'file':
+      case 'file':
         return {
           key: `links`,
           key2: `text`,
@@ -83,7 +74,6 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
   };
 
   const decreaseQuoteCount = (idx: number) => {
-    // if (viewEditMode.mode === 'create') {
     if (true) {
       const filtered = widgetObj[switchKey().key].filter((linkObj: any, idx1: number) => {
         if (idx1 !== idx) return linkObj;
@@ -97,13 +87,20 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
 
   const theSwitchObj = switchKey();
 
+  const appendHttp = (inputUrl: string) => {
+    const splitUrl = inputUrl.split('://');
+    if (splitUrl.length > 1) {
+      return `https://${splitUrl[1]}`;
+    } else if (splitUrl.length === 1) {
+      return `https://${splitUrl[0]}`;
+    } else {
+      return `https://`;
+    }
+  };
+
   return (
     <div className={`mt-2 mb-2 p-2`}>
-      {
-        theSwitchObj &&
-        theSwitchObj?.key &&
-        widgetObj &&
-        widgetObj[theSwitchObj?.key].length > 0 ? (
+      {theSwitchObj && theSwitchObj?.key && widgetObj && widgetObj[theSwitchObj?.key].length > 0 ? (
         widgetObj[theSwitchObj?.key].map((widgetQuote: Quote, idx: number) => {
           return (
             <div
@@ -114,7 +111,7 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
               <div className={`w-8 m-1`}>
                 {/* NUMBER */}
                 <div className={`w-6 h-6 p-2 mb-2 rounded-full bg-blueberry flex justify-center items-center`}>
-                  <span className={`w-auto h-auto text-center text-white text-lg font-semibold `}>{idx+1}</span>
+                  <span className={`w-auto h-auto text-center text-white text-lg font-semibold `}>{idx + 1}</span>
                 </div>
                 {/* TRASH ICON */}
                 <div className={`mt-4 cursor-pointer`} onClick={() => decreaseQuoteCount(idx)}>
@@ -125,59 +122,71 @@ export const EditQuoteContent = (props: NoticeboardFormProps) => {
               </div>
 
               <div className={`w-full`}>
-                <div className={`flex flex-row`}>
-                  <label
-                    htmlFor={`text_${idx}_${widgetObj.id}`}
-                    className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
-                    {`${theSwitchObj.label}`}
-                  </label>
+                {
+                  widgetObj.type !== 'call' && (
+                    <div className={`flex flex-row`}>
+                      <label
+                        htmlFor={`text_${idx}_${widgetObj.id}`}
+                        className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
+                        {`${theSwitchObj.label}`}
+                      </label>
 
-                  <input
-                    id={`${widgetObj.id}`}
-                    onChange={handleEditUpdateQuotes}
-                    data-basekey={`${theSwitchObj.key}`}
-                    data-nestkey1={`${theSwitchObj.key2}`}
-                    data-nestkey2={idx}
-                    className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                    value={
-                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        : ''
-                    }
-                    placeholder={
-                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
-                        : `Please add ${theSwitchObj.label}...`
-                    }
-                  />
-                </div>
+                      <input
+                        id={`${widgetObj.id}`}
+                        onChange={handleEditUpdateQuotes}
+                        data-basekey={`${theSwitchObj.key}`}
+                        data-nestkey1={`${theSwitchObj.key2}`}
+                        data-nestkey2={idx}
+                        className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                        value={
+                          widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            : ''
+                        }
+                        placeholder={
+                          widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key2}`]
+                            : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label}...`
+                        }
+                      />
+                    </div>
+                  )
+                }
 
-                <div className={`flex flex-row`}>
-                  <label
-                    htmlFor={`text_${idx}_${widgetObj.id}`}
-                    className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
-                    {`${theSwitchObj.label2}`}
-                  </label>
 
-                  <textarea
-                    id={`${widgetObj.id}`}
-                    onChange={handleEditUpdateQuotes}
-                    data-basekey={`${theSwitchObj.key}`}
-                    data-nestkey1={`${theSwitchObj.key3}`}
-                    data-nestkey2={idx}
-                    className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
-                    value={
-                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                        : ''
-                    }
-                    placeholder={
-                      widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                        ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
-                        : `Please add ${theSwitchObj.label2}...`
-                    }
-                    rows={2}
-                  />
+                <div className={`flex flex-col`}>
+                  <div className={`flex flex-row`}>
+                    <label
+                      htmlFor={`text_${idx}_${widgetObj.id}`}
+                      className="w-16 mr-2 leading-7 text-right block text-xs font-semibold leading-5 text-gray-700">
+                      {`${theSwitchObj.label2}`}
+                    </label>
+
+                    <textarea
+                      id={`${widgetObj.id}`}
+                      onChange={handleEditUpdateQuotes}
+                      data-basekey={`${theSwitchObj.key}`}
+                      data-nestkey1={`${theSwitchObj.key3}`}
+                      data-nestkey2={idx}
+                      className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                      value={widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]}
+                      placeholder={
+                        widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                          ? widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                          : `${noticeboardDict[userLanguage].FORM.PLEASE_ADD} ${theSwitchObj.label2}...`
+                      }
+                      rows={2}
+                    />
+                  </div>
+                  {/* EXAMPLE URL */}
+
+                  {widgetObj.type !== 'quote' && (
+                    <p className={`text-center w-full ${theme.lessonCard.subtitle}`}>
+                      {widgetObj.type !== 'quote' && widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`]
+                        ? appendHttp(widgetObj[`${theSwitchObj.key}`][idx][`${theSwitchObj.key3}`])
+                        : 'https://'}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

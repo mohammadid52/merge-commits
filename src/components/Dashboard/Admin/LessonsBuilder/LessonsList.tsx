@@ -234,7 +234,7 @@ const LessonsList = () => {
   }
   {
     return (
-      <div className={`w-9/10 h-full`}>
+      <div className={`w-full h-full`}>
 
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
@@ -242,8 +242,8 @@ const LessonsList = () => {
           <SectionTitle title={LessonsListDict[userLanguage]['TITLE']} subtitle={LessonsListDict[userLanguage]['SUBTITLE']} />
           <div className="flex justify-end py-4 mb-4">
             <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchLessonsFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-            <Selector placeholder={LessonsListDict[userLanguage]['SORTBY']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
-            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
+            <Selector placeholder={LessonsListDict[userLanguage]['SORTBY']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-0 " arrowHidden={true} />
+            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
               <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
@@ -256,9 +256,9 @@ const LessonsList = () => {
         {/* List / Table */}
         <div className="flex flex-col">
           <div className="-my-2 py-2">
-            <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
+            <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
               <div className="h-8/10 px-4">
-                <div className="w-full flex justify-between border-b border-gray-200 ">
+                <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{LessonsListDict[userLanguage]['NO']}</span>
                   </div>
@@ -271,13 +271,13 @@ const LessonsList = () => {
                   <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">{LessonsListDict[userLanguage]['TYPE']}</span>
                   </div>
-                  {/* <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Source</span>
+                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">Created Date</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Topics</span>
-                  </div> */}
-                  <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">Last Edit Date</span>
+                  </div>
+                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">{LessonsListDict[userLanguage]['LANGUAGE']}</span>
                   </div>
                   <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -294,6 +294,8 @@ const LessonsList = () => {
                       title={lessonsObject.title}
                       type={lessonsObject.type && getType(lessonsObject.type)}
                       languages={lessonsObject?.language && lessonsObject?.language.map((item: string) => getLanguageString(item))}
+                      createdAt={lessonsObject.createdAt}
+                      updatedAt={lessonsObject.updatedAt}
                     />
                   ))
                   : (

@@ -39,9 +39,9 @@ interface InputValue {
 const AddQuestion = (props: AddQuestionProps) => {
 
   const { goBackToPreviousStep, addNewQuestion } = props;
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {addQuestionDict ,BreadcrumsTitles  } = useDictionary(clientKey);
+  const { addQuestionDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const initialState = {
     question: '',
@@ -193,7 +193,7 @@ const AddQuestion = (props: AddQuestionProps) => {
     }
     if (!questionData.label?.trim().length) {
       isValid = false;
-      msgs.label =addQuestionDict[userLanguage]['messages']['qlabelrequired'];
+      msgs.label = addQuestionDict[userLanguage]['messages']['qlabelrequired'];
     } else {
       msgs.label = ''
     }
@@ -284,66 +284,66 @@ const AddQuestion = (props: AddQuestionProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-              {addQuestionDict[userLanguage]['selecttype']} <span className="text-red-500">*</span>
+                {addQuestionDict[userLanguage]['selecttype']} <span className="text-red-500">*</span>
               </label>
               <Selector selectedItem={type.name} placeholder={addQuestionDict[userLanguage]['selectpl']} list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
               {/* {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>} */}
             </div>
             <div>
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-              {addQuestionDict[userLanguage]['selectlang']}
-            </label>
+                {addQuestionDict[userLanguage]['selectlang']}
+              </label>
               <Selector selectedItem={language.name} placeholder={addQuestionDict[userLanguage]['selectlanpl']} list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
             </div>
           </div>
 
           {(type.value === 'selectOne' || type.value === 'selectMany') && (<div className="p-6">
-            <div className="p-6 border-gray-400 border border-dashed">
-              <p className="text-m font-medium leading-5 text-gray-700 mb-1">{addQuestionDict[userLanguage]['addOption']} </p>
+            <div className="p-6 border-gray-400  border-0 border-dashed">
+            <p className="text-m font-medium leading-5 text-gray-700 mb-1">{addQuestionDict[userLanguage]['addOption']}: </p>
 
-              {/* Options input fields */}
-              {options?.length && options.map((item, index) => (
-                <div className="flex w-9/10 mx-auto mt-4">
-                  <div className="w-8/10">
-                    <FormInput value={item.text} id={item.label} onChange={(e) => optionInputChange(index, e)} name={item.label} />
-                  </div>
-                  <div className="w-1/10 flex items-center">
-                    <span className="w-auto cursor-pointer" onClick={() => onOptionAdd(index)}>
-                      <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
-                        <IoMdAddCircleOutline />
-                      </IconContext.Provider>
-                    </span>
-                    <span className="w-auto cursor-pointer" onClick={() => onOptionRemove(index)}>
-                      <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
-                        <IoMdRemoveCircleOutline />
-                      </IconContext.Provider>
-                    </span>
-                  </div>
-                </div>
-              ))}
-
-              {/* Other options checkboxes */}
+            {/* Options input fields */}
+            {options?.length && options.map((item, index) => (
               <div className="flex w-9/10 mx-auto mt-4">
-                <div className="w-2/4 flex items-center">
-                  <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={addQuestionDict[userLanguage]['otheropt']} />
+                <div className="w-8/10">
+                  <FormInput value={item.text} id={item.label} onChange={(e) => optionInputChange(index, e)} name={item.label} />
                 </div>
-                <div className="w-2/4 flex items-center">
-                  <CheckBox value={noneOfAbove} onChange={() => toggleCheckBoxState("noneOfAbove", noneOfAbove)} name='noneOfAbove' label={addQuestionDict[userLanguage]['nonefabove']} />
+                <div className="w-1/10 flex items-center">
+                  <span className="w-auto cursor-pointer" onClick={() => onOptionAdd(index)}>
+                    <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
+                      <IoMdAddCircleOutline />
+                    </IconContext.Provider>
+                  </span>
+                  <span className="w-auto cursor-pointer" onClick={() => onOptionRemove(index)}>
+                    <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
+                      <IoMdRemoveCircleOutline />
+                    </IconContext.Provider>
+                  </span>
                 </div>
               </div>
+            ))}
+
+            {/* Other options checkboxes */}
+            <div className="flex w-9/10 mx-auto mt-4">
+              <div className="w-2/4 flex items-center">
+                <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={addQuestionDict[userLanguage]['otheropt']} />
+              </div>
+              <div className="w-2/4 flex items-center">
+                <CheckBox value={noneOfAbove} onChange={() => toggleCheckBoxState("noneOfAbove", noneOfAbove)} name='noneOfAbove' label={addQuestionDict[userLanguage]['nonefabove']} />
+              </div>
             </div>
-          </div>)}
+          </div>
+        </div>)}
 
           {validation.message && <div className="py-4 m-auto mt-2 text-center">
-            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
-          </div>}
-          <div className="flex justify-center mt-16 w-5/10 mx-auto">
-            <Buttons label={addQuestionDict[userLanguage]['Button']['cancel']} btnClass='px-8 py-3 mr-4' onClick={goBackToPreviousStep} transparent />
-            <Buttons label={addQuestionDict[userLanguage]['Button']['save']} btnClass='px-10 py-3 ml-4' onClick={saveNewQuestion} />
-          </div>
+          <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+        </div>}
+        <div className="flex justify-center mt-16 w-5/10 mx-auto">
+          <Buttons label={addQuestionDict[userLanguage]['Button']['cancel']} btnClass='px-8 py-3 mr-4' onClick={goBackToPreviousStep} transparent />
+          <Buttons label={addQuestionDict[userLanguage]['Button']['save']} btnClass='px-10 py-3 ml-4' onClick={saveNewQuestion} />
         </div>
       </div>
-    </Fragment>
+      </div>
+    </Fragment >
   )
 }
 

@@ -155,7 +155,7 @@ const StageIcon = (props: StageIconProps) => {
               <div
                 className={` 
                                 ${recentOpened ? 'animate-activation' : ''}
-                                ${!open ? 'opacity-60 border border-white border-opacity-20' : ''}
+                                ${!open ? 'opacity-60  border-0 border-white border-opacity-20' : ''}
                                 ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
                                 ${
                                   open && !active ? 'bg-darker-gray' : ''
@@ -188,7 +188,7 @@ const StageIcon = (props: StageIconProps) => {
               <div
                 className={` 
                                 ${recentOpened ? 'animate-activation' : ''}
-                                ${!open ? 'opacity-60 border border-white border-opacity-20' : ''}
+                                ${!open ? 'opacity-60  border-0 border-white border-opacity-20' : ''}
                                 ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
                                 ${
                                   open && !active ? 'bg-darker-gray' : ''

@@ -293,8 +293,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">{AddNewLessonFormDict[userLanguage]['TITLE']} </h3>
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">{AddNewLessonFormDict[userLanguage]['TITLE']}</h3>
       </div>
 
       <div className="p-4">
@@ -355,7 +355,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           </div>
         </div>
 
-        {formData.type?.id === '1' && (< div className="p-6 border-gray-400 border my-4 border-dashed">
+        {formData.type?.id === '1' && (< div className="p-6 border-gray-400  border-0 my-4 border-dashed">
           <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">{AddNewLessonFormDict[userLanguage]['MEASUREMENTLESSON']}</p>
 
           <div className="my-12 w-6/10 m-auto flex items-center justify-center">
@@ -369,7 +369,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           <div>
             {lessonMeasurements?.length > 0 ? (<div>
               {/* Table header */}
-              <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{AddNewLessonFormDict[userLanguage]['NO']}</span>
                 </div>
@@ -391,7 +391,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               {/* Table column */}
               <div className="w-full m-auto max-h-88 overflow-auto">
                 {lessonMeasurements.map((item: any, index: number) => (
-                  <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
                     <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.measurement} </div>
                     <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.topic ? item.topic : '--'}</div>

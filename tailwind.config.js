@@ -21,10 +21,6 @@ module.exports = {
       ],
     },
   },
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
   corePlugins: {
     translate: true,
   },
@@ -103,7 +99,7 @@ module.exports = {
     borderWidth: {
       default: '1px',
       neg1: '-1px',
-      0: '0',
+      0: '1px',
       2: '2px',
       3: '3px',
       4: '4px',
@@ -408,6 +404,7 @@ module.exports = {
         256: '64rem',
       },
       minWidth: {
+        16: '4rem',
         32: '8rem',
         48: '12rem',
         52: '13rem',

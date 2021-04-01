@@ -267,7 +267,7 @@ const EditQuestion = (props: EditQuestionProps) => {
   const { question, notes, label, type, language, isRequired, options, otherOpt, noneOfAbove } = questionData;
   return (
     <Fragment>
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
           <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
             <IoIosKeypad />
@@ -333,8 +333,8 @@ const EditQuestion = (props: EditQuestionProps) => {
         </div>
 
         {(type.value === 'selectOne' || type.value === 'selectMany') && (<div className="p-6">
-          <div className="p-6 border-gray-400 border border-dashed">
-            <p className="text-m font-medium leading-5 text-gray-700 mb-1">{EditQuestionDict[userLanguage]['ADDOPTION']} </p>
+          <div className="p-6 border-gray-400  border-0 border-dashed">
+            <p className="text-m font-medium leading-5 text-gray-700 mb-1">{EditQuestionDict[userLanguage]['ADDOPTION']}: </p>
 
             {/* Options input fields */}
             {options?.length && options.map((item, index) => (

@@ -1,17 +1,16 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { DashboardProps } from '../Dashboard';
 
-import { CallLinkWidget, DefaultTextWidget, FileLinkWidget, ImageWidget, LogoWidget } from './Widgets';
+import { CallLinkWidget, DefaultTextWidget, LogoWidget } from './Widgets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getAsset } from '../../../assets';
 import { Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
 import { QuoteWidget } from './TopWidgets';
-import { useWindowSize } from '../../../customHooks/windowSize';
+import { FileLinkWidget } from './Widgets/FilesWidget';
 
 const SideWidgetBar = (props: DashboardProps) => {
-  const { currentPage, setVisibleLessonGroup } = props;
+
   const { state, clientKey } = useContext(GlobalContext);
-  const windowSize = useWindowSize();
 
   const getSideWidgets = () => {
     const thereAreWidgets = state.roomData.widgets.length > 0;
@@ -63,29 +62,17 @@ const SideWidgetBar = (props: DashboardProps) => {
           source={getAsset(clientKey, 'logo_symbol')}
           altdesc={`school-logo`}
           card={false}
-          classProp={`w-16 h-auto mx-auto p-2 mb-2 bg-white`}
         />
 
         {/**
          * DYNAMIC MAP
          */}
-        {getSideWidgets().length > 0 &&
+        {
+          state.roomData && state.roomData.widgets.length > 0 &&
+          getSideWidgets().length > 0 &&
           getSideWidgets().map((widgetObj: Widget, idx: number) => {
-            return switchWidgets(widgetObj, idx);
+            return <div className={`mb-4`}>{switchWidgets(widgetObj, idx)}</div>;
           })}
-
-        {/**
-         * FURTHER DEVELOPMENT
-         *  TODO: This meme widget should be built
-         *    out in the future
-         */}
-        {/*<ImageWidget
-          source={`https://iconoclastimages141704-uat.s3.amazonaws.com/public/CurateImage.jpg`}
-          altdesc={`fun-meme`}
-          title={`Reflection`}
-          card={true}
-          classProp={`w-auto h-auto sm:hidden lg:visible`}
-        />*/}
       </div>
     </>
   );

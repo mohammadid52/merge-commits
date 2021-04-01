@@ -140,6 +140,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'manage-users',
             },
             {
+              title: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              name: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              label: 'Institutions',
+              path: 'manage-institutions',
+            },
+            {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
@@ -196,52 +202,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     linkProps.setCurrentPage(id);
   };
 
-  /**
-   * HANDLE MENU LINK COLORS
-   */
-  useEffect(() => {
-    if (pageUrlEndsWith('dashboard')) {
-      if (role === 'FLW' || role === 'TR') {
-        setCurrentPage('lesson-planner');
-      }
-      if (role === 'ST') {
-        setCurrentPage('classroom');
-      }
-
-      if (role === 'ADM') {
-        setCurrentPage('manage-institutions');
-      }
-
-    }
-    if (pageUrlContains('/dashboard/manage-users')) {
-      setCurrentPage('manage-users');
-    }
-    if (pageUrlContains('/dashboard/registration')) {
-      setCurrentPage('registration');
-    }
-    if (pageUrlContains('/dashboard/classroom')) {
-      setCurrentPage('classroom');
-    }
-    if (pageUrlContains('/dashboard/lesson-planner')) {
-      setCurrentPage('lesson-planner');
-    }
-    if (pageUrlContains('/dashboard/lesson-builder')) {
-      setCurrentPage('lesson-builder');
-    }
-    if (pageUrlContains('/dashboard/manage-institutions')) {
-      setCurrentPage('manage-institutions');
-    }
-    if (pageUrlContains('/dashboard/anthology')) {
-      setCurrentPage('anthology');
-    }
-    if (pageUrlContains('/dashboard/noticeboard')) {
-      setCurrentPage('noticeboard');
-    }
-    if (pageUrlContains('/dashboard/assessments')) {
-      setCurrentPage('assessments');
-    }
-  }, []);
-
   const pageUrlEndsWith = (pageLabel: string) => {
     const pageUrl = window.location.href;
     const lastPart = pageUrl.match(/[^/]+$/g);
@@ -286,7 +246,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       {state.user.role && links.length > 0
         ? links.map((link: { name: string; path: string, label: string }, key: number) => (
           <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-            <div id={link.path} className={`${linkClass} ${currentPage === link.path && activeClass}`}>
+            <div id={link.path} className={`${linkClass} ${state.currentPage === link.path && activeClass}`}>
               <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
                 {getMenuIcon(link.label, link.path)}
               </IconContext.Provider>

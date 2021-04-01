@@ -32,6 +32,7 @@ const ConfirmCode = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [newPassToggle, setNewPassToggle] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [expiredLink, setExpiredLink] = useState(false)
 
   const checkLoginCred = () => {
     const auth = cookies.cred;
@@ -109,6 +110,15 @@ const ConfirmCode = () => {
               type: 'error',
               message: 'Invalid account confirmation URL. Please check your email',
             };
+          case 'ExpiredCodeException': {
+            setExpiredLink(true)
+            sendNewCode(username);
+            return {
+              show: true,
+              type: 'error',
+              message: 'The link has expired. A new link is sent to your email.',
+            }
+          }
           default:
             return {
               show: true,
@@ -120,6 +130,24 @@ const ConfirmCode = () => {
       toggleLoading(false);
     }
   };
+
+  const sendNewCode = async (username: string, isSignupError?: boolean) => {
+    try {
+      if (isSignupError) {
+        await Auth.resendSignUp(username);
+      } else {
+        await Auth.forgotPassword(username);
+      }
+    } catch (error) {
+      setMessage(() => {
+        return {
+          show: true,
+          type: 'error',
+          message: error.message,
+        };
+      })
+    }
+  }
 
   const confirmAndLogin = async () => {
     let username = confirmInput.email;
@@ -167,6 +195,14 @@ const ConfirmCode = () => {
                 type: 'error',
                 message: 'Invalid account confirmation URL. Please check your email or Register first',
               };
+            case 'ExpiredCodeException': 
+              setExpiredLink(true);
+              sendNewCode(username, true)
+              return {
+                show: true,
+                type: 'error',
+                message: 'The link has expired. A new link is sent to your email.',
+              }
           }
         });
         toggleLoading(false);
@@ -287,7 +323,7 @@ const ConfirmCode = () => {
                   New Password
                 </label>
                 <input
-                  className="w-full p-3 border border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
+                  className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                   placeholder="New Password"
                   type={newPassToggle ? 'text' : 'password'}
                   id="password"

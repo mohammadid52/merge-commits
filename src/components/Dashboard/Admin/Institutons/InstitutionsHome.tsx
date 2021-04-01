@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-// Instituttion 
+// Instituttion
 import InstitutionLookup from './InstitutionLookup';
 import Institution from './Institution';
 import InstitutionAdd from './InstitutionAdd';
@@ -27,8 +27,12 @@ import EditLearningObjective from './EditBuilders/CurricularsView/TabsActions/Ed
 import AddProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/AddProfileCheckpoint';
 import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/ProfileCheckpointlookup';
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
+import { DashboardProps } from '../../Dashboard';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
-const InstitutionsHome = () => {
+const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
+  const {setCurrentPage} = props;
+  const {state, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 })
   const tabProps = { tabsData, setTabsData }
@@ -36,6 +40,11 @@ const InstitutionsHome = () => {
   // currently everything is tied to institutions.
   // so curricular can be open after selecting any specific institute only.
   // Need to discuss this with Mike.
+
+  //  INITIALIZE CURRENT PAGE LOCATION
+  useEffect(()=>{
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'manage-institutions'}})
+  },[state.user.role])
 
   return (
     <div className={`w-full h-full p-8 flex justify-center`}>

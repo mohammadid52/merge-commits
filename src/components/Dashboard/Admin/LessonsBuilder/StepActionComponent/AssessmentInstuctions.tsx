@@ -135,7 +135,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900"> {lessonType === 'survey' ? 'Survey' : 'Assessment'} {AssessmentInstuctionsDict[userLanguage]['INSTRUCTION']} - {lessonName}</h3>
       </div>
 
@@ -145,11 +145,11 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
         </div>
 
         {/* New accordion */}
-        <div className="bg-white mx-auto border border-gray-200 rounded-xl">
+        <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl">
           <ul className="rounded-xl">
             {accordionSteps.map((item: { id: string, title: string, header: string, titleLabel: string, titleValue: string, textEditorName: string, textEditorValue: string }, index) => (
               <Fragment key={item.id}>
-                <li className={`relative border-b border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
+                <li className={`relative border-b-0 border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
                   <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
                     <div className="flex items-center justify-center">
                       <span className={`text-xs md:text-base font-medium cursor-pointer text-center ${theme.textColor[themeColor]} ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`} onClick={() => setSelectedBlock(item.id)}>

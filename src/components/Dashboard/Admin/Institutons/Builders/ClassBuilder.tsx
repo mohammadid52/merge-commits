@@ -368,7 +368,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       <div className="flex justify-between">
         <SectionTitle title={classBuilderdict[userLanguage]['TITLE']} subtitle={classBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" label="Go Back" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -404,7 +404,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           {selectedStudents.length > 0 && (
             <Fragment>
               {selectedStudents.map(item =>
-                <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                   <div className="flex w-3/10 items-center">
                     <div className="flex-shrink-0 h-10 w-10 flex items-center">
                       {item.avatar ?

@@ -354,12 +354,12 @@ const spBuilderDict: any = {
 }
 
 const editClassDict: any = {
-  'EN': {
-    TITLE: 'EDIT Cohort',
-    SUBTITLE: 'Edit cohort information',
-    NAME_INPUT_LABEL: 'Cohort Name',
-    STUDENTS: 'Participants',
-    ADD_STUDENT_PLACEHOLDER: 'Add new participant',
+  EN: {
+    TITLE: 'EDIT CLASS',
+    SUBTITLE: 'Edit class information',
+    NAME_INPUT_LABEL: 'Class Name',
+    STUDENTS: 'STUDENTS',
+    ADD_STUDENT_PLACEHOLDER: 'Select student',
     ADD_STUDENT_BUTTON: 'Add',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
@@ -433,6 +433,85 @@ const lessonDict: any = {
   },
 };
 
+const noticeboardDict: any = {
+  EN: {
+    JOIN_CALL: {
+      DEFAULT: 'Join Call',
+      ZOOM: 'Join Zoom Call',
+      MEET: 'Join Meet Call',
+      TEAMS: 'Join Teams Call',
+    },
+    DOWNLOAD: 'Download',
+    SECTION_TITLE: {
+      ROOM_SELECTOR: 'Room Selector',
+      WIDGET_MANAGER: 'Widget Manager',
+    },
+    ROOMS: {
+      NONE: 'No rooms found',
+    },
+    FORM: {
+      WIDGET_STATUS: 'Widget Status',
+      ACTIVE: 'Active',
+      INACTIVE: 'Inactive',
+      PLACEMENT: 'Placement',
+      CONTENT: 'Content',
+      IN_SIDEBAR: 'In the sidebar',
+      ABOVE_LESSONS: 'Above the lessons',
+      PLEASE_ADD_TITLE: 'Please add title',
+      TITLE: 'Title',
+      TYPE: 'Type',
+      PLEASE_ADD: 'Please add'
+    },
+    WIDGET_DESCRIPTION: {
+      TEXT:
+        'This is the default text widget. Use this if you want to show a text message/notice to students in your room.',
+      QUOTES: 'Add multiple quotes above the lessons or to the side widget bar to inspire your students.',
+      CALL: "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
+      FILE: 'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.',
+    },
+  },
+  ES: {
+    JOIN_CALL: {
+      DEFAULT: 'Unirse a la llamada',
+      ZOOM: 'Unirse a la llamada Zoom',
+      MEET: 'Unirse a la llamada Meet',
+      TEAMS: 'Unirse a la llamada Teams',
+    },
+    DOWNLOAD: 'Descargar',
+    SECTION_TITLE: {
+      ROOM_SELECTOR: 'Selector de Habitación',
+      WIDGET_MANAGER: 'Administrador de Widgets',
+    },
+    ROOMS: {
+      NONE: 'No se encontraron habitaciones',
+    },
+    FORM: {
+      WIDGET_STATUS: 'Estado del Widgeto',
+      ACTIVE: 'Activo',
+      INACTIVE: 'Inactivo',
+      PLACEMENT: 'Colocación',
+      CONTENT: 'El Contenido',
+      IN_SIDEBAR: 'En el sidebar',
+      ABOVE_LESSONS: 'Sobre el Lessons',
+      PLEASE_ADD_TITLE: 'Por favor agregue un título',
+      TITLE: 'Título',
+      TYPE: 'Type',
+      PLEASE_ADD: 'Por favor añadir'
+    },
+    WIDGET_DESCRIPTION: {
+      TEXT:
+        'Este es el widget de texto predeterminado. Use esto si desea mostrar un mensaje de texto / aviso a los estudiantes en su habitación.',
+      QUOTES:
+        'Agregue varias citas sobre las lecciones o en la barra de widgets lateral para inspirar a sus estudiantes.',
+      CALL:
+        'Este es un widget básico para publicar los enlaces zoom / meet / teams que usará para comunicarse con sus estudiantes.',
+      FILE:
+        'Este es un widget básico para compartir sus archivos de drive / onedrive / dropbox para tareas de estudiantes, etc..',
+    },
+  },
+};
+
+
 const classRoomDict: any = {
   EN: {
     TITLE: 'Classroom',
@@ -459,6 +538,7 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
+      SELECT_CLASSROOM_WIDGETS: '⬆ Select a room to see editable widgets...'
     },
   },
   ES: {
@@ -486,6 +566,7 @@ const classRoomDict: any = {
       NO_SYLLABUS: 'No units...',
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
+      SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...'
     },
   },
 };
@@ -3078,6 +3159,7 @@ export {
   appDict,
   anthologyDict,
   sideBarLinksDict,
+  noticeboardDict,
   dashboardProfileDict,
   staffBuilderDict,
   editClassDict,

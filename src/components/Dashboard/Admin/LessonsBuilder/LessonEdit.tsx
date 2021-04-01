@@ -291,7 +291,7 @@ const LessonEdit = (props: LessonEditProps) => {
       <div className="flex justify-between">
         <SectionTitle title={LessonEditDict[userLanguage]['TITLE']} subtitle={LessonEditDict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

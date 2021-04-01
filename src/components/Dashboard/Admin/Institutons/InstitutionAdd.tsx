@@ -206,7 +206,7 @@ const InstitutionAdd = () => {
       <div className="flex justify-between">
         <SectionTitle title={InstitutionAddDict[userLanguage]['TITLE']} subtitle={InstitutionAddDict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -215,19 +215,19 @@ const InstitutionAdd = () => {
         <div className="h-9/10 flex flex-col md:flex-row">
 
           {/* Profile section */}
-          <div className="w-2/10 p-4 mr-6 flex flex-col text-center items-center">
+          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
             {imageUrl ? (
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
                 {!imageLoading ?
                   <label className="cursor-pointer flex justify-center">
                     <img
-                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                      className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
                       src={imageUrl}
                     />
                     <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
                   </label>
                   :
-                  <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-lightI">
+                  <div className="w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-lightI">
                     <Loader />
                   </div>
                 }
@@ -245,7 +245,7 @@ const InstitutionAdd = () => {
                   </span>
                 </span> */}
               </button>) :
-              <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+              <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
                 {!imageLoading ?
                   <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                     <FaPlus />
@@ -262,13 +262,13 @@ const InstitutionAdd = () => {
             <form>
               <div className={`h-full shadow-5 bg-white sm:rounded-lg mb-4`}>
                 {/* TITLE */}
-                <div className='w-full px-4 py-5 border-b border-gray-200 sm:px-6'>
+                <div className='w-full px-4 py-5 border-b-0 border-gray-200 sm:px-6'>
                   <h3 className='text-lg leading-6 font-medium text-gray-900'>
                   {InstitutionAddDict[userLanguage]['FORM']['TITLE']}
                   </h3>
                 </div>
                 {/* FORM */}
-                <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 px-4 py-5'>
+                <div className='grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 px-4 py-5'>
                   <div className='sm:col-span-6 px-3 py-4'>
                     <div className="w-3/10">
                       <Selector selectedItem={type} placeholder={InstitutionAddDict[userLanguage]['FORM']['INSTITUTION_TYPE']} list={institutionTypeList} onChange={onTypeSelect} />

@@ -40,7 +40,7 @@ const CurriculumList = (props: CurriculumListProps) => {
               <div className="flex justify-end w-8/10 m-auto ">
                 <Buttons btnClass="mx-4" label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']} onClick={createNewCurricular} />
               </div>
-              <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-8/10 m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueCurriculam[userLanguage]['NO']}</span>
                 </div>
@@ -54,7 +54,7 @@ const CurriculumList = (props: CurriculumListProps) => {
 
               <div className="mb-8 w-8/10 m-auto max-h-88 overflow-y-auto">
                 {curricular.items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div key={index} className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                     <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.name ? item.name : ''}

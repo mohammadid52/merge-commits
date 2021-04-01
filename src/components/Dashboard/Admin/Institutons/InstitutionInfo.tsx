@@ -70,13 +70,13 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
       <div className="h-9/10 flex flex-col md:flex-row">
 
         {/* Profile section */}
-        <div className="w-2/10 p-4 mr-4 flex flex-col text-center items-center">
+        <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
 
           {image ?
             <img
-              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full border flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
               src={imageUrl}
-            /> : <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+            /> : <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
               <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
                 style={{ background: `${name ? (stringToHslColor(getInitialsFromString(name)[0] + ' ' + getInitialsFromString(name)[1])) : null}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
                 {name && (
@@ -96,7 +96,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         <div className='w-full'>
           <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-            <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+            <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {Institute_info[userLanguage]['TITLE']}
               </h3>

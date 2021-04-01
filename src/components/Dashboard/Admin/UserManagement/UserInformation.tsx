@@ -31,14 +31,14 @@ const UserInformation = (props: UserInfoProps) => {
     return (
       <div className="w-full md:px-2 pt-2">
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-          <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+          <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
              {UserInformationDict[userLanguage]['heading']}
             </h3>
           </div>
 
           <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   {UserInformationDict[userLanguage]['fullname']}
@@ -112,13 +112,13 @@ const UserInformation = (props: UserInfoProps) => {
 
         {/* TODO: NEED TO CONFIRM FOR GIVING ACCESS TO ADMIN ON PROFILE BUILDER. */}
         {/* <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
-          <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+          <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Institution Information
             </h3>
           </div>
           <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   Institution

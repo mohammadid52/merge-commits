@@ -47,7 +47,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+      <div className={`flex pb-2 mb-2 border-b-0 ${theme.lessonCard.border}`}>
         {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>*/}
         <p className={`text-right ${theme.lessonCard.subtitle}`}>Updated: {dateFromServer(contentObj.updatedAt)}</p>
       </div>
@@ -59,7 +59,7 @@ const AnthologyContent = (props: ContentCardProps) => {
           className={`mb-2 w-auto ${theme.lessonCard.title}`}>{contentObj.title ? contentObj.title : `No title`}</h4>
         {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>{contentObj.subTitle ? contentObj.subTitle : `No subtitle`}</p>*/}
       </div>
-      <div className={`p-3 border-l overflow-ellipsis overflow-hidden ellipsis`}>
+      <div className={`p-3 border-l-0overflow-ellipsis overflow-hidden ellipsis`}>
         {contentObj.content ?
           <p dangerouslySetInnerHTML={{ __html: contentObj.content }} /> :
           `No content`}
@@ -71,7 +71,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+      <div className={`flex pb-2 mb-2 border-b-0 ${theme.lessonCard.border}`}>
         {/*<p className={`text-left ${theme.lessonCard.subtitle}`}>Lesson: -</p>*/}
         <p className={`text-right ${theme.lessonCard.subtitle}`}>Updated: {dateFromServer(contentObj.updatedAt)}</p>
       </div>
@@ -102,7 +102,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2 border-b ${theme.lessonCard.border}`}>
+      <div className={`flex pb-2 mb-2 border-b-0 ${theme.lessonCard.border}`}>
         <p className={`text-left ${theme.lessonCard.subtitle}`}>This is a new entry</p>
       </div>
       {/**

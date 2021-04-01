@@ -10,7 +10,6 @@ import FormInput from '../../../../../../Atoms/Form/FormInput'
 import TextArea from '../../../../../../Atoms/Form/TextArea'
 import Selector from '../../../../../../Atoms/Form/Selector'
 
-import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
@@ -30,15 +29,16 @@ const EditMeasurement = (props: EditMeasurementProps) => {
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({ name: '', topic: '' })
   const [topics, setTopics] = useState([]);
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
-  const {EditMeasurementDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const { EditMeasurementDict, BreadcrumsTitles } = useDictionary(clientKey);
   const [measurement, setMeasurement] = useState({
     id: measurementId, name: '', curriculumID: curricularId, topic: { id: '', name: '', value: '' },
-    criteria: '', distinguished: '', basic: '', adequite: '', excelled: ''
+    criteria: '',
   })
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title:  BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: measurement.topic.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
     { title: BreadcrumsTitles[userLanguage]['EditMeasurement'], url: `/dashboard/curricular/${curricularId}/measurement/edit/${measurementId}'}`, last: true }
   ];
 
@@ -82,10 +82,6 @@ const EditMeasurement = (props: EditMeasurementProps) => {
         name: item.name,
         topic: { id: item.topic.id, name: item.topic.name, value: item.topic.name },
         criteria: item.criteria,
-        distinguished: item.distinguished,
-        adequite: item.adequite,
-        excelled: item.excelled,
-        basic: item.basic
       })
       setLoading(false)
     } else {
@@ -120,17 +116,13 @@ const EditMeasurement = (props: EditMeasurementProps) => {
         id: measurement.id,
         name: measurement.name,
         criteria: measurement.criteria,
-        distinguished: measurement.distinguished,
-        basic: measurement.basic,
-        adequite: measurement.adequite,
-        excelled: measurement.excelled,
         topicID: measurement.topic.id,
         curriculumID: curricularId
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.updateRubric, { input }));
       const updatedItem = item.data.updateRubric
       if (updatedItem) {
-      history.goBack()
+        history.goBack()
       } else {
         console.log('Could not update topic');
       }
@@ -150,7 +142,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
       <div className="flex justify-between">
         <SectionTitle title={EditMeasurementDict[userLanguage]['title']} subtitle={EditMeasurementDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -167,36 +159,24 @@ const EditMeasurement = (props: EditMeasurementProps) => {
                   <div className="px-3 py-4">
                     <FormInput id='name' value={measurement.name} onChange={onInputChange} name='name' label={EditMeasurementDict[userLanguage]['labelmeasur']} isRequired />
                   </div>
-                  <div className="px-3 py-4">
-                    {/* <div>
+                  {/* <div className="px-3 py-4">
+                    <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       Select Sequence
                     </label>
                     <Selector selectedItem={measurement.topic.value} placeholder="topic" list={topics} onChange={selectTopic} />
-                  </div> */}
+                  </div>
                     <div>
                       <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                         {EditMeasurementDict[userLanguage]['seltopic']}
                     </label>
                       <Selector selectedItem={measurement.topic.value} placeholder={EditMeasurementDict[userLanguage]['topic']} list={topics} onChange={selectTopic} />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="px-3 py-4">
                     <TextArea rows={3} id='criteria' value={measurement.criteria} onChange={onInputChange} name='criteria' label={EditMeasurementDict[userLanguage]['criteria']} />
                   </div>
-                  {/* <div className="px-3 py-4">
-                    <TextArea rows={3} id='distinguished' value={measurement.distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='excelled' value={measurement.excelled} onChange={onInputChange} name='excelled' label={EditMeasurementDict[userLanguage]['excell']} />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='adequite' value={measurement.adequite} onChange={onInputChange} name='adequite' label={EditMeasurementDict[userLanguage]['adequite']} />
-                  </div>
-                  <div className="px-3 py-4">
-                    <TextArea rows={3} id='basic' value={measurement.basic} onChange={onInputChange} name='basic' label="Basic" />
-                  </div> */}
                 </div>
               </div>
               <div className="flex my-8 justify-center">
@@ -206,7 +186,7 @@ const EditMeasurement = (props: EditMeasurementProps) => {
             </> : <div className="py-12 my-12 m-auto text-center">{EditMeasurementDict[userLanguage]['fetching']}</div>
         }
       </PageWrapper>
-    </div>
+    </div >
   )
 }
 

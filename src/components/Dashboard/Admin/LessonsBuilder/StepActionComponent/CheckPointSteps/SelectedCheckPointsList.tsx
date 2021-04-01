@@ -38,7 +38,7 @@ const SelectedCheckPointsList = (props: SelectedCheckPointsListProps) => {
 
   return (
     <Fragment>
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
           <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
             <IoIosKeypad />

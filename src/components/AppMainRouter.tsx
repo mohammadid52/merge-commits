@@ -31,23 +31,8 @@ const MainRouter: React.FC = () => {
       sessionStorage.removeItem('accessToken');
     }
   }, [authState]);
-  
-  // DO NOT UNCOMMENT: delete once lessons table updated in production
-  // const listLessons = async () => {
-  //   let lessons: any = await API.graphql(graphqlOperation(queries.listLessons))
-  //   lessons = lessons.data.listLessons.items
-  //   lessons.map((les: any) => {
-  //     console.log('les', les)
-  //     // let input = {
-  //     //   id: les.id,
-  //     //   institutionID: '169b0f4e-fc9f-424e-922f-666ed3ed794d'
-  //     // }
-  //     // API.graphql(graphqlOperation(customMutations.updateLessonInsts, { input }));
-  //   })
-  // }
 
   useEffect(() => {
-    // DO NOT UNCOMMENT: listLessons()
     setupAppHeaders();
     checkUserAuthenticated();
   }, []);

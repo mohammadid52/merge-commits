@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-// import { Auth, API, graphqlOperation } from 'aws-amplify';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
+
+
+/**
+ * About the QuickRegister functionality:
+ *
+ *
+ *
+ */
+
 
 interface newUserInput {
   key: number;
@@ -50,7 +57,6 @@ interface QuickRegisterProps {
 
 const QuickRegister = (props: QuickRegisterProps) => {
   const { active, setQuickRegister } = props;
-  const history = useHistory();
 
   const [newUserInputs, setNewUserInputs] = useState(initialState);
   const [waiting, setWaiting] = useState<boolean>(false);
@@ -88,7 +94,6 @@ const QuickRegister = (props: QuickRegisterProps) => {
       email: newUserInputs.email,
       firstName: newUserInputs.firstName,
       lastName: newUserInputs.lastName,
-      // insitution: '1',
       phone: newUserInputs.phone,
       birthdate: newUserInputs.birthdate,
       externalId: newUserInputs.externalId,
@@ -97,7 +102,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
     };
 
     try {
-      const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }));
+      await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }));
       handleMessage('success', 'User registered successfully');
       setNewUserInputs((prev) => {
         return {
@@ -180,7 +185,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
     setMessage(() => {
       let username = newUserInputs.email;
-      let password = newUserInputs.password;
+
       if (!newUserInputs.firstName) {
         return {
           show: true,
@@ -244,17 +249,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
     });
   };
 
-  const handleChangeRole = (item: { name: string; code: string }) => {
-    setNewUserInputs(() => {
-      return {
-        ...newUserInputs,
-        role: item.code,
-      };
-    });
-  };
 
-  const handleSubmit = (e: any) => {
-    // Wait state so any buttons or messages can show
+
+  const handleSubmit = () => {
     setWaiting(true);
     validation();
   };
@@ -336,14 +333,14 @@ const QuickRegister = (props: QuickRegisterProps) => {
         <div className="w-full flex flex-col justify-center">
           <span className="w-full flex inline-flex rounded-xl shadow-sm">
             {waiting ? (
-              <button className=" bg-light-gray bg-opacity-20 text-white  inline-flex justify-center w-full rounded-xl border border-transparent px-4 py-2 mt-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+              <button className=" bg-light-gray bg-opacity-20 text-white  inline-flex justify-center w-full rounded-xl  border-0 border-transparent px-4 py-2 mt-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                 Registering...
               </button>
             ) : (
               <button
                 type="submit"
                 onClick={handleSubmit}
-                className=" bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:shadow-outline-indigo  inline-flex justify-center w-full rounded-xl border border-transparent px-4 py-2 mt-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                className=" bg-sea-green hover:bg-green-500 text-white focus:border-green-100 focus:ring-indigo  inline-flex justify-center w-full rounded-xl  border-0 border-transparent px-4 py-2 mt-2 text-base leading-6 font-medium shadow-sm focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                 Submit
               </button>
             )}

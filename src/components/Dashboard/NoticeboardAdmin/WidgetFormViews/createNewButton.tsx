@@ -7,14 +7,24 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import Buttons from '../../../Atoms/Buttons';
 
 const CreateNewButton = (props: NoticeboardFormProps) => {
-  const { subSection, viewEditMode, handleEditToggle, widgetObj } = props;
+  const { subSection, viewEditMode, handleEditToggle, widgetObj, resetNewWidgetData } = props;
   const { state, userLanguage, clientKey } = useContext(GlobalContext);
   const { anthologyDict } = useDictionary(clientKey);
+
+  const handleCancel = () => {
+    resetNewWidgetData();
+  }
+
+  const handleCreateNew = () => {
+    resetNewWidgetData();
+    handleEditToggle('create', widgetObj.widgetID);
+  }
+
   return (
     <div className={`flex p-2 ${viewEditMode.mode === 'create' ? 'mt-2' : ''}`}>
       {viewEditMode.mode === 'create' && viewEditMode.widgetID === widgetObj.widgetID ? (
         <Buttons
-          onClick={() => handleEditToggle('', '')}
+          onClick={handleCancel}
           label={anthologyDict[userLanguage].ACTIONS.CANCEL}
           type={`button`}
           Icon={AiOutlineStop}
@@ -23,7 +33,7 @@ const CreateNewButton = (props: NoticeboardFormProps) => {
       ) : (
         <div
           className={`flex flex-row w-auto mr-0 cursor-pointer`}
-          onClick={() => handleEditToggle('create', widgetObj.widgetID)}>
+          onClick={handleCreateNew}>
           <p className={`w-auto mr-2 cursor-pointer font-semibold text-blueberry`}>
             {anthologyDict[userLanguage].ACTIONS.CREATE}
           </p>

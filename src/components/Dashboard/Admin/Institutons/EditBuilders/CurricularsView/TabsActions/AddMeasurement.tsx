@@ -27,10 +27,6 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   const [name, setName] = useState('');
   const [criteria, setCriteria] = useState('');
-  const [basic, setBasic] = useState('');
-  const [distinguished, setDistinguished] = useState('');
-  const [adequite, setAdequite] = useState('');
-  const [excelled, setExcelled] = useState('');
   const [topic, setTopic] = useState({ id: '', name: '', value: '' })
   const [validation, setValidation] = useState({ name: '', topic: '' })
   const [measurementIds, setMeasurementIds] = useState([]);
@@ -48,6 +44,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: topic?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
     { title: BreadcrumsTitles[userLanguage]['AddMeasurement'], url: `/dashboard/curricular/${curricularId}/measurement/add`, last: true }
   ];
 
@@ -58,10 +55,6 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       if (value.length && validation.name) setValidation({ ...validation, name: '' });
     }
     if (e.target.name === 'criteria') setCriteria(value)
-    if (e.target.name === 'distinguished') setDistinguished(value)
-    if (e.target.name === 'adequite') setAdequite(value)
-    if (e.target.name === 'excelled') setExcelled(value)
-    if (e.target.name === 'basic') setBasic(value)
   }
 
   const selectTopic = (val: string, name: string, id: string) => {
@@ -82,8 +75,8 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       value: item.name
     }));
     setTopics(list)
-    if(topicId){
-      setTopic(list.find((item:any) => item.id === topicId))
+    if (topicId) {
+      setTopic(list.find((item: any) => item.id === topicId))
     }
   }
   const fetchMeasurementSequence = async (topicId: string) => {
@@ -119,7 +112,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
     if (isValid) {
       const input = {
         name, topicID: topic.id,
-        criteria, basic, excelled, adequite, distinguished,
+        criteria,
         curriculumID: curricularId
       };
       const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
@@ -134,7 +127,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
         console.log('seqItem', seqItem)
       }
       if (addedItem) {
-      history.goBack()
+        history.goBack()
       } else {
         console.log('Could not add measurement');
       }
@@ -159,7 +152,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       <div className="flex justify-between">
         <SectionTitle title={AddMeasurementDict[userLanguage]['title']} subtitle={AddMeasurementDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -177,7 +170,7 @@ const AddMeasurement = (props: AddMeasurementProps) => {
                 validation.name && <p className="text-red-600">{validation.name}</p>
               }
             </div>
-            <div className="px-3 py-4">
+            {/* <div className="px-3 py-4">
               <div>
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {AddMeasurementDict[userLanguage]['selecttopic']} <span className="text-red-500">*</span>
@@ -187,24 +180,11 @@ const AddMeasurement = (props: AddMeasurementProps) => {
                   validation.topic && <p className="text-red-600">{validation.topic}</p>
                 }
               </div>
-            </div>
+            </div> */}
 
             <div className="px-3 py-4">
               <TextArea rows={3} id='criteria' value={criteria} onChange={onInputChange} name='criteria' label={AddMeasurementDict[userLanguage]['criterialabel']} />
             </div>
-            {/* TODO: NEED TO REMOVE FIELDS FROM RUBRICS TABLE. */}
-            {/* <div className="px-3 py-4">
-              <TextArea rows={3} id='distinguished' value={distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
-            </div>
-            <div className="px-3 py-4">
-              <TextArea rows={3} id='excelled' value={excelled} onChange={onInputChange} name='excelled' label={AddMeasurementDict[userLanguage]['excell']} />
-            </div>
-            <div className="px-3 py-4">
-              <TextArea rows={3} id='adequite' value={adequite} onChange={onInputChange} name='adequite' label={AddMeasurementDict[userLanguage]['adequate']} />
-            </div>
-            <div className="px-3 py-4">
-              <TextArea rows={3} id='basic' value={basic} onChange={onInputChange} name='basic' label="Basic" />
-            </div> */}
           </div>
         </div>
         <div className="flex my-8 justify-center">

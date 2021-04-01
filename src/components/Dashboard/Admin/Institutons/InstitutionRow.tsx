@@ -48,9 +48,9 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
   }, [instRowPrps.image])
 
   return (
-    <div id={instRowPrps.id} className="flex justify-between bg-white w-full border-b border-gray-200">
+    <div id={instRowPrps.id} className="flex justify-between bg-white w-full border-b-0 border-gray-200">
 
-      <div className="w-3/10 px-8 py-4 whitespace-no-wrap">
+      <div className="w-3/10 px-8 py-4 whitespace-nowrap">
         <div className="flex items-center">
           <div className="flex-shrink-0 h-10 w-10 flex items-center">
             {instRowPrps.image ?
@@ -68,22 +68,22 @@ const InstitutionRow: React.FC<InstitutionRowProps> = (
           </div>
         </div>
       </div>
-      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
         <div className="w-16 flex justify-center text-sm leading-5 text-gray-500">
           {instRowPrps.type ? instRowPrps.type : '--'}
         </div>
       </div>
-      <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
+      <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-nowrap">
         <div className="flex flex-col justify-center items-center cursor-pointer" onClick={handleInstitutionView}>
           <div id={instRowPrps.id} className="w-auto text-sm leading-5 text-gray-900 hover:text-gray-600 ">{instRowPrps.website ? getHostNameFromUrl(instRowPrps.website) : '--'}</div>
         </div>
       </div>
-      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
+      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
         <span id={instRowPrps.id} className="w-auto text-sm leading-5 text-gray-500">
           {instRowPrps.phone ? formatPhoneNumber(instRowPrps.phone) : '--'}
         </span>
       </div>
-      <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleInstitutionView} >
+      <div className="w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium" onClick={handleInstitutionView} >
         <div id={instRowPrps.id} className={`flex justify-center ${theme.textColor[themeColor]}`}>Edit</div>
       </div>
     </div>

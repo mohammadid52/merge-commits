@@ -1,10 +1,11 @@
 import React, { useContext } from 'react'
 import { NavLink } from 'react-router-dom';
+import { useHistory } from 'react-router'
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { getAsset } from '../../assets';
 
 interface BreadCrumProps {
-  items: { title: string, url: string, last: boolean }[]
+  items: { title: string, url: string, last: boolean, goBack?: boolean }[]
 }
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
@@ -12,6 +13,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
   const { items } = brdPrps;
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const history = useHistory();
 
   return (
     <div className="flex flex-row my-4 py-4">
@@ -21,7 +23,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
             {items.map((item, i) => (
               <li className="flex items-center mr-2" style={{ minWidth: 'fit-content' }} key={i}>
                 <NavLink to={item.url}>
-                  <span className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}>
+                  <span className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`} onClick={item?.goBack && history.goBack}>
                     {i === 0 ? item.title.toUpperCase() : item.title}
                   </span>
                 </NavLink>

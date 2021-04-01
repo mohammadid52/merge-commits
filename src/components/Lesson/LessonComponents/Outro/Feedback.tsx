@@ -45,7 +45,7 @@ const Feedback = (props: FeedbackProps) => {
       </div>
 
       <h3
-        className={`w-full text-lg w-auto relative font-open font-light text-left flex flex-row items-center text-gray-200 border-b border-white border-opacity-10 pb-2 my-6`}>
+        className={`w-full text-lg w-auto relative font-open font-light text-left flex flex-row items-center text-gray-200 border-b-0 border-white border-opacity-10 pb-2 my-6`}>
         Rating:
       </h3>
 

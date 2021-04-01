@@ -108,7 +108,7 @@ const CoopDisplay = () => {
       {/*<div
           className={`relative ${
             fullscreen ? 'w-full' : 'w-4.85/10'
-          } h-full rounded-lg border shadow-inner-dark bg-darker-blue p-4`}>
+          } h-full rounded-lg  border-0 shadow-inner-dark bg-darker-blue p-4`}>
           <div className="w-full h-full flex flex-col justify-between items-center">
             <div
               className="absolute cursor-pointer w-full text-xl m-2"

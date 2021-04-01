@@ -119,6 +119,16 @@ const PreviewForm = (props: PreviewFormProps) => {
         id: lessonID
       }));
       const savedData: any = result.data.getLesson;
+      const checkpointSequence = savedData?.checkpoints?.items?.map((checkpoint: any) => {
+        let lessonplanSequence = savedData?.lessonPlan?.find((item: any) => item.LessonComponentID === checkpoint?.checkpointID)?.sequence
+        return ({
+          ...checkpoint,
+          sequence: lessonplanSequence
+        })
+      }).sort((a: any, b: any) => a.sequence > b.sequence ? 1 : -1)
+      savedData.checkpoints = {
+        items: checkpointSequence
+      }
       setLessonDetails({ ...savedData });
       setLoading(false);
     } catch {
@@ -151,7 +161,7 @@ const PreviewForm = (props: PreviewFormProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900"> {PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}</h3>
       </div>
       {loading ? (
@@ -169,25 +179,31 @@ const PreviewForm = (props: PreviewFormProps) => {
               {lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}
             </div>
             <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base">Welcome Message:</h3>
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.introductionTitle || ''}</h3>
               <Fragment>
                 {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}
               </Fragment>
             </div>
             <div className="py-2">
+              <h3 className="font-bold text-gray-900 text-base">{lessonType === 'survey' ? 'Survey' : 'Assessment'}Instructions:</h3>
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.instructionsTitle || ''}</h3>
               <Fragment>
                 {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
               </Fragment>
             </div>
             <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base">{PreviewFormDict[userLanguage]['CHECKPOINT']} :</h3>
+              <h3 className="font-bold text-gray-900 text-base">{lessonType === 'survey' ? 'Survey' : 'Assessment'} :</h3>
               {lessonDetails?.checkpoints?.items?.length > 0 ? (<Fragment>
                 {lessonDetails?.checkpoints?.items?.map((item: any) => (
                   <Fragment key={item.id}>
                     <h4 className="font-bold text-gray-900 text-base py-2">{item.checkpoint?.title || ''}<br />
                       <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
                     </h4>
+                    <div className="py-2">
+                      <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
+                      {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
+                    </div>
                     <div>
                       {item.checkpoint?.questions?.items?.length > 0 ? (
                         <div className="py-2 px-4">

@@ -155,9 +155,9 @@ const CurricularView = (props: CurricularViewProps) => {
       <div className="flex justify-between">
         <SectionTitle title={curricularviewdict[userLanguage]['TITLE']} subtitle={curricularviewdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
           {currentPath !== 'edit' ? (
-            <Buttons btnClass="mr-4" onClick={() => history.push(`${match.url}/edit?id=${params.get('id')}`)} Icon={FaEdit} />
+            <Buttons btnClass="mr-4 px-6" label="Edit" onClick={() => history.push(`/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`)} Icon={FaEdit} />
           ) : null
           }
         </div>
@@ -168,7 +168,7 @@ const CurricularView = (props: CurricularViewProps) => {
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-full">
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
                 {curricularviewdict[userLanguage]['HEADING']}
                 </h3>

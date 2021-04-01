@@ -33,11 +33,6 @@ const AddTopic = (props: AddTopicProps) => {
   const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const {AddTopicDict, BreadcrumsTitles } = useDictionary(clientKey);
 
-  const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['AddTopic'], url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
-  ];
-
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [learning, setLearning] = useState({ id: '', name: '', value: '' });
@@ -50,6 +45,13 @@ const AddTopic = (props: AddTopicProps) => {
     adequite: '',
     basic: ''
   })
+
+  const breadCrumsList = [
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: learning?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
+    { title: BreadcrumsTitles[userLanguage]['AddTopic'], url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
+  ];
+
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
       const value = e.target.value
@@ -156,7 +158,7 @@ const AddTopic = (props: AddTopicProps) => {
       <div className="flex justify-between">
         <SectionTitle title={AddTopicDict[userLanguage]['title']} subtitle={AddTopicDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -173,7 +175,7 @@ const AddTopic = (props: AddTopicProps) => {
               }
             </div>
 
-            <div className="px-3 py-4">
+            {/* <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 {AddTopicDict[userLanguage]['learningobj']} <span className="text-red-500">*</span>
               </label>
@@ -181,7 +183,7 @@ const AddTopic = (props: AddTopicProps) => {
               {
                 validation.learning && <p className="text-red-600">{validation.learning}</p>
               }
-            </div>
+            </div> */}
 
             <div className="px-3 py-4">
               <TextArea id='description' value={description} onChange={onInputChange} name='description' label={AddTopicDict[userLanguage]['description']} />

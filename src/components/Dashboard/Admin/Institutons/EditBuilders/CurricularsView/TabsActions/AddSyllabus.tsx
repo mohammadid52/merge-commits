@@ -230,7 +230,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       <div className="flex justify-between">
         <SectionTitle title={AddSyllabusDict[userLanguage]['title']} subtitle={AddSyllabusDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 

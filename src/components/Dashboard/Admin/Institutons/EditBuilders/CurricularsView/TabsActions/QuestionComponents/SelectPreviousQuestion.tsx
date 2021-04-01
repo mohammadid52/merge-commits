@@ -106,7 +106,7 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
           </div>
           <div>
             <Fragment>
-              <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{SelectPreviousQuestionDict[userLanguage]['selection']}</span>
                 </div>
@@ -127,7 +127,7 @@ const SelectPreviousQuestion = (props: SelectPreviousQuestionProps) => {
                     {!error ? (
                       <Fragment>
                         {questionsList?.length ? questionsList.map(item => (
-                          <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                             <div className="flex w-1.5/10 items-center px-6 py-3 text-left text-s leading-4">
                               <span>
                                 <CheckBox value={selectedQuestionIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectquestion' />

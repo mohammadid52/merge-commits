@@ -71,7 +71,7 @@ const RoomsList = (props: RoomListProps) => {
                 <Buttons btnClass="mx-4" label={InstitueRomms[userLanguage]['BUTTON']['CREATE']} onClick={createNewRoom} />
               </div>
 
-              <div className="flex justify-between w-full  px-8 py-4 border-b border-gray-200">
+              <div className="flex justify-between w-full  px-8 py-4 border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
@@ -94,7 +94,7 @@ const RoomsList = (props: RoomListProps) => {
 
               <div className="m-auto max-h-88 overflow-y-auto overflow-x-auto">
                 {roomList.map((item: any, i: number) => (
-                  <div key={i} className="flex justify-between items-center w-full px-8 py-4 border-b border-gray-200">
+                  <div key={i} className="flex justify-between items-center w-full px-8 py-4 border-b-0 border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{i + 1}.</div>
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
                       {item.name}

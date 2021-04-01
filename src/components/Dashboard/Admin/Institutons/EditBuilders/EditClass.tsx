@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -22,6 +22,7 @@ import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 interface EditClassProps { }
 
@@ -31,6 +32,7 @@ const EditClass = (props: EditClassProps) => {
     return new URLSearchParams(location.search);
   };
   const urlParams = useQuery();
+  const match = useRouteMatch();
 
   const initialData = { id: '', name: '', institute: { id: '', name: '', value: '' } }
   const defaultNewMember = { id: '', name: '', value: '', avatar: '' }
@@ -42,18 +44,31 @@ const EditClass = (props: EditClassProps) => {
   const [statusEdit, setStatusEdit] = useState('');
   const [loading, setLoading] = useState(true);
   const [updateStatus, setUpdateStatus] = useState(false)
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [previousName, setPreviousName] = useState('')
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    profile: false,
+    profileId: '',
+    goBack: false,
+    message: 'Do you want to save changes before moving forward?'
+  });
 
-  
+
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { editClassDict,BreadcrumsTitles } = useDictionary(clientKey);
+  const { editClassDict, BreadcrumsTitles } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
+
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `/dashboard/class-edit?id=${urlParams.get('id')}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `${match.url}?id=${urlParams.get('id')}`, last: true }
   ];
-  
+
+  const gotoProfileInfo = (profileId: string) => {
+    history.push(`/dashboard/manage-users/user?id=${profileId}`)
+  }
+
   const fetchClassData = async (classId: string) => {
     try {
       const result: any = await API.graphql(graphqlOperation(customQueries.getClassDetails, { id: classId }))
@@ -74,7 +89,7 @@ const EditClass = (props: EditClassProps) => {
         return {
           id: stu.id,
           status: stu.status,
-          student: { ...stu.student, name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}` }
+          student: { ...stu.student, email: stu.studentEmail, name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}` }
         }
       })
       let students: any = await API.graphql(graphqlOperation(customQueries.listPersons, {
@@ -112,7 +127,8 @@ const EditClass = (props: EditClassProps) => {
     setClassData({
       ...classData,
       name: e.target.value
-    })
+    });
+    setUnsavedChanges(true);
     if (messages.show) {
       setMessages({ show: false, message: '', isError: false })
     }
@@ -211,7 +227,7 @@ const EditClass = (props: EditClassProps) => {
     } else if (classData.institute.id === '') {
       setMessages({
         show: true,
-        message:dictionary.messages.selectinstitute,
+        message: dictionary.messages.selectinstitute,
         isError: true
       })
       return false;
@@ -257,6 +273,52 @@ const EditClass = (props: EditClassProps) => {
     }
   }
 
+  const goBack = () => {
+    if (unsavedChanges) {
+      setWarnModal({
+        show: true,
+        profile: false,
+        profileId: '',
+        goBack: true,
+        message: 'Do you want to save changes before going back?'
+      })
+    } else {
+      history.goBack();
+    }
+  }
+
+  const movetoStudentProfile = (profileID: string) => {
+    if (unsavedChanges) {
+      setWarnModal({
+        show: true,
+        profile: true,
+        profileId: profileID,
+        goBack: false,
+        message: 'Do you want to save changes before leaving the page?'
+      })
+    } else {
+      gotoProfileInfo(profileID)
+    }
+  }
+
+  const DiscardChanges = () => {
+    if (warnModal.goBack) {
+      history.goBack()
+    } else if (warnModal.profile) {
+      gotoProfileInfo(warnModal.profileId);
+    }
+  }
+
+  const saveAndMove = async () => {
+    if (warnModal.goBack) {
+      await saveClassDetails();
+      history.goBack()
+    } else if (warnModal.profile) {
+      await saveClassDetails();
+      gotoProfileInfo(warnModal.profileId);
+    }
+  }
+
   return (
     <div className="w-8/10 h-full mt-4 p-4">
 
@@ -265,17 +327,19 @@ const EditClass = (props: EditClassProps) => {
       <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" label="Go Back" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
       <PageWrapper>
-        <div className="w-7/10 m-auto">
+        <div className="w-6/10 px-2 m-auto">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.heading}</h3>
           <div className="">
-            <div className="w-7/10 m-auto px-2">
-              <FormInput value={classData.name} id='className' onChange={onNameChange} name='className' label={dictionary.NAME_INPUT_LABEL} isRequired />
-              <Buttons btnClass="my-6 mx-auto py-1" label="Save" onClick={saveClassDetails} />
+            <div className="flex items-center">
+              <div>
+                <FormInput value={classData.name} id='className' onChange={onNameChange} name='className' label={dictionary.NAME_INPUT_LABEL} isRequired />
+              </div>
+              <Buttons btnClass="ml-4 py-1 mt-auto" label="Save" onClick={saveClassDetails} transparent={!unsavedChanges} disabled={!unsavedChanges} />
             </div>
           </div>
         </div>
@@ -283,7 +347,12 @@ const EditClass = (props: EditClassProps) => {
         <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">{dictionary.heading2}</h3>
 
         <div className="flex items-center w-6/10 m-auto px-2">
-          <SelectorWithAvatar selectedItem={newMember} list={students} placeholder={dictionary.ADD_STUDENT_PLACEHOLDER} onChange={onStudentSelect} />
+          <div>
+            <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
+              Add students to class
+            </label>
+            <SelectorWithAvatar selectedItem={newMember} list={students} placeholder={dictionary.ADD_STUDENT_PLACEHOLDER} onChange={onStudentSelect} />
+          </div>
           <Buttons btnClass="ml-4 py-1" label={dictionary.ADD_STUDENT_BUTTON} onClick={addStudentInClass} />
         </div>
 
@@ -294,8 +363,8 @@ const EditClass = (props: EditClassProps) => {
               (classStudents.length ?
                 (
                   <Fragment>
-                    <div className="mt-8 w-full m-auto px-2">
-                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
+                    <div className="mt-8 w-9/10 m-auto px-2">
+                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
                         <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
                         <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
@@ -303,12 +372,12 @@ const EditClass = (props: EditClassProps) => {
                       </div>
                     </div>
 
-                    <div className="mb-4 w-full m-auto px-2 max-h-88 overflow-y-scroll">
+                    <div className="mb-4 w-9/10 m-auto px-2 max-h-88 overflow-y-scroll">
                       {
                         classStudents.map((item, index) => (
-                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                             <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
-                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal">
+                            <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer" onClick={() => movetoStudentProfile(item.student.id)}>
                               <div className="flex-shrink-0 h-10 w-10 flex items-center">
                                 {item.student.avatar ?
                                   (<img
@@ -318,26 +387,34 @@ const EditClass = (props: EditClassProps) => {
                                     {item.student.name ? initials(getInitialsFromString(item.student.name)[0], getInitialsFromString(item.student.name)[1]) : initials('N', 'A')}
                                   </div>}
                               </div>
-                              <div className="ml-4">{item.student.name}</div>
+                              <div className="ml-4">
+                                {/* {item.student.name} */}
+                                <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
+                                  {item.student.name}
+                                </div>
+                                <div className="text-sm leading-5 text-gray-500">
+                                  {item.student.email}
+                                </div>
+                              </div>
                             </div>
 
                             {
                               statusEdit === item.id ? (
-                                <div className="w-3/10 mr-6">
+                                <div className="w-3/10 mr-6 px-3">
                                   <Selector selectedItem={item.status} placeholder="Select Status" list={statusList} onChange={(val, name, id) => onClassStudentStatusChange(val, name, id, item.id)} />
                                 </div>) :
-                                <div className="w-3/10">
+                                <div className="w-3/10 px-3">
                                   {item.status || 'Active'}
                                 </div>
                             }
 
-                            <div className="w-1/10">
+                            <div className="w-1/10 px-3">
                               {statusEdit === item.id ?
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? dictionary.UPDATING : dictionary.CANCEL}</span>
                                 :
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                                   {dictionary.EDIT}
-                          </span>
+                                </span>
                               }
                             </div>
                           </div>)
@@ -353,6 +430,9 @@ const EditClass = (props: EditClassProps) => {
               <div className="py-2 m-auto text-center">
                 <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
               </div>)
+            }
+            {
+              warnModal.show && <ModalPopUp closeAction={DiscardChanges} saveAction={saveAndMove} saveLabel='SAVE' cancelLabel='DISCARD' message={warnModal.message} />
             }
           </Fragment>
         ) : null}

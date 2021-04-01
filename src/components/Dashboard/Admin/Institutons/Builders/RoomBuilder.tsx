@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -18,6 +18,7 @@ import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
+import { getAsset } from '../../../../../assets';
 
 interface RoomBuilderProps {
 
@@ -25,6 +26,7 @@ interface RoomBuilderProps {
 
 const RoomBuilder = (props: RoomBuilderProps) => {
   const { } = props;
+  const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
   const initialData = {
@@ -36,13 +38,13 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     curricular: { id: '', name: '', value: '' },
     maxPersons: ''
   }
-  const { theme } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const [roomData, setRoomData] = useState(initialData)
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
-  const { clientKey,userLanguage} = useContext(GlobalContext);
   const { RoomBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
@@ -56,9 +58,18 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: '/dashboard/room-creation', last: true }
+    { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true }
   ];
 
+  const createNewEntry = (field: string) => {
+    if (field === 'teacher') {
+      history.push('/dashboard/registration');
+    } else if (field === 'curricular') {
+      history.push(`/dashboard/manage-institutions/institution/curricular-creation?id=${roomData?.institute?.id}`);
+    } else if (field === 'class') {
+      history.push(`/dashboard/manage-institutions/institution/class-creation?id=${roomData?.institute?.id}`);
+    }
+  }
   const selectTeacher = (val: string, name: string, id: string) => {
     setRoomData({
       ...roomData,
@@ -489,7 +500,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       <div className="flex justify-between">
         <SectionTitle title={RoomBuilderdict[userLanguage]['TITLE']} subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -519,18 +530,21 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                 {RoomBuilderdict[userLanguage]['TEACHER_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
                 <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder={RoomBuilderdict[userLanguage]['TEACHER_PLACEHOLDER']} onChange={selectTeacher} />
+                <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('teacher')}>Add new teacher</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
                 <Selector selectedItem={classRoom.value} placeholder= {RoomBuilderdict[userLanguage]['CLASS_NAME_PLACEHOLDER']} list={classList} onChange={selectClass} />
+                <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('class')}>Add new class</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {RoomBuilderdict[userLanguage]['CURRICULUM_LABEL']}
-              </label>
+                 {RoomBuilderdict[userLanguage]['CURRICULUM_LABEL']}
+                </label>
                 <Selector selectedItem={curricular.value} placeholder={RoomBuilderdict[userLanguage]['CURRICULUM_PLACEHOLDER']} list={curricularList} onChange={selectCurriculum} />
+                <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('curricular')}>Add new curriculum</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
@@ -541,7 +555,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   id='maxPersons'
                   name='maxPersons'
                   onChange={editInputField}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
                   value={maxPersons}
                   placeholder={RoomBuilderdict[userLanguage]['MAXSTUDENT_PLACHOLDER']}
                   min="1" max="30" />
