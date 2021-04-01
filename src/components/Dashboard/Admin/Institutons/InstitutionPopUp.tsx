@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Modal from '../../../Atoms/Modal';
 import Buttons from '../../../Atoms/Buttons';
 

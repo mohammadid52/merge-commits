@@ -99,6 +99,7 @@ module.exports = {
     borderWidth: {
       default: '1px',
       neg1: '-1px',
+      none: '0px',
       0: '1px',
       2: '2px',
       3: '3px',
