@@ -253,8 +253,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
 
-          // SOMETHING TO REFACTOR
-          const roomSyllabusReordered = arrayOfRoomSyllabusSequence.reduce(
+          // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
+          const roomSyllabusReordered = (arrayOfRoomSyllabusSequence) ? arrayOfRoomSyllabusSequence.reduce(
             (acc: any[], syllabusID: string, idx: number) => {
               const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
               if (matchedSyllabus) {
@@ -264,7 +264,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
               }
             },
             []
-          );
+          ) : arrayOfRoomSyllabus;
 
           const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
             if (activeRoomSyllabus === responseObject.id) {
@@ -394,8 +394,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   }, [state.roomData.syllabus]);
 
   useEffect(() => {
-    if (syllabusLessonSequence.length > 0) {
+    if (syllabusLessonSequence && syllabusLessonSequence.length > 0) {
       listSyllabusLessons(lessonPlannerSyllabus, classRoomActiveSyllabus);
+    } else {
+      setLessonLoading(false);
     }
   }, [syllabusLessonSequence]);
 

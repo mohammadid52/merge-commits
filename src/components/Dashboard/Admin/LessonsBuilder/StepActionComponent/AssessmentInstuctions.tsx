@@ -150,7 +150,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
             {accordionSteps.map((item: { id: string, title: string, header: string, titleLabel: string, titleValue: string, textEditorName: string, textEditorValue: string }, index) => (
               <Fragment key={item.id}>
                 <li className={`relative border-b-0 border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
-                  <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
+                  <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''}`}>
                     <div className="flex items-center justify-center">
                       <span className={`text-xs md:text-base font-medium cursor-pointer text-center ${theme.textColor[themeColor]} ${selectedBlock === item.id ? 'font-bold' : 'font-medium'}`} onClick={() => setSelectedBlock(item.id)}>
                         {item.header}

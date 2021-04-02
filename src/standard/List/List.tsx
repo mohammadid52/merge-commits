@@ -27,7 +27,7 @@ const handleLink = (e: any) => {
                 </span>
             </div>
             <div className="white_container shadow-5 p-8 mt-8 align-middle rounded-lg border-b-0 border-gray-200">
-            <table className="h-8/10 px-4 divide-y divide-gray-200">
+            <table className="h-8/10 px-4 divide-y-0 divide-gray-200">
                 <thead className="w-full border-b-0 border-gray-200">
                 <tr>
                     <th className="px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -47,7 +47,7 @@ const handleLink = (e: any) => {
                 </thead>
             { 
         data.length > 0 ? data.map((item: any, key: number) => (
-                <tbody id={item.id} key={key} className="bg-white w-full divide-y divide-gray-200">
+                <tbody id={item.id} key={key} className="bg-white w-full divide-y-0 divide-gray-200">
                 <tr>
                     <td className="px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                         {/* full name bolded with email */}

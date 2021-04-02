@@ -445,7 +445,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
               {accordionSteps.map((item: { id: string, header: string, textEditorName: string, textEditorValue: string, titleLabel?: string, titleValue?: string, title?: string, }, index) => (
                 <Fragment key={item.id}>
                   <li className={`relative border-b-0 border-gray-200 ${selectedBlock === item.id ? 'rounded-lg' : ''}`}>
-                    <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
+                    <div className={`w-full px-8 py-6 text-left ${selectedBlock === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''}`}>
                       <div className="flex items-center justify-between" onClick={() => toggleView(item.id)}>
                         <span className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor]} ${selectedBlock === item.id ? 'font-bold' : 'font-medium '}`}>
                           {item.header}

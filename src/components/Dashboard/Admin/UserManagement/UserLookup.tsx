@@ -232,8 +232,8 @@ const UserLookup = () => {
 					<SectionTitle title={UserLookupDict[userLanguage]['title']} subtitle={UserLookupDict[userLanguage]['subtitle']} />
 					<div className="flex justify-end py-4 mb-4">
 						<SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-						<Selector placeholder={UserLookupDict[userLanguage]['sortby']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-0 " arrowHidden={true} />
-						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
+						<Selector placeholder={UserLookupDict[userLanguage]['sortby']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-none " arrowHidden={true} />
+						<button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
 							<IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
 								{sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
 							</IconContext.Provider>

@@ -71,7 +71,7 @@ const SideWidgetBar = (props: DashboardProps) => {
           state.roomData && state.roomData.widgets.length > 0 &&
           getSideWidgets().length > 0 &&
           getSideWidgets().map((widgetObj: Widget, idx: number) => {
-            return <div className={`mb-4`}>{switchWidgets(widgetObj, idx)}</div>;
+            return <div key={`sidebar_widget_${idx}_parent`} className={`mb-4`}>{switchWidgets(widgetObj, idx)}</div>;
           })}
       </div>
     </>

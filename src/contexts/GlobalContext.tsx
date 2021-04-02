@@ -68,7 +68,7 @@ export const standardTheme = {
     secondary: 'text-gray-500',
     active: 'text-indigo-500',
   },
-  formSelect: 'bg-white border-gray-400 text-gray-900 border',
+  formSelect: 'bg-white border-gray-400 text-gray-900 border-0',
   outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
   verticalBorder: {
     iconoclastIndigo: 'border-indigo-700',

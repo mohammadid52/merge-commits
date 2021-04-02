@@ -174,7 +174,7 @@ const CurricularView = (props: CurricularViewProps) => {
                 </h3>
               </div>
 
-              <div className="grid grid-cols-2 divide-x divide-gray-400 p-4">
+              <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
                 <div className="p-8">
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['NAME']}:</span>

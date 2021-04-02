@@ -175,7 +175,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     {UserEditDict[userLanguage]['lastname']}
                   </label>
-                  <div className='border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
                     <input
                       id='lastName'
                       type='text'

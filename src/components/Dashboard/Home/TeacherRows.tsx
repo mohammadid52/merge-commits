@@ -7,7 +7,7 @@ const TeacherRows = (props: { teacherList: any }) => {
   return (
     <ContentCard>
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y divide-gray-200">
+        <ul className="divide-y-0 divide-gray-200">
           {teacherList &&
             teacherList.length > 0 &&
             teacherList.map(
