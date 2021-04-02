@@ -27,8 +27,8 @@ import useDictionary from '../../../../customHooks/dictionary';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
-  const { InstitutionDict ,BreadcrumsTitles } = useDictionary(clientKey);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const { InstitutionDict, BreadcrumsTitles } = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -51,7 +51,7 @@ const InstitutionLookup: React.FC = () => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'] , url: `${match.url}`, last: true },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'], url: `${match.url}`, last: true },
   ]
 
   const sortByList = [
@@ -232,7 +232,7 @@ const InstitutionLookup: React.FC = () => {
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle title={InstitutionDict[userLanguage]['TITLE']}  subtitle={InstitutionDict[userLanguage]['SUBTITLE']} />
+          <SectionTitle title={InstitutionDict[userLanguage]['TITLE']} subtitle={InstitutionDict[userLanguage]['SUBTITLE']} />
           <div className="flex justify-end py-4 mb-4">
             <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
             <Selector placeholder={InstitutionDict[userLanguage]['SORTBY']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-none " arrowHidden={true} />
@@ -241,7 +241,7 @@ const InstitutionLookup: React.FC = () => {
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
-            <Buttons label={InstitutionDict[userLanguage]['BUTTON']['ADD']} onClick={addNewInstituion} btnClass="mr-4 w-full" Icon={IoBusinessSharp} />
+            <Buttons label={InstitutionDict[userLanguage]['BUTTON']['Add']} onClick={addNewInstituion} btnClass="mr-4 w-full" Icon={IoBusinessSharp} />
           </div>
         </div>
 
@@ -264,8 +264,8 @@ const InstitutionLookup: React.FC = () => {
                     <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['CONTACT']}</span>
                   </div>
                   <div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  {InstitutionDict[userLanguage]['TABLE']['ACTION']}
-									</div>
+                    {InstitutionDict[userLanguage]['TABLE']['ACTION']}
+                  </div>
                 </div>
                 {(currentList && currentList.length) ?
                   currentList.map((instituteObject, i) => (

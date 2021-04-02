@@ -579,6 +579,10 @@ const lessonPlannerDict: any = {
     CHECKPOINT: 'Spiritual Grounding',
     OUTRO: 'Closing',
     BREAKDOWN: 'Discussion',
+    NA: 'n/a',
+    WARMUP_BREAKDOWN: 'WarmUp/Breakdown',
+    CORELESSON_BREAKDOWN: 'CoreLesson/Breakdown',
+    ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
       STUDDENT_ONLINE: 'Students Online',
       TOPIC: 'Topic',
@@ -608,6 +612,10 @@ const lessonPlannerDict: any = {
     CHECKPOINT: 'TBD',
     OUTRO: 'TBD ',
     BREAKDOWN: 'TBD',
+    NA: 'TBD',
+    WARMUP_BREAKDOWN: 'TBD',
+    CORELESSON_BREAKDOWN: 'TBD',
+    ACTIVITY_BREAKDOWN: 'TBD',
     OTHER_LABELS: {
       STUDDENT_ONLINE: 'Students Online',
       TOPIC: 'Topic',
