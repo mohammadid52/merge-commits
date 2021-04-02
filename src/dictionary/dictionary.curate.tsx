@@ -671,7 +671,7 @@ const PreviewFormDict: any = {
 
     },
     PREVIEW_DETAILS: {
-      WARN_MESSAGE: 'Publishing your changes will update lesson plans in all the connected units, Do you want to continue?',
+      WARN_MESSAGE: 'Changes will applay to all assigned lesson plans. Do you want to continue?',
       TITLE: 'Preview Details',
     }
   },
