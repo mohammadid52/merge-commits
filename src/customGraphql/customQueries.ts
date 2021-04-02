@@ -23,6 +23,19 @@ export const getDashboardData = /* GraphQL */ `
                   role
                   phone
                 }
+                curricula {
+                  items {
+                    id
+                    curriculumID
+                    curriculum {
+                      name
+                      id
+                      description
+                      designers
+                      objectives
+                    }
+                  }
+                }
               }
             }
             students {
