@@ -20,7 +20,7 @@ function MenuDrop() {
         { isOpen ?
 
         <div className="origin-top-right z-50 mt-10 absolute right-0 w-56 rounded-md shadow-lg">
-            <div className="rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+            <div className="rounded-md bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             <div className="py-1">
                 <button onClick={() => setIsOpen(!isOpen)} className="group flex items-center px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900" role="menuitem">
                 <svg className="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500 group-focus:text-gray-500" viewBox="0 0 20 20" fill="currentColor">

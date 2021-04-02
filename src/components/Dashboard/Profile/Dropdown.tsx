@@ -30,7 +30,7 @@ function Dropdown() {
 { isOpen ?
 
     <div className="absolute z-50 mt-10 w-56 rounded-md shadow-lg">
-    <div className="rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+    <div className="rounded-md bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
     <div className="py-1">
         <NavLink to={`${match.url}/edit`}>
             <button 

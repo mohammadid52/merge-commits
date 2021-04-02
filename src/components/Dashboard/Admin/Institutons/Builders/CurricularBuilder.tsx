@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoImage } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -18,6 +18,8 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Loader from '../../../../Atoms/Loader';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface CurricularBuilderProps {}
 interface InitialData {
@@ -63,6 +65,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     errorMsg: '',
   });
   const [loading, setIsLoading] = useState(false);
+  const { clientKey,userLanguage} = useContext(GlobalContext);
+  const { CurricularBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -74,8 +78,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const params = useQuery();
   const checkpointsList: any = [];
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'New Curriculum', url: '/dashboard/curricular-creation', last: true },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'], url: '/dashboard/curricular-creation', last: true }
   ];
 
   const onChange = (e: any) => {
@@ -160,9 +164,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
 
         setMessages({
           show: true,
-          message: 'New curriculum has been saved.',
-          isError: false,
-        });
+          message: CurricularBuilderdict[userLanguage]['messages']['success']['save'],
+          isError: false
+        })
         setCurricularData(initialData);
         setIsLoading(false);
         if (newCurricular?.id) {
@@ -171,9 +175,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to save new curriculum please try again later.',
-          isError: true,
-        });
+          message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
+          isError: true
+        })
       }
     }
   };
@@ -193,9 +197,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch institution list pleas try later.',
-        isError: true,
-      });
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
+        isError: true
+      })
     }
   };
 
@@ -216,7 +220,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching Designers list Please try again later.',
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['designerlist'],
         isError: true,
       });
     }
@@ -236,9 +240,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
-        isError: true,
-      });
+        message:CurricularBuilderdict[userLanguage]['messages']['error']['process'],
+        isError: true
+      })
     }
   };
 
@@ -246,25 +250,25 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     if (curricularData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Curricular name is required please enter name.',
-        isError: true,
-      });
+        message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
+        isError: true
+      })
       return false;
     } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add curricular.',
-        isError: true,
-      });
+        message: CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
+        isError: true
+      })
       return false;
     } else if (curricularData.name.trim() !== '') {
       const isUniq = await checkUniqCurricularName();
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This curricular name is already exist, please add another name.',
-          isError: true,
-        });
+          message: CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
+          isError: true
+        })
         return false;
       } else {
         return true;
@@ -358,9 +362,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       } else {
         setMessages({
           show: true,
-          message: 'Invalid path please go back to institution selection page to select your institute.',
-          isError: true,
-        });
+          message: CurricularBuilderdict[userLanguage]['messages']['error']['invalid'],
+          isError: true
+        })
       }
     }
   }, [institutionList]);
@@ -371,7 +375,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Curriculum" subtitle="Add new curriculum to the list" />
+        <SectionTitle title={CurricularBuilderdict[userLanguage]['TITLE']} subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -380,7 +384,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-9/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULUM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{CurricularBuilderdict[userLanguage]['HEADING']}</h3>
           <div className="h-9/10 flex flex-col md:flex-row">
             <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
@@ -415,7 +419,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                   id="curricularName"
                   onChange={onChange}
                   name="name"
-                  label="Curriculum Name"
+                  label={CurricularBuilderdict[userLanguage]['NAME']}
                   isRequired
                 />
               </div>
@@ -433,19 +437,19 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             </div> */}
 
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">Select Language</label>
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">{CurricularBuilderdict[userLanguage]['LANGUAGE']}</label>
                 <MultipleSelector
                   selectedItems={languages}
-                  placeholder="Select Language"
+                  placeholder={CurricularBuilderdict[userLanguage]['LANGUAGE']}
                   list={languageList}
                   onChange={selectLanguage}
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">Select Designers</label>
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">{CurricularBuilderdict[userLanguage]['DESIGNER']}</label>
                 <MultipleSelector
                   selectedItems={selectedDesigners}
-                  placeholder="Designers"
+                  placeholder={CurricularBuilderdict[userLanguage]['DESIGNER']}
                   list={designersList}
                   onChange={selectDesigner}
                 />
@@ -456,11 +460,11 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                   id="description"
                   onChange={onChange}
                   name="description"
-                  label="Description"
+                  label={CurricularBuilderdict[userLanguage]['DESCRIPTION']}
                 />
               </div>
               <div className="px-3 py-4">
-                <TextArea value={objectives} id="objectives" onChange={onChange} name="objectives" label="Objective" />
+                <TextArea value={objectives} id="objectives" onChange={onChange} name="objectives" label= {CurricularBuilderdict[userLanguage]['OBJECT']} />
               </div>
             </div>
           </div>
@@ -473,12 +477,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           </div>
         ) : null}
         <div className="flex my-8 justify-center">
-          <Buttons
-            btnClass="py-3 px-12 text-sm"
-            label={loading ? 'Saving...' : 'Save'}
-            onClick={saveCurriculum}
-            disabled={loading ? true : false}
-          />
+          <Buttons btnClass="py-3 px-12 text-sm" label={loading ?  CurricularBuilderdict[userLanguage]['BUTTON']['SAVING'] :  CurricularBuilderdict[userLanguage]['BUTTON']['SAVE']} onClick={saveCurriculum} disabled={loading ? true : false} />
         </div>
         {/* Image cropper */}
         {showCropper && (

@@ -16,8 +16,8 @@ const LyricsOutput = (props: LyricsOutputProps) => {
         ? props.modules.map((module: any, key: number) => (
             <div
               key={key}
-              className={`h-64 md:h-full w-3.3/10 text-gray-200 flex flex-col flex-no-wrap items-center rounded-lg`}>
-              <div className='w-full h-16 flex flex-row justify-between items-center pb-2 border-b border-white border-opacity-10'>
+              className={`h-64 md:h-full w-3.3/10 text-gray-200 flex flex-col flex-nowrap items-center rounded-lg`}>
+              <div className='w-full h-16 flex flex-row justify-between items-center pb-2 border-b-0 border-white border-opacity-10'>
                 <div
                   className={`w-12 h-12 p-2 text-3xl rounded-lg bg-${module.color} flex justify-center items-center`}>
                   {/*{module.label}*/}

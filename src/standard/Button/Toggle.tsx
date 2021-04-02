@@ -5,7 +5,7 @@ const Toggle = () => {
     
     return (
         ///change the COLOR, MARGIN, WIDTH if needed
-        <span onClick = {() => setOpen(!open)} role="checkbox" aria-checked="false" className={`${open === true ? 'bg-indigo-600' : 'bg-gray-200'} w-14 relative inline-flex flex-shrink-0 h-6 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-blue-100 focus:shadow-outline`}>
+        <span onClick = {() => setOpen(!open)} role="checkbox" aria-checked="false" className={`${open === true ? 'bg-indigo-600' : 'bg-gray-200'} w-14 relative inline-flex flex-shrink-0 h-6 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-blue-100 focus:ring`}>
           {/* if WIDTH is changed, must also change 'translate-x-8' */}
           <span aria-hidden="true" className={`${open === true ? 'translate-x-8' : 'translate-x-0'} translate-x-0 relative inline-block h-5 w-5 rounded-full bg-white shadow transform transition ease-in-out duration-200`}>
             <span className={`${open === true ? 'hidden opacity-0 ease-out duration-100' : 'display opacity-100 ease-in duration-200'} opacity-100 ease-in duration-200 absolute inset-0 h-full w-full flex items-center justify-center transition-opacity`}>

@@ -65,7 +65,7 @@ const NotificationBar: React.FC = () => {
                 key={key}
                 className={`${theme.section} ${key > 0 ? 'mt-2' : ''} ${
                   notification.type === 'breakdown' ? 'bg-orange-600' : 'bg-sea-green'
-                } rounded-lg bg-opacity-40 border border-white border-opacity-40 text-sm text-white animate-fadeIn`}>
+                } rounded-lg bg-opacity-40  border-0 border-white border-opacity-40 text-sm text-white animate-fadeIn`}>
                 {notification.message}
               </div>
             ))

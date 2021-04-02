@@ -5,6 +5,7 @@ import UserStatus from './UserStatus';
 import { getImageFromS3 } from '../../../../utilities/services';
 import { getAsset } from '../../../../assets';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 interface ListProps {
     item: any
@@ -12,8 +13,9 @@ interface ListProps {
 
 const List = (props: ListProps) => {
     const { item } = props;
-    const { theme, clientKey } = useContext(GlobalContext);
+    const { theme, clientKey,userLanguage } = useContext(GlobalContext);
     const themeColor = getAsset(clientKey, 'themeClassName');
+    const { BUTTONS  } = useDictionary(clientKey);
     const match = useRouteMatch();
     const history = useHistory();
     const [imageUrl, setImageUrl] = useState('')
@@ -53,9 +55,9 @@ const List = (props: ListProps) => {
         ///change INFO, MARGIN and WIDTH if needed
         <>
             {item.role === 'ST' || item.role === 'TR' ?
-                <div id={item.id} className="flex justify-between bg-white w-full border-b border-gray-200">
+                <div id={item.id} className="flex justify-between bg-white w-full border-b-0 border-gray-200">
 
-                    <div className="w-4/10 px-8 py-4 whitespace-no-wrap">
+                    <div className="w-4/10 px-8 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                             <div className="flex-shrink-0 h-10 w-10">
                                 {item.image ?
@@ -76,26 +78,26 @@ const List = (props: ListProps) => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
+                    <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
                         <span id={item.id} className="w-auto text-sm leading-5 text-gray-500">
                             <UserRole
                                 role={item.role ? item.role : '--'} />
                         </span>
                     </div>
-                    {/* <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-no-wrap">
+                    {/* <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-nowrap">
                         <div className="flex flex-col justify-center items-center">
                             <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : '--'}</div>
                             <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : '--'}</div>
                         </div>
                     </div> */}
-                    <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-no-wrap">
+                    <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
                         <div className="w-16 flex justify-center">
                             <UserStatus
                                 status={item.status ? item.status : '--'} />
                         </div>
                     </div>
-                    <div className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                        <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]} `}>Edit</div>
+                    <div className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
+                        <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]} `}>{BUTTONS[userLanguage]['EDIT']}</div>
                     </div>
                 </div>
                 : null}

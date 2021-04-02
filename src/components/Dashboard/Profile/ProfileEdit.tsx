@@ -319,14 +319,14 @@ const ProfileEdit = (props: UserInfoProps) => {
 
           <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
 
-            <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+            <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
                 {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
               </h3>
             </div>
 
             <div className="h-full px-4 py-5 sm:px-6">
-              <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900">
+              <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
 
                 {user.role === 'ST' ?
                   // what users with STUDENT can see
@@ -335,7 +335,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.preferredName}
                         />
@@ -355,7 +355,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CONTACT']}
                       </label>
-                      <div className="border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                      <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.phone}
                         />
@@ -366,7 +366,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="birthdate" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['BIRTHDAY']}
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input id="birthdate" type="date" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.birthdate}
                         />
@@ -381,7 +381,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']}
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input id="firstName"
                           onChange={onChange}
                           type="text"
@@ -395,7 +395,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LAST_NAME']}
                       </label>
-                      <div className="mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input id="lastName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.lastName} type="text"
                         />
@@ -406,7 +406,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
                       </label>
-                      <div className="border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                      <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <input id="preferredName" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.preferredName}
                         />
@@ -434,14 +434,14 @@ const ProfileEdit = (props: UserInfoProps) => {
               {stdCheckpoints.map((checkpoint: any) => (
                 <Fragment key={checkpoint.id}>
                   <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
-                    <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                    <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                       <h3 className="text-lg leading-6 font-medium uppercase">
                         {checkpoint.title}
                       </h3>
                     </div>
 
                     <div className="h-full px-4 py-5 sm:px-6">
-                      <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900">
+                      <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
 
                         {checkpoint.questions?.items.map((item: any) => (
                           <Fragment key={item.question.id}>

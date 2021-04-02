@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { getAsset } from '../../../../assets';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 interface LessonsListRow {
   id: string,
@@ -17,8 +18,9 @@ const LessonsListRow = (props: LessonsListRow) => {
 
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { BUTTONS } = useDictionary(clientKey);
 
   const handleLessonsEdit = (type: string) => {
     if (type === 'Lesson') {
@@ -31,7 +33,7 @@ const LessonsListRow = (props: LessonsListRow) => {
 
   const { id, index, title, type, languages, createdAt, updatedAt } = props;
   return (
-    <div id={id} className="flex justify-between bg-white w-full border-b border-gray-200">
+    <div id={id} className="flex justify-between bg-white w-full border-b-0 border-gray-200">
       <div className="w-.5/10 flex justify-center items-center px-4 py-4 whitespace-normal text-sm leading-5 font-medium" >
         {index + 1}.
       </div>
@@ -69,8 +71,8 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-no-wrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
-        <span className="w-auto">Edit</span>
+      <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
+        <span className="w-auto">{BUTTONS['EDIT']}</span>
       </div>
     </div>
   )

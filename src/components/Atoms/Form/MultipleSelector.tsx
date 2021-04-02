@@ -38,7 +38,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-md border border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${btnClass ? btnClass : ''}`}
+          className={`flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${btnClass ? btnClass : ''}`}
         >
           <span className="block truncate text-gray-700" >
             {selectedItems.length ? (
@@ -57,7 +57,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
       {
         showList && (
           <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg max-h-48 overflow-y-auto">
-            <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+            <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
 
               {list.length > 0 ? (list.map((item: { id: string, name: string, value: string }, key: number) => (
                 <li

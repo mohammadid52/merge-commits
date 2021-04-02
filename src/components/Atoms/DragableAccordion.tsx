@@ -33,7 +33,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
   }
 
   return (
-    <div className="bg-white mx-auto border border-gray-200 rounded-xl">
+    <div className="bg-white mx-auto  border-0 border-gray-200 rounded-xl">
       <DragDropContext onDragEnd={onItemDrag}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
@@ -47,7 +47,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
 
 
                   <Fragment key={item.id}>
-                    <li className={`relative border-b border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
+                    <li className={`relative border-b-0 border-gray-200 ${selectedItem === item.id ? 'rounded-lg' : ''}`}>
 
                       <Draggable key={item.id} draggableId={item.id} index={index}>
                         {(provided, snapshot) => (
@@ -56,7 +56,7 @@ const DragableAccordion = (props: DragableAccordionProps) => {
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
-                            <div className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? `border rounded-lg ${theme.borderColorLight[themeColor]}` : ''}`}>
+                            <div className={`w-full px-8 py-6 text-left ${theme.outlineNone} ${selectedItem === item.id ? `border-0 rounded-lg ${theme.borderColorLight[themeColor]}` : ''}`}>
                               <div className="flex items-center justify-between">
                                 <span className={`text-xs md:text-base font-medium cursor-pointer flex ${selectedItem === item.id && theme.textColor[themeColor]} `} onClick={() => changeView(item.id)}>
                                   <div className="w-auto">

@@ -78,7 +78,7 @@ const ToolBar = (props: ToolBarProps) => {
   return (
     <div className='w-full md:h-7/10 bg-grayscale-light flex flex-col items-center text-grayscale-lighter px-4 py-4 rounded-xl'>
       <div className='w-full h-full flex flex-col justify-between'>
-        {/* <h3 className='w-full text-xl text-grayscale-lighter font-open font-light border-b border-grayscale-lighter pb-1 mb-1'>
+        {/* <h3 className='w-full text-xl text-grayscale-lighter font-open font-light border-b-0 border-grayscale-lighter pb-1 mb-1'>
           Toolbox
         </h3>
         <h3 className='text-lg font-light font-open'>My word bank:</h3>

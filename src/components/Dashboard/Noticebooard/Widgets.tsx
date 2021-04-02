@@ -1,16 +1,8 @@
-import React, { useContext } from 'react';
-import { Link, Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import {
-  AiOutlineDropbox,
-  AiOutlineFile,
-  AiOutlineFileExcel,
-  AiOutlineFileWord,
-  AiOutlineFileZip,
-} from 'react-icons/ai';
-import { IoCallOutline } from 'react-icons/io5';
-import { FaRegFilePowerpoint, GrDocumentWord, ImOnedrive } from 'react-icons/all';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {Link, Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {IoCallOutline} from 'react-icons/io5';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 
 export const responsiveClass = 'md:hidden lg:inline-block xl:inline-block';
@@ -26,9 +18,9 @@ export const LogoWidget = (props: {
 }) => {
   const { source, altdesc, title, card, classProp } = props;
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+    <div className={`p-2 mb-4 bg-white  border-0 border-dark-gray border-opacity-10`}>
       {title && (
-        <p className={`${responsiveClass} text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>
+        <p className={`${responsiveClass} text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           {title}:
         </p>
       )}
@@ -48,8 +40,8 @@ export const ImageWidget = (props: {
 }) => {
   const { source, altdesc, title, card, classProp } = props;
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
-      {title && <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>}
+    <div className={`p-2 mb-4 bg-white  border-0 border-dark-gray border-opacity-10`}>
+      {title && <p className={`text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>{title}:</p>}
       <div className={`bg-white rounded`}>
         <img src={source} alt={altdesc} />
       </div>
@@ -60,8 +52,8 @@ export const ImageWidget = (props: {
 export const DefaultTextWidget = (props: { title: string; content: string; card?: boolean; classProp?: string }) => {
   const { title, content, card, classProp } = props;
   return (
-    <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
-      <p className={`text-sm p-2 font-semibold border-b border-dark-gray border-opacity-10`}>{title}:</p>
+    <div className={`p-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
+      <p className={`text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>{title}:</p>
       <div key={`teacher_side_note`} className={`${responsiveClass} p-2`}>
         <p className={`text-xs text-dark-gray`} dangerouslySetInnerHTML={{ __html: content }} />
       </div>
@@ -111,24 +103,23 @@ export const CallLinkWidget = (props: {
   return (
     <div>
       <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
-        <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
+        <div className={`flex flex-row p-2 text-sm font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           <span className={`w-full text-white`}>{title}:</span>
         </div>
       </div>
-      <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+      <div className={`p-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
           {links &&
             links.length > 0 &&
             links.map((link: Link, idx: number) => (
               <div
-                className={`
-            ${
-              idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                  key={`${widgetObj.id}_${idx}`}
+                className={` ${ idx < links.length - 1 && widgetObj.placement === 'sidebar'
                 ? 'border-b border-dark-gray border-opacity-10'
                 : ''
-            } 
-              max-w-1/3
-            `}>
+                } 
+                max-w-1/3
+                `}>
                 {/**
                  * MOBILE VERSION WIDGET ICON
                  */}

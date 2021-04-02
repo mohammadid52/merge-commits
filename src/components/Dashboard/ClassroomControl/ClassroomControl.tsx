@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
 
-import { ClassroomControlProps } from '../Dashboard';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { API, graphqlOperation } from '@aws-amplify/api';
+import {ClassroomControlProps} from '../Dashboard';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {API, graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
-import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
-import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
+import {getArrayOfUniqueValueByProperty} from '../../../utilities/arrays';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
 import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
-import { Syllabus } from '../Classroom/Classroom';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
 
@@ -254,8 +253,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
 
-          // SOMETHING TO REFACTOR
-          const roomSyllabusReordered = arrayOfRoomSyllabusSequence.reduce(
+          // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
+          const roomSyllabusReordered = (arrayOfRoomSyllabusSequence) ? arrayOfRoomSyllabusSequence.reduce(
             (acc: any[], syllabusID: string, idx: number) => {
               const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
               if (matchedSyllabus) {
@@ -265,7 +264,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
               }
             },
             []
-          );
+          ) : arrayOfRoomSyllabus;
 
           const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
             if (activeRoomSyllabus === responseObject.id) {
@@ -395,8 +394,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   }, [state.roomData.syllabus]);
 
   useEffect(() => {
-    if (syllabusLessonSequence.length > 0) {
+    if (syllabusLessonSequence && syllabusLessonSequence.length > 0) {
       listSyllabusLessons(lessonPlannerSyllabus, classRoomActiveSyllabus);
+    } else {
+      setLessonLoading(false);
     }
   }, [syllabusLessonSequence]);
 
@@ -422,7 +423,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
 
   const roomsTitle =
     'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b border-medium-gray';
+  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return isHomescreen ? (
     <Home

@@ -62,7 +62,6 @@ const SideWidgetBar = (props: DashboardProps) => {
           source={getAsset(clientKey, 'logo_symbol')}
           altdesc={`school-logo`}
           card={false}
-          classProp={`w-16 h-auto mx-auto p-2 mb-2 bg-white`}
         />
 
         {/**
@@ -72,7 +71,7 @@ const SideWidgetBar = (props: DashboardProps) => {
           state.roomData && state.roomData.widgets.length > 0 &&
           getSideWidgets().length > 0 &&
           getSideWidgets().map((widgetObj: Widget, idx: number) => {
-            return switchWidgets(widgetObj, idx);
+            return <div key={`sidebar_widget_${idx}_parent`} className={`mb-4`}>{switchWidgets(widgetObj, idx)}</div>;
           })}
       </div>
     </>

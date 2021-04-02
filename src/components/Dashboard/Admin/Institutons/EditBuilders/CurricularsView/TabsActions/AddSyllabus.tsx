@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { IoArrowUndoCircleOutline } from 'react-icons/io5'
 import API, { graphqlOperation } from '@aws-amplify/api'
@@ -16,6 +16,8 @@ import { languageList } from '../../../../../../../utilities/staticData'
 import * as queries from '../../../../../../../graphql/queries'
 import * as mutations from '../../../../../../../graphql/mutations'
 import * as customQueries from '../../../../../../../customGraphql/customQueries'
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext'
+import useDictionary from '../../../../../../../customHooks/dictionary'
 
 interface AddSyllabusProps {
 
@@ -49,6 +51,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [syllabusIds, setSyllabusIds] = useState([]);
   const [loading, setIsLoading] = useState(false);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const {AddSyllabusDict, BreadcrumsTitles } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -56,8 +60,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   });
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Unit Builder', url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['UnitBuilder'], url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`, last: true }
   ];
 
   const onInputChange = (e: any) => {
@@ -116,7 +120,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching Designers list Please try again later.',
+        message: AddSyllabusDict[userLanguage]['messages']['fetcherr'],
         isError: true,
       })
     }
@@ -162,7 +166,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         }
         setMessages({
           show: true,
-          message: 'New unit has been saved.',
+          message: AddSyllabusDict[userLanguage]['messages']['unitsave'],
           isError: false
         })
         setSyllabusData(initialData);
@@ -175,7 +179,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to save new unit please try again later.',
+          message: AddSyllabusDict[userLanguage]['messages']['unablesave'],
           isError: true
         })
       }
@@ -186,7 +190,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     if (syllabusData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Unit name is required please enter name.',
+        message: AddSyllabusDict[userLanguage]['messages']['namerequired'],
         isError: true
       })
       return false;
@@ -224,7 +228,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Unit Builder" subtitle="Create curriculum units here." />
+        <SectionTitle title={AddSyllabusDict[userLanguage]['title']} subtitle={AddSyllabusDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -233,49 +237,49 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">UNIT INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddSyllabusDict[userLanguage]['heading']}</h3>
           <div className="">
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Unit Name" isRequired />
+                <FormInput value={name} id='name' onChange={onInputChange} name='name' label={AddSyllabusDict[userLanguage]['unitname']} isRequired />
               </div>
               <div>
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Select Designers
+                  {AddSyllabusDict[userLanguage]['designer']}
                 </label>
-                <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+                <MultipleSelector selectedItems={selectedDesigners} placeholder={AddSyllabusDict[userLanguage]['placeholder']} list={designersList} onChange={selectDesigner} />
               </div>
             </div>
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Select Language
+                  {AddSyllabusDict[userLanguage]['language']}
               </label>
-                <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                <MultipleSelector selectedItems={languages} placeholder={AddSyllabusDict[userLanguage]['placeholderlanguage']} list={languageList} onChange={selectLanguage} />
               </div>
             </div>
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={description} rows={5} id='description' onChange={onInputChange} name='description' label="Description" />
+                <TextArea value={description} rows={5} id='description' onChange={onInputChange} name='description' label={AddSyllabusDict[userLanguage]['description']} />
               </div>
               <div>
-                <TextArea value={purpose} rows={5} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
+                <TextArea value={purpose} rows={5} id='purpose' onChange={onInputChange} name='purpose' label={AddSyllabusDict[userLanguage]['purpose']} />
               </div>
             </div>
 
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={objectives} rows={5} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
+                <TextArea value={objectives} rows={5} id='objectives' onChange={onInputChange} name='objectives' label={AddSyllabusDict[userLanguage]['objective']} />
               </div>
               <div>
-                <TextArea value={methodology} rows={5} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
+                <TextArea value={methodology} rows={5} id='methodology' onChange={onInputChange} name='methodology' label={AddSyllabusDict[userLanguage]['methodology']} />
               </div>
             </div>
             <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
               <div>
-                <TextArea value={policies} rows={5} id='policies' onChange={onInputChange} name='policies' label="Policies" />
+                <TextArea value={policies} rows={5} id='policies' onChange={onInputChange} name='policies' label={AddSyllabusDict[userLanguage]['policy']} />
               </div>
 
             </div>
@@ -285,7 +289,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
+          <Buttons btnClass="py-3 px-10" label={loading ? AddSyllabusDict[userLanguage]['saving'] : AddSyllabusDict[userLanguage]['save']} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>

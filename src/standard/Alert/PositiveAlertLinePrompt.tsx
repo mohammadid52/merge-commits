@@ -34,12 +34,12 @@ const PosAlert = (props: WritingAlertProps) => {
                 </div>
                 <div className="mt-5 sm:mt-6 flex justify-between">
                 <span className="flex w-4/10 rounded-md shadow-sm">
-                    <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5" onClick={handleEdit}>
+                    <button type="button" className="inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 bg-indigo-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5" onClick={handleEdit}>
                     Go to Final Edits
                     </button>
                 </span>
                 <span className="flex w-4/10 rounded-md shadow-sm">
-                    <button type="button" className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5" onClick={handleCancel}>
+                    <button type="button" className="inline-flex justify-center w-full rounded-md  border-0 border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring-indigo transition ease-in-out duration-150 sm:text-sm sm:leading-5" onClick={handleCancel}>
                     Go back to Line Prompts
                     </button>
                 </span>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad } from 'react-icons/io';
@@ -10,6 +10,8 @@ import Buttons from '../../../../../Atoms/Buttons';
 
 import * as queries from '../../../../../../graphql/queries';
 import { getLanguageString, getTypeString } from '../../../../../../utilities/strings';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
 
 interface QuestionLookupProps {
   changeStep: (step: string) => void
@@ -28,7 +30,9 @@ const QuestionLookup = (props: QuestionLookupProps) => {
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
+  const {  clientKey,userLanguage } = useContext(GlobalContext);
+  const { QuestionLookupDict ,BreadcrumsTitles } = useDictionary(clientKey);
+  
   const selectItem = (questId: string) => {
     const selectedItem = selectedQuestionIds.find(id => id === questId);
     let updatedList;
@@ -96,7 +100,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
 
   return (
     <Fragment>
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
           <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
             <IoIosKeypad />
@@ -105,41 +109,41 @@ const QuestionLookup = (props: QuestionLookupProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} {QuestionLookupDict[userLanguage]['BUILDER']} - {lessonName}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Checkpoints</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{QuestionLookupDict[userLanguage]['CHECKPOINT']}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Previous Questions</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{QuestionLookupDict[userLanguage]['PREVQUE']}</span>
         </h4>
       </div>
 
       <div className="p-4">
         <div className="flex justify-between my-4">
-          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedQuestionIds?.length} Questions Selected</p>
+          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedQuestionIds?.length}{QuestionLookupDict[userLanguage]['QUESELECT']}</p>
           <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
         </div>
         <div>
           <Fragment>
-            <div className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+            <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
               <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Selection</span>
+                <span>{QuestionLookupDict[userLanguage]['SELECTION']}</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Question</span>
+                <span>{QuestionLookupDict[userLanguage]['QUESTION']}</span>
               </div>
               <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Type</span>
+                <span>{QuestionLookupDict[userLanguage]['TYPE']}</span>
               </div>
               <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Language</span>
+                <span>{QuestionLookupDict[userLanguage]['LANGUAGE']}</span>
               </div>
             </div>
 
@@ -149,7 +153,7 @@ const QuestionLookup = (props: QuestionLookupProps) => {
                   {!error ? (
                     <Fragment>
                       {questionsList?.length ? questionsList.map(item => (
-                        <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                        <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                           <div className="flex w-1.5/10 items-center px-6 py-3 text-left text-s leading-4">
                             <span>
                               <CheckBox value={selectedQuestionIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectquestion' />
@@ -161,20 +165,20 @@ const QuestionLookup = (props: QuestionLookupProps) => {
                         </div>
                       )) : (
                           <div className="py-12 my-6 text-center">
-                            <p> Question bank is empty please create a new question.</p>
+                            <p> {QuestionLookupDict[userLanguage]['QUEEMPTY']}</p>
                           </div>
                         )}
                     </Fragment>
                   ) : (
                       <div className="py-12 my-6 text-center">
-                        <p> Error while fetching questions list please try again later.</p>
+                        <p> {QuestionLookupDict[userLanguage]['FETCHERR']}</p>
                       </div>
                     )}
 
                 </Fragment>
               ) : (
                   <div className="py-12 my-6 text-center">
-                    <p> Fetching question details please wait...</p>
+                    <p> {QuestionLookupDict[userLanguage]['FETCHING']}</p>
                   </div>
                 )}
             </div>
@@ -182,8 +186,8 @@ const QuestionLookup = (props: QuestionLookupProps) => {
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={goBackToPreviousStep} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={onQuestionSave} />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={QuestionLookupDict[userLanguage]['BUTTON']['CANCEL']} onClick={goBackToPreviousStep} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={QuestionLookupDict[userLanguage]['BUTTON']['SAVE']} onClick={onQuestionSave} />
           </div>
         </div>
       </div >

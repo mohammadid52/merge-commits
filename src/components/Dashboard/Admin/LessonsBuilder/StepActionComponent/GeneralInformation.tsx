@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api'
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaTrash } from 'react-icons/fa';
@@ -15,6 +15,8 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface GeneralInformationProps {
   formData: InitialData
@@ -43,10 +45,12 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
   const [measurementList, setMeasurementList] = useState(allMeasurement);
   const [loading, setLoading] = useState(false);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { GeneralInformationDict ,BreadcrumsTitles } = useDictionary(clientKey);
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
     state: false,
-    message: 'Are you sure you want to remove this measurement?'
+    message: GeneralInformationDict[userLanguage]['MESSAGES']['REMOVE']
   });
   const [validation, setValidation] = useState({
     name: '',
@@ -120,7 +124,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       setValidation({
         name: '',
         type: '',
-        message: 'Error while deleting measurement,please try later.',
+        message: GeneralInformationDict[userLanguage]['MESSAGES']['DELETEERR'],
         isError: true
       });
     }
@@ -153,7 +157,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       setValidation({
         name: '',
         type: '',
-        message: 'Error while adding measurement,please try later.',
+        message: GeneralInformationDict[userLanguage]['MESSAGES']['ADDERR'],
         isError: true
       });
     }
@@ -176,7 +180,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     const msgs = validation;
     if (!formData.name?.trim().length) {
       isValid = false;
-      msgs.name = 'Lessson name is required';
+      msgs.name = GeneralInformationDict[userLanguage]['MESSAGES']['NAME'];
     } else {
       msgs.name = ''
     }
@@ -212,7 +216,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
       setValidation({
         name: '',
         type: '',
-        message: 'Unable to fetch measurement details, Please try again later.',
+        message: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
         isError: true
       });
     }
@@ -250,7 +254,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           setValidation({
             name: '',
             type: '',
-            message: 'Lesson details updated successfully.',
+            message: GeneralInformationDict[userLanguage]['UPDATESUCCESS'],
             isError: false
           })
         }
@@ -258,7 +262,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         setValidation({
           name: '',
           type: '',
-          message: 'Unable to update Lesson details, Please try again later.',
+          message: GeneralInformationDict[userLanguage]['UPDATEERR'],
           isError: true
         });
         setLoading(false)
@@ -283,8 +287,8 @@ const GeneralInformation = (props: GeneralInformationProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> Lesson Overview</h3>
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-gray-900"> {GeneralInformationDict[userLanguage]['HEADING']}</h3>
       </div>
 
       <div className="p-4">
@@ -292,16 +296,16 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Name <span className="text-red-500"> * </span>
+              {GeneralInformationDict[userLanguage]['NAME']} <span className="text-red-500"> * </span>
             </label>
             <FormInput value={name} id='name' onChange={onInputChange} name='name' />
             {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              Select Designers
+              {GeneralInformationDict[userLanguage]['SELECTDESIGNER']}
             </label>
-            <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+            <MultipleSelector selectedItems={selectedDesigners} placeholder={GeneralInformationDict[userLanguage]['DESIGNER']} list={designersList} onChange={selectDesigner} />
           </div>
         </div>
 
@@ -319,45 +323,45 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              Purpose
+              {GeneralInformationDict[userLanguage]['PURPOSE']}
             </label>
             <RichTextEditor initialValue={purposeHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')} />
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              Objective
+              {GeneralInformationDict[userLanguage]['OBJECTIVE']}
           </label>
             <RichTextEditor initialValue={objectiveHtml} onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')} />
           </div>
         </div>
 
         {/* Measurements block */}
-        {type?.id === '1' && (< div className="p-6 border-gray-400 border my-4 border-dashed">
-          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Lesson Measurements</p>
+        {type?.id === '1' && (< div className="p-6 border-gray-400  border-0 my-4 border-dashed">
+          <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">{GeneralInformationDict[userLanguage]['LESSONMEASUREMENT']}</p>
 
           <div className="my-12 w-6/10 m-auto flex items-center justify-center">
             <div className="mr-4">
-              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder="Select Measurement" onChange={selectMeasurement} />
+              <Selector selectedItem={selectedMeasu.name} list={measurementList} placeholder={GeneralInformationDict[userLanguage]['SELECTMEASUREMENT']} onChange={selectMeasurement} />
             </div>
             <div className="ml-4 w-auto">
-              <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewMeasurement} disabled={selectedMeasu.value ? false : true} />
+              <Buttons btnClass="ml-4 py-1" label={GeneralInformationDict[userLanguage]['BUTTON']['ADD']} onClick={addNewMeasurement} disabled={selectedMeasu.value ? false : true} />
             </div>
           </div>
           <div>
             {lessonMeasurements?.length > 0 ? (<div>
               {/* Table header */}
-              <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>No.</span>
+                  <span>{GeneralInformationDict[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Measurement</span>
+                  <span>{GeneralInformationDict[userLanguage]['MEASUREMENT']}</span>
                 </div>
                 <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Topic</span>
+                  <span>{GeneralInformationDict[userLanguage]['TOPIC']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Action</span>
+                  <span>{GeneralInformationDict[userLanguage]['ACTION']}</span>
                 </div>
                 {/** <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>Action</span>
@@ -368,7 +372,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               {/* Table column */}
               <div className="w-full m-auto max-h-88 overflow-auto">
                 {lessonMeasurements.map((item: any, index: number) => (
-                  <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div key={item.id} className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
                     <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => goToMeasmntDetails(item.curriculumId, item.rubricID)}> {item.measurement || '--'} </div>
                     <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.topic ? item.topic : '--'}</div>
@@ -390,7 +394,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               </div>
             </div>) : (
                 <div className="py-12 my-6 text-center">
-                  <p className="text-gray-600 font-medium"> This lesson does not have any measurements, please add new one.</p>
+                  <p className="text-gray-600 font-medium"> {GeneralInformationDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}</p>
                 </div>
               )}
           </div>
@@ -404,7 +408,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           <ModalPopUp deleteModal deleteLabel="Remove" closeAction={toggleModal} saveAction={deleteMeasurement} message={showDeleteModal.message} />
         }
         <div className="flex mb-8 mt-4 justify-center">
-          <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={updateFormInformation} disabled={loading ? true : false} />
+          <Buttons btnClass="py-3 px-10" label={loading ? GeneralInformationDict[userLanguage]['BUTTON']['SAVING'] : GeneralInformationDict[userLanguage]['BUTTON']['SAVE']} onClick={updateFormInformation} disabled={loading ? true : false} />
         </div>
       </div>
 
