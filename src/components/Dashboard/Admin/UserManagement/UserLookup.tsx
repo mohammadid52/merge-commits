@@ -224,8 +224,6 @@ const UserLookup = () => {
     return <LessonLoading />;
   }
 
-  console.log(state.user.role === 'FLW');
-
   return (
     <div className={`w-full h-full`}>
       {/* Header Section */}
