@@ -5,15 +5,21 @@ import ImageAlternate from '../../Atoms/ImageAlternative';
 import ViewMore from '../../Atoms/ViewMore';
 
 import { slice } from 'lodash';
+import { getImageFromS3 } from '../../../utilities/services';
 
 const StudentsTiles = (props: { studentsList: any }) => {
   const { studentsList } = props;
+
+  // studentsList.forEach(async ({student}) => {
+  //   const image = student.img ? await getImageFromS3(`instituteImages/curricular_image_${student.img}`) : false;
+  //   return
+  // });
 
   const [slicedList, setSlicedList] = useState<any[]>([]);
 
   useEffect(() => {
     if (studentsList && slicedList.length === 0) {
-      setSlicedList(slice(studentsList, 0, 6));
+      setSlicedList(slice(studentsList, 0, 12));
     }
   }, [studentsList]);
 
@@ -21,7 +27,7 @@ const StudentsTiles = (props: { studentsList: any }) => {
     if (slicedList.length <= 6) {
       setSlicedList(studentsList);
     } else {
-      setSlicedList(slice(studentsList, 0, 6));
+      setSlicedList(slice(studentsList, 0, 12));
     }
   };
 
@@ -41,9 +47,9 @@ const StudentsTiles = (props: { studentsList: any }) => {
             <ul className="mx-auto grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
               {slicedList &&
                 slicedList.length > 0 &&
-                slicedList.map(({ student }: studentObj) => {
+                slicedList.map(({ student }: studentObj, idx: number) => {
                   return (
-                    <li className="">
+                    <li key={`homepage__student-${idx}`} className="">
                       <div className="space-y-4">
                         {student.img ? (
                           <img
@@ -68,8 +74,8 @@ const StudentsTiles = (props: { studentsList: any }) => {
                   );
                 })}
             </ul>
-            {studentsList && studentsList.length > 6 && (
-              <ViewMore onClick={onViewMore} text={`${slicedList.length <= 6 ? 'View All' : 'Hide All'}`} />
+            {studentsList && studentsList.length > 12 && (
+              <ViewMore onClick={onViewMore} text={`${slicedList.length <= 12 ? 'View All' : 'Hide All'}`} />
             )}
           </div>
         </div>

@@ -23,7 +23,7 @@ const Home = (props: ClassroomControlProps) => {
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
     if (imageUrl) {
-      console.log(imageUrl);
+      // console.log(imageUrl);
       return imageUrl;
     } else {
       return '';
