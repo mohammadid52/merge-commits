@@ -797,6 +797,7 @@ export const onCreateInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -902,6 +903,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -1007,6 +1009,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2227,6 +2230,7 @@ export const onCreateCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -2309,6 +2313,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -2391,6 +2396,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -2477,6 +2483,7 @@ export const onCreateTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2538,6 +2545,7 @@ export const onUpdateTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2599,6 +2607,7 @@ export const onDeleteTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2731,6 +2740,7 @@ export const onCreateRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2777,6 +2787,7 @@ export const onUpdateRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2823,6 +2834,7 @@ export const onDeleteRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2864,6 +2876,7 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2911,6 +2924,7 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2958,6 +2972,7 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3005,6 +3020,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3052,6 +3068,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3099,6 +3116,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3924,6 +3942,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -4028,6 +4047,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -4132,6 +4152,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages

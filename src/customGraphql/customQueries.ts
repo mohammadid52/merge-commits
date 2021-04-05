@@ -29,6 +29,7 @@ export const getDashboardData = /* GraphQL */ `
                     curriculumID
                     curriculum {
                       name
+                      image
                       id
                       description
                       designers
