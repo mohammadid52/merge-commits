@@ -5,6 +5,7 @@ import * as customQueries from '../../../customGraphql/customQueries';
 import ContentCard from '../../Atoms/ContentCard';
 import ContentCardTitle from '../../Atoms/ContentCardTitle';
 import SectionTitleV2 from '../../Atoms/SectionTitleV2';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { getImageFromS3 } from '../../../utilities/services';
 import RoomTiles from './RoomTiles';
 import TeacherRows from './TeacherRows';
@@ -13,13 +14,7 @@ import { getRoom } from '../../../graphql/queries';
 import { ClassroomControlProps } from '../Dashboard';
 
 const Home = (props: ClassroomControlProps) => {
-  const {
-    homeData,
-    activeRoom,
-    roomsLoading,
-    classList,
-    handleRoomSelection,
-  } = props;
+  const { homeData, activeRoom, roomsLoading, classList, handleRoomSelection } = props;
   const { state, dispatch } = useContext(GlobalContext);
 
   const [teacherList, setTeacherList] = useState<any[]>();
@@ -88,34 +83,25 @@ const Home = (props: ClassroomControlProps) => {
     })
   );
 
-
-
-
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
       setStudentsList(await studentsListWithImages);
-
     };
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
     }
   }, [homeData]);
 
-
-
-
   return (
     <>
-      <SectionTitleV2 title={`Your Classrooms:`} />
-      <RoomTiles
-        handleRoomSelection={handleRoomSelection}
-        classList={classList} />
+      <SectionTitleV3 title={`Your Classrooms:`} />
+      <RoomTiles handleRoomSelection={handleRoomSelection} classList={classList} />
 
-      <SectionTitleV2 title={`Your Teachers:`} />
+      <SectionTitleV3 title={`Your Teachers:`} />
       <TeacherRows teacherList={teacherList} />
 
-      <SectionTitleV2 title={`Your Classmates:`} />
+      <SectionTitleV3 title={`Your Classmates:`} />
       <StudentsTiles studentsList={studentsList} />
     </>
   );
