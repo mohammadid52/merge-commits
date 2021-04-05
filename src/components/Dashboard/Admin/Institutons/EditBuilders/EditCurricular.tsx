@@ -298,7 +298,9 @@ const EditCurricular = (props: EditCurricularProps) => {
           languages: languageList.filter((item) => savedData.languages.includes(item.value)),
         });
         // Load from response value
-        const imageUrl: any = await getImageFromS3(`instituteImages/curricular_image_${currID}`, false, true);
+        const imageUrl: any = savedData.image
+          ? await getImageFromS3(`instituteImages/curricular_image_${currID}`)
+          : null;
         setImageUrl(imageUrl);
 
         if (savedData && savedData.designers && savedData.designers.length) {

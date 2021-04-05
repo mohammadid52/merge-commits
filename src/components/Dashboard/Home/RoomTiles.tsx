@@ -1,11 +1,11 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React, { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import { uniqBy, slice } from 'lodash';
 import { useHistory } from 'react-router-dom';
+
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import ViewMore from '../../Atoms/ViewMore';
 
-import uniqBy from 'lodash/uniqBy';
-import slice from 'lodash/slice';
 import { getImageFromS3 } from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
@@ -37,11 +37,9 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
           const curriculumId = _item.curricula.items[0].curriculumID;
           const imagePath = _item.curricula.items[0].curriculum.image;
 
-          const image = imagePath !== null ? await getImageFromS3(imagePath) : null;
-
-          const teacherProfileImg = _item.teacher.image
-            ? await getImageFromS3(`instituteImages/curricular_image_${_item.teacher.image}`)
-            : false;
+          const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+          console.log(_item.teacher.image);
+          const teacherProfileImg = await (_item.teacher.image ? getImageFromS3(_item.teacher.image) : false);
 
           const modifiedItem = { ..._item, roomName: item.name, bannerImage: image, teacherProfileImg };
           modifiedClassList.push(modifiedItem);
@@ -100,7 +98,6 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
                 curricula: { items: any[] };
               } = item;
               const { name, description }: { name: string; description: string } = curricula.items[0].curriculum;
-              console.log('bannerImage: ', bannerImage);
 
               const { email, firstName, lastName } = teacher;
 
