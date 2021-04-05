@@ -30,7 +30,7 @@ const TeacherRows = (props: { teacherList: any }) => {
                           {teacher.image ? (
                             <img className="h-12 w-12 rounded-full" src={teacher.image} alt="" />
                           ) : (
-                            <ImageAlternate user={teacher} styleClass="h-12 w-12" />
+                            <ImageAlternate user={teacher} styleClass="h-12 w-12 rounded-full" />
                           )}
 
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">

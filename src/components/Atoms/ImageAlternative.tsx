@@ -1,12 +1,13 @@
 import React from 'react';
 import { initials, stringToHslColor } from '../../utilities/strings';
 
-const ImageAlternate = ({ user, textSize, styleClass }: any) => {
+const ImageAlternate = ({ user, textSize, styleClass, rounded = true }: any) => {
   return (
-    <div
-      className={`${styleClass} md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+    <div className={`${styleClass} flex justify-center items-center border-0 border-gray-400 `}>
       <div
-        className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white rounded-full`}
+        className={`h-full w-full flex justify-center items-center ${textSize} text-extrabold text-white ${
+          rounded ? 'rounded-full' : ''
+        }`}
         style={{
           background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`,
           textShadow: '0.2rem 0.2rem 3px #423939b3',
