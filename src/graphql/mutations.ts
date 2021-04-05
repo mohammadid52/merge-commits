@@ -238,6 +238,7 @@ export const createInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -346,6 +347,7 @@ export const updateInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -454,6 +456,7 @@ export const deleteInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -1722,6 +1725,7 @@ export const createCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -1807,6 +1811,7 @@ export const updateCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -1892,6 +1897,7 @@ export const deleteCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -1981,6 +1987,7 @@ export const createTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2045,6 +2052,7 @@ export const updateTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2109,6 +2117,7 @@ export const deleteTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2262,6 +2271,7 @@ export const createRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2311,6 +2321,7 @@ export const updateRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2360,6 +2371,7 @@ export const deleteRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -2404,6 +2416,7 @@ export const createTeacherCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2454,6 +2467,7 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2504,6 +2518,7 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2554,6 +2569,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2604,6 +2620,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -2654,6 +2671,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3554,6 +3572,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3661,6 +3680,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -3768,6 +3788,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
