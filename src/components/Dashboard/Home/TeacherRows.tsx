@@ -1,42 +1,42 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React from 'react';
-import Avatar from './Avatar';
+import ImageAlternate from '../../Atoms/ImageAlternative';
 
 const TeacherRows = (props: { teacherList: any }) => {
   const { teacherList } = props;
+
   return (
-    <ContentCard>
+    <ContentCard hasBackground={false}>
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y-0 divide-gray-200">
+        <ul className="">
           {teacherList &&
             teacherList.length > 0 &&
             teacherList.map(
               (
                 teacher: {
-                  phone: string;
-                  email: string;
                   firstName: string;
                   lastName: string;
+                  phone: string;
+                  email: string;
                   image: string | null;
                 },
                 idx: number
               ) => {
                 return (
-                  <li key={`home_teacher_${idx}`}>
-                    <a href="#" className="block hover:bg-gray-50">
+                  <li key={`home__teacher-${idx}`} className="border-b-0">
+                    <a href="#" className="block hover:bg-gray-100">
                       <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
-                          <div className="flex-shrink-0">
-                            <Avatar userObj={teacher} size={16} idx={idx} />
-                          </div>
-
+                          {teacher.image ? (
+                            <img className="h-12 w-12 rounded-full" src={teacher.image} alt="" />
+                          ) : (
+                            <ImageAlternate user={teacher} styleClass="h-12 w-12 rounded-full" />
+                          )}
 
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-
-                            {/* NAME & EMAIL */}
                             <div>
                               <p className="text-sm font-medium text-indigo-600 truncate">
-                                {teacher.firstName} {teacher.lastName}
+                                {teacher.firstName + teacher.lastName}
                               </p>
                               <p className="mt-2 flex items-center text-sm text-gray-500">
                                 <svg
@@ -51,50 +51,25 @@ const TeacherRows = (props: { teacherList: any }) => {
                                 <span className="truncate">{teacher.email}</span>
                               </p>
                             </div>
-
-                            {/* ADDITIONAL INFO */}
-                            <div className="hidden md:block">
-                              <div>
-                                <p className="text-sm text-gray-900">
-                                  Some date
-                                  <time dateTime="2020-01-07">April 1, 2021</time>
-                                </p>
-                                <p className="mt-2 flex items-center text-sm text-gray-500">
-                                  <svg
-                                    className="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                    aria-hidden="true">
-                                    <path
-                                      fill-rule="evenodd"
-                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                      clip-rule="evenodd"
-                                    />
-                                  </svg>
-                                  A random notification
-                                </p>
-                              </div>
+                            <div className="flex items-center">
+                              <p className="text-sm text-gray-900">
+                                Applied on <time dateTime="2020-01-07">January 7, 2020</time>
+                              </p>
                             </div>
                           </div>
-
                         </div>
-
-                        {/* RIGHT CHEVRON ICON */}
-                        <div>
-                          <svg
-                            className="h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            aria-hidden="true">
-                            <path
-                              fillRule="evenodd"
-                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
+                        <svg
+                          className="h-5 w-5 text-gray-400"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true">
+                          <path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
                       </div>
                     </a>
                   </li>
