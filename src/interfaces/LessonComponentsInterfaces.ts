@@ -11,13 +11,13 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
 }
 
 /**************************************
-* UNIVERSAL LESSON BUILDER INTERFACES *
-***************************************/
+ * UNIVERSAL LESSON BUILDER INTERFACES*
+ ***************************************/
 //
 export interface UniversalLesson{
   id: string;
   syllabusID: string;
-  description: string;
+  summary: string;
   designers: string[];
   teachers: string[];
   categories: string[];
@@ -42,6 +42,7 @@ interface UniversalLessonPages {
 //
 export interface UniversalLessonPage {
   id: string;
+  title: string;
   description: string;
   class: string;
   pageContent: PagePart[];
@@ -51,5 +52,37 @@ export interface PagePart {
   id: string;
   partType: 'component' | 'default';
   class: string;
-  partContent: any[]
+  partContent: PartContent[]
+}
+
+export interface PartContent {
+  id: string;
+  type?: string;
+  value: any[];
+}
+
+/**************************************
+ * UNIVERSAL LESSON SETUP DATA && STUDENT DATA INTERFACES   *
+ **************************************/
+//
+export interface UniversalLessonStudentData {
+  id: string;
+  universalLessonID: string;
+  universalLessonPageID: string;
+  studentAuthID: string;
+  studentID: string;
+  currentLocation: string;
+  lessonProgress: string;
+  anthologyContent: any[];
+  pageData: StudentDataPageData[];
+}
+
+export interface StudentDataPageData {
+  pagePartID: string;
+  pagePartInput: PagePartInput[];
+}
+
+export interface PagePartInput {
+  domID: string;
+  input: string;
 }
