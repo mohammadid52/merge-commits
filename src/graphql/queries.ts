@@ -173,6 +173,7 @@ export const getInstitution = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -843,6 +844,7 @@ export const getCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      image
       description
       objectives
       languages
@@ -938,6 +940,7 @@ export const listCurriculums = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -984,6 +987,7 @@ export const getTopic = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -1058,6 +1062,7 @@ export const listTopics = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -1176,6 +1181,7 @@ export const getRubric = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
@@ -1258,6 +1264,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         institutionID
         name
         type
+        image
         description
         objectives
         languages
@@ -1310,6 +1317,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           institutionID
           name
           type
+          image
           description
           objectives
           languages
