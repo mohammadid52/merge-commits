@@ -38,7 +38,6 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
           const imagePath = _item.curricula.items[0].curriculum.image;
 
           const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-          console.log(_item.teacher.image);
           const teacherProfileImg = await (_item.teacher.image ? getImageFromS3(_item.teacher.image) : false);
 
           const modifiedItem = { ..._item, roomName: item.name, bannerImage: image, teacherProfileImg };
