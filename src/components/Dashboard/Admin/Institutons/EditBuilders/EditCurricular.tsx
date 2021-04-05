@@ -167,7 +167,7 @@ const EditCurricular = (props: EditCurricularProps) => {
       try {
         const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
         const designers = selectedDesigners.map((item) => item.id);
-        const input = {
+        let input = {
           id: curricularData.id,
           name: curricularData.name,
           institutionID: curricularData.institute.id,
@@ -175,11 +175,16 @@ const EditCurricular = (props: EditCurricularProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers: designers,
+          image: null as any,
         };
-        const newCurricular = await API.graphql(graphqlOperation(mutation.updateCurriculum, { input: input }));
+
         if (s3Image) {
           await uploadImageToS3(s3Image, curricularData.id, 'image/jpeg');
+          input = { ...input, image: `instituteImages/curricular_image_${curricularData.id}` };
         }
+
+        const newCurricular = await API.graphql(graphqlOperation(mutation.updateCurriculum, { input: input }));
+
         setMessages({
           show: true,
           message: EditCurriculardict[userLanguage]['messages']['curricularchange'],

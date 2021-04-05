@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoImage } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
-
+import * as mutation from '../../../../../graphql/mutations';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
@@ -65,8 +65,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     errorMsg: '',
   });
   const [loading, setIsLoading] = useState(false);
-  const { clientKey,userLanguage} = useContext(GlobalContext);
-  const { CurricularBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { CurricularBuilderdict, BreadcrumsTitles } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -79,7 +79,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const checkpointsList: any = [];
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'], url: '/dashboard/curricular-creation', last: true }
+    { title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'], url: '/dashboard/curricular-creation', last: true },
   ];
 
   const onChange = (e: any) => {
@@ -154,19 +154,25 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers: designers,
+          image: null as any,
         };
         const response: any = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
         const newCurricular: any = response?.data?.createCurriculum;
 
         if (s3Image) {
           await uploadImageToS3(s3Image, newCurricular.id, 'image/jpeg');
+          await API.graphql(
+            graphqlOperation(mutation.updateCurriculum, {
+              input: { id: newCurricular.id, image: `instituteImages/curricular_image_${newCurricular.id}` },
+            })
+          );
         }
 
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['success']['save'],
-          isError: false
-        })
+          isError: false,
+        });
         setCurricularData(initialData);
         setIsLoading(false);
         if (newCurricular?.id) {
@@ -176,8 +182,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['error']['save'],
-          isError: true
-        })
+          isError: true,
+        });
       }
     }
   };
@@ -198,8 +204,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['error']['fetch'],
-        isError: true
-      })
+        isError: true,
+      });
     }
   };
 
@@ -240,9 +246,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message:CurricularBuilderdict[userLanguage]['messages']['error']['process'],
-        isError: true
-      })
+        message: CurricularBuilderdict[userLanguage]['messages']['error']['process'],
+        isError: true,
+      });
     }
   };
 
@@ -251,15 +257,15 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['validation']['name'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (curricularData.institute.id === '') {
       setMessages({
         show: true,
         message: CurricularBuilderdict[userLanguage]['messages']['validation']['institute'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (curricularData.name.trim() !== '') {
       const isUniq = await checkUniqCurricularName();
@@ -267,8 +273,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['validation']['curricular'],
-          isError: true
-        })
+          isError: true,
+        });
         return false;
       } else {
         return true;
@@ -363,8 +369,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setMessages({
           show: true,
           message: CurricularBuilderdict[userLanguage]['messages']['error']['invalid'],
-          isError: true
-        })
+          isError: true,
+        });
       }
     }
   }, [institutionList]);
@@ -375,7 +381,10 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title={CurricularBuilderdict[userLanguage]['TITLE']} subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']} />
+        <SectionTitle
+          title={CurricularBuilderdict[userLanguage]['TITLE']}
+          subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']}
+        />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -384,7 +393,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-9/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{CurricularBuilderdict[userLanguage]['HEADING']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            {CurricularBuilderdict[userLanguage]['HEADING']}
+          </h3>
           <div className="h-9/10 flex flex-col md:flex-row">
             <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
               <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
@@ -437,7 +448,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
             </div> */}
 
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">{CurricularBuilderdict[userLanguage]['LANGUAGE']}</label>
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {CurricularBuilderdict[userLanguage]['LANGUAGE']}
+                </label>
                 <MultipleSelector
                   selectedItems={languages}
                   placeholder={CurricularBuilderdict[userLanguage]['LANGUAGE']}
@@ -446,7 +459,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 />
               </div>
               <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">{CurricularBuilderdict[userLanguage]['DESIGNER']}</label>
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {CurricularBuilderdict[userLanguage]['DESIGNER']}
+                </label>
                 <MultipleSelector
                   selectedItems={selectedDesigners}
                   placeholder={CurricularBuilderdict[userLanguage]['DESIGNER']}
@@ -464,7 +479,13 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 />
               </div>
               <div className="px-3 py-4">
-                <TextArea value={objectives} id="objectives" onChange={onChange} name="objectives" label= {CurricularBuilderdict[userLanguage]['OBJECT']} />
+                <TextArea
+                  value={objectives}
+                  id="objectives"
+                  onChange={onChange}
+                  name="objectives"
+                  label={CurricularBuilderdict[userLanguage]['OBJECT']}
+                />
               </div>
             </div>
           </div>
@@ -477,7 +498,16 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           </div>
         ) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label={loading ?  CurricularBuilderdict[userLanguage]['BUTTON']['SAVING'] :  CurricularBuilderdict[userLanguage]['BUTTON']['SAVE']} onClick={saveCurriculum} disabled={loading ? true : false} />
+          <Buttons
+            btnClass="py-3 px-12 text-sm"
+            label={
+              loading
+                ? CurricularBuilderdict[userLanguage]['BUTTON']['SAVING']
+                : CurricularBuilderdict[userLanguage]['BUTTON']['SAVE']
+            }
+            onClick={saveCurriculum}
+            disabled={loading ? true : false}
+          />
         </div>
         {/* Image cropper */}
         {showCropper && (
