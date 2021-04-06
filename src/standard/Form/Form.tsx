@@ -50,14 +50,14 @@ const Form = () => {
         ///change the WIDTH or PADDING if needed
         <div className="h-full w-full bg-white shadow my-4 sm:rounded-lg">
           <form>
-            <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+            <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                 Edit Information
                 </h3>
             </div>
 
             <div className="h-full px-4 py-5 sm:px-6">
-                <div className="grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6">
+                <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <FormInput
                     label = 'First Name'
                     value = 'Jayne'
@@ -83,7 +83,7 @@ const Form = () => {
                             </svg>
                             </span>
                             <span className="ml-5 rounded-md shadow-sm">
-                            <button type="button" className="py-2 px-3 border border-gray-300 rounded-md text-m leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                            <button type="button" className="py-2 px-3  border-0 border-gray-300 rounded-md text-m leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:ring-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                                 Change
                             </button>
                             </span>

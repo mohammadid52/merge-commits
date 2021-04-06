@@ -19,13 +19,15 @@ import * as customQueries from '../../../../customGraphql/customQueries';
 import LessonsListRow from './LessonsListRow';
 import { getLanguageString } from '../../../../utilities/strings';
 import { getAsset } from '../../../../assets';
+import useDictionary from '../../../../customHooks/dictionary';
 
 const LessonsList = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { BreadcrumsTitles, LessonsListDict ,paginationPage} = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
@@ -47,8 +49,8 @@ const LessonsList = () => {
   });
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lessons', url: '/dashboard/lesson-builder', last: true },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['LESSONS'], url: '/dashboard/lesson-builder', last: true },
   ]
 
   const sortByList = [
@@ -237,16 +239,16 @@ const LessonsList = () => {
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle title="LESSONS LIST" subtitle="All Lessons List" />
+          <SectionTitle title={LessonsListDict[userLanguage]['TITLE']} subtitle={LessonsListDict[userLanguage]['SUBTITLE']} />
           <div className="flex justify-end py-4 mb-4">
             <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchLessonsFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-            <Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none border-r-0" arrowHidden={true} />
-            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400 border rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
+            <Selector placeholder={LessonsListDict[userLanguage]['SORTBY']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-none " arrowHidden={true} />
+            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
               <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
-            <Buttons label="Add New Lesson" onClick={buildLesson} btnClass="mr-4 w-full" Icon={IoMdAddCircleOutline} />
+            <Buttons label={LessonsListDict[userLanguage]['BUTTON']['ADD']} onClick={buildLesson} btnClass="mr-4 w-full" Icon={IoMdAddCircleOutline} />
           </div>
         </div>
 
@@ -254,20 +256,20 @@ const LessonsList = () => {
         {/* List / Table */}
         <div className="flex flex-col">
           <div className="-my-2 py-2">
-            <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b border-gray-200">
+            <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
               <div className="h-8/10 px-4">
-                <div className="w-full flex justify-between border-b border-gray-200 ">
+                <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>No.</span>
+                    <span>{LessonsListDict[userLanguage]['NO']}</span>
                   </div>
                   <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Lesson Title</span>
+                    <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
                   </div>
                   {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Label</span>
                   </div> */}
                   <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Lesson Type</span>
+                    <span className="w-auto">{LessonsListDict[userLanguage]['TYPE']}</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Created Date</span>
@@ -276,10 +278,10 @@ const LessonsList = () => {
                     <span className="w-auto">Last Edit Date</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Language</span>
+                    <span className="w-auto">{LessonsListDict[userLanguage]['LANGUAGE']}</span>
                   </div>
                   <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
+                    {LessonsListDict[userLanguage]['ACTION']}
                   </div>
                 </div>
 
@@ -298,7 +300,7 @@ const LessonsList = () => {
                   ))
                   : (
                     <div className="flex p-12 mx-auto justify-center">
-                      No Results
+                     {LessonsListDict[userLanguage]['NORESULT']}
                     </div>)}
               </div>
 
@@ -307,7 +309,7 @@ const LessonsList = () => {
                 {!searchInput.isActive &&
                   (
                     <Fragment>
-                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">Showing Page {currentPage + 1} of {totalPages} pages</span>
+                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900"> {paginationPage(userLanguage,currentPage + 1,totalPages)}</span>
                       <Pagination
                         currentPage={currentPage + 1}
                         setNext={goNextPage}

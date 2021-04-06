@@ -19,7 +19,7 @@ const ModalHeader = (headerProps: { title?: string, onClick?: () => void, showBo
   const { theme } = useContext(GlobalContext);
 
   return (
-    <div className={`${theme.modals.header} ${showBorder ? 'border-b' : ''}`}>
+    <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
       <h3 className="text-xl font-semibold">{title && title}</h3>
       <button
         className={`ml-auto w-auto ${theme.outlineNone}`}

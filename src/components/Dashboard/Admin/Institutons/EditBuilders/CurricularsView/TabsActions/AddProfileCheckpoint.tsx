@@ -19,6 +19,7 @@ import Selector from '../../../../../../Atoms/Form/Selector';
 import Buttons from '../../../../../../Atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface AddProfileCheckpointProps {
 
@@ -30,8 +31,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const urlParams: any = useParams()
   const curricularId = urlParams.curricularId;
 
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const {AddProfileCheckpointDict, BreadcrumsTitles } = useDictionary(clientKey);
   
   const initialData = {
     title: '',
@@ -53,8 +55,8 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   });
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Checkpoint', url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['AddCheckpint'], url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`, last: true }
   ];
 
   const languageList = [
@@ -123,7 +125,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       setValidation({
         title: '',
         label: '',
-        message: 'Unable to save Checkpoint details, Please try again later.',
+        message: AddProfileCheckpointDict[userLanguage]['messages']['unsave'],
         isError: true
       });
     }
@@ -134,19 +136,19 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     const msgs = validation;
     if (!checkpointData.title?.trim().length) {
       isValid = false;
-      msgs.title = 'Checkpoint title is required';
+      msgs.title = AddProfileCheckpointDict[userLanguage]['messages']['titlerequired'];
     } else {
       msgs.title = ''
     }
     if (!checkpointData.label?.trim().length) {
       isValid = false;
-      msgs.label = 'Checkpoint label is required';
+      msgs.label = AddProfileCheckpointDict[userLanguage]['messages']['labelrequired'];
     } else {
       msgs.label = ''
     }
     if (checkpQuestions?.length <= 0) {
       isValid = false;
-      msgs.message = 'You need to add minimum one question to create a checkpoint.';
+      msgs.message = AddProfileCheckpointDict[userLanguage]['messages']['minone'];
     } else {
       msgs.message = ''
     }
@@ -189,7 +191,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           setValidation({
             title: '',
             label: '',
-            message: 'Unable to save Checkpoint details, Please try again later.',
+            message: AddProfileCheckpointDict[userLanguage]['messages']['unsave'],
             isError: true
           });
         }
@@ -200,7 +202,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         setValidation({
           title: '',
           label: '',
-          message: 'Unable to save Checkpoint details, Please try again later.',
+          message: AddProfileCheckpointDict[userLanguage]['messages']['unsave'],
           isError: true
         });
         setLoading(false)
@@ -236,7 +238,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add Checkpoint" subtitle="Add new checkpoint to curricular." />
+        <SectionTitle title={AddProfileCheckpointDict[userLanguage]['title']} subtitle={AddProfileCheckpointDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -252,18 +254,18 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         ) : (
             <Fragment>
               <div className="w-8/10 m-auto">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">ADD NEW CHECKPOINT</h3>
+                <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddProfileCheckpointDict[userLanguage]['heading']}</h3>
               </div>
               <div className="w-9/10 m-auto">
                 <div className="">
 
                   <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                     <div>
-                      <FormInput value={title} id='title' onChange={onInputChange} name='title' label='Title' isRequired />
+                      <FormInput value={title} id='title' onChange={onInputChange} name='title' label={AddProfileCheckpointDict[userLanguage]['label']} isRequired />
                       {validation.title && <p className="text-red-600 text-sm">{validation.title}</p>}
                     </div>
                     <div>
-                      <FormInput value={label} id='label' onChange={onInputChange} name='label' label="Checkpoint Label" isRequired />
+                      <FormInput value={label} id='label' onChange={onInputChange} name='label' label={AddProfileCheckpointDict[userLanguage]['checkpointlabel']} isRequired />
                       {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
                     </div>
                   </div>
@@ -271,52 +273,52 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                   <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                     <div>
                       <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                        Select Designers
+                        {AddProfileCheckpointDict[userLanguage]['selectdesigner']}
                       </label>
-                      <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+                      <MultipleSelector selectedItems={selectedDesigners} placeholder={AddProfileCheckpointDict[userLanguage]['placeholder']} list={designersList} onChange={selectDesigner} />
                     </div>
                     <div>
                       <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                        Select Language
+                        {AddProfileCheckpointDict[userLanguage]['languageselect']}
                       </label>
-                      <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                      <Selector selectedItem={language.name} placeholder={AddProfileCheckpointDict[userLanguage]['placeholderlanguage']} list={languageList} onChange={selectLanguage} />
                     </div>
                   </div>
 
 
                   {/* Question table */}
-                  <div className="p-6 border-gray-400 border my-4 border-dashed">
-                    <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">Checkpoint Questions: </p>
+                  <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
+                    <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">{AddProfileCheckpointDict[userLanguage]['checkpointq']}: </p>
                     {!checkpQuestions?.length ? (
                       <div className="my-8">
-                        <p className="text-center p-8"> Please add questions to this checkpoint.</p>
+                        <p className="text-center p-8"> {AddProfileCheckpointDict[userLanguage]['addquestion']}</p>
                         <div className="flex w-full mx-auto p-8 justify-center ">
-                          <Buttons btnClass="mr-4" onClick={() => setCurrentState('questionsList')} label="Add Existing Questions" />
-                          <Buttons btnClass="ml-4" onClick={() => setCurrentState('addQuestion')} label="Create New Question" />
+                          <Buttons btnClass="mr-4" onClick={() => setCurrentState('questionsList')} label={AddProfileCheckpointDict[userLanguage]['button']['existing']} />
+                          <Buttons btnClass="ml-4" onClick={() => setCurrentState('addQuestion')} label={AddProfileCheckpointDict[userLanguage]['button']['newq']} />
                         </div>
                       </div>
                     ) : (
                         <Fragment>
                           <div className="max-h-112 overflow-auto">
-                            <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-no-wrap border-b border-gray-200">
+                            <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                               <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                <span>No.</span>
+                                <span>{AddProfileCheckpointDict[userLanguage]['no']}</span>
                               </div>
                               <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                <span>Question</span>
+                                <span>{AddProfileCheckpointDict[userLanguage]['question']}</span>
                               </div>
                               <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                <span>Type</span>
+                                <span>{AddProfileCheckpointDict[userLanguage]['type']}</span>
                               </div>
                               <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                <span>Options</span>
+                                <span>{AddProfileCheckpointDict[userLanguage]['option']}</span>
                               </div>
                             </div>
 
                             <div className="w-full m-auto">
                               {checkpQuestions.length > 0 ? checkpQuestions.map((item: any, index: number) => (
                                 <Fragment key={item.id}>
-                                  <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
+                                  <div key={item.id} className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${questionOptions.quesId === item.id && 'bg-gray-200'}`}>
                                     <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4"> {index + 1}.</div>
                                     <div className="flex w-6/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal"> {item.question} </div>
                                     <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.type ? getTypeString(item.type) : '--'}</div>
@@ -333,8 +335,8 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                                       </div>)}
                                     </div>
                                   </div>
-                                  {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b border-gray-200">
-                                    <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
+                                  {(questionOptions.quesId === item.id) && (<div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
+                                    <p className="text-gray-900 px-2 py-2 text-base">{AddProfileCheckpointDict[userLanguage]['option']}:</p>
                                     {questionOptions.options?.map((item, index) => (
                                       <span className="px-12 py-2" key={item.label}>{index + 1}. {item.text}</span>
                                     ))}
@@ -342,14 +344,14 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                                 </Fragment>
                               )) : (
                                   <div className="py-12 my-6 text-center">
-                                    <p> This checkpoint does not have any questions</p>
+                                    <p> {AddProfileCheckpointDict[userLanguage]['messages']['noquestion']}</p>
                                   </div>
                                 )}
                             </div>
                           </div>
                           <div className="flex w-full mx-auto p-8 justify-center ">
-                            <Buttons btnClass="mr-4" onClick={() => setCurrentState('questionsList')} label="Add Existing Questions" />
-                            <Buttons btnClass="ml-4" onClick={() => setCurrentState('addQuestion')} label="Create New Question" />
+                            <Buttons btnClass="mr-4" onClick={() => setCurrentState('questionsList')} label={AddProfileCheckpointDict[userLanguage]['button']['existing']} />
+                            <Buttons btnClass="ml-4" onClick={() => setCurrentState('addQuestion')} label={AddProfileCheckpointDict[userLanguage]['button']['newq']} />
                           </div>
                         </Fragment>
                       )}
@@ -361,8 +363,8 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                 <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
               </div>}
               <div className="flex my-8 justify-center">
-                <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
-                <Buttons btnClass="py-3 px-10 ml-4" label={loading ? 'Saving...' : 'Save'} onClick={saveNewCheckpoint} disabled={loading ? true : false} />
+                <Buttons btnClass="py-3 px-10 mr-4" label={AddProfileCheckpointDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
+                <Buttons btnClass="py-3 px-10 ml-4" label={loading ? AddProfileCheckpointDict[userLanguage]['button']['saving'] : AddProfileCheckpointDict[userLanguage]['button']['save']} onClick={saveNewCheckpoint} disabled={loading ? true : false} />
               </div>
             </Fragment>
           )}

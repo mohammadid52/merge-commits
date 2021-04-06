@@ -37,7 +37,7 @@
 }
 
 .purpule-button:focus {
-  @apply outline-none border-indigo-700 shadow-outline;
+  @apply outline-none border-indigo-700 ring;
 }
 
 .purpule-button:hover {

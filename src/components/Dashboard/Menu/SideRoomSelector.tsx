@@ -31,7 +31,7 @@ const SideRoomSelector = (props: ClassroomControlProps) => {
 
   const roomsTitle =
     'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b border-medium-gray';
+  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>

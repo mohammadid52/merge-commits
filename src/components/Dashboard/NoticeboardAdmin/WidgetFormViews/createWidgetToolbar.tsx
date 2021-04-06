@@ -72,14 +72,14 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
     }
   };
 
-  const selectorClass = `p-2 rounded border border-medium-gray border-opacity-20`;
+  const selectorClass = `p-2 rounded  border-0 border-medium-gray border-opacity-20`;
 
   return (
     <div className={`flex flex-col p-2 mb-2`}>
 
       <div className={`grid grid-cols-2 gap-2`}>
       <div className={`mb-2`}>
-        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:</p>
+        <p className={`text-sm font-semibold border-b-0 pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:</p>
         <div className={`grid grid-cols-2 gap-2 ${theme.lessonCard.subtitle}`}>
           {statusOptions.map((option: any, idx: number) => (
             <div
@@ -97,7 +97,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
       </div>
 
       <div className={`mb-2`}>
-        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.PLACEMENT}:</p>
+        <p className={`text-sm font-semibold border-b-0 pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.PLACEMENT}:</p>
         <div className={`grid grid-cols-2 gap-2 ${theme.lessonCard.subtitle}`}>
           {placementOptions.map((option: any, idx: number) => (
             <div
@@ -116,7 +116,7 @@ const CreateWidgetToolbar = (props: NoticeboardFormProps) => {
       </div>
 
       <div className={`mb-2`}>
-        <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.TYPE}:</p>
+        <p className={`text-sm font-semibold border-b-0 pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.TYPE}:</p>
         <div className={`grid grid-cols-4 gap-2 ${theme.lessonCard.subtitle}`}>
           {widgetOptions.map((option: any, idx: number) => (
             <>

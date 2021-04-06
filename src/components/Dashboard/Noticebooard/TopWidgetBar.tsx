@@ -32,7 +32,7 @@ const TopWidgetBar = () => {
       case 'call':
         return (
           <CallLinkWidget
-            key={`sidebar_widget_${idx}`}
+            key={`topbar_widget_${idx}`}
             title={widgetObj.title}
             links={widgetObj.links}
             widgetObj={widgetObj}
@@ -41,7 +41,7 @@ const TopWidgetBar = () => {
       case 'file':
         return (
           <FileLinkWidget
-            key={`sidebar_widget_${idx}`}
+            key={`topbar_widget_${idx}`}
             title={widgetObj.title}
             links={widgetObj.links}
             widgetObj={widgetObj}
@@ -55,9 +55,11 @@ const TopWidgetBar = () => {
   return getTopWidgets().length > 0 ? (
     <ContentCard hasBackground={false}>
       <div className={`w-full h-auto min-h-16`}>
-        {getTopWidgets().map((widgetObj: Widget, idx: number) => {
-          return switchWidgets(widgetObj, idx);
-        })}
+        {
+          getTopWidgets().map((widgetObj: Widget, idx: number) => {
+          return <div key={`topbar_widget_${idx}_parent`} className={`my-4`}>{switchWidgets(widgetObj, idx)}</div>;
+          })
+        }
       </div>
     </ContentCard>
   ) : null;

@@ -54,15 +54,16 @@ const EditClass = (props: EditClassProps) => {
     message: 'Do you want to save changes before moving forward?'
   });
 
-  const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Edit Class', url: `${match.url}?id=${urlParams.get('id')}`, last: true }
-  ];
 
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { editClassDict } = useDictionary(clientKey);
+  const { editClassDict, BreadcrumsTitles } = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage]
+
+  const breadCrumsList = [
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `${match.url}?id=${urlParams.get('id')}`, last: true }
+  ];
 
   const gotoProfileInfo = (profileId: string) => {
     history.push(`/dashboard/manage-users/user?id=${profileId}`)
@@ -116,7 +117,7 @@ const EditClass = (props: EditClassProps) => {
       setLoading(false)
       setMessages({
         show: true,
-        message: 'Error while fetching class data,please try again later.',
+        message: dictionary.messages.errorfetch,
         isError: true
       })
     }
@@ -170,7 +171,7 @@ const EditClass = (props: EditClassProps) => {
       console.log('saveClassStudent', err)
       setMessages({
         show: true,
-        message: 'Error while adding stuent, please try again later',
+        message: dictionary.messages.errorstudentadd,
         isError: true
       })
     }
@@ -209,7 +210,7 @@ const EditClass = (props: EditClassProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: dictionary.messages.processerror,
         isError: true
       })
     }
@@ -219,14 +220,14 @@ const EditClass = (props: EditClassProps) => {
     if (classData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Class name is required please enter.',
+        message: dictionary.messages.classrequired,
         isError: true
       })
       return false;
     } else if (classData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add class.',
+        message: dictionary.messages.selectinstitute,
         isError: true
       })
       return false;
@@ -235,7 +236,7 @@ const EditClass = (props: EditClassProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This class name is already exist, please add another name.',
+          message: dictionary.messages.classexist,
           isError: true
         })
         return false;
@@ -259,13 +260,13 @@ const EditClass = (props: EditClassProps) => {
         const newClass: any = await API.graphql(graphqlOperation(mutations.updateClass, { input: input }));
         setMessages({
           show: true,
-          message: 'Class details has been updated.',
+          message: dictionary.messages.classupdate,
           isError: false
         })
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to update class details. Please try again later.',
+          message: dictionary.messages.unableupdate,
           isError: true
         })
       }
@@ -332,7 +333,7 @@ const EditClass = (props: EditClassProps) => {
 
       <PageWrapper>
         <div className="w-6/10 px-2 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASS INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.heading}</h3>
           <div className="">
             <div className="flex items-center">
               <div>
@@ -343,7 +344,7 @@ const EditClass = (props: EditClassProps) => {
           </div>
         </div>
 
-        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
+        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">{dictionary.heading2}</h3>
 
         <div className="flex items-center w-6/10 m-auto px-2">
           <div>
@@ -363,7 +364,7 @@ const EditClass = (props: EditClassProps) => {
                 (
                   <Fragment>
                     <div className="mt-8 w-9/10 m-auto px-2">
-                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200 text-sm text-gray-600">
+                      <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 text-sm text-gray-600">
                         <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{dictionary.TABLE.SNO}</div>
                         <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
                         <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
@@ -374,7 +375,7 @@ const EditClass = (props: EditClassProps) => {
                     <div className="mb-4 w-9/10 m-auto px-2 max-h-88 overflow-y-scroll">
                       {
                         classStudents.map((item, index) => (
-                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                          <div key={item.id} className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                             <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                             <div className="flex w-5/10 items-center px-4 py-2 whitespace-normal cursor-pointer" onClick={() => movetoStudentProfile(item.student.id)}>
                               <div className="flex-shrink-0 h-10 w-10 flex items-center">
@@ -409,10 +410,10 @@ const EditClass = (props: EditClassProps) => {
 
                             <div className="w-1/10 px-3">
                               {statusEdit === item.id ?
-                                <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                                <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? dictionary.UPDATING : dictionary.CANCEL}</span>
                                 :
                                 <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
-                                  Edit
+                                  {dictionary.EDIT}
                                 </span>
                               }
                             </div>
@@ -421,9 +422,9 @@ const EditClass = (props: EditClassProps) => {
                     </div>
                   </Fragment>
                 )
-                : (<div className="py-12 my-12 m-auto text-center">No students added in the class.</div>)
+                : (<div className="py-12 my-12 m-auto text-center">{dictionary.NOSTUDENT}</div>)
               )
-              : <div className="py-12 my-12 m-auto text-center">Loading class students list...</div>
+              : <div className="py-12 my-12 m-auto text-center">{dictionary.LOADING}</div>
             }
             {messages.show && (
               <div className="py-2 m-auto text-center">

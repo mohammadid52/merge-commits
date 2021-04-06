@@ -8,6 +8,7 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getAsset } from '../../../../../assets';
+import useDictionary from '../../../../../customHooks/dictionary';
 import { statusList } from '../../../../../utilities/staticData'
 
 interface UnitLookupProps {
@@ -21,8 +22,9 @@ interface UnitLookupProps {
 const UnitLookup = (props: UnitLookupProps) => {
   const { lessonName, lessonId, institution, lessonType, lessonPlans } = props;
 
-  const { clientKey, theme } = useContext(GlobalContext);
+  const { clientKey, theme ,userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { BUTTONS, UnitLookupDict } = useDictionary(clientKey);
   const history = useHistory();
 
   const [formState, setFormState] = useState({
@@ -138,7 +140,7 @@ const UnitLookup = (props: UnitLookupProps) => {
         setMessage({
           ...message,
           isError: false,
-          msg: 'Lesson added successfully.'
+          msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED']
         });
       }
 
@@ -146,7 +148,7 @@ const UnitLookup = (props: UnitLookupProps) => {
       setMessage({
         ...message,
         isError: true,
-        msg: 'Error while adding lesson to unit, please try later.'
+        msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR']
       });
     }
 
@@ -199,7 +201,7 @@ const UnitLookup = (props: UnitLookupProps) => {
       setMessage({
         ...message,
         isError: true,
-        msg: 'Error while fetching units Data, Please try again later.'
+        msg: UnitLookupDict[userLanguage]['MESSAGES']['FETCHERR']
       });
     });
   }
@@ -226,8 +228,8 @@ const UnitLookup = (props: UnitLookupProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Assign Unit - {lessonName}</h3>
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">{UnitLookupDict[userLanguage]['HEADING']} - {lessonName}</h3>
       </div>
 
       <div className="p-4">
@@ -244,30 +246,30 @@ const UnitLookup = (props: UnitLookupProps) => {
           </div>
         </div>
 
-        <p className="text-sm p-8 text-gray-700">NOTE: Please select Curricular and then units to add current lesson to that unit.</p>
+        <p className="text-sm p-8 text-gray-700">{UnitLookupDict[userLanguage]['NOTE']}</p>
 
         <div className="px-4">
-          <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+          <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
             <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>No.</span>
+              <span>{UnitLookupDict[userLanguage]['NO']}</span>
             </div>
             <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>Curriculum Name</span>
+              <span>{UnitLookupDict[userLanguage]['CURRICULUMNAME']}</span>
             </div>
             <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>Unit Name</span>
+              <span>{UnitLookupDict[userLanguage]['UNITNAME']}</span>
             </div>
             <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>Status</span>
+              <span>{UnitLookupDict[userLanguage]['STATUS']}</span>
             </div>
             <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              <span>Action</span>
+              <span>{UnitLookupDict[userLanguage]['ACTION']}</span>
             </div>
           </div>
           <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
             {selectedUnitsList?.length > 0 ? (
               selectedUnitsList?.map((item, index) => (
-                <div key={index} className="flex justify-between items-center w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200 cursor-pointer">
+                <div key={index} className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer">
                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                   <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoCurricularUnit(item.syllabusID, item.curricularId)}>
                     {item.curricularName ? item.curricularName : ''}
@@ -296,7 +298,7 @@ const UnitLookup = (props: UnitLookupProps) => {
                 </div>
               ))) : (
                 <p className="text-center p-16 mt-4">
-                  This lesson is not added to any curricular or units.
+                 {UnitLookupDict[userLanguage]['NOTADDED']}
                 </p>
               )}
           </div>

@@ -137,24 +137,24 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           {(partners && partners.length > 0) ? (
             <Fragment>
 
-              <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+              <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>NO.</span>
+                  <span>{dictionary.NO}</span>
                 </div>
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Service Providers</span>
+                  <span>{dictionary.SERVICE}</span>
                 </div>
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Status</span>
+                  <span>{dictionary.STATUS}</span>
                 </div>
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Actions</span>
+                  <span>{dictionary.ACTION}</span>
                 </div>
               </div>
 
               <div className="w-full m-auto max-h-88 overflow-y-auto">
                 {partners.map((item, index) => (
-                  <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {index + 1}.
                     </div>
@@ -173,7 +173,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                     }
                     <div className="w-1/10 flex items-center px-8 py-3 text-left text-s leading-4">
                       {statusEdit === item.id ?
-                        <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? 'updating...' : 'Cancel'}</span>
+                        <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit('')}>{updateStatus ? dictionary.UPDATING : dictionary.CANCEL}</span>
                         :
                         <span className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => setStatusEdit(item.id)}>
                           {BUTTONS[userLanguage].EDIT}
@@ -188,7 +188,7 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
             </Fragment>
           ) : (
               <div className="text-center p-16">
-                <p> This institute does not have any service provider. Please add new service provider.</p>
+                <p> {dictionary.INFO}</p>
               </div>)}
         </PageWrapper>
       </div>

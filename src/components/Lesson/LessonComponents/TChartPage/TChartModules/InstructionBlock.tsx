@@ -16,7 +16,7 @@ const InstructionsBlock = () => {
   return (
     <div className='bg-dark-blue border-l-4 border-green-light md:h-4/10 p-4 flex text-gray-200 rounded-lg shadow-2xlr overflow-hidden'>
       <div className='w-full flex flex-col'>
-        <div className='w-full flex flex-row mb-1 pb-1 border-b border-white border-opacity-10 mr-4'>
+        <div className='w-full flex flex-row mb-1 pb-1 border-b-0 border-white border-opacity-10 mr-4'>
           <h3 className='w-3/10 mr-2 flex text-xl font-open font-light animate-bounce'>
             Instructions 
             {/* <ToolTip width='w-40' position='bottom' header='Instructions' content='click the red icon for video instructions'/> */}

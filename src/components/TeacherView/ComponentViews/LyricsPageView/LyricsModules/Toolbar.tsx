@@ -101,7 +101,7 @@ const ToolBar = (props: ToolbarProps) => {
         </div>*/}
       </div>
 
-      <div className="w-full leading-6 border-b border-t border-white border-opacity-10 mb-4">
+      <div className="w-full leading-6 border-b-0 border-t border-white border-opacity-10 mb-4">
         <p className="pl-2 text-sm text-left text-white">
           1. <b>Click 2 separate words</b> to select a sentence.
         </p>

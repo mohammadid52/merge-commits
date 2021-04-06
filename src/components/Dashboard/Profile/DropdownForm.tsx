@@ -37,7 +37,7 @@ const DropdownForm = ( props: DropdownProps ) => {
             </label>
             <div className="relative">
                 <span className="inline-block w-full rounded-md shadow-sm">
-                <button onClick={() => setShowItems(!showItems)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" className="flex cursor-pointer relative w-full rounded-md border border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                <button onClick={() => setShowItems(!showItems)} type="button" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label" className="flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                     <span className="block truncate">
                     { selectedItem ? selectedItem : selectItem } 
                     </span>
@@ -51,7 +51,7 @@ const DropdownForm = ( props: DropdownProps ) => {
                 { showItems && (
                
                 <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
-                <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+                <ul role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-item-3" className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
                 
                     {items.map( (item: {code: string, name: string}, key: number) => (
                     <li 

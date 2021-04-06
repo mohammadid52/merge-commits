@@ -17,6 +17,7 @@ import { getFilterORArray } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import useDictionary from '../../../../../customHooks/dictionary';
 import { getAsset } from '../../../../../assets';
 
 interface RoomBuilderProps {
@@ -37,13 +38,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     curricular: { id: '', name: '', value: '' },
     maxPersons: ''
   }
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [roomData, setRoomData] = useState(initialData)
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
+  const { RoomBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -55,8 +57,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
   const params = useQuery();
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Classroom Creation', url: `${match.url}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true }
   ];
 
   const createNewEntry = (field: string) => {
@@ -160,14 +162,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create an institute before creating Classroom.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['institutebefor'],
           isError: true
         })
       }
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch institution list. Please try again later.',
+        message:RoomBuilderdict[userLanguage]['messages']['error']['institutelist'] ,
         isError: true
       })
     }
@@ -183,7 +185,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch institution data. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['institutelist'],
         isError: true
       })
     }
@@ -198,7 +200,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create staff member first for your institute.',
+          message:  RoomBuilderdict[userLanguage]['messages']['error']['staffmember'],
           isError: true
         })
       } else {
@@ -226,7 +228,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       console.log(err)
       setMessages({
         show: true,
-        message: 'Unable to fetch teachers list. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['teacherlist'],
         isError: true
       })
     }
@@ -242,7 +244,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (listClass.length === 0) {
         setMessages({
           show: true,
-          message: 'Please create class first for your institute.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['createclass'],
           isError: true
         })
       } else {
@@ -257,7 +259,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch class list. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['classlist'],
         isError: true
       })
     }
@@ -278,7 +280,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Unable to fetch curricular list. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['curricular'],
         isError: true
       })
     }
@@ -297,7 +299,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['process'],
         isError: true
       })
     }
@@ -307,42 +309,42 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     if (roomData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Classroom name is required please enter name.',
+        message: RoomBuilderdict[userLanguage]['messages']['validation']['classroomname'],
         isError: true
       })
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add Classroom.',
+        message:  RoomBuilderdict[userLanguage]['messages']['validation']['institute'],
         isError: true
       })
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a teacher for the Classroom.',
+        message: RoomBuilderdict[userLanguage]['messages']['validation']['teacher'],
         isError: true
       })
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
-        message: 'Please select a class for the Classroom.',
+        message:RoomBuilderdict[userLanguage]['messages']['validation']['class'] ,
         isError: true
       })
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
-        message: 'Please set Max students limit for the Classroom.',
+        message: RoomBuilderdict[userLanguage]['messages']['validation']['maxstudent'] ,
         isError: true
       })
       return false;
     } else if (parseInt(roomData.maxPersons) < 1 || parseInt(roomData.maxPersons) > 30) {
       setMessages({
         show: true,
-        message: 'One Classroom can allow max. 30 students.',
+        message:RoomBuilderdict[userLanguage]['messages']['validation']['allowstudent'] ,
         isError: true
       })
       return false;
@@ -351,7 +353,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This Classroom name is already exist, please add another name.',
+          message: RoomBuilderdict[userLanguage]['messages']['validation']['classroomexist'] ,
           isError: true
         })
         return false;
@@ -374,7 +376,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const addCurricular: any = await API.graphql(graphqlOperation(mutation.createRoomCurriculum, { input: curricularInput }))
         setMessages({
           show: true,
-          message: 'New Classroom details has been saved.',
+          message: RoomBuilderdict[userLanguage]['messages']['success']['classroomdetail'],
           isError: false
         })
         setRoomData(initialData)
@@ -382,7 +384,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while adding Classroom curricular. Please try again later.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
           isError: true
         })
         setLoading(false)
@@ -390,7 +392,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     } else {
       setMessages({
         show: true,
-        message: 'Error while adding Classroom curricular. Please try again later.',
+        message: RoomBuilderdict[userLanguage]['messages']['error']['classroomadd'],
         isError: true
       })
       setLoading(false)
@@ -418,7 +420,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         } else {
           setMessages({
             show: true,
-            message: 'New Classroom details has been saved.',
+            message: RoomBuilderdict[userLanguage]['messages']['success']['newclassroom'],
             isError: false
           })
           setRoomData(initialData)
@@ -427,7 +429,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Error while creating Classroom. Please try again later.',
+          message: RoomBuilderdict[userLanguage]['messages']['error']['ecreateclass'],
           isError: true
         })
         setLoading(false)
@@ -481,7 +483,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       } else {
         setMessages({
           show: true,
-          message: 'Invalid path please go back to institution selection page to select your institute.',
+          message:RoomBuilderdict[userLanguage]['messages']['error']['invalid'] ,
           isError: true
         })
       }
@@ -496,7 +498,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Classroom" subtitle="Add new Classroom to the list" />
+        <SectionTitle title={RoomBuilderdict[userLanguage]['TITLE']} subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -505,10 +507,10 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASSROOM INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{RoomBuilderdict[userLanguage]['HEADING']}</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={editInputField} name='name' label="Classroom Name" placeHolder="Add Classroom name" isRequired />
+              <FormInput value={name} id='name' onChange={editInputField} name='name' label={RoomBuilderdict[userLanguage]['NAME_LABEL']} placeHolder={RoomBuilderdict[userLanguage]['NAME_PLACEHOLDER']} isRequired />
             </div>
             {/* 
               **
@@ -525,37 +527,37 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             <div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Teacher  <span className="text-red-500"> *</span>
+                {RoomBuilderdict[userLanguage]['TEACHER_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
-                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder="Select teacher" onChange={selectTeacher} />
+                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder={RoomBuilderdict[userLanguage]['TEACHER_PLACEHOLDER']} onChange={selectTeacher} />
                 <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('teacher')}>Add new teacher</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Class Name  <span className="text-red-500"> *</span>
+                {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']}  <span className="text-red-500"> *</span>
                 </label>
-                <Selector selectedItem={classRoom.value} placeholder="Select Class" list={classList} onChange={selectClass} />
+                <Selector selectedItem={classRoom.value} placeholder= {RoomBuilderdict[userLanguage]['CLASS_NAME_PLACEHOLDER']} list={classList} onChange={selectClass} />
                 <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('class')}>Add new class</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Curriculum
+                 {RoomBuilderdict[userLanguage]['CURRICULUM_LABEL']}
                 </label>
-                <Selector selectedItem={curricular.value} placeholder="Select Curriculum" list={curricularList} onChange={selectCurriculum} />
+                <Selector selectedItem={curricular.value} placeholder={RoomBuilderdict[userLanguage]['CURRICULUM_PLACEHOLDER']} list={curricularList} onChange={selectCurriculum} />
                 <p className={`text-xs p-1 text-gray-600 cursor-pointer hover:${theme.textColor[themeColor]}`} onClick={() => createNewEntry('curricular')}>Add new curriculum</p>
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  Max.Students (Add number between 1 to 30)  <span className="text-red-500"> *</span>
+                {RoomBuilderdict[userLanguage]['MAXSTUDENT_LABEL']} <span className="text-red-500"> *</span>
                 </label>
                 <input
                   type="number"
                   id='maxPersons'
                   name='maxPersons'
                   onChange={editInputField}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
                   value={maxPersons}
-                  placeholder='Max students'
+                  placeholder={RoomBuilderdict[userLanguage]['MAXSTUDENT_PLACHOLDER']}
                   min="1" max="30" />
               </div>
             </div>
@@ -565,7 +567,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm" label={!loading ? 'Save' : 'Saving...'} onClick={createNewRoom} />
+          <Buttons btnClass="py-3 px-12 text-sm" label={!loading ? RoomBuilderdict[userLanguage]['BUTTON']['SAVE'] : RoomBuilderdict[userLanguage]['BUTTON']['SAVING']} onClick={createNewRoom} />
         </div>
       </PageWrapper>
     </div>

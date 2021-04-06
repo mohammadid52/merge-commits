@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useLocation, useHistory, useRouteMatch, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
@@ -21,6 +21,8 @@ import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 import SyllabusList from './TabsListing/SyllabusList';
 import LearningObjective from './TabsListing/LearningObjective';
 import CheckpointList from './TabsListing/CheckpointList';
+import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
 
 interface CurricularViewProps {
   tabProps?: any
@@ -73,15 +75,17 @@ const CurricularView = (props: CurricularViewProps) => {
   const [designersId, setDesignersID] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
+  const { curricularviewdict,BreadcrumsTitles } = useDictionary(clientKey);
+ 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Curriculum Builder', url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get('id')}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], url: `/dashboard/manage-institutions/curricular?id=${params.get('id')}`, last: true }
   ]
   const tabs = [
-    { index: 0, title: 'Units', icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} institutionId={institutionId} /> },
-    { index: 1, title: 'Learning objectives', icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
-    { index: 2, title: 'Demographics & Information', icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
+    { index: 0, title: curricularviewdict[userLanguage]['TAB']['UNIT'], icon: <BiNotepad />, active: false, content: <SyllabusList savedSyllabi={curricularData.syllabusList} curricularId={currID} loading={loading} institutionId={institutionId}/> },
+    { index: 1, title: curricularviewdict[userLanguage]['TAB']['LEARINGOBJECTIVE'], icon: <MdSpeakerNotes />, active: true, content: <LearningObjective curricularId={currID} /> },
+    { index: 2, title: curricularviewdict[userLanguage]['TAB']['INFORMATION'], icon: <FiUserCheck />, active: false, content: <CheckpointList curricularId={currID} /> },
   ]
 
   const updateTab = (tab: number) => {
@@ -149,7 +153,7 @@ const CurricularView = (props: CurricularViewProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Curriculum Builder" subtitle="Build curriculum, units and lesson plans here" />
+        <SectionTitle title={curricularviewdict[userLanguage]['TITLE']} subtitle={curricularviewdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
           {currentPath !== 'edit' ? (
@@ -164,26 +168,26 @@ const CurricularView = (props: CurricularViewProps) => {
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-full">
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
-                  GENERAL INFORMATION
+                {curricularviewdict[userLanguage]['HEADING']}
                 </h3>
               </div>
 
-              <div className="grid grid-cols-2 divide-x divide-gray-400 p-4">
+              <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
                 <div className="p-8">
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">Curriculum Name:</span>
+                    <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['NAME']}:</span>
                     <span className="w-auto">
                       {name || '--'}
                     </span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">Institution Owner:</span>
+                    <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['OWNER']}:</span>
                     <span className="w-auto">{institute.name || '--'}</span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">Description:</span>
+                    <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['DESCRIPTION']}:</span>
                     <span className="w-7/10">
                       {description || '--'}
                     </span>
@@ -191,7 +195,7 @@ const CurricularView = (props: CurricularViewProps) => {
                 </div>
                 <div className="p-8">
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">Designers:</span>
+                    <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['DESIGNER']}:</span>
                     <span className="w-auto">
                       {personsDataList && personsDataList.length > 0 ? (
                         personsDataList.map((person, i) => `${person} ${(i === personsDataList.length - 1) ? '.' : ','}`)
@@ -200,14 +204,14 @@ const CurricularView = (props: CurricularViewProps) => {
                     </span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">Languages:</span>
+                    <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['LANGUAGE']}:</span>
                     <span className="w-auto">{
                       languages && languages.length > 0 ? (
                         languages.map((item, index) => (item.name + `${languages.length - 1 === index ? '.' : ',' + ' '}`))
                       ) : '--'}</span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                    <span className="text-gray-900 mr-2 w-3/10">Objective:</span>
+                    <span className="text-gray-900 mr-2 w-3/10">{curricularviewdict[userLanguage]['OBJECTIVE']}:</span>
                     <span className="w-7/10">
                       {objectives?.length ? objectives[0] : '--'}
                     </span>

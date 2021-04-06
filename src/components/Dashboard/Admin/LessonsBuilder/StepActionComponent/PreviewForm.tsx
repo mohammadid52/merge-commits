@@ -23,15 +23,16 @@ interface PreviewFormProps {
 const PreviewForm = (props: PreviewFormProps) => {
   const { lessonName, enablePublish, lessonID, lessonPlans, lessonType } = props;
   const { userLanguage, clientKey } = useContext(GlobalContext);
-  const { BUTTONS, lessonBuilderDict } = useDictionary(clientKey);
+  const { BUTTONS, PreviewFormDict } = useDictionary(clientKey);
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: lessonBuilderDict[userLanguage]['PREVIEW_DETAILS']['WARN_MESSAGE']
+    message: PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['WARN_MESSAGE']
   })
   const [loading, setLoading] = useState(false);
   const [relatedUnitsID, setRelatedUnitsID] = useState([]);
   const [lessonDetails, setLessonDetails] = useState<any>({});
+ 
   const [message, setMessage] = useState({
     msg: '',
     isError: true
@@ -59,11 +60,11 @@ const PreviewForm = (props: PreviewFormProps) => {
     ).then(res => setMessage({
       ...message,
       isError: false,
-      msg: 'Successfully updated lesson plans in all units.'
+      msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATESUCCESS']
     })).catch(err => setMessage({
       ...message,
       isError: true,
-      msg: 'Error while updating lesson plans for units, please try again after some time.'
+      msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR']
     }))
     toggleModal();
   }
@@ -82,7 +83,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       setMessage({
         ...message,
         isError: false,
-        msg: 'This lesson is not connected to any units.'
+        msg: PreviewFormDict[userLanguage]['MESSAGES']['CONNECTERR']
       });
     }
   }
@@ -105,7 +106,7 @@ const PreviewForm = (props: PreviewFormProps) => {
         setMessage({
           ...message,
           isError: true,
-          msg: 'Error while fetching units for this lesson.Please try after some time.'
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['FETCHERR']
         })
       }
     }
@@ -118,13 +119,23 @@ const PreviewForm = (props: PreviewFormProps) => {
         id: lessonID
       }));
       const savedData: any = result.data.getLesson;
+      const checkpointSequence = savedData?.checkpoints?.items?.map((checkpoint: any) => {
+        let lessonplanSequence = savedData?.lessonPlan?.find((item: any) => item.LessonComponentID === checkpoint?.checkpointID)?.sequence
+        return ({
+          ...checkpoint,
+          sequence: lessonplanSequence
+        })
+      }).sort((a: any, b: any) => a.sequence > b.sequence ? 1 : -1)
+      savedData.checkpoints = {
+        items: checkpointSequence
+      }
       setLessonDetails({ ...savedData });
       setLoading(false);
     } catch {
       setMessage({
         ...message,
         isError: true,
-        msg: 'Error while fetching lesson details for this lesson.Please try after some time.'
+        msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR']
       })
       setLoading(true);
     }
@@ -150,21 +161,21 @@ const PreviewForm = (props: PreviewFormProps) => {
   return (
     <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
 
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> {lessonBuilderDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}</h3>
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-gray-900"> {PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}</h3>
       </div>
       {loading ? (
         <div className="py-20 text-center mx-auto">
-          <p>Fetching Lesson checkpoints please wait...</p>
+          <p>{PreviewFormDict[userLanguage]['FETCHING']}</p>
         </div>) :
         (<Fragment>
           <div className="p-4 max-h-screen overflow-y-auto">
             <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base"> Purpose: </h3>
+              <h3 className="font-bold text-gray-900 text-base"> {PreviewFormDict[userLanguage]['PURPOSE']}: </h3>
               {lessonDetails?.purpose ? ReactHtmlParser(lessonDetails?.purpose) : ''}
             </div>
             <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base"> Objective: </h3>
+              <h3 className="font-bold text-gray-900 text-base"> {PreviewFormDict[userLanguage]['OBJECTIVE']}: </h3>
               {lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}
             </div>
             <div className="py-2">
@@ -191,7 +202,7 @@ const PreviewForm = (props: PreviewFormProps) => {
                     </h4>
                     <div className="py-2">
                       <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
-                      {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions ) : ''}
+                      {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
                     </div>
                     <div>
                       {item.checkpoint?.questions?.items?.length > 0 ? (
@@ -214,7 +225,7 @@ const PreviewForm = (props: PreviewFormProps) => {
                     </div>
                   </Fragment>
                 ))}
-              </Fragment>) : <p>No Checkpoint added.</p>}
+              </Fragment>) : <p>{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>}
             </div>
             <div className="py-2">
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>

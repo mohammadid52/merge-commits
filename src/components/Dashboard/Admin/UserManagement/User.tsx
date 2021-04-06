@@ -15,6 +15,7 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import { getImageFromS3 } from '../../../../utilities/services';
+import useDictionary from '../../../../customHooks/dictionary';
 
 export interface UserInfo {
   authId: string
@@ -41,7 +42,7 @@ export interface UserInfo {
 const User = () => {
   const history = useHistory();
   const match = useRouteMatch();
-  const { theme } = useContext(GlobalContext);
+  const { theme,userLanguage,clientKey } = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [user, setUser] = useState<UserInfo>(
     {
@@ -70,10 +71,11 @@ const User = () => {
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const queryParams = queryString.parse(location.search)
+  const { UserDict,BreadcrumsTitles  } = useDictionary(clientKey);
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'People', url: '/dashboard/manage-users', last: false },
-    { title: 'User Information', url: `${location.pathname}${location.search}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['PEOPLE'], url: '/dashboard/manage-users', last: false },
+    { title: BreadcrumsTitles[userLanguage]['UserInfo'], url: `${location.pathname}${location.search}`, last: true }
   ]
 
   async function getUserById(id: string) {
@@ -136,7 +138,7 @@ const User = () => {
       <div className={`w-9/10 h-full mt-4`}>
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle title="USER INFORMATION" />
+          <SectionTitle title={UserDict[userLanguage]['title']} />
 
           <div className="flex justify-end py-4 mb-4 w-5/10">
             <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
@@ -154,7 +156,7 @@ const User = () => {
                   <img
                     src={imageUrl}
                     className="w-20 h-20 md:w-40 md:h-40 rounded-full flex flex-shrink-0" />) :
-                  <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full border border-gray-400 shadow-elem-light`}>
+                  <div className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
                     <div className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full" style={{ background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`, textShadow: '0.2rem 0.2rem 3px #423939b3' }}>
                       {initials(user.preferredName ? user.preferredName : user.firstName, user.lastName)}
                     </div>
