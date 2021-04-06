@@ -333,7 +333,7 @@ const Profile = (props: ProfilePageProps) => {
                         {!imageLoading ? (<Fragment>
                           <label className="cursor-pointer">
                             <img
-                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
                               src={imageUrl}
                             />
                             <input type="file" className="hidden" onChange={(e) => cropSelecetedImage(e)} onClick={(e: any) => e.target.value = ''} accept="image/*" multiple={false} />
@@ -359,7 +359,7 @@ const Profile = (props: ProfilePageProps) => {
                         </span> */}
                       </button>) :
                     (
-                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                      <label className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
                         {!imageLoading ? <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
                           <FaPlus />
                         </IconContext.Provider> : <Loader />}
@@ -376,7 +376,7 @@ const Profile = (props: ProfilePageProps) => {
                   </span>
                 </div>
                 <p className="text-gray-600 my-2">{dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']} </p>
-                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
+                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4 w-52`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
                 </div>

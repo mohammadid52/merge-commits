@@ -8,6 +8,7 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import * as queries from '../../../../../graphql/queries';
 import PageWrapper from '../../../../Atoms/PageWrapper'
 import Buttons from '../../../../Atoms/Buttons'
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface RoomListProps {
   instId: string
@@ -16,14 +17,16 @@ interface RoomListProps {
 
 const RoomsList = (props: RoomListProps) => {
   const { instId, instName } = props;
-  const { clientKey, theme } = useContext(GlobalContext);
+  const { clientKey, theme,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [roomList, setRoomList] = useState([]);
   const [loading, setLoading] = useState([]);
+  const {  InstitueRomms } = useDictionary(clientKey);
+
   const [messages, setMessages] = useState({
     show: false,
-    message: 'This institute does not have any classroom. Please create a new classroom.',
+    message: InstitueRomms[userLanguage]['messages']['nothaveclass'],
     isError: false
   })
   const createNewRoom = () => {
@@ -46,7 +49,7 @@ const RoomsList = (props: RoomListProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching classroom data please Try again later.',
+        message: InstitueRomms[userLanguage]['messages']['fetcherr'],
         isError: true
       })
     }
@@ -60,32 +63,32 @@ const RoomsList = (props: RoomListProps) => {
     <div className="py-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName ? instName.toUpperCase() : 'INSTITUTE' } CLASSROOMS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{instName ? instName.toUpperCase() : 'INSTITUTE' } {InstitueRomms[userLanguage]['TITLE']}</h3>
 
           {roomList.length > 0 ? (
             <Fragment>
               <div className="flex justify-end">
-                <Buttons btnClass="mx-4" label="Create new Classroom" onClick={createNewRoom} />
+                <Buttons btnClass="mx-4" label={InstitueRomms[userLanguage]['BUTTON']['CREATE']} onClick={createNewRoom} />
               </div>
 
               <div className="flex justify-between w-full  px-8 py-4 border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>No.</span>
+                  <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Classroom Name</span>
+                  <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Class Name</span>
+                  <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Teacher</span>
+                  <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Max. Students</span>
+                  <span>{InstitueRomms[userLanguage]['MXSTUDENTS']}</span>
                 </div>
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Actions</span>
+                  <span>{InstitueRomms[userLanguage]['ACTION']}</span>
                 </div>
               </div>
 
@@ -100,7 +103,7 @@ const RoomsList = (props: RoomListProps) => {
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.teacher?.firstName || ''} {item.teacher?.lastName || ''}</div>
                     <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">{item.maxPersons}</div>
                     <span className={`w-1/10 h-6 flex items-center cursor-pointer text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentRoom(item.id)}>
-                      edit
+                    {InstitueRomms[userLanguage]['EDIT']}
                   </span>
                   </div>
                 ))
@@ -111,7 +114,7 @@ const RoomsList = (props: RoomListProps) => {
           ) : (
               <Fragment>
                 <div className="flex justify-center mt-8">
-                  <Buttons btnClass="mx-4" label="Create new Classroom" onClick={createNewRoom} />
+                  <Buttons btnClass="mx-4" label={InstitueRomms[userLanguage]['BUTTON']['CREATE']} onClick={createNewRoom} />
                 </div>
                 <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>{messages.message} </p>
               </Fragment>

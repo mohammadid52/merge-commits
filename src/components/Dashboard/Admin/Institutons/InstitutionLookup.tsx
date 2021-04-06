@@ -17,6 +17,7 @@ import SearchInput from '../../../Atoms/Form/SearchInput';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
 import { getAsset } from '../../../../assets';
+import useDictionary from '../../../../customHooks/dictionary';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -26,7 +27,8 @@ import { getAsset } from '../../../../assets';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const { InstitutionDict, BreadcrumsTitles } = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -48,15 +50,15 @@ const InstitutionLookup: React.FC = () => {
   });
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Institution Management', url: `${match.url}`, last: true },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'], url: `${match.url}`, last: true },
   ]
 
   const sortByList = [
-    { id: 1, name: 'Institute Name', value: 'name' },
-    { id: 2, name: 'Type', value: 'type' },
-    { id: 3, name: 'Website', value: 'website' },
-    { id: 4, name: 'Contact No.', value: 'phone' },
+    { id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name' },
+    { id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type' },
+    { id: 3, name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`, value: 'website' },
+    { id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone' },
   ]
 
   const goNextPage = () => {
@@ -230,16 +232,16 @@ const InstitutionLookup: React.FC = () => {
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle title="INSTITUTIONS MANAGEMENT" subtitle="Institutions List" />
+          <SectionTitle title={InstitutionDict[userLanguage]['TITLE']} subtitle={InstitutionDict[userLanguage]['SUBTITLE']} />
           <div className="flex justify-end py-4 mb-4">
             <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchUserFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-            <Selector placeholder="Sort By" list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-0 " arrowHidden={true} />
-            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-0 rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
+            <Selector placeholder={InstitutionDict[userLanguage]['SORTBY']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-none " arrowHidden={true} />
+            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
               <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
-            <Buttons label="Add New Institution" onClick={addNewInstituion} btnClass="mr-4 w-full" Icon={IoBusinessSharp} />
+            <Buttons label={InstitutionDict[userLanguage]['BUTTON']['Add']} onClick={addNewInstituion} btnClass="mr-4 w-full" Icon={IoBusinessSharp} />
           </div>
         </div>
 
@@ -250,20 +252,20 @@ const InstitutionLookup: React.FC = () => {
               <div className="h-8/10 px-4">
                 <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                   <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>Institute Name</span>
+                    <span>{InstitutionDict[userLanguage]['TABLE']['NAME']}</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Type</span>
+                    <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['TYPE']}</span>
                   </div>
                   <div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Website</span>
+                    <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['WEBSITE']}</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Contact No.</span>
+                    <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['CONTACT']}</span>
                   </div>
                   <div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-									</div>
+                    {InstitutionDict[userLanguage]['TABLE']['ACTION']}
+                  </div>
                 </div>
                 {(currentList && currentList.length) ?
                   currentList.map((instituteObject, i) => (
@@ -279,7 +281,7 @@ const InstitutionLookup: React.FC = () => {
                   ))
                   : (
                     <div className="flex p-12 mx-auto justify-center">
-                      No Results
+                      {InstitutionDict[userLanguage]['TABLE']['NORESULT']}
                     </div>)}
 
               </div>
@@ -289,7 +291,7 @@ const InstitutionLookup: React.FC = () => {
                 {!searchInput.isActive &&
                   (
                     <Fragment>
-                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">Showing Page {currentPage + 1} of {totalPages} pages</span>
+                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">{InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1} {InstitutionDict[userLanguage]['OF']} {totalPages} {InstitutionDict[userLanguage]['PAGES']}</span>
                       <Pagination
                         currentPage={currentPage + 1}
                         setNext={goNextPage}

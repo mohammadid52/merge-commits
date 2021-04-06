@@ -14,6 +14,7 @@ import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 
 interface TopicsListComponentProps {
@@ -24,13 +25,14 @@ interface TopicsListComponentProps {
 const TopicsListComponent = (props: TopicsListComponentProps) => {
   const { curricularId, learningId } = props;
   const history = useHistory();
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [openRow, setOpenRow] = useState('');
   const [loading, setLoading] = useState(false)
   const [topics, setTopics] = useState([])
   const [topicIds, setTopicIds] = useState([])
+  const { TOPICLISTDICT,BreadcrumsTitles } = useDictionary(clientKey);
 
   const expandRow = (id: string) => {
     if (openRow === id) {
@@ -103,7 +105,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
     <Fragment>
       <div className="w-9/10 mx-auto my-4 flex">
         <div>
-          <p className="text-base font-medium text-gray-600">Topics: </p>
+          <p className="text-base font-medium text-gray-600">{TOPICLISTDICT[userLanguage]['TOPIC']}: </p>
         </div>
       </div>
       {!loading ? (
@@ -132,7 +134,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                     <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-nowrap  border-0  border-b-0 border-gray-200 hover:bg-gray-200 ${(openRow === item.id) && 'bg-gray-200'}`}>
                                       <div className="flex w-6.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal cursor-pointer text-gray-900 hover:text-gray-800" onClick={() => expandRow(item.id)}> <span className="w-auto mr-4">{index + 1}.</span>{item.name} </div>
                                       <div className={`flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center justify-end cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentTopic(item.id)}>
-                                        Edit
+                                        {TOPICLISTDICT[userLanguage]['EDIT']}
                                       </div>
                                       <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 justify-end whitespace-normal" onClick={() => expandRow(item.id)}>
                                         <span className="w-6 h-6 flex items-center cursor-pointer" style={{minWidth: '1.5rem'}}>
@@ -145,7 +147,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                                   </div>
                                 )}
                               </Draggable>
-                              {(openRow === item.id) && <div className="border border-gray-200">
+                              {(openRow === item.id) && <div className="border-0 border-gray-200">
                                 <MeasurementList curricularId={curricularId} topicID={item.id} />
                               </div>}
                             </Fragment>
@@ -159,7 +161,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
 
               </div> : (
                 <div>
-                  <p className="text-center p-16">  This learning objective does not have any topics. Please create a new one.</p>
+                  <p className="text-center p-16">  {TOPICLISTDICT[userLanguage]['INFO']}</p>
                 </div>
               )
           }
@@ -169,12 +171,12 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                 <IoAdd />
               </IconContext.Provider>
             </span>
-          Add New Topic
+            {TOPICLISTDICT[userLanguage]['ADDNEW']}
         </div>
         </Fragment>
       ) : (
           <div>
-            <p className="text-center p-16">  Fetching topics list...</p>
+            <p className="text-center p-16">  {TOPICLISTDICT[userLanguage]['FETCH']}</p>
           </div >
         )}
 

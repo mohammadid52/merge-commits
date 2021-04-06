@@ -12,6 +12,7 @@ import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface MeasurementListProps {
   curricularId: string
@@ -20,12 +21,14 @@ interface MeasurementListProps {
 
 const MeasurementList = (props: MeasurementListProps) => {
   const { curricularId, topicID } = props;
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [measurements, setMeasurements] = useState([])
   const [measrementIds, setMeasrementIds] = useState([])
+ 
+  const { Measurementdict,BreadcrumsTitles } = useDictionary(clientKey);
 
   const createNewMeasurement = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`)
@@ -92,13 +95,13 @@ const MeasurementList = (props: MeasurementListProps) => {
             <Fragment>
               <div className="flex justify-between w-8/10 px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>No.</span>
+                  <span>{Measurementdict[userLanguage]['NO']}</span>
                 </div>
                 <div className="w-7/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Measurements</span>
+                  <span>{Measurementdict[userLanguage]['MEASUREMENT']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>Actions</span>
+                  <span>{Measurementdict[userLanguage]['ACTION']}</span>
                 </div>
               </div>
               <div className="w-8/10 m-auto">
@@ -125,7 +128,7 @@ const MeasurementList = (props: MeasurementListProps) => {
                                 </div>
                                   <div className="flex w-7/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal text-gray-600 cursor-move"> {item.name} </div>
                                   <div className={`flex w-2/10 px-8 py-3 items-center text-left text-s leading-4 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => editCurrentMeasurement(item.id)}>
-                                    Edit
+                                  {Measurementdict[userLanguage]['EDIT']}
                                   </div>
                                 </div>
                               </div>
@@ -142,7 +145,7 @@ const MeasurementList = (props: MeasurementListProps) => {
               </div>
             </Fragment>
             : <div>
-              <p className="text-center p-16">  This topic does not have any measurement yet. Please create a new one.</p>
+              <p className="text-center p-16">  {Measurementdict[userLanguage]['INFO']}</p>
             </div>}
           <div className="w-8/10 mx-auto my-2 flex justify-center items-center px-8 py-4  border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer" onClick={createNewMeasurement}>
             <span className="w-6 h-6 flex items-center mr-4">
@@ -150,12 +153,12 @@ const MeasurementList = (props: MeasurementListProps) => {
                 <IoAdd />
               </IconContext.Provider>
             </span>
-            Add New Measurement
+            {Measurementdict[userLanguage]['ADDNEW']}
           </div>
         </div>
       ) : (
           <div>
-            <p className="text-center p-16">  Fetching measurements list...</p>
+            <p className="text-center p-16">  {Measurementdict[userLanguage]['FETCH']}</p>
           </div>
         )}
     </Fragment>

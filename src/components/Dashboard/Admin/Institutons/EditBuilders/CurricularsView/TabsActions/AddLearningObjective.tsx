@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -12,6 +12,8 @@ import TextArea from '../../../../../../Atoms/Form/TextArea';
 
 import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 interface AddLearningObjectiveProps {
 
 }
@@ -22,15 +24,18 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
   const urlParams: any = useParams()
   const curricularId = urlParams.curricularId;
 
-  const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Add Learning objective', url: `/dashboard/curricular/${curricularId}/learning-objective/add`, last: true }
-  ];
-
+  
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [validation, setValidation] = useState({ isValid: true, msg: '' })
   const [learningsIds, setLearningsIds] = useState([]);
+  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
+  const { ADDLEARINGOBJDICT,BreadcrumsTitles } = useDictionary(clientKey);
+  
+  const breadCrumsList = [
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['LEARINGOBJECTIVE'], url: `/dashboard/curricular/${curricularId}/learning-objective/add`, last: true }
+  ];
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
@@ -43,7 +48,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
 
   const saveLearningObjectiveDetails = async () => {
     if (!name.length) {
-      setValidation({ isValid: false, msg: 'Name is required' })
+      setValidation({ isValid: false, msg: ADDLEARINGOBJDICT[userLanguage]['VALIDATION'] })
       return
     }
     setValidation({ isValid: true, msg: '' })
@@ -87,7 +92,7 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add learning objective" subtitle="Add new learning objective." />
+        <SectionTitle title={ADDLEARINGOBJDICT[userLanguage]['TITLE']} subtitle={ADDLEARINGOBJDICT[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -96,11 +101,11 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LEARNING OBJECTIVE INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{ADDLEARINGOBJDICT[userLanguage]['HEADING']}</h3>
           <div className="">
 
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Learning Objective Name" isRequired />
+              <FormInput value={name} id='name' onChange={onInputChange} name='name' label={ADDLEARINGOBJDICT[userLanguage]['NAME']} isRequired />
               {
                 !validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null
               }
@@ -114,13 +119,13 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
             </div> */}
 
             <div className="px-3 py-4">
-              <TextArea id='description' value={description} onChange={onInputChange} name='description' label="Description" />
+              <TextArea id='description' value={description} onChange={onInputChange} name='description' label={ADDLEARINGOBJDICT[userLanguage]['DESC']} />
             </div>
 
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label="Save" onClick={saveLearningObjectiveDetails} />
+          <Buttons btnClass="py-3 px-10" label={ADDLEARINGOBJDICT[userLanguage]['SAVE']} onClick={saveLearningObjectiveDetails} />
         </div>
       </PageWrapper>
     </div>

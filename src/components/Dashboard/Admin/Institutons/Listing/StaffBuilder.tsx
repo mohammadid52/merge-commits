@@ -260,19 +260,19 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   <Fragment>
                     <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>No.</span>
+                        <span>{dictionary['NO']}</span>
                       </div>
                       <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Name</span>
+                        <span>{dictionary['NAME']}</span>
                       </div>
                       <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Role</span>
+                        <span>{dictionary['ROLE']}</span>
                       </div>
                       <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Status</span>
+                        <span>{dictionary['STATUS']}</span>
                       </div>
                       <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                        <span>Action</span>
+                        <span>{dictionary['ACTION']}</span>
                       </div>
                     </div>
 
@@ -356,12 +356,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   </Fragment>
                 ) : (
                     <div className="text-center p-16">
-                      <p> This institute does not have any staff member. Please add new member.</p>
+                      <p> {dictionary['INFO']}</p>
                     </div>
                   )}
               </> : (
                 <div className="text-center p-16">
-                  <p>Loading...</p>
+                  <p>{dictionary['LOADING']}</p>
                 </div>
               )
           }

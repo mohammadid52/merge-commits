@@ -12,6 +12,7 @@ import Buttons from '../../../../../Atoms/Buttons';
 import CheckpointQueTable from './CheckpointQueTable';
 import { getAsset } from '../../../../../../assets';
 import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
 interface CheckpointLookupProps {
   changeStep: (step: string) => void
   onSave: (ids: string[]) => void
@@ -23,8 +24,9 @@ interface CheckpointLookupProps {
 const CheckpointLookup = (props: CheckpointLookupProps) => {
   const { changeStep, onSave, checkpointList, lessonName, lessonType } = props;
 
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { CheckpointLookupDict ,BreadcrumsTitles } = useDictionary(clientKey);
 
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
   const [expandId, setExpandedId] = useState('');
@@ -81,32 +83,32 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} {CheckpointLookupDict[userLanguage]['BUILDER']} - {lessonName}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Previous Checkpoints</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{CheckpointLookupDict[userLanguage]['PREVIOUSCHECKPOINT']}</span>
         </h4>
       </div>
 
       <div className="p-4">
         <div className="flex justify-between my-4">
-          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedCheckpointIds?.length} Checkpoints Selected</p>
+          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedCheckpointIds?.length} {CheckpointLookupDict[userLanguage]['CHECKPOINTSELECTED']}</p>
           <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
         </div>
         <div>
           <Fragment>
             <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
               <div className="w-1.5/10 px-6 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                <span>Selection</span>
+                <span>{CheckpointLookupDict[userLanguage]['SELECTION']}</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Checkpoint Title
+                {CheckpointLookupDict[userLanguage]['CHECKPOINTTITLE']}
               </div>
               <div className="w-2/10 px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Language
+                {CheckpointLookupDict[userLanguage]['LANGUAGE']}
               </div>
               <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span></span>
@@ -117,7 +119,7 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
               {checkpointList?.length && filteredList.map(item => (
                 <Fragment>
                   {/* Table row */}
-                  <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${expandId === item.id ? 'border border-indigo-400 rounded-lg' : ''}`}>
+                  <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${expandId === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''}`}>
                     <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4">
                       <span>
                         <CheckBox value={selectedCheckpointIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectcheckpoint' />
@@ -153,8 +155,8 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={() => changeStep('SelectedCheckPointsList')} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label="Save" onClick={() => onSave(selectedCheckpointIds)} />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={CheckpointLookupDict[userLanguage]['BUTTON']['CANCEL']} onClick={() => changeStep('SelectedCheckPointsList')} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={CheckpointLookupDict[userLanguage]['BUTTON']['SAVE']} onClick={() => onSave(selectedCheckpointIds)} />
           </div>
         </div>
 

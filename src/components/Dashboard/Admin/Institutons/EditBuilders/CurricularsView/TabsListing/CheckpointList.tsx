@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import API, { graphqlOperation } from '@aws-amplify/api';
 
@@ -10,6 +10,8 @@ import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import DragableAccordion from '../../../../../../Atoms/DragableAccordion';
 import Buttons from '../../../../../../Atoms/Buttons';
 import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/CheckPointSteps/CheckpointQueTable';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface CheckpointListProps {
   curricularId: string
@@ -21,6 +23,9 @@ const CheckpointList = (props: CheckpointListProps) => {
 
   const [checkPoints, setCheckPoints] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
+  const { CHECKPOINTSDICT,BreadcrumsTitles } = useDictionary(clientKey);
+ 
 
   const createNewCheckpoint = () => {
     history.push(`/dashboard/manage-institutions/curricular/${curricularId}/checkpoint/addNew`)
@@ -72,7 +77,7 @@ const CheckpointList = (props: CheckpointListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CURRICULAR CHECKPOINTS</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{CHECKPOINTSDICT[userLanguage]['TITLE']}</h3>
           {
             !loading ? ((checkPoints && checkPoints.length > 0) ? (
               <Fragment>
@@ -80,19 +85,19 @@ const CheckpointList = (props: CheckpointListProps) => {
                   <DragableAccordion titleList={checkPoints} onDragEnd={() => console.log('onDragEnd')} />
                 </div>
                 <div className="flex justify-center w-9/10 m-auto">
-                  <Buttons btnClass="mr-3" label="Add Existing Checkpoint" onClick={addExistingCheckpoint} />
-                  <Buttons btnClass="ml-3" label="Add New Checkpoint" onClick={createNewCheckpoint} />
+                  <Buttons btnClass="mr-3" label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']} onClick={addExistingCheckpoint} />
+                  <Buttons btnClass="ml-3" label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']} onClick={createNewCheckpoint} />
                 </div>
               </Fragment>
             ) : (
                 <Fragment>
                   <div className="flex justify-center mt-8">
-                    <Buttons btnClass="mr-3" label="Add Existing Checkpoint" onClick={addExistingCheckpoint} />
-                    <Buttons btnClass="mx-4" label="Add new Checkpoint" onClick={createNewCheckpoint} />
+                    <Buttons btnClass="mr-3" label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDEXISTING']} onClick={addExistingCheckpoint} />
+                    <Buttons btnClass="mx-4" label={CHECKPOINTSDICT[userLanguage]['BUTTON']['ADDNEW']} onClick={createNewCheckpoint} />
                   </div>
-                  <p className="text-center p-16">  This curricular does not have any checkpoints yet. Please create a new one.</p>
+                  <p className="text-center p-16">  {CHECKPOINTSDICT[userLanguage]['INFO']}</p>
                 </Fragment>)) : (
-                <div className="py-12 my-12 m-auto text-center">Fetching Data Please wait...</div>
+                <div className="py-12 my-12 m-auto text-center">{CHECKPOINTSDICT[userLanguage]['FETCH']}</div>
               )}
         </PageWrapper>
       </div>

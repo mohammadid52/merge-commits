@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import { UserInfo } from './User';
 import UserStatus from './UserStatus';
 import UserRole from './UserRole';
+import useDictionary from '../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface UserInfoProps {
   user: UserInfo
@@ -12,6 +14,8 @@ interface UserInfoProps {
 
 const UserInformation = (props: UserInfoProps) => {
   const { user, status } = props;
+  const { theme,userLanguage,clientKey } = useContext(GlobalContext);
+  const { UserInformationDict,BreadcrumsTitles  } = useDictionary(clientKey);
 
   let created = () => {
     let date = new Date(user.createdAt);
@@ -29,7 +33,7 @@ const UserInformation = (props: UserInfoProps) => {
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
           <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Personal Information
+             {UserInformationDict[userLanguage]['heading']}
             </h3>
           </div>
 
@@ -37,7 +41,7 @@ const UserInformation = (props: UserInfoProps) => {
             <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                  Full Name
+                  {UserInformationDict[userLanguage]['fullname']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   {`${user.firstName} ${user.lastName}`}
@@ -45,7 +49,7 @@ const UserInformation = (props: UserInfoProps) => {
               </div>
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                  Nickname
+                  {UserInformationDict[userLanguage]['nickname']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   {`${user.preferredName ? user.preferredName : 'not set'}`}
@@ -53,7 +57,7 @@ const UserInformation = (props: UserInfoProps) => {
               </div>
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                  Role
+                  {UserInformationDict[userLanguage]['role']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   <UserRole
@@ -62,7 +66,7 @@ const UserInformation = (props: UserInfoProps) => {
               </div>
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                  Status
+                  {UserInformationDict[userLanguage]['status']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   <UserStatus
@@ -79,7 +83,7 @@ const UserInformation = (props: UserInfoProps) => {
               </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                  Email Address
+                 {UserInformationDict[userLanguage]['email']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   {`${user.email}`}
@@ -95,7 +99,7 @@ const UserInformation = (props: UserInfoProps) => {
               </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                  Account Created
+                 {UserInformationDict[userLanguage]['account']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
                   {created()}

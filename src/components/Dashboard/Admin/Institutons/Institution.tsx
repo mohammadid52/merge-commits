@@ -15,6 +15,8 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import PageWrapper from '../../../Atoms/PageWrapper';
+import useDictionary from '../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface InstitutionProps {
   tabProps?: any
@@ -79,11 +81,14 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, "");
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 })
+  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 });
+  const { clientKey,userLanguage} = useContext(GlobalContext);
+  const {  BreadcrumsTitles } = useDictionary(clientKey);
+
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Institution Management', url: '/dashboard/manage-institutions', last: false },
-    { title: 'Institute Info', url: `${location.pathname}${location.search}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'], url: '/dashboard/manage-institutions', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], url: `${location.pathname}${location.search}`, last: true }
   ];
 
 

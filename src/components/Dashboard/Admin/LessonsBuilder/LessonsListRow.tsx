@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { getAsset } from '../../../../assets';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 interface LessonsListRow {
   id: string,
@@ -17,8 +18,9 @@ const LessonsListRow = (props: LessonsListRow) => {
 
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { BUTTONS } = useDictionary(clientKey);
 
   const handleLessonsEdit = (type: string) => {
     if (type === 'Lesson') {
@@ -70,7 +72,7 @@ const LessonsListRow = (props: LessonsListRow) => {
       </div>
 
       <div className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`} onClick={() => handleLessonsEdit(type)} >
-        <span className="w-auto">Edit</span>
+        <span className="w-auto">{BUTTONS['EDIT']}</span>
       </div>
     </div>
   )

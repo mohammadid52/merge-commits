@@ -13,6 +13,8 @@ import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import Buttons from '../../../Atoms/Buttons';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import BreadCrums from '../../../Atoms/BreadCrums';
+import useDictionary from '../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface newUserInput {
   key: number
@@ -91,10 +93,13 @@ const Registration = () => {
     },
   ];
 
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { RegistrationDict,BreadcrumsTitles  } = useDictionary(clientKey);
+
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'People Management', url: '/dashboard/manage-users', last: false },
-    { title: 'Add New User', url: `/dashboard/registration`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['PeopleManagment'], url: '/dashboard/manage-users', last: false },
+    { title: BreadcrumsTitles[userLanguage]['AddNewUser'], url: `/dashboard/registration`, last: true }
   ]
 
   const handleMessage = (type: string, text: string) => {
@@ -175,13 +180,13 @@ const Registration = () => {
             return {
               show: true,
               type: 'success',
-              message: 'Please make sure the user\'s email is correct',
+              message: RegistrationDict[userLanguage]['messages']['emailerr'],
             }
           case "UsernameExistsException":
             return {
               show: true,
               type: 'error',
-              message: 'An account with this email exists',
+              message: RegistrationDict[userLanguage]['messages']['existemail'],
             }
           default:
             return {
@@ -206,25 +211,25 @@ const Registration = () => {
         return {
           show: true,
           type: 'error',
-          message: 'User\'s first name cannot be blank',
+          message: RegistrationDict[userLanguage]['messages']['firstname'],
         }
       } if (!newUserInputs.lastName) {
         return {
           show: true,
           type: 'error',
-          message: 'User\'s last name cannot be blank',
+          message: RegistrationDict[userLanguage]['messages']['lastname'],
         }
       } if (!username) {
         return {
           show: true,
           type: 'error',
-          message: 'User\'s email cannot be blank',
+          message: RegistrationDict[userLanguage]['messages']['email'],
         }
       } if (!username.includes("@")) {
         return {
           show: true,
           type: 'error',
-          message: 'User\'s email is not in the expected email address format',
+          message: RegistrationDict[userLanguage]['messages']['emailaddress'],
         }
       }
       // if (!newUserInputs.birthdate) {
@@ -238,7 +243,7 @@ const Registration = () => {
         return {
           show: true,
           type: 'error',
-          message: 'User\'s role cannot be blank',
+          message: RegistrationDict[userLanguage]['messages']['userrol'],
         }
       }
       validated = true;
@@ -248,7 +253,7 @@ const Registration = () => {
       return {
         show: true,
         type: 'loading',
-        message: 'Loading...',
+        message: RegistrationDict[userLanguage]['messages']['loading'],
       }
     })
     // handleMessage('error', message.message)
@@ -317,7 +322,7 @@ const Registration = () => {
 
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Registration" subtitle="Add new user to the list" />
+        <SectionTitle title={RegistrationDict[userLanguage]['title']} subtitle={RegistrationDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -330,12 +335,12 @@ const Registration = () => {
 
               <form>
                 <div className="h-full px-4 pb-5 pt-2 sm:px-6">
-                  <div className="text-red-500 pb-2 text-right">* Required fields</div>
+                  <div className="text-red-500 pb-2 text-right">* {RegistrationDict[userLanguage]['requiredfield']}</div>
 
                   <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3 p-2">
                       <label htmlFor="firstName" className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span> First Name
+                        <span className="text-red-500">*</span> {RegistrationDict[userLanguage]['firstname']}
                       </label>
                       <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
@@ -345,13 +350,13 @@ const Registration = () => {
                           onChange={handleChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           value={`${newUserInputs.firstName}`}
-                          placeholder="John" />
+                          placeholder={RegistrationDict[userLanguage]['firstplaceholder']} />
                       </div>
                     </div>
 
                     <div className="sm:col-span-3 p-2">
                       <label htmlFor="lastName" className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span> Last Name
+                        <span className="text-red-500">*</span> {RegistrationDict[userLanguage]['lastname']}
                       </label>
                       <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
@@ -361,15 +366,15 @@ const Registration = () => {
                           onChange={handleChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           value={`${newUserInputs.lastName}`}
-                          placeholder="Doe" />
+                          placeholder={RegistrationDict[userLanguage]['lastplaceholder']} />
                       </div>
                     </div>
 
                     <div className="sm:col-span-3 p-2">
                       <label htmlFor="email" className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span> Email
+                        <span className="text-red-500">*</span> {RegistrationDict[userLanguage]['email']}
                       </label>
-                      <div className="border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
+                      <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
                         <input
                           type="email"
                           id="email"
@@ -377,7 +382,7 @@ const Registration = () => {
                           onChange={handleChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           value={`${newUserInputs.email}`}
-                          placeholder="email@email.com" />
+                          placeholder={RegistrationDict[userLanguage]['emailplaceholder']} />
                       </div>
                     </div>
 
@@ -468,7 +473,7 @@ const Registration = () => {
                 <div>
                   {newUserInputs.message.type === 'success' ? <SuccessNote />
                     : message.type === 'error' ? <ErrorNote note={message.message} />
-                      : message.type === 'loading' ? <div className="my-2 text-sm leading-5 text-gray-900">Loading...</div>
+                      : message.type === 'loading' ? <div className="my-2 text-sm leading-5 text-gray-900">{RegistrationDict[userLanguage]['messages']['loading']}</div>
                         : newUserInputs.message.type === 'error' ? <ErrorNote note={message.message} />
                           : null
                   }
@@ -491,7 +496,7 @@ const Registration = () => {
           </span> */}
           <Buttons
             btnClass="py-2 px-4 text-xs w-full"
-            label={'Submit'}
+            label={RegistrationDict[userLanguage]['button']['submit']}
             onClick={handleSubmit}
           />
         </div>
