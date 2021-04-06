@@ -1,5 +1,13 @@
 import { UniversalLesson } from '../../../interfaces/LessonComponentsInterfaces';
 
+/**
+ *
+ * THIS DATA IS FETCHED AND GETS STORED IN
+ *
+ *        state.data.
+ *
+ */
+
 const exampleUniversalLesson: UniversalLesson = {
   id: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
   syllabusID: '',

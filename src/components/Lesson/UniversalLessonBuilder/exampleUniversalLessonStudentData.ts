@@ -1,5 +1,18 @@
 import { UniversalLessonStudentData } from '../../../interfaces/LessonComponentsInterfaces';
 
+/**
+ *
+ * THIS DATA IS UPDATED AS PAGE IS MODIFIED AND GETS STORED IN
+ *
+ *        state.componentState.
+ *
+ *        -or-
+ *
+ *        state.studentData (would have to be created)
+ *
+ */
+
+
 const exampleStudentDataMutation: UniversalLessonStudentData = {
   id: '000001',
   universalLessonID: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
