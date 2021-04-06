@@ -100,11 +100,14 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
                 curricula: { items: any[] };
               } = item;
               const { name, description }: { name: string; description: string } = curricula.items[0].curriculum;
+              const roomName = item.name;
+              const roomId = item.id;
 
               const { email, firstName, lastName } = teacher;
 
               return (
                 <div
+                  onClick={() => history.push(`/dashboard/classroom/${roomId}`)}
                   key={`homepage__classrooms-${idx}`}
                   className="flex flex-col rounded-lg shadow overflow-hidden transform transition duration-200">
                   <div className="flex-shrink-0">
@@ -129,7 +132,9 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
                         </a>
                       </p> */}
                       <a href="#" className="block mt-2">
-                        <p className="text-xl font-semibold text-gray-900">{name}</p>
+                        <p className="text-xl font-semibold text-gray-900">
+                          {name} ({roomName})
+                        </p>
                         <p className="mt-3 text-base text-gray-500">
                           {description ? limitDesc(description, 250) : 'no description'}
                         </p>

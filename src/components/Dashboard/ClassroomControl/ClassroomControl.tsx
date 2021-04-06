@@ -1,16 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
+import React, { useContext, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-import {ClassroomControlProps} from '../Dashboard';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {API, graphqlOperation} from '@aws-amplify/api';
+import { ClassroomControlProps } from '../Dashboard';
+import { GlobalContext } from '../../../contexts/GlobalContext';
+import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
-import {getArrayOfUniqueValueByProperty} from '../../../utilities/arrays';
-import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
+import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
+import { useHistory } from 'react-router';
+import { split, trim } from 'lodash';
 
 export interface Room {
   id: string;
@@ -54,6 +56,14 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   // Menu state
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
+  const history: any = useHistory();
+
+  const getRouteId = (): string => {
+    const arr = split(trim(history.location.pathname), '/');
+    return arr.length >= 4 && arr[3];
+  };
+
+  const activeRoomId: string = getRouteId();
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
@@ -168,7 +178,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       //
       try {
         const noticeboardWidgetsFetch: any = await API.graphql(
-          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: state.activeRoom } } })
+          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoomId } } })
         );
 
         const response = await noticeboardWidgetsFetch;
@@ -187,26 +197,26 @@ const ClassroomControl = (props: ClassroomControlProps) => {
         setWidgetLoading(false);
       }
     };
-    if (state.activeRoom && widgetLoading === false) {
+    if (activeRoomId && widgetLoading === false) {
       listRoomWidgets();
     }
-  }, [state.activeRoom]);
+  }, [activeRoomId]);
 
   /**
    * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
    */
   useEffect(() => {
     const listRoomCurriculums = async () => {
-      if (state.roomData.rooms.length > 0 && state.activeRoom !== '') {
+      if (state.roomData.rooms.length > 0 && activeRoomId !== '') {
         try {
           const roomIds = getArrayOfUniqueValueByProperty(state.roomData.rooms, 'id');
           const roomCurriculumsFetch: any = API.graphql(
             graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { roomID: { contains: state.activeRoom } },
+              filter: { roomID: { contains: activeRoomId } },
             })
           );
           const response = await roomCurriculumsFetch;
-          console.log('response curriculums', response)
+          console.log('response curriculums', response);
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
           setCurriculumIds(arrayOfCurriculumIds);
@@ -217,18 +227,18 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       }
     };
     listRoomCurriculums();
-  }, [state.activeRoom]);
+  }, [activeRoomId]);
 
   // Save info of selected room to cookie
   useEffect(() => {
-    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === state.activeRoom);
+    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoomId);
     if (getRoomFromState.length === 1) {
       setCookie('room_info', getRoomFromState[0]);
       setActiveRoomInfo(getRoomFromState[0]);
     } else {
       setCookie('room_info', {});
     }
-  }, [state.activeRoom]);
+  }, [activeRoomId]);
 
   /**
    * 5. LIST AVAILABLE SYLLABUS and GET SEQUENCE TO SORT SYLLABI
@@ -249,22 +259,20 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
           const responseRoomSyllabus = await syllabusMultiFetch;
 
-
           const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
 
           // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
-          const roomSyllabusReordered = (arrayOfRoomSyllabusSequence) ? arrayOfRoomSyllabusSequence.reduce(
-            (acc: any[], syllabusID: string, idx: number) => {
-              const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
-              if (matchedSyllabus) {
-                return [...acc, matchedSyllabus];
-              } else {
-                return acc;
-              }
-            },
-            []
-          ) : arrayOfRoomSyllabus;
+          const roomSyllabusReordered = arrayOfRoomSyllabusSequence
+            ? arrayOfRoomSyllabusSequence.reduce((acc: any[], syllabusID: string, idx: number) => {
+                const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
+                if (matchedSyllabus) {
+                  return [...acc, matchedSyllabus];
+                } else {
+                  return acc;
+                }
+              }, [])
+            : arrayOfRoomSyllabus;
 
           const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
             if (activeRoomSyllabus === responseObject.id) {
@@ -367,7 +375,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   };
 
-
   const lessonPlannerSyllabus =
     state.roomData.syllabus.length > 0
       ? state.roomData.syllabus.filter((syllabusObject: any) => {
@@ -378,7 +385,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       : [];
 
   const classRoomActiveSyllabus = state.roomData.rooms
-    .filter((room: any) => room.id === state.activeRoom)
+    .filter((room: any) => room.id === activeRoomId)
     .map((room: any) => {
       return { id: room.activeSyllabus };
     });
@@ -401,15 +408,13 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   }, [syllabusLessonSequence]);
 
-
-
   /******************************************
    * 7.1 SELECT ROOM FUNCTION               *
    ******************************************/
   const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
-    if (state.activeRoom !== t.id) {
+    if (activeRoomId !== t.id) {
       // setActiveRoom(t.id);
       setActiveRoomName(name);
 
@@ -438,7 +443,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       homeData={homeData}
       setHomeData={setHomeData}
       currentPage={currentPage}
-      activeRoom={state.activeRoom}
+      activeRoom={activeRoomId}
       setActiveRoom={setActiveRoom}
       setActiveRoomInfo={setActiveRoomInfo}
       setActiveRoomName={setActiveRoomName}
