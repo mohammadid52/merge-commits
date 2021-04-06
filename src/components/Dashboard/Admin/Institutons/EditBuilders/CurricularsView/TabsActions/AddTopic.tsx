@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -12,6 +12,8 @@ import Selector from '../../../../../../Atoms/Form/Selector'
 import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as customMutations from '../../../../../../../customGraphql/customMutations'
+import useDictionary from '../../../../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 interface AddTopicProps {
 
 }
@@ -28,6 +30,8 @@ const AddTopic = (props: AddTopicProps) => {
 
   const urlGetParams: any = useQuery();
   const learningId = urlGetParams.get('lid'); // Find a code from params.
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const {AddTopicDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -43,9 +47,9 @@ const AddTopic = (props: AddTopicProps) => {
   })
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     { title: learning?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
-    { title: 'Add Topic', url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['AddTopic'], url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
   ];
 
   const onInputChange = (e: any) => {
@@ -67,13 +71,13 @@ const AddTopic = (props: AddTopicProps) => {
     const msgs = validation;
     if (!name.length) {
       isValid = false;
-      msgs.name = 'Name is required';
+      msgs.name = AddTopicDict[userLanguage]['messages']['namerequired'];
     } else {
       msgs.name = ''
     }
     if (!learning.id) {
       isValid = false;
-      msgs.learning = 'learning objective is required';
+      msgs.learning = AddTopicDict[userLanguage]['messages']['objectiverequired'];
     } else {
       msgs.learning = ''
     }
@@ -152,20 +156,20 @@ const AddTopic = (props: AddTopicProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Add Topic" subtitle="Add new topic to the curricular." />
+        <SectionTitle title={AddTopicDict[userLanguage]['title']} subtitle={AddTopicDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">TOPIC OVERVIEW</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddTopicDict[userLanguage]['heading']}</h3>
           <div className="">
 
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Topic Name" isRequired />
+              <FormInput value={name} id='name' onChange={onInputChange} name='name' label={AddTopicDict[userLanguage]['topicname']} isRequired />
               {
                 validation.name && <p className="text-red-600">{validation.name}</p>
               }
@@ -173,16 +177,16 @@ const AddTopic = (props: AddTopicProps) => {
 
             {/* <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                Select Learning objective <span className="text-red-500">*</span>
+                {AddTopicDict[userLanguage]['learningobj']} <span className="text-red-500">*</span>
               </label>
-              <Selector selectedItem={learning.value} placeholder="Learning objective" list={learnings} onChange={selectLearning} />
+              <Selector selectedItem={learning.value} placeholder={AddTopicDict[userLanguage]['learningobjpl']} list={learnings} onChange={selectLearning} />
               {
                 validation.learning && <p className="text-red-600">{validation.learning}</p>
               }
             </div> */}
 
             <div className="px-3 py-4">
-              <TextArea id='description' value={description} onChange={onInputChange} name='description' label="Description" />
+              <TextArea id='description' value={description} onChange={onInputChange} name='description' label={AddTopicDict[userLanguage]['description']} />
             </div>
 
             <div className="px-3 py-4">
@@ -201,8 +205,8 @@ const AddTopic = (props: AddTopicProps) => {
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10 mr-4" label="Cancel" onClick={history.goBack} transparent />
-          <Buttons btnClass="py-3 px-10 ml-4" label="Save" onClick={saveTopicDetails} />
+          <Buttons btnClass="py-3 px-10 mr-4" label={AddTopicDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
+          <Buttons btnClass="py-3 px-10 ml-4" label={AddTopicDict[userLanguage]['button']['save']} onClick={saveTopicDetails} />
         </div>
       </PageWrapper>
     </div>

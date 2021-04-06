@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -18,6 +18,8 @@ import { IconContext } from 'react-icons';
 import { stringToHslColor, getInitialsFromString, initials } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { getImageFromS3 } from '../../../../../utilities/services';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 
 interface ClassBuilderProps {
 
@@ -48,6 +50,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const [selectedStudents, setSelectedStudent] = useState([]);
   const [allStudentList, setAllStudentList] = useState([]);
   const [loading, setIsLoading] = useState(false);
+  const { clientKey,userLanguage} = useContext(GlobalContext);
+  const { classBuilderdict,BreadcrumsTitles  } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -60,8 +64,8 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const params = useQuery();
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Class Creation', url: '/dashboard/class-creation', last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['Class_Creation'], url: '/dashboard/class-creation', last: true }
   ];
 
   const onChange = (e: any) => {
@@ -164,7 +168,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch{
       setMessages({
         show: true,
-        message: 'Error while fetching student list, Please try again or you can add them later.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['FETCHSTUDENT'],
         isError: true
       })
     }
@@ -184,7 +188,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching institution list, Please try again later.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['FETCHINSTITUTION'],
         isError: true
       })
     }
@@ -198,7 +202,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       .then(res => {
         setMessages({
           show: true,
-          message: 'New class details has been saved.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['SUCCESS']['CLASSSAVE'],
           isError: false
         })
         setSelectedStudent([])
@@ -208,7 +212,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       .catch(err => {
         setMessages({
           show: true,
-          message: 'Error while adding students data, you can add them saperately from class.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['STUDENTADDERROR'],
           isError: true
         })
       })
@@ -230,7 +234,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       } catch{
         setMessages({
           show: true,
-          message: 'Unable to save new class. Please try again later.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['SAVECLASSERROR'],
           isError: true
         })
       }
@@ -251,7 +255,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while adding stuents data, you can add them saperately from class.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['STUDENTADDERROR'],
         isError: true
       })
     }
@@ -270,7 +274,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while processing please Try again later.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['PROCESSINGERROR'],
         isError: true
       })
     }
@@ -280,14 +284,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     if (classData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Class name is required please enter.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['NAME'] ,
         isError: true
       })
       return false;
     } else if (classData.institute.id === '') {
       setMessages({
         show: true,
-        message: 'Please select an institute to add class.',
+        message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['INSTITUTE'],
         isError: true
       })
       return false;
@@ -296,7 +300,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: 'This class name is already exist, please add another name.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['VALIDATION']['CLASSNAME'],
           isError: true
         })
         return false;
@@ -347,7 +351,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       } else {
         setMessages({
           show: true,
-          message: 'Invalid path please go back to institution selection page to select your institute.',
+          message: classBuilderdict[userLanguage]['MESSAGES']['ERROR']['INVALIDPATH'],
           isError: true
         })
       }
@@ -362,19 +366,19 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Create New Class" subtitle="Add new class to the list" />
+        <SectionTitle title={classBuilderdict[userLanguage]['TITLE']} subtitle={classBuilderdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons btnClass="" label="Go Back" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">CLASS INFORMATION</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{classBuilderdict[userLanguage]['HEADING']}</h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='className' onChange={onChange} name='className' label="Class Name" isRequired />
+              <FormInput value={name} id='className' onChange={onChange} name='className' label={classBuilderdict[userLanguage]['NAME_LABEL']} isRequired />
             </div>
 
             {/* 
@@ -391,16 +395,16 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             </div> */}
           </div>
         </div>
-        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">STUDENTS</h3>
+        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">{classBuilderdict[userLanguage]['HEADING2']}</h3>
         <div className="flex items-center w-6/10 m-auto px-2">
-          <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder="Add new student" onChange={onStudentSelect} />
-          <Buttons btnClass="ml-4 py-1" label="Add" onClick={addMemberToList} />
+          <SelectorWithAvatar selectedItem={newMember} list={studentList} placeholder={classBuilderdict[userLanguage]['MEMBER_PLACEHOLDER']} onChange={onStudentSelect} />
+          <Buttons btnClass="ml-4 py-1" label={classBuilderdict[userLanguage]['BUTTON']['ADD']} onClick={addMemberToList} />
         </div>
         <div className="my-4 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
           {selectedStudents.length > 0 && (
             <Fragment>
               {selectedStudents.map(item =>
-                <div className="flex justify-between w-full items-center px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                   <div className="flex w-3/10 items-center">
                     <div className="flex-shrink-0 h-10 w-10 flex items-center">
                       {item.avatar ?
@@ -426,7 +430,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
         </div>) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="my-8 py-3 px-12 text-sm" label={loading ? 'Saving...' : 'Save'} onClick={saveClassDetails} disabled={loading ? true : false} />
+          <Buttons btnClass="my-8 py-3 px-12 text-sm" label={loading ? classBuilderdict[userLanguage]['BUTTON']['SAVING'] : classBuilderdict[userLanguage]['BUTTON']['SAVE']} onClick={saveClassDetails} disabled={loading ? true : false} />
         </div>
       </PageWrapper>
     </div>

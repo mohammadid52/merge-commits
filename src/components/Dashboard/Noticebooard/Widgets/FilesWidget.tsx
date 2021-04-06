@@ -21,8 +21,8 @@ export const FileLinkWidget = (props: {
   widgetObj?: Widget;
 }) => {
   const { title, links, classProp, widgetObj } = props;
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {noticeboardDict} = useDictionary(clientKey);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
+  const { noticeboardDict } = useDictionary(clientKey);
 
   const getFileInfo = (url: string) => {
     if (url.includes('document') || url.includes('word')) {
@@ -73,28 +73,29 @@ export const FileLinkWidget = (props: {
   return (
     <div>
       <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
-        <div className={`flex flex-row p-2 text-sm font-semibold border-b border-dark-gray border-opacity-10`}>
+        <div className={`flex flex-row p-2 text-sm font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           <span className={`w-full text-white`}>{title}:</span>
         </div>
       </div>
-      <div className={`p-2 mb-2 bg-white border border-dark-gray border-opacity-10`}>
+      <div className={`p-2 mb-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
           {links &&
-          links.length > 0 &&
-          links.map((link: Link, idx: number) => (
-            <div
-              className={`
+            links.length > 0 &&
+            links.map((link: Link, idx: number) => (
+              <div
+                key={`${widgetObj.id}_${idx}`}
+                className={`
             ${
-                idx < links.length - 1 && widgetObj.placement === 'sidebar'
-                  ? 'border-b border-dark-gray border-opacity-10'
-                  : ''
-              } 
+              idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                ? 'border-b border-dark-gray border-opacity-10'
+                : ''
+            } 
               max-w-1/3
             `}>
-              {/**
-               * MOBILE VERSION WIDGET ICON
-               */}
-              <span className={`w-full mr-0 mb-2 flex flex-col`}>
+                {/**
+                 * MOBILE VERSION WIDGET ICON
+                 */}
+                <span className={`w-full mr-0 mb-2 flex flex-col`}>
                   <p className={`${responsiveClass} mt-2 text-center text-xs`}>{link.text}</p>
                   <a
                     id={`links_${links.id}_mini`}
@@ -112,8 +113,8 @@ export const FileLinkWidget = (props: {
                     )}
                   </a>
                 </span>
-            </div>
-          ))}
+              </div>
+            ))}
         </div>
       </div>
     </div>

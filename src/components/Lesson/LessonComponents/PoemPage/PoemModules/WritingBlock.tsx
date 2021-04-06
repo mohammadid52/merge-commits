@@ -363,7 +363,7 @@ const WritingBlock = (props: WritingBlockProps) => {
                                             <div className='relative w-full'>
                                                 <input
                                                     id={id}
-                                                    className={` ${line?.menuOpen && menuToggled ? 'rounded-tl-xl border-t border-l border-r border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
+                                                    className={` ${line?.menuOpen && menuToggled ? 'rounded-tl-xl  border-t-0 border-l  border-r-0 border-white' : 'rounded-l-xl'}  ${theme.elem.textInput}`}
                                                     name={id}
                                                     type='text'
                                                     value={line.text}
@@ -373,12 +373,12 @@ const WritingBlock = (props: WritingBlockProps) => {
 
                                             {/* MAP AVAILABLE LINE PROMPTS */}
                                                 {line?.menuOpen && menuToggled ? (
-                                                    <div className={`absolute left-0 h-48 overflow-y-scroll w-full rounded-b-xl z-50 shadow-xlwhite border-b border-l border-r border-white ${theme.elem.textInput}`}>
+                                                    <div className={`absolute left-0 h-48 overflow-y-scroll w-full rounded-b-xl z-50 shadow-xlwhite border-b-0 border-l  border-r-0 border-white ${theme.elem.textInput}`}>
                                                         {lineState.prompts.map((prompt: any, key: number) => (
                                                             <div
                                                                 key={key}
                                                                 id={id}
-                                                                className={`w-full mb-2 font-light cursor-pointer border-t border-white border-opacity-20`}
+                                                                className={`w-full mb-2 font-light cursor-pointer  border-t-0 border-white border-opacity-20`}
                                                                 onClick={handleSelectPrompt}>
                                                                 <span id={prompt.id}>{prompt.prompt}</span>
                                                             </div>

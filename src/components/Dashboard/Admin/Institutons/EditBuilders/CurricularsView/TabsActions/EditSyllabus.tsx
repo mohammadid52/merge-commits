@@ -23,6 +23,7 @@ import * as customMutations from '../../../../../../../customGraphql/customMutat
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
+import useDictionary from '../../../../../../../customHooks/dictionary';
 
 interface EditSyllabusProps {
 
@@ -49,8 +50,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const history = useHistory();
   const location = useLocation();
 
-  const { clientKey, theme } = useContext(GlobalContext);
+  const { clientKey, theme,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const {EditSyllabusDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const initialData = {
     name: '',
@@ -85,7 +87,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     show: false,
     lessonPlan: false,
     lessonEdit: false,
-    message: 'Do you want to save changes before moving forward?'
+    message: EditSyllabusDict[userLanguage]['messages']['wantsave']
   })
   const [selecetedLesson, setSelectedLesson] = useState({
     id: '',
@@ -110,8 +112,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const institutionId = urlParams.institutionId;
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Unit Builder', url: `/dashboard/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['UnitBuilder'], url: `/dashboard/curricular/${curricularId}/syllabus/edit?id=${syllabusId}`, last: true }
   ];
 
   const onDragEnd = async (result: any) => {
@@ -205,7 +207,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         const newSyllabus = await API.graphql(graphqlOperation(mutations.updateSyllabus, { input: input }));
         setMessages({
           show: true,
-          message: 'Unit details has been updated.',
+          message: EditSyllabusDict[userLanguage]['messages']['unitupdate'],
           isError: false
         })
         setSyllabusData(initialData);
@@ -214,7 +216,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       } catch {
         setMessages({
           show: true,
-          message: 'Unable to update unit details please try again later.',
+          message: EditSyllabusDict[userLanguage]['messages']['unableupdate'],
           isError: true
         })
         return false
@@ -225,7 +227,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (syllabusData.name.trim() === '') {
       setMessages({
         show: true,
-        message: 'Unit name is required please enter name.',
+        message: EditSyllabusDict[userLanguage]['messages']['namerequired'],
         isError: true
       })
       return false;
@@ -269,7 +271,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while updating lesson status please try later.',
+        message: EditSyllabusDict[userLanguage]['messages']['updateerr'],
         isError: true,
         lessonError: true
       })
@@ -330,7 +332,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while adding new lesson please try later.',
+        message: EditSyllabusDict[userLanguage]['messages']['updateerr'],
         isError: true,
         lessonError: true
       })
@@ -388,7 +390,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         console.log('err', err)
         setMessages({
           show: true,
-          message: 'Error while fetching unit data.',
+          message: EditSyllabusDict[userLanguage]['messages']['fetcher'],
           isError: true
         })
       }
@@ -417,7 +419,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching lessons list data.',
+        message: EditSyllabusDict[userLanguage]['messages']['fetchlist'],
         isError: true,
         lessonError: true
       })
@@ -439,7 +441,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     } catch {
       setMessages({
         show: true,
-        message: 'Error while fetching Designers list Please try again later.',
+        message: EditSyllabusDict[userLanguage]['messages']['fetchdesign'],
         isError: true,
         lessonError: true
       })
@@ -593,9 +595,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="Unit Builder" subtitle="Update curriculum units here." />
+        <SectionTitle title={EditSyllabusDict[userLanguage]['title']} subtitle={EditSyllabusDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={backtoPreviousStep} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={backtoPreviousStep} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -605,54 +607,54 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         <div className="h-9/10 flex flex-col md:flex-row">
           <div className="w-full">
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
-                  GENERAL INFORMATION
+                  {EditSyllabusDict[userLanguage]['heading']}
                 </h3>
               </div>
               <div className="w-9/10 m-auto p-4">
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label="Unit Name" isRequired />
+                    <FormInput value={name} id='name' onChange={onInputChange} name='name' label={EditSyllabusDict[userLanguage]['unitname']} isRequired />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      Select Designers
+                     {EditSyllabusDict[userLanguage]['designer']}
                     </label>
-                    <MultipleSelector selectedItems={selectedDesigners} placeholder="Designers" list={designersList} onChange={selectDesigner} />
+                    <MultipleSelector selectedItems={selectedDesigners} placeholder={EditSyllabusDict[userLanguage]['pdesigner']} list={designersList} onChange={selectDesigner} />
                   </div>
                 </div>
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      Select Language
-                    </label>
-                    <MultipleSelector selectedItems={languages} placeholder="Language" list={languageList} onChange={selectLanguage} />
+                      {EditSyllabusDict[userLanguage]['selectlang']}
+                  </label>
+                    <MultipleSelector selectedItems={languages} placeholder={EditSyllabusDict[userLanguage]['language']} list={languageList} onChange={selectLanguage} />
                   </div>
 
                 </div>
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea value={description} rows={5} id='description' onChange={onInputChange} name='description' label="Description" />
+                    <TextArea value={description} rows={5} id='description' onChange={onInputChange} name='description' label={EditSyllabusDict[userLanguage]['desc']} />
                   </div>
                   <div>
-                    <TextArea value={purpose} rows={5} id='purpose' onChange={onInputChange} name='purpose' label="Purpose" />
+                    <TextArea value={purpose} rows={5} id='purpose' onChange={onInputChange} name='purpose' label={EditSyllabusDict[userLanguage]['purpose']} />
                   </div>
                 </div>
 
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea value={objectives} rows={5} id='objectives' onChange={onInputChange} name='objectives' label="Objectives" />
+                    <TextArea value={objectives} rows={5} id='objectives' onChange={onInputChange} name='objectives' label={EditSyllabusDict[userLanguage]['objective']} />
                   </div>
                   <div>
-                    <TextArea value={methodology} rows={5} id='methodology' onChange={onInputChange} name='methodology' label="Methodology" />
+                    <TextArea value={methodology} rows={5} id='methodology' onChange={onInputChange} name='methodology' label={EditSyllabusDict[userLanguage]['methodology']} />
                   </div>
                 </div>
                 <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
-                    <TextArea value={policies} rows={5} id='policies' onChange={onInputChange} name='policies' label="Policies" />
+                    <TextArea value={policies} rows={5} id='policies' onChange={onInputChange} name='policies' label={EditSyllabusDict[userLanguage]['policy']} />
                   </div>
                 </div>
                 {(messages.show && !messages.lessonError) ? (<div className="py-2 m-auto text-center">
@@ -666,9 +668,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
 
             <div className='bg-white shadow-5 sm:rounded-lg mb-4'>
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
-                  LESSON PLAN MANAGER
+                  {EditSyllabusDict[userLanguage]['lessonplan']}
                 </h3>
               </div>
               <div className="w-full m-auto p-4">
@@ -676,7 +678,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                 {/* Add new lesson section */}
                 <div className="my-12 w-6/10 m-auto flex items-center justify-center">
                   <div className="mr-4">
-                    <Selector selectedItem={selecetedLesson.value} list={dropdownLessonsList} placeholder="Select Lesson" onChange={selectLesson} />
+                    <Selector selectedItem={selecetedLesson.value} list={dropdownLessonsList} placeholder={EditSyllabusDict[userLanguage]['selectlesson']} onChange={selectLesson} />
                   </div>
                   <div className="ml-4 w-auto">
                     <Buttons btnClass="ml-4 py-1" label="Add" onClick={addNewLesson} disabled={selecetedLesson.value ? false : true} />
@@ -689,24 +691,24 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                 <div>
                   {(selectedLessonsList && selectedLessonsList.length > 0) ? (
                     <div>
-                      <div className="flex justify-between w-full  px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                      <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                         <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>No.</span>
+                          <span>{EditSyllabusDict[userLanguage]['no']}</span>
                         </div>
                         <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Lesson Name</span>
+                          <span>{EditSyllabusDict[userLanguage]['name']}</span>
                         </div>
                         <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Measurements</span>
+                          <span>{EditSyllabusDict[userLanguage]['measurement']}</span>
                         </div>
                         <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Type</span>
+                          <span>{EditSyllabusDict[userLanguage]['type']}</span>
                         </div>
                         <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-center justify-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Status</span>
+                          <span>{EditSyllabusDict[userLanguage]['status']}</span>
                         </div>
                         <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                          <span>Actions</span>
+                          <span>{EditSyllabusDict[userLanguage]['action']}</span>
                         </div>
                       </div>
 
@@ -728,7 +730,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
                                       >
-                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <div key={index} className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                                           <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
                                           <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer" onClick={() => gotoLessonBuilder(item.id, item.type)}>
                                             {item.title ? item.title : '--'}
@@ -753,7 +755,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                           {
                                             (editState.id !== item.id) ?
                                               <span className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`} onClick={() => editCurrentLesson(item.id)}>
-                                                edit
+                                                {EditSyllabusDict[userLanguage]['edit']}
                                               </span>
                                               :
                                               <span className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`} onClick={cancelEdit}>
@@ -783,11 +785,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                     </div>
                   ) : (
                       <div className="text-center p-16 mt-4">
-                        No lessons selected.
+                       {EditSyllabusDict[userLanguage]['nolesson']}
                       </div>
                     )}
                   <div className="flex my-8 justify-center">
-                    <Buttons btnClass="py-3 px-10" label='Create New Lesson' onClick={createNewLesson} disabled={loading ? true : false} />
+                    <Buttons btnClass="py-3 px-10" label={EditSyllabusDict[userLanguage]['createnew']} onClick={createNewLesson} disabled={loading ? true : false} />
                   </div>
                 </div>
               </div>

@@ -1,52 +1,22 @@
-import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import * as customQueries from '../../../customGraphql/customQueries';
-import ContentCard from '../../Atoms/ContentCard';
-import ContentCardTitle from '../../Atoms/ContentCardTitle';
-import SectionTitleV2 from '../../Atoms/SectionTitleV2';
+import React, { useEffect, useState } from 'react';
+
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { getImageFromS3 } from '../../../utilities/services';
 import RoomTiles from './RoomTiles';
 import TeacherRows from './TeacherRows';
 import StudentsTiles from './StudentsTiles';
+import { ClassroomControlProps } from '../Dashboard';
+import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 
-const Home = () => {
-  const { state } = useContext(GlobalContext);
-  const [homeData, setHomeData] = useState<{ class: any }[]>();
+const Home = (props: ClassroomControlProps) => {
+  const { homeData, classList, handleRoomSelection } = props;
+
   const [teacherList, setTeacherList] = useState<any[]>();
-  const [classList, setClassList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
-
-  const getDashboardData = async (authId: string, email: string) => {
-    try {
-      const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, {
-          authId: authId,
-          email: email,
-        })
-      );
-      const response = await dashboardDataFetch;
-      const arrayOfResponseObjects = response?.data.getPerson.classes.items;
-      setHomeData(arrayOfResponseObjects);
-    } catch (e) {
-      console.error('getDashbaordData -> ', e);
-    } finally {
-      // need to do some cleanup
-    }
-  };
-
-  useEffect(() => {
-    if (state.user.authId) {
-      const authId = state.user.authId;
-      const email = state.user.email;
-      getDashboardData(authId, email);
-    }
-  }, [state.user.authId]);
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
     if (imageUrl) {
-      console.log(imageUrl);
       return imageUrl;
     } else {
       return '';
@@ -106,18 +76,10 @@ const Home = () => {
     })
   );
 
-  const getClassList =
-    homeData && homeData.length > 0
-      ? homeData.reduce((acc: any[], dataObj: any) => {
-          return [...acc, { name: dataObj.class.name, rooms: dataObj.class.rooms, students: dataObj.class.students }];
-        }, [])
-      : [];
-
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
       setStudentsList(await studentsListWithImages);
-      setClassList(getClassList);
     };
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
@@ -126,14 +88,18 @@ const Home = () => {
 
   return (
     <>
-      <SectionTitleV2 title={`Your Classrooms:`} />
-      <RoomTiles classList={classList} />
-
-      <SectionTitleV2 title={`Your Teachers:`} />
-      <TeacherRows teacherList={teacherList} />
-
-      <SectionTitleV2 title={`Your Classmates:`} />
-      <StudentsTiles studentsList={studentsList} />
+      {homeData ? (
+        <>
+          <SectionTitleV3 title={'Your Classrooms'} />
+          <RoomTiles handleRoomSelection={handleRoomSelection} classList={classList} />
+          <SectionTitleV3 title={'Your Teachers'} />
+          <TeacherRows teacherList={teacherList} />
+          <SectionTitleV3 title={'Your Classmates'} />
+          <StudentsTiles studentsList={studentsList} />
+        </>
+      ) : (
+        <ComponentLoading />
+      )}
     </>
   );
 };

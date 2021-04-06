@@ -147,6 +147,7 @@ type Curriculum @model @key(fields: ["id"]) @key(name: "curriculumByInstitution"
   institutionID: ID!
   name: String!
   type: String
+  image: String
   description: String
   objectives: [String]
   languages: [Language]

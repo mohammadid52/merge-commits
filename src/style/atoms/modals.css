@@ -27,7 +27,7 @@
 }
 
 .modal .modal-header {
-  @apply flex items-center justify-between p-4 border-b border-solid rounded-t bg-white text-gray-900 border-gray-200;
+  @apply flex items-center justify-between p-4 border-b-0 border-solid rounded-t bg-white text-gray-900 border-gray-200;
 }
 
 .modal .modal-header .modal-close {
@@ -35,11 +35,11 @@
 }
 
 .modal .modal-content {
-  @apply border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900;
+  @apply border-0  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900;
 }
 
 .modal .modal-footer {
-  @apply flex items-center justify-end p-4 border-t border-solid rounded-b bg-white text-gray-900 border-gray-200;
+  @apply flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200;
 }
 
 @keyframes modalShow {

@@ -17,7 +17,7 @@ const TrophyBlock = () => {
   return (
     <div
       className={`w-7/10 h-full ${theme.gradient.cardBase} flex flex-col justify-between items-center rounded-lg py-3 px-6 shadow-xl`}>
-      <div className='w-full border-b border-white border-opacity-10 mr-4 mb-2'>
+      <div className='w-full border-b-0 border-white border-opacity-10 mr-4 mb-2'>
         <h3 className='w-full text-xl text-gray-200 font-open font-light pr-4'>
           You have completed
         </h3>

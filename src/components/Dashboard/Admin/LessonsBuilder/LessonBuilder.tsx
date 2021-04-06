@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, Fragment, useContext } from 'react'
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
@@ -18,6 +18,8 @@ import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import { InstructionInitialState, SavedLessonDetailsProps, LessonPlansProps } from './LessonEdit';
+import useDictionary from '../../../../customHooks/dictionary';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 export interface InitialData {
   name: string
@@ -43,11 +45,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const { designersList, institutionList } = props;
   const history = useHistory();
   const match = useRouteMatch();
+  const { theme, clientKey ,userLanguage} = useContext(GlobalContext);
+  const { BreadcrumsTitles, LessonBuilderDict } = useDictionary(clientKey);
 
   const breadCrumsList = [
-    { title: 'Home', url: '/dashboard', last: false },
-    { title: 'Lessons', url: '/dashboard/lesson-builder', last: false },
-    { title: 'Lesson Plan Builder', url: `${match.url}`, last: true },
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['LESSONS'], url: '/dashboard/lesson-builder', last: false },
+    { title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'], url: `${match.url}`, last: true },
   ]
 
   const initialData = {
@@ -94,7 +98,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: "You have unsaved changes, do you still want to continue?"
+    message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE']
   });
 
   const changeLessonType = (type: string) => {
@@ -235,9 +239,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title="LESSON PLAN BUILDER" subtitle="Build lessons, surveys or assessments here." />
+        <SectionTitle title={LessonBuilderDict[userLanguage]['TITLE']} subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -246,7 +250,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
         <div className="w-full m-auto">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
-          <div className="grid grid-cols-5 divide-x divide-gray-400 p-4">
+          <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
             <div className="sm:col-span-1">
               <WizardScroller stepsList={lessonBuilderSteps} activeStep={activeStep} setActiveStep={(step) => setActiveStep(step)} />
             </div>

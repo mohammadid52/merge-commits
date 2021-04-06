@@ -55,7 +55,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
         } min-h-100 p-2 mb-6 rounded h-auto flex flex-col `}>
         {/* CARD CONTAINER */}
         {/* LESSON CARD TOP - WITH IMAGE */}
-        <div className={`border rounded`}>
+        <div className={`border-0 rounded`}>
           <div
             className={`w-full h-40 bg-white  ${theme.dashboard.bg} rounded-t bg-cover flex flex-col place-content-end`}
             style={{
@@ -65,7 +65,7 @@ const SmallLessonCard = (props: LessonCardProps) => {
             }}>
             <div className="text-center">
               <div
-                className="tracking-widest border-b text-gray-300 border-ketchup"
+                className="tracking-widest border-b-0 text-gray-300 border-ketchup"
                 style={{ textShadow: '1px 1px black' }}>
                 FEATURED PERSON
               </div>

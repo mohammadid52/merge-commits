@@ -15,6 +15,7 @@ import SideRoomSelector from './Menu/SideRoomSelector';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
+import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -51,7 +52,7 @@ export interface DashboardProps {
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export interface SideMenuProps extends DashboardProps {
+export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
   [key: string]: any;
 }
@@ -60,6 +61,7 @@ const Dashboard = (props: DashboardProps) => {
   const { updateAuthState } = props;
   const match = useRouteMatch();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
+
   const [userData, setUserData] = useState({
     role: '',
     image: '',
@@ -68,7 +70,7 @@ const Dashboard = (props: DashboardProps) => {
 
   // For controlling loading transitions
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
-  const [syllabusLoading, setsyllabusLoading] = useState<boolean>(false);
+  const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
 
   // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
@@ -77,14 +79,6 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
-
-  useEffect(() => {
-    // copyLessonPlans();
-  }, []);
-
-  useEffect(() => {
-    // initRosterSyllabusLessons();
-  }, []);
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -154,7 +148,8 @@ const Dashboard = (props: DashboardProps) => {
         {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
         (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
         (userData.role === 'ST' && state.currentPage === 'classroom') ? (
-          <SideRoomSelector
+          <ClassroomControl
+            isHomescreen={false}
             currentPage={currentPage}
             activeRoom={activeRoom}
             setActiveRoom={setActiveRoom}
@@ -163,7 +158,7 @@ const Dashboard = (props: DashboardProps) => {
             lessonLoading={lessonLoading}
             setLessonLoading={setLessonLoading}
             syllabusLoading={syllabusLoading}
-            setSyllabusLoading={setsyllabusLoading}
+            setSyllabusLoading={setSyllabusLoading}
             activeRoomSyllabus={activeRoomSyllabus}
             setActiveRoomSyllabus={setActiveRoomSyllabus}
           />
@@ -206,7 +201,19 @@ const Dashboard = (props: DashboardProps) => {
                   exact
                   path={`${match.url}/home`}
                   render={() => (
-                    <Home/>
+                    <ClassroomControl
+                      isHomescreen={true}
+                      currentPage={currentPage}
+                      activeRoom={activeRoom}
+                      setActiveRoom={setActiveRoom}
+                      setActiveRoomInfo={setActiveRoomInfo}
+                      setActiveRoomName={setActiveRoomName}
+                      lessonLoading={lessonLoading}
+                      setLessonLoading={setLessonLoading}
+                      syllabusLoading={syllabusLoading}
+                      setSyllabusLoading={setSyllabusLoading}
+                      activeRoomSyllabus={activeRoomSyllabus}
+                      setActiveRoomSyllabus={setActiveRoomSyllabus}/>
                   )}
                 />
 
@@ -258,7 +265,7 @@ const Dashboard = (props: DashboardProps) => {
                       lessonLoading={lessonLoading}
                       setLessonLoading={setLessonLoading}
                       syllabusLoading={syllabusLoading}
-                      setSyllabusLoading={setsyllabusLoading}
+                      setSyllabusLoading={setSyllabusLoading}
                     />
                   )}
                 />

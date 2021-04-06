@@ -56,13 +56,13 @@ const ProfileInfo = (props: UserInfoProps) => {
     return (
       <div className="w-full md:px-4 pt-4">
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-          <div className="flex justify-between border-b border-gray-200 sm:px-6">
+          <div className="flex justify-between border-b-0 border-gray-200 sm:px-6">
             <h3 className="px-4 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
               {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}
             </h3>
           </div>
           <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['FIRST_NAME']}
@@ -135,13 +135,13 @@ const ProfileInfo = (props: UserInfoProps) => {
           <Fragment>
             {stdCheckpoints.map((checkpoint: any) => <Fragment key={checkpoint.id}>
               <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-                <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
+                <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
                     {checkpoint.title}
                   </h3>
                 </div>
                 <div className="px-4 py-5 sm:px-6">
-                  <dl className="grid grid-cols-1 col-gap-4 row-gap-4 sm:grid-cols-2">
+                  <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
 
                     {checkpoint.questions?.items.map((item: any) => (
                       <div className="sm:col-span-1 p-2">

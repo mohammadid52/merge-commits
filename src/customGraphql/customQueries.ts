@@ -7,6 +7,14 @@ export const getDashboardData = /* GraphQL */ `
             name
             rooms {
               items {
+                id
+                institutionID
+                classID
+                teacherAuthID
+                teacherEmail
+                name
+                maxPersons
+                activeSyllabus
                 teacher {
                   firstName
                   lastName
@@ -15,9 +23,20 @@ export const getDashboardData = /* GraphQL */ `
                   role
                   phone
                 }
-                activeSyllabus
-                name
-                id
+                curricula {
+                  items {
+                    id
+                    curriculumID
+                    curriculum {
+                      name
+                      image
+                      id
+                      description
+                      designers
+                      objectives
+                    }
+                  }
+                }
               }
             }
             students {
@@ -1394,9 +1413,7 @@ export const listLessonsTitles = /* GraphQL */ `
         designers
         lessonPlan {
           type
-          LessonComponentID
-          sequence
-          stage
+         
         }
         institutionID
         createdAt
@@ -2265,6 +2282,11 @@ export const getStudentResponse = /* GraphQL */ `
         checkpointID
         email
         authID
+        person {
+          id
+          email
+          authId
+        }
         componentType
         scheduleID
         lessonID

@@ -55,7 +55,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
                        className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
                     <span
                       id={option.label}
-                      className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border 
+                      className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
                 ${input.value === option.label ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
                       data-value={option.label}
                       onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}

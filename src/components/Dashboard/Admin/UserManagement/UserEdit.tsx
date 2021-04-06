@@ -7,6 +7,8 @@ import DropdownForm from './DropdownForm';
 import { UserInfo } from './User';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import Buttons from '../../../Atoms/Buttons';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -19,6 +21,8 @@ const UserEdit = (props: UserInfoProps) => {
   const history = useHistory();
   const { user, status, getUserById, setStatus } = props;
   const [editUser, setEditUser] = useState(user);
+  const { theme,userLanguage,clientKey } = useContext(GlobalContext);
+  const { UserEditDict,BreadcrumsTitles  } = useDictionary(clientKey);
 
   async function updatePerson() {
     const input = {
@@ -140,21 +144,21 @@ const UserEdit = (props: UserInfoProps) => {
       <div className='h-full w-full md:px-2 pt-2'>
         <form>
           <div className='h-full shadow-5 bg-white sm:rounded-lg mb-4'>
-            <div className='px-4 py-5 border-b border-gray-200 sm:px-6'>
+            <div className='px-4 py-5 border-b-0 border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                Edit Information
+               {UserEditDict[userLanguage]['heading']} 
               </h3>
             </div>
 
             <div className='h-full px-4 py-5 sm:px-6'>
-              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900'>
+              <div className='grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900'>
                 <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='firstName'
                     className='block text-m font-medium leading-5 text-gray-700'>
-                    First Name
+                   {UserEditDict[userLanguage]['firstname']}
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
+                  <div className='mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='firstName'
                       type='text'
@@ -169,9 +173,9 @@ const UserEdit = (props: UserInfoProps) => {
                   <label
                     htmlFor='lastName'
                     className='block text-m font-medium leading-5 text-gray-700'>
-                    Last Name
+                    {UserEditDict[userLanguage]['lastname']}
                   </label>
-                  <div className='border border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
+                  <div className='border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm'>
                     <input
                       id='lastName'
                       type='text'
@@ -193,7 +197,7 @@ const UserEdit = (props: UserInfoProps) => {
                                 </svg>
                                 </span>
                                 <span className="ml-5 rounded-md shadow-sm">
-                                <button type="button" className="py-2 px-3 border border-gray-300 rounded-md text-m leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                                <button type="button" className="py-2 px-3  border-0 border-gray-300 rounded-md text-m leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:ring-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
                                     Change
                                 </button>
                                 </span>
@@ -204,9 +208,9 @@ const UserEdit = (props: UserInfoProps) => {
                   <label
                     htmlFor='preferredName'
                     className='block text-m font-medium leading-5 text-gray-700'>
-                    Nickname
+                    {UserEditDict[userLanguage]['nickname']}
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
+                  <div className='mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='preferredName'
                       type='text'
@@ -223,7 +227,7 @@ const UserEdit = (props: UserInfoProps) => {
                     style={false}
                     handleChange={handleChangeStatus}
                     userInfo={editUser.status}
-                    label='Status'
+                    label={UserEditDict[userLanguage]['status']}
                     id='status'
                     items={Status}
                   />
@@ -235,7 +239,7 @@ const UserEdit = (props: UserInfoProps) => {
                     style={false}
                     handleChange={handleChangeRole}
                     userInfo={editUser.role}
-                    label='Role'
+                    label={UserEditDict[userLanguage]['role']}
                     id='role'
                     items={Role}
                   />
@@ -247,7 +251,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Contact Number
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
+                  <div className='mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='phone'
                       onChange={onChange}
@@ -261,21 +265,21 @@ const UserEdit = (props: UserInfoProps) => {
           </div>
           {/* 
           <div className='h-full bg-white shadow-5 sm:rounded-lg'>
-            <div className='px-4 py-5 border-b border-gray-200 sm:px-6'>
+            <div className='px-4 py-5 border-b-0 border-gray-200 sm:px-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
                 Edit Institution Information
               </h3>
             </div>
 
             <div className='h-full px-4 py-5 sm:px-6'>
-              <div className='grid grid-cols-1 row-gap-4 col-gap-4 sm:grid-cols-6 text-gray-900'>
+              <div className='grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900'>
                 <div className='sm:col-span-3 p-2'>
                   <label
                     htmlFor='institution'
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Institution
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
+                  <div className='mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='institution'
                       type='text'
@@ -292,7 +296,7 @@ const UserEdit = (props: UserInfoProps) => {
                     className='block text-m font-medium leading-5 text-gray-700'>
                     Grade
                   </label>
-                  <div className='mt-1 border border-gray-300 py-2 px-3 rounded-md shadow-sm'>
+                  <div className='mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm'>
                     <input
                       id='grade'
                       onChange={onChange}
@@ -309,13 +313,13 @@ const UserEdit = (props: UserInfoProps) => {
           <div className="px-4 pt-4 w-full flex justify-end">
             <Buttons
               btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
-              label={'Cancel'}
+              label={UserEditDict[userLanguage]['button']['cancel']}
               onClick={history.goBack}
               transparent
             />
             <Buttons
               btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
-              label={'Save'}
+              label={UserEditDict[userLanguage]['button']['save']}
               onClick={onSubmit}
             />
           </div>

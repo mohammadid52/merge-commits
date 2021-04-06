@@ -13,6 +13,7 @@ import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Selector from '../../../../../Atoms/Form/Selector';
 import { getAsset } from '../../../../../../assets';
 import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../../customHooks/dictionary';
 
 interface AddNewQuestionProps {
   changeStep: (step: string) => void
@@ -42,8 +43,9 @@ interface InputValue {
 const AddNewQuestion = (props: AddNewQuestionProps) => {
   const { changeStep, setCheckpQuestions, goBackToPreviousStep, lessonName, lessonType } = props;
 
-  const { theme, clientKey } = useContext(GlobalContext);
+  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const { AddNewQuestionDict ,BreadcrumsTitles } = useDictionary(clientKey);
 
   const initialState = {
     question: '',
@@ -183,19 +185,19 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     const msgs = validation;
     if (!questionData.question?.trim().length) {
       isValid = false;
-      msgs.question = 'Question input is required';
+      msgs.question = AddNewQuestionDict[userLanguage]['VALIDATION']['QUESTION'];
     } else {
       msgs.question = ''
     }
     if (!questionData.type.value?.trim().length) {
       isValid = false;
-      msgs.type = 'Question type is required';
+      msgs.type = AddNewQuestionDict[userLanguage]['VALIDATION']['TYPE'];
     } else {
       msgs.type = ''
     }
     if (!questionData.label?.trim().length) {
       isValid = false;
-      msgs.label = 'Question label is required';
+      msgs.label = AddNewQuestionDict[userLanguage]['VALIDATION']['LABEL'];
     } else {
       msgs.label = ''
     }
@@ -229,7 +231,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             type: '',
             label: '',
             options: '',
-            message: 'Question details has been saved.',
+            message: AddNewQuestionDict[userLanguage]['MESSAGES']['QUESTIONSAVE'],
             isError: false
           });
         }
@@ -240,7 +242,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
           type: '',
           label: '',
           options: '',
-          message: 'Unable to save Question details, Please try again later.',
+          message: AddNewQuestionDict[userLanguage]['MESSAGES']['UNABLESAVE'],
           isError: true
         });
         setLoading(false)
@@ -265,7 +267,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
   const { question, notes, label, type, language, isRequired, options, otherOpt, noneOfAbove } = questionData;
   return (
     <Fragment>
-      <div className="px-4 py-5 border-b border-gray-200 sm:px-6 flex items-center">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
           <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
             <IoIosKeypad />
@@ -274,19 +276,19 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} Builder - {lessonName}</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} {AddNewQuestionDict[userLanguage]['BUILDER']} - {lessonName}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Checkpoints</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{AddNewQuestionDict[userLanguage]['CHECKPOINT']}</span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">Add New Question</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{AddNewQuestionDict[userLanguage]['ADDNEWQUESTION']}</span>
         </h4>
       </div>
 
@@ -294,11 +296,11 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
       <div className="p-4">
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <FormInput value={question} id='question' onChange={onInputChange} name='question' label="Question" isRequired />
+            <FormInput value={question} id='question' onChange={onInputChange} name='question' label={AddNewQuestionDict[userLanguage]['QUESTION']} isRequired />
             {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>}
           </div>
           <div>
-            <FormInput value={label} id='Label' onChange={onInputChange} name='label' label="Question Label" isRequired />
+            <FormInput value={label} id='Label' onChange={onInputChange} name='label' label={AddNewQuestionDict[userLanguage]['QUESTIONLABEL']} isRequired />
             {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
           </div>
         </div>
@@ -311,28 +313,28 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-              Select Type <span className="text-red-500">*</span>
+              {AddNewQuestionDict[userLanguage]['SELECTTYPE']} <span className="text-red-500">*</span>
             </label>
             <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
             {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
           </div>
           <div>
             <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-              Select Language
+              {AddNewQuestionDict[userLanguage]['SELECTLANGUAGE']}
             </label>
-            <Selector selectedItem={language.name} placeholder="Language" list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
+            <Selector selectedItem={language.name} placeholder={AddNewQuestionDict[userLanguage]['LANGUAGE']} list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
           </div>
         </div>
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div className=" flex items-center">
-            <CheckBox value={isRequired} onChange={() => toggleCheckBoxState("isRequired", isRequired)} name='isRequired' label="Make this question required" />
+            <CheckBox value={isRequired} onChange={() => toggleCheckBoxState("isRequired", isRequired)} name='isRequired' label={AddNewQuestionDict[userLanguage]['MAKEQUESTION']} />
           </div>
         </div>
 
         {(type.value === 'selectOne' || type.value === 'selectMany') && (<div className="p-6">
-          <div className="p-6 border-gray-400 border border-dashed">
-            <p className="text-m font-medium leading-5 text-gray-700 mb-1">Add Options: </p>
+          <div className="p-6 border-gray-400  border-0 border-dashed">
+            <p className="text-m font-medium leading-5 text-gray-700 mb-1">{AddNewQuestionDict[userLanguage]['ADDOPTION']}: </p>
 
             {/* Options input fields */}
             {options?.length && options.map((item, index) => (
@@ -358,10 +360,10 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             {/* Other options checkboxes */}
             <div className="flex w-9/10 mx-auto mt-4">
               <div className="w-2/4 flex items-center">
-                <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={`Add an "Other" Answer Option and Comment Field`} />
+                <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={AddNewQuestionDict[userLanguage]['ADDOTHEROPTION']} />
               </div>
               <div className="w-2/4 flex items-center">
-                <CheckBox value={noneOfAbove} onChange={() => toggleCheckBoxState("noneOfAbove", noneOfAbove)} name='noneOfAbove' label={`Add a "None of the above" Answer Option`} />
+                <CheckBox value={noneOfAbove} onChange={() => toggleCheckBoxState("noneOfAbove", noneOfAbove)} name='noneOfAbove' label={AddNewQuestionDict[userLanguage]['ADDNONOFABOVE']} />
               </div>
             </div>
           </div>
@@ -372,8 +374,8 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
           </div>}
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label="Cancel" onClick={goBackToPreviousStep} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? 'Saving...' : 'Save'} onClick={saveNewQuestion} disabled={loading ? true : false} />
+            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']} onClick={goBackToPreviousStep} transparent />
+            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? AddNewQuestionDict[userLanguage]['BUTTON']['SAVING'] : AddNewQuestionDict[userLanguage]['BUTTON']['SAVE']} onClick={saveNewQuestion} disabled={loading ? true : false} />
           </div>
         </div>
       </div>

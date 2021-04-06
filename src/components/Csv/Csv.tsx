@@ -3,6 +3,9 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
 import Selector from '../Atoms/Form/Selector';
+import { createFilterToFetchSpecificItemsOnly } from '../../utilities/strings';
+import { CSVLink } from 'react-csv';
+
 interface Csv { }
 
 const Csv = (props: Csv) => {
@@ -21,7 +24,7 @@ const Csv = (props: Csv) => {
     const [selectedUnit, setSelectedUnit] = useState(null);
 
     const [surveys, setSurveys] = useState([]);
-    const [syllabusLessons, setSyllabusLessons] = useState([])
+    const [syllabusLessonsData, setSyllabusLessonsData] = useState([]);
     const [selectedSurvey, setSelectedsurvey] = useState(null);
 
     const [surveyQuestions, setSurveyQuestions] = useState([]);
@@ -29,6 +32,51 @@ const Csv = (props: Csv) => {
 
     const [classStudents, setClassStudents] = useState([]);
 
+    const [isCSVReady, setIsCSVReady] = useState(false)
+    const [isCSVDownloadReady, setIsCSVDownloadReady] = useState(false)
+    const [CSVHeaders, setCSVHeaders] = useState([])
+    const [CSVData, setCSVData] = useState([]);
+
+    const [SCQAnswers, setSCQAnswers] = useState([]);
+    const [DCQAnswers, setDCQAnswers] = useState([]);
+    
+    // methods to clear state data
+
+    const resetInstitution = () => {
+        setInstClassRooms([])
+        
+        clearClassRooms();
+        
+        clearClass();
+        
+        setSelectedCurriculum(null)
+        setSelectedsurvey(null)
+        setSurveyQuestions([])
+        
+        clearStudentsAnswers()
+        
+        clearCSVData();
+    }
+    const clearClassRooms = () => {
+        setClassRoomsList([])
+        setSelectedClassRoom(null)
+    }
+    const clearClass = () => {
+        setSelectedClass(null)
+        setClassStudents([])
+    }
+    const clearCSVData = () => {
+        setIsCSVReady(false);
+        setIsCSVDownloadReady(false);
+        setCSVData([])
+        setCSVHeaders([])
+    }
+    const clearStudentsAnswers = () => {
+        setSCQAnswers([])
+        setDCQAnswers([])
+    }
+    
+    // starting
     useEffect(() => {
         listInstitutions();
     }, [])
@@ -46,20 +94,12 @@ const Csv = (props: Csv) => {
         setInstitutions(institutions)
     }
 
-    const resetInstitution = () => {
-        setInstClassRooms([])
-        setClassRoomsList([])
-        setSelectedClassRoom(null)
-        setSelectedClass(null)
-        setSelectedCurriculum(null)
-    }
+
 
     const onInstSelect = async (id: string, name: string, value: string) => {
         try {
             let sInst = selectedInst;
-            console.log('previous inst', sInst)
             let inst = { id, name, value };
-            console.log('inst', inst)
             setSelectedInst(inst)
             if (!sInst || sInst.id !== inst.id) {
                 resetInstitution();
@@ -71,37 +111,48 @@ const Csv = (props: Csv) => {
                 classrooms = classrooms?.data.getInstitution?.rooms?.items || []
                 classrooms = classrooms.map((cr: any) => {
                     let curriculum = (cr.curricula?.items && Array.isArray(cr.curricula?.items)) ? cr.curricula?.items[0].curriculum : null
-                    console.log({ id: cr.id, name: cr.name, value: cr.name, class: { ...cr.class }, curriculum });
                     instCRs.push({ id: cr.id, name: cr.name, value: cr.name })
                     return { id: cr.id, name: cr.name, value: cr.name, class: { ...cr.class }, curriculum }
                 })
                 setClassRoomsList(classrooms)
                 setInstClassRooms(instCRs)
+            } else {
+                console.log('institution already selected')
             }
         } catch (err) {
             console.log('inst select, fetch classrooms err', err)
         }
     }
 
-    const onClassRoomSelect = (id: string, name: string, value: string) => {
-        let cr = { id, name, value };
-        setSelectedClassRoom(cr);
-        let classroom = classRoomsList.filter(c => c.id === cr.id)[0]
-        setSelectedClass(classroom.class)
-        setSelectedCurriculum(classroom.curriculum)
-        // list syllabus and checkpoints (for demographics questions)
-        fetchUnits(classroom.curriculum.id)
-        //fet students of the class
-        fetchStudents(classroom.class.id)
+    const onClassRoomSelect = async (id: string, name: string, value: string) => {
+        try {
+            let sCR = selectedClassRoom;
+            let cr = { id, name, value };
+            setSelectedClassRoom(cr);
+            if (!sCR || sCR.id !== cr.id) {
+                let classroom = classRoomsList.filter(c => c.id === cr.id)[0]
+                // with classroom => class and curriculum are directly selected 
+                setSelectedClass(classroom.class)
+                setSelectedCurriculum(classroom.curriculum)
+                // fetch students of the selected class. (This list of students will be used in the csv)
+                const studentsEmails = await fetchStudents(classroom.class.id)
+                await fetchUnits(classroom.curriculum.id, studentsEmails)
+                // units (syllabus fetched)
+            } else {
+                console.log('classroom already selected');
+            }
+        } catch (err) {
+            console.log('on class room select', err)
+        }
     }
 
-    
-    const fetchUnits = async (curriculumId: string) => {
+
+    const fetchUnits = async (curriculumId: string, studentsEmails: any) => {
         try {
             let curriculumData: any = await API.graphql(graphqlOperation(customQueries.listUnits, {
                 id: curriculumId
             }))
-            let units = curriculumData?.data.getCurriculum?.syllabi?.items|| []
+            let units = curriculumData?.data.getCurriculum?.syllabi?.items || []
             units = units.map((syl: any) => {
                 return { id: syl.id, name: syl.name, value: syl.name }
             })
@@ -113,22 +164,28 @@ const Csv = (props: Csv) => {
                 cCheckpoints.push(cc.checkpoint.id)
                 let questions = cc.checkpoint?.questions?.items || [];
                 questions.map((q: any) => {
-                    demographicsQues.push({question: q.question, checkpointID: cc.checkpoint.id})
+                    demographicsQues.push({ question: q.question, checkpointID: cc.checkpoint.id })
                 })
             })
             setDemographicsQuestions(demographicsQues)
             // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
-            getStudentsDemographicsQuestionsResponse(cCheckpoints, '999999')
+            getStudentsDemographicsQuestionsResponse(cCheckpoints, '999999', studentsEmails)
         } catch (err) {
             console.log('fetch units (syllabus) error', err)
         }
     }
 
-    const getStudentsDemographicsQuestionsResponse = (checkpointIds: any, syllabusLessonID: string) => {
-        // let curriculumData: any = await API.graphql(graphqlOperation(customQueries.getStudentResponse, {
-        //     id: curriculumId
-        // }))
-
+    const getStudentsDemographicsQuestionsResponse = async (checkpointIds: any, syllabusLessonID: string, studentsEmails: any) => {
+        let curriculumData: any = await API.graphql(graphqlOperation(customQueries.getStudentResponse, {
+            filter: {
+                ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
+                syllabusLessonID: { eq: syllabusLessonID },
+                ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email'),
+            },
+        }));
+        let studentsAnswersDemographicsCheckpointsQuestions = curriculumData?.data?.listQuestionDatas?.items || [];
+        setDCQAnswers(studentsAnswersDemographicsCheckpointsQuestions)
+        // console.log('studentsAnswersDemographicsCheckpointsQuestions', studentsAnswersDemographicsCheckpointsQuestions)
     }
 
     const onUnitSelect = (id: string, name: string, value: string) => {
@@ -145,8 +202,9 @@ const Csv = (props: Csv) => {
         let classStudents = students.map((stu: any) => {
             return stu.student
         })
-        console.log('classStudents', classStudents)
+        let studentsEmails = classStudents.map((stu: any) => stu.email)
         setClassStudents(classStudents)
+        return studentsEmails
     }
 
     const fetchSurveys = async (unitId: string) => {
@@ -156,24 +214,26 @@ const Csv = (props: Csv) => {
             }))
             syllabusLessons = syllabusLessons?.data.getSyllabus?.lessons?.items || []
             let surveys: any = []
-            syllabusLessons = syllabusLessons.filter((les: any) => {
+            let syllabusLessonsData: any = []
+            syllabusLessons.filter((les: any) => {
                 if (les.lesson && les.lesson.type === "survey") {
-                    surveys.push({id: les.lesson.id, name: les.lesson.title, value: les.lesson.title });
+                    syllabusLessonsData.push({ syllabusLessonID: les.id, lessonID: les.lessonID, lesson: les.lesson })
+                    surveys.push({ id: les.lesson.id, name: les.lesson.title, value: les.lesson.title });
                     return les.lesson;
                 }
             })
-            setSyllabusLessons(syllabusLessons)
+            // setSyllabusLessons(syllabusLessons)
+            setSyllabusLessonsData(syllabusLessonsData);
             setSurveys(surveys);
         } catch (err) {
             console.log('fetch surveys list error', err)
         }
     }
 
-    const onSurveySelect = (id: string, name: string, value: string) => {
+    const onSurveySelect = async (id: string, name: string, value: string) => {
         let survey = { id, name, value };
         setSelectedsurvey(survey);
-        console.log('Fetch checkpoints of this survey', survey);
-        listQuestions(survey.id)
+        await listQuestions(survey.id);
     }
 
     const listQuestions = async (lessonId: string) => {
@@ -182,20 +242,108 @@ const Csv = (props: Csv) => {
                 id: lessonId
             }))
             let checkpoints = surveyQuestions?.data?.getLesson?.checkpoints?.items;
-            console.log('checkpoints', checkpoints)
             const questions: any = [];
+            let cCheckpoints: any = [];
             checkpoints.map((cp: any) => {
+                cCheckpoints.push(cp.checkpointID)
                 let ques = cp?.checkpoint?.questions?.items;
                 ques.map((q: any) => {
                     questions.push({ question: q.question, checkpointID: cp.checkpointID })
                 })
             })
-            console.log('questions', questions)
             setSurveyQuestions(questions)
+            let syllabusLes = syllabusLessonsData.filter(sl => sl.lessonID === lessonId)[0]
+            await getStudentsSurveyQuestionsResponse(cCheckpoints, syllabusLes.syllabusLessonID)
+            setIsCSVReady(true)
+            return;
         } catch (err) {
             console.log('list questions error', err)
         }
     }
+
+    const getStudentsSurveyQuestionsResponse = async (checkpointIds: any, syllabusLessonID: string) => {
+        if (checkpointIds.length) {
+            let studsEmails = classStudents.map((stu: any) => stu.email)
+            let curriculumData: any = await API.graphql(graphqlOperation(customQueries.getStudentResponse, {
+                filter: {
+                    ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
+                    syllabusLessonID: { eq: syllabusLessonID },
+                    ...createFilterToFetchSpecificItemsOnly(studsEmails, 'email'),
+                },
+            }));
+            let studentsAnswersSurveyCheckpointsQuestions = curriculumData?.data?.listQuestionDatas?.items || [];
+            setSCQAnswers(studentsAnswersSurveyCheckpointsQuestions)
+            return studentsAnswersSurveyCheckpointsQuestions
+        } else {
+            console.log('no checkpoints of the selected survey');
+        }
+    }
+
+    const getCSVReady = async () => {
+        let students = classStudents;
+        let qids: any = [];
+        let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
+            qids.push(ques.question.id);
+            return { label: `${ques.question.question}`, key: `${ques.question.id}` }
+        })
+        let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
+            qids.push(ques.question.id);
+            return { label: `${ques.question.question} (demographic)`, key: `${ques.question.id}` }
+        })
+        console.log('surveyQuestionHeaders', surveyQuestionHeaders)
+        console.log('demographicsQuestionHeaders', demographicsQuestionHeaders)
+        setCSVHeaders([
+            { label: 'AuthId', key: 'authId' },
+            { label: 'Email', key: 'email' },
+            { label: 'First Name', key: 'firstName' },
+            { label: 'Last Name', key: 'lastName' },
+            { label: 'Institute', key: 'institute' },
+            { label: 'Curriculum', key: 'curriculum' },
+            { label: 'Unit', key: 'unit' },
+            { label: 'Survey name', key: 'surveyName' },
+            ...surveyQuestionHeaders,
+            ...demographicsQuestionHeaders,
+        ])
+        let data = students.map((stu: any) => {
+            let studentAnswers: any = {};
+            SCQAnswers.map((ans: any) => {
+                if (ans.person.id === stu.id) {
+                    ans.responseObject.map((resp: any) => {
+                        if (qids.indexOf(resp.qid) >= 0) {
+                            studentAnswers[resp.qid] = (Array.isArray(resp.response) && resp.response.length) ? resp.response[0] : '';
+                        }
+                    })
+                }
+            })
+            DCQAnswers.map((ans: any) => {
+                if (ans.person.id === stu.id) {
+                    ans.responseObject.map((resp: any) => {
+                        if (qids.indexOf(resp.qid) >= 0) {
+                            studentAnswers[resp.qid] = (Array.isArray(resp.response) && resp.response.length) ? resp.response[0] : '';
+                        }
+                    })
+                }
+            })
+            return {
+                ...stu,
+                institute: selectedInst.name,
+                curriculum: selectedCurriculum.name,
+                unit: selectedUnit.name,
+                surveyName: selectedSurvey.name,
+                ...studentAnswers
+            }
+        })
+        setCSVData(data);
+        setIsCSVDownloadReady(true);
+    }
+
+    useEffect(() => {
+        if (isCSVReady) {
+            console.log('SCQAnswers', SCQAnswers)
+            getCSVReady();
+        }
+    }, [isCSVReady])
+
 
     return (
         <>
@@ -261,7 +409,7 @@ const Csv = (props: Csv) => {
             }
             <span> ====**===========**======= ====**===========**======= </span>
             {
-                selectedUnit ? 
+                selectedUnit ?
                     <div>
                         <span>survey questions</span>
                         {
@@ -274,13 +422,13 @@ const Csv = (props: Csv) => {
                             })
                         }
                     </div>
-                : null
+                    : null
             }
             <span> ====**===========**======= ====**===========**======= </span>
             {
-                selectedCurriculum ? 
-                    <div> 
-                        <span>Demographics questions</span> 
+                selectedCurriculum ?
+                    <div>
+                        <span>Demographics questions</span>
                         {
                             demographicsQuestions.map((dq, index) => {
                                 return (
@@ -308,6 +456,17 @@ const Csv = (props: Csv) => {
                         }
                     </div>
                     : null
+            }
+
+            {
+                isCSVDownloadReady ?
+                    <button type="submit" className=" mt-5 inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out items-center">
+                        <CSVLink
+                            data={CSVData}
+                            headers={CSVHeaders}
+                            filename={"students_data.csv"}
+                        >Download CSV</CSVLink>
+                    </button> : null
             }
 
         </>

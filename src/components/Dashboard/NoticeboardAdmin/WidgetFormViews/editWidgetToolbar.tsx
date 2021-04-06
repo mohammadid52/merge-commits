@@ -14,7 +14,7 @@ const EditWidgetToolbar = (props: NoticeboardFormProps) => {
   const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const {noticeboardDict} = useDictionary(clientKey);
 
-  const selectorClass = `p-2 rounded border border-medium-gray border-opacity-20`;
+  const selectorClass = `p-2 rounded  border-0 border-medium-gray border-opacity-20`;
 
   return newWidgetData ? (
     <div className={`flex flex-col p-2 mb-2`}>
@@ -23,7 +23,7 @@ const EditWidgetToolbar = (props: NoticeboardFormProps) => {
 
         {/* STATUS TOGGLE */}
         <div className={`mb-2`}>
-          <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:</p>
+          <p className={`text-sm font-semibold border-b-0 pb-2 mb-2 ${theme.lessonCard.border}`}>{noticeboardDict[userLanguage].FORM.WIDGET_STATUS}:</p>
           <div
             className={`
                 z-50  grid grid-cols-2 gap-2 cursor-pointer ${theme.lessonCard.subtitle}`}
@@ -47,7 +47,7 @@ const EditWidgetToolbar = (props: NoticeboardFormProps) => {
 
         {/* PLACEMENT TOGGLE */}
         <div className={`mb-2`}>
-          <p className={`text-sm font-semibold border-b pb-2 mb-2 ${theme.lessonCard.border}`}>Widget Placement:</p>
+          <p className={`text-sm font-semibold border-b-0 pb-2 mb-2 ${theme.lessonCard.border}`}>Widget Placement:</p>
           <div className={`grid grid-cols-2 gap-2 ${theme.lessonCard.subtitle}`}>
             <div
               id={widgetObj.id}

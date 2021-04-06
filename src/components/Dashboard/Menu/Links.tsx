@@ -140,6 +140,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               path: 'manage-users',
             },
             {
+              title: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              name: sideBarLinksDict[userLanguage].INSTITUTIONS,
+              label: 'Institutions',
+              path: 'manage-institutions',
+            },
+            {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',

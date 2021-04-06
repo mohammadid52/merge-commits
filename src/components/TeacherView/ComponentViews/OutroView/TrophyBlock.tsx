@@ -14,7 +14,7 @@ const TrophyBlock = (props: props) => {
     return (
         <div className="h-full w-6.8/10 bg-dark-blue flex flex-col justify-between items-center shadow-2 rounded-lg p-4">
             <div className="h-full flex flex-col justify-between items-center">
-                <div className={`${fullscreen ? ' text-2xl' : 'text-md'} h-1.5/10 text-gray-200 font-open font-bold border-b border-white`}>
+                <div className={`${fullscreen ? ' text-2xl' : 'text-md'} h-1.5/10 text-gray-200 font-open font-bold border-b-0 border-white`}>
                     You have completed
                 </div>
 

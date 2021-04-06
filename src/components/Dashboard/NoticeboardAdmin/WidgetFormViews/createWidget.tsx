@@ -48,7 +48,7 @@ export const CreateModeView = (props: NoticeboardFormProps) => {
             data-basekey={`title`}
             onChange={handleEditUpdateDefault}
             value={widgetObj.title ? widgetObj.title : ''}
-            className={`mt-1 block w-full sm:text-sm sm:leading-5 border border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
+            className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
             placeholder={widgetObj.title ? widgetObj.title : noticeboardDict[userLanguage].FORM.PLEASE_ADD_TITLE}
           />
         </Fragment>

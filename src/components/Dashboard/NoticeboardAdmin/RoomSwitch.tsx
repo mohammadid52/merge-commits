@@ -21,7 +21,7 @@ const RoomSwitch = (props: DashboardProps) => {
     }
   };
 
-  const linkClass = 'w-full p-2 text-sm tracking-wider mx-auto border-b border-medium-gray';
+  const linkClass = 'w-full p-2 text-sm tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return (
     <div className={`${theme.section}`}>
