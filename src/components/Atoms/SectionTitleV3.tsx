@@ -15,8 +15,8 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
   const { theme } = useContext(GlobalContext);
 
   return (
-    <div className={`bg-opacity-10 ${spacing}`}>
-      <div className={`${theme.section} m-auto`}>
+    <div className={`bg-opacity-10`}>
+      <div className={`${theme.section} m-auto ${spacing}`}>
         <h2 className={`text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
         <p className="text-md text-gray-500">{subtitle}</p>
       </div>
