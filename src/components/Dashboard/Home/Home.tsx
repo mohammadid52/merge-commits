@@ -9,10 +9,13 @@ import { ClassroomControlProps } from '../Dashboard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
+import { getAsset } from '../../../assets';
 
 const Home = (props: ClassroomControlProps) => {
   const { homeData, classList, handleRoomSelection } = props;
-  const { state, theme } = useContext(GlobalContext);
+  const { state, theme, clientKey } = useContext(GlobalContext);
+
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName } : null;
 
@@ -96,8 +99,8 @@ const Home = (props: ClassroomControlProps) => {
       {homeData ? (
         <>
           {user && (
-            <div className={`${theme.section} mt-4 py-3 m-auto bg-white rounded-lg px-4 shadow`}>
-              <h2 className={`text-xl font-normal`}>Welcome, What do you want to learn today, {user.firstName} ?</h2>
+            <div className={`${theme.section} mt-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
+              <h2 className={`text-base font-normal`}>Welcome, What do you want to learn today, {user.firstName} ?</h2>
             </div>
           )}
 
