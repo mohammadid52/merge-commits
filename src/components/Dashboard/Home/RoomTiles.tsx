@@ -1,5 +1,5 @@
 import ContentCard from '../../Atoms/ContentCard';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { uniqBy, slice } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { IoImage } from 'react-icons/io5';
@@ -67,6 +67,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
     if (slicedList.length <= 3) {
       setSlicedList(modifiedList);
     } else {
+      roomTileRef.current.scrollIntoView();
       setSlicedList(slice(modifiedList, 0, 3));
     }
   };
@@ -79,9 +80,11 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
     }
   };
 
+  const roomTileRef: any = useRef();
+
   return (
     <ContentCard hasBackground={false}>
-      <div className="relative bg-gray-50">
+      <div ref={roomTileRef} className="relative bg-gray-50">
         <div className="relative max-w-7xl mx-auto">
           <div className="mt-4 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
             {slicedList.map((item, idx: number) => {
@@ -161,7 +164,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
           </div>
           <div className="my-3 mt-8">
             {classList && classList.length > 3 && (
-              <ViewMore onClick={onViewMore} text={`${slicedList.length <= 3 ? 'View All' : 'Hide All'}`} />
+              <ViewMore onClick={onViewMore} text={`${slicedList.length <= 3 ? 'Show All' : 'Show Few'}`} />
             )}
           </div>
         </div>
