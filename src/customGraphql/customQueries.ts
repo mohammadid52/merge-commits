@@ -45,6 +45,7 @@ export const getDashboardData = /* GraphQL */ `
                   firstName
                   lastName
                   image
+                  id
                 }
               }
             }
