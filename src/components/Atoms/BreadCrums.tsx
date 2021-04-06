@@ -15,12 +15,12 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
   const history = useHistory();
 
   return (
-    <div className="flex flex-row my-2 py-2">
+    <div className="flex flex-row my-0 py-0 mb-4">
       <div className={`w-auto border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
         <nav className="w-full flex">
           <ol className="list-none flex items-center justify-start">
             {items.map((item, i) => (
-              <li className="flex items-center mr-2" style={{ minWidth: 'fit-content' }} key={i}>
+              <li className="flex items-center w-auto mr-2" style={{ minWidth: 'fit-content' }} key={i}>
                 <NavLink to={item.url}>
                   <span
                     className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}
