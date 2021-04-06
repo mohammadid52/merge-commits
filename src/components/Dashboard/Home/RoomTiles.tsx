@@ -2,6 +2,7 @@ import ContentCard from '../../Atoms/ContentCard';
 import React, { useContext, useEffect, useState } from 'react';
 import { uniqBy, slice } from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { IoImage } from 'react-icons/io5';
 
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import ViewMore from '../../Atoms/ViewMore';
@@ -9,7 +10,7 @@ import ViewMore from '../../Atoms/ViewMore';
 import { getImageFromS3 } from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
-const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
+const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
   const { classList, handleRoomSelection } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
@@ -55,8 +56,10 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
   const modifiedList = getList();
 
   useEffect(() => {
-    if (modifiedList && slicedList.length === 0) {
-      setSlicedList(slice(modifiedList, 0, 3));
+    if (classList && classList.length > 0) {
+      if (modifiedList && slicedList.length === 0) {
+        setSlicedList(slice(modifiedList, 0, 3));
+      }
     }
   }, [modifiedList]);
 
@@ -77,11 +80,8 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
   };
 
   return (
-    <ContentCard>
-      <div className="relative bg-gray-50 py-6 px-4 sm:px-6">
-        <div className="absolute inset-0">
-          <div className="bg-white h-1/3 sm:h-2/3"></div>
-        </div>
+    <ContentCard hasBackground={false}>
+      <div className="relative bg-gray-50">
         <div className="relative max-w-7xl mx-auto">
           <div className="mt-4 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
             {slicedList.map((item, idx: number) => {
@@ -103,7 +103,7 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
               return (
                 <div
                   key={`homepage__classrooms-${idx}`}
-                  className="flex flex-col rounded-lg shadow-lg overflow-hidden transform transition duration-200">
+                  className="flex flex-col rounded-lg shadow overflow-hidden transform transition duration-200">
                   <div className="flex-shrink-0">
                     {bannerImage ? (
                       <img
@@ -112,11 +112,10 @@ const RoomTiles = (props: { classList: any; handleRoomSelection: any }) => {
                         alt=""
                       />
                     ) : (
-                      <ImageAlternate
-                        user={{ firstName, lastName }}
-                        rounded={false}
-                        styleClass="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform"
-                      />
+                      <div
+                        className={`profile justify-center lign-center items-center content-center  h-48 w-full bg-gray-100 flex border-gray-400`}>
+                        <IoImage className="fill-current text-gray-80" size={32} />
+                      </div>
                     )}
                   </div>
                   <div className="flex-1 bg-white p-6 flex flex-col justify-between">

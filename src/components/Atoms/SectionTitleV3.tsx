@@ -12,7 +12,7 @@ const SectionTitleV2: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
 
   return (
     <div className={`bg-opacity-10 pt-6`}>
-      <div className={`${theme.section} px-4 py-4 m-auto`}>
+      <div className={`${theme.section} py-4 m-auto`}>
         <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
         <p className="text-md text-gray-500">{subtitle}</p>
       </div>
