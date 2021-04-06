@@ -35,7 +35,6 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
       classList.length > 0 &&
       classList.forEach((item: { rooms: { items: any[] }; name: string }) => {
         item.rooms.items.forEach(async (_item: any) => {
-          const curriculumId = _item.curricula.items[0].curriculumID;
           const imagePath = _item.curricula.items[0].curriculum.image;
 
           const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
@@ -86,7 +85,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
     <ContentCard hasBackground={false}>
       <div ref={roomTileRef} className="relative bg-gray-50">
         <div className="relative max-w-7xl mx-auto">
-          <div className="mt-4 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+          <div className="mt-0 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
             {slicedList.map((item, idx: number) => {
               const {
                 teacherProfileImg,
@@ -116,7 +115,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
                       />
                     ) : (
                       <div
-                        className={`profile justify-center lign-center items-center content-center  h-48 w-full bg-gray-100 flex border-gray-400`}>
+                        className={`profile justify-center items-center content-center  h-48 w-full bg-gray-100 flex border-gray-400`}>
                         <IoImage className="fill-current text-gray-80" size={32} />
                       </div>
                     )}

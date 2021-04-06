@@ -10,9 +10,12 @@ import { getImageFromS3 } from '../../../utilities/services';
 const StudentsTiles = (props: { studentsList: any }) => {
   const { studentsList } = props;
 
-  // studentsList.forEach(async ({student}) => {
-  //   const image = student.img ? await getImageFromS3(`instituteImages/curricular_image_${student.img}`) : false;
-  //   return
+  // studentsList.forEach(async ({ student }: any) => {
+  //   const image = await (student.img ? getImageFromS3(student.img) : false);
+  //   return {
+  //     ...student,
+  //     image,
+  //   };
   // });
 
   const [slicedList, setSlicedList] = useState<any[]>([]);
