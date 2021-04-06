@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { getImageFromS3 } from '../../../utilities/services';
@@ -7,9 +7,14 @@ import TeacherRows from './TeacherRows';
 import StudentsTiles from './StudentsTiles';
 import { ClassroomControlProps } from '../Dashboard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
+import { GlobalContext } from '../../../contexts/GlobalContext';
+import isEmpty from 'lodash/isEmpty';
 
 const Home = (props: ClassroomControlProps) => {
   const { homeData, classList, handleRoomSelection } = props;
+  const { state, theme } = useContext(GlobalContext);
+
+  const user = !isEmpty(state) ? { firstName: state.user.firstName } : null;
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
@@ -40,7 +45,7 @@ const Home = (props: ClassroomControlProps) => {
 
   const teacherListWithImages = Promise.all(
     getTeacherList.map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: teacherObj.image ? await getImageURL(teacherObj.image) : null };
+      return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
     })
   );
 
@@ -70,7 +75,7 @@ const Home = (props: ClassroomControlProps) => {
         ...studentObj,
         student: {
           ...studentObj.student,
-          image: studentObj.student.image ? await getImageURL(studentObj.student.image) : null,
+          image: await (studentObj.student.image ? getImageURL(studentObj.student.image) : null),
         },
       };
     })
@@ -90,12 +95,24 @@ const Home = (props: ClassroomControlProps) => {
     <>
       {homeData ? (
         <>
+          {/* Header */}
+          {user && (
+            <div className={`${theme.section} mt-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
+              <h2 className={`text-base font-normal`}>Welcome, What do you want to learn today, {user.firstName} ?</h2>
+            </div>
+          )}
+
+          {/* Classroom Section */}
           <SectionTitleV3 title={'Your Classrooms'} />
           <RoomTiles handleRoomSelection={handleRoomSelection} classList={classList} />
+
+          {/* Teachers Section */}
           <SectionTitleV3 title={'Your Teachers'} />
           <TeacherRows teacherList={teacherList} />
-          <SectionTitleV3 title={'Your Classmates'} />
-          <StudentsTiles studentsList={studentsList} />
+
+          {/* Classmates Section */}
+          <SectionTitleV3 spacing="pt-6 pb-4" title={'Your Classmates'} />
+          <StudentsTiles state={state} studentsList={studentsList} />
         </>
       ) : (
         <ComponentLoading />

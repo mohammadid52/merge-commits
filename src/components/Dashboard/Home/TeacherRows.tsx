@@ -51,11 +51,6 @@ const TeacherRows = (props: { teacherList: any }) => {
                                 <span className="truncate">{teacher.email}</span>
                               </p>
                             </div>
-                            <div className="flex items-center">
-                              <p className="text-sm text-gray-900">
-                                Applied on <time dateTime="2020-01-07">January 7, 2020</time>
-                              </p>
-                            </div>
                           </div>
                         </div>
                         <svg

@@ -301,7 +301,7 @@ const UserLookup = () => {
             </div>
 
             {/* Pagination And Counter */}
-            <div className="flex justify-center my-8">
+            <div className="flex justify-center my-4">
               {!searchInput.isActive && (
                 <Fragment>
                   <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
