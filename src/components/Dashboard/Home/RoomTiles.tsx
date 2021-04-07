@@ -10,21 +10,21 @@ import ViewMore from '../../Atoms/ViewMore';
 import { getImageFromS3 } from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
-const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
-  const { classList, handleRoomSelection } = props;
+const RoomTiles = (props: { classList: [] }) => {
+  const { classList } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
 
-  // // Select room on roomtile click
-  // const handleRoomSelection = (e: React.MouseEvent)=> {
-  //   const t = e.target as HTMLElement;
-  //   dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
-  // }
+  // Select room on roomtile click
+  const handleRoomSelection = (id: string) => {
+    dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
+    history.push('/dashboard/classroom');
+  };
   // Push user to classroom on room change
 
   useEffect(() => {
     if (state.activeRoom !== '') {
-      history.push('/dashboard/classroom');
+      history.push('/dashboard/home');
     }
   }, [state.activeRoom]);
 
@@ -35,7 +35,6 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
       classList.length > 0 &&
       classList.forEach((item: { rooms: { items: any[] }; name: string }) => {
         item.rooms.items.forEach(async (_item: any) => {
-          const curriculumId = _item.curricula.items[0].curriculumID;
           const imagePath = _item.curricula.items[0].curriculum.image;
 
           const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
@@ -86,7 +85,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
     <ContentCard hasBackground={false}>
       <div ref={roomTileRef} className="relative bg-gray-50">
         <div className="relative max-w-7xl mx-auto">
-          <div className="mt-4 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+          <div className="mt-0 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
             {slicedList.map((item, idx: number) => {
               const {
                 teacherProfileImg,
@@ -100,11 +99,14 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
                 curricula: { items: any[] };
               } = item;
               const { name, description }: { name: string; description: string } = curricula.items[0].curriculum;
+              const roomName = item.name;
+              const roomId = item.id;
 
               const { email, firstName, lastName } = teacher;
 
               return (
                 <div
+                  onClick={() => handleRoomSelection(roomId)}
                   key={`homepage__classrooms-${idx}`}
                   className="flex flex-col rounded-lg shadow overflow-hidden transform transition duration-200">
                   <div className="flex-shrink-0">
@@ -116,7 +118,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
                       />
                     ) : (
                       <div
-                        className={`profile justify-center lign-center items-center content-center  h-48 w-full bg-gray-100 flex border-gray-400`}>
+                        className={`profile justify-center items-center content-center  h-48 w-full bg-gray-100 flex border-gray-400`}>
                         <IoImage className="fill-current text-gray-80" size={32} />
                       </div>
                     )}
@@ -129,7 +131,9 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
                         </a>
                       </p> */}
                       <a href="#" className="block mt-2">
-                        <p className="text-xl font-semibold text-gray-900">{name}</p>
+                        <p className="text-xl font-semibold text-gray-900">
+                          {name} ({roomName})
+                        </p>
                         <p className="mt-3 text-base text-gray-500">
                           {description ? limitDesc(description, 250) : 'no description'}
                         </p>

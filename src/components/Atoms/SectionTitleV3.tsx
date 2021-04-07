@@ -4,20 +4,24 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 interface SectionTitleProps {
   title: string;
   subtitle?: string;
+  fontSize?: string;
+  fontStyle?: string;
+  extraClass?: string;
+  spacing?: string;
 }
 
-const SectionTitleV2: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
-  const { title, subtitle } = sectProps;
+const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
+  const { title, subtitle, fontSize = '2xl', fontStyle = 'bold', extraClass, spacing = 'py-4' } = sectProps;
   const { theme } = useContext(GlobalContext);
 
   return (
-    <div className={`bg-opacity-10 pt-6`}>
-      <div className={`${theme.section} py-4 m-auto`}>
-        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+    <div className={`bg-opacity-10`}>
+      <div className={`${theme.section} m-auto ${spacing}`}>
+        <h2 className={`text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
         <p className="text-md text-gray-500">{subtitle}</p>
       </div>
     </div>
   );
 };
 
-export default SectionTitleV2;
+export default SectionTitleV3;
