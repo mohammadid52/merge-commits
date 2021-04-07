@@ -14,6 +14,11 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import useDictionary from '../../../customHooks/dictionary';
 import { initRosterSyllabusLessons } from '../../../uniqueScripts/InitRoster_in_SyllabusLessons';
+import BreadCrums from '../../Atoms/BreadCrums';
+import { BreadcrumsTitles } from '../../../dictionary/dictionary.iconoclast';
+import { getAsset } from '../../../assets';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 
 interface Artist {
   id: string;
@@ -88,15 +93,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     handleSyllabusActivation,
     lessonLoading,
     syllabusLoading,
-
   } = props;
   const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const { classRoomDict } = useDictionary(clientKey);
   const [survey] = useState<any>({
     display: false,
     data: null,
   });
-
 
   const [lessonGroupCount, setLessonGroupCount] = useState<{ today: number; upcoming: number; completed: number }>({
     today: 0,
@@ -104,18 +109,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     completed: 0,
   });
 
-
   //  INITIALIZE CURRENT PAGE LOCATION
-  useEffect(()=>{
-    if(state.user.role === 'ST'){
-      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}})
+  useEffect(() => {
+    if (state.user.role === 'ST') {
+      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'classroom' } });
     }
-    if(state.user.role === 'TR'|| state.user.role === 'FLW'){
-      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}})
+    if (state.user.role === 'TR' || state.user.role === 'FLW') {
+      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
     }
-  },[state.user.role])
-
-
+  }, [state.user.role]);
 
   /**
    * ASSESSMENTS & SURVEYS
@@ -124,10 +126,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const assessmentsSurveys =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
-        if (lesson?.lesson?.type.includes('survey') || lesson?.lesson?.type.includes('assessment')) {
-          return lesson;
-        }
-      })
+          if (lesson?.lesson?.type.includes('survey') || lesson?.lesson?.type.includes('assessment')) {
+            return lesson;
+          }
+        })
       : [];
 
   /**
@@ -139,14 +141,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const todayLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
-        if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
-          if (lesson?.status === 'Active' && lesson?.lesson.type !== 'survey') {
-            if (!lesson.complete) {
-              return lesson;
+          if (lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
+            if (lesson?.status === 'Active' && lesson?.lesson.type !== 'survey') {
+              if (!lesson.complete) {
+                return lesson;
+              }
             }
           }
-        }
-      })
+        })
       : [];
 
   /**
@@ -156,17 +158,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const upcomingLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
-        if(lesson.hasOwnProperty('lesson') && lesson.lesson !== null){
-          if (lesson.status === 'Inactive' && lesson.lesson?.type !== 'survey') {
-            if (!lesson.complete) {
-              return lesson;
+          if (lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
+            if (lesson.status === 'Inactive' && lesson.lesson?.type !== 'survey') {
+              if (!lesson.complete) {
+                return lesson;
+              }
             }
           }
-        }
-      })
+        })
       : [];
 
   const todayAndUpcomingLessons = [...todayLessons, ...upcomingLessons];
+
+  // if there are top widgets
+  const thereAreTopWidgets = state.roomData.widgets.some((widget: any) => widget.placement === 'topbar');
+  console.log(state.roomData.widgets);
 
   /**
    * Completed Lessons -
@@ -175,25 +181,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const completedLessons =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
-        if (lesson.complete) {
-          return lesson;
-        }
-      })
+          if (lesson.complete) {
+            return lesson;
+          }
+        })
       : [];
 
-
-
-  useEffect(()=>{
-    if(state.roomData.lessons.length > 0){
+  useEffect(() => {
+    if (state.roomData.lessons.length > 0) {
       setLessonGroupCount({
         today: todayLessons.length,
         upcoming: upcomingLessons.length,
-        completed: completedLessons.length
-      })
+        completed: completedLessons.length,
+      });
     }
-  },[state.roomData.lessons])
-
-
+  }, [state.roomData.lessons]);
 
   const sortedLessons = (lessonArray: any[], sortProperty: string) => {
     return lessonArray.sort((a: any, b: any) => {
@@ -206,17 +208,93 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     });
   };
 
+  const Counter = ({ count }: { count: number }) => {
+    return (
+      <div
+        className={`w-5 h-5 p-1  bg-indigo-500 rounded-full flex justify-center align-center items-center content-center`}>
+        <span className={`w-auto h-auto text-xs text-white font-bold`}>{count}</span>
+      </div>
+    );
+  };
+
+  const tabs = [
+    {
+      index: 0,
+      icon: <Counter count={lessonGroupCount.today} />,
+      title: !isTeacher
+        ? classRoomDict[userLanguage]['LESSON_TABS']['TAB_ONE']
+        : classRoomDict[userLanguage]['LESSON_TABS']['TAB_TWO'],
+      active: true,
+      content: (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} p-4 pb-0 text-xl m-auto`}>
+            <Today
+              activeRoom={state.activeRoom}
+              activeRoomInfo={activeRoomInfo}
+              isTeacher={isTeacher}
+              lessonLoading={lessonLoading}
+              lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      index: 1,
+      icon: <Counter count={lessonGroupCount.upcoming} />,
+      title: 'Upcoming',
+      active: false,
+      content: !isTeacher && state.roomData.lessons && state.roomData.lessons.length > 0 && (
+        <div className={`bg-grayscale-light bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <UpcomingLessons activeRoomInfo={activeRoomInfo} lessons={upcomingLessons} />
+          </div>
+        </div>
+      ),
+    },
+    {
+      index: 2,
+      icon: <Counter count={lessonGroupCount.completed} />,
+      title: 'Completed',
+      active: false,
+      content: (
+        <div className={`bg-grayscale-light bg-opacity-10`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
+            <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <>
+    <div className="p-8">
       {/**
        *  TOP WIDGET BAR
        *  - Hide for teacher
        */}
-      <div className={`bg-opacity-10`}>
-        <div className={`${theme.section} px-4 pb-4 m-auto`}>
-          <TopWidgetBar />
+      {/* Top bar   */}
+      <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+        <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+          <span>
+            {!isTeacher ? (activeRoomName !== '' ? activeRoomName : classRoomDict[userLanguage]['TITLE']) : null}
+            {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
+          </span>
+        </div>
+        <div>
+          <span className={`mr-0 float-right text-gray-500 text-right`}>
+            <DateAndTime />
+          </span>
         </div>
       </div>
+
+      {thereAreTopWidgets && (
+        <div className={`bg-opacity-10`}>
+          <div className={`${theme.section} pb-4 m-auto`}>
+            <TopWidgetBar />
+          </div>
+        </div>
+      )}
 
       {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
@@ -241,107 +319,38 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         </div>
       ) : null}
 
-      <div className={`bg-opacity-10`}>
-        <div className={`${theme.section} px-4 pb-4 m-auto`}>
-          <h2 className={`w-full flex text-xl border-b-0 border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-            <span>
-              {!isTeacher ? (activeRoomName !== '' ? activeRoomName : classRoomDict[userLanguage]['TITLE']) : null}
-              {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
-            </span>
-            <span className={`mr-0 text-right`}>
-              <DateAndTime />
-            </span>
-          </h2>
-        </div>
-      </div>
-
-
-
       {/**
        *  ASSESSMENTS/SURVEYS
        */}
+
       {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full ${theme.dashboard.sectionTitle}`}> {classRoomDict[userLanguage]['ASSESSMENT_TITLE']}</h2>
-          </div>
-        </div>
-      ) : null}
-
-      {state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <SurveyCard
-              isTeacher={isTeacher}
-              link={'/lesson/on-boarding-survey-1'}
-              lessons={assessmentsSurveys}
-              lessonType={`survey`}
-              accessible={survey.display}
-            />
-          </div>
-        </div>
-      ) : null}
-
-      {/**
-       *  LESSON TAB TOGGLE
-       */}
-      <div className={`bg-opacity-10`}>
-        <div className={`${theme.section} px-4 text-xl m-auto`}>
-          <TodayUpcomingTabs
-            isTeacher={isTeacher}
-            lessonGroupCount={lessonGroupCount}
-            visibleLessonGroup={visibleLessonGroup}
-            setVisibleLessonGroup={setVisibleLessonGroup}
-          />
-        </div>
-      </div>
-
-      {/**
-       *  LESSONS
-       *    - today
-       *    - upcoming
-       *    - completed
-       */}
-      {visibleLessonGroup === 'today' ? (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <Today
-              activeRoom={state.activeRoom}
-              activeRoomInfo={activeRoomInfo}
-              isTeacher={isTeacher}
-              lessonLoading={lessonLoading}
-              lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
-            />
-          </div>
-        </div>
-      ) : null}
-
-      {
-        !isTeacher &&
-        state.roomData.lessons &&
-        state.roomData.lessons.length > 0 &&
-        visibleLessonGroup === 'upcoming' ? (
-          <div className={`bg-grayscale-light bg-opacity-10`}>
-            <div className={`${theme.section} p-4 text-xl m-auto`}>
-              <UpcomingLessons
-                activeRoomInfo={activeRoomInfo}
-                lessons={upcomingLessons} />
+        <>
+          <SectionTitleV3 title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
+          <div className={`bg-opacity-10`}>
+            <div className={`${theme.section} text-xl m-auto`}>
+              <SurveyCard
+                isTeacher={isTeacher}
+                link={'/lesson/on-boarding-survey-1'}
+                lessons={assessmentsSurveys}
+                lessonType={`survey`}
+                accessible={survey.display}
+              />
             </div>
           </div>
-        ) : null
-      }
-
-      {
-        state.roomData.lessons &&
-        state.roomData.lessons.length > 0 &&
-        visibleLessonGroup === 'completed' ? (
-        <div className={`bg-grayscale-light bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
-          </div>
-        </div>
+        </>
       ) : null}
-    </>
+
+      {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+        <SectionTitleV3 title={classRoomDict[userLanguage]['LIST_LESSON']} />
+      ) : null}
+
+      <div className={`w-full pt-8 pb-4 px-6 bg-white rounded-lg shadow mb-0`}>
+        {/**
+         *  LESSON TAB TOGGLE
+         */}
+        <UnderlinedTabs tabs={tabs} />
+      </div>
+    </div>
   );
 };
 

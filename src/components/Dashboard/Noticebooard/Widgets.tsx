@@ -1,8 +1,8 @@
-import React, {useContext} from 'react';
-import {Link, Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {IoCallOutline} from 'react-icons/io5';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import React, { useContext } from 'react';
+import { Link, Widget } from '../../../interfaces/ClassroomComponentsInterfaces';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { IoCallOutline } from 'react-icons/io5';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 
 export const responsiveClass = 'md:hidden lg:inline-block xl:inline-block';
@@ -52,10 +52,10 @@ export const ImageWidget = (props: {
 export const DefaultTextWidget = (props: { title: string; content: string; card?: boolean; classProp?: string }) => {
   const { title, content, card, classProp } = props;
   return (
-    <div className={`p-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
-      <p className={`text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>{title}:</p>
+    <div className="p-2 bg-white shadow rounded-lg">
+      <p className={`text-sm p-2 font-semibold border-b-0 text-gray-900 border-gray-200`}>{title}:</p>
       <div key={`teacher_side_note`} className={`${responsiveClass} p-2`}>
-        <p className={`text-xs text-dark-gray`} dangerouslySetInnerHTML={{ __html: content }} />
+        <p className={`text-xs text-gray-800`} dangerouslySetInnerHTML={{ __html: content }} />
       </div>
     </div>
   );
@@ -69,7 +69,7 @@ export const CallLinkWidget = (props: {
   widgetObj?: Widget;
 }) => {
   const { title, links, card, classProp, widgetObj } = props;
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const { clientKey, userLanguage } = useContext(GlobalContext);
   const { noticeboardDict } = useDictionary(clientKey);
 
   const getCallInfo = (url: string) => {
@@ -102,21 +102,20 @@ export const CallLinkWidget = (props: {
 
   return (
     <div>
-      <div className={`${responsiveClass} bg-medium-gray bg-opacity-80`}>
-        <div className={`flex flex-row p-2 text-sm font-semibold border-b-0 border-dark-gray border-opacity-10`}>
-          <span className={`w-full text-white`}>{title}:</span>
-        </div>
+      <div className={`mb-2  ${responsiveClass}`}>
+        <span className={`text-gray-400 w-full font-semibold text-sm`}>{title}:</span>
       </div>
-      <div className={`p-2 bg-white  border-0 border-dark-gray border-opacity-10`}>
+      <div style={{ minHeight: 90 }} className={`p-3 bg-white shadow rounded-lg flex items-center justify-center`}>
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
           {links &&
             links.length > 0 &&
             links.map((link: Link, idx: number) => (
               <div
-                  key={`${widgetObj.id}_${idx}`}
-                className={` ${ idx < links.length - 1 && widgetObj.placement === 'sidebar'
-                ? 'border-b border-dark-gray border-opacity-10'
-                : ''
+                key={`${widgetObj.id}_${idx}`}
+                className={` ${
+                  idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                    ? 'border-b border-dark-gray border-opacity-10'
+                    : ''
                 } 
                 max-w-1/3
                 `}>
@@ -152,4 +151,3 @@ export const CallLinkWidget = (props: {
     </div>
   );
 };
-
