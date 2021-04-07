@@ -12,7 +12,6 @@ import * as queries from '../../../graphql/queries';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
 import { useHistory } from 'react-router';
-import { split, trim } from 'lodash';
 
 export interface Room {
   id: string;
@@ -39,7 +38,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     activeRoomSyllabus,
     setActiveRoomSyllabus,
   } = props;
-  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
+  const { state, dispatch, clientKey } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
 
   // Cookie setting for transition to Student/Teacher
@@ -57,13 +56,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
   const history: any = useHistory();
-
-  const getRouteId = (): string => {
-    const arr = split(trim(history.location.pathname), '/');
-    return arr.length >= 4 && arr[3];
-  };
-
-  const activeRoomId: string = getRouteId();
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
@@ -178,7 +170,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       //
       try {
         const noticeboardWidgetsFetch: any = await API.graphql(
-          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: activeRoomId } } })
+          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: state.activeRoom } } })
         );
 
         const response = await noticeboardWidgetsFetch;
@@ -197,22 +189,22 @@ const ClassroomControl = (props: ClassroomControlProps) => {
         setWidgetLoading(false);
       }
     };
-    if (activeRoomId && widgetLoading === false) {
+    if (state.activeRoom && widgetLoading === false) {
       listRoomWidgets();
     }
-  }, [activeRoomId]);
+  }, [state.activeRoom]);
 
   /**
    * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
    */
   useEffect(() => {
     const listRoomCurriculums = async () => {
-      if (state.roomData.rooms.length > 0 && activeRoomId !== '') {
+      if (state.roomData.rooms.length > 0 && state.activeRoom !== '') {
         try {
           const roomIds = getArrayOfUniqueValueByProperty(state.roomData.rooms, 'id');
           const roomCurriculumsFetch: any = API.graphql(
             graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { roomID: { contains: activeRoomId } },
+              filter: { roomID: { contains: state.activeRoom } },
             })
           );
           const response = await roomCurriculumsFetch;
@@ -227,18 +219,18 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       }
     };
     listRoomCurriculums();
-  }, [activeRoomId]);
+  }, [state.activeRoom]);
 
   // Save info of selected room to cookie
   useEffect(() => {
-    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === activeRoomId);
+    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === state.activeRoom);
     if (getRoomFromState.length === 1) {
       setCookie('room_info', getRoomFromState[0]);
       setActiveRoomInfo(getRoomFromState[0]);
     } else {
       setCookie('room_info', {});
     }
-  }, [activeRoomId]);
+  }, [state.activeRoom]);
 
   /**
    * 5. LIST AVAILABLE SYLLABUS and GET SEQUENCE TO SORT SYLLABI
@@ -385,7 +377,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       : [];
 
   const classRoomActiveSyllabus = state.roomData.rooms
-    .filter((room: any) => room.id === activeRoomId)
+    .filter((room: any) => room.id === state.activeRoom)
     .map((room: any) => {
       return { id: room.activeSyllabus };
     });
@@ -414,7 +406,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const handleRoomSelection = (e: React.MouseEvent, i: number) => {
     const t = e.target as HTMLElement;
     const name = t.getAttribute('data-name');
-    if (activeRoomId !== t.id) {
+    if (state.activeRoom !== t.id) {
       // setActiveRoom(t.id);
       setActiveRoomName(name);
 
@@ -425,10 +417,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
     }
   };
-
-  const roomsTitle =
-    'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return isHomescreen ? (
     <Home
@@ -443,7 +431,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       homeData={homeData}
       setHomeData={setHomeData}
       currentPage={currentPage}
-      activeRoom={activeRoomId}
+      activeRoom={state.activeRoom}
       setActiveRoom={setActiveRoom}
       setActiveRoomInfo={setActiveRoomInfo}
       setActiveRoomName={setActiveRoomName}

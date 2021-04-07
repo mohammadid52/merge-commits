@@ -147,7 +147,7 @@ const Dashboard = (props: DashboardProps) => {
 
         {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
         (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-        (userData.role === 'ST' && state.currentPage === 'classroom') ? (
+        (state.currentPage === 'classroom' && userData.role === 'ST') ? (
           <ClassroomControl
             isHomescreen={false}
             currentPage={currentPage}
@@ -219,7 +219,7 @@ const Dashboard = (props: DashboardProps) => {
 
                 <Route
                   exact
-                  path={`${match.url}/classroom/:id`}
+                  path={`${match.url}/classroom`}
                   render={() => (
                     <Classroom
                       currentPage={currentPage}

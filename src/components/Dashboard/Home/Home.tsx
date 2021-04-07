@@ -11,10 +11,16 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 
 const Home = (props: ClassroomControlProps) => {
-  const { homeData, classList, handleRoomSelection } = props;
-  const { state, theme } = useContext(GlobalContext);
+  const { homeData, classList } = props;
+  const { state, dispatch, theme } = useContext(GlobalContext);
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName } : null;
+
+  useEffect(() => {
+    if (state.user.role === 'ST') {
+      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
+    }
+  }, []);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
@@ -98,7 +104,7 @@ const Home = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div className={`${theme.section} shadow mt-8 mb-6 px-4 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
-              <h2 className={`text-base font-normal`}>Welcome, What do you want to learn today, {user.firstName} ?</h2>
+              <h2 className={`text-base font-normal`}>Welcome, What do you want to learn today, {user.firstName}?</h2>
             </div>
           )}
 

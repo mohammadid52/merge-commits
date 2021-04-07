@@ -15,16 +15,16 @@ const RoomTiles = (props: { classList: [] }) => {
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
 
-  // // Select room on roomtile click
-  // const handleRoomSelection = (e: React.MouseEvent)=> {
-  //   const t = e.target as HTMLElement;
-  //   dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
-  // }
+  // Select room on roomtile click
+  const handleRoomSelection = (id: string) => {
+    dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
+    history.push('/dashboard/classroom');
+  };
   // Push user to classroom on room change
 
   useEffect(() => {
     if (state.activeRoom !== '') {
-      history.push('/dashboard/classroom');
+      history.push('/dashboard/home');
     }
   }, [state.activeRoom]);
 
@@ -106,7 +106,7 @@ const RoomTiles = (props: { classList: [] }) => {
 
               return (
                 <div
-                  onClick={() => history.push(`/dashboard/classroom/${roomId}`)}
+                  onClick={() => handleRoomSelection(roomId)}
                   key={`homepage__classrooms-${idx}`}
                   className="flex flex-col rounded-lg shadow overflow-hidden transform transition duration-200">
                   <div className="flex-shrink-0">
