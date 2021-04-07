@@ -5,10 +5,10 @@ import { useHistory } from 'react-router-dom';
 import { IoImage } from 'react-icons/io5';
 
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import ViewMore from '../../Atoms/ViewMore';
 
 import { getImageFromS3 } from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
+import Buttons from '../../Atoms/Buttons';
 
 const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
   const { classList, handleRoomSelection } = props;
@@ -53,6 +53,8 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
   const [slicedList, setSlicedList] = useState<any[]>([]);
 
   const modifiedList = getList();
+
+  console.log(modifiedList);
 
   useEffect(() => {
     if (classList && classList.length > 0) {
@@ -163,7 +165,9 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
           </div>
           <div className="my-3 mt-8">
             {classList && classList.length > 3 && (
-              <ViewMore onClick={onViewMore} text={`${slicedList.length <= 3 ? 'Show All' : 'Show Few'}`} />
+              <div className="w-auto float-right">
+                <Buttons label={slicedList.length <= 3 ? 'Show All' : 'Show Few'} onClick={onViewMore} type="button" />
+              </div>
             )}
           </div>
         </div>
