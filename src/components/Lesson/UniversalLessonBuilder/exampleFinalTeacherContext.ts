@@ -5,7 +5,8 @@ const exampleFinalTeacherContext = {
   roster: [{}],
   studentDataUpdated: false,
   lessonData: {},
-  pages: [ //contains: lessonData.universalLessonPlan
+  pages: [
+    //contains: lessonData.universalLessonPlan
     { enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF' },
     { enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF' },
     { enabled: true, open: false, active: false, label: 'Story Breakdown', displayMode: 'SELF' },
@@ -17,10 +18,51 @@ const exampleFinalTeacherContext = {
     { enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF' },
   ],
   sharing: false,
-  displayData:{},
+  displayData: [
+    //contains: student's shared BreakdownData
+    {
+      id: '000002', // studentDataID
+      universalLessonID: '3gd3g2cb-6699-4d8c-9b03-383310a56482',
+      universalLessonPageID: 'page_2',
+      studentAuthID: '9101f663-f819-4180-9d31-63afd81d7b56',
+      studentID: 'otherstudent@yopmail.com',
+      pageData: [
+        {
+          pagePartID: 'page_2_part_1',
+          pagePartInput: [
+            {
+              domID: 'title',
+              input: "Another student's title",
+            },
+            {
+              domID: 'story',
+              input: 'A story that another student wrote',
+            },
+          ],
+        },
+        {
+          pagePartID: 'page_2_part_2',
+          pagePartInput: [
+            {
+              domID: 'culture',
+              input: 'Dutch',
+            },
+            {
+              domID: 'storyteller',
+              input: 'Grandmother',
+            },
+            {
+              domID: 'lessons',
+              input: 'Perseverance',
+            },
+          ],
+        },
+      ],
+    },
+  ],
   studentViewing: {
     live: true,
-    studentInfo:{
+    studentInfo: {
       id: '000001',
       universalLessonID: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
       universalLessonPageID: 'page_2',
@@ -36,7 +78,8 @@ const exampleFinalTeacherContext = {
             {
               domID: 'title',
               input: 'My story title',
-            }, {
+            },
+            {
               domID: 'story',
               input: 'My story content',
             },
@@ -47,18 +90,20 @@ const exampleFinalTeacherContext = {
           pagePartInput: [
             {
               domID: 'culture',
-              input: 'Dutch'
-            },{
+              input: 'Dutch',
+            },
+            {
               domID: 'storyteller',
-              input: 'Grandmother'
-            },{
+              input: 'Grandmother',
+            },
+            {
               domID: 'lessons',
-              input: 'Perseverance'
-            }
-          ]
-        }
+              input: 'Perseverance',
+            },
+          ],
+        },
       ],
-    }
+    },
   },
   open: false,
 };

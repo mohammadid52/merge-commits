@@ -115,6 +115,7 @@ const ClassRoster = (props: classRosterProps) => {
         }),
       );
       const syllabusLessonStudentList = syllabusLessonStudents.data.listPersonLocations.items;
+      console.log('syllabusLessonStudentList :: ', syllabusLessonStudentList)
       setPersonLocationStudents(syllabusLessonStudentList);
       dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: syllabusLessonStudentList } });
       subscription = subscribeToPersonLocations();
