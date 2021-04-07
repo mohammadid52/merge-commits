@@ -147,7 +147,7 @@ const Dashboard = (props: DashboardProps) => {
 
         {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
         (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-        (userData.role === 'ST' && state.currentPage === 'classroom') ? (
+        (state.currentPage === 'classroom' && userData.role === 'ST') ? (
           <ClassroomControl
             isHomescreen={false}
             currentPage={currentPage}
@@ -176,7 +176,6 @@ const Dashboard = (props: DashboardProps) => {
                 </div>
               }>
               <Switch>
-
                 <Route
                   path={`${match.url}`}
                   exact
@@ -185,7 +184,7 @@ const Dashboard = (props: DashboardProps) => {
                       if (userData.role === 'FLW' || userData.role === 'TR') {
                         return <Redirect to={`${match.url}/lesson-planner`} />;
                       } else if (userData.role === 'ST') {
-                        return <Redirect to={`${match.url}/classroom`} />;
+                        return <Redirect to={`${match.url}/home`} />;
                         // return <Redirect to={`${match.url}/home`} />;
                       } else return <Redirect to={`${match.url}/manage-institutions`} />;
                     } else
@@ -213,7 +212,8 @@ const Dashboard = (props: DashboardProps) => {
                       syllabusLoading={syllabusLoading}
                       setSyllabusLoading={setSyllabusLoading}
                       activeRoomSyllabus={activeRoomSyllabus}
-                      setActiveRoomSyllabus={setActiveRoomSyllabus}/>
+                      setActiveRoomSyllabus={setActiveRoomSyllabus}
+                    />
                   )}
                 />
 
@@ -278,7 +278,6 @@ const Dashboard = (props: DashboardProps) => {
                 <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
 
                 <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
-
               </Switch>
             </Suspense>
           </div>
@@ -286,14 +285,11 @@ const Dashboard = (props: DashboardProps) => {
           {/**
            *  SIDEWIDGETSBAR
            */}
-          {
-            state.currentPage === 'classroom' ||
-            state.currentPage === 'lesson-planner' ||
-            state.currentPage === 'noticeboard' ?
-              (
-                <SideWidgetBar currentPage={state.currentPage} />
-              ) : null
-          }
+          {state.currentPage === 'classroom' ||
+          state.currentPage === 'lesson-planner' ||
+          state.currentPage === 'noticeboard' ? (
+            <SideWidgetBar currentPage={state.currentPage} />
+          ) : null}
         </div>
       </div>
     </>

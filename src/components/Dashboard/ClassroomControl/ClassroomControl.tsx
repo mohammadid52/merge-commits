@@ -1,16 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
+import React, { useContext, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-import {ClassroomControlProps} from '../Dashboard';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {API, graphqlOperation} from '@aws-amplify/api';
+import { ClassroomControlProps } from '../Dashboard';
+import { GlobalContext } from '../../../contexts/GlobalContext';
+import { API, graphqlOperation } from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
-import {getArrayOfUniqueValueByProperty} from '../../../utilities/arrays';
-import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import { getArrayOfUniqueValueByProperty } from '../../../utilities/arrays';
+import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
+import { useHistory } from 'react-router';
 
 export interface Room {
   id: string;
@@ -37,7 +38,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     activeRoomSyllabus,
     setActiveRoomSyllabus,
   } = props;
-  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
+  const { state, dispatch, clientKey } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
 
   // Cookie setting for transition to Student/Teacher
@@ -54,6 +55,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   // Menu state
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
+  const history: any = useHistory();
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
@@ -206,7 +208,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
             })
           );
           const response = await roomCurriculumsFetch;
-          console.log('response curriculums', response)
+          console.log('response curriculums', response);
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
           setCurriculumIds(arrayOfCurriculumIds);
@@ -249,22 +251,20 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
           const responseRoomSyllabus = await syllabusMultiFetch;
 
-
           const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
 
           // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
-          const roomSyllabusReordered = (arrayOfRoomSyllabusSequence) ? arrayOfRoomSyllabusSequence.reduce(
-            (acc: any[], syllabusID: string, idx: number) => {
-              const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
-              if (matchedSyllabus) {
-                return [...acc, matchedSyllabus];
-              } else {
-                return acc;
-              }
-            },
-            []
-          ) : arrayOfRoomSyllabus;
+          const roomSyllabusReordered = arrayOfRoomSyllabusSequence
+            ? arrayOfRoomSyllabusSequence.reduce((acc: any[], syllabusID: string, idx: number) => {
+                const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
+                if (matchedSyllabus) {
+                  return [...acc, matchedSyllabus];
+                } else {
+                  return acc;
+                }
+              }, [])
+            : arrayOfRoomSyllabus;
 
           const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
             if (activeRoomSyllabus === responseObject.id) {
@@ -367,7 +367,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   };
 
-
   const lessonPlannerSyllabus =
     state.roomData.syllabus.length > 0
       ? state.roomData.syllabus.filter((syllabusObject: any) => {
@@ -401,8 +400,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   }, [syllabusLessonSequence]);
 
-
-
   /******************************************
    * 7.1 SELECT ROOM FUNCTION               *
    ******************************************/
@@ -420,10 +417,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
     }
   };
-
-  const roomsTitle =
-    'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return isHomescreen ? (
     <Home
