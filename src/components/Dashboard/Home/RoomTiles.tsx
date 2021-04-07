@@ -10,8 +10,8 @@ import ViewMore from '../../Atoms/ViewMore';
 import { getImageFromS3 } from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
-const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
-  const { classList, handleRoomSelection } = props;
+const RoomTiles = (props: { classList: [] }) => {
+  const { classList } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
 
