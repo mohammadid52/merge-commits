@@ -14,7 +14,7 @@ const Home = (props: ClassroomControlProps) => {
   const { homeData, classList, handleRoomSelection } = props;
   const { state, theme } = useContext(GlobalContext);
 
-  const user = !isEmpty(state) ? { firstName: state.user.firstName } : null;
+  const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
@@ -98,7 +98,9 @@ const Home = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div className={`${theme.section} mt-6 mb-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
-              <h2 className={`text-base font-normal`}>Welcome, What do you want to learn today, {user.firstName} ?</h2>
+              <h2 className={`text-base font-normal`}>
+                Welcome, What do you want to learn today, {user.preferredName || ''} {user.firstName} ?
+              </h2>
             </div>
           )}
 
