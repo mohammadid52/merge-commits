@@ -82,14 +82,6 @@ export interface LessonCardProps {
   lessonType?: string;
 }
 
-const Counter: React.FC<{ count: number }> = ({ count }) => {
-  return (
-    <div className="w-5 h-5 p-1  bg-indigo-500 rounded-full flex justify-center align-center items-center content-center">
-      <span className="w-auto h-auto text-xs text-white font-bold">{count}</span>
-    </div>
-  );
-};
-
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
     isTeacher,
@@ -212,6 +204,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         return -1;
       }
     });
+  };
+
+  const Counter: React.FC<{ count: number }> = ({ count }) => {
+    return (
+      <div className="w-5 h-5 p-1  bg-indigo-500 rounded-full flex justify-center align-center items-center content-center">
+        <span className="w-auto h-auto text-xs text-white font-bold">{count}</span>
+      </div>
+    );
   };
 
   const tabs = [
