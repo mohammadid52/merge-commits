@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react'
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
-import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline } from 'react-icons/io';
 
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
@@ -25,9 +25,9 @@ const LessonsList = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { BreadcrumsTitles, LessonsListDict ,paginationPage} = useDictionary(clientKey);
+  const { BreadcrumsTitles, LessonsListDict, paginationPage } = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
@@ -40,23 +40,23 @@ const LessonsList = () => {
   const [totalLessonNum, setTotalLessonNum] = useState(0);
   const [searchInput, setSearchInput] = useState({
     value: '',
-    isActive: false
+    isActive: false,
   });
   const [sortingType, setSortingType] = useState({
     value: '',
     name: '',
-    asc: true
+    asc: true,
   });
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     { title: BreadcrumsTitles[userLanguage]['LESSONS'], url: '/dashboard/lesson-builder', last: true },
-  ]
+  ];
 
   const sortByList = [
     { id: 1, name: 'Title', value: 'title' },
     { id: 2, name: 'Type', value: 'type' },
-  ]
+  ];
 
   const getType = (type: string) => {
     switch (type) {
@@ -67,67 +67,64 @@ const LessonsList = () => {
       case 'assessment':
         return 'Assessment';
     }
-  }
+  };
 
   const goNextPage = () => {
     const pageHigherLimit = totalPages - 1;
     if (firstPage) {
-      setFirstPage(false)
+      setFirstPage(false);
     }
-    if (currentPage < (pageHigherLimit - 1)) {
+    if (currentPage < pageHigherLimit - 1) {
       setCurrentPage(currentPage + 1);
     } else if (currentPage === pageHigherLimit - 1) {
       setCurrentPage(currentPage + 1);
       setLastPage(true);
     }
-  }
+  };
 
   const goPrevPage = () => {
     if (lastPage) {
-      setLastPage(false)
+      setLastPage(false);
     }
-    if (currentPage > 0)
-      setCurrentPage(currentPage - 1);
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
     else {
-      setFirstPage(true)
+      setFirstPage(true);
     }
-  }
+  };
 
   const currentPageLessons = () => {
-    const initialItem = (currentPage) * pageCount;
+    const initialItem = currentPage * pageCount;
     const updatedList = lessonsData.slice(initialItem, initialItem + pageCount);
     setCurrentList(updatedList);
-  }
+  };
 
   const backToInitials = () => {
     setCurrentPage(0);
     currentPageLessons();
     setFirstPage(true);
     if (totalPages === 1) {
-      setLastPage(true)
+      setLastPage(true);
     } else {
       setLastPage(false);
     }
-  }
+  };
 
   const buildLesson = () => {
     history.push(`${match.url}/lesson/add`);
-  }
+  };
 
   const getLessonsList = async () => {
     try {
-      const fetchLessonsData: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonsTitles)
-      );
+      const fetchLessonsData: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles));
       if (!fetchLessonsData) {
         throw new Error('fail!');
       } else {
         const LessonsListData = fetchLessonsData.data?.listLessons?.items;
-        const totalListPages = Math.floor(LessonsListData.length / pageCount)
+        const totalListPages = Math.floor(LessonsListData.length / pageCount);
         if (totalListPages * pageCount === LessonsListData.length) {
           setTotalPages(totalListPages);
         } else {
-          setTotalPages(totalListPages + 1)
+          setTotalPages(totalListPages + 1);
         }
         setLessonsData(LessonsListData);
         setTotalLessonNum(LessonsListData.length);
@@ -136,65 +133,63 @@ const LessonsList = () => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const setSearch = (str: string) => {
     setSearchInput({
       ...searchInput,
-      value: str
-    })
-  }
+      value: str,
+    });
+  };
 
   const searchLessonsFromList = () => {
     if (searchInput.value) {
       const currentLessonsList = [...lessonsData];
-      const newList = currentLessonsList.filter(item => {
+      const newList = currentLessonsList.filter((item) => {
         // Search on lesson title for match.
-        return (
-          (item.title?.toLowerCase().includes(searchInput.value))
-        )
+        return item.title?.toLowerCase().includes(searchInput.value);
       });
       setSearchInput({
         ...searchInput,
-        isActive: true
-      })
-      setCurrentList(newList)
+        isActive: true,
+      });
+      setCurrentList(newList);
     } else {
       removeSearchAction();
     }
-  }
+  };
   const toggleSortDimention = () => {
     setSortingType({
       ...sortingType,
-      asc: !sortingType.asc
-    })
-  }
+      asc: !sortingType.asc,
+    });
+  };
   const removeSearchAction = () => {
     backToInitials();
     setSearchInput({ value: '', isActive: false });
-
-  }
+  };
 
   const fetchSortedList = () => {
-    const newLessonsList = [...lessonsData].sort((a, b) => ((a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase()) && sortingType.asc) ? 1 : -1);
+    const newLessonsList = [...lessonsData].sort((a, b) =>
+      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() && sortingType.asc ? 1 : -1
+    );
     setLessonsData(newLessonsList);
-  }
+  };
 
   const setSortingValue = (str: string, name: string) => {
     setSortingType({
       ...sortingType,
       value: str,
-      name: name
-    })
-  }
+      name: name,
+    });
+  };
   useEffect(() => {
     getLessonsList();
   }, []);
 
-
   useEffect(() => {
     backToInitials();
-  }, [lessonsData])
+  }, [lessonsData]);
 
   useEffect(() => {
     setCurrentPage(0);
@@ -204,7 +199,7 @@ const LessonsList = () => {
     if (pageCount * totalListPages === totalLessonNum) {
       setTotalPages(totalListPages);
     } else {
-      setTotalPages(totalListPages + 1)
+      setTotalPages(totalListPages + 1);
     }
     if (totalPages === 1 && totalListPages === 0) {
       setFirstPage(true);
@@ -214,44 +209,63 @@ const LessonsList = () => {
 
   useEffect(() => {
     currentPageLessons();
-  }, [currentPage, totalLessonNum, pageCount])
+  }, [currentPage, totalLessonNum, pageCount]);
 
   useEffect(() => {
     if (totalPages === 1) {
       setFirstPage(true);
       setLastPage(true);
     }
-  }, [totalPages])
+  }, [totalPages]);
 
   useEffect(() => {
     fetchSortedList();
-  }, [sortingType.value, sortingType.asc])
+  }, [sortingType.value, sortingType.asc]);
 
   if (status !== 'done') {
-    return (
-      <LessonLoading />
-    )
+    return <LessonLoading />;
   }
   {
     return (
       <div className={`w-full h-full`}>
-
         {/* Header section */}
         <BreadCrums items={breadCrumsList} />
         <div className="flex justify-between">
-          <SectionTitle title={LessonsListDict[userLanguage]['TITLE']} subtitle={LessonsListDict[userLanguage]['SUBTITLE']} />
+          <SectionTitle
+            title={LessonsListDict[userLanguage]['TITLE']}
+            subtitle={LessonsListDict[userLanguage]['SUBTITLE']}
+          />
           <div className="flex justify-end py-4 mb-4">
-            <SearchInput value={searchInput.value} onChange={setSearch} onKeyDown={searchLessonsFromList} closeAction={removeSearchAction} style="mr-4 w-full" />
-            <Selector placeholder={LessonsListDict[userLanguage]['SORTBY']} list={sortByList} selectedItem={sortingType.name} onChange={setSortingValue} btnClass="rounded-r-none  border-r-none " arrowHidden={true} />
-            <button className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `} onClick={toggleSortDimention}>
+            <SearchInput
+              value={searchInput.value}
+              onChange={setSearch}
+              onKeyDown={searchLessonsFromList}
+              closeAction={removeSearchAction}
+              style="mr-4 w-full"
+            />
+            <Selector
+              placeholder={LessonsListDict[userLanguage]['SORTBY']}
+              list={sortByList}
+              selectedItem={sortingType.name}
+              onChange={setSortingValue}
+              btnClass="rounded-r-none  border-r-none "
+              arrowHidden={true}
+            />
+            <button
+              className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
+              onClick={toggleSortDimention}>
               <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
-            <Buttons label={LessonsListDict[userLanguage]['BUTTON']['ADD']} onClick={buildLesson} btnClass="mr-4 w-full" Icon={IoMdAddCircleOutline} />
+            <Buttons
+              label={LessonsListDict[userLanguage]['BUTTON']['ADD']}
+              onClick={buildLesson}
+              btnClass="mr-4 w-full"
+              Icon={IoMdAddCircleOutline}
+            />
           </div>
         </div>
-
 
         {/* List / Table */}
         <div className="flex flex-col">
@@ -285,7 +299,7 @@ const LessonsList = () => {
                   </div>
                 </div>
 
-                {(currentList && currentList.length) ?
+                {currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
                       key={`lessonsRows${i}`}
@@ -293,40 +307,44 @@ const LessonsList = () => {
                       id={lessonsObject.id}
                       title={lessonsObject.title}
                       type={lessonsObject.type && getType(lessonsObject.type)}
-                      languages={lessonsObject?.language && lessonsObject?.language.map((item: string) => getLanguageString(item))}
+                      languages={
+                        lessonsObject?.language &&
+                        lessonsObject?.language.map((item: string) => getLanguageString(item))
+                      }
                       createdAt={lessonsObject.createdAt}
                       updatedAt={lessonsObject.updatedAt}
                     />
                   ))
-                  : (
-                    <div className="flex p-12 mx-auto justify-center">
-                     {LessonsListDict[userLanguage]['NORESULT']}
-                    </div>)}
+                ) : (
+                  <div className="flex p-12 mx-auto justify-center">{LessonsListDict[userLanguage]['NORESULT']}</div>
+                )}
               </div>
 
               {/* Pagination And Counter */}
-              <div className="flex justify-center my-8">
-                {!searchInput.isActive &&
-                  (
-                    <Fragment>
-                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900"> {paginationPage(userLanguage,currentPage + 1,totalPages)}</span>
-                      <Pagination
-                        currentPage={currentPage + 1}
-                        setNext={goNextPage}
-                        setPrev={goPrevPage}
-                        firstPage={firstPage}
-                        lastPage={lastPage}
-                      />
-                      <PageCountSelector pageSize={pageCount} setPageSize={(c: number) => setPageCount(c)} />
-                    </Fragment>
-                  )}
+              <div className="flex justify-center my-4">
+                {!searchInput.isActive && (
+                  <Fragment>
+                    <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
+                      {' '}
+                      {paginationPage(userLanguage, currentPage + 1, totalPages)}
+                    </span>
+                    <Pagination
+                      currentPage={currentPage + 1}
+                      setNext={goNextPage}
+                      setPrev={goPrevPage}
+                      firstPage={firstPage}
+                      lastPage={lastPage}
+                    />
+                    <PageCountSelector pageSize={pageCount} setPageSize={(c: number) => setPageCount(c)} />
+                  </Fragment>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
-}
+};
 
-export default LessonsList
+export default LessonsList;
