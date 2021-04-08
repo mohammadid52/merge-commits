@@ -54,8 +54,6 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
 
   const modifiedList = getList();
 
-  console.log(modifiedList);
-
   useEffect(() => {
     if (classList && classList.length > 0) {
       if (modifiedList && slicedList.length === 0) {

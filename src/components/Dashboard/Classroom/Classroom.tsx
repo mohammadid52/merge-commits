@@ -171,9 +171,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const todayAndUpcomingLessons = [...todayLessons, ...upcomingLessons];
 
   // if there are top widgets
-  const thereAreTopWidgets = state.roomData.widgets.some((widget: any) => widget.placement === 'topbar');
-  console.log(state.roomData.widgets);
-
+  const thereAreTopWidgets: boolean = state.roomData.widgets.some((widget: any) => widget.placement === 'topbar');
   /**
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
