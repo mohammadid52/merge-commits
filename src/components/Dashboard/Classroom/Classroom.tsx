@@ -230,7 +230,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       active: true,
       content: (
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 pb-0 text-xl m-auto`}>
+          <div className={`${theme.section} p-4 text-xl m-auto`}>
             <Today
               activeRoom={state.activeRoom}
               activeRoomInfo={activeRoomInfo}
@@ -247,8 +247,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       icon: <Counter count={lessonGroupCount.upcoming} />,
       title: 'Upcoming',
       active: false,
-      content: !isTeacher && state.roomData.lessons && state.roomData.lessons.length > 0 && (
-        <div className={`bg-grayscale-light bg-opacity-10`}>
+      content: !isTeacher && (
+        <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <UpcomingLessons activeRoomInfo={activeRoomInfo} lessons={upcomingLessons} />
           </div>
@@ -261,7 +261,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       title: 'Completed',
       active: false,
       content: (
-        <div className={`bg-grayscale-light bg-opacity-10`}>
+        <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
           </div>
