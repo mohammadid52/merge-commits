@@ -133,6 +133,7 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           phone: editFormValues.phone,
           isServiceProvider: editFormValues.isServiceProvider,
         };
+
         const updatedList = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }));
         instEditPrps.toggleUpdateState();
         history.goBack();

@@ -12,11 +12,10 @@ interface ButtonProps {
   btnClass?: string;
   labelClass?: string;
   disabled?: boolean;
-  spacing?: string;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
-  const { label, Icon, transparent, type, onClick, btnClass, labelClass, disabled, spacing = 'px-4 py-2' } = btnPrps;
+  const { label, Icon, transparent, type, onClick, btnClass, labelClass, disabled } = btnPrps;
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -24,7 +23,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
     <button
       disabled={disabled}
       type={type ? type : 'button'}
-      className={`font-bold uppercase text-xs$ ${spacing} rounded-lg flex items-center justify-center w-auto ${
+      className={`font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${
         theme.outlineNone
       } ${transparent ? theme.btn.cancel : theme.btn[themeColor]} ${btnClass ? btnClass : ''} ${
         disabled ? 'cursor-not-allowed' : 'cursor-pointer'
