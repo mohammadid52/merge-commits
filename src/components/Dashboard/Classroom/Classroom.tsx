@@ -294,18 +294,12 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       )}
 
       {isTeacher && state.currentPage === 'lesson-planner' ? (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 text-xl m-auto`}>
-            <h2 className={`text-xl w-full border-b-0 border-dark-gray pb-1 ${theme.dashboard.sectionTitle}`}>
-              {classRoomDict[userLanguage]['UNIT_TITLE']}
-            </h2>
-          </div>
-        </div>
+        <SectionTitleV3 title={classRoomDict[userLanguage]['UNIT_TITLE']} />
       ) : null}
 
       {isTeacher && state.currentPage === 'lesson-planner' ? (
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} px-4 pb-4 m-auto`}>
+          <div className={`${theme.section} pb-4 m-auto`}>
             <SyllabusSwitch
               activeRoom={state.activeRoom}
               currentPage={currentPage}
