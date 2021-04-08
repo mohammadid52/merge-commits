@@ -232,7 +232,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
           return pickCheckpointObj;
         })
 
-        // console.log('checkpoints --> ', items)
         // console.log('checkpoints --> ordered --> ',orderCorrected)
         const listCheckpoints = {...checkpoints.data.listCheckpoints, items: orderCorrected}
 
@@ -369,7 +368,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     if (!checkpointsLoaded && state.status === 'loaded') {
       getAdditionalLessonData();
     }
-  }, [state.status]);
+  }, [state.data.lesson]);
 
 
 

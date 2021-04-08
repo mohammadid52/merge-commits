@@ -3,13 +3,11 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
-import { RiDoorClosedLine } from 'react-icons/ri';
+import { FaAppleAlt } from 'react-icons/fa';
+import { AiOutlineBook, AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { IoIosPeople, IoMdBuild } from 'react-icons/io';
-import { GiShinyApple } from 'react-icons/gi';
-import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
+import { IoBookOutline } from 'react-icons/io5';
 import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
 
 import useDictionary from '../../../customHooks/dictionary';
@@ -32,7 +30,7 @@ export interface LinkProps {
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const { state, userLanguage, clientKey } = useContext(GlobalContext);
-  const { currentPage, setCurrentPage } = linkProps;
+
   const { sideBarLinksDict } = useDictionary(clientKey);
   const history = useHistory();
   const match = useRouteMatch();
@@ -162,6 +160,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
+            },{
+              title: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
+              name: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
+              label: 'Universal Lesson Builder',
+              path: 'universal-lesson-builder',
             },
           ];
         });
@@ -202,16 +205,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     linkProps.setCurrentPage(id);
   };
 
-  const pageUrlEndsWith = (pageLabel: string) => {
-    const pageUrl = window.location.href;
-    const lastPart = pageUrl.match(/[^/]+$/g);
-    return lastPart.includes(pageLabel);
-  };
 
-  const pageUrlContains = (pageLabel: string) => {
-    const pageUrl = window.location.href;
-    return pageUrl.indexOf(pageLabel) !== -1;
-  };
+
+
 
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
@@ -224,6 +220,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Lesson Planner':
         return <FaAppleAlt id={url} />;
       case 'Lesson Builder':
+      case 'Universal Lesson Builder':
         return <IoMdBuild id={url} />;
       case 'Institutions':
         return <HiOutlineOfficeBuilding id={url} />;
@@ -238,7 +235,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   const linkClass =
     'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
-  const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
+
   const activeClass = 'bg-gray-200 text-dark-gray';
 
   const path = history.location.pathname;

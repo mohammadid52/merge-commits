@@ -2,7 +2,7 @@ import {
   UniversalLessonPage,
   UniversalLessonPlanStage,
   UniversalLessonStudentData,
-} from '../../../interfaces/LessonComponentsInterfaces';
+} from '../interfaces/UniversalLessonInterfaces';
 
 interface QuestionData {
   [key: string]: string | null;
@@ -29,8 +29,9 @@ export interface StudentRosterObject {
   };
 }
 
-interface StudentTeacherContextInterface {
+interface StudentTeacherStateInterface {
   status?: string;
+  complete?: boolean;
   //user properties should be renamed for teacher & student context
   authID?: string;
   username?: string;
@@ -63,4 +64,12 @@ interface StudentTeacherContextInterface {
   //subscriptions
   subscription?: any;
   subscribeFunc?: () => any;
+}
+
+
+/**************************************
+ * THE CONTEXT FOR TEACHER & STUDENT  *
+ **************************************/
+export const sharedState: StudentTeacherStateInterface = {
+  //
 }

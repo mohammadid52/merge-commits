@@ -1,4 +1,4 @@
-import { UniversalLesson } from '../../../interfaces/LessonComponentsInterfaces';
+import { UniversalLesson } from '../../../interfaces/UniversalLessonInterfaces';
 
 /**
  *

@@ -16,6 +16,7 @@ import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import ClassroomControl from './ClassroomControl/ClassroomControl';
+import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -278,6 +279,8 @@ const Dashboard = (props: DashboardProps) => {
                 <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
 
                 <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
+
+                <Route path={`${match.url}/universal-lesson-builder`} render={() => <UniversalLessonBuilder />} />
               </Switch>
             </Suspense>
           </div>
