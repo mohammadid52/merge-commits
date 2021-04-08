@@ -48,13 +48,13 @@ const SyllabusSwitch = (props: DashboardProps) => {
       </div>
 
       {activeRoom === '' ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
-          ⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_SYLLABUS}...
+        <div className={`py-4 px-6 bg-white rounded-lg shadow`}>
+          <p>⬅️ {classRoomDict[userLanguage].MESSAGES.SELECT_SYLLABUS}...</p>
         </div>
       ) : null}
 
       {activeRoom !== '' && !syllabusLoading && state.roomData?.syllabus?.length === 0 ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>
+        <div className={`py-4 px-6 bg-white rounded-lg shadow`}>
           {classRoomDict[userLanguage].MESSAGES.NO_SYLLABUS}...
         </div>
       ) : null}
