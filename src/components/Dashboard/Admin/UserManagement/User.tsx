@@ -7,6 +7,7 @@ import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 
+import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import UserInformation from './UserInformation';
@@ -102,10 +103,8 @@ const User = () => {
 
   useEffect(() => {
     async function getUrl() {
-      if (user?.image !== null) {
-        const imageUrl: any = await getImageFromS3(user.image);
-        setImageUrl(imageUrl);
-      }
+      const imageUrl: any = await getImageFromS3(user.image);
+      setImageUrl(imageUrl);
     }
     getUrl();
   }, [user.image]);
@@ -151,11 +150,38 @@ const User = () => {
     const imageUrl: any = await getImageFromS3(`user_profile_image_${user.id}`);
     setImageUrl(imageUrl);
     setUser({ ...user, image: `user_profile_image_${user.id}` });
+    updateImageParam(`user_profile_image_${user.id}`);
 
     toggleCropper();
 
     setImageLoading(false);
   };
+
+  async function updateImageParam(imageKey: string) {
+    // TODO:
+    // Need to check for update only required input values.
+
+    const input = {
+      id: user.id,
+      authId: user.authId,
+      image: imageKey,
+      status: user.status,
+      email: user.email,
+      role: user.role,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      language: user.language,
+    };
+
+    try {
+      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }));
+      setUser({
+        ...user,
+      });
+    } catch (error) {
+      console.error('Error updating image on graphql', error);
+    }
+  }
 
   // TODO: Make below functions global(initials, stringToHslColor)
 
@@ -175,7 +201,7 @@ const User = () => {
     return 'hsl(' + h + ', 70%, 72%)';
   };
 
-  console.log({ image: user.image, imageUrl });
+  console.log({ authId: user.authId });
 
   useEffect(() => {
     let id = queryParams.id;

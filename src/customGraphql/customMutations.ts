@@ -148,6 +148,7 @@ export const updateStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       student {
+        image
         id
         authId
         email
