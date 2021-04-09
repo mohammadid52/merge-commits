@@ -3150,6 +3150,29 @@ const LessonsListRow:any={
   'ES':{}
 }
 
+
+const UniversalBuilderDict: any = {
+  'EN':{
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'Lesson Pages'
+    },
+    TEMPLATES:{
+      TITLE: 'Lesson Templates'
+    }
+  },
+  'ES':{
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'TBD'
+    },
+    TEMPLATES:{
+      TITLE: 'TBD'
+    }
+  }
+}
+
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3227,6 +3250,6 @@ export {
   UnitLookupDict,
   LessonBuilderDict,
   LessonEditDict,
-  LessonsListDict
-  
+  LessonsListDict,
+  UniversalBuilderDict
 };

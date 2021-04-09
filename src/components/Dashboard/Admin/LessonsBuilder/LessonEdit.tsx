@@ -23,6 +23,7 @@ import { languageList } from '../../../../utilities/staticData'
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 
 interface LessonEditProps {
   designersList: any[]
@@ -114,6 +115,7 @@ const LessonEdit = (props: LessonEditProps) => {
     { name: "Overview", icon: <IoCardSharp /> },
     // { name: "Assign Unit", icon: <FaUnity /> },
     { name: "Preview Details", icon: <FaRegEye /> },
+    { name: "Universal Builder", icon: <FaQuestionCircle /> },
   ];
 
   const typeList: any = [
@@ -255,6 +257,8 @@ const LessonEdit = (props: LessonEditProps) => {
           lessonName={formData.name}
           lessonType={formData.type?.value}
         />;
+      case 'Universal Builder':
+        return <UniversalLessonBuilder/>;
       case 'Preview Details':
         return <PreviewForm
           lessonName={formData.name}

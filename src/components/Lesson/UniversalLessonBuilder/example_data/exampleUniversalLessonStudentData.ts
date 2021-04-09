@@ -1,4 +1,4 @@
-import { UniversalLessonStudentData } from '../../../interfaces/UniversalLessonInterfaces';
+import { UniversalLessonStudentData } from '../../../../interfaces/UniversalLessonInterfaces';
 
 /**
  *

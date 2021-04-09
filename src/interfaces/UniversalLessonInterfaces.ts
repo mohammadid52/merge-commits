@@ -5,10 +5,16 @@
 export interface UniversalLesson{
   id: string;
   isDraft?: boolean; //will determine if curriculum builder can see lesson to add to syllabus
-  summary?: string;
+  institute?: string;
   designers: string[];
-  teachers: string[];
+  teachers?: string[];
+  summary?: string;
+  purpose?: string; //input this information on LESSON
+  objectives?: string; //input this information on LESSON
+  curriculum?: string; //get this information from LESSON PLAN BUILDER
+  unit?: string; //get this information from LESSON PLAN BUILDER
   categories?: string[];
+  additionalFiles?: string[];
   universalLessonPlan: UniversalLessonPlanStage[];
   universalLessonPages: UniversalLessonPage[];
 }

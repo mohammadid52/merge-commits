@@ -1,15 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { lessonControlState } from '../state/LessonControlState';
 import { lessonControlReducer } from '../reducers/LessonControlReducer';
-import queryString from 'query-string';
 import * as customQueries from '../customGraphql/customQueries';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
-import { Auth } from '@aws-amplify/auth';
-import * as mutations from '../graphql/mutations';
 import { createFilterToFetchSpecificItemsOnly, getClientKey } from '../utilities/strings';
 
 interface LessonControlProps {

@@ -3155,6 +3155,27 @@ const LessonsListDict:any={
   }
 }
 
+const UniversalBuilderDict: any = {
+  'EN':{
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'Lesson Pages'
+    },
+    TEMPLATES:{
+      TITLE: 'Lesson Templates'
+    }
+  },
+  'ES':{
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'TBD'
+    },
+    TEMPLATES:{
+      TITLE: 'TBD'
+    }
+  }
+}
+
 
 
 function paginationPage(lang: string, page: number, total: number) {
@@ -3234,5 +3255,6 @@ export {
   UnitLookupDict,
   LessonBuilderDict,
   LessonEditDict,
-  LessonsListDict
+  LessonsListDict,
+  UniversalBuilderDict
 };

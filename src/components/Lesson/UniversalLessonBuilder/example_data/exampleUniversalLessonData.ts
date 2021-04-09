@@ -1,4 +1,4 @@
-import { UniversalLesson } from '../../../interfaces/UniversalLessonInterfaces';
+import { UniversalLesson } from '../../../../interfaces/UniversalLessonInterfaces';
 
 /**
  *
@@ -10,7 +10,6 @@ import { UniversalLesson } from '../../../interfaces/UniversalLessonInterfaces';
 
 const exampleUniversalLesson: UniversalLesson = {
   id: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
-  syllabusID: '',
   summary:
     "This is a fun lesson where everyone is encouraged to be a part of the conversation about how our own cultures have influenced our sense of self-identity.  We start by writing about where we are from and share stories from these places.  Afterward, we will have the opportunity to see Marlon tell about how culture influenced his sense of self-identify through his poem 'Where I'm from.' Finally, we will create our own poems and learn more about each other and where we are from by sharing these poem...",
   designers: ['Marlon Lizama'],
