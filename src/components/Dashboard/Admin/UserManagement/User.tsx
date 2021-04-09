@@ -212,6 +212,8 @@ const User = () => {
     return <LessonLoading />;
   }
 
+  const disableProfileChange = user.role !== 'ST';
+
   {
     return (
       <>
@@ -252,6 +254,7 @@ const User = () => {
                               onClick={(e: any) => (e.target.value = '')}
                               accept="image/*"
                               multiple={false}
+                              disabled={disableProfileChange}
                             />
                           </label>
                         </>
@@ -284,6 +287,7 @@ const User = () => {
                         onChange={(e) => cropSelecetedImage(e)}
                         onClick={(e: any) => (e.target.value = '')}
                         accept="image/*"
+                        disabled={disableProfileChange}
                         multiple={false}
                       />
                     </label>
