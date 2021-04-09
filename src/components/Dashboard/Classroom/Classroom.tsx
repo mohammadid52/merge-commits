@@ -300,22 +300,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         )}
 
-        {isTeacher && state.currentPage === 'lesson-planner' ? (
-          <SectionTitleV3 title={classRoomDict[userLanguage]['UNIT_TITLE']} />
-        ) : null}
-
-        {isTeacher && state.currentPage === 'lesson-planner' ? (
-          <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} pb-4 m-auto`}>
-              <SyllabusSwitch
-                activeRoom={state.activeRoom}
-                currentPage={currentPage}
-                syllabusLoading={syllabusLoading}
-                handleSyllabusActivation={handleSyllabusActivation}
-              />
+        {isTeacher && state.activeRoom === 'lesson-planner' && (
+          <>
+            <SectionTitleV3 title={classRoomDict[userLanguage]['UNIT_TITLE']} />
+            <div className={`bg-opacity-10`}>
+              <div className={`${theme.section} pb-4 m-auto`}>
+                <SyllabusSwitch
+                  activeRoom={state.activeRoom}
+                  currentPage={currentPage}
+                  syllabusLoading={syllabusLoading}
+                  handleSyllabusActivation={handleSyllabusActivation}
+                />
+              </div>
             </div>
-          </div>
-        ) : null}
+          </>
+        )}
 
         {/**
          *  ASSESSMENTS/SURVEYS
