@@ -99,35 +99,28 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
           <div className="mt-0 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
             {slicedList.map((item, idx: number) => {
               const { teacherProfileImg, bannerImage, teacher, curricula } = item;
-              const { name, description, summary } = curricula.items[0].curriculum;
+              const { name, summary } = curricula.items[0].curriculum;
 
               const { email, firstName, lastName } = teacher;
 
               return (
-                <div
-                  key={`homepage__classrooms-${idx}`}
-                  className="flex flex-col rounded-lg shadow overflow-hidden transform transition duration-200">
+                <div key={`homepage__classrooms-${idx}`} className="flex flex-col rounded-lg shadow overflow-hidden ">
                   <div className="flex-shrink-0">
                     {bannerImage ? (
                       <img
-                        className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform"
+                        className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
                         src={bannerImage}
                         alt=""
                       />
                     ) : (
                       <div
-                        className={`profile justify-center items-center content-center  h-48 w-full bg-gray-100 flex border-gray-400`}>
+                        className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
                         <IoImage className="fill-current text-gray-80" size={32} />
                       </div>
                     )}
                   </div>
                   <div className="flex-1 bg-white p-6 flex flex-col justify-between">
                     <div className="flex-1">
-                      {/* <p className="text-sm font-medium text-indigo-600">
-                        <a href="#" className="hover:underline">
-                          Case Study
-                        </a>
-                      </p> */}
                       <a href="#" className="block mt-2">
                         <p className="text-xl font-semibold text-gray-900">{name}</p>
                         <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
