@@ -30,6 +30,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
 
   const getList = (): any[] => {
     let modifiedClassList: object[] = [];
+    let uniqIds: string[] = [];
 
     classList &&
       classList.length > 0 &&
@@ -41,11 +42,15 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
           const teacherProfileImg = await (_item.teacher.image ? getImageFromS3(_item.teacher.image) : false);
 
           const modifiedItem = { ..._item, roomName: item.name, bannerImage: image, teacherProfileImg };
-          modifiedClassList.push(modifiedItem);
+
+          if (!uniqIds.includes(_item.curricula.items[0].curriculumID)) {
+            modifiedClassList.push(modifiedItem);
+            uniqIds.push(_item.curricula.items[0].curriculumID);
+          }
         });
       });
 
-    modifiedClassList = uniqBy(modifiedClassList, (item: any) => item.curricula.items[0].curriculum.id);
+    // modifiedClassList = uniqBy(modifiedClassList, (item: any) => item.curricula.items[0].curriculumID);
 
     return modifiedClassList;
   };
