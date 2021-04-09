@@ -102,12 +102,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   };
 
   // Temporary List
+  //*******//
   const typeList = [
     { id: 0, name: 'In-School Programming' },
     { id: 1, name: 'After-School Programming' },
     { id: 2, name: 'Summer Intensives (2 week programming)' },
     { id: 3, name: "Writer's Retreat" },
   ];
+  //*****//
 
   const selectLanguage = (id: string, name: string, value: string) => {
     let updatedList;

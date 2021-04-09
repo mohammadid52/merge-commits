@@ -1235,6 +1235,8 @@ const EditCurriculardict: any = {
     NAME: 'Curriculum Name',
     LANGUAGE: 'Select Language',
     DESIGNER: 'Select Designers',
+    TYPE: 'Select Type',
+    SUMMARY: 'Summary',
     DESCRIPTION: 'Description',
     OBJECTIVE: 'Objective',
     messages: {
@@ -1259,6 +1261,8 @@ const EditCurriculardict: any = {
     HEADING: 'TBD',
     NAME: 'TBD',
     LANGUAGE: 'TBD',
+    TYPE: 'TBD',
+    SUMMARY: 'TBD',
     DESIGNER: 'TBD',
     DESCRIPTION: 'TBD',
     OBJECTIVE: 'TBD',
