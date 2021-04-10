@@ -155,6 +155,8 @@ const Dashboard = (props: DashboardProps) => {
             setActiveRoom={setActiveRoom}
             setActiveRoomInfo={setActiveRoomInfo}
             setActiveRoomName={setActiveRoomName}
+            activeRoomName={activeRoomName}
+            activeRoomInfo={activeRoomInfo}
             lessonLoading={lessonLoading}
             setLessonLoading={setLessonLoading}
             syllabusLoading={syllabusLoading}
@@ -176,7 +178,6 @@ const Dashboard = (props: DashboardProps) => {
                 </div>
               }>
               <Switch>
-
                 <Route
                   path={`${match.url}`}
                   exact
@@ -213,7 +214,8 @@ const Dashboard = (props: DashboardProps) => {
                       syllabusLoading={syllabusLoading}
                       setSyllabusLoading={setSyllabusLoading}
                       activeRoomSyllabus={activeRoomSyllabus}
-                      setActiveRoomSyllabus={setActiveRoomSyllabus}/>
+                      setActiveRoomSyllabus={setActiveRoomSyllabus}
+                    />
                   )}
                 />
 
@@ -278,7 +280,6 @@ const Dashboard = (props: DashboardProps) => {
                 <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
 
                 <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
-
               </Switch>
             </Suspense>
           </div>
@@ -286,14 +287,11 @@ const Dashboard = (props: DashboardProps) => {
           {/**
            *  SIDEWIDGETSBAR
            */}
-          {
-            state.currentPage === 'classroom' ||
-            state.currentPage === 'lesson-planner' ||
-            state.currentPage === 'noticeboard' ?
-              (
-                <SideWidgetBar currentPage={state.currentPage} />
-              ) : null
-          }
+          {state.currentPage === 'classroom' ||
+          state.currentPage === 'lesson-planner' ||
+          state.currentPage === 'noticeboard' ? (
+            <SideWidgetBar currentPage={state.currentPage} />
+          ) : null}
         </div>
       </div>
     </>

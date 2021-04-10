@@ -53,7 +53,7 @@ export const DefaultTextWidget = (props: { title: string; content: string; card?
   const { title, content, card, classProp } = props;
   return (
     <div className="p-2 bg-white shadow rounded-lg">
-      <p className={`text-sm p-2 font-semibold border-b-0 text-gray-900 border-gray-200`}>{title}:</p>
+      <p className={`text-sm p-2 font-semibold border-b-0 text-gray-900 border-gray-200`}>{title}</p>
       <div key={`teacher_side_note`} className={`${responsiveClass} p-2`}>
         <p className={`text-xs text-gray-800`} dangerouslySetInnerHTML={{ __html: content }} />
       </div>
@@ -103,7 +103,7 @@ export const CallLinkWidget = (props: {
   return (
     <div>
       <div className={`mb-2  ${responsiveClass}`}>
-        <span className={`text-gray-400 w-full font-semibold text-sm`}>{title}:</span>
+        <span className={`text-gray-400 w-full font-semibold text-sm`}>{title}</span>
       </div>
       <div style={{ minHeight: 90 }} className={`p-3 bg-white shadow rounded-lg flex items-center justify-center`}>
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>

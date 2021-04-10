@@ -28,7 +28,7 @@ const TopWidgetBar = () => {
           <DefaultTextWidget key={`topbar_widget_${idx}`} title={widgetObj.title} content={widgetObj.content.text} />
         );
       case 'quote':
-        return <QuoteWidget key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
+        return <QuoteWidget placement={widgetObj.placement} key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
       case 'call':
         return (
           <CallLinkWidget

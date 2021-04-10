@@ -247,7 +247,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       icon: <Counter count={lessonGroupCount.upcoming} />,
       title: 'Upcoming',
       active: false,
-      content: !isTeacher && (
+      content: (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
             <UpcomingLessons activeRoomInfo={activeRoomInfo} lessons={upcomingLessons} />
@@ -269,6 +269,22 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       ),
     },
   ];
+
+  const tabsForTeacher = tabs
+    .filter((tab) => tab.index !== 1)
+    .map((tab) => {
+      if (tab.index === 2) {
+        const modifiedTab = {
+          ...tab,
+          index: tab.index - 1,
+        };
+        return modifiedTab;
+      } else {
+        return {
+          ...tab,
+        };
+      }
+    });
 
   return (
     <div className="p-8 h-full w-full">
@@ -346,7 +362,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {/**
              *  LESSON TAB TOGGLE
              */}
-            <UnderlinedTabs tabs={tabs} />
+            <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
           </div>
         )}
       </div>
