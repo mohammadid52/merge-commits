@@ -1,5 +1,5 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react'
-import API, { graphqlOperation } from '@aws-amplify/api'
+import React, { Fragment, useState, useEffect, useContext } from 'react';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
 import { RiArrowRightLine } from 'react-icons/ri';
@@ -16,49 +16,53 @@ import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
 interface AddNewQuestionProps {
-  changeStep: (step: string) => void
-  setCheckpQuestions: (obj: any) => void
-  goBackToPreviousStep: () => void
-  lessonName: string
-  lessonType: string
+  changeStep: (step: string) => void;
+  setCheckpQuestions: (obj: any) => void;
+  goBackToPreviousStep: () => void;
+  lessonName: string;
+  lessonType: string;
+  setUnsavedChanges?: Function;
 }
 interface InitialState {
-  question: string
-  notes: string
-  label: string
-  type: InputValue
-  language: InputValue
-  isRequired: boolean
-  options: { label: string, text: string }[] | null
-  otherOpt: boolean
-  noneOfAbove: boolean
+  question: string;
+  notes: string;
+  label: string;
+  type: InputValue;
+  language: InputValue;
+  isRequired: boolean;
+  options: { label: string; text: string }[] | null;
+  otherOpt: boolean;
+  noneOfAbove: boolean;
 }
 
 interface InputValue {
-  id: string,
-  name: string,
-  value: string
+  id: string;
+  name: string;
+  value: string;
 }
 
 const AddNewQuestion = (props: AddNewQuestionProps) => {
-  const { changeStep, setCheckpQuestions, goBackToPreviousStep, lessonName, lessonType } = props;
+  const { changeStep, setUnsavedChanges, setCheckpQuestions, goBackToPreviousStep, lessonName, lessonType } = props;
 
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { AddNewQuestionDict ,BreadcrumsTitles } = useDictionary(clientKey);
+  const { AddNewQuestionDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const initialState = {
     question: '',
     notes: '',
     label: '',
     type: { id: '', name: '', value: '' },
-    language: { id: '1', name: "English", value: 'EN' },
+    language: { id: '1', name: 'English', value: 'EN' },
     isRequired: false,
-    options: [{ label: '1', text: '' }, { label: '2', text: '' }],
+    options: [
+      { label: '1', text: '' },
+      { label: '2', text: '' },
+    ],
     otherOpt: false,
-    noneOfAbove: false
-  }
-  const [questionData, setQuestionData] = useState<InitialState>(initialState)
+    noneOfAbove: false,
+  };
+  const [questionData, setQuestionData] = useState<InitialState>(initialState);
   // const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
@@ -67,7 +71,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     type: '',
     options: '',
     message: '',
-    isError: true
+    isError: true,
   });
   const typeList: any = [
     { id: '1', name: 'Text', value: 'text' },
@@ -83,159 +87,156 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
 
   const selectOneOptions = [
     {
-      label: "1",
-      text: "Very Difficult"
+      label: '1',
+      text: 'Very Difficult',
     },
     {
-      label: "2",
-      text: "Difficult"
+      label: '2',
+      text: 'Difficult',
     },
     {
-      label: "3",
-      text: "Easy"
+      label: '3',
+      text: 'Easy',
     },
     {
-      label: "4",
-      text: "Very Easy"
-    }
-  ]
+      label: '4',
+      text: 'Very Easy',
+    },
+  ];
 
   const onInputChange = (e: any) => {
     setQuestionData({
       ...questionData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
   const toggleCheckBoxState = (field: string, value: boolean) => {
     setQuestionData({
       ...questionData,
-      [field]: !value
-    })
-  }
+      [field]: !value,
+    });
+  };
   const optionInputChange = (index: number, e: any) => {
-    const currentOptions = [...questionData.options]
-    currentOptions[index].text = e.target.value
+    const currentOptions = [...questionData.options];
+    currentOptions[index].text = e.target.value;
     setQuestionData({
       ...questionData,
-      options: currentOptions
-    })
-  }
+      options: currentOptions,
+    });
+  };
   const onOptionAdd = (index: number) => {
-
     // adding new option field after selected options index.
-    const currentOptions = [...questionData.options]
-    const newItem = { label: (index + 2).toString(), text: '' }
-    currentOptions.splice(index + 1, 0, newItem)
+    const currentOptions = [...questionData.options];
+    const newItem = { label: (index + 2).toString(), text: '' };
+    currentOptions.splice(index + 1, 0, newItem);
     let updatedOptions = currentOptions.map((item, i) => {
-      if (i > (index + 1)) {
+      if (i > index + 1) {
         item.label = (i + 1).toString();
-        return item
+        return item;
       } else {
         return item;
       }
-    })
+    });
     setQuestionData({
       ...questionData,
-      options: updatedOptions
-    })
-  }
+      options: updatedOptions,
+    });
+  };
   const onOptionRemove = (index: number) => {
-
     // Removing option field from specific index
     if (questionData.options.length > 1) {
-      const currentOptions = [...questionData.options]
-      currentOptions.splice(index, 1)
+      const currentOptions = [...questionData.options];
+      currentOptions.splice(index, 1);
       let updatedOptions = currentOptions.map((item, i) => {
         if (i >= index) {
           item.label = (i + 1).toString();
-          return item
+          return item;
         } else {
           return item;
         }
-      })
+      });
       setQuestionData({
         ...questionData,
-        options: updatedOptions
-      })
+        options: updatedOptions,
+      });
     }
-  }
+  };
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
     setQuestionData({
       ...questionData,
       [field]: {
         id: id,
         name: name,
-        value: val
-      }
-    })
+        value: val,
+      },
+    });
   };
-  const filteredOptions = (options: { label: string, text: string }[]) => {
+  const filteredOptions = (options: { label: string; text: string }[]) => {
     let optionsObj = [...options];
     if (questionData.otherOpt) {
-      optionsObj.push({ label: 'other', text: 'Other' })
+      optionsObj.push({ label: 'other', text: 'Other' });
     }
     if (questionData.noneOfAbove) {
-      optionsObj.push({ label: 'none', text: 'None of the above' })
+      optionsObj.push({ label: 'none', text: 'None of the above' });
     }
     return optionsObj;
-  }
+  };
 
   const validateForm = () => {
-    let isValid = true
+    let isValid = true;
     const msgs = validation;
     if (!questionData.question?.trim().length) {
       isValid = false;
       msgs.question = AddNewQuestionDict[userLanguage]['VALIDATION']['QUESTION'];
     } else {
-      msgs.question = ''
+      msgs.question = '';
     }
     if (!questionData.type.value?.trim().length) {
       isValid = false;
       msgs.type = AddNewQuestionDict[userLanguage]['VALIDATION']['TYPE'];
     } else {
-      msgs.type = ''
+      msgs.type = '';
     }
     if (!questionData.label?.trim().length) {
       isValid = false;
       msgs.label = AddNewQuestionDict[userLanguage]['VALIDATION']['LABEL'];
     } else {
-      msgs.label = ''
+      msgs.label = '';
     }
     setValidation({ ...msgs });
     return isValid;
-  }
+  };
 
   const saveNewQuestion = async () => {
     const isValid = validateForm();
     if (isValid) {
       try {
-        setLoading(true)
-        const questOptions = questionData.options
+        setLoading(true);
+        const questOptions = questionData.options;
         const input = {
           label: questionData.label,
           type: questionData.type.value,
           question: questionData.question,
           // designers: selectedDesigners.map(item => item.id),
           language: questionData.language.value,
-          options: filteredOptions(questionData.options)
-        }
-        const results: any = await API.graphql(
-          graphqlOperation(mutations.createQuestion, { input: input })
-        );
+          options: filteredOptions(questionData.options),
+        };
+        const results: any = await API.graphql(graphqlOperation(mutations.createQuestion, { input: input }));
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {
           newQuestion.required = questionData.isRequired;
-          setCheckpQuestions(newQuestion)
+          setCheckpQuestions(newQuestion);
           setValidation({
             question: '',
             type: '',
             label: '',
             options: '',
             message: AddNewQuestionDict[userLanguage]['MESSAGES']['QUESTIONSAVE'],
-            isError: false
+            isError: false,
           });
         }
-        setLoading(false)
+        setLoading(false);
+        setUnsavedChanges(false);
       } catch {
         setValidation({
           question: '',
@@ -243,26 +244,33 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
           label: '',
           options: '',
           message: AddNewQuestionDict[userLanguage]['MESSAGES']['UNABLESAVE'],
-          isError: true
+          isError: true,
         });
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (questionData.type?.value === 'selectOne') {
       setQuestionData({
         ...questionData,
-        options: selectOneOptions
-      })
+        options: selectOneOptions,
+      });
     } else if (questionData.type?.value === 'selectMany') {
       setQuestionData({
         ...questionData,
-        options: [{ label: '1', text: '' }, { label: '2', text: '' }]
-      })
+        options: [
+          { label: '1', text: '' },
+          { label: '2', text: '' },
+        ],
+      });
     }
-  }, [questionData.type])
+  }, [questionData.type]);
+
+  useEffect(() => {
+    setUnsavedChanges(false);
+  }, [questionData]);
 
   const { question, notes, label, type, language, isRequired, options, otherOpt, noneOfAbove } = questionData;
   return (
@@ -276,19 +284,26 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>{lessonType === 'survey' ? 'Survey' : 'Assessment'} {AddNewQuestionDict[userLanguage]['BUILDER']} - {lessonName}</span>
+          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>
+            {lessonType === 'survey' ? 'Survey' : 'Assessment'} {AddNewQuestionDict[userLanguage]['BUILDER']} -{' '}
+            {lessonName}
+          </span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{AddNewQuestionDict[userLanguage]['CHECKPOINT']}</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">
+            {AddNewQuestionDict[userLanguage]['CHECKPOINT']}
+          </span>
           <span className="w-6 h-6 flex items-center mx-4">
             <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
-          <span className="font-normal text-gray-600 w-auto flex-shrink-0">{AddNewQuestionDict[userLanguage]['ADDNEWQUESTION']}</span>
+          <span className="font-normal text-gray-600 w-auto flex-shrink-0">
+            {AddNewQuestionDict[userLanguage]['ADDNEWQUESTION']}
+          </span>
         </h4>
       </div>
 
@@ -296,11 +311,25 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
       <div className="p-4">
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
-            <FormInput value={question} id='question' onChange={onInputChange} name='question' label={AddNewQuestionDict[userLanguage]['QUESTION']} isRequired />
+            <FormInput
+              value={question}
+              id="question"
+              onChange={onInputChange}
+              name="question"
+              label={AddNewQuestionDict[userLanguage]['QUESTION']}
+              isRequired
+            />
             {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>}
           </div>
           <div>
-            <FormInput value={label} id='Label' onChange={onInputChange} name='label' label={AddNewQuestionDict[userLanguage]['QUESTIONLABEL']} isRequired />
+            <FormInput
+              value={label}
+              id="Label"
+              onChange={onInputChange}
+              name="label"
+              label={AddNewQuestionDict[userLanguage]['QUESTIONLABEL']}
+              isRequired
+            />
             {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
           </div>
         </div>
@@ -315,72 +344,127 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
               {AddNewQuestionDict[userLanguage]['SELECTTYPE']} <span className="text-red-500">*</span>
             </label>
-            <Selector selectedItem={type.name} placeholder="Type" list={typeList} onChange={(val, name, id) => onSelectOption(val, name, id, 'type')} />
+            <Selector
+              selectedItem={type.name}
+              placeholder="Type"
+              list={typeList}
+              onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+            />
             {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
           </div>
           <div>
             <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
               {AddNewQuestionDict[userLanguage]['SELECTLANGUAGE']}
             </label>
-            <Selector selectedItem={language.name} placeholder={AddNewQuestionDict[userLanguage]['LANGUAGE']} list={languageList} onChange={(val, name, id) => onSelectOption(val, name, id, 'language')} />
+            <Selector
+              selectedItem={language.name}
+              placeholder={AddNewQuestionDict[userLanguage]['LANGUAGE']}
+              list={languageList}
+              onChange={(val, name, id) => onSelectOption(val, name, id, 'language')}
+            />
           </div>
         </div>
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div className=" flex items-center">
-            <CheckBox value={isRequired} onChange={() => toggleCheckBoxState("isRequired", isRequired)} name='isRequired' label={AddNewQuestionDict[userLanguage]['MAKEQUESTION']} />
+            <CheckBox
+              value={isRequired}
+              onChange={() => toggleCheckBoxState('isRequired', isRequired)}
+              name="isRequired"
+              label={AddNewQuestionDict[userLanguage]['MAKEQUESTION']}
+            />
           </div>
         </div>
 
-        {(type.value === 'selectOne' || type.value === 'selectMany') && (<div className="p-6">
-          <div className="p-6 border-gray-400  border-0 border-dashed">
-            <p className="text-m font-medium leading-5 text-gray-700 mb-1">{AddNewQuestionDict[userLanguage]['ADDOPTION']}: </p>
+        {(type.value === 'selectOne' || type.value === 'selectMany') && (
+          <div className="p-6">
+            <div className="p-6 border-gray-400  border-0 border-dashed">
+              <p className="text-m font-medium leading-5 text-gray-700 mb-1">
+                {AddNewQuestionDict[userLanguage]['ADDOPTION']}:{' '}
+              </p>
 
-            {/* Options input fields */}
-            {options?.length && options.map((item, index) => (
+              {/* Options input fields */}
+              {options?.length &&
+                options.map((item, index) => (
+                  <div className="flex w-9/10 mx-auto mt-4">
+                    <div className="w-8/10">
+                      <FormInput
+                        value={item.text}
+                        id={item.label}
+                        onChange={(e) => optionInputChange(index, e)}
+                        name={item.label}
+                      />
+                    </div>
+                    <div className="w-1/10 flex items-center">
+                      <span
+                        className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
+                        onClick={() => onOptionAdd(index)}>
+                        <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
+                          <IoMdAddCircleOutline />
+                        </IconContext.Provider>
+                      </span>
+                      <span
+                        className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
+                        onClick={() => onOptionRemove(index)}>
+                        <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
+                          <IoMdRemoveCircleOutline />
+                        </IconContext.Provider>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+
+              {/* Other options checkboxes */}
               <div className="flex w-9/10 mx-auto mt-4">
-                <div className="w-8/10">
-                  <FormInput value={item.text} id={item.label} onChange={(e) => optionInputChange(index, e)} name={item.label} />
+                <div className="w-2/4 flex items-center">
+                  <CheckBox
+                    value={otherOpt}
+                    onChange={() => toggleCheckBoxState('otherOpt', otherOpt)}
+                    name="otherOpt"
+                    label={AddNewQuestionDict[userLanguage]['ADDOTHEROPTION']}
+                  />
                 </div>
-                <div className="w-1/10 flex items-center">
-                  <span className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `} onClick={() => onOptionAdd(index)}>
-                    <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
-                      <IoMdAddCircleOutline />
-                    </IconContext.Provider>
-                  </span>
-                  <span className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `} onClick={() => onOptionRemove(index)}>
-                    <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
-                      <IoMdRemoveCircleOutline />
-                    </IconContext.Provider>
-                  </span>
+                <div className="w-2/4 flex items-center">
+                  <CheckBox
+                    value={noneOfAbove}
+                    onChange={() => toggleCheckBoxState('noneOfAbove', noneOfAbove)}
+                    name="noneOfAbove"
+                    label={AddNewQuestionDict[userLanguage]['ADDNONOFABOVE']}
+                  />
                 </div>
-              </div>
-            ))}
-
-            {/* Other options checkboxes */}
-            <div className="flex w-9/10 mx-auto mt-4">
-              <div className="w-2/4 flex items-center">
-                <CheckBox value={otherOpt} onChange={() => toggleCheckBoxState("otherOpt", otherOpt)} name='otherOpt' label={AddNewQuestionDict[userLanguage]['ADDOTHEROPTION']} />
-              </div>
-              <div className="w-2/4 flex items-center">
-                <CheckBox value={noneOfAbove} onChange={() => toggleCheckBoxState("noneOfAbove", noneOfAbove)} name='noneOfAbove' label={AddNewQuestionDict[userLanguage]['ADDNONOFABOVE']} />
               </div>
             </div>
           </div>
-        </div>)}
+        )}
 
         <div className="mt-8 px-6 pb-4">
-          {validation.message && <div className="py-4 m-auto mt-2 text-center">
-            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
-          </div>}
+          {validation.message && (
+            <div className="py-4 m-auto mt-2 text-center">
+              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+            </div>
+          )}
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']} onClick={goBackToPreviousStep} transparent />
-            <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? AddNewQuestionDict[userLanguage]['BUTTON']['SAVING'] : AddNewQuestionDict[userLanguage]['BUTTON']['SAVE']} onClick={saveNewQuestion} disabled={loading ? true : false} />
+            <Buttons
+              btnClass="py-1 px-4 text-xs mr-2"
+              label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']}
+              onClick={goBackToPreviousStep}
+              transparent
+            />
+            <Buttons
+              btnClass="py-1 px-8 text-xs ml-2"
+              label={
+                loading
+                  ? AddNewQuestionDict[userLanguage]['BUTTON']['SAVING']
+                  : AddNewQuestionDict[userLanguage]['BUTTON']['SAVE']
+              }
+              onClick={saveNewQuestion}
+              disabled={loading ? true : false}
+            />
           </div>
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
 export default AddNewQuestion;
