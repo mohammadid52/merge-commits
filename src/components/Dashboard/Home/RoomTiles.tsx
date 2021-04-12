@@ -1,6 +1,8 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import slice from 'lodash/slice';
+import debounce from 'lodash/debounce';
+
 import { useHistory } from 'react-router-dom';
 import { IoImage } from 'react-icons/io5';
 
@@ -76,6 +78,8 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
   }, [modifiedList]);
 
   const onViewMore = (): void => {
+    console.log('fddf');
+
     if (slicedList.length <= 3) {
       setSlicedList(modifiedList);
     } else {
@@ -95,13 +99,19 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
     }
   };
 
+  const debouncedViewMore: any = React.useCallback(debounce(onViewMore, 500), [modifiedList, slicedList]);
+
   return (
     <>
       <SectionTitleV3
         title={'Your Classrooms'}
         withButton={
           <div className="flex justify-end">
-            <Buttons label={slicedList.length <= 3 ? 'Show All' : 'Show Few'} onClick={onViewMore} type="button" />
+            <Buttons
+              label={slicedList.length <= 3 ? 'Show All' : 'Show Few'}
+              onClick={debouncedViewMore}
+              type="button"
+            />
           </div>
         }
         borderBottom={false}
