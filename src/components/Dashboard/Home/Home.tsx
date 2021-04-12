@@ -95,6 +95,26 @@ const Home = (props: ClassroomControlProps) => {
     <>
       {homeData ? (
         <>
+          {/* Hero Section */}
+          <div className="relative bg-indigo-800">
+            <div className="absolute inset-0">
+              <img
+                className="w-full h-full object-cover"
+                src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?ixlib=rb-1.2.1&ixqx=5od8bulhcw&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1920&q=60&&sat=-100"
+                alt=""
+              />
+              <div
+                className="absolute inset-0 bg-indigo-800"
+                // style="mix-blend-mode: multiply;"
+                aria-hidden="true"></div>
+            </div>
+            <div className="relative h-full flex flex-col max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+              <div />
+              <h1 className="text-4xl font-extrabold tracking-tight text-center text-white sm:text-5xl lg:text-6xl">
+                Dashboard
+              </h1>
+            </div>
+          </div>
           {/* Header */}
           {user && (
             <div className={`${theme.section} mt-6 mb-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
@@ -105,16 +125,19 @@ const Home = (props: ClassroomControlProps) => {
           )}
 
           {/* Classroom Section */}
-          <SectionTitleV3 title={'Your Classrooms'} />
-          <RoomTiles handleRoomSelection={handleRoomSelection} classList={classList} />
+          <div className="my-6">
+            <RoomTiles handleRoomSelection={handleRoomSelection} classList={classList} />
+          </div>
 
           {/* Teachers Section */}
-          <SectionTitleV3 title={'Your Teachers'} />
-          <TeacherRows teacherList={teacherList} />
-
+          <div className="my-6">
+            <SectionTitleV3 title={'Your Teachers'} />
+            <TeacherRows teacherList={teacherList} />
+          </div>
           {/* Classmates Section */}
-          <SectionTitleV3 spacing="pt-6 pb-4" title={'Your Classmates'} />
-          <StudentsTiles state={state} studentsList={studentsList} />
+          <div className="my-6">
+            <StudentsTiles state={state} studentsList={studentsList} />
+          </div>
         </>
       ) : (
         <ComponentLoading />

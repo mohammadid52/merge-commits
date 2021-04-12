@@ -1,6 +1,6 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { uniqBy, slice } from 'lodash';
+import slice from 'lodash/slice';
 import { useHistory } from 'react-router-dom';
 import { IoImage } from 'react-icons/io5';
 
@@ -9,6 +9,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 import Buttons from '../../Atoms/Buttons';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
 const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
   const { classList, handleRoomSelection } = props;
@@ -59,7 +60,9 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
     teacherProfileImg: string;
     bannerImage: string;
     teacher: { email: string; firstName: string; lastName: string; image: string };
-    curricula: { items: { curriculum: { name: string; description: string; id: string; summary: string } }[] };
+    curricula: {
+      items: { curriculum: { name: string; description?: string; id: string; summary?: string; type?: string } }[];
+    };
   }
 
   const modifiedList: ModifiedListProps[] = getList();
@@ -93,76 +96,87 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
   };
 
   return (
-    <ContentCard hasBackground={false}>
-      <div className="relative bg-gray-50">
-        <div className="relative max-w-7xl mx-auto">
-          <div className="mt-0 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
-            {slicedList.map((item, idx: number) => {
-              const { teacherProfileImg, bannerImage, teacher, curricula } = item;
-              const { name, summary } = curricula.items[0].curriculum;
+    <>
+      <SectionTitleV3
+        title={'Your Classrooms'}
+        withButton={
+          <div className="flex justify-end">
+            <Buttons label={slicedList.length <= 3 ? 'Show All' : 'Show Few'} onClick={onViewMore} type="button" />
+          </div>
+        }
+        borderBottom={false}
+      />
+      <ContentCard hasBackground={false}>
+        <div className="relative">
+          <div className="relative max-w-7xl mx-auto transition-all">
+            <div className="mt-0 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+              {slicedList.map((item, idx: number) => {
+                const { teacherProfileImg, bannerImage, teacher, curricula } = item;
+                const { name, summary, type } = curricula.items[0].curriculum;
 
-              const { email, firstName, lastName } = teacher;
+                const { email, firstName, lastName } = teacher;
 
-              return (
-                <div key={`homepage__classrooms-${idx}`} className="flex flex-col rounded-lg shadow overflow-hidden ">
-                  <div className="flex-shrink-0">
-                    {bannerImage ? (
-                      <img
-                        className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
-                        src={bannerImage}
-                        alt=""
-                      />
-                    ) : (
-                      <div
-                        className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
-                        <IoImage className="fill-current text-gray-80" size={32} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 bg-white p-6 flex flex-col justify-between">
-                    <div className="flex-1">
-                      <a href="#" className="block mt-2">
-                        <p className="text-xl font-semibold text-gray-900">{name}</p>
-                        <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
-                      </a>
+                return (
+                  <div
+                    key={`homepage__classrooms-${idx}`}
+                    className="flex flex-col rounded-b-lg shadow overflow-hidden transition-all">
+                    <div className="flex-shrink-0">
+                      {bannerImage ? (
+                        <img
+                          className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
+                          src={bannerImage}
+                          alt=""
+                        />
+                      ) : (
+                        <div
+                          className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
+                          <IoImage className="fill-current text-gray-80" size={32} />
+                        </div>
+                      )}
                     </div>
-                    <div className="mt-6 flex items-center">
-                      <div className="flex-shrink-0 w-auto">
-                        <a href="#">
-                          <span className="sr-only">{firstName + ' ' + lastName}</span>
-                          {teacherProfileImg ? (
-                            <img className="h-10 w-10 rounded-full" src={teacherProfileImg} alt="" />
-                          ) : (
-                            <ImageAlternate user={{ firstName, lastName }} styleClass="h-10 w-10 rounded-full" />
-                          )}
-                        </a>
-                      </div>
-                      <div className="ml-3 w-auto">
-                        <p className="text-sm font-semibold text-gray-900">
+                    <div className="flex-1 bg-white p-6 flex flex-col justify-between">
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-indigo-600">
                           <a href="#" className="hover:underline">
-                            {firstName + ' ' + lastName}
+                            {type}
                           </a>
                         </p>
-                        <p className="space-x-1 text-sm text-gray-500">
-                          <a href="#">{email}</a>
-                        </p>
+                        <a href="#" className="block mt-2">
+                          <p className="text-xl font-semibold text-gray-900">{name}</p>
+                          <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
+                        </a>
+                      </div>
+                      <div className="mt-6 flex items-center">
+                        <div className="flex-shrink-0 w-auto">
+                          <a href="#">
+                            <span className="sr-only">{firstName + ' ' + lastName}</span>
+                            {teacherProfileImg ? (
+                              <img className="h-10 w-10 rounded-full" src={teacherProfileImg} alt="" />
+                            ) : (
+                              <ImageAlternate user={{ firstName, lastName }} styleClass="h-10 w-10 rounded-full" />
+                            )}
+                          </a>
+                        </div>
+                        <div className="ml-3 w-auto">
+                          <p className="text-sm font-semibold text-gray-900">
+                            <a href="#" className="hover:underline">
+                              {firstName + ' ' + lastName}
+                            </a>
+                          </p>
+                          <p className="space-x-1 text-sm text-gray-500">
+                            <a href="#">{email}</a>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="my-3 mt-8">
-            {classList && classList.length > 3 && (
-              <div className="w-auto float-right">
-                <Buttons label={slicedList.length <= 3 ? 'Show All' : 'Show Few'} onClick={onViewMore} type="button" />
-              </div>
-            )}
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
-    </ContentCard>
+      </ContentCard>
+    </>
   );
 };
 
