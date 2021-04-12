@@ -25,10 +25,6 @@ import { GlobalContext } from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 
-//TODO: below imports/const need to be moved to UniversalLessonBuilder component
-import { Responsive, WidthProvider } from 'react-grid-layout';
-const ResponsiveGridLayout = WidthProvider(Responsive);
-//TODO: above imports/const need to be moved to UniversalLessonBuilder component
 
 interface LessonEditProps {
   designersList: any[]
