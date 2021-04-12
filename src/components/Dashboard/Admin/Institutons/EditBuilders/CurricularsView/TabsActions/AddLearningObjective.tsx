@@ -14,85 +14,101 @@ import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-interface AddLearningObjectiveProps {
-
-}
+interface AddLearningObjectiveProps {}
 
 const AddLearningObjective = (props: AddLearningObjectiveProps) => {
-  const { } = props;
+  const {} = props;
   const history = useHistory();
-  const urlParams: any = useParams()
+  const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
+  const institutionId = urlParams.institutionId;
 
-  
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [validation, setValidation] = useState({ isValid: true, msg: '' })
+  const [validation, setValidation] = useState({ isValid: true, msg: '' });
   const [learningsIds, setLearningsIds] = useState([]);
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
-  const { ADDLEARINGOBJDICT,BreadcrumsTitles } = useDictionary(clientKey);
-  
+  const { ADDLEARINGOBJDICT, BreadcrumsTitles } = useDictionary(clientKey);
+
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['LEARINGOBJECTIVE'], url: `/dashboard/curricular/${curricularId}/learning-objective/add`, last: true }
+    {
+      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['LEARINGOBJECTIVE'],
+      url: `/dashboard/manage-institutions/curricular/${curricularId}/learning-objective/add`,
+      last: true,
+    },
   ];
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
-      const value = e.target.value
-      setName(value)
-      if (!validation.isValid && value.length) setValidation({ isValid: true, msg: '' })
+      const value = e.target.value;
+      setName(value);
+      if (!validation.isValid && value.length) setValidation({ isValid: true, msg: '' });
     }
-    if (e.target.name === 'description') setDescription(e.target.value)
-  }
+    if (e.target.name === 'description') setDescription(e.target.value);
+  };
 
   const saveLearningObjectiveDetails = async () => {
     if (!name.length) {
-      setValidation({ isValid: false, msg: ADDLEARINGOBJDICT[userLanguage]['VALIDATION'] })
-      return
+      setValidation({ isValid: false, msg: ADDLEARINGOBJDICT[userLanguage]['VALIDATION'] });
+      return;
     }
-    setValidation({ isValid: true, msg: '' })
+    setValidation({ isValid: true, msg: '' });
     const input = {
-      name, description, curriculumID: curricularId
+      name,
+      description,
+      curriculumID: curricularId,
     };
     const item: any = await API.graphql(graphqlOperation(mutations.createLearningObjective, { input }));
-    const addedItem = item.data.createLearningObjective
+    const addedItem = item.data.createLearningObjective;
     if (!learningsIds.length) {
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `l_${curricularId}`, sequence: [addedItem.id] } }));
-      seqItem = seqItem.data.createCSequences
-      console.log('seqItem', seqItem)
+      let seqItem: any = await API.graphql(
+        graphqlOperation(mutations.createCSequences, { input: { id: `l_${curricularId}`, sequence: [addedItem.id] } })
+      );
+      seqItem = seqItem.data.createCSequences;
+      console.log('seqItem', seqItem);
     } else {
-      let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `l_${curricularId}`, sequence: [...learningsIds, addedItem.id] } }));
-      seqItem = seqItem.data.updateCSequences
-      console.log('seqItem', seqItem)
+      let seqItem: any = await API.graphql(
+        graphqlOperation(mutations.updateCSequences, {
+          input: { id: `l_${curricularId}`, sequence: [...learningsIds, addedItem.id] },
+        })
+      );
+      seqItem = seqItem.data.updateCSequences;
+      console.log('seqItem', seqItem);
     }
     if (addedItem) {
-      history.goBack()
+      history.goBack();
     } else {
       console.log('Could not add learning objective');
     }
-  }
+  };
 
   const fetchLOSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `l_${curricularId}` }))
-    item = item?.data.getCSequences?.sequence || []
+    let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `l_${curricularId}` }));
+    item = item?.data.getCSequences?.sequence || [];
     if (item) {
-      setLearningsIds(item)
+      setLearningsIds(item);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchLOSequence()
-  }, [])
+    fetchLOSequence();
+  }, []);
 
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
-
+    <div>
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title={ADDLEARINGOBJDICT[userLanguage]['TITLE']} subtitle={ADDLEARINGOBJDICT[userLanguage]['SUBTITLE']} />
+        <SectionTitle
+          title={ADDLEARINGOBJDICT[userLanguage]['TITLE']}
+          subtitle={ADDLEARINGOBJDICT[userLanguage]['SUBTITLE']}
+        />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -101,14 +117,20 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{ADDLEARINGOBJDICT[userLanguage]['HEADING']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            {ADDLEARINGOBJDICT[userLanguage]['HEADING']}
+          </h3>
           <div className="">
-
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={onInputChange} name='name' label={ADDLEARINGOBJDICT[userLanguage]['NAME']} isRequired />
-              {
-                !validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null
-              }
+              <FormInput
+                value={name}
+                id="name"
+                onChange={onInputChange}
+                name="name"
+                label={ADDLEARINGOBJDICT[userLanguage]['NAME']}
+                isRequired
+              />
+              {!validation.isValid ? <p className="text-red-600">{validation.msg}</p> : null}
             </div>
 
             {/* <div className="px-3 py-4">
@@ -119,17 +141,26 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
             </div> */}
 
             <div className="px-3 py-4">
-              <TextArea id='description' value={description} onChange={onInputChange} name='description' label={ADDLEARINGOBJDICT[userLanguage]['DESC']} />
+              <TextArea
+                id="description"
+                value={description}
+                onChange={onInputChange}
+                name="description"
+                label={ADDLEARINGOBJDICT[userLanguage]['DESC']}
+              />
             </div>
-
           </div>
         </div>
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10" label={ADDLEARINGOBJDICT[userLanguage]['SAVE']} onClick={saveLearningObjectiveDetails} />
+          <Buttons
+            btnClass="py-3 px-10"
+            label={ADDLEARINGOBJDICT[userLanguage]['SAVE']}
+            onClick={saveLearningObjectiveDetails}
+          />
         </div>
       </PageWrapper>
     </div>
-  )
-}
+  );
+};
 
-export default AddLearningObjective
+export default AddLearningObjective;

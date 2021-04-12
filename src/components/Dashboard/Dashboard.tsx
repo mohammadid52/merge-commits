@@ -156,6 +156,8 @@ const Dashboard = (props: DashboardProps) => {
             setActiveRoom={setActiveRoom}
             setActiveRoomInfo={setActiveRoomInfo}
             setActiveRoomName={setActiveRoomName}
+            activeRoomName={activeRoomName}
+            activeRoomInfo={activeRoomInfo}
             lessonLoading={lessonLoading}
             setLessonLoading={setLessonLoading}
             syllabusLoading={syllabusLoading}

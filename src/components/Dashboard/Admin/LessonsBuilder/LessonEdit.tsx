@@ -27,28 +27,28 @@ import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/Unive
 
 
 interface LessonEditProps {
-  designersList: any[]
+  designersList: any[];
 }
 
 export interface InstructionInitialState {
-  introductionTitle: string,
-  instructionsTitle: string,
-  summaryTitle: string,
-  introduction: string,
-  instructions: string,
-  summary: string
+  introductionTitle: string;
+  instructionsTitle: string;
+  summaryTitle: string;
+  introduction: string;
+  instructions: string;
+  summary: string;
 }
 
 export interface LessonPlansProps {
-  type: string,
-  LessonComponentID: string,
-  sequence: number,
-  stage: string
+  type: string;
+  LessonComponentID: string;
+  sequence: number;
+  stage: string;
 }
 
 export interface SavedLessonDetailsProps {
-  lessonPlans: LessonPlansProps[] | null
-  lessonInstructions: InstructionInitialState | null
+  lessonPlans: LessonPlansProps[] | null;
+  lessonInstructions: InstructionInitialState | null;
 }
 
 const LessonEdit = (props: LessonEditProps) => {
@@ -61,7 +61,7 @@ const LessonEdit = (props: LessonEditProps) => {
   const params = useQuery();
   const lessonId = params.get('lessonId');
   const assessmentId = params.get('assessmentId');
-  const lessonType = (!lessonId && assessmentId) ? 'assessment' : 'lesson';
+  const lessonType = !lessonId && assessmentId ? 'assessment' : 'lesson';
 
   const initialData = {
     name: '',
@@ -120,7 +120,6 @@ const LessonEdit = (props: LessonEditProps) => {
     { name: 'Overview', icon: <IoCardSharp /> },
     // { name: "Assign Unit", icon: <FaUnity /> },
     { name: 'Preview Details', icon: <FaRegEye /> },
-    { name: 'Universal Builder', icon: <FaQuestionCircle /> },
   ];
 
   const typeList: any = [
@@ -133,10 +132,10 @@ const LessonEdit = (props: LessonEditProps) => {
   };
 
   const gobackToLessonsList = () => {
-    if (activeStep === 'Builder' && unsavedChanges) {
+    if (unsavedChanges) {
       toggleModal();
     } else {
-      history.goBack();
+      history.push('/dashboard/lesson-builder');
     }
   };
 
@@ -151,7 +150,7 @@ const LessonEdit = (props: LessonEditProps) => {
     try {
       let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
       list = list.data.listRubrics?.items || [];
-      const measuList = list.sort((a: any, b: any) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+      const measuList = list.sort((a: any, b: any) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
       const filteredList = measuList.map((item: any) => {
         return {
           id: item.id,
@@ -167,9 +166,11 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const fetchLessonDetails = async () => {
     try {
-      const result: any = await API.graphql(graphqlOperation(customQueries.getLesson, {
-        id: lessonId || assessmentId,
-      }));
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getLesson, {
+          id: lessonId || assessmentId,
+        })
+      );
       const savedData = result.data.getLesson;
       setFormData({
         ...formData,
@@ -177,7 +178,9 @@ const LessonEdit = (props: LessonEditProps) => {
         type: savedData.type && typeList.find((item: any) => item.value === savedData.type),
         purposeHtml: savedData?.purpose ? savedData.purpose : '<p></p>',
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
-        languages: savedData.language ? languageList.filter((item: any) => savedData.language.includes(item.value)) : [],
+        languages: savedData.language
+          ? languageList.filter((item: any) => savedData.language.includes(item.value))
+          : [],
         institution: {
           id: savedData?.institution?.id,
           name: savedData?.institution?.name,
@@ -236,54 +239,64 @@ const LessonEdit = (props: LessonEditProps) => {
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'Overview':
-        return <GeneralInformation
-          formData={formData}
-          setFormData={setFormData}
-          designersList={designersList}
-          selectedDesigners={selectedDesigners}
-          setSelectedDesigners={setSelectedDesigners}
-          lessonId={lessonId || assessmentId}
-          allMeasurement={measurementList}
-          lessonMeasurements={selectedMeasurement}
-          setLessonMeasurements={setSelectedMeasurement}
-        />;
+        return (
+          <GeneralInformation
+            setUnsavedChanges={setUnsavedChanges}
+            formData={formData}
+            setFormData={setFormData}
+            designersList={designersList}
+            selectedDesigners={selectedDesigners}
+            setSelectedDesigners={setSelectedDesigners}
+            lessonId={lessonId || assessmentId}
+            allMeasurement={measurementList}
+            lessonMeasurements={selectedMeasurement}
+            setLessonMeasurements={setSelectedMeasurement}
+          />
+        );
       case 'Instructions':
-        return <AssessmentInstuctions
-          lessonId={lessonId || assessmentId}
-          savedInstructions={savedLessonDetails?.lessonInstructions}
-          updateParentState={updateInstructions}
-          lessonType={formData.type?.value}
-          lessonName={formData.name}
-        />;
+        return (
+          <AssessmentInstuctions
+            lessonId={lessonId || assessmentId}
+            savedInstructions={savedLessonDetails?.lessonInstructions}
+            updateParentState={updateInstructions}
+            lessonType={formData.type?.value}
+            lessonName={formData.name}
+            setUnsavedChanges={setUnsavedChanges}
+          />
+        );
       case 'Builder':
-        return <CheckpointBuilder
-          lessonPlans={savedLessonDetails.lessonPlans}
-          updateLessonPlan={updateLessonPlan}
-          designersList={designersList}
-          lessonID={lessonId || assessmentId}
-          setUnsavedChanges={setUnsavedChanges}
-          activeStep={activeStep}
-          lessonName={formData.name}
-          lessonType={formData.type?.value}
-        />;
-      case 'Universal Builder':
-        return <UniversalLessonBuilder activeStep={activeStep} />;
+        return (
+          <CheckpointBuilder
+            lessonPlans={savedLessonDetails.lessonPlans}
+            updateLessonPlan={updateLessonPlan}
+            designersList={designersList}
+            lessonID={lessonId || assessmentId}
+            setUnsavedChanges={setUnsavedChanges}
+            activeStep={activeStep}
+            lessonName={formData.name}
+            lessonType={formData.type?.value}
+          />
+        );
       case 'Preview Details':
-        return <PreviewForm
-          lessonName={formData.name}
-          enablePublish
-          lessonID={lessonId || assessmentId}
-          lessonPlans={savedLessonDetails.lessonPlans}
-          lessonType={formData.type?.value}
-        />;
+        return (
+          <PreviewForm
+            lessonName={formData.name}
+            enablePublish
+            lessonID={lessonId || assessmentId}
+            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonType={formData.type?.value}
+          />
+        );
       case 'Assign Unit':
-        return <UnitLookup
-          lessonName={formData.name}
-          lessonId={lessonId || assessmentId}
-          institution={formData.institution}
-          lessonType={formData.type?.value}
-          lessonPlans={savedLessonDetails.lessonPlans}
-        />;
+        return (
+          <UnitLookup
+            lessonName={formData.name}
+            lessonId={lessonId || assessmentId}
+            institution={formData.institution}
+            lessonType={formData.type?.value}
+            lessonPlans={savedLessonDetails.lessonPlans}
+          />
+        );
       // default:
       //   return <GeneralInformation
       //     formData={formData}
@@ -297,15 +310,16 @@ const LessonEdit = (props: LessonEditProps) => {
   };
 
   return (
-    <div className='w-full h-full'>
-
+    <div className="w-full h-full">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
-      <div className='flex justify-between'>
-        <SectionTitle title={LessonEditDict[userLanguage]['TITLE']}
-                      subtitle={LessonEditDict[userLanguage]['SUBTITLE']} />
-        <div className='flex justify-end py-4 mb-4 w-5/10'>
-          <Buttons label='Go Back' btnClass='mr-4' onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
+      <div className="flex justify-between">
+        <SectionTitle
+          title={LessonEditDict[userLanguage]['TITLE']}
+          subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
+        />
+        <div className="flex justify-end py-4 mb-4 w-5/10">
+          <Buttons label="Exit" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -313,26 +327,33 @@ const LessonEdit = (props: LessonEditProps) => {
       <PageWrapper>
         <div className='w-full m-auto'>
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
-          <div className='grid grid-cols-5 divide-x-0 divide-gray-400 p-4'>
-            <div className='sm:col-span-1'>
-              <WizardScroller stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep}
-                              activeStep={activeStep} setActiveStep={(step) => setActiveStep(step)} />
+          <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
+            <div className="sm:col-span-1">
+              <WizardScroller
+                stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep}
+                activeStep={activeStep}
+                setActiveStep={(step) => setActiveStep(step)}
+              />
             </div>
             <div className='sm:col-span-4'>
               {loading ? (
                 <p className='h-100 flex justify-center items-center'>Fetching lesson details pleas wait...</p>
               ) : (
                 <Fragment>
-                  <div className='mx-6'>
-                    {currentStepComp(activeStep)}
-                  </div>
+                  <div className="mx-6">{currentStepComp(activeStep)}</div>
                 </Fragment>
               )}
             </div>
           </div>
         </div>
-        {warnModal.show && <ModalPopUp closeAction={toggleModal} saveAction={history.goBack} saveLabel='Yes'
-                                       message={warnModal.message} />}
+        {warnModal.show && (
+          <ModalPopUp
+            closeAction={toggleModal}
+            saveAction={history.goBack}
+            saveLabel="Yes"
+            message={warnModal.message}
+          />
+        )}
       </PageWrapper>
     </div>
   );

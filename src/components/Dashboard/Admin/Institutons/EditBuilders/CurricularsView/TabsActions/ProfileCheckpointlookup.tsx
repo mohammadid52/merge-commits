@@ -19,17 +19,16 @@ import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import { getAsset } from '../../../../../../../assets';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 
-interface ProfileCheckpointlookupProps {
-
-}
+interface ProfileCheckpointlookupProps {}
 
 const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
-  const { } = props;
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
+  const {} = props;
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const urlParams: any = useParams()
+  const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
+  const institutionId = urlParams.institutionId;
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
   const [expandId, setExpandedId] = useState('');
   const [searchInput, setSearchInput] = useState('');
@@ -37,67 +36,75 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
   const [allCheckpointList, setAllCheckpointList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const {ProfileCheckpointlookupDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const { ProfileCheckpointlookupDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['AddExistingCheckpoint'], url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`, last: true }
+    {
+      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['AddExistingCheckpoint'],
+      url: `/dashboard/curricular/${curricularId}/checkpoint/addNew`,
+      last: true,
+    },
   ];
 
   const selectItem = (checkpointId: string) => {
-    const selectedItem = selectedCheckpointIds.find(id => id === checkpointId);
+    const selectedItem = selectedCheckpointIds.find((id) => id === checkpointId);
     let updatedList;
     if (!selectedItem) {
       updatedList = [...selectedCheckpointIds, checkpointId];
     } else {
-      updatedList = selectedCheckpointIds.filter(id => id !== checkpointId);
+      updatedList = selectedCheckpointIds.filter((id) => id !== checkpointId);
     }
     setSelectedCheckpointIds(updatedList);
-  }
+  };
 
   const viewCheckpoint = (checkId: string) => {
     if (expandId === checkId) {
-      setExpandedId('')
+      setExpandedId('');
     } else {
-      setExpandedId(checkId)
+      setExpandedId(checkId);
     }
-  }
+  };
 
   const searchFromList = () => {
     const currentCheckList = [...allCheckpointList];
-    const newList = currentCheckList.filter(item => {
+    const newList = currentCheckList.filter((item) => {
       // Search on title for match.
-      return (
-        (item.title?.toLowerCase().includes(searchInput))
-      )
+      return item.title?.toLowerCase().includes(searchInput);
     });
     setFilteredList(newList);
-  }
+  };
 
   const removeSearchAction = () => {
     setFilteredList([...allCheckpointList]);
-    setSearchInput('')
-  }
+    setSearchInput('');
+  };
   const saveCommonCurricular = async (checkpointID: string) => {
     let profileCheckpointInput = {
       type: 'curricular',
       typeID: curricularId,
       checkpointID: checkpointID,
-    }
-    await API.graphql(graphqlOperation(customMutations.createCommonCheckpoint, {
-      input: profileCheckpointInput
-    }))
-  }
+    };
+    await API.graphql(
+      graphqlOperation(customMutations.createCommonCheckpoint, {
+        input: profileCheckpointInput,
+      })
+    );
+  };
 
   const saveCurricularCheckpoints = async () => {
     setLoading(true);
     let newCheckpoints: any = await Promise.all(
       selectedCheckpointIds.map(async (selectedId: string) => saveCommonCurricular(selectedId))
-    )
+    );
     history.goBack();
     setLoading(false);
-
-  }
+  };
 
   const fetchCheckpointLists = async () => {
     try {
@@ -106,41 +113,47 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
         await API.graphql(
           graphqlOperation(customQueries.listCheckpoints, {
             filter: { type: { eq: 'profile' } },
-          })),
+          })
+        ),
         await API.graphql(
           graphqlOperation(customQueries.getCurriculumCheckpoints, {
-            id: curricularId
-          })),
+            id: curricularId,
+          })
+        ),
       ]);
       if (!allCheckpointList) {
         throw new Error('fail!');
       } else {
         const checkpointList = allCheckpointList.data?.listCheckpoints?.items;
-        const savedCheckpointId = curricularCheckp.data?.getCurriculum?.checkpoints?.items.map((item: { checkpointID: string }) => item.checkpointID)
+        const savedCheckpointId = curricularCheckp.data?.getCurriculum?.checkpoints?.items.map(
+          (item: { checkpointID: string }) => item.checkpointID
+        );
         const sortedList = checkpointList
           .filter((chechpoint: any) => !savedCheckpointId.includes(chechpoint.id))
-          .sort((a: any, b: any) => a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1);
+          .sort((a: any, b: any) => (a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1));
         setAllCheckpointList(sortedList);
-        setFilteredList(sortedList)
+        setFilteredList(sortedList);
       }
       setLoading(false);
     } catch (error) {
       setError(true);
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchCheckpointLists();
-  }, [])
+  }, []);
 
   return (
-    <div className="w-9/10 h-full px-4 pb-4">
-
+    <div>
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
-        <SectionTitle title={ProfileCheckpointlookupDict[userLanguage]['title']} subtitle={ProfileCheckpointlookupDict[userLanguage]['subtitle']} />
+        <SectionTitle
+          title={ProfileCheckpointlookupDict[userLanguage]['title']}
+          subtitle={ProfileCheckpointlookupDict[userLanguage]['subtitle']}
+        />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
@@ -149,11 +162,22 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-8/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{ProfileCheckpointlookupDict[userLanguage]['heading']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            {ProfileCheckpointlookupDict[userLanguage]['heading']}
+          </h3>
         </div>
         <div className="flex justify-between my-4">
-          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14"> {selectedCheckpointIds?.length} {ProfileCheckpointlookupDict[userLanguage]['selectcheckpoint']}</p>
-          <SearchInput value={searchInput} onChange={(val: string) => setSearchInput(val)} onKeyDown={searchFromList} closeAction={removeSearchAction} style="w-2/4" />
+          <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14">
+            {' '}
+            {selectedCheckpointIds?.length} {ProfileCheckpointlookupDict[userLanguage]['selectcheckpoint']}
+          </p>
+          <SearchInput
+            value={searchInput}
+            onChange={(val: string) => setSearchInput(val)}
+            onKeyDown={searchFromList}
+            closeAction={removeSearchAction}
+            style="w-2/4"
+          />
         </div>
         <div>
           <Fragment>
@@ -162,10 +186,10 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                 <span>{ProfileCheckpointlookupDict[userLanguage]['selection']}</span>
               </div>
               <div className="w-5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              {ProfileCheckpointlookupDict[userLanguage]['checkpoint']}
+                {ProfileCheckpointlookupDict[userLanguage]['checkpoint']}
               </div>
               <div className="w-2/10 px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              {ProfileCheckpointlookupDict[userLanguage]['language']}
+                {ProfileCheckpointlookupDict[userLanguage]['language']}
               </div>
               <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 <span></span>
@@ -177,69 +201,105 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
                 <Fragment>
                   {!error ? (
                     <Fragment>
-
-                      {allCheckpointList?.length ? filteredList.map(item => (
-                        <Fragment key={item.id}>
-                          {/* Table row */}
-                          <div key={item.id} className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${expandId === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''}`}>
-                            <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                              <span>
-                                <CheckBox value={selectedCheckpointIds?.includes(item.id)} onChange={() => selectItem(item.id)} name='selectcheckpoint' />
-                              </span>
-                            </div>
-                            <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                              <div>
-                                <span>{item.title}</span><br />
-                                <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
+                      {allCheckpointList?.length ? (
+                        filteredList.map((item) => (
+                          <Fragment key={item.id}>
+                            {/* Table row */}
+                            <div
+                              key={item.id}
+                              className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                                expandId === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''
+                              }`}>
+                              <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4">
+                                <span>
+                                  <CheckBox
+                                    value={selectedCheckpointIds?.includes(item.id)}
+                                    onChange={() => selectItem(item.id)}
+                                    name="selectcheckpoint"
+                                  />
+                                </span>
+                              </div>
+                              <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
+                                <div>
+                                  <span>{item.title}</span>
+                                  <br />
+                                  <span className="text-sm leading-6 text-gray-500">
+                                    {item.subtitle ? item.subtitle : ''}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
+                                {item.language ? getLanguageString(item.language) : '--'}
+                              </div>
+                              <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
+                                <span
+                                  className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
+                                  onClick={() => viewCheckpoint(item.id)}>
+                                  <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+                                    {expandId === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
+                                  </IconContext.Provider>
+                                </span>
                               </div>
                             </div>
-                            <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">{item.language ? getLanguageString(item.language) : '--'}</div>
-                            <div className="flex w-1.5/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                              <span className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`} onClick={() => viewCheckpoint(item.id)}>
-                                <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
-                                  {expandId === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
-                                </IconContext.Provider>
-                              </span>
-                            </div>
-                          </div>
 
-                          {/* Details for selected row */}
-                          {(expandId === item.id) && (
-                            <div className="my-6">
-                              <CheckpointQueTable checkpointId={item.id} />
-                            </div>
-                          )}
-                        </Fragment>
-                      ))
-                        : (
-                          <div className="py-12 my-6 text-center">
-                            <p> {ProfileCheckpointlookupDict[userLanguage]['listempty']}</p>
-                          </div>
-                        )
-                      }
+                            {/* Details for selected row */}
+                            {expandId === item.id && (
+                              <div className="my-6">
+                                <CheckpointQueTable checkpointId={item.id} />
+                              </div>
+                            )}
+                          </Fragment>
+                        ))
+                      ) : (
+                        <div className="py-12 my-6 text-center">
+                          <p> {ProfileCheckpointlookupDict[userLanguage]['listempty']}</p>
+                        </div>
+                      )}
                     </Fragment>
-                  ) : <div className="py-12 my-6 text-center">
+                  ) : (
+                    <div className="py-12 my-6 text-center">
                       <p>{ProfileCheckpointlookupDict[userLanguage]['errfetch']} </p>
-                    </div>}
+                    </div>
+                  )}
                 </Fragment>
-              ) : (<div className="py-12 my-6 text-center">
-                <p> {selectedCheckpointIds.length > 0 ? ProfileCheckpointlookupDict[userLanguage]['updating'] : ProfileCheckpointlookupDict[userLanguage]['fetching']} </p>
-              </div>)}
+              ) : (
+                <div className="py-12 my-6 text-center">
+                  <p>
+                    {' '}
+                    {selectedCheckpointIds.length > 0
+                      ? ProfileCheckpointlookupDict[userLanguage]['updating']
+                      : ProfileCheckpointlookupDict[userLanguage]['fetching']}{' '}
+                  </p>
+                </div>
+              )}
             </div>
           </Fragment>
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-center my-6">
-            <Buttons btnClass="py-1 px-4 text-xs mr-2" label={ProfileCheckpointlookupDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
-            {
-              allCheckpointList.length > 0 && <Buttons btnClass="py-1 px-8 text-xs ml-2" label={loading ? ProfileCheckpointlookupDict[userLanguage]['button']['saving'] : ProfileCheckpointlookupDict[userLanguage]['button']['save']} onClick={saveCurricularCheckpoints} disabled={(loading || selectedCheckpointIds.length === 0) ? true : false} />
-            }
+            <Buttons
+              btnClass="py-1 px-4 text-xs mr-2"
+              label={ProfileCheckpointlookupDict[userLanguage]['button']['cancel']}
+              onClick={history.goBack}
+              transparent
+            />
+            {allCheckpointList.length > 0 && (
+              <Buttons
+                btnClass="py-1 px-8 text-xs ml-2"
+                label={
+                  loading
+                    ? ProfileCheckpointlookupDict[userLanguage]['button']['saving']
+                    : ProfileCheckpointlookupDict[userLanguage]['button']['save']
+                }
+                onClick={saveCurricularCheckpoints}
+                disabled={loading || selectedCheckpointIds.length === 0 ? true : false}
+              />
+            )}
           </div>
         </div>
       </PageWrapper>
-
     </div>
-  )
-}
+  );
+};
 
-export default ProfileCheckpointlookup
+export default ProfileCheckpointlookup;

@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
+import isEmpty from 'lodash/isEmpty';
 
 import Buttons from '../../../../Atoms/Buttons';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
@@ -14,11 +15,11 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import { getTypeString } from '../../../../../utilities/strings';
 
 interface PreviewFormProps {
-  lessonName: string
-  enablePublish?: boolean
-  lessonID: string
-  lessonPlans: any
-  lessonType: string
+  lessonName: string;
+  enablePublish?: boolean;
+  lessonID: string;
+  lessonPlans: any;
+  lessonType: string;
 }
 const PreviewForm = (props: PreviewFormProps) => {
   const { lessonName, enablePublish, lessonID, lessonPlans, lessonType } = props;
@@ -27,24 +28,25 @@ const PreviewForm = (props: PreviewFormProps) => {
 
   const [warnModal, setWarnModal] = useState({
     show: false,
-    message: PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['WARN_MESSAGE']
-  })
+    message: PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['WARN_MESSAGE'],
+  });
   const [loading, setLoading] = useState(false);
   const [relatedUnitsID, setRelatedUnitsID] = useState([]);
   const [lessonDetails, setLessonDetails] = useState<any>({});
- 
+  const [fetchingQuestionSequence, setFetchingQuestionSequence] = useState(false);
+
   const [message, setMessage] = useState({
     msg: '',
-    isError: true
-  })
+    isError: true,
+  });
 
   const updateLessonPlan = async (syllabusLessonId: string, updatedLessonPlan: any) => {
     const input = {
       id: syllabusLessonId,
-      lessonPlan: updatedLessonPlan
-    }
+      lessonPlan: updatedLessonPlan,
+    };
     const result: any = await API.graphql(graphqlOperation(customMutations.updateSyllabusLesson, { input: input }));
-  }
+  };
 
   const updateAllLessonPlans = () => {
     const updatedLessonPlan = lessonPlans.map((item: any) => ({
@@ -54,27 +56,33 @@ const PreviewForm = (props: PreviewFormProps) => {
       stage: `checkpoint?id=${item.LessonComponentID}`,
       type: 'survey',
       displayMode: 'SELF',
-    }))
+    }));
     let updatedPlans: any = Promise.all(
       relatedUnitsID.map(async (ID: string) => updateLessonPlan(ID, updatedLessonPlan))
-    ).then(res => setMessage({
-      ...message,
-      isError: false,
-      msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATESUCCESS']
-    })).catch(err => setMessage({
-      ...message,
-      isError: true,
-      msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR']
-    }))
+    )
+      .then((res) =>
+        setMessage({
+          ...message,
+          isError: false,
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATESUCCESS'],
+        })
+      )
+      .catch((err) =>
+        setMessage({
+          ...message,
+          isError: true,
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+        })
+      );
     toggleModal();
-  }
+  };
 
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
-      show: !warnModal.show
-    })
-  }
+      show: !warnModal.show,
+    });
+  };
 
   const publishAction = () => {
     if (relatedUnitsID?.length) {
@@ -83,68 +91,93 @@ const PreviewForm = (props: PreviewFormProps) => {
       setMessage({
         ...message,
         isError: false,
-        msg: PreviewFormDict[userLanguage]['MESSAGES']['CONNECTERR']
+        msg: PreviewFormDict[userLanguage]['MESSAGES']['CONNECTERR'],
       });
     }
-  }
+  };
 
   const fetchSyllabusLessonData = async () => {
     if (lessonID) {
       try {
-        const result: any = await API.graphql(graphqlOperation(queries.listSyllabusLessons, {
-          filter: { lessonID: { eq: lessonID } }
-        }))
+        const result: any = await API.graphql(
+          graphqlOperation(queries.listSyllabusLessons, {
+            filter: { lessonID: { eq: lessonID } },
+          })
+        );
         const savedData = result?.data?.listSyllabusLessons?.items;
         if (savedData?.length) {
-          const syllabusLessonId = savedData.map((item: any) => item.id)
-          setRelatedUnitsID([
-            ...syllabusLessonId
-          ])
+          const syllabusLessonId = savedData.map((item: any) => item.id);
+          setRelatedUnitsID([...syllabusLessonId]);
         }
         setLoading(false);
       } catch {
         setMessage({
           ...message,
           isError: true,
-          msg: PreviewFormDict[userLanguage]['MESSAGES']['FETCHERR']
-        })
+          msg: PreviewFormDict[userLanguage]['MESSAGES']['FETCHERR'],
+        });
       }
     }
-  }
+  };
 
   const fetchLessonPreview = async () => {
     try {
       setLoading(true);
-      const result: any = await API.graphql(graphqlOperation(customQueries.getCompleteLesson, {
-        id: lessonID
-      }));
-      const savedData: any = result.data.getLesson;
-      const checkpointSequence = savedData?.checkpoints?.items?.map((checkpoint: any) => {
-        let lessonplanSequence = savedData?.lessonPlan?.find((item: any) => item.LessonComponentID === checkpoint?.checkpointID)?.sequence
-        return ({
-          ...checkpoint,
-          sequence: lessonplanSequence
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getCompleteLesson, {
+          id: lessonID,
         })
-      }).sort((a: any, b: any) => a.sequence > b.sequence ? 1 : -1)
+      );
+      const savedData: any = result.data.getLesson;
+      setFetchingQuestionSequence(true);
+      const checkpointSequence = await Promise.all(
+        savedData?.checkpoints?.items?.map(async (checkpoint: any) => {
+          let lessonplanSequence = savedData?.lessonPlan?.find(
+            (item: any) => item.LessonComponentID === checkpoint?.checkpointID
+          )?.sequence;
+
+          let questionSequence: any = await API.graphql(
+            graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpoint.checkpointID}` })
+          );
+          questionSequence = questionSequence?.data.getCSequences?.sequence || [];
+          checkpoint?.checkpoint?.questions?.items.forEach((t: any) => {
+            let index = questionSequence.indexOf(t.questionID);
+            console.log(index);
+            t.index = index;
+          });
+
+          checkpoint?.checkpoint?.questions?.items.sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+
+          return {
+            ...checkpoint,
+            sequence: lessonplanSequence,
+          };
+        })
+      );
+      setFetchingQuestionSequence(false);
+
+      checkpointSequence.sort((a: any, b: any) => (a.sequence > b.sequence ? 1 : -1));
+
       savedData.checkpoints = {
-        items: checkpointSequence
-      }
+        items: checkpointSequence,
+      };
+
       setLessonDetails({ ...savedData });
       setLoading(false);
     } catch {
       setMessage({
         ...message,
         isError: true,
-        msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR']
-      })
-      setLoading(true);
+        msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+      });
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchLessonPreview();
     fetchSyllabusLessonData();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (message?.msg) {
@@ -152,23 +185,26 @@ const PreviewForm = (props: PreviewFormProps) => {
         setMessage({
           ...message,
           isError: true,
-          msg: ''
-        })
-      }, 3000)
+          msg: '',
+        });
+      }, 3000);
     }
-  }, [message.msg])
+  }, [message.msg]);
 
   return (
-    <div className='bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4'>
-
+    <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900"> {PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}</h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          {' '}
+          {PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}
+        </h3>
       </div>
-      {loading ? (
+      {loading || isEmpty(lessonDetails) ? (
         <div className="py-20 text-center mx-auto">
           <p>{PreviewFormDict[userLanguage]['FETCHING']}</p>
-        </div>) :
-        (<Fragment>
+        </div>
+      ) : (
+        <Fragment>
           <div className="p-4 max-h-screen overflow-y-auto">
             <div className="py-2">
               <h3 className="font-bold text-gray-900 text-base"> {PreviewFormDict[userLanguage]['PURPOSE']}: </h3>
@@ -181,74 +217,92 @@ const PreviewForm = (props: PreviewFormProps) => {
             <div className="py-2">
               <h3 className="font-bold text-gray-900 text-base">Welcome Message:</h3>
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.introductionTitle || ''}</h3>
-              <Fragment>
-                {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}
-              </Fragment>
+              <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}</Fragment>
             </div>
             <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base">{lessonType === 'survey' ? 'Survey' : 'Assessment'}Instructions:</h3>
+              <h3 className="font-bold text-gray-900 text-base">
+                {lessonType === 'survey' ? 'Survey' : 'Assessment'}Instructions:
+              </h3>
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.instructionsTitle || ''}</h3>
-              <Fragment>
-                {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
-              </Fragment>
+              <Fragment>{lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}</Fragment>
             </div>
             <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base">{lessonType === 'survey' ? 'Survey' : 'Assessment'} :</h3>
-              {lessonDetails?.checkpoints?.items?.length > 0 ? (<Fragment>
-                {lessonDetails?.checkpoints?.items?.map((item: any) => (
-                  <Fragment key={item.id}>
-                    <h4 className="font-bold text-gray-900 text-base py-2">{item.checkpoint?.title || ''}<br />
-                      <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
-                    </h4>
-                    <div className="py-2">
-                      <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
-                      {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
-                    </div>
-                    <div>
-                      {item.checkpoint?.questions?.items?.length > 0 ? (
-                        <div className="py-2 px-4">
-                          {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                            <Fragment>
-                              <p key={checkpItem.id}>
-                                <span>{index + 1}.{checkpItem?.question?.question} </span>({getTypeString(checkpItem?.question?.type)})
-                              </p>
-                              <div className="px-12">
-                                {(checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne') && (
-                                  <ul className="list-disc">
-                                    {checkpItem?.question?.options?.map((opt: any) => (<li >{opt?.text}</li>))}
-                                  </ul>
-                                )}
-                              </div>
-                            </Fragment>
-                          ))}
-                        </div>) : null}
-                    </div>
-                  </Fragment>
-                ))}
-              </Fragment>) : <p>{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>}
+              <h3 className="font-bold text-gray-900 text-base">
+                {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
+              </h3>
+              {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
+                <Fragment>
+                  {lessonDetails?.checkpoints?.items?.map((item: any) => (
+                    <Fragment key={item.id}>
+                      <h4 className="font-bold text-gray-900 text-base py-2">
+                        {item.checkpoint?.title || ''}
+                        <br />
+                        <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+                      </h4>
+                      <div className="py-2">
+                        <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
+                        {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
+                      </div>
+                      <div>
+                        {item.checkpoint?.questions?.items?.length > 0 ? (
+                          <div className="py-2 px-4">
+                            {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
+                              <Fragment key={index}>
+                                <p key={checkpItem.id}>
+                                  <span>
+                                    {index + 1}.{checkpItem?.question?.question}{' '}
+                                  </span>
+                                  ({getTypeString(checkpItem?.question?.type)})
+                                </p>
+                                <div className="px-12">
+                                  {(checkpItem?.question?.type === 'selectMany' ||
+                                    checkpItem?.question?.type === 'selectOne') && (
+                                    <ul className="list-disc">
+                                      {checkpItem?.question?.options?.map((opt: any) => (
+                                        <li key={opt?.text}>{opt?.text}</li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              </Fragment>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    </Fragment>
+                  ))}
+                </Fragment>
+              ) : (
+                <p>{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>
+              )}
             </div>
             <div className="py-2">
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
-              <Fragment>
-                {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}
-              </Fragment>
+              <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
             </div>
           </div>
           {message ? (
             <div className="py-4 m-auto mt-2 text-center">
               <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}> {message.msg} </p>
-            </div>) : null}
-          {enablePublish &&
+            </div>
+          ) : null}
+          {enablePublish && (
             <div className="w-2/10 mx-auto py-4">
               <Buttons btnClass="mx-auto w-full" onClick={publishAction} label={BUTTONS[userLanguage]['PUBLISH']} />
             </div>
-          }
-          {warnModal.show && <ModalPopUp closeAction={toggleModal} saveAction={updateAllLessonPlans} saveLabel={BUTTONS[userLanguage]['YES']} message={warnModal.message} />}
-        </Fragment>)
-      }
-
+          )}
+          {warnModal.show && (
+            <ModalPopUp
+              closeAction={toggleModal}
+              saveAction={updateAllLessonPlans}
+              saveLabel={BUTTONS[userLanguage]['YES']}
+              message={warnModal.message}
+            />
+          )}
+        </Fragment>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default PreviewForm
+export default PreviewForm;

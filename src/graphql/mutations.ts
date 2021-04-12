@@ -239,6 +239,7 @@ export const createInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -348,6 +349,7 @@ export const updateInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -457,6 +459,7 @@ export const deleteInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -1726,6 +1729,7 @@ export const createCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -1812,6 +1816,7 @@ export const updateCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -1898,6 +1903,7 @@ export const deleteCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -1988,6 +1994,7 @@ export const createTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2053,6 +2060,7 @@ export const updateTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2118,6 +2126,7 @@ export const deleteTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2272,6 +2281,7 @@ export const createRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2322,6 +2332,7 @@ export const updateRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2372,6 +2383,7 @@ export const deleteRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2417,6 +2429,7 @@ export const createTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2468,6 +2481,7 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2519,6 +2533,7 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2570,6 +2585,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2621,6 +2637,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2672,6 +2689,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3573,6 +3591,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3681,6 +3700,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3789,6 +3809,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages

@@ -20,12 +20,7 @@ export interface Room {
 
 const SideRoomSelector = (props: ClassroomControlProps) => {
   // Essentials
-  const {
-    homeData,
-    activeRoom,
-    roomsLoading,
-    handleRoomSelection,
-  } = props;
+  const { homeData, activeRoom, roomsLoading, handleRoomSelection } = props;
   const { state, theme, clientKey, userLanguage } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
 
@@ -36,30 +31,32 @@ const SideRoomSelector = (props: ClassroomControlProps) => {
   return (
     <div className={`${theme.sidemenu.secondary} mr-2`}>
       <div className={roomsTitle}>{classRoomDict[userLanguage]['LIST_TITLE']}:</div>
-      {state.roomData.rooms.length > 0 ? (
-        state.roomData.rooms.map((room: Room, i: number) => {
-          return (
-            <div
-              key={`room_button_sb${i}`}
-              id={room.id}
-              data-name={room.name}
-              onClick={(e) => handleRoomSelection(e, i)}
-              className={`cursor-pointer ${linkClass} 
-              ${activeRoom === room.id ? 'bg-grayscale-light bg-opacity-80' : 'bg-darker-gray bg-opacity-20'} 
-              truncate ...`}>
-              {room.name}
-            </div>
-          );
-        })
-      ) : roomsLoading === false ? (
-        <>
-          <p className={`${linkClass}`}>Loading {classRoomDict[userLanguage]['LIST_TITLE']}...</p>
-        </>
-      ) : (
-        <>
-          <p className={`${linkClass}`}>No {classRoomDict[userLanguage]['LIST_TITLE']} assigned to user</p>
-        </>
-      )}
+      <div id="roomlist">
+        {state.roomData.rooms.length > 0 ? (
+          state.roomData.rooms.map((room: Room, i: number) => {
+            return (
+              <div
+                key={`room_button_sb${i}`}
+                id={room.id}
+                data-name={room.name}
+                onClick={(e) => handleRoomSelection(e, i)}
+                className={`cursor-pointer text-white ${linkClass} 
+            ${activeRoom === room.id ? 'bg-indigo-600 ' : 'hover:bg-indigo-500'} 
+            truncate ...`}>
+                {room.name}
+              </div>
+            );
+          })
+        ) : roomsLoading === false ? (
+          <>
+            <p className={`${linkClass}`}>Loading {classRoomDict[userLanguage]['LIST_TITLE']}...</p>
+          </>
+        ) : (
+          <>
+            <p className={`${linkClass}`}>No {classRoomDict[userLanguage]['LIST_TITLE']} assigned to user</p>
+          </>
+        )}
+      </div>
     </div>
   );
 };
