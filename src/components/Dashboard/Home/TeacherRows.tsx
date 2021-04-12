@@ -36,7 +36,7 @@ const TeacherRows = (props: { teacherList: any }) => {
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                             <div>
                               <p className="text-sm font-medium text-indigo-600 truncate">
-                                {teacher.firstName + teacher.lastName}
+                                {teacher.firstName + ' ' + teacher.lastName}
                               </p>
                               <p className="mt-2 flex items-center text-sm text-gray-500">
                                 <svg
