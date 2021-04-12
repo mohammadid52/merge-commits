@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { LessonPlansProps } from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import { InitialData } from '../../Dashboard/Admin/LessonsBuilder/StepActionComponent/CheckPointSteps/AddNewCheckPoint';
-import StartSelectOrCreate from './views/StartSelectOrCreate';
+import BuilderWrapper from './views/BuilderWrapper';
 
 interface UniversalLessonBuilderProps {
   designersList?: { id: string, name: string, value: string }[]
@@ -24,7 +24,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   };
 
-  const [universalBuilderStep, setUniversalBuilderStep] = useState('StartSelectOrCreate');
+  const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const [universalLessonDetails, setUniversalLessonDetails] = useState(initialUniversalLessonData);
 
   //  STORE FOR TEMPLATES, TODO: SHOULD BE FETCHED IN THE FUTURE
@@ -40,9 +40,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   //  WHICH COMPONENT DO WE RETURN?
   const currentStepComp = (currentStep: string) => {
     switch(currentStep){
-      case 'StartSelectOrCreate':
+      case 'BuilderWrapper':
         return (
-        <StartSelectOrCreate
+        <BuilderWrapper
           universalBuilderStep={universalBuilderStep}
           setUniversalBuilderStep={setUniversalBuilderStep}
           universalBuilderTemplates={universalBuilderTemplates}/>);
