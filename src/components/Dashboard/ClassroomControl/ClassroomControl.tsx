@@ -422,10 +422,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
    ******************************************/
 
   useEffect(() => {
-    const firstChild = document.querySelector('#roomlist').firstElementChild;
-    const name = firstChild.getAttribute('data-name');
-    if (activeRoom === '' && state.roomData.rooms.length >= 0) {
-      const firstRoom = state.roomData.rooms.length > 0 && state.roomData.rooms[0];
+    if (activeRoom === '' && state.roomData.rooms.length > 0) {
+      const firstChild = document.querySelector('#roomlist').firstElementChild;
+      const name = firstChild.getAttribute('data-name');
+      const firstRoom = state.roomData.rooms[0];
       setActiveRoomName(name);
       setActiveRoom(firstChild.id);
       setActiveRoomInfo(firstRoom);
@@ -435,7 +435,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       setLessonLoading(true);
       setActiveRoomSyllabus(firstRoom.activeSyllabus);
     }
-  }, [state.roomData.rooms.length, activeRoom]);
+  }, []);
 
   const roomsTitle =
     'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
