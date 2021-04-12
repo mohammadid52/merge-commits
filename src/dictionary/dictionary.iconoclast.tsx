@@ -1070,7 +1070,8 @@ const CurricularBuilderdict: any = {
     NAME: 'Curriculum Name',
     LANGUAGE: 'Select Language',
     DESIGNER: 'Select Designers',
-
+    TYPE: 'Select Type',
+    SUMMARY: 'Summary',
     DESCRIPTION: 'Description',
     OBJECT: 'Objective',
     messages: {
@@ -1102,6 +1103,8 @@ const CurricularBuilderdict: any = {
     NAME: 'TBD',
     LANGUAGE: 'TBD',
     DESIGNER: 'TBD',
+    TYPE: 'TBD',
+    SUMMARY: 'TBD',
     DESCRIPTION: 'TBD',
     OBJECT: 'TBD',
     messages: {
@@ -1232,6 +1235,8 @@ const EditCurriculardict: any = {
     NAME: 'Curriculum Name',
     LANGUAGE: 'Select Language',
     DESIGNER: 'Select Designers',
+    TYPE: 'Select Type',
+    SUMMARY: 'Summary',
     DESCRIPTION: 'Description',
     OBJECTIVE: 'Objective',
     messages: {
@@ -1256,6 +1261,8 @@ const EditCurriculardict: any = {
     HEADING: 'TBD',
     NAME: 'TBD',
     LANGUAGE: 'TBD',
+    TYPE: 'TBD',
+    SUMMARY: 'TBD',
     DESIGNER: 'TBD',
     DESCRIPTION: 'TBD',
     OBJECTIVE: 'TBD',
@@ -2452,7 +2459,6 @@ const CheckpointLookupDict: any = {
     BUTTON: {
       SAVE: 'Save',
       CANCEL: 'Cancel',
-      SAVING: 'Saving...',
     },
   },
   ES: {
@@ -2465,7 +2471,6 @@ const CheckpointLookupDict: any = {
     BUTTON: {
       SAVE: 'TBD',
       CANCEL: 'TBD',
-      SAVING: 'TBD',
     },
   },
 };

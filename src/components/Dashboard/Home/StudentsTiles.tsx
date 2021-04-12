@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 import ContentCard from '../../Atoms/ContentCard';
 import ImageAlternate from '../../Atoms/ImageAlternative';
-import ViewMore from '../../Atoms/ViewMore';
-import { getImageFromS3 } from '../../../utilities/services';
 
 import slice from 'lodash/slice';
 import filter from 'lodash/filter';
+import Buttons from '../../Atoms/Buttons';
 
 const StudentsTiles = (props: { studentsList: any; state: any }) => {
   const { studentsList, state } = props;
@@ -80,7 +79,9 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
               )}
           </ul>
           {studentsList && studentsList.length > 12 && (
-            <ViewMore onClick={onViewMore} text={`${slicedList.length <= 12 ? 'View All' : 'Hide All'}`} />
+            <div className="w-auto float-right">
+              <Buttons label={slicedList.length <= 12 ? 'View All' : 'Hide All'} onClick={onViewMore} type="button" />
+            </div>
           )}
         </div>
       </div>

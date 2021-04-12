@@ -31,6 +31,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     id: '',
     name: '',
     description: '',
+    summary: '',
     languages: [{ id: '1', name: 'English', value: 'EN' }],
     objectives: '',
     institute: {
@@ -57,6 +58,8 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
+  const [type, setType] = useState<string>();
+
   const [error, setError] = useState({
     show: true,
     errorMsg: '',
@@ -390,7 +393,21 @@ const EditCurricular = (props: EditCurricularProps) => {
     });
   };
 
-  const { name, description, objectives, languages, institute } = curricularData;
+  // Temporary List
+  //*******//
+  const typeList = [
+    { id: 0, name: 'In-School Programming' },
+    { id: 1, name: 'After-School Programming' },
+    { id: 2, name: 'Summer Intensives (2 week programming)' },
+    { id: 3, name: "Writer's Retreat" },
+  ];
+  //*****//
+
+  const selectType = (str: any, name: string) => {
+    setType(name);
+  };
+
+  const { name, description, objectives, languages, summary, institute } = curricularData;
   return (
     <div className="w-8/10 h-full mt-4 p-4">
       {/* Section Header */}
@@ -481,6 +498,26 @@ const EditCurricular = (props: EditCurricularProps) => {
                   placeholder={EditCurriculardict[userLanguage]['DESIGNER']}
                   list={designersList}
                   onChange={selectDesigner}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {EditCurriculardict[userLanguage]['TYPE']}
+                </label>
+                <Selector
+                  placeholder={EditCurriculardict[userLanguage]['TYPE']}
+                  list={typeList}
+                  onChange={selectType}
+                  selectedItem={type || EditCurriculardict[userLanguage]['TYPE']}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <TextArea
+                  value={summary}
+                  id="summary"
+                  onChange={onChange}
+                  name="summary"
+                  label={EditCurriculardict[userLanguage]['SUMMARY']}
                 />
               </div>
               <div className="px-3 py-4">

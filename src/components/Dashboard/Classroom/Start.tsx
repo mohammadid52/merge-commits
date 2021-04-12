@@ -7,6 +7,7 @@ import { dateString } from '../../../utilities/time';
 import { Lesson } from './Classroom';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
+import Buttons from '../../Atoms/Buttons';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -130,12 +131,11 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   return (
     <div>
-      <button
+      <Buttons
         type="submit"
         onClick={handleLink}
-        className={`${classSwitch()} h-full w-full text-xs rounded-br focus:outline-none transition duration-150 ease-in-out`}>
-        <span className="w-auto h-auto">{`${firstPart()} ${secondPart()}`}</span>
-      </button>
+        label={`${firstPart()} ${secondPart()}`}
+        btnClass={`h-full w-full text-xs focus:outline-none transition duration-150 ease-in-out`}></Buttons>
     </div>
   );
 };

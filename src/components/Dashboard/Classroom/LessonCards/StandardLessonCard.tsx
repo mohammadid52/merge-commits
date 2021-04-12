@@ -14,9 +14,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const { theme } = useContext(GlobalContext);
 
   return (
-    <div
-      key={keyProps}
-      className={`relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex mb-8 ${theme.elem.textDark} `}>
+    <div key={keyProps} className={`relative bg-white shadow rounded-lg flex mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
@@ -27,7 +25,13 @@ const StandardLessonCard = (props: LessonCardProps) => {
       <div className={`${lessonType !== 'survey' ? 'w-7.5/10' : 'w-full'} flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
-        <BottomBar isTeacher={isTeacher} accessible={accessible} activeRoomInfo={activeRoomInfo} lessonProps={lessonProps}   lessonType={lessonType} />
+        <BottomBar
+          isTeacher={isTeacher}
+          accessible={accessible}
+          activeRoomInfo={activeRoomInfo}
+          lessonProps={lessonProps}
+          lessonType={lessonType}
+        />
       </div>
     </div>
   );
