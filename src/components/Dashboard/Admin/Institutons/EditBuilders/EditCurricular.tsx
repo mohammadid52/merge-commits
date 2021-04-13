@@ -32,6 +32,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     name: '',
     description: '',
     summary: '',
+    type: '',
     languages: [{ id: '1', name: 'English', value: 'EN' }],
     objectives: '',
     institute: {
@@ -58,7 +59,6 @@ const EditCurricular = (props: EditCurricularProps) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [s3Image, setS3Image] = useState(null);
-  const [type, setType] = useState<string>();
 
   const [error, setError] = useState({
     show: true,
@@ -175,6 +175,8 @@ const EditCurricular = (props: EditCurricularProps) => {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
           description: curricularData.description,
+          type: curricularData.type,
+          summary: curricularData.summary,
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers: designers,
@@ -403,11 +405,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   ];
   //*****//
 
-  const selectType = (str: any, name: string) => {
-    setType(name);
-  };
-
-  const { name, description, objectives, languages, summary, institute } = curricularData;
+  const { name, description, objectives, type, languages, summary, institute } = curricularData;
   return (
     <div className="w-8/10 h-full mt-4 p-4">
       {/* Section Header */}
@@ -507,7 +505,9 @@ const EditCurricular = (props: EditCurricularProps) => {
                 <Selector
                   placeholder={EditCurriculardict[userLanguage]['TYPE']}
                   list={typeList}
-                  onChange={selectType}
+                  onChange={(str: any, name: string) => {
+                    setCurricularData({ ...curricularData, type: name });
+                  }}
                   selectedItem={type || EditCurriculardict[userLanguage]['TYPE']}
                 />
               </div>

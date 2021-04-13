@@ -441,6 +441,8 @@ export const createCurriculum = /* GraphQL */ `
     createCurriculum(input: $input, condition: $condition) {
       id
       name
+      type
+      summary
       institutionID
     }
   }
