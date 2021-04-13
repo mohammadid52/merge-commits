@@ -758,6 +758,7 @@ export const createCheckpoint = /* GraphQL */ `
       title
       subtitle
       type
+      scope
       instructionsTitle
       instructions
       purpose
