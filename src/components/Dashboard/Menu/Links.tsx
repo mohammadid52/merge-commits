@@ -4,11 +4,11 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 // Iconz
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook, } from 'react-icons/ai';
-import { RiDoorClosedLine, } from 'react-icons/ri';
-import { HiOutlineOfficeBuilding, } from 'react-icons/hi';
-import { IoIosPeople, IoMdBuild, } from 'react-icons/io';
-import { GiShinyApple, } from 'react-icons/gi';
+import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
+import { RiDoorClosedLine } from 'react-icons/ri';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
+import { IoIosPeople, IoMdBuild } from 'react-icons/io';
+import { GiShinyApple } from 'react-icons/gi';
 import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
 import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
 
@@ -48,7 +48,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   }, [role]);
 
   const userLinks = (role: string): void => {
-    console.log('role', role)
+    console.log('role', role);
     switch (role) {
       case 'SUP':
         return setLinks((links) => {
@@ -173,16 +173,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               title: sideBarLinksDict[userLanguage].CLASSROOM,
               name: sideBarLinksDict[userLanguage].CLASSROOM,
               label: 'Classroom',
-              path: 'classroom',
+              path: 'home',
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
               name: sideBarLinksDict[userLanguage].ANTHOLOGY,
               label: 'Anthology',
               path: 'anthology',
-            }
-          ]
-        })
+            },
+          ];
+        });
       default:
         return;
     }
@@ -230,7 +230,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Anthology':
         return <AiOutlineBook id={url} />;
       case 'Noticeboard':
-        return <BsReverseLayoutSidebarReverse id={url} />
+        return <BsReverseLayoutSidebarReverse id={url} />;
       default:
         return '';
     }
@@ -241,19 +241,21 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
   const activeClass = 'bg-gray-200 text-dark-gray';
 
+  const path = history.location.pathname;
+
   return (
     <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
-        ? links.map((link: { name: string; path: string, label: string }, key: number) => (
-          <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-            <div id={link.path} className={`${linkClass} ${state.currentPage === link.path && activeClass}`}>
-              <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
-                {getMenuIcon(link.label, link.path)}
-              </IconContext.Provider>
-              {link.name}
+        ? links.map((link: { name: string; path: string; label: string }, key: number) => (
+            <div key={`link_${key}`} id={link.path} onClick={handleLink}>
+              <div id={link.path} className={`${linkClass} ${path === `/dashboard/${link.path}` && activeClass}`}>
+                <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
+                  {getMenuIcon(link.label, link.path)}
+                </IconContext.Provider>
+                {link.name}
+              </div>
             </div>
-          </div>
-        ))
+          ))
         : null}
     </div>
   );

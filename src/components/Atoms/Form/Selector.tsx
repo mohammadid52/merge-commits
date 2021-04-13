@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { getAsset } from '../../../assets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
@@ -9,10 +9,11 @@ interface SelectorProps {
   arrowHidden?: boolean;
   placeholder: string;
   onChange: (c: string, n: string, id: string) => void;
+  disabled?: boolean;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
-  const { list, selectedItem, btnClass, arrowHidden, placeholder, onChange } = selectorProps;
+  const { list, selectedItem, btnClass, disabled, arrowHidden, placeholder, onChange } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
   const { theme, clientKey } = useContext(GlobalContext);
@@ -26,7 +27,6 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   const onFocus = () => {
     if (!showList) {
-      window.addEventListener('click', handleOutsideClick, false);
       setShowList(true);
     }
   };
@@ -35,19 +35,33 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     const stringElement = e.target.innerHTML;
     if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
       window.removeEventListener('click', handleOutsideClick, false);
-      setShowList(false);
+      if (showList) {
+        setShowList(false);
+      }
     }
   };
 
+  useEffect(() => {
+    if (showList) {
+      window.addEventListener('click', handleOutsideClick, false);
+    } else {
+      window.removeEventListener('click', handleOutsideClick, false);
+    }
+  }, [showList]);
+
   return (
-    <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
+    <div className="relative" ref={currentRef}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
+          disabled={disabled}
+          onClick={() => setShowList(!showList)}
           type="button"
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          className={`${
+            disabled ? 'bg-gray-100' : ''
+          } flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">{selectedItem ? selectedItem : placeholder}</span>
@@ -67,7 +81,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+            className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map((item: { name: string; id: any; value: string }, key: number) => (
                 <li
@@ -90,7 +104,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   </span>
                   <span
                     className={`${
-                      selectedItem === item.name ? 'font-semibold pl-4' : 'font-normal pl-8'
+                      selectedItem === item.name ? 'font-semibold pl-4' : 'font-normal pl-9'
                     } block truncate`}>
                     {item.name}
                   </span>
@@ -98,7 +112,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               ))
             ) : (
               <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal"> No Results</span>
+                <span className="font-normal">No Results</span>
               </li>
             )}
           </ul>

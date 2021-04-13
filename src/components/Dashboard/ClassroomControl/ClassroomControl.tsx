@@ -11,6 +11,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
+import { useHistory } from 'react-router';
 
 export interface Room {
   id: string;
@@ -38,7 +39,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     activeRoomSyllabus,
     setActiveRoomSyllabus,
   } = props;
-  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
+  const { state, dispatch, clientKey } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
 
   // Cookie setting for transition to Student/Teacher
@@ -55,6 +56,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   // Menu state
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
+  const history: any = useHistory();
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
@@ -437,9 +439,9 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   }, []);
 
-  const roomsTitle =
-    'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
-  const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
+  // const roomsTitle =
+  //   'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
+  // const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return isHomescreen ? (
     <Home

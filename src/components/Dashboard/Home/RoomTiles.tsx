@@ -13,21 +13,21 @@ import ImageAlternate from '../../Atoms/ImageAlternative';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
-const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
-  const { classList, handleRoomSelection } = props;
+const RoomTiles = (props: { classList: [] }) => {
+  const { classList } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
 
-  // // Select room on roomtile click
-  // const handleRoomSelection = (e: React.MouseEvent)=> {
-  //   const t = e.target as HTMLElement;
-  //   dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: t.id } });
-  // }
+  // Select room on roomtile click
+  const handleRoomSelection = (id: string) => {
+    dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
+    history.push('/dashboard/classroom');
+  };
   // Push user to classroom on room change
 
   useEffect(() => {
     if (state.activeRoom !== '') {
-      history.push('/dashboard/classroom');
+      history.push('/dashboard/home');
     }
   }, [state.activeRoom]);
 
@@ -37,7 +37,7 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
 
     classList &&
       classList.length > 0 &&
-      classList.forEach((item: { rooms: { items: any[] }; name: string }) => {
+      classList.forEach((item: { rooms: { items: any[] }; name: string; id: string }) => {
         item.rooms.items.forEach(async (_item: any) => {
           const curriculum = _item.curricula.items[0].curriculum;
           const imagePath = curriculum.image;
@@ -59,6 +59,8 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
 
   const [slicedList, setSlicedList] = useState<ModifiedListProps[]>([]);
   interface ModifiedListProps {
+    id: any;
+    name: any;
     teacherProfileImg: string;
     bannerImage: string;
     teacher: { email: string; firstName: string; lastName: string; image: string };

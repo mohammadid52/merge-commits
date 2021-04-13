@@ -147,7 +147,7 @@ const Dashboard = (props: DashboardProps) => {
 
         {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
         (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-        (userData.role === 'ST' && state.currentPage === 'classroom') ? (
+        (state.currentPage === 'classroom' && userData.role === 'ST') ? (
           <ClassroomControl
             isHomescreen={false}
             currentPage={currentPage}
@@ -186,7 +186,7 @@ const Dashboard = (props: DashboardProps) => {
                       if (userData.role === 'FLW' || userData.role === 'TR') {
                         return <Redirect to={`${match.url}/lesson-planner`} />;
                       } else if (userData.role === 'ST') {
-                        return <Redirect to={`${match.url}/classroom`} />;
+                        return <Redirect to={`${match.url}/home`} />;
                         // return <Redirect to={`${match.url}/home`} />;
                       } else return <Redirect to={`${match.url}/manage-institutions`} />;
                     } else

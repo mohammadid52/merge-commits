@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { getAsset } from '../../../assets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
@@ -9,40 +9,46 @@ interface MultipleSelectorProps {
   arrowHidden?: boolean;
   placeholder: string;
   onChange: (id: string, name: string, value: string) => void;
+  disabled?: boolean;
 }
 
 const MultipleSelector = (props: MultipleSelectorProps) => {
-  const { list, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
+  const { list, disabled, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
 
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const onFocus = () => {
-    if (!showList) {
-      window.addEventListener('click', handleOutsideClick, false);
-      setShowList(true);
-    }
-  };
-
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
     if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
       window.removeEventListener('click', handleOutsideClick, false);
-      setShowList(false);
+      if (showList) setShowList(false);
     }
   };
 
+  useEffect(() => {
+    if (showList) {
+      window.addEventListener('click', handleOutsideClick, false);
+    } else {
+      window.removeEventListener('click', handleOutsideClick, false);
+    }
+  }, [showList]);
+
   return (
-    <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
+    <div className="relative" ref={currentRef}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
+          disabled={disabled}
+          onClick={() => setShowList(!showList)}
           type="button"
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"
-          className={`flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          className={`${
+            disabled ? 'bg-gray-100' : ''
+          } flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">
@@ -70,7 +76,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
             role="listbox"
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
-            className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
+            className="max-h-60 focus:shadow-none rounded-md py-1 text-base leading-6 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
               list.map((item: { id: string; name: string; value: string }, key: number) => (
                 <li
@@ -93,7 +99,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
                   </span>
                   <span
                     className={`${
-                      selectedItems.find((i) => i.id === item.id) ? 'font-semibold' : 'font-normal pl-8'
+                      selectedItems.find((i) => i.id === item.id) ? 'font-semibold' : 'font-normal pl-9'
                     } pl-4 block truncate`}>
                     {item.name}
                   </span>
