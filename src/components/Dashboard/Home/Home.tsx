@@ -111,15 +111,15 @@ const Home = (props: ClassroomControlProps) => {
           )}
 
           {/* Classroom Section */}
-          <SectionTitleV3 title={'Your Classrooms'} />
+          <SectionTitleV3 extraContainerClass={`${theme.section}`} title={'Your Classrooms'} />
           <RoomTiles classList={classList} />
 
           {/* Teachers Section */}
-          <SectionTitleV3 title={'Your Teachers'} />
+          <SectionTitleV3 extraContainerClass={`${theme.section}`} title={'Your Teachers'} />
           <TeacherRows teacherList={teacherList} />
 
           {/* Classmates Section */}
-          <SectionTitleV3 spacing="pt-6 pb-4" title={'Your Classmates'} />
+          <SectionTitleV3 extraContainerClass={`${theme.section}`} spacing="pt-6 pb-4" title={'Your Classmates'} />
           <StudentsTiles state={state} studentsList={studentsList} />
         </>
       ) : (
