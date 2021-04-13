@@ -7,7 +7,7 @@ const TeacherRows = (props: { teacherList: any }) => {
 
   return (
     <ContentCard hasBackground={false}>
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+      <div className="bg-white shadow overflow-hidden ">
         <ul className="">
           {teacherList &&
             teacherList.length > 0 &&
@@ -36,7 +36,7 @@ const TeacherRows = (props: { teacherList: any }) => {
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                             <div>
                               <p className="text-sm font-medium text-indigo-600 truncate">
-                                {teacher.firstName + teacher.lastName}
+                                {teacher.firstName + ' ' + teacher.lastName}
                               </p>
                               <p className="mt-2 flex items-center text-sm text-gray-500">
                                 <svg
@@ -53,7 +53,7 @@ const TeacherRows = (props: { teacherList: any }) => {
                             </div>
                           </div>
                         </div>
-                        <svg
+                        {/* <svg
                           className="h-5 w-5 text-gray-400"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
@@ -64,7 +64,7 @@ const TeacherRows = (props: { teacherList: any }) => {
                             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                             clipRule="evenodd"
                           />
-                        </svg>
+                        </svg> */}
                       </div>
                     </a>
                   </li>

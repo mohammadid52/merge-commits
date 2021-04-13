@@ -318,7 +318,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
         {isTeacher && state.activeRoom === 'lesson-planner' && (
           <>
-            <SectionTitleV3 title={classRoomDict[userLanguage]['UNIT_TITLE']} />
+            <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
             <div className={`bg-opacity-10`}>
               <div className={`pb-4 m-auto`}>
                 <SyllabusSwitch
@@ -338,7 +338,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
         {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
           <>
-            <SectionTitleV3 title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
+            <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
             <div className={`bg-opacity-10`}>
               <div className={`text-xl m-auto`}>
                 <SurveyCard
@@ -354,7 +354,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         ) : null}
 
         {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-          <SectionTitleV3 title={classRoomDict[userLanguage]['LIST_LESSON']} />
+          <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['LIST_LESSON']} />
         ) : null}
 
         {showClassDetails && (

@@ -9,10 +9,13 @@ import { ClassroomControlProps } from '../Dashboard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
+import { getAsset } from '../../../assets';
 
 const Home = (props: ClassroomControlProps) => {
   const { homeData, classList } = props;
-  const { state, dispatch, theme } = useContext(GlobalContext);
+  const { state, dispatch, theme, clientKey } = useContext(GlobalContext);
+  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
+  const [loading, setLoading] = useState(false);
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
 
@@ -101,26 +104,56 @@ const Home = (props: ClassroomControlProps) => {
     <>
       {homeData ? (
         <>
+          {/* Hero Section */}
+          <div className="relative">
+            <div className="absolute inset-0 w-full h-80">
+              <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
+              <img
+                className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"
+                src={dashboardBanner1}
+                alt=""
+              />
+            </div>
+            <div className="relative h-full flex flex-col max-w-7xl mx-auto pt-24 px-4 sm:px-6 lg:px-8">
+              <div className="mt-20" />
+              <h1 className="z-100 text-4xl font-extrabold tracking-tight text-center text-white sm:text-5xl lg:text-6xl">
+                Dashboard
+              </h1>
+            </div>
+          </div>
           {/* Header */}
           {user && (
             <div className={`${theme.section} mt-6 mb-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
-              <h2 className={`text-base font-normal`}>
-                Welcome, What do you want to learn today, {user.preferredName || ''} {user.firstName} ?
+              <h2 className={`text-base text-center font-normal`}>
+                Welcome, What do you want to learn today,{' '}
+                <span className="font-semibold">
+                  {user.preferredName || ''} {user.firstName}
+                </span>{' '}
+                ?
               </h2>
             </div>
           )}
 
           {/* Classroom Section */}
-          <SectionTitleV3 extraContainerClass={`${theme.section}`} title={'Your Classrooms'} />
+
           <RoomTiles classList={classList} />
 
           {/* Teachers Section */}
-          <SectionTitleV3 extraContainerClass={`${theme.section}`} title={'Your Teachers'} />
-          <TeacherRows teacherList={teacherList} />
-
+          <div className="my-6">
+            <SectionTitleV3
+              title={'Your Teachers'}
+              fontSize="lg"
+              fontStyle="semibold"
+              extraContainerClass="max-w-256"
+              borderBottom
+              extraClass="leading-6 text-gray-900"
+            />
+            <TeacherRows teacherList={teacherList} />
+          </div>
           {/* Classmates Section */}
-          <SectionTitleV3 extraContainerClass={`${theme.section}`} spacing="pt-6 pb-4" title={'Your Classmates'} />
-          <StudentsTiles state={state} studentsList={studentsList} />
+          <div className="my-6">
+            <StudentsTiles state={state} studentsList={studentsList} />
+          </div>
         </>
       ) : (
         <ComponentLoading />

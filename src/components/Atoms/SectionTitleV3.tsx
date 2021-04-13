@@ -9,26 +9,33 @@ interface SectionTitleProps {
   extraClass?: string;
   spacing?: string;
   extraContainerClass?: string;
+  withButton?: React.ReactElement;
+  borderBottom?: boolean;
 }
 
 const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps) => {
   const {
     title,
     subtitle,
-    fontSize = '2xl',
-    fontStyle = 'bold',
     extraClass,
     extraContainerClass,
-    spacing = 'py-4',
+    withButton,
+    borderBottom = false,
+    fontSize = 'lg',
+    fontStyle = 'semibold',
   } = sectProps;
   const { theme } = useContext(GlobalContext);
 
   return (
-    <div className={`bg-opacity-10`}>
-      <div className={`m-auto ${spacing} ${extraContainerClass}`}>
+    <div
+      className={`${extraContainerClass} ${withButton ? 'flex items-center justify-center' : ''} mx-auto m-auto py-5 ${
+        borderBottom ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white' : ''
+      }`}>
+      <div className={``}>
         <h2 className={`text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
         <p className="text-md text-gray-500">{subtitle}</p>
       </div>
+      {withButton}
     </div>
   );
 };
