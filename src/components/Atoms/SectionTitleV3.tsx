@@ -16,17 +16,17 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
     title,
     subtitle,
     withButton,
-    borderBottom = true,
-    fontSize = '2xl',
-    fontStyle = 'bold',
+    borderBottom = false,
+    fontSize = 'lg',
+    fontStyle = 'semibold',
     extraClass,
   } = sectProps;
   const { theme } = useContext(GlobalContext);
 
   return (
     <div
-      className={`${withButton ? 'flex items-center justify-center' : ''} max-w-256 mx-auto m-auto px-4 py-5 ${
-        borderBottom ? 'border-b-0 border-gray-200 shadow rounded-t-lg bg-white' : ''
+      className={`${withButton ? 'flex items-center justify-center' : ''} max-w-256 mx-auto m-auto py-5 ${
+        borderBottom ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white' : ''
       }`}>
       <div className={``}>
         <h2 className={`text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
