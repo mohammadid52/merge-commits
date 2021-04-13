@@ -114,6 +114,9 @@ const RoomTiles = (props: { classList: []; handleRoomSelection: any }) => {
             />
           </div>
         }
+        fontSize="lg"
+        fontStyle="semibold"
+        extraClass="leading-6 text-gray-900"
         borderBottom={false}
       />
       <ContentCard hasBackground={false}>

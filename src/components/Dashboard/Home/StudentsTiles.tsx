@@ -35,6 +35,9 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
     <>
       <SectionTitleV3
         title={'Your Classrooms'}
+        fontSize="lg"
+        fontStyle="semibold"
+        extraClass="leading-6 text-gray-900"
         withButton={
           <div className="flex justify-end">
             <Buttons label={slicedList.length <= 12 ? 'View All' : 'Hide All'} onClick={onViewMore} type="button" />
