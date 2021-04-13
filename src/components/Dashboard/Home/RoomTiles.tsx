@@ -95,7 +95,7 @@ const RoomTiles = (props: { classList: [] }) => {
   };
 
   const [showMore, setShowMore] = useState(false);
-  const debouncedViewMore2: any = React.useCallback(
+  const debouncedViewMore: any = React.useCallback(
     debounce(() => setRestRow([]), 200),
     [modifiedList, showMore]
   );
@@ -105,7 +105,7 @@ const RoomTiles = (props: { classList: [] }) => {
       if (showMore) {
         setRestRow(slice(modifiedList, 3));
       } else {
-        debouncedViewMore2();
+        debouncedViewMore();
       }
     }
   }, [modifiedList, showMore]);
