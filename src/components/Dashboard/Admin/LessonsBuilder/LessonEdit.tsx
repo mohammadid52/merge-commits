@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle, FaUnity } from 'react-icons/fa';
+import findIndex from 'lodash/findIndex';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 
@@ -125,12 +126,28 @@ const LessonEdit = (props: LessonEditProps) => {
     history.push('/dashboard/lesson-builder');
   };
 
+  const currentStepIdx = findIndex(assessmentScrollerStep, { name: activeStep });
   const gobackToLessonsList = () => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      history.push('/dashboard/lesson-builder');
+      if (currentStepIdx === 0) {
+        history.push('/dashboard/lesson-builder');
+      } else {
+        const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
+        setActiveStep(prevStep);
+      }
     }
+  };
+
+  const onModalSave = () => {
+    if (currentStepIdx === 0) {
+      return history.goBack();
+    } else {
+      const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
+      setActiveStep(prevStep);
+    }
+    toggleModal();
   };
 
   const toggleModal = () => {
@@ -313,7 +330,7 @@ const LessonEdit = (props: LessonEditProps) => {
           subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Exit" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go back" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -341,12 +358,7 @@ const LessonEdit = (props: LessonEditProps) => {
           </div>
         </div>
         {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={history.goBack}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
+          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
         )}
       </PageWrapper>
     </div>
