@@ -121,6 +121,7 @@ const LessonEdit = (props: LessonEditProps) => {
     { name: 'Overview', icon: <IoCardSharp /> },
     // { name: "Assign Unit", icon: <FaUnity /> },
     { name: 'Preview Details', icon: <FaRegEye /> },
+    { name: 'Universal Builder', icon: <FaQuestionCircle /> },
   ];
 
   const typeList: any = [
@@ -294,6 +295,18 @@ const LessonEdit = (props: LessonEditProps) => {
             lessonType={formData.type?.value}
           />
         );
+      case 'Universal Builder':
+        return (
+          <UniversalLessonBuilder
+            lessonPlans={savedLessonDetails.lessonPlans}
+            updateLessonPlan={updateLessonPlan}
+            designersList={designersList}
+            lessonID={lessonId || assessmentId}
+            setUnsavedChanges={setUnsavedChanges}
+            activeStep={activeStep}
+            lessonName={formData.name}
+            lessonType={formData.type?.value}/>
+        )
       case 'Preview Details':
         return (
           <PreviewForm
