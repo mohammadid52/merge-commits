@@ -293,6 +293,8 @@ const EditCurricular = (props: EditCurricularProps) => {
           ...curricularData,
           id: savedData.id,
           name: savedData.name,
+          type: savedData.type,
+          summary: savedData.summary,
           institute: {
             id: savedData.institution.id,
             name: savedData.institution.name,
