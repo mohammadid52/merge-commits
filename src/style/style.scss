@@ -1,8 +1,8 @@
 /* OTHER / GENERAL */
-@import "general/scrollbars";
+@import 'general/scrollbars';
 
 /* MAIN PARTS */
-@import "lessons";
+@import 'lessons';
 
 /*
   NOTE: This file should be converted into simple css file and
@@ -120,6 +120,48 @@
   padding: 0;
 }
 
+.roomTiles {
+  &.is-open {
+    transition: transform ease-out 0.3s;
+    transition-delay: 0ms;
+    transform-origin: top;
+    animation: showCards 0.3s linear;
+  }
+  &.hide {
+    transform-origin: top;
+    animation: hideCards 0.2s linear;
+    transition: transform ease-in 0.2s;
+  }
+}
+@keyframes showCards {
+  0% {
+    opacity: 0;
+    transform: scaleY(50%);
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleY(100%);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hideCards {
+  0% {
+    opacity: 0.1;
+    transform: scaleY(100%);
+  }
+
+  100% {
+    transform: scaleY(0%);
+
+    opacity: 0;
+  }
+}
+
 @media screen and (max-width: 767px) {
   .test {
     max-height: 80vh;
@@ -137,8 +179,7 @@
       font-size: 1.5rem;
     }
   }
-W
-  .reg {
+  W .reg {
     padding: 1rem;
 
     h1 {

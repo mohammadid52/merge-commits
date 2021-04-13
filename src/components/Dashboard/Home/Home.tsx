@@ -131,7 +131,7 @@ const Home = (props: ClassroomControlProps) => {
           )}
 
           {/* Classroom Section */}
-          <SectionTitleV3 title={'Your Classrooms'} />
+
           <RoomTiles classList={classList} />
 
           {/* Teachers Section */}
