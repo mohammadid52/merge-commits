@@ -230,7 +230,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       active: true,
       content: (
         <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
+          <div className={`p-4 text-xl m-auto`}>
             <Today
               activeRoom={state.activeRoom}
               activeRoomInfo={activeRoomInfo}
@@ -301,7 +301,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </span>
         </div>
         <div>
-          <span className={`mr-0 float-right text-gray-500 text-right`}>
+          <span className={`mr-0 float-right text-gray-600 text-right`}>
             <DateAndTime />
           </span>
         </div>
@@ -310,7 +310,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       <div>
         {thereAreTopWidgets && (
           <div className={`bg-opacity-10`}>
-            <div className={`${theme.section} pb-4 m-auto`}>
+            <div className={`pb-4 m-auto`}>
               <TopWidgetBar />
             </div>
           </div>
@@ -318,9 +318,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
         {isTeacher && state.activeRoom === 'lesson-planner' && (
           <>
-            <SectionTitleV3 title={classRoomDict[userLanguage]['UNIT_TITLE']} />
+            <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
             <div className={`bg-opacity-10`}>
-              <div className={`${theme.section} pb-4 m-auto`}>
+              <div className={`pb-4 m-auto`}>
                 <SyllabusSwitch
                   activeRoom={state.activeRoom}
                   currentPage={currentPage}
@@ -338,9 +338,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
         {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
           <>
-            <SectionTitleV3 title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
+            <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
             <div className={`bg-opacity-10`}>
-              <div className={`${theme.section} text-xl m-auto`}>
+              <div className={`text-xl m-auto`}>
                 <SurveyCard
                   isTeacher={isTeacher}
                   link={'/lesson/on-boarding-survey-1'}
@@ -354,7 +354,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         ) : null}
 
         {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-          <SectionTitleV3 title={classRoomDict[userLanguage]['LIST_LESSON']} />
+          <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['LIST_LESSON']} />
         ) : null}
 
         {showClassDetails && (
