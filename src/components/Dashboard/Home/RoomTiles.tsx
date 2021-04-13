@@ -113,6 +113,7 @@ const RoomTiles = (props: { classList: [] }) => {
   return (
     <>
       <SectionTitleV3
+        extraContainerClass="max-w-256"
         title={'Your Classrooms'}
         withButton={
           <div className="flex justify-end">
