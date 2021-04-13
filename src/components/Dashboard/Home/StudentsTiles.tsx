@@ -25,9 +25,9 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
 
   const onViewMore = () => {
     if (slicedList.length <= 6) {
-      setSlicedList(studentsList);
+      setSlicedList(filteredList);
     } else {
-      setSlicedList(slice(studentsList, 0, 12));
+      setSlicedList(slice(filteredList, 0, 12));
     }
   };
 
@@ -37,13 +37,15 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
         title={'Your Classrooms'}
         fontSize="lg"
         fontStyle="semibold"
+        borderBottom
         extraClass="leading-6 text-gray-900"
         withButton={
-          <div className="flex justify-end">
-            <Buttons label={slicedList.length <= 12 ? 'View All' : 'Hide All'} onClick={onViewMore} type="button" />
-          </div>
+          filteredList.length > 12 && (
+            <div className="flex justify-end">
+              <Buttons label={slicedList.length <= 12 ? 'View All' : 'Hide All'} onClick={onViewMore} type="button" />
+            </div>
+          )
         }
-        borderBottom={false}
       />
       <ContentCard hasBackground={false} additionalClass="shadow bg-white mb-20 rounded-b-lg">
         <div className="max-w-7xl mx-auto py-12 px-4 text-center sm:px-6 lg:px-8">

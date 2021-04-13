@@ -140,6 +140,7 @@ const Home = (props: ClassroomControlProps) => {
               title={'Your Teachers'}
               fontSize="lg"
               fontStyle="semibold"
+              borderBottom
               extraClass="leading-6 text-gray-900"
             />
             <TeacherRows teacherList={teacherList} />
