@@ -3,6 +3,7 @@ import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaEdit } from 'react-icons/fa';
 import { NavLink, useRouteMatch } from 'react-router-dom';
 import { RiLock2Fill } from 'react-icons/ri';
+import { BsLockFill } from 'react-icons/bs';
 
 import Dropdown from './Dropdown';
 import { GlobalContext } from '../../../contexts/GlobalContext';
@@ -50,28 +51,33 @@ const ProfileInfo = (props: UserInfoProps) => {
   if (status !== 'done') {
     return <LessonLoading />;
   }
-
+  const Tooltip = ({
+    content,
+    text,
+    extraClass,
+  }: {
+    content?: React.ReactElement;
+    text?: string;
+    extraClass?: string;
+  }) => {
+    return (
+      <div className={`tooltip ${extraClass}`}>
+        {content}
+        <span className="tooltiptext">{text}</span>
+      </div>
+    );
+  };
   {
     return (
       <div className="w-full md:px-4 pt-4">
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-          <div className="flex border-b-0 border-gray-200 sm:px-6">
-            <div className="flex justify-start w-6/10 items-center ">
-              <h3 className="px-4 pr-0 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
-                {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}{' '}
-              </h3>
-              <span className="w-8 h-8">
-                <NavLink to={`${match.url}/password`}>
-                  <IconContext.Provider value={{ size: '2rem', color: '#B22222' }}>
-                    <RiLock2Fill />
-                  </IconContext.Provider>
-                </NavLink>
-              </span>
-            </div>
-            <div></div>
+          <div className="border-b-0 border-gray-200 sm:px-6">
+            <h3 className="px-0 pr-0 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
+              {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}{' '}
+            </h3>
           </div>
           <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 grid-rows-2 gap-x-2 gap-y-4 sm:grid-cols-3">
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['FIRST_NAME']}
@@ -127,6 +133,23 @@ const ProfileInfo = (props: UserInfoProps) => {
                 <dd className="mt-1 text-sm leading-5 text-gray-900">
                   {`${user.role ? getUserRoleString(user.role) : '--'}`}
                 </dd>
+              </div>
+              <div className="sm:col-span-1 p-2">
+                <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
+                  {/* {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['ROLE']} */}
+
+                  <Tooltip
+                    content={
+                      <NavLink className="flex items-center justify-center w-auto" to={`${match.url}/password`}>
+                        <p className="mr-2">Password</p>
+                        <IconContext.Provider value={{ size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
+                          <RiLock2Fill />
+                        </IconContext.Provider>
+                      </NavLink>
+                    }
+                    text="click here to edit password"></Tooltip>
+                </dt>
+                <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
               </div>
             </dl>
           </div>
