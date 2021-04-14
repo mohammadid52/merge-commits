@@ -308,7 +308,7 @@ const PreviewForm = (props: PreviewFormProps) => {
                 <p className="w-3/4">{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>
               )}
             </div>
-            <div className="py-2">
+            <div className="py-2 italic px-4">
               <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
               <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
             </div>
