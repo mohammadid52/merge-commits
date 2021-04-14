@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
+import { BiChevronDown } from 'react-icons/bi';
 
 import Buttons from '../../../../Atoms/Buttons';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
@@ -142,7 +143,7 @@ const PreviewForm = (props: PreviewFormProps) => {
           questionSequence = questionSequence?.data.getCSequences?.sequence || [];
           checkpoint?.checkpoint?.questions?.items.forEach((t: any) => {
             let index = questionSequence.indexOf(t.questionID);
-            console.log(index);
+            // console.log(index);
             t.index = index;
           });
 
@@ -191,11 +192,53 @@ const PreviewForm = (props: PreviewFormProps) => {
     }
   }, [message.msg]);
 
+  const fieldClass = 'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
+  const QuestionList = ({ checkpItem, index }: any) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const showListAndDropDown =
+      checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne';
+    return (
+      <div className="my-4 w-9/10 question__container">
+        <div
+          onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
+          role="button"
+          className={`${
+            isOpen ? 'border-indigo-300' : 'border-gray-200'
+          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-center w-full`}>
+          <p className="w-9.3/10" key={checkpItem.id}>
+            <span>
+              {index + 1}.{checkpItem?.question?.question}{' '}
+            </span>
+            <span
+              className={`py-0.5 px-1 ml-2 text-xs  rounded ${
+                showListAndDropDown ? 'bg-indigo-200  text-indigo-700' : 'bg-red-200 text-red-700'
+              }`}>
+              {getTypeString(checkpItem?.question?.type)}
+            </span>
+          </p>
+          {showListAndDropDown ? (
+            <BiChevronDown className="text-gray-900 w-.7/10 text-lg" />
+          ) : (
+            <div className="w-.7/10" />
+          )}
+        </div>
+        <div id="option__list" className={`px-12 py-2 option__list ${isOpen ? 'show' : 'hide'}`}>
+          {showListAndDropDown && (
+            <ul className="list-disc">
+              {checkpItem?.question?.options?.map((opt: any) => (
+                <li key={opt?.text}>{opt?.text}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {' '}
+        <h3 style={{ color: '#374151' }} className="text-lg leading-6 font-semibold">
           {PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}
         </h3>
       </div>
@@ -205,36 +248,42 @@ const PreviewForm = (props: PreviewFormProps) => {
         </div>
       ) : (
         <Fragment>
-          <div className="p-4 max-h-screen overflow-y-auto">
-            <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base"> {PreviewFormDict[userLanguage]['PURPOSE']}: </h3>
-              {lessonDetails?.purpose ? ReactHtmlParser(lessonDetails?.purpose) : ''}
-            </div>
-            <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base"> {PreviewFormDict[userLanguage]['OBJECTIVE']}: </h3>
-              {lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}
-            </div>
-            <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base">Welcome Message:</h3>
-              <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.introductionTitle || ''}</h3>
-              <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}</Fragment>
-            </div>
-            <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base">
-                {lessonType === 'survey' ? 'Survey' : 'Assessment'}Instructions:
+          <div className="p-4 max-h-screen overflow-y-auto hide__scrollbar overflow-x-hidden w-full">
+            <div className={fieldClass}>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+                {PreviewFormDict[userLanguage]['PURPOSE']}
               </h3>
-              <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.instructionsTitle || ''}</h3>
-              <Fragment>{lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}</Fragment>
+              <p className="w-3/4">{lessonDetails?.purpose ? ReactHtmlParser(lessonDetails?.purpose) : ''}</p>
             </div>
-            <div className="py-2">
-              <h3 className="font-bold text-gray-900 text-base">
+            <div className={fieldClass}>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+                {PreviewFormDict[userLanguage]['OBJECTIVE']}:{' '}
+              </h3>
+              <p className="w-3/4">{lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}</p>
+            </div>
+            <div className={fieldClass}>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">Welcome Message:</h3>
+              {/* <h3 className="font-medium text-gray-500 text-base">{lessonDetails?.introductionTitle || ''}</h3> */}
+              <p className="w-3/4">{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}</p>
+            </div>
+            <div className={fieldClass}>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+                {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions:
+              </h3>
+              {/* <h3 className="font-medium text-gray-500 text-base">{lessonDetails?.instructionsTitle || ''}</h3> */}
+              <p className="w-3/4">
+                {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
+              </p>
+            </div>
+            <div className={'py-2 px-4 w-full'}>
+              <h3 className="font-semibold text-gray-700 text-xl mb-2">
                 {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
               </h3>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
-                <Fragment>
+                <div className="ml-8 mt-4">
                   {lessonDetails?.checkpoints?.items?.map((item: any) => (
                     <Fragment key={item.id}>
-                      <h4 className="font-bold text-gray-900 text-base py-2">
+                      <h4 className="font-bold text-gray-900 text-base">
                         {item.checkpoint?.title || ''}
                         <br />
                         <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
@@ -245,35 +294,18 @@ const PreviewForm = (props: PreviewFormProps) => {
                       </div>
                       <div>
                         {item.checkpoint?.questions?.items?.length > 0 ? (
-                          <div className="py-2 px-4">
+                          <div className="py-2">
                             {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                              <Fragment key={index}>
-                                <p key={checkpItem.id}>
-                                  <span>
-                                    {index + 1}.{checkpItem?.question?.question}{' '}
-                                  </span>
-                                  ({getTypeString(checkpItem?.question?.type)})
-                                </p>
-                                <div className="px-12">
-                                  {(checkpItem?.question?.type === 'selectMany' ||
-                                    checkpItem?.question?.type === 'selectOne') && (
-                                    <ul className="list-disc">
-                                      {checkpItem?.question?.options?.map((opt: any) => (
-                                        <li key={opt?.text}>{opt?.text}</li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </div>
-                              </Fragment>
+                              <QuestionList index={index} key={index} checkpItem={checkpItem} />
                             ))}
                           </div>
                         ) : null}
                       </div>
                     </Fragment>
                   ))}
-                </Fragment>
+                </div>
               ) : (
-                <p>{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>
+                <p className="w-3/4">{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>
               )}
             </div>
             <div className="py-2">
