@@ -12,7 +12,7 @@ const DummyBlock = (props: { selectedPageDetails: UniversalLessonPage }) => {
           <p className={`text-white`}>DESC: {selectedPageDetails?.description}</p>
           <p className={`text-white`}>CLASS: {selectedPageDetails?.class}</p>
           {selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number) => (
-            <>
+            <div className={`m-4`}>
               <div className="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                 <div className="px-4 py-5 sm:px-6">
                   <p className={`text-white`}>ID: {pagePart.id}</p>
@@ -24,7 +24,7 @@ const DummyBlock = (props: { selectedPageDetails: UniversalLessonPage }) => {
                   <p>{JSON.stringify(pagePart.partContent)}</p>
                 </div>
               </div>
-            </>
+            </div>
           ))}
         </>
       ) : (
