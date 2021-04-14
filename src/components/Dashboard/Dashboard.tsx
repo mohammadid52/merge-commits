@@ -134,43 +134,37 @@ const Dashboard = (props: DashboardProps) => {
   }, [state.user.role]);
 
   return (
-    <>
-      <Noticebar inputContext={'global'} />
-      <div className={`w-screen md:w-full h-screen md:h-full flex overflow-hidden`}>
-        {/**
-         *  SIDEMENU
-         */}
-        <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}>
-          <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
-          <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
-        </SideMenu>
-
-        {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
-        (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-        (state.currentPage === 'classroom' && userData.role === 'ST') ? (
-          <ClassroomControl
-            isHomescreen={false}
-            currentPage={currentPage}
-            activeRoom={activeRoom}
-            setActiveRoom={setActiveRoom}
-            setActiveRoomInfo={setActiveRoomInfo}
-            setActiveRoomName={setActiveRoomName}
-            activeRoomName={activeRoomName}
-            activeRoomInfo={activeRoomInfo}
-            lessonLoading={lessonLoading}
-            setLessonLoading={setLessonLoading}
-            syllabusLoading={syllabusLoading}
-            setSyllabusLoading={setSyllabusLoading}
-            activeRoomSyllabus={activeRoomSyllabus}
-            setActiveRoomSyllabus={setActiveRoomSyllabus}
-          />
-        ) : null}
-
-        {/**
-         *  MAIN CONTENT
-         */}
-        <div className={`flex flex-row overflow-x-hidden overflow-y-scroll`}>
-          <div className={`height h-full flex flex-col`}>
+    <div className="h-screen flex overflow-hidden bg-gray-100">
+      {/* <Noticebar inputContext={'global'} /> */}
+      <SideMenu
+        updateAuthState={updateAuthState}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        role={userData.role}
+      />
+      <div className="flex flex-col w-0 flex-1 overflow-hidden">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none">
+          {/* {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
+          (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
+          (state.currentPage === 'classroom' && userData.role === 'ST') ? (
+            <ClassroomControl
+              isHomescreen={false}
+              currentPage={currentPage}
+              activeRoom={activeRoom}
+              setActiveRoom={setActiveRoom}
+              setActiveRoomInfo={setActiveRoomInfo}
+              setActiveRoomName={setActiveRoomName}
+              activeRoomName={activeRoomName}
+              activeRoomInfo={activeRoomInfo}
+              lessonLoading={lessonLoading}
+              setLessonLoading={setLessonLoading}
+              syllabusLoading={syllabusLoading}
+              setSyllabusLoading={setSyllabusLoading}
+              activeRoomSyllabus={activeRoomSyllabus}
+              setActiveRoomSyllabus={setActiveRoomSyllabus}
+            />
+          ) : null} */}
+          <div className="max-w-7xl mx-auto">
             <Suspense
               fallback={
                 <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -271,30 +265,18 @@ const Dashboard = (props: DashboardProps) => {
                     />
                   )}
                 />
-
                 <Route
                   path={`${match.url}/manage-institutions`}
                   render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
                 />
-
                 <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
-
                 <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
               </Switch>
             </Suspense>
           </div>
-
-          {/**
-           *  SIDEWIDGETSBAR
-           */}
-          {state.currentPage === 'classroom' ||
-          state.currentPage === 'lesson-planner' ||
-          state.currentPage === 'noticeboard' ? (
-            <SideWidgetBar currentPage={state.currentPage} />
-          ) : null}
-        </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 };
 

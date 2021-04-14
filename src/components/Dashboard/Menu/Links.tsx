@@ -13,6 +13,7 @@ import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
 import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
 
 import useDictionary from '../../../customHooks/dictionary';
+import { getAsset } from '../../../assets';
 
 type LinkObject = {
   name: string;
@@ -31,8 +32,9 @@ export interface LinkProps {
 }
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { state, userLanguage, clientKey } = useContext(GlobalContext);
+  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
   const { currentPage, setCurrentPage } = linkProps;
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const { sideBarLinksDict } = useDictionary(clientKey);
   const history = useHistory();
   const match = useRouteMatch();
@@ -170,16 +172,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
-              title: sideBarLinksDict[userLanguage].CLASSROOM,
-              name: sideBarLinksDict[userLanguage].CLASSROOM,
-              label: 'Classroom',
+              title: sideBarLinksDict[userLanguage].DASHBOARD,
+              name: sideBarLinksDict[userLanguage].DASHBOARD,
+              label: 'Dashboard',
               path: 'home',
+              subMenuItems: [],
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
               name: sideBarLinksDict[userLanguage].ANTHOLOGY,
               label: 'Anthology',
               path: 'anthology',
+              subMenuItems: [],
             },
           ];
         });
@@ -216,21 +220,23 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
       case 'People':
-        return <IoIosPeople id={url} />;
+        return <IoIosPeople className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Registration':
-        return <AiOutlineUsergroupAdd id={url} />;
+        return <AiOutlineUsergroupAdd className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Classroom':
-        return <IoBookOutline id={url} />;
+        return <IoBookOutline className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+      case 'Dashboard':
+        return <IoBookOutline className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Lesson Planner':
-        return <FaAppleAlt id={url} />;
+        return <FaAppleAlt className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Lesson Builder':
-        return <IoMdBuild id={url} />;
+        return <IoMdBuild className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Institutions':
-        return <HiOutlineOfficeBuilding id={url} />;
+        return <HiOutlineOfficeBuilding className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Anthology':
-        return <AiOutlineBook id={url} />;
+        return <AiOutlineBook className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       case 'Noticeboard':
-        return <BsReverseLayoutSidebarReverse id={url} />;
+        return <BsReverseLayoutSidebarReverse className="text-gray-500 mr-3 h-6 w-6" id={url} />;
       default:
         return '';
     }
@@ -246,16 +252,70 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   return (
     <div className={`link w-full h-12 z-40`}>
       {state.user.role && links.length > 0
-        ? links.map((link: { name: string; path: string; label: string }, key: number) => (
-            <div key={`link_${key}`} id={link.path} onClick={handleLink}>
-              <div id={link.path} className={`${linkClass} ${path === `/dashboard/${link.path}` && activeClass}`}>
-                <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
-                  {getMenuIcon(link.label, link.path)}
-                </IconContext.Provider>
+        ? links.map((link: { subMenuItems: any; name: string; path: string; label: string }, key: number) => {
+            return link.subMenuItems.length === 0 ? (
+              <a
+                key={`link_${key}`}
+                id={link.path}
+                onClick={handleLink}
+                className={`${
+                  path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
+                } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md`}>
+                <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
                 {link.name}
+              </a>
+            ) : (
+              <div className="space-y-1">
+                <button
+                  type="button"
+                  className="text-gray-300 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center pl-2 pr-1 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  aria-controls="sub-menu-1"
+                  aria-expanded="false">
+                  {getMenuIcon(link.label, link.path)}
+                  Team
+                  <svg
+                    className="text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true">
+                    <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
+                  </svg>
+                </button>
+                <div className="space-y-1" id="sub-menu-1">
+                  <a
+                    href="#"
+                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                    Overview
+                  </a>
+
+                  <a
+                    href="#"
+                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                    Members
+                  </a>
+
+                  <a
+                    href="#"
+                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                    Calendar
+                  </a>
+
+                  <a
+                    href="#"
+                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
+                    Settings
+                  </a>
+                </div>
               </div>
-            </div>
-          ))
+            );
+            // <div onClick={handleLink}>
+            //   <div id={link.path} className={`${linkClass} ${path === `/dashboard/${link.path}` && activeClass}`}>
+            //     <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
+            //       {getMenuIcon(link.label, link.path)}
+            //     </IconContext.Provider>
+            //     {link.name}
+            //   </div>
+            // </div>
+          })
         : null}
     </div>
   );

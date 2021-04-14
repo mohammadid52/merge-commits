@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../utilities/services';
+import { getUserRoleString } from '../../../utilities/strings';
 
 import { firstInitialFunc, stringToHslColor } from '../../../utilities/strings';
 
@@ -19,11 +20,11 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     return firstInitial + lastInitial;
   };
 
-
-
   const handleLink = (e: any) => {
     const id = e.target.id.toLowerCase();
     linkProps.setCurrentPage(id);
+    history.push(`${match.url}/profile`);
+    console.log(history.push);
   };
 
   useEffect(() => {
@@ -35,34 +36,51 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   }, [state.user]);
 
   return (
-    <NavLink id="profile" to={`${match.url}/profile`} onClick={handleLink}>
-      <div className={`size flex flex-col text-center justify-center items-center py-4 ${theme.sidemenu.darktone}`}>
-        <div className="w-8 h-8">
-          {
-            // state.user.image ?
-            linkProps.image ? (
-              <img className="w-8 h-8 rounded-full" src={imageUrl} />
-            ) : (
-              <div
-                className="w-8 h-8 rounded-full flex justify-center items-center text-xs text-white font-sans"
-                style={{
-                  background: `${
-                    state.user.firstName
-                      ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
-                      : '#272730'
-                  }`,
-                  textShadow: '0.1rem 0.1rem 2px #423939b3',
-                }}>
-                {`${initials(state.user.firstName, state.user.lastName)}`}
-              </div>
-            )
-          }
+    <div onClick={handleLink} className="flex-shrink-0 bg-gray-700 flex border-t cursor-pointer border-gray-200 p-4">
+      <a className="flex-shrink-0 w-full group block">
+        <div className="flex items-center">
+          <div className="h-10 w-10">
+            <img className="inline-block min-w-9 min-h-9 h-9 w-9 rounded-full" src={imageUrl} alt="" />
+          </div>
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">{`${
+              state.user.firstName
+            } ${firstInitialFunc(state.user.lastName)}`}</p>
+            <p className="text-xs font-medium text-gray-400 group-hover:text-gray-300">
+              {getUserRoleString(state.user.role)}
+            </p>
+          </div>
         </div>
-        <div className="flex-grow w-auto flex justify-start overflow-hidden text-xs text-white font-sans tracking-wider">
-          {`${state.user.firstName} ${firstInitialFunc(state.user.lastName)}`}
-        </div>
-      </div>
-    </NavLink>
+      </a>
+    </div>
+    // <NavLink id="profile" to={} onClick={handleLink}>
+    //   <div className={`size flex flex-col text-center justify-center items-center py-4 ${theme.sidemenu.darktone}`}>
+    //     <div className="w-8 h-8">
+    //       {
+    //         // state.user.image ?
+    //         linkProps.image ? (
+    //           <img className="w-8 h-8 rounded-full" src={imageUrl} />
+    //         ) : (
+    //           <div
+    //             className="w-8 h-8 rounded-full flex justify-center items-center text-xs text-white font-sans"
+    //             style={{
+    //               background: `${
+    //                 state.user.firstName
+    //                   ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
+    //                   : '#272730'
+    //               }`,
+    //               textShadow: '0.1rem 0.1rem 2px #423939b3',
+    //             }}>
+    //             {`${initials(state.user.firstName, state.user.lastName)}`}
+    //           </div>
+    //         )
+    //       }
+    //     </div>
+    //     <div className="flex-grow w-auto flex justify-start overflow-hidden text-xs text-white font-sans tracking-wider">
+    //       {`${state.user.firstName} ${firstInitialFunc(state.user.lastName)}`}
+    //     </div>
+    //   </div>
+    // </NavLink>
   );
 };
 

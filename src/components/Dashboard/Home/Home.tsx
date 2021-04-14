@@ -123,7 +123,7 @@ const Home = (props: ClassroomControlProps) => {
           </div>
           {/* Header */}
           {user && (
-            <div className={`${theme.section} mt-6 mb-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
+            <div className={`${theme.section} relative mt-6 mb-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome, What do you want to learn today,{' '}
                 <span className="font-semibold">
@@ -139,7 +139,7 @@ const Home = (props: ClassroomControlProps) => {
           <RoomTiles classList={classList} />
 
           {/* Teachers Section */}
-          <div className="my-6">
+          <div className="my-8">
             <SectionTitleV3
               title={'Your Teachers'}
               fontSize="lg"
@@ -151,7 +151,7 @@ const Home = (props: ClassroomControlProps) => {
             <TeacherRows teacherList={teacherList} />
           </div>
           {/* Classmates Section */}
-          <div className="my-6">
+          <div className="my-8">
             <StudentsTiles state={state} studentsList={studentsList} />
           </div>
         </>
