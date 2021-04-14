@@ -262,6 +262,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             );
             setLoading(false);
             postLessonCreation(lessonsData?.id);
+            setUnsavedChanges(false);
+
             setValidation({
               name: '',
               type: '',
@@ -300,6 +302,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           const lessonsData = results?.data?.updateLesson;
 
           setLoading(false);
+          setUnsavedChanges(false);
 
           if (lessonsData) {
             postLessonCreation(lessonsData?.id);

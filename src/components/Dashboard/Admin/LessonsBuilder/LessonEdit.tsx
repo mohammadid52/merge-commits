@@ -146,6 +146,7 @@ const LessonEdit = (props: LessonEditProps) => {
     if (currentStepIdx === 0) {
       return history.goBack();
     } else {
+      setUnsavedChanges(false);
       const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
       setActiveStep(prevStep);
     }
