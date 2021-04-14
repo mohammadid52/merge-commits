@@ -3,6 +3,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
 import { FaRegEye, FaQuestionCircle } from 'react-icons/fa';
+import findIndex from 'lodash/findIndex';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 
@@ -110,6 +111,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setLessonBuilderSteps(assessmentScrollerStep);
     }
   };
+  const currentStepIdx = findIndex(assessmentScrollerStep, { name: activeStep });
+
+  const onModalSave = () => {
+    if (currentStepIdx === 0) {
+      return history.goBack();
+    } else {
+      const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
+      setActiveStep(prevStep);
+    }
+    toggleModal();
+  };
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
@@ -181,7 +193,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      history.push('/dashboard/lesson-builder');
+      if (currentStepIdx === 0) {
+        history.push('/dashboard/lesson-builder');
+      } else {
+        const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
+        setActiveStep(prevStep);
+      }
     }
   };
 
@@ -279,12 +296,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           </div>
         </div>
         {warnModal.show && (
-          <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={history.goBack}
-            saveLabel="Yes"
-            message={warnModal.message}
-          />
+          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
         )}
       </PageWrapper>
     </div>
