@@ -52,24 +52,6 @@ const ProfileInfo = (props: UserInfoProps) => {
     return <LessonLoading />;
   }
 
-  // NOT TESTED FOR COMMON USE
-  const Tooltip = ({
-    content,
-    text,
-    extraClass,
-  }: {
-    content?: React.ReactElement;
-    text?: string;
-    extraClass?: string;
-  }) => {
-    return (
-      <div className={`tooltip ${extraClass}`}>
-        {content}
-        <span className="tooltiptext">{text}</span>
-      </div>
-    );
-  };
-
   {
     return (
       <div className="w-full md:px-4 pt-4">
@@ -141,16 +123,12 @@ const ProfileInfo = (props: UserInfoProps) => {
                 <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
                   {/* {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['ROLE']} */}
 
-                  <Tooltip
-                    content={
-                      <NavLink className="flex items-center justify-center w-auto" to={`${match.url}/password`}>
-                        <p className="mr-2">Password</p>
-                        <IconContext.Provider value={{ size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
-                          <RiLock2Fill />
-                        </IconContext.Provider>
-                      </NavLink>
-                    }
-                    text="click here to edit password"></Tooltip>
+                  <NavLink className="flex items-center justify-center w-auto" to={`${match.url}/password`}>
+                    <p className="mr-2">Password</p>
+                    <IconContext.Provider value={{ size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
+                      <RiLock2Fill />
+                    </IconContext.Provider>
+                  </NavLink>
                 </dt>
                 <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
               </div>
