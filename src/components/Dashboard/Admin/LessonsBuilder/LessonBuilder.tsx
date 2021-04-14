@@ -119,6 +119,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     } else {
       const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
       setActiveStep(prevStep);
+      setUnsavedChanges(false);
     }
     toggleModal();
   };

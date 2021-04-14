@@ -438,8 +438,8 @@ const ProfileEdit = (props: UserInfoProps) => {
               </div>
             </div>
           </div>
-          <NavLink className="text-gray-500 font-medium float-right w-auto italic" to={path}>
-            <p className="">click here to edit password</p>
+          <NavLink className="text-gray-700 font-medium float-right w-auto" to={path}>
+            <p className="font-semibold">Click here to edit password</p>
           </NavLink>
 
           {stdCheckpoints?.length > 0 ? (
