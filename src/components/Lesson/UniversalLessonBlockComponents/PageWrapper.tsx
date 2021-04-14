@@ -12,10 +12,10 @@ export const PageWrapper = (props: PageWrapperProps) => {
   return (
     <div className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50`}>
       <div className={`text-white`}>
-        <p>ID: {selectedPageDetails?.id}</p>
-        <p>TITLE: {selectedPageDetails?.title}</p>
-        <p>DESC: {selectedPageDetails?.description}</p>
-        <p>CLASS: {selectedPageDetails?.class}</p>
+        {/*<p>ID: {selectedPageDetails?.id}</p>*/}
+        {/*<p>TITLE: {selectedPageDetails?.title}</p>*/}
+        {/*<p>DESC: {selectedPageDetails?.description}</p>*/}
+        {/*<p>CLASS: {selectedPageDetails?.class}</p>*/}
         {children}
       </div>
     </div>

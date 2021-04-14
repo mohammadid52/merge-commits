@@ -62,6 +62,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       case 'BuilderWrapper':
         return (
           <BuilderWrapper
+            mode={`building`}
             universalLessonDetails={universalLessonDetails}
             universalBuilderStep={universalBuilderStep}
             setUniversalBuilderStep={setUniversalBuilderStep}

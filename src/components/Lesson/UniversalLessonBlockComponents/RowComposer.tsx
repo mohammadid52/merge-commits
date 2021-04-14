@@ -4,31 +4,41 @@ import { StringifyBlock } from './Blocks/StringifyBlock';
 import { RowWrapper } from './RowWrapper';
 import { PageWrapper } from './PageWrapper';
 import { HeaderBlock } from './Blocks/HeaderBlock';
+import { ParagraphBlock } from './Blocks/ParagraphBlock';
+import { FormBlock } from './Blocks/FormBlock';
+import { AddNewBlock } from './UtilityBlocks/AddNewBlock';
 
-const RowComposer = (props: { selectedPageDetails: UniversalLessonPage }) => {
-  const { selectedPageDetails } = props;
+interface RowComposerProps {
+  mode: 'building' | 'viewing';
+  selectedPageDetails?: UniversalLessonPage;
+}
+
+const RowComposer = (props: RowComposerProps) => {
+  const { mode, selectedPageDetails } = props;
 
   const composePartContent = (id: string, type: string, value: any, inputKey: string) => {
     if (type.includes('header')) {
       return <HeaderBlock key={inputKey} id={id} type={type} value={value} />;
+    } else if (type.includes('paragraph')) {
+      return <ParagraphBlock key={inputKey} id={id} type={type} value={value} />;
+    } else if (type.includes('form')) {
+      return <FormBlock key={inputKey} value={value} />;
     } else {
       return <StringifyBlock key={inputKey} id={id} anyObj={value} />;
     }
   };
 
-  return selectedPageDetails ? (
+  return (
     <PageWrapper selectedPageDetails={selectedPageDetails}>
       {/* ONE PAGE */}
 
-      {selectedPageDetails.pageContent.length > 0 &&
+      {selectedPageDetails && selectedPageDetails.pageContent.length > 0 ? (
         selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number) => (
           // ONE ROW
-          <RowWrapper key={`pp_${idx}`} pagePart={pagePart}>
-            <p>PARTCONTENT:</p>
+          <RowWrapper key={`pp_${idx}`} pagePart={pagePart} mode={mode}>
             {pagePart.partContent.length > 0 ? (
               pagePart.partContent.map((content: PartContent, idx2: number) => (
                 <div id={content.id} key={`pp_${idx}_pc_${idx2}`}>
-                  <p>{content.type}</p>
                   {content.value.length > 0 ? (
                     content.value.map((value: any, idx3: number) =>
                       composePartContent(content.id, content.type, value, `pp_${idx}_pc_${idx2}_cv_${idx3}`)
@@ -42,10 +52,18 @@ const RowComposer = (props: { selectedPageDetails: UniversalLessonPage }) => {
               <h1>This pagepart has no content.</h1>
             )}
           </RowWrapper>
-        ))}
+        ))
+      ) : (
+        <h1>This page has no layout information.</h1>
+      )}
+
+      {/* SHOW ADD NEW BLOCK CONTROL */}
+      {mode === 'building' && (
+        <RowWrapper>
+          <AddNewBlock />
+        </RowWrapper>
+      )}
     </PageWrapper>
-  ) : (
-    <h1>This page has no layout information.</h1>
   );
 };
 

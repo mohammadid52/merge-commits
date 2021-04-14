@@ -9,6 +9,7 @@ import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/Uni
 import { CoreBuilder } from './CoreBuilder';
 
 interface ExistingLessonTemplateProps {
+  mode?: 'building' | 'viewing';
   universalLessonDetails?: UniversalLesson;
   universalBuilderStep?: string;
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
@@ -20,6 +21,7 @@ interface ExistingLessonTemplateProps {
 // GRID SHOWING EXISTING TEMPLATES TILES
 const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
+    mode,
     universalLessonDetails,
     selectedPageDetails,
     setSelectedPageDetails,
@@ -50,6 +52,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       />
 
       <CoreBuilder
+        mode={mode}
         universalLessonDetails={universalLessonDetails}
         selectedPageDetails={selectedPageDetails}
         galleryVisible={galleryVisible}

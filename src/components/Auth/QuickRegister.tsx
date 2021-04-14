@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
-
+import { useCookies } from 'react-cookie';
 
 /**
  * About the QuickRegister functionality:
@@ -10,7 +10,6 @@ import * as mutations from '../../graphql/mutations';
  *
  *
  */
-
 
 interface newUserInput {
   key: number;
@@ -72,6 +71,8 @@ const QuickRegister = (props: QuickRegisterProps) => {
     message: '',
     field: '',
   });
+
+  const [cookies] = useCookies(['room_info']);
 
   const handleMessage = (type: string, text: string) => {
     setNewUserInputs(() => {
@@ -249,12 +250,20 @@ const QuickRegister = (props: QuickRegisterProps) => {
     });
   };
 
-
-
   const handleSubmit = () => {
     setWaiting(true);
     validation();
   };
+
+  useEffect(() => {
+    if (cookies['room_info']) {
+      const roomInfoCookie = cookies['room_info'];
+      if (Object.keys(roomInfoCookie).length > 0 && roomInfoCookie.hasOwnProperty('classID')) {
+        // getClassStudents(roomInfoCookie['classID']);
+      }
+      console.log('roomInfoCookie --> ', roomInfoCookie);
+    }
+  }, []);
 
   return (
     <div
