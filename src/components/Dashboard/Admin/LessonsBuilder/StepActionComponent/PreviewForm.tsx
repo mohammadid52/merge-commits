@@ -308,9 +308,13 @@ const PreviewForm = (props: PreviewFormProps) => {
                 <p className="w-3/4">{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>
               )}
             </div>
-            <div className="py-2 italic px-4">
-              <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
-              <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
+
+            <div className={fieldClass}>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base mb-2">Closing Message :</h3>
+              <div className="w-3/4 italic">
+                <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
+                <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
+              </div>
             </div>
           </div>
           {message ? (
