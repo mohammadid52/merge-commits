@@ -51,6 +51,8 @@ const ProfileInfo = (props: UserInfoProps) => {
   if (status !== 'done') {
     return <LessonLoading />;
   }
+
+  // NOT TESTED FOR COMMON USE
   const Tooltip = ({
     content,
     text,
@@ -67,6 +69,7 @@ const ProfileInfo = (props: UserInfoProps) => {
       </div>
     );
   };
+
   {
     return (
       <div className="w-full md:px-4 pt-4">

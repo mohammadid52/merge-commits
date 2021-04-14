@@ -251,8 +251,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             assessmentID: '0',
             // assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
           };
+
           const results: any = await API.graphql(graphqlOperation(customMutations.createLesson, { input: input }));
           const lessonsData = results?.data?.createLesson;
+          console.log(lessonsData);
+
           if (lessonsData?.id) {
             let rubrics = Promise.all(
               lessonMeasurements.map(async (item: any) => saveMeasurements(lessonsData?.id, item.id))
@@ -291,6 +294,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],
             designers: selectedDesigners.map((item) => item.id),
+            language: formData.languages.map((item) => item.value),
           };
           const results: any = await API.graphql(graphqlOperation(customMutations.updateLesson, { input: input }));
           const lessonsData = results?.data?.updateLesson;
@@ -383,7 +387,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               <span className="text-red-500"> * </span>
             </label>
             <MultipleSelector
-              disabled={lessonId !== ''}
+              // disabled={lessonId !== ''}
               selectedItems={languages}
               placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
               list={languageList}

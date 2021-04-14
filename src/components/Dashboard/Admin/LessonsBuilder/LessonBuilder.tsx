@@ -30,6 +30,7 @@ export interface InitialData {
   objectiveHtml: string;
   languages: { id: string; name: string; value: string }[];
   institution?: InputValueObject;
+  language: string[];
 }
 export interface InputValueObject {
   id: string;
@@ -63,6 +64,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     objectiveHtml: '<p></p>',
     languages: [{ id: '1', name: 'English', value: 'EN' }],
     institution: { id: '', name: '', value: '' },
+    language: [''],
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -253,7 +255,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Exit" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go back" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
