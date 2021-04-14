@@ -1,5 +1,5 @@
 import React from 'react';
-import DummyBlock from '../../UniversalLessonBlockComponents/Dummy/DummyBlock';
+import RowComposer from '../../UniversalLessonBlockComponents/RowComposer';
 import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface CoreBuilderProps {
@@ -14,7 +14,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   return (
     <div className={`bg-dark-gray`}>
       <div className={`w-full min-h-256 mx-auto`}>
-        <DummyBlock selectedPageDetails={selectedPageDetails} />
+        <RowComposer selectedPageDetails={selectedPageDetails} />
       </div>
     </div>
   );
