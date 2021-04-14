@@ -798,6 +798,7 @@ export const onCreateInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -904,6 +905,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -1010,6 +1012,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2231,6 +2234,7 @@ export const onCreateCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -2314,6 +2318,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -2397,6 +2402,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -2484,6 +2490,7 @@ export const onCreateTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2546,6 +2553,7 @@ export const onUpdateTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2608,6 +2616,7 @@ export const onDeleteTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2741,6 +2750,7 @@ export const onCreateRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2788,6 +2798,7 @@ export const onUpdateRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2835,6 +2846,7 @@ export const onDeleteRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2877,6 +2889,7 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2925,6 +2938,7 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2973,6 +2987,7 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3021,6 +3036,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3069,6 +3085,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3117,6 +3134,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3943,6 +3961,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -4048,6 +4067,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -4153,6 +4173,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages

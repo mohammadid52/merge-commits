@@ -3,12 +3,12 @@ import { Lesson, LessonCardProps } from '../../Classroom';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 const SideImage = (props: LessonCardProps) => {
-  const {lessonProps} = props;
-  const {theme} = useContext(GlobalContext);
+  const { lessonProps } = props;
+  const { theme } = useContext(GlobalContext);
 
   return (
     <div
-      className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl`}
+      className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
       style={{
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
           lessonProps && lessonProps.lesson?.artist?.images ? lessonProps.lesson?.artist?.images : null
@@ -16,7 +16,7 @@ const SideImage = (props: LessonCardProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <div className="h-6/10 flex justify-center items-center"/>
+      <div className="h-6/10 flex justify-center items-center" />
 
       <>
         <div className="h-1/10 pl-6">
@@ -34,9 +34,8 @@ const SideImage = (props: LessonCardProps) => {
           </h2>
         </div>
       </>
-
     </div>
-  )
-}
+  );
+};
 
 export default SideImage;

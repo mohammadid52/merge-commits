@@ -148,6 +148,7 @@ export const updateStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       student {
+        image
         id
         authId
         email
@@ -440,6 +441,8 @@ export const createCurriculum = /* GraphQL */ `
     createCurriculum(input: $input, condition: $condition) {
       id
       name
+      type
+      summary
       institutionID
     }
   }
@@ -755,6 +758,7 @@ export const createCheckpoint = /* GraphQL */ `
       title
       subtitle
       type
+      scope
       instructionsTitle
       instructions
       purpose

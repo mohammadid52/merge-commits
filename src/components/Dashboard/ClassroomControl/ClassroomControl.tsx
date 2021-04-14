@@ -29,6 +29,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     setCurrentPage,
     activeRoom,
     setActiveRoom,
+    activeRoomName,
     setActiveRoomInfo,
     setActiveRoomName,
     lessonLoading,
@@ -283,6 +284,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           });
 
           setSyllabusLoading(false);
+          setLessonLoading(false);
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);
         }
@@ -359,6 +361,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
             data: syllabusLessonsReordered,
           },
         });
+        setLessonLoading(false);
       } catch (e) {
         console.error('syllabus lessons: ', e);
       } finally {
@@ -417,6 +420,32 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
     }
   };
+
+  // /******************************************
+  //  * Select First Room By Default               *
+  //  ******************************************/
+
+  // useEffect(() => {
+  //   if (activeRoom === '' && state.roomData.rooms.length >= 0) {
+  //     try {
+  //       // const firstChild = document.querySelector('#roomlist').firstElementChild;
+  //       // const name = firstChild.getAttribute('data-name');
+  //       const firstRoom = state.roomData.rooms.length > 0 && state.roomData.rooms[0];
+  //       setActiveRoomName(name);
+  //       setActiveRoom(firstChild.id);
+  //       setActiveRoomInfo(firstRoom);
+  //       dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: firstChild.id } });
+
+  //       setSyllabusLoading(true); // Trigger loading ui element
+  //       setLessonLoading(true);
+  //       setActiveRoomSyllabus(firstRoom.activeSyllabus);
+  //     } catch (e) {}
+  //   }
+  // }, [state.roomData.rooms.length, activeRoom]);
+
+  // const roomsTitle =
+  //   'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
+  // const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return isHomescreen ? (
     <Home

@@ -28,7 +28,7 @@ const TopWidgetBar = () => {
           <DefaultTextWidget key={`topbar_widget_${idx}`} title={widgetObj.title} content={widgetObj.content.text} />
         );
       case 'quote':
-        return <QuoteWidget key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
+        return <QuoteWidget placement={widgetObj.placement} key={`topbar_widget_${idx}`} quotes={widgetObj.quotes} />;
       case 'call':
         return (
           <CallLinkWidget
@@ -53,16 +53,18 @@ const TopWidgetBar = () => {
   };
 
   return getTopWidgets().length > 0 ? (
-    <ContentCard hasBackground={false}>
-      <div className={`w-full h-auto min-h-16`}>
-        {
-          getTopWidgets().map((widgetObj: Widget, idx: number) => {
-          return <div key={`topbar_widget_${idx}_parent`} className={`my-4`}>{switchWidgets(widgetObj, idx)}</div>;
-          })
-        }
-      </div>
-    </ContentCard>
-  ) : null;
+    // <ContentCard hasBackground={false}>
+    <div className={`w-full h-auto min-h-16 flex`}>
+      {getTopWidgets().map((widgetObj: Widget, idx: number) => {
+        return (
+          <div key={`topbar_widget_${idx}_parent`} className={`my-4 w-48 mr-4`}>
+            {switchWidgets(widgetObj, idx)}
+          </div>
+        );
+      })}
+    </div>
+  ) : // </ContentCard>
+  null;
 };
 
 export default TopWidgetBar;
