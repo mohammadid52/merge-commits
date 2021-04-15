@@ -14,6 +14,7 @@ import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
 import { getTypeString } from '../../../../../utilities/strings';
+import Loader from '../../../../Atoms/Loader';
 
 interface PreviewFormProps {
   lessonName: string;
@@ -243,8 +244,11 @@ const PreviewForm = (props: PreviewFormProps) => {
         </h3>
       </div>
       {loading || isEmpty(lessonDetails) ? (
-        <div className="py-20 text-center mx-auto">
-          <p>{PreviewFormDict[userLanguage]['FETCHING']}</p>
+        <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+          <div className="w-5/10">
+            <Loader color="rgba(107, 114, 128, 1)" />
+            <p className="mt-2 text-center text-lg text-gray-500">{PreviewFormDict[userLanguage]['FETCHING']}</p>
+          </div>
         </div>
       ) : (
         <Fragment>

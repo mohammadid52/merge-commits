@@ -37,7 +37,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const initialData = {
     title: '',
     label: '',
-    scope: '',
+    scope: 'Public',
     language: { id: '1', name: 'English', value: 'EN' },
   };
   const [checkpointData, setCheckpointData] = useState(initialData);

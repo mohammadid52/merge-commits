@@ -307,8 +307,8 @@ const Profile = (props: ProfilePageProps) => {
   }
   {
     return (
-      <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
-        <div className={`w-9/10 h-full main_container mt-4`}>
+      <div className="">
+        <div className={`main_container`}>
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between">
             <SectionTitle
