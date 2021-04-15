@@ -101,6 +101,18 @@ const Home = (props: ClassroomControlProps) => {
     }
   }, [homeData]);
 
+  const getUserGreetings = () => {
+    if (user?.preferredName) {
+      if (user?.preferredName === user?.firstName) {
+        return `${user.firstName}`;
+      } else {
+        return `${user.preferredName} ${user.firstName}`;
+      }
+    } else {
+      return `${user.firstName}`;
+    }
+  };
+
   return (
     <>
       {homeData ? (
@@ -128,11 +140,7 @@ const Home = (props: ClassroomControlProps) => {
             <div
               className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
-                Welcome, What do you want to learn today,{' '}
-                <span className="font-semibold">
-                  {user.preferredName || ''} {user.firstName}
-                </span>{' '}
-                ?
+                Welcome, What do you want to learn today, <span className="font-semibold">{getUserGreetings()}</span> ?
               </h2>
             </div>
           )}
