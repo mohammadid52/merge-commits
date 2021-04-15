@@ -101,18 +101,6 @@ const Home = (props: ClassroomControlProps) => {
     }
   }, [homeData]);
 
-  const getUserGreetings = () => {
-    if (user?.preferredName) {
-      if (user?.preferredName === user?.firstName) {
-        return `${user.firstName}`;
-      } else {
-        return `${user.preferredName} ${user.firstName}`;
-      }
-    } else {
-      return `${user.firstName}`;
-    }
-  };
-
   return (
     <>
       {homeData ? (
