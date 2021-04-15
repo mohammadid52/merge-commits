@@ -5,7 +5,12 @@ import { UniversalBuilderDict } from '../../../../dictionary/dictionary.iconocla
 
 import PageSelector from '../UI/PageSelector';
 import { Toolbar } from '../UI/Toolbar';
-import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
+import {
+  PagePart,
+  PartContent,
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
 import { CoreBuilder } from './CoreBuilder';
 
 interface ExistingLessonTemplateProps {
@@ -16,6 +21,11 @@ interface ExistingLessonTemplateProps {
   universalBuilderTemplates?: any[];
   selectedPageDetails?: UniversalLessonPage;
   setSelectedPageDetails?: React.Dispatch<React.SetStateAction<UniversalLessonPage>>;
+  selectedPagePartDetails: PagePart;
+  setSelectedPagePartDetails: React.Dispatch<React.SetStateAction<PagePart>>;
+  selectedPartContentDetails: PartContent;
+  setSelectedPartContentDetails: React.Dispatch<React.SetStateAction<PartContent>>;
+  initialUniversalLessonPagePartContent: PartContent;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -25,6 +35,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     universalLessonDetails,
     selectedPageDetails,
     setSelectedPageDetails,
+    selectedPagePartDetails,
+    setSelectedPagePartDetails,
+    selectedPartContentDetails,
+    setSelectedPartContentDetails,
+    initialUniversalLessonPagePartContent,
     universalBuilderStep,
     setUniversalBuilderStep,
     universalBuilderTemplates,
@@ -54,8 +69,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       <CoreBuilder
         mode={mode}
         universalLessonDetails={universalLessonDetails}
-        selectedPageDetails={selectedPageDetails}
         galleryVisible={galleryVisible}
+        selectedPageDetails={selectedPageDetails}
+        setSelectedPageDetails={setSelectedPageDetails}
+        selectedPagePartDetails={selectedPagePartDetails}
+        setSelectedPagePartDetails={setSelectedPagePartDetails}
+        selectedPartContentDetails={selectedPartContentDetails}
+        setSelectedPartContentDetails={setSelectedPartContentDetails}
+        initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
       />
     </div>
   );

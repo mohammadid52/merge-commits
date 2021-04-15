@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { PagePart, PartContent, UniversalLessonPage } from '../../../interfaces/UniversalLessonInterfaces';
 import { StringifyBlock } from './Blocks/StringifyBlock';
 import { RowWrapper } from './RowWrapper';
-import { PageWrapper } from './PageWrapper';
+import { LessonPageWrapper } from './LessonPageWrapper';
 import { HeaderBlock } from './Blocks/HeaderBlock';
 import { ParagraphBlock } from './Blocks/ParagraphBlock';
 import { FormBlock } from './Blocks/FormBlock';
@@ -29,7 +29,7 @@ const RowComposer = (props: RowComposerProps) => {
   };
 
   return (
-    <PageWrapper selectedPageDetails={selectedPageDetails}>
+    <LessonPageWrapper selectedPageDetails={selectedPageDetails}>
       {/* ONE PAGE */}
 
       {selectedPageDetails && selectedPageDetails.pageContent.length > 0 ? (
@@ -49,12 +49,12 @@ const RowComposer = (props: RowComposerProps) => {
                 </div>
               ))
             ) : (
-              <h1>This pagepart has no content.</h1>
+              <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
             )}
           </RowWrapper>
         ))
       ) : (
-        <h1>This page has no layout information.</h1>
+        <h1 className={`w-full text-center`}>This page has no layout information.</h1>
       )}
 
       {/* SHOW ADD NEW BLOCK CONTROL */}
@@ -63,7 +63,7 @@ const RowComposer = (props: RowComposerProps) => {
           <AddNewBlock />
         </RowWrapper>
       )}
-    </PageWrapper>
+    </LessonPageWrapper>
   );
 };
 

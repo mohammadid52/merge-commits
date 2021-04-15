@@ -1,6 +1,6 @@
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import React from 'react';
-import { IoMdAddCircleOutline } from 'react-icons/Io';
+import { IoMdAddCircleOutline } from 'react-icons/io';
 
 export const AddNewBlock = () => {
   return (

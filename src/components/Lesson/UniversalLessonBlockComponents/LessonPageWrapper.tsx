@@ -6,11 +6,11 @@ interface PageWrapperProps {
   selectedPageDetails?: UniversalLessonPage;
 }
 
-export const PageWrapper = (props: PageWrapperProps) => {
+export const LessonPageWrapper = (props: PageWrapperProps) => {
   const { children, selectedPageDetails } = props;
 
   return (
-    <div className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50`}>
+    <div className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-30`}>
       <div className={`text-white`}>
         {/*<p>ID: {selectedPageDetails?.id}</p>*/}
         {/*<p>TITLE: {selectedPageDetails?.title}</p>*/}

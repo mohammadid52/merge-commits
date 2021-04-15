@@ -160,7 +160,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
-            },{
+            },
+            {
               title: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
               name: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
               label: 'Universal Lesson Builder',
@@ -204,10 +205,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
     linkProps.setCurrentPage(id);
   };
-
-
-
-
 
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {

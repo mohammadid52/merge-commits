@@ -3,7 +3,12 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { LessonPlansProps } from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import { InitialData } from '../../Dashboard/Admin/LessonsBuilder/StepActionComponent/CheckPointSteps/AddNewCheckPoint';
 import BuilderWrapper from './views/BuilderWrapper';
-import { UniversalLesson, UniversalLessonPage } from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  PagePart,
+  PartContent,
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import { exampleUniversalLesson } from './example_data/exampleUniversalLessonData';
 
 interface UniversalLessonBuilderProps {
@@ -17,6 +22,9 @@ interface UniversalLessonBuilderProps {
   lessonType?: string;
 }
 
+/*******************************************
+ * INITIAL VALUES                          *
+ *******************************************/
 const initialUniversalLessonData: UniversalLesson = {
   id: '',
   summary: '',
@@ -35,6 +43,22 @@ const initialUniversalLessonPage: UniversalLessonPage = {
   pageContent: [],
 };
 
+const initialUniversalLessonPagePart: PagePart = {
+  id: '',
+  partType: 'default',
+  class: '',
+  partContent: [],
+};
+
+const initialUniversalLessonPagePartContent: PartContent = {
+  id: '',
+  type: '',
+  value: [],
+};
+
+/*******************************************
+ * THE BUILDER PARENT                      *
+ *******************************************/
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const { state, dispatch } = useContext(GlobalContext);
   const {
@@ -68,6 +92,11 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
             setUniversalBuilderStep={setUniversalBuilderStep}
             selectedPageDetails={selectedPageDetails}
             setSelectedPageDetails={setSelectedPageDetails}
+            selectedPagePartDetails={selectedPagePartDetails}
+            setSelectedPagePartDetails={setSelectedPagePartDetails}
+            selectedPartContentDetails={selectedPartContentDetails}
+            setSelectedPartContentDetails={setSelectedPartContentDetails}
+            initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
           />
         );
       default:
@@ -75,8 +104,13 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }
   };
 
+  //  CORE DATA MANAGEMENT
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(initialUniversalLessonData);
   const [selectedPageDetails, setSelectedPageDetails] = useState<UniversalLessonPage>(initialUniversalLessonPage);
+  const [selectedPagePartDetails, setSelectedPagePartDetails] = useState<PagePart>(initialUniversalLessonPagePart);
+  const [selectedPartContentDetails, setSelectedPartContentDetails] = useState<PartContent>(
+    initialUniversalLessonPagePartContent
+  );
   /**********************************************
    * FUNCTIONALITY AND DATA FETCHES WILL
    * BE DONE BELOW THIS AREA

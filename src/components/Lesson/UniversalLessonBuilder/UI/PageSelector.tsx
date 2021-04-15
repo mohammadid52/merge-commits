@@ -49,7 +49,7 @@ const PageSelector = (props: PageSelectorProps) => {
         `}>
       {!props.loading && (
         <div className={`bg-white`}>
-          <div className="p-4 max-h-screen overflow-y-auto">
+          <div className="max-h-screen px-4 overflow-y-auto">
             <div className="py-2">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                 {pages && pages.length > 0
