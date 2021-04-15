@@ -603,6 +603,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   {RoomBuilderdict[userLanguage]['CO_TEACHER_LABEL']}
                 </label>
                 <MultipleSelector
+                  withAvatar
                   selectedItems={selectedCoTeachers}
                   list={coTeachersList}
                   placeholder={RoomBuilderdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
