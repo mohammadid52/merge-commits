@@ -34,7 +34,7 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
   return (
     <>
       <SectionTitleV3
-        title={'Your Classrooms'}
+        title={'Your Classmates'}
         extraContainerClass="max-w-256"
         fontSize="lg"
         fontStyle="semibold"
