@@ -28,8 +28,8 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
 
   return (
     <div
-      className={`${extraContainerClass} ${withButton ? 'flex items-center justify-center' : ''} mx-auto m-auto py-5 ${
-        borderBottom ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white' : ''
+      className={`${extraContainerClass} ${withButton ? 'flex items-center justify-center' : ''} mx-auto m-auto py-4 ${
+        borderBottom ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white mb-0' : ''
       }`}>
       <div className={``}>
         <h2 className={`text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>

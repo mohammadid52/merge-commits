@@ -124,8 +124,9 @@ const ProfileInfo = (props: UserInfoProps) => {
                   {/* {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['ROLE']} */}
 
                   <NavLink className="flex items-center justify-center w-auto" to={`${match.url}/password`}>
-                    <p className="mr-2">Password</p>
-                    <IconContext.Provider value={{ size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
+                    <p className="w-auto mr-2">Password</p>
+                    <IconContext.Provider
+                      value={{ className: 'w-auto', size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
                       <RiLock2Fill />
                     </IconContext.Provider>
                   </NavLink>

@@ -116,9 +116,16 @@ const RoomTiles = (props: { classList: [] }) => {
         extraContainerClass="max-w-256 mt-8"
         title={'Your Classrooms'}
         withButton={
-          <div className="flex justify-end">
-            <Buttons label={!showMore ? 'Show All' : 'Show Few'} onClick={() => setShowMore(!showMore)} type="button" />
-          </div>
+          classList &&
+          classList.length > 3 && (
+            <div className="flex justify-end">
+              <Buttons
+                label={!showMore ? 'Show All' : 'Show Few'}
+                onClick={() => setShowMore(!showMore)}
+                type="button"
+              />
+            </div>
+          )
         }
         fontSize="lg"
         fontStyle="semibold"
@@ -163,7 +170,7 @@ const RoomTiles = (props: { classList: [] }) => {
                           </a>
                         </p>
                         <a href="#" className="block mt-2">
-                          <p className="text-xl font-semibold text-gray-900">
+                          <p className="text-base font-semibold text-gray-900">
                             {name} ({roomName})
                           </p>
                           <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
@@ -186,7 +193,9 @@ const RoomTiles = (props: { classList: [] }) => {
                               {firstName + ' ' + lastName}
                             </a>
                           </p>
-                          <p className="space-x-1 text-sm text-gray-500">
+                          <p
+                            style={{ maxWidth: '99%' }}
+                            className="overflow-hidden pr-2 overflow-ellipsis space-x-1 text-sm text-gray-500">
                             <a href="#">{email}</a>
                           </p>
                         </div>
