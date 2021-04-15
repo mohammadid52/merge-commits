@@ -19,6 +19,7 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { getAsset } from '../../../../../assets';
+import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 
 interface RoomBuilderProps {}
 
@@ -43,6 +44,11 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
+  const [coTeachersList, setCoTeachersList] = useState(teachersList);
+  const [selectedCoTeachers, setSelectedCoTeachers] = useState<
+    { email?: string; authId: string; value?: string; id?: string; name?: string }[]
+  >([]);
+
   const { RoomBuilderdict, BreadcrumsTitles } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
@@ -77,6 +83,24 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         value: val,
       },
     });
+    const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    setCoTeachersList(filteredDefaultTeacher);
+    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
+  };
+
+  const selectCoTeacher = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentCoTeachers = selectedCoTeachers;
+    const selectedItem = currentCoTeachers.find((item) => item.id === id);
+
+    if (!selectedItem) {
+      const selectedItem = coTeachersList.find((item) => item.id === id);
+      updatedList = [...currentCoTeachers, { id, name, value, ...selectedItem }];
+    } else {
+      updatedList = currentCoTeachers.filter((item) => item.id !== id);
+    }
+
+    setSelectedCoTeachers(updatedList);
   };
 
   const editInputField = (e: any) => {
@@ -229,7 +253,9 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             return item;
           }
         });
+
         setTeachersList(updatedList);
+        setCoTeachersList(updatedList);
       }
     } catch (err) {
       console.log(err);
@@ -426,7 +452,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
+          // ********************** CHANGES HERE ********************************
+          // ********************** Uncomment this lines and add it to graphql query ********************************
+          // coTeachersEmail: selectedCoTeachers.map((item: any) => item.email),
+          // coTeachersAuthId: selectedCoTeachers.map((item: any) => item.authId),
         };
+
         const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
         const roomId = newRoom.data.createRoom.id;
         if (roomData.curricular.id) {
@@ -566,6 +597,18 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   onClick={() => createNewEntry('teacher')}>
                   Add new teacher
                 </p>
+              </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {RoomBuilderdict[userLanguage]['CO_TEACHER_LABEL']}
+                </label>
+                <MultipleSelector
+                  selectedItems={selectedCoTeachers}
+                  list={coTeachersList}
+                  placeholder={RoomBuilderdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
+                  onChange={selectCoTeacher}
+                  disabled={roomData.teacher.id === ''}
+                />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
