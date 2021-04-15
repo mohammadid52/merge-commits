@@ -181,7 +181,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           stage: 'checkpoint',
           type: 'profile',
           label: checkpointData.label,
-          scope: checkpointData.scope,
+          // scope: checkpointData.scope,
           title: checkpointData.title,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
@@ -327,7 +327,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       onChange={selectDesigner}
                     />
                   </div>
-                  <div>
+                  {/* <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">Select Scope</label>
                     <Selector
                       selectedItem={checkpointData.scope}
@@ -335,7 +335,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       list={scopeList}
                       onChange={(c, name) => setCheckpointData({ ...checkpointData, scope: name })}
                     />
-                  </div>
+                  </div> */}
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {AddProfileCheckpointDict[userLanguage]['languageselect']}
