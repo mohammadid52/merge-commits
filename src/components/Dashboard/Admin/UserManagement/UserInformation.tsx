@@ -8,24 +8,22 @@ import useDictionary from '../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface UserInfoProps {
-  user: UserInfo
-  status: string
+  user: UserInfo;
+  status: string;
 }
 
 const UserInformation = (props: UserInfoProps) => {
   const { user, status } = props;
-  const { theme,userLanguage,clientKey } = useContext(GlobalContext);
-  const { UserInformationDict,BreadcrumsTitles  } = useDictionary(clientKey);
+  const { theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const { UserInformationDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   let created = () => {
     let date = new Date(user.createdAt);
-    return (
-      (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
-    )
-  }
+    return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+  };
 
   if (status !== 'done') {
-    return (<LessonLoading />)
+    return <LessonLoading />;
   }
   {
     return (
@@ -33,7 +31,7 @@ const UserInformation = (props: UserInfoProps) => {
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
           <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-             {UserInformationDict[userLanguage]['heading']}
+              {UserInformationDict[userLanguage]['heading']}
             </h3>
           </div>
 
@@ -43,9 +41,7 @@ const UserInformation = (props: UserInfoProps) => {
                 <dt className="text-base leading-5 font-medium text-gray-500">
                   {UserInformationDict[userLanguage]['fullname']}
                 </dt>
-                <dd className="mt-2 text-base leading-5 text-gray-900">
-                  {`${user.firstName} ${user.lastName}`}
-                </dd>
+                <dd className="mt-2 text-base leading-5 text-gray-900">{`${user.firstName} ${user.lastName}`}</dd>
               </div>
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
@@ -60,8 +56,7 @@ const UserInformation = (props: UserInfoProps) => {
                   {UserInformationDict[userLanguage]['role']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                  <UserRole
-                    role={user.role} />
+                  <UserRole role={user.role} />
                 </dd>
               </div>
               <div className="sm:col-span-1 p-2">
@@ -69,8 +64,7 @@ const UserInformation = (props: UserInfoProps) => {
                   {UserInformationDict[userLanguage]['status']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                  <UserStatus
-                    status={user.status} />
+                  <UserStatus status={user.status} />
                 </dd>
               </div>
               {/* <div className="sm:col-span-1 p-2">
@@ -83,11 +77,9 @@ const UserInformation = (props: UserInfoProps) => {
               </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                 {UserInformationDict[userLanguage]['email']}
+                  {UserInformationDict[userLanguage]['email']}
                 </dt>
-                <dd className="mt-2 text-base leading-5 text-gray-900">
-                  {`${user.email}`}
-                </dd>
+                <dd className="mt-2 text-base leading-5 text-gray-900">{`${user.email}`}</dd>
               </div>
               {/* <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
@@ -99,15 +91,12 @@ const UserInformation = (props: UserInfoProps) => {
               </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-base leading-5 font-medium text-gray-500">
-                 {UserInformationDict[userLanguage]['account']}
+                  {UserInformationDict[userLanguage]['account']}
                 </dt>
-                <dd className="mt-2 text-base leading-5 text-gray-900">
-                  {created()}
-                </dd>
+                <dd className="mt-2 text-base leading-5 text-gray-900">{created()}</dd>
               </div>
             </dl>
           </div>
-
         </div>
 
         {/* TODO: NEED TO CONFIRM FOR GIVING ACCESS TO ADMIN ON PROFILE BUILDER. */}
@@ -139,7 +128,7 @@ const UserInformation = (props: UserInfoProps) => {
           </div>
         </div> */}
       </div>
-    )
+    );
   }
-}
+};
 export default UserInformation;

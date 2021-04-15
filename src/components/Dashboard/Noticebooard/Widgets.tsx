@@ -100,6 +100,10 @@ export const CallLinkWidget = (props: {
     }
   };
 
+  const getOG = async (url: string) => {
+    // fetching here...
+  };
+
   return (
     <div>
       <div className={`mb-2  ${responsiveClass}`}>
@@ -109,43 +113,46 @@ export const CallLinkWidget = (props: {
         <div className={`${widgetObj.placement === 'sidebar' ? '' : 'flex'}`}>
           {links &&
             links.length > 0 &&
-            links.map((link: Link, idx: number) => (
-              <div
-                key={`${widgetObj.id}_${idx}`}
-                className={` ${
-                  idx < links.length - 1 && widgetObj.placement === 'sidebar'
-                    ? 'border-b border-dark-gray border-opacity-10'
-                    : ''
-                } 
-                max-w-1/3
-                `}>
-                {/**
-                 * MOBILE VERSION WIDGET ICON
-                 */}
-                <span className={`w-full mr-0 mb-2 flex flex-col`}>
-                  <a
-                    id={`links_${links.id}_mini`}
-                    className={`text-xs font-semibold text-blueberry hover:underline`}
-                    href={link.url}
-                    target={`_blank`}>
-                    {getCallInfo(link.url)?.iconUrl === null ? (
-                      <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
-                        <IoCallOutline size={24} />
-                      </IconContext.Provider>
-                    ) : (
-                      <div className={`w-8 h-8 mx-auto my-2`}>
-                        <img
-                          className={`pointer-events-none`}
-                          src={getCallInfo(link.url)?.iconUrl}
-                          alt={`call_link_icon`}
-                        />
-                      </div>
-                    )}
-                    <p className={`${responsiveClass} text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
-                  </a>
-                </span>
-              </div>
-            ))}
+            links.map((link: Link, idx: number) => {
+              getOG(link.url);
+              return (
+                <div
+                  key={`${widgetObj.id}_${idx}`}
+                  className={` ${
+                    idx < links.length - 1 && widgetObj.placement === 'sidebar'
+                      ? 'border-b border-dark-gray border-opacity-10'
+                      : ''
+                  } 
+                  max-w-1/3
+                  `}>
+                  {/**
+                   * MOBILE VERSION WIDGET ICON
+                   */}
+                  <span className={`w-full mr-0 mb-2 flex flex-col`}>
+                    <a
+                      id={`links_${links.id}_mini`}
+                      className={`text-xs font-semibold text-blueberry hover:underline`}
+                      href={link.url}
+                      target={`_blank`}>
+                      {getCallInfo(link.url)?.iconUrl === null ? (
+                        <IconContext.Provider value={{ className: 'mx-auto my-2' }}>
+                          <IoCallOutline size={24} />
+                        </IconContext.Provider>
+                      ) : (
+                        <div className={`w-8 h-8 mx-auto my-2`}>
+                          <img
+                            className={`pointer-events-none`}
+                            src={getCallInfo(link.url)?.iconUrl}
+                            alt={`call_link_icon`}
+                          />
+                        </div>
+                      )}
+                      <p className={`${responsiveClass} text-center`}>{getCallInfo(link.url)?.joinLabel}</p>
+                    </a>
+                  </span>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

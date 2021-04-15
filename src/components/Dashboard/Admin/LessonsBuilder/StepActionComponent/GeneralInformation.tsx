@@ -245,9 +245,12 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           purpose: formData.purposeHtml,
           objectives: [formData.objectiveHtml],
           designers: selectedDesigners.map((item) => item.id),
+          language: formData.languages.map((item) => item.value),
         };
         const results: any = await API.graphql(graphqlOperation(customMutations.updateLesson, { input: input }));
         const lessonsData = results?.data?.updateLesson;
+        console.log(lessonsData);
+
         // if (lessonsData.type !== 'lesson') {
         //   const assessmentInput = {
         //     id: lessonsData.assessmentID,
@@ -348,7 +351,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               <span className="text-red-500"> * </span>
             </label>
             <MultipleSelector
-              disabled={lessonId !== ''}
+              // disabled={lessonId !== ''}
               selectedItems={languages}
               placeholder={GeneralInformationDict[userLanguage]['LANGUAGE']}
               list={languageList}

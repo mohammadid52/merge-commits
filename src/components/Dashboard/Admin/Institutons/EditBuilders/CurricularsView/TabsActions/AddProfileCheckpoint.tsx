@@ -37,6 +37,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const initialData = {
     title: '',
     label: '',
+    scope: '',
     language: { id: '1', name: 'English', value: 'EN' },
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
@@ -70,6 +71,11 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const languageList = [
     { id: 1, name: 'English', value: 'EN' },
     { id: 2, name: 'Spanish', value: 'ES' },
+  ];
+
+  const scopeList = [
+    { id: 0, name: 'Public' },
+    { id: 1, name: 'Private' },
   ];
 
   const onInputChange = (e: any) => {
@@ -175,6 +181,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           stage: 'checkpoint',
           type: 'profile',
           label: checkpointData.label,
+          scope: checkpointData.scope,
           title: checkpointData.title,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
@@ -243,6 +250,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   useEffect(() => {
     fetchPersonsList();
   }, []);
+
   // w-9/10 h-full px-4 pb-4 <--- WRAPPER STYLES; JUST FOR REFERENCE IN FUTURE
   return (
     <div className="">
@@ -307,7 +315,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                   </div>
                 </div>
 
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-3">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {AddProfileCheckpointDict[userLanguage]['selectdesigner']}
@@ -317,6 +325,15 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       placeholder={AddProfileCheckpointDict[userLanguage]['placeholder']}
                       list={designersList}
                       onChange={selectDesigner}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">Select Scope</label>
+                    <Selector
+                      selectedItem={checkpointData.scope}
+                      placeholder={AddProfileCheckpointDict[userLanguage]['typePlaceholder']}
+                      list={scopeList}
+                      onChange={(c, name) => setCheckpointData({ ...checkpointData, scope: name })}
                     />
                   </div>
                   <div>
