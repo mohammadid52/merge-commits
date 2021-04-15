@@ -24,7 +24,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
   };
 
   return (
-    <div className="md:flex w-auto md:flex-shrink-0">
+    <div className="bg-gray-800 md:flex w-auto md:flex-shrink-0">
       <div className="flex flex-col w-64">
         <div className="flex flex-col h-0 flex-1">
           <div onClick={handleLink} className="flex items-center h-16 justify-center flex-shrink-0 px-4 bg-gray-900">

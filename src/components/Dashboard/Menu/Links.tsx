@@ -14,6 +14,8 @@ import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
 
 import useDictionary from '../../../customHooks/dictionary';
 import { getAsset } from '../../../assets';
+import { findIndex } from 'lodash';
+import { open } from 'inspector';
 
 type LinkObject = {
   name: string;
@@ -40,6 +42,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const match = useRouteMatch();
   const { role } = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
+  const [openItems, setOpenItems] = useState([]);
 
   /**
    * DISPLAY OTHER MENU ITEMS FOR
@@ -93,10 +96,17 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           return [
             ...links,
             {
+              title: sideBarLinksDict[userLanguage].DASHBOARD,
+              name: sideBarLinksDict[userLanguage].DASHBOARD,
+              label: 'Dashboard',
+              path: 'home',
+            },
+            {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
               path: 'manage-institutions',
+              subMenuItems: [{ title: 'Add New', path: 'manage-institutions/add' }],
             },
             {
               title: sideBarLinksDict[userLanguage].PEOPLE,
@@ -121,6 +131,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
+              subMenuItems: [{ title: 'Add New', path: 'lesson-builder/lesson/add' }],
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
@@ -192,7 +203,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  const handleLink = (e: any) => {
+  const handleLink = (e: any, label: string, toggle: boolean) => {
     const id = e.target.id.toLowerCase();
     const lastCharacter = match.url.charAt(match.url.length - 1);
 
@@ -201,6 +212,15 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       history.push(`${sliced}/${id}`);
     } else {
       history.push(`${match.url}/${id}`);
+    }
+
+    if (toggle) {
+      const exists = openItems.indexOf(label) !== -1;
+      if (exists) {
+        setOpenItems([...openItems.filter((d) => d !== label)]);
+      } else {
+        setOpenItems([...openItems, label]);
+      }
     }
 
     linkProps.setCurrentPage(id);
@@ -251,61 +271,66 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
   return (
     <div className={`link w-full h-12 z-40`}>
-      {state.user.role && links.length > 0
+      {state.user.role && links && links.length > 0
         ? links.map((link: { subMenuItems: any; name: string; path: string; label: string }, key: number) => {
-            return link.subMenuItems.length === 0 ? (
+            const currentPath = `/dashboard/${link.path}`;
+            const open =
+              path === currentPath ||
+              (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
+            return link.subMenuItems && link.subMenuItems.length > 0 ? (
+              <div key={`link_${key}`} className={`space-y-1`}>
+                <a
+                  id={link.path}
+                  onClick={(e) => handleLink(e, link.label, true)}
+                  type="button"
+                  className={`${
+                    open && `bg-gray-700 hover:bg-gray-700`
+                  } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                  aria-controls="sub-menu-1"
+                  aria-expanded="false">
+                  {getMenuIcon(link.label, link.path)}
+                  {link.name}
+                  <svg
+                    className={`${
+                      open ? 'text-gray-400 rotate-90' : 'text-gray-300'
+                    } text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150`}
+                    viewBox="0 0 20 20"
+                    aria-hidden="true">
+                    <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
+                  </svg>
+                </a>
+                {open && (
+                  <div className="space-y-1" id="sub-menu-1">
+                    {link.subMenuItems.map((d: any) => {
+                      const activeLink =
+                        findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1;
+
+                      return (
+                        <a
+                          key={`${d.path}_key`}
+                          id={d.path}
+                          onClick={(e) => handleLink(e, link.label, false)}
+                          className={`group cursor-pointer w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
+                            activeLink ? 'text-gray-300' : 'text-gray-600'
+                          }`}>
+                          {d.title}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
               <a
                 key={`link_${key}`}
                 id={link.path}
-                onClick={handleLink}
+                onClick={(e) => handleLink(e, link.label, false)}
                 className={`${
                   path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
                 } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md`}>
                 <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
                 {link.name}
               </a>
-            ) : (
-              <div className="space-y-1">
-                <button
-                  type="button"
-                  className="text-gray-300 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center pl-2 pr-1 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  aria-controls="sub-menu-1"
-                  aria-expanded="false">
-                  {getMenuIcon(link.label, link.path)}
-                  Team
-                  <svg
-                    className="text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150"
-                    viewBox="0 0 20 20"
-                    aria-hidden="true">
-                    <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
-                  </svg>
-                </button>
-                <div className="space-y-1" id="sub-menu-1">
-                  <a
-                    href="#"
-                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                    Overview
-                  </a>
-
-                  <a
-                    href="#"
-                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                    Members
-                  </a>
-
-                  <a
-                    href="#"
-                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                    Calendar
-                  </a>
-
-                  <a
-                    href="#"
-                    className="group w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 hover:bg-gray-50">
-                    Settings
-                  </a>
-                </div>
-              </div>
             );
             // <div onClick={handleLink}>
             //   <div id={link.path} className={`${linkClass} ${path === `/dashboard/${link.path}` && activeClass}`}>

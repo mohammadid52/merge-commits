@@ -39,13 +39,11 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     <div onClick={handleLink} className="flex-shrink-0 bg-gray-700 flex border-t cursor-pointer border-gray-200 p-4">
       <a className="flex-shrink-0 w-full group block">
         <div className="flex items-center">
-          <div className="h-10 w-10">
-            <img className="inline-block min-w-9 min-h-9 h-9 w-9 rounded-full" src={imageUrl} alt="" />
+          <div style={{ width: 64, height: 64, minWidth: 64, minHeight: 64 }} className="">
+            <img className="inline-block rounded" style={{ width: 64, height: 64 }} src={imageUrl} alt="" />
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">{`${
-              state.user.firstName
-            } ${firstInitialFunc(state.user.lastName)}`}</p>
+            <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">{`${state.user.firstName} ${state.user.lastName}`}</p>
             <p className="text-xs font-medium text-gray-400 group-hover:text-gray-300">
               {getUserRoleString(state.user.role)}
             </p>
