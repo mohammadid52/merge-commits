@@ -112,6 +112,30 @@ export const onChangePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -1364,6 +1388,36 @@ export const onCreateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -1495,6 +1549,36 @@ export const onUpdateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -1626,6 +1710,36 @@ export const onDeleteRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -9509,6 +9623,30 @@ export const onCreatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -9690,6 +9828,30 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -9871,6 +10033,30 @@ export const onDeletePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
