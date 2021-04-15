@@ -285,28 +285,42 @@ const PreviewForm = (props: PreviewFormProps) => {
               </h3>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
                 <div className="ml-8 mt-4">
-                  {lessonDetails?.checkpoints?.items?.map((item: any) => (
-                    <Fragment key={item.id}>
-                      <h4 className="font-bold text-gray-900 text-base">
-                        {item.checkpoint?.title || ''}
-                        <br />
-                        <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
-                      </h4>
-                      <div className="py-2">
-                        <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
-                        {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
-                      </div>
-                      <div>
-                        {item.checkpoint?.questions?.items?.length > 0 ? (
-                          <div className="py-2">
-                            {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                              <QuestionList index={index} key={index} checkpItem={checkpItem} />
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </Fragment>
-                  ))}
+                  {lessonDetails?.checkpoints?.items?.map((item: any) => {
+                    const htmlTitle = item.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
+
+                    return (
+                      <Fragment key={item.id}>
+                        <h4 className="font-bold text-gray-900 text-base">
+                          {item.checkpoint?.title || ''}{' '}
+                          {item.checkpoint?.estTime && (
+                            <span>
+                              ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
+                            </span>
+                          )}
+                          <br />
+                          <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+                        </h4>
+                        <div className="py-2">
+                          <h4 className="text-gray-600 text-base font-medium">{item.checkpoint?.instructionsTitle} </h4>
+
+                          {htmlTitle.length > 0 && (
+                            <div className="border-dashed border-0 w-9/10 border-gray-600 rounded-md p-2 px-3">
+                              {ReactHtmlParser(item.checkpoint?.instructions)}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          {item.checkpoint?.questions?.items?.length > 0 ? (
+                            <div className="py-2">
+                              {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
+                                <QuestionList index={index} key={index} checkpItem={checkpItem} />
+                              ))}
+                            </div>
+                          ) : null}
+                        </div>
+                      </Fragment>
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="w-3/4">{PreviewFormDict[userLanguage]['NOCHECKPOINT']}</p>
