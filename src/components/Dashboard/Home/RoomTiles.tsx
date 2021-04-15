@@ -116,9 +116,16 @@ const RoomTiles = (props: { classList: [] }) => {
         extraContainerClass="max-w-256 mt-8"
         title={'Your Classrooms'}
         withButton={
-          <div className="flex justify-end">
-            <Buttons label={!showMore ? 'Show All' : 'Show Few'} onClick={() => setShowMore(!showMore)} type="button" />
-          </div>
+          classList &&
+          classList.length > 3 && (
+            <div className="flex justify-end">
+              <Buttons
+                label={!showMore ? 'Show All' : 'Show Few'}
+                onClick={() => setShowMore(!showMore)}
+                type="button"
+              />
+            </div>
+          )
         }
         fontSize="lg"
         fontStyle="semibold"
