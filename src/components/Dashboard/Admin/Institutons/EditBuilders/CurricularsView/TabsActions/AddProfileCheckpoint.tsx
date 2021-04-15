@@ -315,7 +315,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                   </div>
                 </div>
 
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-3">
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {AddProfileCheckpointDict[userLanguage]['selectdesigner']}

@@ -326,6 +326,9 @@ const ProfileEdit = (props: UserInfoProps) => {
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
+                  <NavLink className="text-gray-500 lowercase text-right float-right w-auto" to={path}>
+                    <p className="font-medium text-base">Click here to edit password</p>
+                  </NavLink>
                 </h3>
               </div>
 
@@ -388,10 +391,6 @@ const ProfileEdit = (props: UserInfoProps) => {
                 </div>
               </div>
             </div>
-
-            <NavLink className="text-gray-700 my-4 text-right font-medium w-full" to={path}>
-              <p className="font-semibold">Click here to edit password</p>
-            </NavLink>
           </div>
 
           {stdCheckpoints?.length > 0 ? (
