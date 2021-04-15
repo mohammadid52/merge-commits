@@ -73,6 +73,7 @@ const LessonEdit = (props: LessonEditProps) => {
     objectiveHtml: '<p></p>',
     institution: { id: '', name: '', value: '' },
     languages: [{ id: '1', name: 'English', value: 'EN' }],
+    language: [''],
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -134,6 +135,7 @@ const LessonEdit = (props: LessonEditProps) => {
   };
 
   const currentStepIdx = findIndex(assessmentScrollerStep, { name: activeStep });
+
   const gobackToLessonsList = () => {
     if (unsavedChanges) {
       toggleModal();
@@ -151,6 +153,7 @@ const LessonEdit = (props: LessonEditProps) => {
     if (currentStepIdx === 0) {
       return history.goBack();
     } else {
+      setUnsavedChanges(false);
       const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
       setActiveStep(prevStep);
     }
@@ -190,15 +193,14 @@ const LessonEdit = (props: LessonEditProps) => {
         })
       );
       const savedData = result.data.getLesson;
+
       setFormData({
         ...formData,
         name: savedData.title,
         type: savedData.type && typeList.find((item: any) => item.value === savedData.type),
         purposeHtml: savedData?.purpose ? savedData.purpose : '<p></p>',
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
-        languages: savedData.language
-          ? languageList.filter((item: any) => savedData.language.includes(item.value))
-          : [],
+        languages: savedData.language.map((it: any) => languageList.find((it2: any) => it2.value === it)),
         institution: {
           id: savedData?.institution?.id,
           name: savedData?.institution?.name,

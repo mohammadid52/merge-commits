@@ -45,6 +45,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     description: '',
     objectives: '',
     summary: '',
+    type: '',
     languages: [{ id: '1', name: 'English', value: 'EN' }],
     institute: {
       id: '',
@@ -56,7 +57,6 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const location = useLocation();
   const [institutionList, setInstitutionList] = useState(null);
   const [designersList, setDesignersList] = useState([]);
-  const [type, setType] = useState<string>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
 
@@ -137,10 +137,6 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     setSelectedDesigners(updatedList);
   };
 
-  const selectType = (str: any, name: string) => {
-    setType(name);
-  };
-
   const selectInstitute = (val: string, name: string, id: string) => {
     setCurricularData({
       ...curricularData,
@@ -170,11 +166,11 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
           description: curricularData.description,
-          type,
+          type: curricularData.type,
           summary: curricularData.summary,
           objectives: [curricularData.objectives],
           languages: languagesCode,
-          designers: designers,
+          designers,
           image: null as any,
         };
 
@@ -397,7 +393,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   }, [institutionList]);
 
-  const { name, description, objectives, languages, institute, summary } = curricularData;
+  const { name, description, objectives, languages, type, institute, summary } = curricularData;
   return (
     <div className="w-8/10 h-full mt-4 p-4">
       {/* Section Header */}
@@ -499,7 +495,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                 <Selector
                   placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
                   list={typeList}
-                  onChange={selectType}
+                  onChange={(str: any, name: string) => {
+                    setCurricularData({ ...curricularData, type: name });
+                  }}
                   selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
                 />
               </div>

@@ -113,22 +113,29 @@ const RoomTiles = (props: { classList: [] }) => {
   return (
     <>
       <SectionTitleV3
-        extraContainerClass="max-w-256"
+        extraContainerClass="max-w-256 mt-8"
         title={'Your Classrooms'}
         withButton={
-          <div className="flex justify-end">
-            <Buttons label={!showMore ? 'Show All' : 'Show Few'} onClick={() => setShowMore(!showMore)} type="button" />
-          </div>
+          classList &&
+          classList.length > 3 && (
+            <div className="flex justify-end">
+              <Buttons
+                label={!showMore ? 'Show All' : 'Show Few'}
+                onClick={() => setShowMore(!showMore)}
+                type="button"
+              />
+            </div>
+          )
         }
         fontSize="lg"
         fontStyle="semibold"
         extraClass="leading-6 text-gray-900"
-        borderBottom={false}
+        borderBottom
       />
-      <ContentCard hasBackground={false}>
+      <ContentCard hasBackground={false} additionalClass="shadow bg-white mb-10 rounded-b-lg">
         <div className="relative">
           <div className="relative max-w-7xl mx-auto">
-            <div className="mt-0 max-w-lg mx-auto grid gap-5 lg:grid-cols-3 lg:max-w-none">
+            <div className="mt-0 max-w-lg mx-auto  pt-4 grid px-4 gap-5 lg:grid-cols-3 lg:max-w-none">
               {firstRow.map((item, idx: number) => {
                 const { teacherProfileImg, bannerImage, teacher, curricula } = item;
                 const { name, summary, type } = curricula.items[0].curriculum;
@@ -140,7 +147,7 @@ const RoomTiles = (props: { classList: [] }) => {
                   <div
                     onClick={() => handleRoomSelection(roomId)}
                     key={`homepage__classrooms-${idx}`}
-                    className="flex flex-col rounded-b-lg shadow overflow-hidden ">
+                    className="flex border-0 border-gray-300 flex-col rounded-lg overflow-hidden ">
                     <div className="flex-shrink-0">
                       {bannerImage ? (
                         <img
@@ -201,7 +208,7 @@ const RoomTiles = (props: { classList: [] }) => {
             <div
               className={`mt-5 roomTiles ${
                 showMore ? 'is-open' : 'hide'
-              } max-w-lg mx-auto gap-5 lg:grid-cols-3 lg:max-w-none grid`}
+              } max-w-lg mx-auto gap-5 px-4 pb-4 lg:grid-cols-3 lg:max-w-none grid`}
               hidden>
               {restRow.map((item, idx: number) => {
                 const { teacherProfileImg, bannerImage, teacher, curricula } = item;
@@ -212,7 +219,7 @@ const RoomTiles = (props: { classList: [] }) => {
                 return (
                   <div
                     key={`homepage__classrooms-${idx}`}
-                    className="flex flex-col rounded-b-lg shadow overflow-hidden transition-all">
+                    className="flex flex-col rounded-lg  border-0 border-gray-300 overflow-hidden transition-all">
                     <div className="flex-shrink-0">
                       {bannerImage ? (
                         <img

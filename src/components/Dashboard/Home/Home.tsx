@@ -16,6 +16,7 @@ const Home = (props: ClassroomControlProps) => {
   const { state, dispatch, theme, clientKey } = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
   const [loading, setLoading] = useState(false);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
 
@@ -106,7 +107,7 @@ const Home = (props: ClassroomControlProps) => {
         <>
           {/* Hero Section */}
           <div className="relative">
-            <div className="absolute inset-0 w-full h-80">
+            <div className="absolute inset-0 w-full h-60">
               <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
               <img
                 className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"
@@ -114,16 +115,18 @@ const Home = (props: ClassroomControlProps) => {
                 alt=""
               />
             </div>
-            <div className="relative h-full flex flex-col max-w-7xl mx-auto pt-24 px-4 sm:px-6 lg:px-8">
-              <div className="mt-20" />
-              <h1 className="z-100 text-4xl font-extrabold tracking-tight text-center text-white sm:text-5xl lg:text-6xl">
+            <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
+              <h1
+                style={{ fontSize: '6rem' }}
+                className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
                 Dashboard
               </h1>
             </div>
           </div>
           {/* Header */}
           {user && (
-            <div className={`${theme.section} mt-6 mb-4 px-6 py-4 m-auto bg-indigo-500 text-white rounded-lg`}>
+            <div
+              className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome, What do you want to learn today,{' '}
                 <span className="font-semibold">

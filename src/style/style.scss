@@ -161,6 +161,38 @@
     opacity: 0;
   }
 }
+.hide__scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.question__container {
+  transition: 0.3s;
+
+  .option__list {
+    display: block;
+    overflow: hidden;
+    &.hide {
+      visibility: hidden;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-out;
+    }
+    &.show {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-in;
+    }
+  }
+}
 
 @media screen and (max-width: 767px) {
   .test {
@@ -222,4 +254,43 @@
     padding: 0.5rem;
     height: 4rem;
   }
+}
+
+// Tooltip Styles
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px 0;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  left: 87%;
+  // box-shadow: -10px 6px 30px -4px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transition: opacity 0.7s;
+}
+
+.tooltip .tooltiptext::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  // box-shadow: -10px 6px 30px -4px rgba(0, 0, 0, 0.12);
+  border-color: transparent rgba(0, 0, 0, 0.9) transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  opacity: 1;
+  visibility: visible;
 }

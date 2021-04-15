@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 
 import DropdownForm from './DropdownForm';
 import { UserInfo } from './Profile';
@@ -139,7 +139,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const savePersonCheckpointData = async (checkpointId: string, questions: any[]) => {
     let responseObject = {
-      syllabusLessonID: '999999', //Blocks syllabus id since it's required, at least for now.
+      syllabusLessonID: '999999', //Dummy syllabus id since it's required, at least for now.
       checkpointID: checkpointId,
       authID: editUser.authId,
       email: editUser.email,
@@ -309,10 +309,14 @@ const ProfileEdit = (props: UserInfoProps) => {
       });
     }
   }, [questionData]);
+  const match = useRouteMatch();
 
   if (status !== 'done') {
     return <LessonLoading />;
   }
+
+  const path = '/dashboard/profile/password';
+
   {
     return (
       <div className="h-full w-full md:px-4 pt-4">
@@ -434,6 +438,10 @@ const ProfileEdit = (props: UserInfoProps) => {
               </div>
             </div>
           </div>
+          <NavLink className="text-gray-700 font-medium float-right w-auto" to={path}>
+            <p className="font-semibold">Click here to edit password</p>
+          </NavLink>
+
           {stdCheckpoints?.length > 0 ? (
             <Fragment>
               {stdCheckpoints.map((checkpoint: any) => (
