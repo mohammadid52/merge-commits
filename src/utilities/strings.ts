@@ -240,7 +240,7 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 };
 
 export const getClientKey = () => {
-  const url = (new URL(window.location.href));
+  const url = new URL(window.location.href);
   let hostname = url.hostname;
   if (hostname.indexOf('localhost') >= 0) return 'iconoclast';
   if (hostname.indexOf('demo') >= 0) return 'iconoclast';
@@ -348,7 +348,12 @@ export const checkIfFirstNewInSequence = (before: string, current: string, after
       return false;
     }
   }
-}
+};
 
-
-
+export const stripStyleFromHTML = (str: string) => {
+  if (typeof str === 'string') {
+    return str.replace(/style="(.*?)"/g, 'style=""');
+  } else {
+    return str;
+  }
+};
