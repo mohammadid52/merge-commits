@@ -303,7 +303,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {' '}
           {GeneralInformationDict[userLanguage]['HEADING']}
         </h3>
       </div>

@@ -316,7 +316,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         )}
 
-        {isTeacher && state.activeRoom === 'lesson-planner' && (
+        {isTeacher && state.currentPage === 'lesson-planner' && (
           <>
             <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
             <div className={`bg-opacity-10`}>
@@ -336,7 +336,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
          *  ASSESSMENTS/SURVEYS
          */}
 
-        {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+        {state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
           <>
             <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
             <div className={`bg-opacity-10`}>

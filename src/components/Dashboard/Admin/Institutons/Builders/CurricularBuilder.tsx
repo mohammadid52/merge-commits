@@ -194,7 +194,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setCurricularData(initialData);
         setIsLoading(false);
         if (newCurricular?.id) {
-          history.push(`/dashboard/manage-institutions/curricular/${newCurricular.id}/syllabus/add`);
+          history.push(
+            `/dashboard/manage-institutions/${curricularData.institute.id}/curricular/${newCurricular.id}/syllabus/add`
+          );
         }
       } catch {
         setMessages({

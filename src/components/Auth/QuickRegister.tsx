@@ -54,6 +54,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
   const [cookies] = useCookies(['room_info']);
   const roomInfoCookie = cookies['room_info'];
   const [classID, setClassID] = useState(roomInfoCookie.classID)
+  console.log('classID-----------', classID)
 
   const [message, setMessage] = useState<{
     show: boolean;
@@ -101,9 +102,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
     setWaiting(true);
     const isValid = validation();
     if (isValid) {
-      const userData = await cognitoSignUp();
-      await registerUser(userData);
-      await addToClass(userData)
+      let userData = await cognitoSignUp();
+      const registeredUser = await registerUser(userData);
+      await addToClass({...userData, id: registeredUser.id })
       setNewUserInputs(initialState);
       setWaiting(false);
     }
@@ -132,13 +133,13 @@ const QuickRegister = (props: QuickRegisterProps) => {
       firstName: userData.firstName,
       lastName: userData.lastName,
       phone: userData.phone,
-      birthdate: userData.birthdate,
+      // birthdate: userData.birthdate,
       externalId: userData.externalId,
       grade: userData.grade,
       language: 'EN',
     };
     try {
-      await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }));
+      let createdPerson: any = await API.graphql(graphqlOperation(mutations.createPerson, { input: user }));
       handleMessage('success', 'User registered successfully');
       setNewUserInputs((prev) => {
         return {
@@ -147,7 +148,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
           role: '', externalId: '',
         };
       });
-      return;
+      return createdPerson.data.createPerson;
     } catch (error) {
       if (error.errors[0].message.includes('coerced')) {
         handleMessage('success', 'User registered successfully');

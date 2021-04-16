@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import Banner from './Banner';
 import { LessonContext } from '../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import { stripStyleFromHTML } from '../../../utilities/strings';
 
 interface InstructionBlockProps {
   isTeacher?: boolean;
@@ -26,13 +27,18 @@ const InstructionsBlock = (props: InstructionBlockProps) => {
        */}
       {Array.isArray(instructions) &&
         instructions.map((inst: any, key: number) => (
-          <p key={key} className={`mb-1 text-gray-100 ${theme.elem.text}`} dangerouslySetInnerHTML={{ __html: inst }}></p>
+          <p
+            key={key}
+            className={`mb-1 text-gray-100 ${theme.elem.text}`}
+            dangerouslySetInnerHTML={{ __html: inst && stripStyleFromHTML(inst) }}></p>
         ))}
       {/**
        * STRING OF INSTRUCTIONS...
        */}
       {typeof instructions === 'string' && (
-        <p className={`mb-1 text-gray-100 ${theme.elem.text}`} dangerouslySetInnerHTML={{ __html: instructions }}></p>
+        <p
+          className={`mb-1 text-gray-100 ${theme.elem.text}`}
+          dangerouslySetInnerHTML={{ __html: instructions && stripStyleFromHTML(instructions) }}></p>
       )}
     </>
   );
