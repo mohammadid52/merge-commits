@@ -755,10 +755,19 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             </div>
 
             <div className="bg-white shadow-5 sm:rounded-lg mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+              <div className="px-4 py-5 flex items-center justify-between border-b-0 border-gray-200 sm:px-6">
+                <div />
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
                   {EditSyllabusDict[userLanguage]['lessonplan']}
                 </h3>
+                <div className="flex justify-end">
+                  <Buttons
+                    btnClass="py-3 px-10"
+                    label={EditSyllabusDict[userLanguage]['createnew']}
+                    onClick={createNewLesson}
+                    disabled={loading ? true : false}
+                  />
+                </div>
               </div>
               <div className="w-full m-auto p-4">
                 {/* Add new lesson section */}
@@ -925,14 +934,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   ) : (
                     <div className="text-center p-16 mt-4">{EditSyllabusDict[userLanguage]['nolesson']}</div>
                   )}
-                  <div className="flex my-8 justify-center">
-                    <Buttons
-                      btnClass="py-3 px-10"
-                      label={EditSyllabusDict[userLanguage]['createnew']}
-                      onClick={createNewLesson}
-                      disabled={loading ? true : false}
-                    />
-                  </div>
                 </div>
               </div>
             </div>
