@@ -103,6 +103,7 @@ type Room
   classID: ID!
   teacherAuthID: String!
   teacherEmail: String!
+  coTeachers: [Person]
   name: String!
   maxPersons: Int!
   institution: Institution @connection(fields: ["institutionID"])
