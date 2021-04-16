@@ -10,6 +10,18 @@ import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 import { getAsset } from '../../../assets';
+import { times } from 'lodash';
+
+export interface ModifiedListProps {
+  id: any;
+  name: any;
+  teacherProfileImg: string;
+  bannerImage: string;
+  teacher: { email: string; firstName: string; lastName: string; image: string };
+  curricula: {
+    items: { curriculum: { name: string; description?: string; id: string; summary?: string; type?: string } }[];
+  };
+}
 
 const Home = (props: ClassroomControlProps) => {
   const { homeData, classList } = props;
@@ -41,9 +53,9 @@ const Home = (props: ClassroomControlProps) => {
   const getTeacherList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          const teacherObj = dataObj.class.rooms.items[0].teacher;
-          const teacherIsPresent = acc.find(
-            (teacher: any) => teacher.firstName === teacherObj.firstName && teacher.lastName === teacherObj.lastName
+          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+          const teacherIsPresent = acc?.find(
+            (teacher: any) => teacher?.firstName === teacherObj?.firstName && teacher?.lastName === teacherObj?.lastName
           );
           if (teacherIsPresent) {
             return acc;
@@ -63,13 +75,13 @@ const Home = (props: ClassroomControlProps) => {
     homeData && homeData.length > 0
       ? homeData
           .reduce((acc: any[], dataObj: any) => {
-            return [...acc, ...dataObj.class.students.items];
+            return [...acc, ...dataObj?.class?.students?.items];
           }, [])
           .reduce((acc: any[], studentObj: any) => {
             const studentIsPresent = acc.find(
               (studentObj2: any) =>
-                studentObj2.student.firstName === studentObj.student.firstName &&
-                studentObj2.student.lastName === studentObj.student.lastName
+                studentObj2?.student?.firstName === studentObj?.student?.firstName &&
+                studentObj2?.student?.lastName === studentObj?.student?.lastName
             );
             if (studentIsPresent) {
               return acc;
@@ -84,12 +96,40 @@ const Home = (props: ClassroomControlProps) => {
       return {
         ...studentObj,
         student: {
-          ...studentObj.student,
-          image: await (studentObj.student.image ? getImageURL(studentObj.student.image) : null),
+          ...studentObj?.student,
+          image: await (studentObj?.student?.image ? getImageURL(studentObj?.student?.image) : null),
         },
       };
     })
   );
+
+  const getClassList = (): ModifiedListProps[] => {
+    let modifiedClassList: ModifiedListProps[] = [];
+    let uniqIds: string[] = [];
+
+    classList &&
+      classList.length > 0 &&
+      classList.forEach((item: { rooms: { items: any[] }; name: string; id: string }) => {
+        item.rooms.items.forEach(async (_item: any) => {
+          const curriculum = _item.curricula?.items[0].curriculum;
+          if (curriculum !== null) {
+            const imagePath = curriculum?.image;
+
+            const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+            const teacherProfileImg = await (_item.teacher.image ? getImageFromS3(_item.teacher.image) : false);
+
+            const modifiedItem = { ..._item, roomName: item?.name, bannerImage: image, teacherProfileImg };
+
+            if (!uniqIds.includes(curriculum?.id)) {
+              modifiedClassList.push(modifiedItem);
+              uniqIds.push(curriculum?.id);
+            }
+          }
+        });
+      });
+
+    return modifiedClassList;
+  };
 
   useEffect(() => {
     const fetchAndProcessDashboardData = async () => {
@@ -136,7 +176,7 @@ const Home = (props: ClassroomControlProps) => {
 
           {/* Classroom Section */}
 
-          <RoomTiles classList={classList} />
+          <RoomTiles classList={getClassList()} />
 
           {/* Teachers Section */}
           <div className="my-6">

@@ -97,7 +97,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </dt>
                 <dd className="mt-1 text-sm leading-5 text-gray-900">{language()}</dd>
               </div>
-              <div className="sm:col-span-1 p-2">
+              <div className="sm:col-span-2 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['EMAIL']}
                 </dt>

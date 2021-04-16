@@ -57,7 +57,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
-
   /**
    * State
    */
@@ -115,24 +114,28 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       case 'checkpoint':
       case 'survey':
         const checkpoints =
-          state.data.lesson && state.data.lesson.checkpoints && state.data.lesson.checkpoints.items
-            ? state.data.lesson.checkpoints.items.filter((checkpoint: CheckpointInterface) => checkpoint.type !== 'doFirst')
+          state.data?.lesson && state.data?.lesson?.checkpoints && state.data?.lesson?.checkpoints?.items
+            ? state.data.lesson.checkpoints.items.filter(
+                (checkpoint: CheckpointInterface) => checkpoint?.type !== 'doFirst'
+              )
             : [];
-        if (checkpoints.length > 0) {
+        if (checkpoints?.length > 0) {
           return checkpoints;
         } else {
           return [];
         }
       case 'doFirst':
-        const doFirstCheckpoint = state.data.lesson && state.data.lesson.checkpoints && state.data.lesson.checkpoints.items
-          ? state.data.lesson.checkpoints.items.filter((checkpoint: CheckpointInterface) => checkpoint.type === 'doFirst')
-          : [];
+        const doFirstCheckpoint =
+          state.data?.lesson && state.data?.lesson?.checkpoints && state.data?.lesson?.checkpoints?.items
+            ? state.data?.lesson?.checkpoints?.items.filter(
+                (checkpoint: CheckpointInterface) => checkpoint?.type === 'doFirst'
+              )
+            : [];
         return doFirstCheckpoint;
       default:
         return null;
     }
   };
-
 
   /**
    * 3. CONCAT all checkpoint questions to a usable
@@ -141,7 +144,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    */
   const flattenCheckpoints = (checkpointArray: any) => {
     if (checkpointArray && checkpointArray.length > 0) {
-
       return checkpointArray.reduce((acc: [], checkpointObj: any): any => {
         if (checkpointObj.hasOwnProperty('questions')) {
           const questionItems = checkpointObj?.questions?.items; // Array of question objects
@@ -150,22 +152,19 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
           return acc;
         }
       }, []);
-
     } else return [];
   };
 
   const collectQuestionGroups = (checkpointArray: any) => {
-    if(checkpointArray && checkpointArray.length > 0){
-
-      return checkpointArray.reduce((acc: [], checkpointObj: any):any => {
-        if(checkpointObj.hasOwnProperty('questions')){
+    if (checkpointArray && checkpointArray.length > 0) {
+      return checkpointArray.reduce((acc: [], checkpointObj: any): any => {
+        if (checkpointObj.hasOwnProperty('questions')) {
           const questionItems = checkpointObj?.questions?.items; // Array of question objects
           return [...acc, questionItems];
         } else {
           return acc;
         }
       }, []);
-
     } else return [];
   };
 
@@ -174,15 +173,11 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    */
 
   const allQuestions = () => {
-
-        return flattenCheckpoints(questionSource());
-
+    return flattenCheckpoints(questionSource());
   };
 
   const allQuestionGroups = () => {
-
-      return collectQuestionGroups(questionSource());
-
+    return collectQuestionGroups(questionSource());
   };
 
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]): number[] => {
@@ -203,20 +198,20 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * [..., {qid: "1", response: ['response']}]
    */
   const initialResponseState = allQuestions().reduce((acc: any, questionObj: QuestionParentInterface) => {
-    const checkpointIdString = questionObj.checkpointID ? questionObj.checkpointID?.toString() : 'undefined-checkpointID';
+    const checkpointIdString = questionObj.checkpointID
+      ? questionObj.checkpointID?.toString()
+      : 'undefined-checkpointID';
     const questionIdString = questionObj.question.id.toString();
 
     if (acc.hasOwnProperty(checkpointIdString)) {
       return {
         ...acc,
-        [checkpointIdString]: [...acc[checkpointIdString],
-          { qid: questionIdString, response: [] }],
+        [checkpointIdString]: [...acc[checkpointIdString], { qid: questionIdString, response: [] }],
       };
     } else {
       return {
         ...acc,
-        [checkpointIdString]: [
-          { qid: questionIdString, response: [] }],
+        [checkpointIdString]: [{ qid: questionIdString, response: [] }],
       };
     }
   }, []);
@@ -227,7 +222,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const handleInputChange = (id: number | string, value: string | string[], checkpointID: string) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
-      if(checkpointIDgroup === checkpointID){
+      if (checkpointIDgroup === checkpointID) {
         //@ts-ignore
         const mappedInput = input[checkpointIDgroup].map((obj: ResponseObject) => {
           if (obj.qid === id) {
@@ -243,7 +238,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       } else {
         return { ...acc, [checkpointIDgroup]: input[checkpointIDgroup] };
       }
-    }, {})
+    }, {});
 
     // UPDATE THIS COMPONENT STATE
     setInput(updatedInput);
@@ -257,21 +252,22 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     });
   };
 
-
   if (status !== 'loaded') return null;
 
   return (
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
-
-        <div className='w-full h-full my-4 flex flex-col flex-wrap justify-around items-center'>
-
-          {
-            questionSource() ? (
-              questionSource().length > 0 &&
+        <div className="w-full h-full my-4 flex flex-col flex-wrap justify-around items-center">
+          {questionSource()
+            ? questionSource().length > 0 &&
               allQuestionGroups().map((questionGroup: any, idx0: number) => {
-                const part1 = <QuestionGroupInfo key={`qgroup_${idx0}`} isTeacher={isTeacher}
-                                                 checkpointID={questionGroup[0].checkpointID} />;
+                const part1 = (
+                  <QuestionGroupInfo
+                    key={`qgroup_${idx0}`}
+                    isTeacher={isTeacher}
+                    checkpointID={questionGroup[0].checkpointID}
+                  />
+                );
                 const part2 = questionGroup.map((question: QuestionInterface, idx: number) => {
                   const realIndex = indexInc[idx0] + idx;
                   return (
@@ -291,16 +287,10 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     </React.Fragment>
                   );
                 });
-                const part3 = (
-                  <LessonElementCard key={`questiongroup_${idx0}`}>
-                    {part2}
-                  </LessonElementCard>
-                );
+                const part3 = <LessonElementCard key={`questiongroup_${idx0}`}>{part2}</LessonElementCard>;
                 return [part1, part3];
               })
-            ) : null
-          }
-
+            : null}
         </div>
       </div>
     </div>

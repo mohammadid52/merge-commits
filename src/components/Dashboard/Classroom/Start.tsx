@@ -135,7 +135,10 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         type="submit"
         onClick={handleLink}
         label={`${firstPart()} ${secondPart()}`}
-        btnClass={`h-full w-full text-xs focus:outline-none transition duration-150 ease-in-out`}></Buttons>
+        disabled={!open}
+        btnClass={`h-full w-full text-xs focus:outline-none ${
+          !open ? 'opacity-80' : 'opacity-100'
+        } transition duration-150 ease-in-out`}></Buttons>
     </div>
   );
 };
