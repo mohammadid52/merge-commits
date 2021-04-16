@@ -310,7 +310,10 @@ const LessonControl = () => {
 
         {/* QUICK REGISTER */}
 
-        <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
+        {
+          quickRegister &&
+            <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
+        }
 
         {/* USER MANAGEMENT */}
         <div className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleClick}>
