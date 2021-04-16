@@ -24,7 +24,6 @@ import { languageList } from '../../../../utilities/staticData';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
-import Loader from '../../../Atoms/Loader';
 
 interface LessonEditProps {
   designersList: any[];
@@ -351,12 +350,7 @@ const LessonEdit = (props: LessonEditProps) => {
             </div>
             <div className="sm:col-span-4">
               {loading ? (
-                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10">
-                    <Loader color="rgba(107, 114, 128, 1)" />
-                    <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
-                  </div>
-                </div>
+                <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
               ) : (
                 <Fragment>
                   <div className="mx-6">{currentStepComp(activeStep)}</div>
