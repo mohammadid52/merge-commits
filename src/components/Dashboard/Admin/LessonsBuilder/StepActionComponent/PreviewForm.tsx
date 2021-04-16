@@ -237,40 +237,45 @@ const PreviewForm = (props: PreviewFormProps) => {
   };
 
   const QuestionContainer = ({ item }: any) => {
-    const htmlTitle = item.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
+    const htmlTitle = item?.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
     const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div
-        className={`${
+    const showQuestions =
+      item.checkpoint?.title || item.checkpoint?.estTime || item.checkpoint?.questions?.items.length > 0;
+    const outerContainerStyles = showQuestions
+      ? `${
           isOpen ? 'border-indigo-400 border-solid' : 'border-indigo-400 border-dashed'
-        }  border-0 w-9/10 mb-4  hover:border-indigo-400 rounded-md p-2 px-4 relative`}
-        key={item.id}>
-        <div className="w-full flex items-center justify-between cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
-          <div>
-            <h4 className="font-bold text-gray-900 text-base">
-              {item.checkpoint?.title || ''}{' '}
-              {item.checkpoint?.estTime && (
-                <span>
-                  ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
+        }  border-0 w-9/10 mb-4  hover:border-indigo-400 rounded-md p-2 px-4 relative`
+      : '';
+    return (
+      <div className={outerContainerStyles} key={item.id}>
+        {showQuestions ? (
+          <div className="w-full flex items-center justify-between cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+            <div>
+              <h4 className="font-bold text-gray-900 text-base">
+                {item.checkpoint?.title || ''}{' '}
+                {item.checkpoint?.estTime && (
+                  <span>
+                    ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
+                  </span>
+                )}
+                <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200  text-gray-700 rounded">
+                  {item.checkpoint?.questions?.items.length} questions
                 </span>
+                <br />
+                <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+              </h4>
+            </div>
+            <div className="w-auto m-2">
+              {isOpen ? (
+                <BiChevronUp className="text-gray-900 text-xl" />
+              ) : (
+                <BiChevronDown className="text-gray-900 text-xl" />
               )}
-              <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200  text-gray-700 rounded">
-                {item.checkpoint?.questions?.items.length} questions
-              </span>
-              <br />
-              <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
-            </h4>
+            </div>
           </div>
-          <div className="w-auto m-2">
-            {isOpen ? (
-              <BiChevronUp className="text-gray-900 text-xl" />
-            ) : (
-              <BiChevronDown className="text-gray-900 text-xl" />
-            )}
-          </div>
-        </div>
+        ) : null}
         <div className={`option__list ${isOpen ? 'show' : 'hide'}`}>
-          {item.checkpoint?.instructionsTitle || htmlTitle.length > 0 ? (
+          {item.checkpoint?.instructionsTitle || (htmlTitle && htmlTitle.length > 0) ? (
             <div className="py-2">
               <h4 className="text-gray-600 text-base font-medium mb-2">{item.checkpoint?.instructionsTitle} </h4>
 
