@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
-import { BiChevronDown } from 'react-icons/bi';
+import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 import Buttons from '../../../../Atoms/Buttons';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
@@ -14,6 +14,7 @@ import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
 import { getTypeString } from '../../../../../utilities/strings';
+import Loader from '../../../../Atoms/Loader';
 
 interface PreviewFormProps {
   lessonName: string;
@@ -34,6 +35,9 @@ const PreviewForm = (props: PreviewFormProps) => {
   const [loading, setLoading] = useState(false);
   const [relatedUnitsID, setRelatedUnitsID] = useState([]);
   const [lessonDetails, setLessonDetails] = useState<any>({});
+
+  const [isAllOpen, setIsAllOpen] = useState(false);
+
   const [fetchingQuestionSequence, setFetchingQuestionSequence] = useState(false);
 
   const [message, setMessage] = useState({
@@ -195,16 +199,17 @@ const PreviewForm = (props: PreviewFormProps) => {
   const fieldClass = 'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
   const QuestionList = ({ checkpItem, index }: any) => {
     const [isOpen, setIsOpen] = useState(false);
+
     const showListAndDropDown =
       checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne';
     return (
-      <div className="my-4 w-9/10 question__container">
+      <div className="my-4 w-full question__container">
         <div
           onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
           role="button"
           className={`${
             isOpen ? 'border-indigo-300' : 'border-gray-200'
-          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-center w-full`}>
+          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-full`}>
           <p className="w-9.3/10" key={checkpItem.id}>
             <span>
               {index + 1}.{checkpItem?.question?.question}{' '}
@@ -222,7 +227,7 @@ const PreviewForm = (props: PreviewFormProps) => {
             <div className="w-.7/10" />
           )}
         </div>
-        <div id="option__list" className={`px-12 py-2 option__list ${isOpen ? 'show' : 'hide'}`}>
+        <div id="option__list" className={`px-12 py-2 option__list ${isOpen ? 'show' : isAllOpen ? 'show' : 'hide'}`}>
           {showListAndDropDown && (
             <ul className="list-disc">
               {checkpItem?.question?.options?.map((opt: any) => (
@@ -230,6 +235,57 @@ const PreviewForm = (props: PreviewFormProps) => {
               ))}
             </ul>
           )}
+        </div>
+      </div>
+    );
+  };
+
+  const QuestionContainer = ({ item }: any) => {
+    const htmlTitle = item?.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
+
+    const questionsLen = item.checkpoint?.questions?.items.length;
+    const showQuestions = item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
+    const outerContainerStyles = showQuestions ? `w-full mb-4 p-6 px-4 border-0 border-gray-300 rounded relative` : '';
+    return (
+      <div className={outerContainerStyles} key={item.id}>
+        {showQuestions ? (
+          <div className="w-full flex items-center justify-between cursor-pointer">
+            <div>
+              <h4 className="font-bold text-gray-900 text-base">
+                {item.checkpoint?.title || ''}{' '}
+                {item.checkpoint?.estTime && (
+                  <span>
+                    ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
+                  </span>
+                )}
+                <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200 text-gray-700 rounded-md">
+                  {item.checkpoint?.questions?.items.length || ''}{' '}
+                  {questionsLen === 0 ? 'no questions' : questionsLen === 1 ? 'question' : 'questions'}
+                </span>
+                <br />
+                <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+              </h4>
+            </div>
+          </div>
+        ) : null}
+        <div className={`option__list`}>
+          {item.checkpoint?.instructionsTitle || (htmlTitle && htmlTitle.length > 0) ? (
+            <div className="py-2">
+              <h4 className="text-gray-600 text-base font-medium mb-2">{item.checkpoint?.instructionsTitle} </h4>
+              {htmlTitle.length > 0 && (
+                <div className="border-dashed border-0 w-full bg-gray-100 border-gray-300 rounded-md p-2 px-3">
+                  instructions: {ReactHtmlParser(item.checkpoint?.instructions)}
+                </div>
+              )}
+            </div>
+          ) : null}
+          {item.checkpoint?.questions?.items?.length > 0 ? (
+            <div className="py-2">
+              {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
+                <QuestionList index={index} key={index} checkpItem={checkpItem} />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     );
@@ -243,8 +299,11 @@ const PreviewForm = (props: PreviewFormProps) => {
         </h3>
       </div>
       {loading || isEmpty(lessonDetails) ? (
-        <div className="py-20 text-center mx-auto">
-          <p>{PreviewFormDict[userLanguage]['FETCHING']}</p>
+        <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+          <div className="w-5/10">
+            <Loader color="rgba(107, 114, 128, 1)" />
+            <p className="mt-2 text-center text-lg text-gray-500">{PreviewFormDict[userLanguage]['FETCHING']}</p>
+          </div>
         </div>
       ) : (
         <Fragment>
@@ -270,38 +329,28 @@ const PreviewForm = (props: PreviewFormProps) => {
               <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
                 {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions:
               </h3>
-              {/* <h3 className="font-medium text-gray-500 text-base">{lessonDetails?.instructionsTitle || ''}</h3> */}
-              <p className="w-3/4">
-                {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
-              </p>
+              <div className="w-3/4">
+                <p className="font-semibold text-base">{lessonDetails?.instructionsTitle || ''}</p>
+                <p className="w-3/4 mb-4 mt-2">
+                  {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
+                </p>
+              </div>
             </div>
             <div className={'py-2 px-4 w-full'}>
-              <h3 className="font-semibold text-gray-700 text-xl mb-2">
-                {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
-              </h3>
+              <div className="w-full mt-2 flex items-center justify-between">
+                <h3 className="font-semibold text-gray-700 text-xl mb-2">
+                  {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
+                </h3>
+                <Buttons
+                  btnClass="w-4/10 px-4 py-3"
+                  onClick={() => setIsAllOpen(!isAllOpen)}
+                  label="Toggle All Questions"
+                />
+              </div>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
-                <div className="ml-8 mt-4">
-                  {lessonDetails?.checkpoints?.items?.map((item: any) => (
-                    <Fragment key={item.id}>
-                      <h4 className="font-bold text-gray-900 text-base">
-                        {item.checkpoint?.title || ''}
-                        <br />
-                        <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
-                      </h4>
-                      <div className="py-2">
-                        <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
-                        {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
-                      </div>
-                      <div>
-                        {item.checkpoint?.questions?.items?.length > 0 ? (
-                          <div className="py-2">
-                            {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                              <QuestionList index={index} key={index} checkpItem={checkpItem} />
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </Fragment>
+                <div className="mt-4">
+                  {lessonDetails?.checkpoints?.items?.map((item: any, key: number) => (
+                    <QuestionContainer key={key} item={item} />
                   ))}
                 </div>
               ) : (
@@ -311,15 +360,15 @@ const PreviewForm = (props: PreviewFormProps) => {
 
             <div className={fieldClass}>
               <h3 className="w-1/4 font-medium text-gray-500 text-base mb-2">Closing Message :</h3>
-              <div className="w-3/4 italic">
-                <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
+              <div className="w-3/4">
+                <h3 className="font-semibold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
                 <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
               </div>
             </div>
           </div>
           {message ? (
             <div className="py-4 m-auto mt-2 text-center">
-              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}> {message.msg} </p>
+              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}>{message.msg} </p>
             </div>
           ) : null}
           {enablePublish && (

@@ -321,65 +321,19 @@ const ProfileEdit = (props: UserInfoProps) => {
     return (
       <div className="h-full w-full md:px-4 pt-4">
         <form>
-          <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
-            <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
-                {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
-              </h3>
-            </div>
+          <div>
+            <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+                  {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
+                  <NavLink className="text-gray-500 lowercase text-right float-right w-auto" to={path}>
+                    <p className="font-medium text-base">Click here to edit password</p>
+                  </NavLink>
+                </h3>
+              </div>
 
-            <div className="h-full px-4 py-5 sm:px-6">
-              <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
-                {user.role === 'ST' ? (
-                  // what users with STUDENT can see
-                  <>
-                    <div className="sm:col-span-3 p-2">
-                      <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
-                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
-                      </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          id="preferredName"
-                          onChange={onChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          defaultValue={user.preferredName}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-3 p-2">
-                      <DropdownForm
-                        handleChangeLanguage={handleChangeLanguage}
-                        userLanguage={user.language}
-                        label={dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LANGUAGE']}
-                        items={Language}
-                      />
-                    </div>
-
-                    {/* <div className="sm:col-span-3 p-2">
-                      <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700">
-                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['CONTACT']}
-                      </label>
-                      <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
-                        <input id="phone" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          defaultValue={user.phone}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="sm:col-span-3 p-2">
-                      <label htmlFor="birthdate" className="block text-sm font-medium leading-5 text-gray-700">
-                        {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['BIRTHDAY']}
-                      </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input id="birthdate" type="date" onChange={onChange} className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          defaultValue={user.birthdate}
-                        />
-                      </div>
-                    </div> */}
-                  </>
-                ) : (
-                  // everyone else can see
+              <div className="h-full px-4 py-5 sm:px-6">
+                <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <>
                     <div className="sm:col-span-3 p-2">
                       <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
@@ -434,16 +388,13 @@ const ProfileEdit = (props: UserInfoProps) => {
                       />
                     </div>
                   </>
-                )}
+                </div>
               </div>
             </div>
           </div>
-          <NavLink className="text-gray-700 font-medium float-right w-auto" to={path}>
-            <p className="font-semibold">Click here to edit password</p>
-          </NavLink>
 
           {stdCheckpoints?.length > 0 ? (
-            <Fragment>
+            <div className="mt-8">
               {stdCheckpoints.map((checkpoint: any) => (
                 <Fragment key={checkpoint.id}>
                   <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
@@ -531,7 +482,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                   </div>
                 </Fragment>
               ))}
-            </Fragment>
+            </div>
           ) : null}
 
           <div className="px-4 pt-4 w-full flex justify-end">

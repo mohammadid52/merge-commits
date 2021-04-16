@@ -26,6 +26,7 @@ import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import useDictionary from '../../../customHooks/dictionary';
 import { getUniqItems, createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
+import { getAsset } from '../../../assets';
 
 export interface UserInfo {
   authId: string;
@@ -265,16 +266,29 @@ const Profile = (props: ProfilePageProps) => {
       const results: any = await API.graphql(
         graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId })
       );
+
       const userData: any = results.data.getPerson;
-      const studentClasses: any = userData.classes?.items.map((item: any) => item.class);
-      const studentInstitutions: any = studentClasses?.map((item: any) => item.institution);
-      const studentRooms: any = studentClasses?.map((item: any) => item.rooms?.items)?.flat(1);
+      let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
+      studentClasses = studentClasses.filter((d: any) => d !== null);
+
+      const studentInstitutions: any = studentClasses?.map((item: any) => item?.institution);
+      const studentRooms: any = studentClasses?.map((item: any) => item?.rooms?.items)?.flat(1);
       const studentCurriculars: any = studentRooms.map((item: any) => item?.curricula?.items).flat(1);
-      const uniqCurriculars: any = getUniqItems(studentCurriculars, 'curriculumID');
+      const uniqCurriculars: any = getUniqItems(
+        studentCurriculars.filter((d: any) => d !== null),
+        'curriculumID'
+      );
       const studCurriCheckp: any = uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1);
       const studentCheckpoints: any = studCurriCheckp.map((item: any) => item?.checkpoint);
-      const uniqCheckpoints: any = getUniqItems(studentCheckpoints, 'id');
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item.id);
+
+      const sCheckpoints: any[] = [];
+
+      studentCheckpoints.forEach((item: any) => {
+        if (item) sCheckpoints.push(item);
+      });
+
+      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = { ...userData };
       delete personalInfo.classes;
       if (uniqCheckpointIDs?.length > 0) {
@@ -302,34 +316,57 @@ const Profile = (props: ProfilePageProps) => {
     getUrl();
   }, [person.image]);
 
+  const profileBanner1 = getAsset(clientKey, 'dashboardBanner1');
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   if (status !== 'done') {
     return <LessonLoading />;
   }
   {
     return (
-      <div className="w-full h-9.28/10 md:h-full flex items-center justify-center">
-        <div className={`w-9/10 h-full main_container mt-4`}>
-          <BreadCrums items={breadCrumsList} />
+      <>
+        {/* Hero Section */}
+        <div className="relative">
+          <div className="absolute inset-0 w-full h-60">
+            <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
+            <img className="object-cover w-full h-full bg-center bg-no-repeat bg-contain" src={profileBanner1} alt="" />
+          </div>
+          <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
+            <h1
+              style={{ fontSize: '6rem' }}
+              className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+              Profile
+            </h1>
+          </div>
+        </div>
+        {/* Header */}
+        {person && (
+          <div
+            className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+            <h2 className={`text-base text-center font-normal`}>
+              <span className="font-semibold">{person.preferredName ? person.preferredName : person.firstName}</span>,
+              update your avatar, personal information & profile questions here.
+            </h2>
+          </div>
+        )}
+        <div className={`main_container p-0 mx-auto max-w-256`}>
+          {/* <BreadCrums items={breadCrumsList} />  */}
           <div className="flex justify-between">
             <SectionTitle
               title={dashboardProfileDict[userLanguage]['TITLE']}
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
             <div className="flex justify-end py-4 mb-4 w-5/10">
-              <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-              {currentPath !== 'edit' ? (
-                <Buttons
-                  btnClass="mr-4 px-6"
-                  label="Edit"
-                  onClick={() => history.push(`${match.url}/edit`)}
-                  Icon={FaEdit}
-                />
+              <Buttons label="Go Back" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+              {currentPath !== 'edit' && currentPath !== 'password' ? (
+                <Buttons btnClass="ml-6" label="Edit" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
               ) : null}
             </div>
           </div>
-          <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
+          <div
+            className={`w-full m-auto max-w-256 p-4 white_back mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-              <div className="w-auto p-4 flex flex-col text-center items-center">
+              <div className="w-auto p-4 flex flex-col text-center items-center px-8">
                 <div className="relative">
                   {person.image ? (
                     <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
@@ -391,7 +428,7 @@ const Profile = (props: ProfilePageProps) => {
                   )}
                 </div>
                 <p className="text-gray-600 my-2">{dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']} </p>
-                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4 w-52`}>
+                <div className={`text-lg md:text-xl font-bold font-open text-gray-900 mt-4 w-52`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
@@ -490,7 +527,7 @@ const Profile = (props: ProfilePageProps) => {
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 };
