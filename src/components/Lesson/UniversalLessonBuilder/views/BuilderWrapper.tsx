@@ -12,6 +12,9 @@ import {
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
 import { CoreBuilder } from './CoreBuilder';
+import { HierarchyPanel } from '../UI/HierarchyPanel';
+import { EditPanel } from '../UI/EditPanel';
+import { BuilderMenu } from '../UI/BuilderMenu';
 
 interface ExistingLessonTemplateProps {
   mode?: 'building' | 'viewing';
@@ -50,11 +53,20 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [loading, setLoading] = useState(false);
 
   // UI elements show/hide
+  const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
+  const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
 
   return (
     <div className=" relative bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-      <Toolbar galleryVisible={galleryVisible} setGalleryVisible={setGalleryVisible} />
+      <Toolbar
+        hierarchyVisible={hierarchyVisible}
+        setHierarchyVisible={setHierarchyVisible}
+        galleryVisible={galleryVisible}
+        setGalleryVisible={setGalleryVisible}
+        builderMenuVisible={builderMenuVisible}
+        setBuilderMenuVisible={setBuilderMenuVisible}
+      />
 
       <PageSelector
         universalLessonDetails={universalLessonDetails}
@@ -66,10 +78,36 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setSelectedPageDetails={setSelectedPageDetails}
       />
 
+      <HierarchyPanel
+        hierarchyVisible={hierarchyVisible}
+        selectedPageDetails={selectedPageDetails}
+        selectedPagePartDetails={selectedPagePartDetails}
+        setSelectedPagePartDetails={setSelectedPagePartDetails}
+        selectedPartContentDetails={selectedPartContentDetails}
+        setSelectedPartContentDetails={setSelectedPartContentDetails}
+      />
+
+      <BuilderMenu
+        galleryVisible={galleryVisible}
+        setGalleryVisible={setGalleryVisible}
+        builderMenuVisible={builderMenuVisible}
+      />
+
+      {/*<EditPanel*/}
+      {/*  selectedPageDetails={selectedPageDetails}*/}
+      {/*  setSelectedPageDetails={setSelectedPageDetails}*/}
+      {/*  selectedPagePartDetails={selectedPagePartDetails}*/}
+      {/*  setSelectedPagePartDetails={setSelectedPagePartDetails}*/}
+      {/*  selectedPartContentDetails={selectedPartContentDetails}*/}
+      {/*  setSelectedPartContentDetails={setSelectedPartContentDetails}*/}
+      {/*  initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}*/}
+      {/*/>*/}
+
       <CoreBuilder
         mode={mode}
         universalLessonDetails={universalLessonDetails}
         galleryVisible={galleryVisible}
+        hierarchyVisible={hierarchyVisible}
         selectedPageDetails={selectedPageDetails}
         setSelectedPageDetails={setSelectedPageDetails}
         selectedPagePartDetails={selectedPagePartDetails}

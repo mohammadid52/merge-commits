@@ -14,6 +14,7 @@ interface CoreBuilderProps {
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
+  hierarchyVisible?: boolean;
   setSelectedPageDetails?: React.Dispatch<React.SetStateAction<UniversalLessonPage>>;
   selectedPagePartDetails: PagePart;
   setSelectedPagePartDetails: React.Dispatch<React.SetStateAction<PagePart>>;
@@ -27,6 +28,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     mode,
     universalLessonDetails,
     selectedPageDetails,
+    hierarchyVisible,
+    galleryVisible,
     setSelectedPageDetails,
     selectedPagePartDetails,
     setSelectedPagePartDetails,
@@ -38,22 +41,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   return (
     <div className={`bg-dark-gray`}>
       <div className={`relative w-full flex flex-row min-h-256 mx-auto`}>
-        <HierarchyPanel
-          selectedPageDetails={selectedPageDetails}
-          selectedPagePartDetails={selectedPagePartDetails}
-          setSelectedPagePartDetails={setSelectedPagePartDetails}
-          selectedPartContentDetails={selectedPartContentDetails}
-          setSelectedPartContentDetails={setSelectedPartContentDetails}
-        />
-        <EditPanel
-          selectedPageDetails={selectedPageDetails}
-          setSelectedPageDetails={setSelectedPageDetails}
-          selectedPagePartDetails={selectedPagePartDetails}
-          setSelectedPagePartDetails={setSelectedPagePartDetails}
-          selectedPartContentDetails={selectedPartContentDetails}
-          setSelectedPartContentDetails={setSelectedPartContentDetails}
-          initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
-        />
         <RowComposer mode={mode} selectedPageDetails={selectedPageDetails} />
       </div>
     </div>

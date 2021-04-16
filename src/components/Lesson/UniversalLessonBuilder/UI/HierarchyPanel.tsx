@@ -17,6 +17,7 @@ interface HierarchyPanelProps {
   setSelectedPagePartDetails: React.Dispatch<React.SetStateAction<PagePart>>;
   selectedPartContentDetails: PartContent;
   setSelectedPartContentDetails: React.Dispatch<React.SetStateAction<PartContent>>;
+  hierarchyVisible?: boolean;
 }
 
 export const HierarchyPanel = (props: HierarchyPanelProps) => {
@@ -26,25 +27,14 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
     setSelectedPagePartDetails,
     selectedPartContentDetails,
     setSelectedPartContentDetails,
+    hierarchyVisible,
   } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
-    <div className={`w-auto h-full bg-gray-600`}>
-      <div className={`absolute ml-2 mt-2`}>
-        <ButtonsRound
-          Icon={FiLayers}
-          type={`button`}
-          disabled={selectedPageDetails.pageContent.length <= 0}
-          btnClass={`
-          ${isOpen ? 'transition duration-200' : 'transition duration-200'}
-          ${isOpen ? 'transform translate-x-48' : 'transform translate-x-0'}
-          inline-flex items-center p-3 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-          onClick={() => setIsOpen(!isOpen)}
-        />
-      </div>
+    <div className={`absolute w-48 h-full bg-gray-600`}>
       <Transition
-        show={isOpen}
+        show={hierarchyVisible}
         enter="transition duration-200"
         enterFrom="opacity-0 transform -translate-x-48"
         enterTo="opacity-100 transform translate-x-0"

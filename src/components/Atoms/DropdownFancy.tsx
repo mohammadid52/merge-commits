@@ -4,30 +4,18 @@ import { CgMenuGridO } from 'react-icons/cg';
 
 interface DropdownFancyProps {
   options?: Array<{ value: string; option: string }>;
+  builderMenuVisible?: boolean;
 }
 
 const DropdownFancy = (props: DropdownFancyProps) => {
-  const { options } = props;
-  const [menuEntered, setMenuEntered] = useState<boolean>(false);
-
-  const handleMenuOpen = () => {
-    setMenuEntered(!menuEntered);
-  };
+  const { options, builderMenuVisible } = props;
 
   return (
-    <div className="relative" onClick={handleMenuOpen}>
-      <div className={`text-right`}>
-        <button className={`w-auto`}>
-          <IconContext.Provider value={{ size: '1.5rem', className: 'text-dark-gray' }}>
-            <CgMenuGridO />
-          </IconContext.Provider>
-        </button>
-      </div>
-
+    <div className="relative">
       <div
         className={`
-        ${menuEntered ? 'transition ease-out duration-100' : 'transition ease-in duration-75'}
-        ${menuEntered ? 'transform opacity-100 scale-100' : 'transform opacity-0 scale-95'}
+        ${builderMenuVisible ? 'transition ease-out duration-100' : 'transition ease-in duration-75'}
+        ${builderMenuVisible ? 'transform opacity-100 scale-100' : 'transform opacity-0 scale-95'}
         origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none
         z-50`}
         role="menu"

@@ -2,14 +2,32 @@ import Buttons from '../../../Atoms/Buttons';
 import React from 'react';
 import { VscNewFile, VscReferences, VscSave } from 'react-icons/vsc';
 import DropdownFancy from '../../../Atoms/DropdownFancy';
+import { BuilderMenu } from './BuilderMenu';
+import { HierarchyToggle } from './Toolbar/HierarchyToggle';
+import { PageGalleryToggle } from './Toolbar/PageGalleryToggle';
+import { UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
+import { BuilderMenuToggle } from './Toolbar/BuilderMenuToggle';
 
 interface ToolbarProps {
+  selectedPageDetails?: UniversalLessonPage;
+  hierarchyVisible?: boolean;
+  setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   galleryVisible?: boolean;
   setGalleryVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  builderMenuVisible?: boolean;
+  setBuilderMenuVisible?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Toolbar = (props: ToolbarProps) => {
-  const { galleryVisible, setGalleryVisible } = props;
+  const {
+    selectedPageDetails,
+    galleryVisible,
+    setGalleryVisible,
+    hierarchyVisible,
+    setHierarchyVisible,
+    builderMenuVisible,
+    setBuilderMenuVisible,
+  } = props;
   const dropDownOptions = [
     {
       value: 'Save Draft',
@@ -37,12 +55,23 @@ export const Toolbar = (props: ToolbarProps) => {
     setGalleryVisible(!galleryVisible);
   };
 
+  const handleSetHierarchyVisibility = () => {
+    setHierarchyVisible(!hierarchyVisible);
+  };
+
+  const handleSetBuilderMenuVisibility = () => {
+    setBuilderMenuVisible(!builderMenuVisible);
+  };
+
   return (
     <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
       <div className={`grid grid-cols-3 gap-2`}>
-        <h3 className="text-lg leading-6 font-medium text-gray-900">The Lesson Title</h3>
-        <Buttons label="Page Gallery" onClick={handleSetGalleryVisibility} btnClass="px-4" />
-        <DropdownFancy options={dropDownOptions} />
+        <HierarchyToggle
+          selectedPageDetails={selectedPageDetails}
+          handleSetHierarchyVisibility={handleSetHierarchyVisibility}
+        />
+        <PageGalleryToggle handleSetGalleryVisibility={handleSetGalleryVisibility} />
+        <BuilderMenuToggle handleSetBuilderMenuVisibility={handleSetBuilderMenuVisibility} />
       </div>
     </div>
   );

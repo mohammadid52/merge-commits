@@ -2949,25 +2949,25 @@ const UnitLookupDict: any = {
 };
 
 const UniversalBuilderDict: any = {
-  'EN':{
+  EN: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'Lesson Pages'
+      LESSON_PAGES: 'Lesson Pages',
     },
-    TEMPLATES:{
-      TITLE: 'Lesson Templates'
-    }
+    TEMPLATES: {
+      TITLE: 'Lesson Templates',
+    },
   },
-  'ES':{
+  ES: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'TBD'
+      LESSON_PAGES: 'TBD',
     },
-    TEMPLATES:{
-      TITLE: 'TBD'
-    }
-  }
-}
+    TEMPLATES: {
+      TITLE: 'TBD',
+    },
+  },
+};
 
 const LessonBuilderDict: any = {
   EN: {
@@ -3112,5 +3112,5 @@ export {
   LessonBuilderDict,
   LessonEditDict,
   LessonsListDict,
-  UniversalBuilderDict
+  UniversalBuilderDict,
 };
