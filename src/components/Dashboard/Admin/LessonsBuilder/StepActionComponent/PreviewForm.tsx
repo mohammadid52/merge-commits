@@ -337,17 +337,19 @@ const PreviewForm = (props: PreviewFormProps) => {
               <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
                 {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions:
               </h3>
-              {/* <h3 className="font-medium text-gray-500 text-base">{lessonDetails?.instructionsTitle || ''}</h3> */}
-              <p className="w-3/4">
-                {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
-              </p>
+              <div className="w-3/4">
+                <p className="font-semibold text-base">{lessonDetails?.instructionsTitle || ''}</p>
+                <p className="w-3/4 mb-4 mt-2">
+                  {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
+                </p>
+              </div>
             </div>
             <div className={'py-2 px-4 w-full'}>
               <h3 className="font-semibold text-gray-700 text-xl mb-2">
                 {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
               </h3>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
-                <div className="ml-8 mt-4">
+                <div className="mt-4">
                   {lessonDetails?.checkpoints?.items?.map((item: any, key: number) => (
                     <QuestionContainer key={key} item={item} />
                   ))}
@@ -359,15 +361,15 @@ const PreviewForm = (props: PreviewFormProps) => {
 
             <div className={fieldClass}>
               <h3 className="w-1/4 font-medium text-gray-500 text-base mb-2">Closing Message :</h3>
-              <div className="w-3/4 italic">
-                <h3 className="font-bold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
+              <div className="w-3/4">
+                <h3 className="font-semibold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
                 <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
               </div>
             </div>
           </div>
           {message ? (
             <div className="py-4 m-auto mt-2 text-center">
-              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}> {message.msg} </p>
+              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}>{message.msg} </p>
             </div>
           ) : null}
           {enablePublish && (
