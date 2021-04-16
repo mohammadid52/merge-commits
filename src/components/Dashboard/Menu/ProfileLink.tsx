@@ -40,7 +40,22 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
       <a className="flex-shrink-0 w-full group block">
         <div className="flex items-center">
           <div style={{ width: 64, height: 64, minWidth: 64, minHeight: 64 }} className="">
-            <img className="inline-block rounded" style={{ width: 64, height: 64 }} src={imageUrl} alt="" />
+            {state.user.image ? (
+              <img className="inline-block rounded" style={{ width: 64, height: 64 }} src={imageUrl} alt="" />
+            ) : (
+              <div
+                style={{
+                  background: `${
+                    state.user.firstName
+                      ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
+                      : '#272730'
+                  }`,
+                  textShadow: '0.1rem 0.1rem 2px #423939b3',
+                }}
+                className="rounded flex justify-center items-center text-xs text-white font-sans">
+                {`${initials(state.user.firstName, state.user.lastName)}`}
+              </div>
+            )}
           </div>
           <div className="ml-3">
             <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">{`${state.user.firstName} ${state.user.lastName}`}</p>

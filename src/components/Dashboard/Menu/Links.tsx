@@ -95,12 +95,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             ...links,
-            {
-              title: sideBarLinksDict[userLanguage].DASHBOARD,
-              name: sideBarLinksDict[userLanguage].DASHBOARD,
-              label: 'Dashboard',
-              path: 'home',
-            },
+            // {
+            //   title: sideBarLinksDict[userLanguage].DASHBOARD,
+            //   name: sideBarLinksDict[userLanguage].DASHBOARD,
+            //   label: 'Dashboard',
+            //   path: 'home',
+            // },
             {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
@@ -113,6 +113,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
               path: 'manage-users',
+              subMenuItems: [{ title: 'Add New Person', path: 'registration' }],
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
@@ -131,7 +132,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
-              subMenuItems: [{ title: 'Add New', path: 'lesson-builder/lesson/add' }],
+              subMenuItems: [{ title: 'Add New Lesson', path: 'lesson-builder/lesson/add' }],
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
@@ -146,17 +147,20 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             ...links,
-            {
-              title: sideBarLinksDict[userLanguage].PEOPLE,
-              name: sideBarLinksDict[userLanguage].PEOPLE,
-              label: 'People',
-              path: 'manage-users',
-            },
+
             {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
               path: 'manage-institutions',
+            },
+
+            {
+              title: sideBarLinksDict[userLanguage].PEOPLE,
+              name: sideBarLinksDict[userLanguage].PEOPLE,
+              label: 'People',
+              path: 'manage-users',
+              subMenuItems: [{ title: 'Add New Person', path: 'registration' }],
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
@@ -175,6 +179,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
+              subMenuItems: [{ title: 'Add New Lesson', path: 'lesson-builder/lesson/add' }],
             },
           ];
         });
@@ -203,7 +208,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  const handleLink = (e: any, label: string, toggle: boolean) => {
+  const handleLink = (e: any, label: string, toggle: boolean = false) => {
     const id = e.target.id.toLowerCase();
     const lastCharacter = match.url.charAt(match.url.length - 1);
 
@@ -226,16 +231,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     linkProps.setCurrentPage(id);
   };
 
-  const pageUrlEndsWith = (pageLabel: string) => {
-    const pageUrl = window.location.href;
-    const lastPart = pageUrl.match(/[^/]+$/g);
-    return lastPart.includes(pageLabel);
-  };
+  // const pageUrlEndsWith = (pageLabel: string) => {
+  //   const pageUrl = window.location.href;
+  //   const lastPart = pageUrl.match(/[^/]+$/g);
+  //   return lastPart.includes(pageLabel);
+  // };
 
-  const pageUrlContains = (pageLabel: string) => {
-    const pageUrl = window.location.href;
-    return pageUrl.indexOf(pageLabel) !== -1;
-  };
+  // const pageUrlContains = (pageLabel: string) => {
+  //   const pageUrl = window.location.href;
+  //   return pageUrl.indexOf(pageLabel) !== -1;
+  // };
 
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
@@ -262,10 +267,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  const linkClass =
-    'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
-  const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
-  const activeClass = 'bg-gray-200 text-dark-gray';
+  // const linkClass =
+  //   'w-full h-20 text-center text-xs tracking-wider mx-auto py-4 flex flex-col items-center justify-center';
+  // const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
+  // const activeClass = 'bg-gray-200 text-dark-gray';
 
   const path = history.location.pathname;
 
@@ -277,6 +282,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             const open =
               path === currentPath ||
               (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
+
+            const exists = openItems.indexOf(link.label) !== -1;
+
             return link.subMenuItems && link.subMenuItems.length > 0 ? (
               <div key={`link_${key}`} className={`space-y-1`}>
                 <a
@@ -292,14 +300,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                   {link.name}
                   <svg
                     className={`${
-                      open ? 'text-gray-400 rotate-90' : 'text-gray-300'
+                      exists ? 'text-gray-400 rotate-90' : 'text-gray-300'
                     } text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150`}
                     viewBox="0 0 20 20"
                     aria-hidden="true">
                     <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
                   </svg>
                 </a>
-                {open && (
+                {exists && (
                   <div className="space-y-1" id="sub-menu-1">
                     {link.subMenuItems.map((d: any) => {
                       const activeLink =
@@ -309,7 +317,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                         <a
                           key={`${d.path}_key`}
                           id={d.path}
-                          onClick={(e) => handleLink(e, link.label, false)}
+                          onClick={(e) => handleLink(e, link.label)}
                           className={`group cursor-pointer w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
                             activeLink ? 'text-gray-300' : 'text-gray-600'
                           }`}>
@@ -324,7 +332,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               <a
                 key={`link_${key}`}
                 id={link.path}
-                onClick={(e) => handleLink(e, link.label, false)}
+                onClick={(e) => handleLink(e, link.label)}
                 className={`${
                   path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
                 } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md`}>
@@ -332,14 +340,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 {link.name}
               </a>
             );
-            // <div onClick={handleLink}>
-            //   <div id={link.path} className={`${linkClass} ${path === `/dashboard/${link.path}` && activeClass}`}>
-            //     <IconContext.Provider value={{ size: '24px', style: { pointerEvents: 'none' } }}>
-            //       {getMenuIcon(link.label, link.path)}
-            //     </IconContext.Provider>
-            //     {link.name}
-            //   </div>
-            // </div>
           })
         : null}
     </div>
