@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, Fragment } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
-import { BiChevronDown } from 'react-icons/bi';
+import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 import Buttons from '../../../../Atoms/Buttons';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
@@ -14,6 +14,7 @@ import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
 import { getTypeString } from '../../../../../utilities/strings';
+import Loader from '../../../../Atoms/Loader';
 
 interface PreviewFormProps {
   lessonName: string;
@@ -204,7 +205,7 @@ const PreviewForm = (props: PreviewFormProps) => {
           role="button"
           className={`${
             isOpen ? 'border-indigo-300' : 'border-gray-200'
-          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-center w-full`}>
+          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-full`}>
           <p className="w-9.3/10" key={checkpItem.id}>
             <span>
               {index + 1}.{checkpItem?.question?.question}{' '}
@@ -235,6 +236,69 @@ const PreviewForm = (props: PreviewFormProps) => {
     );
   };
 
+  const QuestionContainer = ({ item }: any) => {
+    const htmlTitle = item?.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
+    const [isOpen, setIsOpen] = useState(false);
+    const questionsLen = item.checkpoint?.questions?.items.length;
+    const showQuestions = item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
+    const outerContainerStyles = showQuestions
+      ? `${
+          isOpen ? 'border-indigo-400 border-solid' : 'border-indigo-400 border-dashed'
+        }  border-0 w-9/10 mb-4  hover:border-indigo-400 rounded-md p-2 px-4 relative`
+      : '';
+    return (
+      <div className={outerContainerStyles} key={item.id}>
+        {showQuestions ? (
+          <div className="w-full flex items-center justify-between cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+            <div>
+              <h4 className="font-bold text-gray-900 text-base">
+                {item.checkpoint?.title || ''}{' '}
+                {item.checkpoint?.estTime && (
+                  <span>
+                    ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
+                  </span>
+                )}
+                <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200  text-gray-700 rounded">
+                  {item.checkpoint?.questions?.items.length || ''}{' '}
+                  {questionsLen === 0 ? 'no questions' : questionsLen === 1 ? 'question' : 'questions'}
+                </span>
+                <br />
+                <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+              </h4>
+            </div>
+            <div className="w-auto m-2">
+              {isOpen ? (
+                <BiChevronUp className="text-gray-900 text-xl" />
+              ) : (
+                <BiChevronDown className="text-gray-900 text-xl" />
+              )}
+            </div>
+          </div>
+        ) : null}
+        <div className={`option__list ${isOpen ? 'show' : 'hide'}`}>
+          {item.checkpoint?.instructionsTitle || (htmlTitle && htmlTitle.length > 0) ? (
+            <div className="py-2">
+              <h4 className="text-gray-600 text-base font-medium mb-2">{item.checkpoint?.instructionsTitle} </h4>
+
+              {htmlTitle.length > 0 && (
+                <div className="border-dashed border-0 w-9/10 bg-gray-100 border-gray-600 rounded-md p-2 px-3">
+                  {ReactHtmlParser(item.checkpoint?.instructions)}
+                </div>
+              )}
+            </div>
+          ) : null}
+          {item.checkpoint?.questions?.items?.length > 0 ? (
+            <div className="py-2">
+              {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
+                <QuestionList index={index} key={index} checkpItem={checkpItem} />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -243,8 +307,11 @@ const PreviewForm = (props: PreviewFormProps) => {
         </h3>
       </div>
       {loading || isEmpty(lessonDetails) ? (
-        <div className="py-20 text-center mx-auto">
-          <p>{PreviewFormDict[userLanguage]['FETCHING']}</p>
+        <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+          <div className="w-5/10">
+            <Loader color="rgba(107, 114, 128, 1)" />
+            <p className="mt-2 text-center text-lg text-gray-500">{PreviewFormDict[userLanguage]['FETCHING']}</p>
+          </div>
         </div>
       ) : (
         <Fragment>
@@ -281,27 +348,8 @@ const PreviewForm = (props: PreviewFormProps) => {
               </h3>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
                 <div className="ml-8 mt-4">
-                  {lessonDetails?.checkpoints?.items?.map((item: any) => (
-                    <Fragment key={item.id}>
-                      <h4 className="font-bold text-gray-900 text-base">
-                        {item.checkpoint?.title || ''}
-                        <br />
-                        <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
-                      </h4>
-                      <div className="py-2">
-                        <h4 className="font-bold text-gray-800 text-base"> {item.checkpoint?.instructionsTitle} </h4>
-                        {item.checkpoint?.instructions ? ReactHtmlParser(item.checkpoint?.instructions) : ''}
-                      </div>
-                      <div>
-                        {item.checkpoint?.questions?.items?.length > 0 ? (
-                          <div className="py-2">
-                            {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                              <QuestionList index={index} key={index} checkpItem={checkpItem} />
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </Fragment>
+                  {lessonDetails?.checkpoints?.items?.map((item: any, key: number) => (
+                    <QuestionContainer key={key} item={item} />
                   ))}
                 </div>
               ) : (

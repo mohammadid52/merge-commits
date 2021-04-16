@@ -80,7 +80,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
         })
       );
       const response = await dashboardDataFetch;
-      const arrayOfResponseObjects = response?.data.getPerson.classes.items;
+      let arrayOfResponseObjects = response?.data.getPerson.classes.items;
+
+      arrayOfResponseObjects = arrayOfResponseObjects.filter((item: any) => item.class !== null);
+
       setHomeData(arrayOfResponseObjects);
     } catch (e) {
       console.error('getDashbaordData -> ', e);
@@ -105,7 +108,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       ? homeData.reduce((acc: any[], dataObj: any) => {
           return [
             ...acc,
-            { name: dataObj.class?.name, rooms: dataObj.class?.rooms, students: dataObj.class?.students },
+            { name: dataObj?.class?.name, rooms: dataObj?.class?.rooms, students: dataObj?.class?.students },
           ];
         }, [])
       : [];

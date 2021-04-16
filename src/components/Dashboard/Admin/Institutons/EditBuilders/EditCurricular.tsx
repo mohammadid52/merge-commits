@@ -409,7 +409,7 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   const { name, description, objectives, type, languages, summary, institute } = curricularData;
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
+    <div className="">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">

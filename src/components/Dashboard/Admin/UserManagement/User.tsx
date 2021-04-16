@@ -217,7 +217,7 @@ const User = () => {
   {
     return (
       <>
-        <div className={`w-9/10 h-full mt-4`}>
+        <div className={``}>
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between">
             <SectionTitle title={UserDict[userLanguage]['title']} />

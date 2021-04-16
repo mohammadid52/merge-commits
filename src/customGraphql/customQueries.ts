@@ -34,6 +34,8 @@ export const getDashboardData = /* GraphQL */ `
                       description
                       designers
                       objectives
+                      summary
+                      type
                     }
                   }
                 }
