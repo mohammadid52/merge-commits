@@ -107,7 +107,7 @@ const AssessmentInstuctions = (props: AssessmentInstuctionsProps) => {
         instructionsTitle: formData.instructionsTitle,
         summaryTitle: formData.summaryTitle,
         introduction: formData.introduction,
-        instructions: [formData.instructions],
+        instructions: formData.instructions,
         summary: formData.summary,
       };
       const results: any = await API.graphql(graphqlOperation(customMutations.updateLesson, { input: input }));
