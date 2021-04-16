@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiLayers } from 'react-icons/Fi';
 import ButtonsRound from '../../../Atoms/ButtonsRound';
 import { SlideOutTreeView } from './HierarchyPanel/SlideOutTreeView';
@@ -18,6 +18,7 @@ interface HierarchyPanelProps {
   selectedPartContentDetails: PartContent;
   setSelectedPartContentDetails: React.Dispatch<React.SetStateAction<PartContent>>;
   hierarchyVisible?: boolean;
+  setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const HierarchyPanel = (props: HierarchyPanelProps) => {
@@ -28,11 +29,17 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
     selectedPartContentDetails,
     setSelectedPartContentDetails,
     hierarchyVisible,
+    setHierarchyVisible,
   } = props;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (selectedPageDetails && !(selectedPageDetails.pageContent.length > 0)) {
+      setHierarchyVisible(false);
+    }
+  }, [selectedPageDetails]);
 
   return (
-    <div className={`absolute w-48 h-full bg-gray-600`}>
+    <div className={`${hierarchyVisible ? 'absolute w-48 h-full bg-gray-600 z-50' : 'hidden'}`}>
       <Transition
         show={hierarchyVisible}
         enter="transition duration-200"

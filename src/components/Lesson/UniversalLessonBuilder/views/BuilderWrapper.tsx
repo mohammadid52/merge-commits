@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import useDictionary from '../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { UniversalBuilderDict } from '../../../../dictionary/dictionary.iconoclast';
 
 import PageSelector from '../UI/PageSelector';
 import { Toolbar } from '../UI/Toolbar';
@@ -48,6 +47,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     universalBuilderTemplates,
   } = props;
   const { userLanguage, clientKey } = useContext(GlobalContext);
+  //@ts-ignore
   const { UniversalBuilderDict } = useDictionary(clientKey);
 
   const [loading, setLoading] = useState(false);
@@ -60,6 +60,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   return (
     <div className=" relative bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <Toolbar
+        selectedPageDetails={selectedPageDetails}
         hierarchyVisible={hierarchyVisible}
         setHierarchyVisible={setHierarchyVisible}
         galleryVisible={galleryVisible}
@@ -80,6 +81,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <HierarchyPanel
         hierarchyVisible={hierarchyVisible}
+        setHierarchyVisible={setHierarchyVisible}
         selectedPageDetails={selectedPageDetails}
         selectedPagePartDetails={selectedPagePartDetails}
         setSelectedPagePartDetails={setSelectedPagePartDetails}

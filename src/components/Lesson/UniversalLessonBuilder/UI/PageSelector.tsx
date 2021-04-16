@@ -43,7 +43,7 @@ const PageSelector = (props: PageSelectorProps) => {
   return (
     <div
       className={`
-           absolute
+           absolute z-50
            ${galleryVisible ? 'transition ease-out duration-100' : 'transition ease-in duration-75'}
            ${galleryVisible ? 'transform opacity-100 scale-100' : 'transform opacity-0 scale-95'}
         `}>

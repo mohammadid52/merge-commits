@@ -1,5 +1,5 @@
 import Buttons from '../../../../Atoms/Buttons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UniversalLessonPage } from '../../../../../interfaces/UniversalLessonInterfaces';
 import { IoBookOutline } from 'react-icons/io5';
 
@@ -10,10 +10,19 @@ interface HierarchyToggleProps {
 
 export const HierarchyToggle = (props: HierarchyToggleProps) => {
   const { selectedPageDetails, handleSetHierarchyVisibility } = props;
-  const isTherePageContent = selectedPageDetails && selectedPageDetails.pageContent.length > 0;
+  const [enabled, setEnabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (selectedPageDetails && selectedPageDetails.pageContent.length > 0) {
+      setEnabled(true);
+    } else {
+      setEnabled(false);
+    }
+  }, [selectedPageDetails]);
+
   return (
     <Buttons
-      disabled={!isTherePageContent}
+      disabled={!enabled}
       Icon={IoBookOutline}
       label="Hierarchy"
       onClick={handleSetHierarchyVisibility}
