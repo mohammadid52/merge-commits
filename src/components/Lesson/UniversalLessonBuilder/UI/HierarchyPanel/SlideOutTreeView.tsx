@@ -37,7 +37,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
         <div key={`pagePart_tree_${idx}`} className="space-y-1">
           <button
             type="button"
-            className="bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center px-2 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-900 group w-full flex items-center py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             aria-controls={`sub-menu-${idx}`}
             aria-expanded="false">
             {pagePart.id}
@@ -49,7 +49,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                   key={`pagePart_tree_${idx}_${idx2}`}
                   href="#"
                   onClick={() => handleSelectionProcess(pagePart, partContent)}
-                  className="group w-full flex items-center pl-10 pr-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 bg-gray-300 hover:bg-gray-200">
+                  className="group w-full flex items-center py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900 bg-gray-300 hover:bg-gray-200">
                   {partContent.id}
                 </a>
               ))}
