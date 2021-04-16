@@ -54,6 +54,17 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
           leaveTo="opacity-0 transform">
           <div className={`absolute right-0 w-auto h-full bg-white z-50`}>
             <div className={`w-full flex flex-col justify-center`}>
+              {/* Header */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-start">
+                  <span className="pr-2 bg-white text-sm text-gray-500">Controls</span>
+                </div>
+              </div>
+
+              {/* Menu Options */}
               {dropDownOptions &&
                 dropDownOptions.map((option: { id: string; value: string; option: string }, idx: number) => (
                   <button

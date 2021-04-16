@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
+import { PageGalleryControls } from './PageSelector/PageGalleryControls';
 
 interface PageSelectorProps {
   universalLessonDetails: UniversalLesson;
@@ -47,10 +48,21 @@ const PageSelector = (props: PageSelectorProps) => {
            ${galleryVisible ? 'transition ease-out duration-100' : 'transition ease-in duration-75'}
            ${galleryVisible ? 'transform opacity-100 scale-100' : 'transform opacity-0 scale-95'}
         `}>
+      {/* Page Selection Buttons */}
       {!props.loading && (
         <div className={`bg-white`}>
           <div className="max-h-screen px-4 overflow-y-auto">
             <div className="py-2">
+              {/* Header */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="px-3 bg-white text-lg font-medium text-gray-900">Lesson Pages</span>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                 {pages && pages.length > 0
                   ? pages.map((page: UniversalLessonPage, idx: number) => (
@@ -64,6 +76,8 @@ const PageSelector = (props: PageSelectorProps) => {
                     ))
                   : null}
               </div>
+
+              <PageGalleryControls />
             </div>
           </div>
         </div>

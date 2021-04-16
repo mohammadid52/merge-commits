@@ -1,8 +1,4 @@
-import Buttons from '../../../Atoms/Buttons';
 import React from 'react';
-import { VscNewFile, VscReferences, VscSave } from 'react-icons/vsc';
-import DropdownFancy from '../../../Atoms/DropdownFancy';
-import { BuilderMenu } from './BuilderMenu';
 import { HierarchyToggle } from './Toolbar/HierarchyToggle';
 import { PageGalleryToggle } from './Toolbar/PageGalleryToggle';
 import { UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
