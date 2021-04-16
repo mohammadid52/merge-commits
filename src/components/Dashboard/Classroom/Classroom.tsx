@@ -316,7 +316,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           </div>
         )}
 
-        {isTeacher && state.activeRoom === 'lesson-planner' && (
+        {isTeacher && state.currentPage === 'lesson-planner' && (
           <>
             <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
             <div className={`bg-opacity-10`}>

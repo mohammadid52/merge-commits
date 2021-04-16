@@ -322,7 +322,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       <div className="h-full w-full md:px-4 pt-4">
         <form>
           <div>
-            <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4">
+            <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}

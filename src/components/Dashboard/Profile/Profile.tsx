@@ -266,16 +266,29 @@ const Profile = (props: ProfilePageProps) => {
       const results: any = await API.graphql(
         graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId })
       );
+
       const userData: any = results.data.getPerson;
-      const studentClasses: any = userData.classes?.items.map((item: any) => item.class);
-      const studentInstitutions: any = studentClasses?.map((item: any) => item.institution);
-      const studentRooms: any = studentClasses?.map((item: any) => item.rooms?.items)?.flat(1);
+      let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
+      studentClasses = studentClasses.filter((d: any) => d !== null);
+
+      const studentInstitutions: any = studentClasses?.map((item: any) => item?.institution);
+      const studentRooms: any = studentClasses?.map((item: any) => item?.rooms?.items)?.flat(1);
       const studentCurriculars: any = studentRooms.map((item: any) => item?.curricula?.items).flat(1);
-      const uniqCurriculars: any = getUniqItems(studentCurriculars, 'curriculumID');
+      const uniqCurriculars: any = getUniqItems(
+        studentCurriculars.filter((d: any) => d !== null),
+        'curriculumID'
+      );
       const studCurriCheckp: any = uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1);
       const studentCheckpoints: any = studCurriCheckp.map((item: any) => item?.checkpoint);
-      const uniqCheckpoints: any = getUniqItems(studentCheckpoints, 'id');
-      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item.id);
+
+      const sCheckpoints: any[] = [];
+
+      studentCheckpoints.forEach((item: any) => {
+        if (item) sCheckpoints.push(item);
+      });
+
+      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = { ...userData };
       delete personalInfo.classes;
       if (uniqCheckpointIDs?.length > 0) {
@@ -336,7 +349,7 @@ const Profile = (props: ProfilePageProps) => {
             </h2>
           </div>
         )}
-        <div className={`main_container`}>
+        <div className={`main_container p-0 mx-auto max-w-256`}>
           {/* <BreadCrums items={breadCrumsList} />  */}
           <div className="flex justify-between">
             <SectionTitle
@@ -346,18 +359,14 @@ const Profile = (props: ProfilePageProps) => {
             <div className="flex justify-end py-4 mb-4 w-5/10">
               <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
               {currentPath !== 'edit' ? (
-                <Buttons
-                  btnClass="mr-4 px-6"
-                  label="Edit"
-                  onClick={() => history.push(`${match.url}/edit`)}
-                  Icon={FaEdit}
-                />
+                <Buttons btnClass="ml-6" label="Edit" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
               ) : null}
             </div>
           </div>
-          <div className={`w-full white_back p-8 mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
+          <div
+            className={`w-full m-auto max-w-256 p-4 white_back mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col md:flex-row">
-              <div className="w-auto p-4 flex flex-col text-center items-center">
+              <div className="w-auto p-4 flex flex-col text-center items-center px-8">
                 <div className="relative">
                   {person.image ? (
                     <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
@@ -419,7 +428,7 @@ const Profile = (props: ProfilePageProps) => {
                   )}
                 </div>
                 <p className="text-gray-600 my-2">{dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']} </p>
-                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4 w-52`}>
+                <div className={`text-lg md:text-xl font-bold font-open text-gray-900 mt-4 w-52`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
                   <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
