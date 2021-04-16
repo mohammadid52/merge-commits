@@ -1974,7 +1974,7 @@ const EditSyllabusDict: any = {
     no: 'No.',
     name: 'Lesson Name',
     measurement: 'Measurements',
-    type: 'Tyep',
+    type: 'Type',
     status: 'Status',
     action: 'Actions',
     edit: 'edit',

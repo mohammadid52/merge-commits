@@ -3,6 +3,7 @@ import { LessonContext } from '../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import InstructionBlock from '../LessonComponents/InstructionBlock';
 import Banner from '../LessonComponents/Banner';
+import { stripStyleFromHTML } from '../../../utilities/strings';
 
 interface QuestionGroupInfoProps {
   isTeacher?: boolean;
@@ -44,14 +45,14 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
     setInfo({
       title: getCheckpointObj?.title,
       subtitle: getCheckpointObj?.subtitle,
-      instructions: quickRepair(getCheckpointObj?.instructions),
+      instructions: stripStyleFromHTML(getCheckpointObj?.instructions),
       instructionsTitle: getCheckpointObj?.instructionsTitle,
     });
   };
 
   useEffect(() => {
     if (state.data.lesson.checkpoints) {
-      if(state.data.lesson.checkpoints.items.length > 0){
+      if (state.data.lesson.checkpoints.items.length > 0) {
         getQuestionGroupInfo();
       }
     }
@@ -61,10 +62,9 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
-
           <Banner
             isTeacher={isTeacher}
-            subtitleSection={`${info && info.title ?  info.title : null}`}
+            subtitleSection={`${info && info.title ? info.title : null}`}
             subtitleSection2={info.subtitle ? `- ( ${info.subtitle} )` : null}
           />
 
@@ -74,7 +74,6 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
             instructionsTitle={info?.instructionsTitle}
             instructions={info?.instructions}
           />
-
         </div>
       </div>
     </div>

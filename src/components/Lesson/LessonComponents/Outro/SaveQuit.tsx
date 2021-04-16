@@ -31,14 +31,13 @@ const SaveQuit = (props: SaveQuitProps) => {
    * QUESTION SAVING
    */
 
-
   /**
    * GET or CREATE QUESTION DATA
    */
   const createQuestionData = async (responseObj: any) => {
     try {
       const newQuestionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: responseObj }),
+        graphqlOperation(customMutations.createQuestionData, { input: responseObj })
       );
     } catch (err) {
       console.error(err);
@@ -98,18 +97,18 @@ const SaveQuit = (props: SaveQuitProps) => {
           <Popup
             alert={visible}
             setAlert={setVisible}
-            header='You have completed a lesson!'
-            button1='Save your lesson'
-            svg='smile'
+            header="You have completed a lesson!"
+            button1="Save your lesson"
+            svg="smile"
             handleButton1={handleManualSave}
-            fill='screen'
+            fill="screen"
           />
         </div>
       ) : null}
 
-      <div className="w-full flex flex-col my-4">
+      <div className="w-full flex flex-col my-24">
         <button
-          type='submit'
+          type="submit"
           className={`self-center w-auto px-4 h-10 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded-full my-4`}
           onClick={handlePopup}>
           <IconContext.Provider value={{ className: 'w-auto mr-2', style: { cursor: 'pointer' } }}>
