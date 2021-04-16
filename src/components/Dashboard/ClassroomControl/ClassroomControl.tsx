@@ -103,7 +103,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const getClassList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          return [...acc, { name: dataObj.class.name, rooms: dataObj.class.rooms, students: dataObj.class.students }];
+          return [
+            ...acc,
+            { name: dataObj.class?.name, rooms: dataObj.class?.rooms, students: dataObj.class?.students },
+          ];
         }, [])
       : [];
 

@@ -35,6 +35,7 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
         <ButtonsRound
           Icon={FiLayers}
           type={`button`}
+          disabled={selectedPageDetails.pageContent.length <= 0}
           btnClass={`
           ${isOpen ? 'transition duration-200' : 'transition duration-200'}
           ${isOpen ? 'transform translate-x-48' : 'transform translate-x-0'}
