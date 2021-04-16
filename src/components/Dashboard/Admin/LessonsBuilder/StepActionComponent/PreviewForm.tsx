@@ -35,6 +35,9 @@ const PreviewForm = (props: PreviewFormProps) => {
   const [loading, setLoading] = useState(false);
   const [relatedUnitsID, setRelatedUnitsID] = useState([]);
   const [lessonDetails, setLessonDetails] = useState<any>({});
+
+  const [isAllOpen, setIsAllOpen] = useState(false);
+
   const [fetchingQuestionSequence, setFetchingQuestionSequence] = useState(false);
 
   const [message, setMessage] = useState({
@@ -200,7 +203,7 @@ const PreviewForm = (props: PreviewFormProps) => {
     const showListAndDropDown =
       checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne';
     return (
-      <div className="my-4 w-9/10 question__container">
+      <div className="my-4 w-full question__container">
         <div
           onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
           role="button"
@@ -224,7 +227,7 @@ const PreviewForm = (props: PreviewFormProps) => {
             <div className="w-.7/10" />
           )}
         </div>
-        <div id="option__list" className={`px-12 py-2 option__list ${isOpen ? 'show' : 'hide'}`}>
+        <div id="option__list" className={`px-12 py-2 option__list ${isOpen ? 'show' : isAllOpen ? 'show' : 'hide'}`}>
           {showListAndDropDown && (
             <ul className="list-disc">
               {checkpItem?.question?.options?.map((opt: any) => (
@@ -242,7 +245,7 @@ const PreviewForm = (props: PreviewFormProps) => {
 
     const questionsLen = item.checkpoint?.questions?.items.length;
     const showQuestions = item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
-    const outerContainerStyles = showQuestions ? `w-9/10 mb-4 p-2 px-4 relative` : '';
+    const outerContainerStyles = showQuestions ? `w-full mb-4 p-6 px-4 border-0 border-gray-300 rounded relative` : '';
     return (
       <div className={outerContainerStyles} key={item.id}>
         {showQuestions ? (
@@ -255,7 +258,7 @@ const PreviewForm = (props: PreviewFormProps) => {
                     ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
                   </span>
                 )}
-                <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200  text-gray-700 rounded">
+                <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200 text-gray-700 rounded-md">
                   {item.checkpoint?.questions?.items.length || ''}{' '}
                   {questionsLen === 0 ? 'no questions' : questionsLen === 1 ? 'question' : 'questions'}
                 </span>
@@ -269,9 +272,8 @@ const PreviewForm = (props: PreviewFormProps) => {
           {item.checkpoint?.instructionsTitle || (htmlTitle && htmlTitle.length > 0) ? (
             <div className="py-2">
               <h4 className="text-gray-600 text-base font-medium mb-2">{item.checkpoint?.instructionsTitle} </h4>
-
               {htmlTitle.length > 0 && (
-                <div className="border-dashed border-0 w-9/10 bg-gray-100 border-gray-600 rounded-md p-2 px-3">
+                <div className="border-dashed border-0 w-full bg-gray-100 border-gray-300 rounded-md p-2 px-3">
                   instructions: {ReactHtmlParser(item.checkpoint?.instructions)}
                 </div>
               )}
@@ -339,7 +341,11 @@ const PreviewForm = (props: PreviewFormProps) => {
                 <h3 className="font-semibold text-gray-700 text-xl mb-2">
                   {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
                 </h3>
-                <Buttons btnClass="w-2/10 px-4 py-3" label="View Details" onClick={() => {}} />
+                <Buttons
+                  btnClass="w-4/10 px-4 py-3"
+                  onClick={() => setIsAllOpen(!isAllOpen)}
+                  label="Toggle All Questions"
+                />
               </div>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
                 <div className="mt-4">
