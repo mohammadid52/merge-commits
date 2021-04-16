@@ -55,7 +55,7 @@ const ProfileInfo = (props: UserInfoProps) => {
   {
     return (
       <div className="w-full md:px-4 pt-4">
-        <div className="bg-white overflow-hidden border-l-0 border-gray-200 mb-4">
+        <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
           <div className="border-b-0 border-gray-200 sm:px-6">
             <h3 className="px-0 pr-0 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
               {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}{' '}
@@ -97,7 +97,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </dt>
                 <dd className="mt-1 text-sm leading-5 text-gray-900">{language()}</dd>
               </div>
-              <div className="sm:col-span-1 p-2">
+              <div className="sm:col-span-2 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['EMAIL']}
                 </dt>
@@ -148,20 +148,16 @@ const ProfileInfo = (props: UserInfoProps) => {
                   <div className="px-4 py-5 sm:px-6">
                     <dl className="grid grid-cols-1 gap-x-4 gap-y-4 sm:grid-cols-2">
                       {checkpoint.questions?.items.map((item: any) => (
-                        <>
-                          {item.question && (
-                            <div className="sm:col-span-1 p-2">
-                              <dt className="text-sm leading-5 font-medium text-gray-500">
-                                {/* {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']} */}
-                                {item?.question?.question}
-                              </dt>
-                              <dd className="mt-1 text-sm leading-5 text-gray-900">
-                                {getQuestionResponse(checkpoint.id, item?.question?.id) || '--'}
-                                {/* {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`} */}
-                              </dd>
-                            </div>
-                          )}
-                        </>
+                        <div className="sm:col-span-1 p-2">
+                          <dt className="text-sm leading-5 font-medium text-gray-500">
+                            {/* {dashboardProfileDict[userLanguage]['INSTITUTION_INFO']['INSTITUTION']} */}
+                            {item.question.question}
+                          </dt>
+                          <dd className="mt-1 text-sm leading-5 text-gray-900">
+                            {getQuestionResponse(checkpoint.id, item.question.id) || '--'}
+                            {/* {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`} */}
+                          </dd>
+                        </div>
                       ))}
                     </dl>
                   </div>
