@@ -196,6 +196,7 @@ const PreviewForm = (props: PreviewFormProps) => {
   const fieldClass = 'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
   const QuestionList = ({ checkpItem, index }: any) => {
     const [isOpen, setIsOpen] = useState(false);
+
     const showListAndDropDown =
       checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne';
     return (
@@ -238,18 +239,14 @@ const PreviewForm = (props: PreviewFormProps) => {
 
   const QuestionContainer = ({ item }: any) => {
     const htmlTitle = item?.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
-    const [isOpen, setIsOpen] = useState(false);
+
     const questionsLen = item.checkpoint?.questions?.items.length;
     const showQuestions = item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
-    const outerContainerStyles = showQuestions
-      ? `${
-          isOpen ? 'border-indigo-400 border-solid' : 'border-indigo-400 border-dashed'
-        }  border-0 w-9/10 mb-4  hover:border-indigo-400 rounded-md p-2 px-4 relative`
-      : '';
+    const outerContainerStyles = showQuestions ? `w-9/10 mb-4 p-2 px-4 relative` : '';
     return (
       <div className={outerContainerStyles} key={item.id}>
         {showQuestions ? (
-          <div className="w-full flex items-center justify-between cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+          <div className="w-full flex items-center justify-between cursor-pointer">
             <div>
               <h4 className="font-bold text-gray-900 text-base">
                 {item.checkpoint?.title || ''}{' '}
@@ -266,23 +263,16 @@ const PreviewForm = (props: PreviewFormProps) => {
                 <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
               </h4>
             </div>
-            <div className="w-auto m-2">
-              {isOpen ? (
-                <BiChevronUp className="text-gray-900 text-xl" />
-              ) : (
-                <BiChevronDown className="text-gray-900 text-xl" />
-              )}
-            </div>
           </div>
         ) : null}
-        <div className={`option__list ${isOpen ? 'show' : 'hide'}`}>
+        <div className={`option__list`}>
           {item.checkpoint?.instructionsTitle || (htmlTitle && htmlTitle.length > 0) ? (
             <div className="py-2">
               <h4 className="text-gray-600 text-base font-medium mb-2">{item.checkpoint?.instructionsTitle} </h4>
 
               {htmlTitle.length > 0 && (
                 <div className="border-dashed border-0 w-9/10 bg-gray-100 border-gray-600 rounded-md p-2 px-3">
-                  {ReactHtmlParser(item.checkpoint?.instructions)}
+                  instructions: {ReactHtmlParser(item.checkpoint?.instructions)}
                 </div>
               )}
             </div>
@@ -345,9 +335,12 @@ const PreviewForm = (props: PreviewFormProps) => {
               </div>
             </div>
             <div className={'py-2 px-4 w-full'}>
-              <h3 className="font-semibold text-gray-700 text-xl mb-2">
-                {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
-              </h3>
+              <div className="w-full mt-2 flex items-center justify-between">
+                <h3 className="font-semibold text-gray-700 text-xl mb-2">
+                  {lessonType === 'survey' ? 'Survey' : 'Assessment'} :
+                </h3>
+                <Buttons btnClass="w-2/10 px-4 py-3" label="View Details" onClick={() => {}} />
+              </div>
               {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
                 <div className="mt-4">
                   {lessonDetails?.checkpoints?.items?.map((item: any, key: number) => (
