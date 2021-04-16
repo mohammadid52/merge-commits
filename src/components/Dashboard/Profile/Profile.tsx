@@ -357,8 +357,8 @@ const Profile = (props: ProfilePageProps) => {
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
             <div className="flex justify-end py-4 mb-4 w-5/10">
-              <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-              {currentPath !== 'edit' ? (
+              <Buttons label="Go Back" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+              {currentPath !== 'edit' && currentPath !== 'password' ? (
                 <Buttons btnClass="ml-6" label="Edit" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
               ) : null}
             </div>

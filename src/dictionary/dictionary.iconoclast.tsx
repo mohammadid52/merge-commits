@@ -2401,7 +2401,7 @@ const AddNewQuestionDict: any = {
     CHECKPOINT: 'Checkpoints',
     ADDNEWQUESTION: 'Add New Question',
     QUESTION: 'Question',
-    QUESTIONLABE: 'Question Label',
+    QUESTIONLABEL: 'Question Label',
     SELECTTYPE: 'Select Type',
     SELECTLANGUAGE: 'Select Language',
     LANGUAGE: 'Language',
