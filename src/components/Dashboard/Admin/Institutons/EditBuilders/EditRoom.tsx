@@ -7,7 +7,7 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
 import * as mutation from '../../../../../graphql/mutations';
 import SectionTitle from '../../../../Atoms/SectionTitle';
-import PageWrapper from '../../../../Atoms/PageWrapper'
+import PageWrapper from '../../../../Atoms/PageWrapper';
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
@@ -18,12 +18,10 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 
-interface EditRoomProps {
-
-}
+interface EditRoomProps {}
 
 const EditRoom = (props: EditRoomProps) => {
-  const { } = props;
+  const {} = props;
   const history = useHistory();
   const location = useLocation();
   const initialData = {
@@ -33,10 +31,10 @@ const EditRoom = (props: EditRoomProps) => {
     teacher: { id: '', name: '', value: '' },
     classRoom: { id: '', name: '', value: '' },
     curricular: { id: '', name: '', value: '' },
-    maxPersons: ''
-  }
-  const { theme,clientKey, userLanguage } = useContext(GlobalContext);
-  const [roomData, setRoomData] = useState(initialData)
+    maxPersons: '',
+  };
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
@@ -46,18 +44,22 @@ const EditRoom = (props: EditRoomProps) => {
   const [messages, setMessages] = useState({
     show: false,
     message: '',
-    isError: false
-  })
+    isError: false,
+  });
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
- 
-  const { BreadcrumsTitles,RoomEDITdict } = useDictionary(clientKey);
+
+  const { BreadcrumsTitles, RoomEDITdict } = useDictionary(clientKey);
 
   const params = useQuery();
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'], url: `/dashboard/room-edit?id=${params.get('id')}`, last: true }
+    {
+      title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'],
+      url: `/dashboard/room-edit?id=${params.get('id')}`,
+      last: true,
+    },
   ];
 
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -67,17 +69,17 @@ const EditRoom = (props: EditRoomProps) => {
         id: id,
         name: name,
         value: val,
-      }
-    })
-  }
+      },
+    });
+  };
 
   const editInputField = (e: any) => {
     setRoomData({
       ...roomData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
-    removeErrorMsg()
-  }
+    removeErrorMsg();
+  };
 
   const selectInstitute = async (val: string, name: string, id: string) => {
     if (roomData.institute.id !== id) {
@@ -86,7 +88,7 @@ const EditRoom = (props: EditRoomProps) => {
         institute: {
           id: id,
           name: name,
-          value: val
+          value: val,
         },
         teacher: { id: '', name: '', value: '' },
         classRoom: { id: '', name: '', value: '' },
@@ -94,7 +96,7 @@ const EditRoom = (props: EditRoomProps) => {
       });
       removeErrorMsg();
     }
-  }
+  };
 
   const selectClass = (val: string, name: string, id: string) => {
     setRoomData({
@@ -102,145 +104,154 @@ const EditRoom = (props: EditRoomProps) => {
       classRoom: {
         id: id,
         name: name,
-        value: val
-      }
-    })
+        value: val,
+      },
+    });
     removeErrorMsg();
-  }
+  };
   const selectCurriculum = (val: string, name: string, id: string) => {
     setRoomData({
       ...roomData,
       curricular: {
         id: id,
         name: name,
-        value: val
-      }
-    })
+        value: val,
+      },
+    });
     removeErrorMsg();
-  }
+  };
 
   const removeErrorMsg = () => {
     if (messages.show) {
       setMessages({
         show: false,
         message: '',
-        isError: false
-      })
+        isError: false,
+      });
     }
-  }
+  };
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
     if (imageUrl) {
-      console.log(imageUrl)
-      return imageUrl
+      console.log(imageUrl);
+      return imageUrl;
     } else {
-      return ''
+      return '';
     }
-  }
+  };
 
   const getInstitutionList = async () => {
     try {
       const list: any = await API.graphql(graphqlOperation(queries.listInstitutions));
-      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
+      const sortedList = list.data.listInstitutions?.items.sort((a: any, b: any) =>
+        a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+      );
       const InstituteList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
+        value: `${item.name ? item.name : ''}`,
       }));
       setInstitutionList(InstituteList);
       if (InstituteList.length === 0) {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['institutebefor'],
-          isError: true
-        })
+          isError: true,
+        });
       }
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-  }
+  };
 
   const getInstituteInfo = async (instId: string) => {
     try {
-      const list: any = await API.graphql(graphqlOperation(customQueries.getInstitution, {
-        id: instId
-      }));
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitution, {
+          id: instId,
+        })
+      );
       const serviceProviders = list.data.getInstitution?.serviceProviders?.items;
       return serviceProviders;
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unabletofetch'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-  }
+  };
 
   const getTeachersList = async (allInstiId: string[]) => {
     try {
-      const list: any = await API.graphql(graphqlOperation(queries.listStaffs, {
-        filter: { or: getFilterORArray(allInstiId, 'institutionID') },
-      }));
+      const list: any = await API.graphql(
+        graphqlOperation(queries.listStaffs, {
+          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+        })
+      );
       const listStaffs = list.data.listStaffs.items;
       if (listStaffs?.length === 0) {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['addstaffirst'],
-          isError: true
-        })
+          isError: true,
+        });
       } else {
-        const sortedList = listStaffs.sort((a: any, b: any) => (a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase()) ? 1 : -1);
+        const sortedList = listStaffs.sort((a: any, b: any) =>
+          a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
+        );
         const staffList = sortedList.map((item: any) => ({
           id: item.staffMember?.id,
           name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
           value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
           email: item.staffMember?.email ? item.staffMember?.email : '',
-          authId: item.staffMember?.authId ? item.staffMember?.authId : ''
+          authId: item.staffMember?.authId ? item.staffMember?.authId : '',
+          image: item.staffMember?.image,
         }));
 
         // Removed duplicates from staff list.
-        const uniqIDs: string[] = []
+        const uniqIDs: string[] = [];
         const filteredArray = staffList.filter((member: { id: string }) => {
           const duplicate = uniqIDs.includes(member.id);
-          uniqIDs.push(member.id)
-          return !duplicate
-        })
+          uniqIDs.push(member.id);
+          return !duplicate;
+        });
         setTeachersList(filteredArray);
       }
-
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unableteacher'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-
-  }
+  };
 
   const getClassLists = async (allInstiId: string[]) => {
     try {
-      const list: any = await API.graphql(graphqlOperation(queries.listClasss, {
-        filter: { or: getFilterORArray(allInstiId, 'institutionID') },
-      }));
-      const listClass = list.data.listClasss?.items
+      const list: any = await API.graphql(
+        graphqlOperation(queries.listClasss, {
+          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+        })
+      );
+      const listClass = list.data.listClasss?.items;
       if (listClass.length === 0) {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['addclassfirst'],
-          isError: true
-        })
+          isError: true,
+        });
       } else {
-        const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
+        const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
         const classList = sortedList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
-          value: `${item.name ? item.name : ''}`
+          value: `${item.name ? item.name : ''}`,
         }));
         setClassList(classList);
       }
@@ -248,111 +259,115 @@ const EditRoom = (props: EditRoomProps) => {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unableclass'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-  }
+  };
 
   const getCurricularList = async (allInstiId: string[]) => {
     try {
-      const list: any = await API.graphql(graphqlOperation(queries.listCurriculums, {
-        filter: { or: getFilterORArray(allInstiId, 'institutionID') }
-      }));
-      const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase()) ? 1 : -1);
+      const list: any = await API.graphql(
+        graphqlOperation(queries.listCurriculums, {
+          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+        })
+      );
+      const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
+        a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+      );
       const curricularList = sortedList.map((item: any, i: any) => ({
         id: item.id,
         name: `${item.name ? item.name : ''}`,
-        value: `${item.name ? item.name : ''}`
+        value: `${item.name ? item.name : ''}`,
       }));
       setCurricularList(curricularList);
-    } catch{
+    } catch {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['unablecurricular'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-  }
+  };
 
   const checkUniqRoomName = async () => {
     try {
-      const list: any = await API.graphql(graphqlOperation(queries.listRooms, {
-        filter: {
-          institutionID: { eq: roomData.institute.id },
-          name: { eq: roomData.name }
-        }
-      }))
+      const list: any = await API.graphql(
+        graphqlOperation(queries.listRooms, {
+          filter: {
+            institutionID: { eq: roomData.institute.id },
+            name: { eq: roomData.name },
+          },
+        })
+      );
       return list.data.listRooms.items.length === 0 ? true : false;
-
     } catch {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errorprocess'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-  }
+  };
 
   const validateForm = async () => {
     if (roomData.name.trim() === '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['classroomrequired'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (roomData.institute.id === '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectinstitute'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (roomData.teacher.id === '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectteacher'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (roomData.classRoom.id === '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['selectclass'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (roomData.maxPersons == '') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['mxstudent'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (roomData.maxPersons > '30') {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['oneclass'],
-        isError: true
-      })
+        isError: true,
+      });
       return false;
     } else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
-      const isUniq = await checkUniqRoomName()
+      const isUniq = await checkUniqRoomName();
       if (!isUniq) {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['alreadyexist'],
-          isError: true
-        })
+          isError: true,
+        });
         return false;
       } else {
-        return true
+        return true;
       }
     } else {
-      return true
+      return true;
     }
-  }
-
+  };
 
   const saveRoomCurricular = async (id: string, roomId: string, currId: string) => {
     if (roomId && id) {
@@ -361,30 +376,31 @@ const EditRoom = (props: EditRoomProps) => {
           id: id,
           roomID: roomId,
           curriculumID: currId,
-        }
+        };
 
-        const addCurricular: any = await API.graphql(graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput }))
+        const addCurricular: any = await API.graphql(
+          graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput })
+        );
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['classupdate'],
-          isError: false
-        })
+          isError: false,
+        });
       } catch {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdating'],
-          isError: true
-        })
+          isError: true,
+        });
       }
     } else {
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errprocess'],
-        isError: true
-      })
+        isError: true,
+      });
     }
-
-  }
+  };
 
   const saveRoomDetails = async () => {
     const isValid = await validateForm();
@@ -398,39 +414,38 @@ const EditRoom = (props: EditRoomProps) => {
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
-        }
+        };
         const newRoom: any = await API.graphql(graphqlOperation(mutation.updateRoom, { input: input }));
         const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
-        saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id)
-      } catch{
+        saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
+      } catch {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdatingclass'],
-          isError: true
-        })
+          isError: true,
+        });
       }
     }
-  }
+  };
 
   const filterCurricularData = (currId: string) => {
     const currentList = [...curricularList];
-    const selectedCurr = currentList.find(item => item.id === currId);
+    const selectedCurr = currentList.find((item) => item.id === currId);
     setRoomData({
       ...roomData,
       curricular: {
         id: selectedCurr?.id,
         name: selectedCurr?.name,
-        value: selectedCurr?.value
-      }
-    })
-
-  }
+        value: selectedCurr?.value,
+      },
+    });
+  };
 
   const fetchRoomDetails = async () => {
     const currID = params.get('id');
     if (currID) {
       try {
-        const result: any = await API.graphql(graphqlOperation(queries.getRoom, { id: currID }))
+        const result: any = await API.graphql(graphqlOperation(queries.getRoom, { id: currID }));
         const savedData = result.data.getRoom;
         const curricularId = savedData.curricula.items[0].curriculumID;
         setRoomData({
@@ -452,54 +467,53 @@ const EditRoom = (props: EditRoomProps) => {
             name: savedData.class?.name,
             value: savedData.class?.name,
           },
-          maxPersons: savedData.maxPersons
-        })
-        setPrevName(savedData.name)
-        setSelectedCurrID(curricularId)
+          maxPersons: savedData.maxPersons,
+        });
+        setPrevName(savedData.name);
+        setSelectedCurrID(curricularId);
       } catch {
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errfetch'],
-          isError: true
-        })
+          isError: true,
+        });
       }
     } else {
-      history.push('/dashboard/manage-institutions')
+      history.push('/dashboard/manage-institutions');
     }
-  }
+  };
 
   const fetchOtherList = async () => {
     const instId = roomData.institute.id;
     const items: any = await getInstituteInfo(instId);
     const serviceProviders = items.map((item: any) => item.providerID);
-    const allInstiId = [...serviceProviders, instId]
+    const allInstiId = [...serviceProviders, instId];
     getTeachersList(allInstiId);
     getClassLists(allInstiId);
     getCurricularList(allInstiId);
-  }
+  };
 
   useEffect(() => {
     if (roomData.institute.id) {
       fetchOtherList();
     }
-  }, [roomData.institute.id])
+  }, [roomData.institute.id]);
 
   useEffect(() => {
     if (curricularList.length && selectedCurrID) {
-      filterCurricularData(selectedCurrID)
+      filterCurricularData(selectedCurrID);
     }
-  }, [curricularList])
+  }, [curricularList]);
 
   useEffect(() => {
     fetchRoomDetails();
-    getInstitutionList()
-  }, [])
+    getInstitutionList();
+  }, []);
 
   const { name, curricular, classRoom, maxPersons, institute, teacher } = roomData;
 
   return (
     <div className="w-8/10 h-full mt-4 p-4">
-
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
@@ -512,16 +526,26 @@ const EditRoom = (props: EditRoomProps) => {
       {/* Body section */}
       <PageWrapper>
         <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{RoomEDITdict[userLanguage]['HEADING']}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            {RoomEDITdict[userLanguage]['HEADING']}
+          </h3>
           <div className="">
             <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={editInputField} name='name' label={RoomEDITdict[userLanguage]['NAME_LABEL']} placeHolder={RoomEDITdict[userLanguage]['NAME_PLACEHOLDER']} isRequired />
+              <FormInput
+                value={name}
+                id="name"
+                onChange={editInputField}
+                name="name"
+                label={RoomEDITdict[userLanguage]['NAME_LABEL']}
+                placeHolder={RoomEDITdict[userLanguage]['NAME_PLACEHOLDER']}
+                isRequired
+              />
             </div>
-            {/* 
-              **
-              * Hide institution drop down since all the things are tied to the 
-              * Institute, will add this later if need to add builders saperately.
-            */}
+            {/*
+             **
+             * Hide institution drop down since all the things are tied to the
+             * Institute, will add this later if need to add builders saperately.
+             */}
             {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute  <span className="text-red-500"> *</span>
@@ -532,49 +556,79 @@ const EditRoom = (props: EditRoomProps) => {
             <div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {RoomEDITdict[userLanguage]['TEACHER_LABEL']}  <span className="text-red-500"> *</span>
+                  {RoomEDITdict[userLanguage]['TEACHER_LABEL']} <span className="text-red-500"> *</span>
                 </label>
-                <SelectorWithAvatar selectedItem={teacher} list={teachersList} placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']} onChange={selectTeacher} />
+                <SelectorWithAvatar
+                  selectedItem={teacher}
+                  list={teachersList}
+                  placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
+                  onChange={selectTeacher}
+                />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']}  <span className="text-red-500"> *</span>
+                  {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']} <span className="text-red-500"> *</span>
                 </label>
-                <Selector selectedItem={classRoom.value} placeholder={RoomEDITdict[userLanguage]['CLASS_NAME_PLACEHOLDER']} list={classList} onChange={selectClass} />
+                <Selector
+                  selectedItem={classRoom.value}
+                  placeholder={RoomEDITdict[userLanguage]['CLASS_NAME_PLACEHOLDER']}
+                  list={classList}
+                  onChange={selectClass}
+                />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
-              </label>
-                <Selector selectedItem={curricular.value} placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']} list={curricularList} onChange={selectCurriculum} />
+                  {RoomEDITdict[userLanguage]['CURRICULUM_LABEL']}
+                </label>
+                <Selector
+                  selectedItem={curricular.value}
+                  placeholder={RoomEDITdict[userLanguage]['CURRICULUM_PLACEHOLDER']}
+                  list={curricularList}
+                  onChange={selectCurriculum}
+                />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']}  <span className="text-red-500"> *</span>
+                  {RoomEDITdict[userLanguage]['MAXSTUDENT_LABEL']} <span className="text-red-500"> *</span>
                 </label>
                 <input
                   type="number"
-                  id='maxPersons'
-                  name='maxPersons'
+                  id="maxPersons"
+                  name="maxPersons"
                   onChange={editInputField}
                   className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-400 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
                   value={maxPersons}
                   placeholder={RoomEDITdict[userLanguage]['MAXSTUDENT_PLACEHOLDER']}
-                  min="1" max="30" />
+                  min="1"
+                  max="30"
+                />
               </div>
             </div>
           </div>
         </div>
-        {messages.show ? (<div className="py-2 m-auto text-center">
-          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>{messages.message && messages.message}</p>
-        </div>) : null}
+        {messages.show ? (
+          <div className="py-2 m-auto text-center">
+            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {messages.message && messages.message}
+            </p>
+          </div>
+        ) : null}
         <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm mr-4" label={RoomEDITdict[userLanguage]['BUTTON']['CANCEL']} onClick={history.goBack} transparent />
-          <Buttons btnClass="py-3 px-12 text-sm ml-4" label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']} onClick={saveRoomDetails} />
+          <Buttons
+            btnClass="py-3 px-12 text-sm mr-4"
+            label={RoomEDITdict[userLanguage]['BUTTON']['CANCEL']}
+            onClick={history.goBack}
+            transparent
+          />
+          <Buttons
+            btnClass="py-3 px-12 text-sm ml-4"
+            label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
+            onClick={saveRoomDetails}
+          />
         </div>
       </PageWrapper>
     </div>
-  )
-}
+  );
+};
 
-export default EditRoom
+export default EditRoom;
