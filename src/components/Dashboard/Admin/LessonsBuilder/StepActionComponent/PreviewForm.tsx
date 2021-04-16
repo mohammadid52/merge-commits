@@ -239,8 +239,8 @@ const PreviewForm = (props: PreviewFormProps) => {
   const QuestionContainer = ({ item }: any) => {
     const htmlTitle = item?.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
     const [isOpen, setIsOpen] = useState(false);
-    const showQuestions =
-      item.checkpoint?.title || item.checkpoint?.estTime || item.checkpoint?.questions?.items.length > 0;
+    const questionsLen = item.checkpoint?.questions?.items.length;
+    const showQuestions = item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
     const outerContainerStyles = showQuestions
       ? `${
           isOpen ? 'border-indigo-400 border-solid' : 'border-indigo-400 border-dashed'
@@ -259,7 +259,8 @@ const PreviewForm = (props: PreviewFormProps) => {
                   </span>
                 )}
                 <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200  text-gray-700 rounded">
-                  {item.checkpoint?.questions?.items.length} questions
+                  {item.checkpoint?.questions?.items.length || ''}{' '}
+                  {questionsLen === 0 ? 'no questions' : questionsLen === 1 ? 'question' : 'questions'}
                 </span>
                 <br />
                 <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
