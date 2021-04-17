@@ -16,6 +16,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import Selector from '../../../../Atoms/Form/Selector';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Loader from '../../../../Atoms/Loader';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
@@ -26,7 +27,9 @@ interface InitialData {
   id: string;
   name: string;
   description: string;
+  summary: string;
   objectives: string;
+  type?: string;
   languages: { id: string; name: string; value: string }[];
   institute: {
     id: string;
@@ -41,6 +44,8 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     name: '',
     description: '',
     objectives: '',
+    summary: '',
+    type: '',
     languages: [{ id: '1', name: 'English', value: 'EN' }],
     institute: {
       id: '',
@@ -95,6 +100,16 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
       });
     }
   };
+
+  // Temporary List
+  //*******//
+  const typeList = [
+    { id: 0, name: 'In-School Programming' },
+    { id: 1, name: 'After-School Programming' },
+    { id: 2, name: 'Summer Intensives (2 week programming)' },
+    { id: 3, name: "Writer's Retreat" },
+  ];
+  //*****//
 
   const selectLanguage = (id: string, name: string, value: string) => {
     let updatedList;
@@ -151,11 +166,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           name: curricularData.name,
           institutionID: curricularData.institute.id,
           description: curricularData.description,
+          type: curricularData.type,
+          summary: curricularData.summary,
           objectives: [curricularData.objectives],
           languages: languagesCode,
-          designers: designers,
+          designers,
           image: null as any,
         };
+
         const response: any = await API.graphql(graphqlOperation(customMutations.createCurriculum, { input: input }));
         const newCurricular: any = response?.data?.createCurriculum;
 
@@ -176,7 +194,9 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
         setCurricularData(initialData);
         setIsLoading(false);
         if (newCurricular?.id) {
-          history.push(`/dashboard/manage-institutions/curricular/${newCurricular.id}/syllabus/add`);
+          history.push(
+            `/dashboard/manage-institutions/${curricularData.institute.id}/curricular/${newCurricular.id}/syllabus/add`
+          );
         }
       } catch {
         setMessages({
@@ -375,7 +395,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
     }
   }, [institutionList]);
 
-  const { name, description, objectives, languages, institute } = curricularData;
+  const { name, description, objectives, languages, type, institute, summary } = curricularData;
   return (
     <div className="w-8/10 h-full mt-4 p-4">
       {/* Section Header */}
@@ -458,6 +478,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                   onChange={selectLanguage}
                 />
               </div>
+
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {CurricularBuilderdict[userLanguage]['DESIGNER']}
@@ -469,6 +490,29 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
                   onChange={selectDesigner}
                 />
               </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {CurricularBuilderdict[userLanguage]['TYPE']}
+                </label>
+                <Selector
+                  placeholder={CurricularBuilderdict[userLanguage]['TYPE']}
+                  list={typeList}
+                  onChange={(str: any, name: string) => {
+                    setCurricularData({ ...curricularData, type: name });
+                  }}
+                  selectedItem={type || CurricularBuilderdict[userLanguage]['TYPE']}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <TextArea
+                  value={summary}
+                  id="summary"
+                  onChange={onChange}
+                  name="summary"
+                  label={CurricularBuilderdict[userLanguage]['SUMMARY']}
+                />
+              </div>
+
               <div className="px-3 py-4">
                 <TextArea
                   value={description}

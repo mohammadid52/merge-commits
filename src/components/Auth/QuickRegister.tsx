@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
-
-
-/**
- * About the QuickRegister functionality:
- *
- *
- *
- */
-
-
+import * as customMutations from '../../customGraphql/customMutations';
+import { useCookies } from 'react-cookie';
 interface newUserInput {
   key: number;
   authId: string;
@@ -57,9 +49,12 @@ interface QuickRegisterProps {
 
 const QuickRegister = (props: QuickRegisterProps) => {
   const { active, setQuickRegister } = props;
-
   const [newUserInputs, setNewUserInputs] = useState(initialState);
   const [waiting, setWaiting] = useState<boolean>(false);
+  const [cookies] = useCookies(['room_info']);
+  const roomInfoCookie = cookies['room_info'];
+  const [classID, setClassID] = useState(roomInfoCookie.classID)
+  console.log('classID-----------', classID)
 
   const [message, setMessage] = useState<{
     show: boolean;
@@ -86,55 +81,84 @@ const QuickRegister = (props: QuickRegisterProps) => {
     });
   };
 
-  async function registerUser(authId: string) {
-    let userData = {
-      authId: authId,
+  const handleChange = (e: { target: { id: any; value: any } }) => {
+    const { id, value } = e.target;
+    setNewUserInputs(() => {
+      if (id === 'email') {
+        return {
+          ...newUserInputs,
+          [id]: value.toLowerCase(),
+        };
+      } else {
+        return {
+          ...newUserInputs,
+          [id]: value,
+        };
+      }
+    });
+  };
+
+  const handleSubmit = async () => {
+    setWaiting(true);
+    const isValid = validation();
+    if (isValid) {
+      let userData = await cognitoSignUp();
+      const registeredUser = await registerUser(userData);
+      await addToClass({...userData, id: registeredUser.id })
+      setNewUserInputs(initialState);
+      setWaiting(false);
+    }
+    return;
+  };
+
+  const addToClass = async (user: any) => {
+    const input = {
+      classID,
+      studentID: user.id,
+      studentAuthID: user.authId,
+      studentEmail: user.email,
+      status: 'Active'
+    };
+    let newStudent: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input }));
+    newStudent = newStudent.data.createClassStudent;
+    return;
+  }
+
+  const registerUser = async (userData: any) => {
+    let user = {
+      authId: userData.authId,
       status: 'ACTIVE',
       role: 'ST',
-      email: newUserInputs.email,
-      firstName: newUserInputs.firstName,
-      lastName: newUserInputs.lastName,
-      phone: newUserInputs.phone,
-      birthdate: newUserInputs.birthdate,
-      externalId: newUserInputs.externalId,
-      grade: newUserInputs.grade,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      phone: userData.phone,
+      // birthdate: userData.birthdate,
+      externalId: userData.externalId,
+      grade: userData.grade,
       language: 'EN',
     };
-
     try {
-      await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }));
+      let createdPerson: any = await API.graphql(graphqlOperation(mutations.createPerson, { input: user }));
       handleMessage('success', 'User registered successfully');
       setNewUserInputs((prev) => {
         return {
-          ...prev,
-          key: 0,
-          authId: '',
-          email: '',
-          password: 'xIconoclast.5x',
-          firstName: '',
-          lastName: '',
-          phone: '',
-          birthdate: '',
-          grade: '',
-          role: '',
-          externalId: '',
+          ...prev, key: 0, authId: '', email: '', password: 'xIconoclast.5x',
+          firstName: '', lastName: '', phone: '', birthdate: '', grade: '',
+          role: '', externalId: '',
         };
       });
+      return createdPerson.data.createPerson;
     } catch (error) {
       if (error.errors[0].message.includes('coerced')) {
         handleMessage('success', 'User registered successfully');
       } else {
         handleMessage('error', error.message);
       }
-    } finally {
-      setTimeout(() => {
-        setNewUserInputs(initialState);
-        setWaiting(false);
-      }, 1000);
     }
   }
 
-  async function signUp() {
+  const cognitoSignUp = async () => {
     let username = newUserInputs.email;
     let password = newUserInputs.password;
     try {
@@ -142,13 +166,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
         username,
         password,
       });
-      setNewUserInputs(() => {
-        return {
-          ...newUserInputs,
-          authId: user.userSub,
-        };
-      });
-      registerUser(user.userSub);
+      let userData = { ...newUserInputs, authId: user.userSub };
+      setNewUserInputs(() => { return userData; });
+      return userData;
     } catch (error) {
       console.log('error signing up:', error);
       setMessage(() => {
@@ -181,86 +201,34 @@ const QuickRegister = (props: QuickRegisterProps) => {
   }
 
   const validation = () => {
-    let validated = false;
-
-    setMessage(() => {
-      let username = newUserInputs.email;
-
-      if (!newUserInputs.firstName) {
-        return {
-          show: true,
-          type: 'error',
-          message: "User's first name cannot be blank",
-          field: 'firstName',
-        };
-      }
-      if (!newUserInputs.lastName) {
-        return {
-          show: true,
-          type: 'error',
-          message: "User's last name cannot be blank",
-          field: 'lastName',
-        };
-      }
-      if (!username) {
-        return {
-          show: true,
-          type: 'error',
-          message: "User's email cannot be blank",
-          field: 'email',
-        };
-      }
-      if (!username.includes('@')) {
-        return {
-          show: true,
-          type: 'error',
-          message: "User's email is not in the expected email address format",
-          field: 'email',
-        };
-      }
-
-      validated = true;
-      if (validated) {
-        signUp();
-      }
-      return {
-        show: true,
-        type: 'loading',
-        message: 'Loading...',
-        field: '',
-      };
-    });
-  };
-
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
-    setNewUserInputs(() => {
-      if (id === 'email') {
-        return {
-          ...newUserInputs,
-          [id]: value.toLowerCase(),
-        };
-      } else {
-        return {
-          ...newUserInputs,
-          [id]: value,
-        };
-      }
-    });
-  };
-
-
-
-  const handleSubmit = () => {
-    setWaiting(true);
-    validation();
+    let username = newUserInputs.email;
+    let isValid = true;
+    let msg = { show: true, type: 'loading', message: 'Loading...', field: '' };
+    if (!newUserInputs.firstName) {
+      isValid = false;
+      msg.message = `User's first name cannot be blank`;
+      msg.field = 'firstName'
+    } else if (!newUserInputs.lastName) {
+      isValid = false;
+      msg.message = `User's last name cannot be blank`;
+      msg.field = 'lastName'
+    } else if (!username) {
+      isValid = false;
+      msg.message = `User's email cannot be blank`;
+      msg.field = 'email'
+    } else if (!username.includes('@')) {
+      isValid = false;
+      msg.message = `User's email is not in the expected email address format`;
+      msg.field = 'email'
+    }
+    setMessage(msg)
+    return isValid;
   };
 
   return (
     <div
-      className={`${
-        !active ? 'hidden' : 'display'
-      } fixed z-100 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50`}>
+      className={`${!active ? 'hidden' : 'display'
+        } fixed z-100 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50`}>
       <div className="flex flex-col w-128 p-4 overflow-hidden bg-white shadow-xl rounded-lg">
         <div className="w-full flex flex-row justify-between">
           <h1 className="text-3xl font-open font-medium">Quick Register</h1>

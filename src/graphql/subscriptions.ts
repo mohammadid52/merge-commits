@@ -112,6 +112,30 @@ export const onChangePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -798,6 +822,7 @@ export const onCreateInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -904,6 +929,7 @@ export const onUpdateInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -1010,6 +1036,7 @@ export const onDeleteInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -1361,6 +1388,36 @@ export const onCreateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -1492,6 +1549,36 @@ export const onUpdateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -1623,6 +1710,36 @@ export const onDeleteRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -2231,6 +2348,7 @@ export const onCreateCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -2314,6 +2432,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -2397,6 +2516,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -2484,6 +2604,7 @@ export const onCreateTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2546,6 +2667,7 @@ export const onUpdateTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2608,6 +2730,7 @@ export const onDeleteTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2741,6 +2864,7 @@ export const onCreateRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2788,6 +2912,7 @@ export const onUpdateRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2835,6 +2960,7 @@ export const onDeleteRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2877,6 +3003,7 @@ export const onCreateTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2925,6 +3052,7 @@ export const onUpdateTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2973,6 +3101,7 @@ export const onDeleteTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3021,6 +3150,7 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3069,6 +3199,7 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3117,6 +3248,7 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3943,6 +4075,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -4048,6 +4181,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -4153,6 +4287,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -9488,6 +9623,30 @@ export const onCreatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -9669,6 +9828,30 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -9850,6 +10033,30 @@ export const onDeletePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {

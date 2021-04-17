@@ -103,6 +103,7 @@ type Room
   classID: ID!
   teacherAuthID: String!
   teacherEmail: String!
+  coTeachers: [Person]
   name: String!
   maxPersons: Int!
   institution: Institution @connection(fields: ["institutionID"])
@@ -148,6 +149,7 @@ type Curriculum @model @key(fields: ["id"]) @key(name: "curriculumByInstitution"
   name: String!
   type: String
   image: String
+  summary: String
   description: String
   objectives: [String]
   languages: [Language]

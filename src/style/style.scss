@@ -1,8 +1,8 @@
 /* OTHER / GENERAL */
-@import "general/scrollbars";
+@import 'general/scrollbars';
 
 /* MAIN PARTS */
-@import "lessons";
+@import 'lessons';
 
 /*
   NOTE: This file should be converted into simple css file and
@@ -28,7 +28,6 @@
 .main_container {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
 
   @media screen and (max-width: 767px) {
     padding: 1rem;
@@ -120,6 +119,75 @@
   padding: 0;
 }
 
+.roomTiles {
+  &.is-open {
+    transition: transform ease-out 0.3s;
+    transition-delay: 0ms;
+    transform-origin: top;
+    animation: showCards 0.3s linear;
+  }
+  &.hide {
+    transform-origin: top;
+    animation: hideCards 0.2s linear;
+    transition: transform ease-in 0.2s;
+  }
+}
+@keyframes showCards {
+  0% {
+    opacity: 0;
+    transform: scaleY(50%);
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleY(100%);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hideCards {
+  0% {
+    opacity: 0.1;
+    transform: scaleY(100%);
+  }
+
+  100% {
+    transform: scaleY(0%);
+
+    opacity: 0;
+  }
+}
+.hide__scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  & {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.option__list {
+  display: block;
+  overflow: hidden;
+  &.hide {
+    visibility: hidden;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-out;
+  }
+  &.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-in;
+  }
+}
 @media screen and (max-width: 767px) {
   .test {
     max-height: 80vh;
@@ -137,8 +205,7 @@
       font-size: 1.5rem;
     }
   }
-W
-  .reg {
+  W .reg {
     padding: 1rem;
 
     h1 {
