@@ -103,7 +103,6 @@ type Room
   classID: ID!
   teacherAuthID: String!
   teacherEmail: String!
-  coTeachers: [Person]
   name: String!
   maxPersons: Int!
   institution: Institution @connection(fields: ["institutionID"])
@@ -118,7 +117,21 @@ type Room
   repeat: String
   notes: String
   activeSyllabus: String
+  coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
 }
+
+type RoomCoTeachers
+  @model
+  @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
+  id: ID!
+  roomID: ID!
+  teacherID: ID!
+  teacherEmail: String!
+  teacherAuthID: String!
+  room: Room @connection(fields: ["roomID"])
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+}
+
 type Class @model @key(name: "classByInstitution", fields: ["institutionID"]) {
   id: ID!
   institutionID: ID!
