@@ -4,7 +4,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 
 import { getAsset } from '../../../../../assets';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
-
+import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
@@ -41,7 +41,7 @@ const RoomsList = (props: RoomListProps) => {
     setLoading(true);
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listRooms, {
+        graphqlOperation(customQueries.listRoomsDashboard, {
           filter: {
             institutionID: { eq: instId },
           },

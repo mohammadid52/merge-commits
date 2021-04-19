@@ -450,6 +450,121 @@ export const listRooms = /* GraphQL */ `
   }
 `;
 
+export const listRoomsDashboard = /* GraphQL */ `
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+          items {
+            id
+            curriculumID
+            curriculum {
+              name
+            }
+          }
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listRoomCurriculums = /* GraphQL */ `
   query ListRoomCurriculums($filter: ModelRoomCurriculumFilterInput, $limit: Int, $nextToken: String) {
     listRoomCurriculums(filter: $filter, limit: $limit, nextToken: $nextToken) {
@@ -1176,6 +1291,8 @@ export const listServiceProviders = /* GraphQL */ `
     }
   }
 `;
+
+
 
 export const getInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {
