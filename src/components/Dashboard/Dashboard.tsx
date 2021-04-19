@@ -5,6 +5,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import SideMenu from './Menu/SideMenu';
 import { useCookies } from 'react-cookie';
 import * as queries from '../../graphql/queries';
+import * as customQueries from '../../customGraphql/customQueries';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import QuestionBank from './Admin/Questions/QuestionBank';

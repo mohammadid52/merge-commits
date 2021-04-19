@@ -70,7 +70,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     if (state.roomData?.rooms?.length > 0) {
       setOpenItems([...openItems, 'Dashboard']);
     }
-  }, [role, state.roomData.rooms]);
+  }, [role, state.roomData.rooms, state.activeRoom]);
 
   const userLinks = (role: string): void => {
     console.log('role', role);
@@ -212,6 +212,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 state.roomData.rooms.map((room: Room, i: number) => {
                   return {
                     title: room.name,
+                    active: room.id === state.activeRoom,
                     path: room.id,
                     onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
                   };
@@ -315,74 +316,76 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   return (
     <div className={`link w-full h-12 z-40`}>
       {state.user.role && links && links.length > 0
-        ? links.map((link: { subMenuItems: any; name: string; path: string; label: string }, key: number) => {
-            const currentPath = `/dashboard/${link.path}`;
-            const open =
-              path === currentPath ||
-              (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
+        ? links.map(
+            (link: { subMenuItems: any; name: string; path: string; label: string; active: boolean }, key: number) => {
+              const currentPath = `/dashboard/${link.path}`;
+              const open =
+                path === currentPath ||
+                (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
 
-            const exists = openItems.indexOf(link.label) !== -1;
+              const exists = openItems.indexOf(link.label) !== -1;
 
-            return link.subMenuItems && link.subMenuItems.length > 0 ? (
-              <div key={`link_${key}`} className={`space-y-1`}>
-                <a
-                  id={link.path}
-                  onClick={(e) => handleLink(e, link.label, true)}
-                  type="button"
-                  className={`${
-                    open && `bg-gray-700 hover:bg-gray-700`
-                  } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white flex items-center px-2 py-2 text-sm font-medium rounded-md`}
-                  aria-controls="sub-menu-1"
-                  aria-expanded="false">
-                  {getMenuIcon(link.label, link.path)}
-                  {link.name}
-                  <svg
+              return link.subMenuItems && link.subMenuItems.length > 0 ? (
+                <div key={`link_${key}`} className={`space-y-1`}>
+                  <a
+                    id={link.path}
+                    onClick={(e) => handleLink(e, link.label, true)}
+                    type="button"
                     className={`${
-                      exists ? 'text-gray-400 rotate-90' : 'text-gray-300'
-                    } text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150`}
-                    viewBox="0 0 20 20"
-                    aria-hidden="true">
-                    <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
-                  </svg>
-                </a>
-                {exists && (
-                  <div className="space-y-1" id="sub-menu-1">
-                    {link.subMenuItems.map((d: any) => {
-                      const activeLink =
-                        findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1;
+                      open && `bg-gray-700 hover:bg-gray-700`
+                    } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                    aria-controls="sub-menu-1"
+                    aria-expanded="false">
+                    {getMenuIcon(link.label, link.path)}
+                    {link.name}
+                    <svg
+                      className={`${
+                        exists ? 'text-gray-400 rotate-90' : 'text-gray-300'
+                      } text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150`}
+                      viewBox="0 0 20 20"
+                      aria-hidden="true">
+                      <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
+                    </svg>
+                  </a>
+                  {exists && (
+                    <div className="space-y-1" id="sub-menu-1">
+                      {link.subMenuItems.map((d: any) => {
+                        const activeLink =
+                          findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1 || d.active;
 
-                      return (
-                        <a
-                          key={`${d.path}_key`}
-                          id={d.path}
-                          onClick={(e) => {
-                            if (d.onClick) {
-                              d.onClick();
-                            } else handleLink(e, link.label);
-                          }}
-                          className={`group cursor-pointer w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
-                            activeLink ? 'text-gray-300' : 'text-gray-600'
-                          }`}>
-                          {d.title}
-                        </a>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <a
-                key={`link_${key}`}
-                id={link.path}
-                onClick={(e) => handleLink(e, link.label)}
-                className={`${
-                  path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
-                } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md`}>
-                <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
-                {link.name}
-              </a>
-            );
-          })
+                        return (
+                          <a
+                            key={`${d.path}_key`}
+                            id={d.path}
+                            onClick={(e) => {
+                              if (d.onClick) {
+                                d.onClick();
+                              } else handleLink(e, link.label);
+                            }}
+                            className={`group cursor-pointer truncate ... w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
+                              activeLink ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                            {d.title}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <a
+                  key={`link_${key}`}
+                  id={link.path}
+                  onClick={(e) => handleLink(e, link.label)}
+                  className={`${
+                    path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
+                  } text-gray-400 hover:text-gray-300 my-2 truncate ... cursor-pointer hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md`}>
+                  <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
+                  {link.name}
+                </a>
+              );
+            }
+          )
         : null}
     </div>
   );

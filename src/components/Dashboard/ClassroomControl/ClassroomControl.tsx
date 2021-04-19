@@ -114,7 +114,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       : [];
 
   useEffect(() => {
-    if (homeData && homeData.length > 0) {
+    if (homeData && homeData.length > 0 && getClassList.length > 0) {
       setClassList(getClassList);
     }
   }, [homeData]);
@@ -206,9 +206,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
    */
   useEffect(() => {
     const listRoomCurriculums = async () => {
-      if (state.roomData.rooms.length > 0 && state.activeRoom !== '') {
+      if (state.roomData.rooms.length > 0) {
         try {
-          const roomIds = getArrayOfUniqueValueByProperty(state.roomData.rooms, 'id');
           const roomCurriculumsFetch: any = API.graphql(
             graphqlOperation(customQueries.listRoomCurriculums, {
               filter: { roomID: { contains: state.activeRoom } },
