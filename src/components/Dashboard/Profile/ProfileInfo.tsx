@@ -12,6 +12,7 @@ import LessonLoading from '../../Lesson/Loading/ComponentLoading';
 import ToolTip from '../../General/ToolTip/ToolTip';
 import useDictionary from '../../../customHooks/dictionary';
 import { getUserRoleString } from '../../../utilities/strings';
+import Tooltip from '../../Atoms/Tooltip';
 interface UserInfoProps {
   user: UserInfo;
   status: string;
@@ -121,14 +122,16 @@ const ProfileInfo = (props: UserInfoProps) => {
               </div>
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 flex items-center justify-start font-medium text-gray-500">
-                  {/* {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['ROLE']} */}
-
                   <NavLink className="flex items-center justify-center w-auto" to={`${match.url}/password`}>
-                    <p className="w-auto mr-2">Password</p>
-                    <IconContext.Provider
-                      value={{ className: 'w-auto', size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
-                      <RiLock2Fill />
-                    </IconContext.Provider>
+                    <Tooltip text="edit password">
+                      <div className="flex items-center justify-center">
+                        <p className="w-auto mr-2">{dashboardProfileDict[userLanguage]['PERSONAL_INFO']['PASSWORD']}</p>
+                        <IconContext.Provider
+                          value={{ className: 'w-auto', size: '1rem', color: 'rgba(160, 174, 192, 1)' }}>
+                          <RiLock2Fill />
+                        </IconContext.Provider>
+                      </div>
+                    </Tooltip>
                   </NavLink>
                 </dt>
                 <dd className="mt-1 text-sm leading-5 text-gray-900">*******</dd>
