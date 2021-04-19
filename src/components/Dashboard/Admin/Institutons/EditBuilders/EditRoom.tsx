@@ -443,7 +443,7 @@ const EditRoom = (props: EditRoomProps) => {
           teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id).authId,
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
           name: roomData.name,
-          coTeachers: selectedCoTeachers,
+          // coTeachers: selectedCoTeachers,
           maxPersons: roomData.maxPersons,
         };
         const newRoom: any = await API.graphql(graphqlOperation(mutation.updateRoom, { input: input }));
@@ -598,7 +598,7 @@ const EditRoom = (props: EditRoomProps) => {
                   onChange={selectTeacher}
                 />
               </div>
-              <div className="px-3 py-4">
+              {/* <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
                 </label>
@@ -609,7 +609,7 @@ const EditRoom = (props: EditRoomProps) => {
                   placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
                   onChange={selectCoTeacher}
                 />
-              </div>
+              </div> */}
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {RoomEDITdict[userLanguage]['CLASS_NAME_LABEL']} <span className="text-red-500"> *</span>

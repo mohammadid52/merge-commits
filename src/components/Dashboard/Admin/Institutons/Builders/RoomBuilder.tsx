@@ -457,7 +457,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           name: roomData.name,
           maxPersons: roomData.maxPersons,
           // ******* NEW {coTeachers: object[]} FIELD ADDED ******
-          coTeachers: selectedCoTeachers,
+          // coTeachers: selectedCoTeachers,
         };
 
         const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
@@ -600,7 +600,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   Add new teacher
                 </p>
               </div>
-              <div className="px-3 py-4">
+              {/* <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {RoomBuilderdict[userLanguage]['CO_TEACHER_LABEL']}
                 </label>
@@ -612,7 +612,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   onChange={selectCoTeacher}
                   disabled={roomData.teacher.id === ''}
                 />
-              </div>
+              </div> */}
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']} <span className="text-red-500"> *</span>
