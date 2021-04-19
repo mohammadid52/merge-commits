@@ -463,30 +463,6 @@ export const listRoomsDashboard = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-        coTeachers {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
         name
         maxPersons
         institution {
