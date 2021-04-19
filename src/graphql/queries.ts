@@ -621,6 +621,13 @@ export const listRooms = /* GraphQL */ `
         }
         curricula {
           nextToken
+          items {
+            id
+            curriculumID
+            curriculum {
+              name
+            }
+          }
         }
         filters
         location
