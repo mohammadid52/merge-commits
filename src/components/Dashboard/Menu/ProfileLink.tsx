@@ -20,8 +20,6 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   };
 
   const handleLink = (e: any) => {
-    // Fixed: SideWidget Bar showing on profile page at first time
-    // Reason: the current page was not updating from 'lesson-planner'(default) to 'profile'
     linkProps.setCurrentPage('profile');
     dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'profile' } });
   };
