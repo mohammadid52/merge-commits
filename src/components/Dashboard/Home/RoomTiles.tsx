@@ -13,6 +13,7 @@ import ImageAlternate from '../../Atoms/ImageAlternative';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { ModifiedListProps } from './Home';
+import Tooltip from '../../Atoms/Tooltip';
 
 const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
   const { classList: classes } = props;
@@ -145,9 +146,12 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                             </a>
                           </p>
                           <a href="#" className="block mt-2">
-                            <p className="text-base font-semibold text-gray-900">
-                              {name} ({roomName})
-                            </p>
+                            {/* Testing: tooltip */}
+                            <Tooltip placement="bottom" text="Go to classroom">
+                              <p className="text-base font-semibold text-gray-900">
+                                {name} ({roomName})
+                              </p>
+                            </Tooltip>
                             <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>

@@ -38,6 +38,7 @@ const TeacherRows = (props: { teacherList: any }) => {
                               <p className="text-sm font-medium text-indigo-600 truncate">
                                 {teacher.firstName + ' ' + teacher.lastName}
                               </p>
+
                               <p className="mt-2 flex items-center text-sm text-gray-500">
                                 <svg
                                   className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
