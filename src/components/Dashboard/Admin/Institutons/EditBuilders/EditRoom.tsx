@@ -205,6 +205,7 @@ const EditRoom = (props: EditRoomProps) => {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
         );
+
         const staffList = sortedList.map((item: any) => ({
           id: item.staffMember?.id,
           name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
@@ -248,7 +249,10 @@ const EditRoom = (props: EditRoomProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-        const classList = sortedList.map((item: any, i: any) => ({
+        const filteredClassList = sortedList.filter(
+          (classItem: any) => classItem.institution.isServiceProvider !== true
+        );
+        const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
           value: `${item.name ? item.name : ''}`,
