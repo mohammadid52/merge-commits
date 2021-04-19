@@ -204,11 +204,34 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }
 
+  /***
+   *
+   * let questionSequence: any = await API.graphql(
+   graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
+   );
+   questionSequence = questionSequence?.data.getCSequences?.sequence || [];
+   * */
+
   /**
    * Function and useEffect for getting/setting checkpoints if
    * condition is met and lesson plans include
    * checkpoints in their name
    */
+  const correctCheckpointQuestionSequence = async (checkpointId: string, checkpointObj: any) => {
+    const questionSequences: any = await API.graphql(
+      graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
+    );
+    const currentQuestions = await checkpointObj.questions.items;
+    const qSequence = questionSequences.data.getCSequences.sequence;
+    const orderedQuestions = qSequence.map((sequenceID: string) => {
+      const findQuestion = currentQuestions.find((questionObj: any) => questionObj.question.id === sequenceID);
+      return findQuestion;
+    });
+
+    // console.log('orderedQuestions -> ', orderedQuestions);
+    return { ...checkpointObj, questions: { ...checkpointObj.questions, items: orderedQuestions } };
+  };
+
   const getAllCheckpoints = async () => {
     const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
@@ -232,9 +255,27 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
           return pickCheckpointObj;
         });
 
-        // console.log('checkpoints --> ', items)
-        // console.log('checkpoints --> ordered --> ',orderCorrected)
-        const listCheckpoints = { ...checkpoints.data.listCheckpoints, items: orderCorrected };
+        console.log('checkpoints --> ', items);
+        console.log('checkpoints --> ordered --> ', orderCorrected);
+
+        /**
+         *
+         * HOTFIX TO CORRECT QUESTION ORDER
+         *
+         * */
+        const questionOrderCorrected =
+          orderCorrected &&
+          Promise.all(
+            orderCorrected.map(async (checkpointObj: any) => {
+              return await correctCheckpointQuestionSequence(checkpointObj.id, checkpointObj);
+            })
+          );
+
+        // console.log('questionOrder corrected -> ', await questionOrderCorrected);
+
+        const listCheckpoints = questionOrderCorrected
+          ? { ...checkpoints.data.listCheckpoints, items: await questionOrderCorrected }
+          : { ...checkpoints.data.listCheckpoints, items: await orderCorrected };
 
         setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: listCheckpoints } });
 
