@@ -145,10 +145,8 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                             </a>
                           </p>
                           <a href="#" className="block mt-2">
-                            <p className="text-base font-semibold text-gray-900">
-                              {name} ({roomName})
-                            </p>
-                            <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
+                            <p className="text-base font-semibold text-gray-900">{name}</p>
+                            <p className="mt-2 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>
                         <div className="mt-6 flex items-center">
