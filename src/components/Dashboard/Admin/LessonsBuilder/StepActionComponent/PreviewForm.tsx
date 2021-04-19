@@ -208,7 +208,7 @@ const PreviewForm = (props: PreviewFormProps) => {
           onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
           role="button"
           className={`${
-            isOpen ? 'border-indigo-300' : 'border-gray-200'
+            isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
           } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-full`}>
           <p className="w-9.3/10" key={checkpItem.id}>
             <span>
@@ -320,10 +320,15 @@ const PreviewForm = (props: PreviewFormProps) => {
               </h3>
               <p className="w-3/4">{lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}</p>
             </div>
+
             <div className={fieldClass}>
               <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">Welcome Message:</h3>
-              {/* <h3 className="font-medium text-gray-500 text-base">{lessonDetails?.introductionTitle || ''}</h3> */}
-              <p className="w-3/4">{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}</p>
+              <div className="w-3/4">
+                <p className="font-semibold text-base">{lessonDetails?.introductionTitle || ''}</p>
+                <p className="w-3/4 mb-4 mt-2">
+                  {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}
+                </p>
+              </div>
             </div>
             <div className={fieldClass}>
               <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
