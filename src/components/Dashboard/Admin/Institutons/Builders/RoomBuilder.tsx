@@ -452,10 +452,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
-          // ********************** CHANGES HERE ********************************
-          // ********************** Uncomment this lines and add it to graphql query ********************************
-          // coTeachersEmail: selectedCoTeachers.map((item: any) => item.email),
-          // coTeachersAuthId: selectedCoTeachers.map((item: any) => item.authId),
+          // ******* NEW {coTeachers: object[]} FIELD ADDED ******
+          coTeachers: selectedCoTeachers,
         };
 
         const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
