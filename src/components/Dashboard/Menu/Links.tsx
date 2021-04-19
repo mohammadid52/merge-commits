@@ -15,7 +15,6 @@ import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
 import useDictionary from '../../../customHooks/dictionary';
 import { getAsset } from '../../../assets';
 import { findIndex } from 'lodash';
-import { open } from 'inspector';
 
 type LinkObject = {
   name: string;
@@ -24,18 +23,36 @@ type LinkObject = {
   label?: string;
 };
 
+export interface Room {
+  id: string;
+  classID: string;
+  teacherAuthID: string;
+  name: string;
+}
+
 export interface LinkProps {
   children?: React.ReactNode;
   setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
   currentPage: string;
   image?: string;
   role?: string;
+  setActiveRoomName: Function;
   updateAuthState?: Function;
+  setActiveRoomSyllabus: Function;
+  setLessonLoading: Function;
+  setSyllabusLoading: Function;
 }
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { currentPage, setCurrentPage } = linkProps;
+  const { state, dispatch, theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const {
+    currentPage,
+    setCurrentPage,
+    setActiveRoomName,
+    setSyllabusLoading,
+    setLessonLoading,
+    setActiveRoomSyllabus,
+  } = linkProps;
   const themeColor = getAsset(clientKey, 'themeClassName');
   const { sideBarLinksDict } = useDictionary(clientKey);
   const history = useHistory();
@@ -50,7 +67,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
    */
   useEffect(() => {
     userLinks(role);
-  }, [role]);
+    if (state.roomData?.rooms?.length > 0) {
+      setOpenItems([...openItems, 'Dashboard']);
+    }
+  }, [role, state.roomData.rooms]);
 
   const userLinks = (role: string): void => {
     console.log('role', role);
@@ -58,7 +78,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'SUP':
         return setLinks((links) => {
           return [
-            ...links,
             {
               title: sideBarLinksDict[userLanguage].REGISTRATION,
               name: sideBarLinksDict[userLanguage].REGISTRATION,
@@ -94,7 +113,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'ADM':
         return setLinks((links) => {
           return [
-            ...links,
             // {
             //   title: sideBarLinksDict[userLanguage].DASHBOARD,
             //   name: sideBarLinksDict[userLanguage].DASHBOARD,
@@ -146,8 +164,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'FLW':
         return setLinks((links) => {
           return [
-            ...links,
-
             {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
@@ -186,13 +202,20 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'ST':
         return setLinks((links) => {
           return [
-            ...links,
             {
               title: sideBarLinksDict[userLanguage].DASHBOARD,
               name: sideBarLinksDict[userLanguage].DASHBOARD,
               label: 'Dashboard',
               path: 'home',
-              subMenuItems: [],
+              subMenuItems:
+                state.roomData.rooms.length &&
+                state.roomData.rooms.map((room: Room, i: number) => {
+                  return {
+                    title: room.name,
+                    path: room.id,
+                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
+                  };
+                }),
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
@@ -205,6 +228,21 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         });
       default:
         return;
+    }
+  };
+
+  const handleRoomSelection = (id: string, name: string, i: number) => {
+    if (state.activeRoom !== id) {
+      // setActiveRoom(t.id);
+      setActiveRoomName(name);
+
+      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
+
+      setSyllabusLoading(true); // Trigger loading ui element
+      setLessonLoading(true);
+      setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
+
+      history.push('/dashboard/classroom');
     }
   };
 
@@ -317,7 +355,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                         <a
                           key={`${d.path}_key`}
                           id={d.path}
-                          onClick={(e) => handleLink(e, link.label)}
+                          onClick={(e) => {
+                            if (d.onClick) {
+                              d.onClick();
+                            } else handleLink(e, link.label);
+                          }}
                           className={`group cursor-pointer w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
                             activeLink ? 'text-gray-300' : 'text-gray-600'
                           }`}>

@@ -137,6 +137,10 @@ const Dashboard = (props: DashboardProps) => {
     <div className="h-screen flex overflow-hidden bg-gray-100">
       {/* <Noticebar inputContext={'global'} /> */}
       <SideMenu
+        setActiveRoomSyllabus={setActiveRoomSyllabus}
+        setLessonLoading={setLessonLoading}
+        setSyllabusLoading={setSyllabusLoading}
+        setActiveRoomName={setActiveRoomName}
         updateAuthState={updateAuthState}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}

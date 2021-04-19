@@ -166,7 +166,7 @@ const Home = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div
-              className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+              className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome, What do you want to learn today,{' '}
                 <span className="font-semibold">{user.preferredName ? user.preferredName : user.firstName}</span> ?

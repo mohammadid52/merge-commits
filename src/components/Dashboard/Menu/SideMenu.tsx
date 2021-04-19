@@ -14,13 +14,22 @@ interface SideMenuProps {
 }
 
 const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps) => {
-  const { currentPage, setCurrentPage, role, updateAuthState } = props;
+  const {
+    currentPage,
+    setCurrentPage,
+    role,
+    updateAuthState,
+    setActiveRoomName,
+    setActiveRoomSyllabus,
+    setSyllabusLoading,
+    setLessonLoading,
+  } = props;
   const { dispatch, theme, clientKey } = useContext(GlobalContext);
   const history = useHistory();
 
   const handleLink = (e: React.MouseEvent) => {
     history.push('/dashboard/home');
-    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'classroom' } });
+    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'homepage' } });
   };
 
   return (
@@ -31,9 +40,25 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
             <img className="h-8 w-auto" src={getAsset(clientKey, 'main_logo')} alt="Workflow" />
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
-            <ProfileLink role={role} setCurrentPage={setCurrentPage} currentPage={currentPage} />
+            <ProfileLink
+              setActiveRoomSyllabus={setActiveRoomSyllabus}
+              setLessonLoading={setLessonLoading}
+              setSyllabusLoading={setSyllabusLoading}
+              setActiveRoomName={setActiveRoomName}
+              role={role}
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+            />
             <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
-              <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={role} />
+              <Links
+                setActiveRoomSyllabus={setActiveRoomSyllabus}
+                setLessonLoading={setLessonLoading}
+                setSyllabusLoading={setSyllabusLoading}
+                setActiveRoomName={setActiveRoomName}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+                role={role}
+              />
             </nav>
           </div>
           <SignOutButton updateAuthState={updateAuthState} />
