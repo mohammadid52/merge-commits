@@ -832,6 +832,36 @@ export const createRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -966,6 +996,36 @@ export const updateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -1100,6 +1160,36 @@ export const deleteRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -9907,6 +9997,30 @@ export const createPersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -10091,6 +10205,30 @@ export const updatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -10275,6 +10413,30 @@ export const deletePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {

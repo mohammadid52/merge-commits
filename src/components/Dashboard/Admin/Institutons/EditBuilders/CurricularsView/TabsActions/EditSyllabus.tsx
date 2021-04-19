@@ -3,6 +3,7 @@ import { useHistory, useLocation, useParams } from 'react-router';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import findIndex from 'lodash/findIndex';
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../../Atoms/SectionTitle';
@@ -128,9 +129,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (result.source.index !== result.destination.index) {
       const list = reorder(lessonsIds, result.source.index, result.destination.index);
       setLessonsIds(list);
+
+      const filteredList = selectedLessonsList.map((lesson) => list.filter((id) => id === lesson.uniqlessonId)).flat(1);
+
       let lessonsList = selectedLessonsList
         .map((t: any) => {
-          let index = list.indexOf(t.uniqlessonId);
+          let index = findIndex(list, (id) => id === t.uniqlessonId);
           return { ...t, index };
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
@@ -138,9 +142,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       setSelectedLessonsList(lessonsList);
       let seqItem: any = await API.graphql(
         graphqlOperation(mutations.updateCSequences, { input: { id: `lesson_${syllabusId}`, sequence: list } })
+        // sorting issue : error in sequence key in graphql
       );
       seqItem = seqItem.data.updateCSequences;
-      console.log('seq updated');
+
+      console.log({ list, lessonsList, filteredList, lessonsIds });
     }
   };
 
@@ -749,10 +755,19 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             </div>
 
             <div className="bg-white shadow-5 sm:rounded-lg mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+              <div className="px-4 py-5 flex items-center justify-between border-b-0 border-gray-200 sm:px-6">
+                <div />
                 <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
                   {EditSyllabusDict[userLanguage]['lessonplan']}
                 </h3>
+                <div className="flex justify-end">
+                  <Buttons
+                    btnClass="py-3 px-10"
+                    label={EditSyllabusDict[userLanguage]['createnew']}
+                    onClick={createNewLesson}
+                    disabled={loading ? true : false}
+                  />
+                </div>
               </div>
               <div className="w-full m-auto p-4">
                 {/* Add new lesson section */}
@@ -812,74 +827,76 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                           <Droppable droppableId="droppable">
                             {(provided, snapshot) => (
                               <div {...provided.droppableProps} ref={provided.innerRef}>
-                                {selectedLessonsList.map((item, index) => (
-                                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                                    {(provided, snapshot) => (
-                                      <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}>
+                                {selectedLessonsList.map((item, index) => {
+                                  return (
+                                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                                      {(provided, snapshot) => (
                                         <div
-                                          key={index}
-                                          className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                                          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                            {index + 1}.
-                                          </div>
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}>
                                           <div
-                                            className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
-                                            onClick={() => gotoLessonBuilder(item.id, item.type)}>
-                                            {item.title ? item.title : '--'}
-                                          </div>
-                                          <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal text-gray-500">
-                                            {item?.measurements?.items?.length > 0
-                                              ? item?.measurements?.items?.map((rubric: any, index: number) =>
-                                                  index === item?.measurements?.items?.length - 1
-                                                    ? rubric?.rubric?.name + '.'
-                                                    : rubric?.rubric?.name + ', '
+                                            key={index}
+                                            className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                                            <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
+                                              {index + 1}.
+                                            </div>
+                                            <div
+                                              className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
+                                              onClick={() => gotoLessonBuilder(item.id, item.type)}>
+                                              {item.title ? item.title : '--'}
+                                            </div>
+                                            <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal text-gray-500">
+                                              {item?.measurements?.items?.length > 0
+                                                ? item?.measurements?.items?.map((rubric: any, index: number) =>
+                                                    index === item?.measurements?.items?.length - 1
+                                                      ? rubric?.rubric?.name + '.'
+                                                      : rubric?.rubric?.name + ', '
+                                                  )
+                                                : '-'}
+                                            </div>
+                                            <div className="flex w-1/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal cursor-pointer">
+                                              {item.type ? item.type : '--'}
+                                            </div>
+                                            <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
+                                              {editState.id !== item.id ? (
+                                                item.status ? (
+                                                  item.status
+                                                ) : (
+                                                  '--'
                                                 )
-                                              : '-'}
-                                          </div>
-                                          <div className="flex w-1/10 items-center px-8 py-3 text-left text-s text-gray-500 leading-4 font-medium whitespace-normal cursor-pointer">
-                                            {item.type ? item.type : '--'}
-                                          </div>
-                                          <div className="flex w-2.5/10 items-center px-8 py-3 text-center justify-center text-s text-gray-500 leading-4 font-medium ">
-                                            {editState.id !== item.id ? (
-                                              item.status ? (
-                                                item.status
                                               ) : (
-                                                '--'
-                                              )
+                                                <div className="text-gray-900">
+                                                  <Selector
+                                                    selectedItem={item.status}
+                                                    placeholder="Select Status"
+                                                    list={statusList}
+                                                    onChange={(val, name, id) =>
+                                                      onStatusChange(val, name, id, item.uniqlessonId)
+                                                    }
+                                                  />
+                                                </div>
+                                              )}
+                                            </div>
+                                            {editState.id !== item.id ? (
+                                              <span
+                                                className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`}
+                                                onClick={() => editCurrentLesson(item.id)}>
+                                                {EditSyllabusDict[userLanguage]['edit']}
+                                              </span>
                                             ) : (
-                                              <div className="text-gray-900">
-                                                <Selector
-                                                  selectedItem={item.status}
-                                                  placeholder="Select Status"
-                                                  list={statusList}
-                                                  onChange={(val, name, id) =>
-                                                    onStatusChange(val, name, id, item.uniqlessonId)
-                                                  }
-                                                />
-                                              </div>
+                                              <span
+                                                className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
+                                                onClick={cancelEdit}>
+                                                {editState.action ? editState.action : 'Cancel'}
+                                              </span>
                                             )}
                                           </div>
-                                          {editState.id !== item.id ? (
-                                            <span
-                                              className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`}
-                                              onClick={() => editCurrentLesson(item.id)}>
-                                              {EditSyllabusDict[userLanguage]['edit']}
-                                            </span>
-                                          ) : (
-                                            <span
-                                              className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
-                                              onClick={cancelEdit}>
-                                              {editState.action ? editState.action : 'Cancel'}
-                                            </span>
-                                          )}
                                         </div>
-                                      </div>
-                                    )}
-                                  </Draggable>
-                                ))}
+                                      )}
+                                    </Draggable>
+                                  );
+                                })}
                                 {provided.placeholder}
                               </div>
                             )}
@@ -917,14 +934,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   ) : (
                     <div className="text-center p-16 mt-4">{EditSyllabusDict[userLanguage]['nolesson']}</div>
                   )}
-                  <div className="flex my-8 justify-center">
-                    <Buttons
-                      btnClass="py-3 px-10"
-                      label={EditSyllabusDict[userLanguage]['createnew']}
-                      onClick={createNewLesson}
-                      disabled={loading ? true : false}
-                    />
-                  </div>
                 </div>
               </div>
             </div>

@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from 'react';
 
 import { getAsset } from '../../../assets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
+import { getImageFromS3 } from '../../../utilities/services';
 import { initials, getInitialsFromString, stringToHslColor } from '../../../utilities/strings';
 
 interface selectorProps {
@@ -17,6 +18,7 @@ const SelectorWithAvatar = (props: selectorProps) => {
   const { list, selectedItem, btnClass, arrowHidden, placeholder, onChange } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
+  const [teacherList, setTeacherList] = useState([]);
 
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -41,6 +43,29 @@ const SelectorWithAvatar = (props: selectorProps) => {
       setShowList(false);
     }
   };
+
+  const getList = (listData: any) => {
+    let modifiedlist: any = [];
+
+    listData.forEach(async (item: any) => {
+      const imagePath = item?.image;
+
+      const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+
+      const modifiedItem = { ...item, avatar: image };
+
+      modifiedlist.push(modifiedItem);
+    });
+
+    return modifiedlist;
+  };
+
+  React.useEffect(() => {
+    if (list && list.length > 0) {
+      const modifiedlist = getList(list);
+      setTeacherList(modifiedlist);
+    }
+  }, [list]);
 
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
@@ -71,8 +96,8 @@ const SelectorWithAvatar = (props: selectorProps) => {
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
             className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-            {list.length > 0 ? (
-              list.map((item: { name: string; id: any; value: string; avatar?: string }, key: number) => (
+            {teacherList.length > 0 ? (
+              teacherList.map((item: { name: string; id: any; value: string; avatar?: string }, key: number) => (
                 <li
                   key={key}
                   onClick={() => updateSelectedItem(item.value, item.name, item.id, item.avatar)}

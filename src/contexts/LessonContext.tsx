@@ -204,11 +204,34 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }
 
+  /***
+   *
+   * let questionSequence: any = await API.graphql(
+   graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
+   );
+   questionSequence = questionSequence?.data.getCSequences?.sequence || [];
+   * */
+
   /**
    * Function and useEffect for getting/setting checkpoints if
    * condition is met and lesson plans include
    * checkpoints in their name
    */
+  const correctCheckpointQuestionSequence = async (checkpointId: string, checkpointObj: any) => {
+    const questionSequences: any = await API.graphql(
+      graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
+    );
+    const currentQuestions = await checkpointObj.questions.items;
+    const qSequence = questionSequences.data.getCSequences.sequence;
+    const orderedQuestions = qSequence.map((sequenceID: string) => {
+      const findQuestion = currentQuestions.find((questionObj: any) => questionObj.question.id === sequenceID);
+      return findQuestion;
+    });
+
+    // console.log('orderedQuestions -> ', orderedQuestions);
+    return { ...checkpointObj, questions: { ...checkpointObj.questions, items: orderedQuestions } };
+  };
+
   const getAllCheckpoints = async () => {
     const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
@@ -220,27 +243,45 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }, []);
     if (allCheckpointIDS.length > 0) {
       try {
-        const checkpoints: any = await API.graphql(graphqlOperation(customQueries.listCheckpoints, {
-          filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
-        }));
-
-
+        const checkpoints: any = await API.graphql(
+          graphqlOperation(customQueries.listCheckpoints, {
+            filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
+          })
+        );
 
         const items = checkpoints.data.listCheckpoints.items;
         const orderCorrected = allCheckpointIDS.map((checkpointID: string, idx: number) => {
-          const pickCheckpointObj = items.find((targetCheckpointObj: any) => targetCheckpointObj.id === checkpointID)
+          const pickCheckpointObj = items.find((targetCheckpointObj: any) => targetCheckpointObj?.id === checkpointID);
           return pickCheckpointObj;
-        })
+        });
 
-        // console.log('checkpoints --> ', items)
-        // console.log('checkpoints --> ordered --> ',orderCorrected)
-        const listCheckpoints = {...checkpoints.data.listCheckpoints, items: orderCorrected}
+        console.log('checkpoints --> ', items);
+        console.log('checkpoints --> ordered --> ', orderCorrected);
 
-        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints:  listCheckpoints}});
+        /**
+         *
+         * HOTFIX TO CORRECT QUESTION ORDER
+         *
+         * */
+        const questionOrderCorrected =
+          orderCorrected &&
+          Promise.all(
+            orderCorrected.map(async (checkpointObj: any) => {
+              return await correctCheckpointQuestionSequence(checkpointObj.id, checkpointObj);
+            })
+          );
+
+        // console.log('questionOrder corrected -> ', await questionOrderCorrected);
+
+        const listCheckpoints = questionOrderCorrected
+          ? { ...checkpoints.data.listCheckpoints, items: await questionOrderCorrected }
+          : { ...checkpoints.data.listCheckpoints, items: await orderCorrected };
+
+        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: listCheckpoints } });
 
         // INIT CONTEXT WITH EMPTY QUESTIONDATA!
         const initCheckpointsObj = listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
-          return { ...acc, [checkpointObj.id]: {} };
+          return { ...acc, [checkpointObj?.id]: {} };
         }, {});
 
         dispatch({
@@ -249,7 +290,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             data: initCheckpointsObj,
           },
         });
-
       } catch (e) {
         console.error('err fetch checkpoints ::: ', e);
       } finally {
@@ -266,7 +306,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const createQuestionData = async (responseObj: any) => {
     try {
       const newQuestionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: responseObj }),
+        graphqlOperation(customMutations.createQuestionData, { input: responseObj })
       );
     } catch (err) {
       console.error(err);
@@ -299,7 +339,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       }, null);
       setRecentQuestionOp('created');
     }
-  }
+  };
 
   async function getOrCreateQuestionData() {
     const { lessonID } = urlParams;
@@ -320,13 +360,16 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
             syllabusLessonID: { eq: lessonID },
             email: { eq: studentID },
           },
-        }),
+        })
       );
       const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
-        return [...acc, {
-          id: val.id,
-          checkpointID: val.checkpointID,
-        }];
+        return [
+          ...acc,
+          {
+            id: val.id,
+            checkpointID: val.checkpointID,
+          },
+        ];
       }, []);
 
       const noQuestionDatas = questionDatas.data.listQuestionDatas.items.length === 0;
@@ -336,10 +379,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         await handleCreateQuestionData();
       }
 
-      if (
-        existQuestionDatas && recentQuestionOp === '' ||
-        existQuestionDatas && recentQuestionOp === 'created'
-      ) {
+      if ((existQuestionDatas && recentQuestionOp === '') || (existQuestionDatas && recentQuestionOp === 'created')) {
         dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
         setRecentQuestionOp('fetched');
       }
@@ -371,8 +411,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }, [state.status]);
 
-
-
   // Init questionData in DB if necessary
   useEffect(() => {
     const initQuestionDataDB = async () => {
@@ -392,9 +430,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     const { lessonID } = urlParams;
     if (lessonID) {
       try {
-        const classroom: any = await API.graphql(
-          graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID }),
-        );
+        const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID }));
         setLesson(classroom.data.getSyllabusLesson);
         getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
@@ -406,23 +442,23 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }
 
-
   /**
    * SUBSCRIBE TO SYLLABUS LESSON
    */
   const subscribeToSyllabusLesson = () => {
     const { lessonID } = urlParams;
-    // @ts-ignore
-    const syllabusLessonSubscription = API.graphql( graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: lessonID }) ).subscribe({
+
+    const syllabusLessonSubscription = API.graphql(
+      graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: lessonID })
+      // @ts-ignore
+    ).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
-        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })).then(
-          (sLessonData: any) => {
-            const sLessonDataData = sLessonData.data.getSyllabusLesson;
-            setSubscriptionData(sLessonDataData)
-          }
-        );
+        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })).then((sLessonData: any) => {
+          const sLessonDataData = sLessonData.data.getSyllabusLesson;
+          setSubscriptionData(sLessonDataData);
+        });
       },
     });
 
@@ -448,16 +484,19 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   }, []);
 
   useEffect(() => {
-    if(subscriptionData){
-
+    if (subscriptionData) {
       dispatch({
         type: 'UPDATE_LESSON_PLAN',
         payload: {
           pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
             return !item.disabled;
           }),
-          //@ts-ignore
-          displayData: {...subscriptionData.displayData, breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage},
+
+          displayData: {
+            ...subscriptionData.displayData,
+            //@ts-ignore
+            breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage,
+          },
           viewing: subscriptionData.viewing,
         },
       });
@@ -468,7 +507,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     if (data) {
       let initialComponentState: any = {};
       let initialComponentStateSecondary: any = { notes: '' };
-      lesson.lessonPlan.forEach((item: { type: string; stage: string }) => {
+      lesson?.lessonPlan.forEach((item: { type: string; stage: string }) => {
         initialComponentState[item.type] = data[item.stage];
       });
       dispatch({
@@ -496,9 +535,6 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }, [lesson]);
 
-
-
-
   return (
     <LessonContext.Provider
       value={{
@@ -509,7 +545,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         subscribeToSyllabusLesson,
         userLanguage,
         uLang,
-        clientKey
+        clientKey,
       }}>
       {children}
     </LessonContext.Provider>

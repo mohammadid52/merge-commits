@@ -377,6 +377,36 @@ export const getRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
+      coTeachers {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       name
       maxPersons
       institution {
@@ -513,6 +543,30 @@ export const listRooms = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
@@ -4081,6 +4135,30 @@ export const getPersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
+        coTeachers {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
         name
         maxPersons
         institution {
