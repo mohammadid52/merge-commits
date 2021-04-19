@@ -8,7 +8,7 @@ import { firstInitialFunc, stringToHslColor } from '../../../utilities/strings';
 import { LinkProps } from './Links';
 
 const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { state, theme } = useContext(GlobalContext);
+  const { state, theme, dispatch } = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState('');
@@ -19,11 +19,11 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     return firstInitial + lastInitial;
   };
 
-
-
   const handleLink = (e: any) => {
-    const id = e.target.id.toLowerCase();
-    linkProps.setCurrentPage(id);
+    // Fixed: SideWidget Bar showing on profile page at first time
+    // Reason: the current page was not updating from 'lesson-planner'(default) to 'profile'
+    linkProps.setCurrentPage('profile');
+    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'profile' } });
   };
 
   useEffect(() => {
