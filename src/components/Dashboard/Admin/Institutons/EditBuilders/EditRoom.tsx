@@ -17,6 +17,7 @@ import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
+import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 
 interface EditRoomProps {}
 
@@ -29,6 +30,7 @@ const EditRoom = (props: EditRoomProps) => {
     name: '',
     institute: { id: '', name: '', value: '' },
     teacher: { id: '', name: '', value: '' },
+    coTeachers: [{}],
     classRoom: { id: '', name: '', value: '' },
     curricular: { id: '', name: '', value: '' },
     maxPersons: '',
@@ -37,6 +39,7 @@ const EditRoom = (props: EditRoomProps) => {
   const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
+
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
@@ -46,6 +49,10 @@ const EditRoom = (props: EditRoomProps) => {
     message: '',
     isError: false,
   });
+  const [coTeachersList, setCoTeachersList] = useState(teachersList);
+  const [selectedCoTeachers, setSelectedCoTeachers] = useState<
+    { email?: string; authId: string; value?: string; id?: string; name?: string }[]
+  >([]);
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -71,6 +78,24 @@ const EditRoom = (props: EditRoomProps) => {
         value: val,
       },
     });
+    const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    setCoTeachersList(filteredDefaultTeacher);
+    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
+  };
+
+  const selectCoTeacher = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentCoTeachers = selectedCoTeachers;
+    const selectedItem = currentCoTeachers.find((item) => item.id === id);
+
+    if (!selectedItem) {
+      const selectedItem = coTeachersList.find((item) => item.id === id);
+      updatedList = [...currentCoTeachers, { id, name, value, ...selectedItem }];
+    } else {
+      updatedList = currentCoTeachers.filter((item) => item.id !== id);
+    }
+
+    setSelectedCoTeachers(updatedList);
   };
 
   const editInputField = (e: any) => {
@@ -91,6 +116,7 @@ const EditRoom = (props: EditRoomProps) => {
           value: val,
         },
         teacher: { id: '', name: '', value: '' },
+        coTeachers: [{}],
         classRoom: { id: '', name: '', value: '' },
         curricular: { id: '', name: '', value: '' },
       });
@@ -205,7 +231,10 @@ const EditRoom = (props: EditRoomProps) => {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
         );
-        const staffList = sortedList.map((item: any) => ({
+        const filterByRole = sortedList.filter(
+          (teacher: any) => teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
+        );
+        const staffList = filterByRole.map((item: any) => ({
           id: item.staffMember?.id,
           name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
           value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
@@ -222,6 +251,7 @@ const EditRoom = (props: EditRoomProps) => {
           return !duplicate;
         });
         setTeachersList(filteredArray);
+        setCoTeachersList(filteredArray.filter((item: any) => item.id !== teacher.id));
       }
     } catch {
       setMessages({
@@ -413,6 +443,7 @@ const EditRoom = (props: EditRoomProps) => {
           teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id).authId,
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
           name: roomData.name,
+          coTeachers: selectedCoTeachers,
           maxPersons: roomData.maxPersons,
         };
         const newRoom: any = await API.graphql(graphqlOperation(mutation.updateRoom, { input: input }));
@@ -467,6 +498,8 @@ const EditRoom = (props: EditRoomProps) => {
             name: savedData.class?.name,
             value: savedData.class?.name,
           },
+          // ***** UNCOMMENT THIS ******
+          // coTeachers: savedData.coTeachers,
           maxPersons: savedData.maxPersons,
         });
         setPrevName(savedData.name);
@@ -563,6 +596,18 @@ const EditRoom = (props: EditRoomProps) => {
                   list={teachersList}
                   placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
                   onChange={selectTeacher}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
+                </label>
+                <MultipleSelector
+                  withAvatar
+                  selectedItems={selectedCoTeachers}
+                  list={coTeachersList}
+                  placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
+                  onChange={selectCoTeacher}
                 />
               </div>
               <div className="px-3 py-4">

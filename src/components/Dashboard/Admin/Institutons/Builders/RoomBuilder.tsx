@@ -235,13 +235,17 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
         );
-        const staffList = sortedList
+        const filterByRole = sortedList.filter(
+          (teacher: any) => teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
+        );
+        const staffList = filterByRole
           .filter((staff: any) => staff.staffMember)
           .map((item: any) => ({
             id: item.staffMember?.id,
             name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
             value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
             email: item.staffMember?.email ? item.staffMember?.email : '',
+            image: item.staffMember?.image,
             authId: item.staffMember?.authId ? item.staffMember?.authId : '',
           }));
 
