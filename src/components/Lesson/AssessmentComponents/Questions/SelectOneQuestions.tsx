@@ -36,7 +36,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
           <label htmlFor={question.question.label}>
             <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
               <b>{questionIndex + 1}. </b>
-              {question.question.question}
+              {question.question.question} (Select one)
             </p>
           </label>
           <div className={'w-auto flex flex-wrap mx-auto'}>
@@ -48,11 +48,12 @@ const SelectOneQuestions = (props: QuestionProps) => {
                   color: string;
                   text: string;
                 },
-                questionOptionIndex: number,
+                questionOptionIndex: number
               ) => {
                 return (
-                  <div key={`question_${questionId}_${questionOptionIndex}`}
-                       className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
+                  <div
+                    key={`question_${questionId}_${questionOptionIndex}`}
+                    className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
                     <span
                       id={option.label}
                       className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
@@ -63,7 +64,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
                     <span className={`w-24`}>{option.text}</span>
                   </div>
                 );
-              },
+              }
             )}
           </div>
         </div>
