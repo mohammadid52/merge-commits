@@ -1,6 +1,7 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { getAsset } from '../../../assets';
 import { GlobalContext } from '../../../contexts/GlobalContext';
+import { getImageFromS3 } from '../../../utilities/services';
 import { getInitialsFromString, initials, stringToHslColor } from '../../../utilities/strings';
 
 interface MultipleSelectorProps {
@@ -18,6 +19,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
   const { list, disabled, withAvatar, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
+  const [teacherList, setTeacherList] = useState([]);
 
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -37,6 +39,29 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
       window.removeEventListener('click', handleOutsideClick, false);
     }
   }, [showList]);
+
+  const getList = (listData: any) => {
+    let modifiedlist: any = [];
+
+    listData.forEach(async (item: any) => {
+      const imagePath = item?.image;
+
+      const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+
+      const modifiedItem = { ...item, avatar: image };
+
+      modifiedlist.push(modifiedItem);
+    });
+
+    return modifiedlist;
+  };
+
+  React.useEffect(() => {
+    if (list && list.length > 0) {
+      const modifiedlist = getList(list);
+      setTeacherList(modifiedlist);
+    }
+  }, [list]);
 
   return (
     <div className="relative" ref={currentRef}>
@@ -79,52 +104,54 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
             className="max-h-60 focus:shadow-none rounded-md py-1 text-base leading-6 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-            {list.length > 0 ? (
-              list.map((item: { id: string; name: string; value: string; avatar?: string }, key: number) => (
-                <li
-                  key={key}
-                  onClick={() => onChange(item.id, item.name, item.value)}
-                  id={item.id}
-                  role="option"
-                  className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
-                  {item.avatar && withAvatar ? (
-                    <img src={item.avatar} alt="" className="flex-shrink-0 h-6 w-6 rounded-full" />
-                  ) : (
-                    <div
-                      className="h-6 w-6 rounded-full mr-2 flex flex-shrink-0 justify-center items-center text-white text-xs p-2 text-bold"
-                      style={{
-                        background: `${stringToHslColor(
-                          getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1]
-                        )}`,
-                        textShadow: '0.1rem 0.1rem 2px #423939b3',
-                      }}>
-                      {item.name
-                        ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1])
-                        : initials('N', 'A')}
-                    </div>
-                  )}
-                  {!withAvatar && (
+            {teacherList.length > 0 ? (
+              teacherList.map((item: { id: string; name: string; value: string; avatar?: string }, key: number) => {
+                return (
+                  <li
+                    key={key}
+                    onClick={() => onChange(item.id, item.name, item.value)}
+                    id={item.id}
+                    role="option"
+                    className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
+                    {item.avatar && withAvatar ? (
+                      <img src={item.avatar} alt="" className="flex-shrink-0 mr-2 h-6 w-6 rounded-full" />
+                    ) : (
+                      <div
+                        className="h-6 w-6 rounded-full mr-2 flex flex-shrink-0 justify-center items-center text-white text-xs p-2 text-bold"
+                        style={{
+                          background: `${stringToHslColor(
+                            getInitialsFromString(item.name)[0] + ' ' + getInitialsFromString(item.name)[1]
+                          )}`,
+                          textShadow: '0.1rem 0.1rem 2px #423939b3',
+                        }}>
+                        {item.name
+                          ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1])
+                          : initials('N', 'A')}
+                      </div>
+                    )}
+                    {!withAvatar && (
+                      <span
+                        className={`${selectedItems.find((i) => i.id === item.id) ? 'display' : 'hidden'} ${
+                          theme.textColor[themeColor]
+                        } relative w-auto flex items-center`}>
+                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    )}
                     <span
-                      className={`${selectedItems.find((i) => i.id === item.id) ? 'display' : 'hidden'} ${
-                        theme.textColor[themeColor]
-                      } relative w-auto flex items-center`}>
-                      <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      className={`${selectedItems.find((i) => i.id === item.id) ? 'font-semibold' : 'font-normal'} ${
+                        !withAvatar ? 'pl-9' : ''
+                      } pl-4 block truncate`}>
+                      {item.name}
                     </span>
-                  )}
-                  <span
-                    className={`${selectedItems.find((i) => i.id === item.id) ? 'font-semibold' : 'font-normal'} ${
-                      !withAvatar ? 'pl-9' : ''
-                    } pl-4 block truncate`}>
-                    {item.name}
-                  </span>
-                </li>
-              ))
+                  </li>
+                );
+              })
             ) : (
               <li className="flex justify-center relative py-2 px-4">
                 <span className="font-normal"> No Results</span>
