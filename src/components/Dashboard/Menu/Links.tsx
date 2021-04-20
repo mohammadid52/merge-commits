@@ -41,18 +41,13 @@ export interface LinkProps {
   setActiveRoomSyllabus: Function;
   setLessonLoading: Function;
   setSyllabusLoading: Function;
+  handleRoomSelection: Function;
 }
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const { state, dispatch, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const {
-    currentPage,
-    setCurrentPage,
-    setActiveRoomName,
-    setSyllabusLoading,
-    setLessonLoading,
-    setActiveRoomSyllabus,
-  } = linkProps;
+  const { handleRoomSelection } = linkProps;
+
   const themeColor = getAsset(clientKey, 'themeClassName');
   const { sideBarLinksDict } = useDictionary(clientKey);
   const history = useHistory();
@@ -183,6 +178,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
               path: 'lesson-planner',
+              subMenuItems:
+                state.roomData.rooms.length &&
+                state.roomData.rooms.map((room: Room, i: number) => {
+                  return {
+                    title: room.name,
+                    active: room.id === state.activeRoom && state.currentPage === 'lesson-planner',
+                    path: room.id,
+                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
+                  };
+                }),
             },
             {
               title: sideBarLinksDict[userLanguage].NOTICEBOARD,
@@ -212,7 +217,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 state.roomData.rooms.map((room: Room, i: number) => {
                   return {
                     title: room.name,
-                    active: room.id === state.activeRoom,
+                    active: room.id === state.activeRoom && state.currentPage === 'classroom',
                     path: room.id,
                     onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
                   };
@@ -229,21 +234,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         });
       default:
         return;
-    }
-  };
-
-  const handleRoomSelection = (id: string, name: string, i: number) => {
-    if (state.activeRoom !== id) {
-      // setActiveRoom(t.id);
-      setActiveRoomName(name);
-
-      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
-
-      setSyllabusLoading(true); // Trigger loading ui element
-      setLessonLoading(true);
-      setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
-
-      history.push('/dashboard/classroom');
     }
   };
 
@@ -311,6 +301,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   // const dividerClass = 'w-1/2 h-1px mx-auto bg-gradient-to-r from-transparent via-white20 to-transparent';
   // const activeClass = 'bg-gray-200 text-dark-gray';
 
+  const ellipse = (string: string = ''): string => {
+    return string.length > 20 ? `${string.slice(0, 20)}...` : string;
+  };
+
   const path = history.location.pathname;
 
   return (
@@ -362,7 +356,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                                 d.onClick();
                               } else handleLink(e, link.label);
                             }}
-                            className={`group cursor-pointer truncate ... w-full flex items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
+                            className={`group block cursor-pointer truncate ... w-full items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
                               activeLink ? 'text-gray-300' : 'text-gray-600'
                             }`}>
                             {d.title}

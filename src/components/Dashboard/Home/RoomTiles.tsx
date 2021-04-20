@@ -14,8 +14,8 @@ import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { ModifiedListProps } from './Home';
 
-const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
-  const { classList: classes } = props;
+const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedListProps[] }) => {
+  const { classList: classes, handleRoomSelection } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
   const [showMore, setShowMore] = useState(false);
@@ -28,31 +28,11 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
     }
   }, [classes]);
 
-  // Select room on roomtile click
-  const handleRoomSelection = (id: string) => {
-    dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
-    history.push('/dashboard/classroom');
-  };
-  // Push user to classroom on room change
-
   useEffect(() => {
     if (state.activeRoom !== '') {
       history.push('/dashboard/home');
     }
   }, [state.activeRoom]);
-
-  // const [slicedList, setSlicedList] = useState<ModifiedListProps[]>([]);
-
-  // const [firstRow, setFirstRow] = useState([]);
-  // const [restRow, setRestRow] = useState([]);
-
-  useEffect(() => {
-    // if (classList && classList.length > 0) {
-    //   if (classList && firstRow.length === 0) {
-    //     setFirstRow(slice(classList, 0, 3));
-    //   }
-    // }
-  }, [classList]);
 
   const limitDesc = (str: string, len: number = 250): string => {
     if (str) {
@@ -65,21 +45,6 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
       return 'no summary';
     }
   };
-
-  // const debouncedViewMore: any = React.useCallback(
-  //   debounce(() => setRestRow([]), 200),
-  //   [classList, showMore]
-  // );
-
-  // useEffect(() => {
-  //   if (classList && classList.length > 0) {
-  //     if (showMore) {
-  //       setRestRow(slice(classList, 3));
-  //     } else {
-  //       debouncedViewMore();
-  //     }
-  //   }
-  // }, [classList, showMore]);
 
   return (
     <>
@@ -112,16 +77,17 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                 style={{ transition: 'width 2s', transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)' }}
                 className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
                 {classList.slice(0, showMore ? classList.length - 1 : 3).map((item, idx: number) => {
-                  const { teacherProfileImg, bannerImage, teacher, curricula } = item;
+                  const { teacherProfileImg, bannerImage, teacher, curricula, roomIndex } = item;
                   const { name, summary, type } = curricula?.items[0]?.curriculum;
                   const roomId = item?.id;
+                  const roomName = item?.name;
                   const { email, firstName, lastName } = teacher;
 
                   return (
                     <div
-                      onClick={() => handleRoomSelection(roomId)}
+                      onClick={() => handleRoomSelection(roomId, roomName, roomIndex)}
                       key={`homepage__classrooms-${idx}`}
-                      className="flex border-0 border-gray-300 flex-col rounded-lg overflow-hidden ">
+                      className="flex shadow flex-col rounded-lg overflow-hidden ">
                       <div className="flex-shrink-0">
                         {bannerImage ? (
                           <img
@@ -139,18 +105,16 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                       <div className="flex-1 bg-white p-6 flex flex-col justify-between">
                         <div className="flex-1">
                           <p className="text-sm font-medium text-indigo-600">
-                            <a href="#" className="hover:underline">
-                              {type}
-                            </a>
+                            <a className="hover:underline">{type}</a>
                           </p>
-                          <a href="#" className="block mt-2">
+                          <a className="block mt-2">
                             <p className="text-lg font-semibold text-gray-900">{name}</p>
                             <p className="mt-2 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>
                         <div className="mt-6 flex items-center">
                           <div className="flex-shrink-0 w-auto">
-                            <a href="#">
+                            <a>
                               <span className="sr-only">{firstName + ' ' + lastName}</span>
                               {teacherProfileImg ? (
                                 <img className="h-10 w-10 rounded-full" src={teacherProfileImg} alt="" />
@@ -161,14 +125,12 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                           </div>
                           <div className="ml-3 w-auto">
                             <p className="text-sm font-semibold text-gray-900">
-                              <a href="#" className="hover:underline">
-                                {firstName + ' ' + lastName}
-                              </a>
+                              <a className="hover:underline">{firstName + ' ' + lastName}</a>
                             </p>
                             <p
                               style={{ maxWidth: '99%' }}
                               className="overflow-hidden pr-2 overflow-ellipsis space-x-1 text-sm text-gray-500">
-                              <a href="#">{email}</a>
+                              <a>{email}</a>
                             </p>
                           </div>
                         </div>

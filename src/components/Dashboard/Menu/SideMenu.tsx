@@ -23,6 +23,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
     setActiveRoomSyllabus,
     setSyllabusLoading,
     setLessonLoading,
+    handleRoomSelection,
   } = props;
   const { dispatch, theme, clientKey } = useContext(GlobalContext);
   const history = useHistory();
@@ -41,6 +42,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
             <ProfileLink
+              handleRoomSelection={handleRoomSelection}
               setActiveRoomSyllabus={setActiveRoomSyllabus}
               setLessonLoading={setLessonLoading}
               setSyllabusLoading={setSyllabusLoading}
@@ -51,6 +53,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
             />
             <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
               <Links
+                handleRoomSelection={handleRoomSelection}
                 setActiveRoomSyllabus={setActiveRoomSyllabus}
                 setLessonLoading={setLessonLoading}
                 setSyllabusLoading={setSyllabusLoading}
@@ -69,23 +72,3 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
 };
 
 export default SideMenu;
-
-{
-  /* 
-// <div className={theme.sidemenu.primary}>
-    //   <div className={`hidden w-full h-12 md:flex justify-center items-start text-2xl font-bold z-50`}>
-    //     <NavLink id="dashboard" to="/dashboard" onClick={handleLink}>
-    //       <img
-    //         id="dashboard"
-    //         className={` ${clientKey === 'demo' ? 'bg-white' : 'bg-gray-900'} p-2 w-4 h-2`}
-    //         src={getAsset(clientKey, 'main_logo')}
-    //         alt="Logo"
-    //       />
-    //     </NavLink>
-    //   </div>
-    //   <div className={`sidebar w-full h-1/2 text-gray-200 cursor-pointer`}>{children}</div>
-    //   {/* <div className={`mt-auto mb-2 text-gray-200`}>
-    //     <SignOutButton updateAuthState={props.updateAuthState} />
-    //   </div> 
-    // </div> */
-}

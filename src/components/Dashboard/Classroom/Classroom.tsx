@@ -98,6 +98,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     handleSyllabusActivation,
     lessonLoading,
     syllabusLoading,
+    handleRoomSelection,
   } = props;
   const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -130,10 +131,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const roomId = match?.params?.roomId;
 
   useEffect(() => {
-    if (!isEmpty(roomId)) {
-      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: roomId } });
+    if (!isEmpty(roomId) && state.roomData?.rooms?.length > 0) {
+      const roomIndex = state.roomData.rooms.findIndex((d: any) => d.id === roomId);
+      const room = state.roomData.rooms[roomIndex];
+      const name = room?.name;
+      handleRoomSelection(roomId, name, roomIndex);
     }
-  }, [roomId]);
+  }, [roomId, state.roomData.rooms]);
 
   /**
    * ASSESSMENTS & SURVEYS
