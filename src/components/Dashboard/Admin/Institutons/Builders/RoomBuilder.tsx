@@ -444,11 +444,35 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   };
 
+  const saveRoomTeachers = async (roomID: string) => {
+    const updatedTeachers = selectedCoTeachers;
+
+    const newItems: any[] = [];
+
+    updatedTeachers.forEach((d) => {
+      const input = {
+        roomID,
+        teacherID: d.id,
+        teacherEmail: d.email,
+        teacherAuthID: d.authId,
+      };
+      newItems.push(input);
+    });
+
+    if (newItems.length > 0) {
+      await Promise.all(
+        newItems.map(async (teacher) => {
+          await API.graphql(graphqlOperation(customMutation.createRoomCoTeachers, { input: teacher }));
+        })
+      );
+    }
+  };
+
   const createNewRoom = async () => {
+    setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
-        setLoading(true);
         const input = {
           institutionID: roomData.institute.id,
           classID: roomData.classRoom.id,
@@ -456,14 +480,13 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
-          // ******* NEW {coTeachers: object[]} FIELD ADDED ******
-          // coTeachers: selectedCoTeachers,
         };
 
         const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
         const roomId = newRoom.data.createRoom.id;
         if (roomData.curricular.id) {
           await saveRoomCurricular(roomId, roomData.curricular.id);
+          await saveRoomTeachers(roomId);
         } else {
           setMessages({
             show: true,
@@ -471,6 +494,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             isError: false,
           });
           setRoomData(initialData);
+          setSelectedCoTeachers([]);
           setLoading(false);
         }
       } catch {
@@ -481,7 +505,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         });
         setLoading(false);
       }
-    }
+    } else setLoading(false);
   };
   const fetchOtherList = async (id: string) => {
     const items: any = await getInstituteInfo(id);
@@ -600,7 +624,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   Add new teacher
                 </p>
               </div>
-              {/* <div className="px-3 py-4">
+              <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {RoomBuilderdict[userLanguage]['CO_TEACHER_LABEL']}
                 </label>
@@ -612,7 +636,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   onChange={selectCoTeacher}
                   disabled={roomData.teacher.id === ''}
                 />
-              </div> */}
+              </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']} <span className="text-red-500"> *</span>

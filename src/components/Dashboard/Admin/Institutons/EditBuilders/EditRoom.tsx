@@ -42,7 +42,7 @@ const EditRoom = (props: EditRoomProps) => {
   const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
@@ -416,12 +416,14 @@ const EditRoom = (props: EditRoomProps) => {
         const addCurricular: any = await API.graphql(
           graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput })
         );
+        setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['classupdate'],
           isError: false,
         });
       } catch {
+        setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdating'],
@@ -429,6 +431,7 @@ const EditRoom = (props: EditRoomProps) => {
         });
       }
     } else {
+      setLoading(false);
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errprocess'],
@@ -438,6 +441,7 @@ const EditRoom = (props: EditRoomProps) => {
   };
 
   const saveRoomDetails = async () => {
+    setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
@@ -453,8 +457,8 @@ const EditRoom = (props: EditRoomProps) => {
         const newRoom: any = await API.graphql(graphqlOperation(mutation.updateRoom, { input: input }));
 
         const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
-        saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
-        saveRoomTeachers(roomData.id);
+        await saveRoomTeachers(roomData.id);
+        await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
       } catch {
         setMessages({
           show: true,
@@ -473,13 +477,13 @@ const EditRoom = (props: EditRoomProps) => {
     const newItems: any[] = [];
 
     originalTeachers.forEach((d) => {
-      if (updatedTeachers.map((d) => d.id).indexOf(d.teacherID) === -1) {
+      if (updatedTeachers.map((d) => d.id).indexOf(d.id) === -1) {
         deletedItems.push(d.rowId);
       }
     });
 
     updatedTeachers.forEach((d) => {
-      if (originalTeachers.map((d) => d.teacherID).indexOf(d.id) === -1) {
+      if (originalTeachers.map((d) => d.id).indexOf(d.id) === -1) {
         const input = {
           roomID,
           teacherID: d.id,
@@ -490,33 +494,24 @@ const EditRoom = (props: EditRoomProps) => {
       }
     });
 
-    console.log(deletedItems);
-    console.log(newItems);
-
-    if (updatedTeachers.length > 0) {
+    if (newItems.length > 0) {
       await Promise.all(
-        selectedCoTeachers.map(async (teacher) => {
-          const input = {
-            roomID,
-            teacherID: teacher.id,
-            teacherEmail: teacher.email,
-            teacherAuthID: teacher.authId,
-          };
-          await API.graphql(graphqlOperation(customMutations.createRoomCoTeachers, { input: input }));
+        newItems.map(async (teacher) => {
+          await API.graphql(graphqlOperation(customMutations.createRoomCoTeachers, { input: teacher }));
         })
       );
     }
 
-    // if (deletedItems.length > 0) {
-    // await Promise.all(
-    //   originalTeachers.map(async (id) => {
-    //     const input = {
-    //       id: id,
-    //     };
-    //     await API.graphql(graphqlOperation(mutation.deleteRoomCoTeachers, { input: input }));
-    //   })
-    // );
-    // }
+    if (deletedItems.length > 0) {
+      await Promise.all(
+        deletedItems.map(async (id) => {
+          const input = {
+            id: id,
+          };
+          await API.graphql(graphqlOperation(mutation.deleteRoomCoTeachers, { input: input }));
+        })
+      );
+    }
   };
 
   const filterCurricularData = (currId: string) => {
@@ -749,8 +744,9 @@ const EditRoom = (props: EditRoomProps) => {
             transparent
           />
           <Buttons
+            disabled={loading}
             btnClass="py-3 px-12 text-sm ml-4"
-            label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
+            label={loading ? 'Saving...' : RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
             onClick={saveRoomDetails}
           />
         </div>
