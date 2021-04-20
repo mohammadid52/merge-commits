@@ -22,7 +22,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
                 <div
                   key={`testSyllabus_${i}`}
                   id={`testSyllabus_${i}`}
-                  className={`flex flex-col bg-white rounded-lg shadow py-4 justify-center items-center`}>
+                  className={`flex relative flex-col bg-white rounded-lg shadow py-4 pb-10 justify-center items-center`}>
                   <div className={``}>
                     <p className={`text-sm text-darker-gray text-center`}>
                       <b>Unit Name: </b>
@@ -32,12 +32,14 @@ const SyllabusSwitch = (props: DashboardProps) => {
 
                   {!syllabus.active ? (
                     <div
-                      className="text-center cursor-pointer text-base text-indigo-500 hover:bg-indigo-400 hover:text-white transition-all font-semibold w-auto py-0 px-2 rounded-md duration-300"
+                      className="text-center rounded-b-lg absolute bottom-0 left-0 right-0 cursor-pointer text-base text-indigo-500 hover:bg-indigo-400 hover:text-white transition-all font-semibold w-auto py-2 duration-150"
                       onClick={() => handleSyllabusActivation(syllabus.id)}>
                       Activate
                     </div>
                   ) : (
-                    <div className={`w-full flex justify-center items-center text-base text-green-400 font-semibold`}>
+                    <div
+                      onClick={() => handleSyllabusActivation(syllabus.id)}
+                      className={`w-full absolute rounded-b-lg bottom-0 left-0 right-0 py-2 flex justify-center  items-center text-base bg-green-400 text-white  font-semibold`}>
                       Active
                     </div>
                   )}
