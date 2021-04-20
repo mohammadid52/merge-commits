@@ -3,6 +3,7 @@ import { DashboardProps } from '../Dashboard';
 import { Syllabus } from './Classroom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
+import Tooltip from '../../Atoms/Tooltip';
 
 const SyllabusSwitch = (props: DashboardProps) => {
   const { activeRoom, currentPage, syllabusLoading, handleSyllabusActivation } = props;
@@ -38,7 +39,6 @@ const SyllabusSwitch = (props: DashboardProps) => {
                     </div>
                   ) : (
                     <div
-                      onClick={() => handleSyllabusActivation(syllabus.id)}
                       className={`w-full absolute rounded-b-lg bottom-0 left-0 right-0 py-2 flex justify-center  items-center text-base bg-green-400 text-white  font-semibold`}>
                       Active
                     </div>
