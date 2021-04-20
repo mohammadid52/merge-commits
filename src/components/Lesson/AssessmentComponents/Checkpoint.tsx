@@ -5,6 +5,7 @@ import Banner from '../LessonComponents/Banner';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
 import SurveyOutro from './SurveyOutro';
+import { BodyProps } from '../Body/Body';
 
 export interface CheckpointInterface {
   title: string;
@@ -17,11 +18,11 @@ export interface CheckpointInterface {
   label: string;
 }
 
-const Checkpoint = (props: { isTeacher?: boolean }) => {
+const Checkpoint = (props: { isTeacher?: boolean; checkpointsLoaded: BodyProps['checkpointsLoaded'] }) => {
   /**
    * Teacher switch
    */
-  const { isTeacher } = props;
+  const { isTeacher, checkpointsLoaded } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -69,21 +70,23 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
        *  2.
        *  LOAD CHECKPOINT QUESTIONS
        */}
-      <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
+      <CheckpointQuestions
+        isTeacher={isTeacher}
+        checkpointType={`checkpoint`}
+        handleSetTitle={handleSetTitle}
+        checkpointsLoaded={checkpointsLoaded}
+      />
 
       {/**
        *  3.
        *  SHOW OUTRO + SAVE, IF SURVEY
        */}
-      {
-        !isTeacher && state.data.lesson.type !== 'lesson' &&
-        (
-          <>
-            <SurveyOutro />
-            <SaveQuit />
-          </>
-        )
-      }
+      {!isTeacher && state.data.lesson.type !== 'lesson' && (
+        <>
+          <SurveyOutro />
+          <SaveQuit />
+        </>
+      )}
     </div>
   );
 };

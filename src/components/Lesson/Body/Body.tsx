@@ -27,13 +27,18 @@ const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
  *  when the time comes to add the assessments,
  *  add it back here
  */
+export interface BodyProps {
+  checkpointsLoaded?: boolean;
+  lessonDataLoaded?: boolean;
+}
 
-const Body = () => {
+const Body = (props: BodyProps) => {
+  const { checkpointsLoaded, lessonDataLoaded } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const location = useLocation();
   const match = useRouteMatch();
 
-  const lessonType = state.data.lesson.type;
+  const lessonType = state.data?.lesson?.type;
 
   /**
    * TODO:
@@ -96,26 +101,23 @@ const Body = () => {
   return (
     <>
       <div className={`z-0 px-4 pb-4 pt-8 ${theme.bg} ${state.data.lesson.type === 'survey' ? 'mt-12' : ''}`}>
-
         {/**
          *  COMPONENT SWITCH
          */}
         <Switch>
           <Route exact path={`${match.url}/`}>
-            {
-              (() => {
-                if (lessonType === 'assessment' || lessonType === 'survey') {
-                  return (
-                    <>
-                      <Intro />
-                      <Checkpoint isTeacher={false} />
-                    </>
-                  );
-                } else {
-                  return (<Intro />);
-                }
-              })()
-            }
+            {(() => {
+              if (lessonType === 'assessment' || lessonType === 'survey') {
+                return (
+                  <>
+                    <Intro />
+                    <Checkpoint isTeacher={false} checkpointsLoaded={checkpointsLoaded} />
+                  </>
+                );
+              } else {
+                return <Intro />;
+              }
+            })()}
           </Route>
           <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
           <Route path={`${match.url}/corelesson`}>{pageFetch('corelesson')}</Route>
@@ -124,7 +126,7 @@ const Body = () => {
             <Outro />
           </Route>
           <Route path={`${match.url}/checkpoint`}>
-            <Checkpoint />
+            <Checkpoint checkpointsLoaded={checkpointsLoaded} />
           </Route>
           {/*<Route path={`${match.url}/assessment`}>
           <Assessments />

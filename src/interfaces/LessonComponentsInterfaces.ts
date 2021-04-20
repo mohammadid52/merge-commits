@@ -5,6 +5,8 @@ export interface LessonComponentsInterface {
 }
 
 export interface LessonHeaderBarProps extends LessonComponentsInterface {
+  lessonDataLoaded?: boolean;
+  checkpointsLoaded?: boolean;
   handlePopup?: () => void;
   setOverlay?: React.Dispatch<SetStateAction<string>>;
   overlay?: string;
