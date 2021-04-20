@@ -103,7 +103,7 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
         extraClass="leading-6 text-gray-900"
         borderBottom
       />
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white mb-10 rounded-b-lg">
+      <ContentCard hasBackground={false} additionalClass="shadow bg-white mb-6 rounded-b-lg">
         {classList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto">
@@ -114,7 +114,6 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                 {classList.slice(0, showMore ? classList.length - 1 : 3).map((item, idx: number) => {
                   const { teacherProfileImg, bannerImage, teacher, curricula } = item;
                   const { name, summary, type } = curricula?.items[0]?.curriculum;
-                  const roomName = item?.name;
                   const roomId = item?.id;
                   const { email, firstName, lastName } = teacher;
 
@@ -145,10 +144,8 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                             </a>
                           </p>
                           <a href="#" className="block mt-2">
-                            <p className="text-base font-semibold text-gray-900">
-                              {name} ({roomName})
-                            </p>
-                            <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
+                            <p className="text-lg font-semibold text-gray-900">{name}</p>
+                            <p className="mt-2 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>
                         <div className="mt-6 flex items-center">

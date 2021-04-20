@@ -4,7 +4,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 
 import { getAsset } from '../../../../../assets';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
-
+import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as queries from '../../../../../graphql/queries';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
@@ -21,7 +21,7 @@ const RoomsList = (props: RoomListProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [roomList, setRoomList] = useState([]);
-  const [loading, setLoading] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { InstitueRomms } = useDictionary(clientKey);
 
   const [messages, setMessages] = useState({
@@ -38,22 +38,26 @@ const RoomsList = (props: RoomListProps) => {
   };
 
   const fetchRoomList = async () => {
+    setLoading(true);
     try {
       const list: any = await API.graphql(
-        graphqlOperation(queries.listRooms, {
+        graphqlOperation(customQueries.listRoomsDashboard, {
           filter: {
             institutionID: { eq: instId },
           },
         })
       );
       const newList = list.data.listRooms.items;
+      console.log(newList);
       setRoomList(newList);
+      setLoading(false);
     } catch {
       setMessages({
         show: true,
         message: InstitueRomms[userLanguage]['messages']['fetcherr'],
         isError: true,
       });
+      setLoading(false);
     }
   };
 
@@ -64,12 +68,12 @@ const RoomsList = (props: RoomListProps) => {
   return (
     <div className="py-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper>
+        <PageWrapper defaultClass="">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {instName ? instName.toUpperCase() : 'INSTITUTE'} {InstitueRomms[userLanguage]['TITLE']}
           </h3>
 
-          {roomList.length > 0 ? (
+          {!loading && roomList.length > 0 ? (
             <Fragment>
               <div className="flex justify-end">
                 <Buttons
@@ -79,26 +83,26 @@ const RoomsList = (props: RoomListProps) => {
                 />
               </div>
 
-              <div className="flex justify-between w-full  px-8 py-4 border-b-0 border-gray-200">
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <div className="flex justify-between w-full mt-8  px-4 py-4 border-b-0 border-gray-200">
+                <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['NO']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASSROOMS_NAME']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CLASS_NAME']}</span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
 
                 {/* ---- Not Important ---- */}
-                {/* <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{InstitueRomms[userLanguage]['MXSTUDENTS']}</span>
-                </div> */}
+                <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <span>{InstitueRomms[userLanguage]['CURRICULAM']}</span>
+                </div>
 
-                <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-1/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['ACTION']}</span>
                 </div>
               </div>
@@ -107,24 +111,26 @@ const RoomsList = (props: RoomListProps) => {
                 {roomList.map((item: any, i: number) => (
                   <div
                     key={i}
-                    className="flex justify-between items-center w-full px-8 py-4 border-b-0 border-gray-200">
-                    <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{i + 1}.</div>
-                    <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal">
+                    className="flex justify-between items-center w-full px-4 py-4 border-b-0 border-gray-200">
+                    <div className="flex w-1/10 items-center px-4 py-2 text-left text-s leading-4">{i + 1}.</div>
+                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
                       {item.name}
                     </div>
-                    <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">
+                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
                       {item.class?.name}
                     </div>
-                    <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">
+                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
                       {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
                     </div>
-                    {/* ---- Not Important ---- */}
-
-                    {/* <div className="flex w-2/10 items-center px-8 py-3 text-left text-s leading-4">
-                      {item.maxPersons}
-                    </div> */}
+                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
+                      {item?.curricula?.items
+                        ?.map((d: any) => {
+                          return d?.curriculum?.name;
+                        })
+                        .join(',')}
+                    </div>
                     <span
-                      className={`w-1/10 h-6 flex items-center cursor-pointer text-left px-8 py-3 ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 flex items-center cursor-pointer text-left px-4 py-2 ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentRoom(item.id)}>
                       {InstitueRomms[userLanguage]['EDIT']}
                     </span>
