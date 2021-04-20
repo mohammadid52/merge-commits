@@ -287,7 +287,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-        const classList = sortedList.map((item: any, i: any) => ({
+
+        const filteredClassList = sortedList.filter(
+          (classItem: any) => classItem.institution.isServiceProvider !== true
+        );
+
+        const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
           value: `${item.name ? item.name : ''}`,
