@@ -74,7 +74,6 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
         </ul>
         {coTeachersList && coTeachersList.length > 0 && (
           <ul className="">
-            <p className="px-4 text-gray-500 sm:px-6 py-2">Co teachers:</p>
             {coTeachersList.map(
               (
                 teacher: {
