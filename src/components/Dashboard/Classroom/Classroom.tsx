@@ -1,4 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router';
+import isEmpty from 'lodash/isEmpty';
+
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -21,8 +24,6 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 import Selector from '../../Atoms/Form/Selector';
-
-import isEmpty from 'lodash/isEmpty';
 
 interface Artist {
   id: string;
@@ -102,6 +103,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const showClassDetails: boolean = !isEmpty(activeRoomInfo);
+  const match: any = useRouteMatch();
 
   const { classRoomDict } = useDictionary(clientKey);
   const [survey] = useState<any>({
@@ -124,6 +126,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
     }
   }, [state.user.role]);
+
+  const roomId = match?.params?.roomId;
+
+  useEffect(() => {
+    if (!isEmpty(roomId)) {
+      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: roomId } });
+    }
+  }, [roomId]);
 
   /**
    * ASSESSMENTS & SURVEYS

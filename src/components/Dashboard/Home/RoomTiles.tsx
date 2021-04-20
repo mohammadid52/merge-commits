@@ -110,7 +110,7 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
               <div
                 // #ts-ignores
                 style={{ transition: 'width 2s', transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)' }}
-                className="mt-0 max-w-lg mx-auto pt-4 pb-4 grid px-4 gap-5 lg:grid-cols-3 lg:max-w-none">
+                className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
                 {classList.slice(0, showMore ? classList.length - 1 : 3).map((item, idx: number) => {
                   const { teacherProfileImg, bannerImage, teacher, curricula } = item;
                   const { name, summary, type } = curricula?.items[0]?.curriculum;

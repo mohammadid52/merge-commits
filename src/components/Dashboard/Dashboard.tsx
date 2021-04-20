@@ -76,7 +76,7 @@ const Dashboard = (props: DashboardProps) => {
   // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
-  const [activeRoom, setActiveRoom] = useState<string>('');
+  // const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
@@ -204,8 +204,8 @@ const Dashboard = (props: DashboardProps) => {
                     <ClassroomControl
                       isHomescreen={true}
                       currentPage={currentPage}
-                      activeRoom={activeRoom}
-                      setActiveRoom={setActiveRoom}
+                      // activeRoom={activeRoom}
+                      // setActiveRoom={setActiveRoom}
                       setActiveRoomInfo={setActiveRoomInfo}
                       setActiveRoomName={setActiveRoomName}
                       lessonLoading={lessonLoading}
@@ -220,14 +220,14 @@ const Dashboard = (props: DashboardProps) => {
 
                 <Route
                   exact
-                  path={`${match.url}/classroom`}
+                  path={`${match.url}/classroom/:roomId`}
                   render={() => (
                     <Classroom
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
-                      activeRoom={activeRoom}
+                      // activeRoom={activeRoom}
                       activeRoomInfo={activeRoomInfo}
-                      setActiveRoom={setActiveRoom}
+                      // setActiveRoom={setActiveRoom}
                       activeRoomName={activeRoomName}
                       setActiveRoomName={setActiveRoomName}
                       visibleLessonGroup={visibleLessonGroup}
@@ -257,7 +257,7 @@ const Dashboard = (props: DashboardProps) => {
                     <LessonPlanHome
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
-                      activeRoom={activeRoom}
+                      // activeRoom={activeRoom}
                       activeRoomInfo={activeRoomInfo}
                       activeRoomName={activeRoomName}
                       setActiveRoomName={setActiveRoomName}

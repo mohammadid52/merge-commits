@@ -11,7 +11,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
 import Home from '../Home/Home';
 import SideRoomSelector from '../Menu/SideRoomSelector';
-import { useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 
 export interface Room {
   id: string;
@@ -24,12 +24,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   // Essentials
   const {
     isHomescreen,
-    isTeacher,
     currentPage,
-    setCurrentPage,
-    activeRoom,
     setActiveRoom,
-    activeRoomName,
     setActiveRoomInfo,
     setActiveRoomName,
     lessonLoading,
@@ -57,6 +53,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
   const history: any = useHistory();
+  const match: any = useRouteMatch();
 
   /**
    * INIT ADMIN NOT LOADING ANYTHING
@@ -66,6 +63,10 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     if (userRole === 'ADM') {
       setRoomsLoading(true);
     }
+  }, []);
+
+  useEffect(() => {
+    console.log(match);
   }, []);
 
   /******************************************
