@@ -528,24 +528,6 @@ const Dashboard = (props: DashboardProps) => {
       />
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
-          {/* {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
-          (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-          (state.currentPage === 'classroom' && userData.role === 'ST') ? (
-            <ClassroomControl
-              isHomescreen={false}
-              currentPage={currentPage}
-              setActiveRoomInfo={setActiveRoomInfo}
-              setActiveRoomName={setActiveRoomName}
-              activeRoomName={activeRoomName}
-              activeRoomInfo={activeRoomInfo}
-              lessonLoading={lessonLoading}
-              setLessonLoading={setLessonLoading}
-              syllabusLoading={syllabusLoading}
-              setSyllabusLoading={setSyllabusLoading}
-              activeRoomSyllabus={activeRoomSyllabus}
-              setActiveRoomSyllabus={setActiveRoomSyllabus}
-            />
-          ) : null} */}
           <div className="max-w-7xl mx-auto">
             <Suspense
               fallback={
@@ -573,7 +555,6 @@ const Dashboard = (props: DashboardProps) => {
                       );
                   }}
                 />
-
                 <Route
                   exact
                   path={`${match.url}/home`}
@@ -586,7 +567,6 @@ const Dashboard = (props: DashboardProps) => {
                     />
                   )}
                 />
-
                 <Route
                   exact
                   path={`${match.url}/classroom/:roomId`}
@@ -594,9 +574,7 @@ const Dashboard = (props: DashboardProps) => {
                     <Classroom
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
-                      // activeRoom={activeRoom}
                       activeRoomInfo={activeRoomInfo}
-                      // setActiveRoom={setActiveRoom}
                       activeRoomName={activeRoomName}
                       setActiveRoomName={setActiveRoomName}
                       visibleLessonGroup={visibleLessonGroup}
@@ -607,27 +585,20 @@ const Dashboard = (props: DashboardProps) => {
                     />
                   )}
                 />
-
                 <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
-
                 <Route
                   path={`${match.url}/noticeboard`}
                   render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
                 />
-
                 <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
-
                 <Route path={`${match.url}/registration`} render={() => <Registration />} />
-
                 <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
-
                 <Route
                   path={`${match.url}/lesson-planner`}
                   render={() => (
                     <LessonPlanHome
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
-                      // activeRoom={activeRoom}
                       activeRoomInfo={activeRoomInfo}
                       activeRoomName={activeRoomName}
                       setActiveRoomName={setActiveRoomName}

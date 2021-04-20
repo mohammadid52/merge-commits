@@ -63,9 +63,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   useEffect(() => {
     userLinks(role);
     if (state.roomData?.rooms?.length > 0) {
-      setOpenItems([...openItems, 'Dashboard']);
+      setOpenItems([...openItems, 'Dashboard', 'Lesson Planner']);
     }
-  }, [role, state.roomData.rooms, state.activeRoom]);
+  }, [role, state.roomData.rooms, state.activeRoom, state.currentPage]);
 
   const userLinks = (role: string): void => {
     console.log('role', role);
