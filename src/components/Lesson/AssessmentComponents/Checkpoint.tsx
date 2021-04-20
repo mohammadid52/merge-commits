@@ -18,11 +18,16 @@ export interface CheckpointInterface {
   label: string;
 }
 
-const Checkpoint = (props: { isTeacher?: boolean; checkpointsLoaded: BodyProps['checkpointsLoaded'] }) => {
+const Checkpoint = (props: {
+  isTeacher?: boolean;
+  checkpointsLoaded?: BodyProps['checkpointsLoaded'];
+  setupComplete?: BodyProps['setupComplete'];
+  checkpointsItems?: any[];
+}) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, checkpointsLoaded } = props;
+  const { isTeacher, checkpointsLoaded, setupComplete, checkpointsItems } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
@@ -70,12 +75,14 @@ const Checkpoint = (props: { isTeacher?: boolean; checkpointsLoaded: BodyProps['
        *  2.
        *  LOAD CHECKPOINT QUESTIONS
        */}
-      <CheckpointQuestions
-        isTeacher={isTeacher}
-        checkpointType={`checkpoint`}
-        handleSetTitle={handleSetTitle}
-        checkpointsLoaded={checkpointsLoaded}
-      />
+      {checkpointsItems && checkpointsItems.length > 0 && (
+        <CheckpointQuestions
+          isTeacher={isTeacher}
+          checkpointType={`checkpoint`}
+          handleSetTitle={handleSetTitle}
+          checkpointsItems={checkpointsItems}
+        />
+      )}
 
       {/**
        *  3.

@@ -28,12 +28,14 @@ const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
  *  add it back here
  */
 export interface BodyProps {
+  setupComplete?: boolean;
   checkpointsLoaded?: boolean;
   lessonDataLoaded?: boolean;
+  checkpointsItems?: any[];
 }
 
 const Body = (props: BodyProps) => {
-  const { checkpointsLoaded, lessonDataLoaded } = props;
+  const { setupComplete, checkpointsLoaded, lessonDataLoaded, checkpointsItems } = props;
   const { state, theme, dispatch } = useContext(LessonContext);
   const location = useLocation();
   const match = useRouteMatch();
@@ -111,11 +113,11 @@ const Body = (props: BodyProps) => {
                 return (
                   <>
                     <Intro />
-                    <Checkpoint isTeacher={false} checkpointsLoaded={checkpointsLoaded} />
+                    <Checkpoint isTeacher={false} checkpointsItems={checkpointsItems} />
                   </>
                 );
               } else {
-                return <Intro />;
+                return <Intro checkpointsItems={checkpointsItems} />;
               }
             })()}
           </Route>
@@ -126,7 +128,7 @@ const Body = (props: BodyProps) => {
             <Outro />
           </Route>
           <Route path={`${match.url}/checkpoint`}>
-            <Checkpoint checkpointsLoaded={checkpointsLoaded} />
+            <Checkpoint checkpointsItems={checkpointsItems} />
           </Route>
           {/*<Route path={`${match.url}/assessment`}>
           <Assessments />

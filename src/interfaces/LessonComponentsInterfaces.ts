@@ -2,6 +2,7 @@ import React, { SetStateAction } from 'react';
 
 export interface LessonComponentsInterface {
   isTeacher?: boolean;
+  checkpointsItems?: any[];
 }
 
 export interface LessonHeaderBarProps extends LessonComponentsInterface {
