@@ -8,6 +8,7 @@ import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
+import { getAsset } from '../../../assets';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -33,7 +34,7 @@ export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
   studentDataID: string;
   idx: number;
-}
+};
 
 const Anthology = () => {
   const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
@@ -59,20 +60,15 @@ const Anthology = () => {
   // For editing specific poems/stories
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({ mode: '', studentDataID: '', idx: 0 });
 
-
-
-  useEffect(()=>{
-    dispatch({type: 'UPDATE_CURRENTPAGE', payload:{data: 'anthology'}})
-  },[])
-
-
-
+  useEffect(() => {
+    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'anthology' } });
+  }, []);
 
   // TOP Function to load student data
   const listStudentData = async () => {
     try {
       const studentDataFetch: any = await API.graphql(
-        graphqlOperation(queries.listStudentDatas, { filter: { studentAuthID: { eq: state.user.authId } } }),
+        graphqlOperation(queries.listStudentDatas, { filter: { studentAuthID: { eq: state.user.authId } } })
       );
       const response = await studentDataFetch;
       const arrayOfResponseObjects = response?.data?.listStudentDatas?.items;
@@ -102,17 +98,17 @@ const Anthology = () => {
 
   // Useeffect to load student data and process it
   useEffect(() => {
-    const initializeStudentData = async()=> {
+    const initializeStudentData = async () => {
       if (state.user.authId) {
         await listStudentData();
       }
-    }
+    };
     initializeStudentData();
   }, [state.user.authId]);
 
   // Useeffect to initialize newStudentData
   useEffect(() => {
-      setNewStudentData({ ...newStudentData, syllabusLessonID: customSyllabusLessonID() });
+    setNewStudentData({ ...newStudentData, syllabusLessonID: customSyllabusLessonID() });
   }, [studentData]);
 
   // Function group to handle updating student data
@@ -161,7 +157,11 @@ const Anthology = () => {
     }
   };
 
-  const handleEditToggle = (editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '', studentDataID: string, idx: number) => {
+  const handleEditToggle = (
+    editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
+    studentDataID: string,
+    idx: number
+  ) => {
     setViewEditMode({ mode: editMode, studentDataID: studentDataID, idx: idx });
   };
 
@@ -178,9 +178,9 @@ const Anthology = () => {
   };
 
   const subSectionKey: any = {
-    'Journal': ['journal'],
-    'Work': ['poem', 'story'],
-    'Notes': ['notes'],
+    Journal: ['journal'],
+    Work: ['poem', 'story'],
+    Notes: ['notes'],
   };
 
   // Function group for filtering the studentData/anthology content
@@ -192,9 +192,10 @@ const Anthology = () => {
     if (subSectionKey[subSection].includes(contentObj.type)) return contentObj;
   });
 
-  const filterAnthologyContentWithSimilarSyllabusLessonID = (inputSyllabusLessonID: string) => studentData.filter((contentObj: AnthologyMapItem) => {
-    if (contentObj.syllabusLessonID.includes(inputSyllabusLessonID)) return contentObj;
-  });
+  const filterAnthologyContentWithSimilarSyllabusLessonID = (inputSyllabusLessonID: string) =>
+    studentData.filter((contentObj: AnthologyMapItem) => {
+      if (contentObj.syllabusLessonID.includes(inputSyllabusLessonID)) return contentObj;
+    });
 
   const getAnthologyContentByStudentDataID = studentData.find((contentObj: AnthologyMapItem) => {
     return contentObj.studentDataID === viewEditMode.studentDataID;
@@ -224,7 +225,7 @@ const Anthology = () => {
             studentAuthID: state.user.authId,
             anthologyContent: removeHelperProperties,
           },
-        }),
+        })
       );
     } catch (e) {
       console.error('studentDataUpdate: ', e);
@@ -244,9 +245,9 @@ const Anthology = () => {
     };
 
     try {
-      const studentDataCreate: any = await API.graphql(graphqlOperation(mutations.createStudentData, {
-        input:
-          {
+      const studentDataCreate: any = await API.graphql(
+        graphqlOperation(mutations.createStudentData, {
+          input: {
             lessonProgress: newStudentData.lessonProgress,
             currentLocation: newStudentData.currentLocation,
             status: newStudentData.status,
@@ -255,7 +256,8 @@ const Anthology = () => {
             studentAuthID: state.user.authId,
             anthologyContent: removeHelperProperties,
           },
-      }));
+        })
+      );
     } catch (e) {
       console.error('studentDataCreate: Anthology: ', e);
     } finally {
@@ -265,24 +267,40 @@ const Anthology = () => {
 
   // UseEffect for monitoring save/create new changes and calling functions
   useEffect(() => {
-    const manageSaveAndCreate = async() => {
+    const manageSaveAndCreate = async () => {
       if (viewEditMode.mode === 'save') {
         await anthologySave();
       } else if (viewEditMode.mode === 'savenew') {
         await anthologyCreate();
         await listStudentData();
       }
-    }
+    };
     manageSaveAndCreate();
   }, [viewEditMode]);
 
   const getTranslation = Object.keys(anthologyDict[userLanguage].TABS).map((key: any) => {
     return anthologyDict[userLanguage].TABS[key];
-  })
+  });
+  const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
 
   // RETURN
   return (
     <React.Fragment>
+      {/* Hero Section */}
+      {/* TODO: Replace this with Hero Banner Component */}
+      <div className="relative">
+        <div className="absolute inset-0 w-full h-60">
+          <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
+          <img className="object-cover w-full h-full bg-center bg-no-repeat bg-contain" src={notebookBanner} alt="" />
+        </div>
+        <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
+          <h1
+            style={{ fontSize: '6rem' }}
+            className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+            Notebook
+          </h1>
+        </div>
+      </div>
       <SectionTitle title={anthologyDict[userLanguage].TITLE} />
       {/*
         Tabs to select between:
@@ -304,13 +322,16 @@ const Anthology = () => {
           - Stories
           - Poems
     */}
-      <AnthologyContent viewEditMode={viewEditMode} handleEditToggle={handleEditToggle}
-                        handleEditUpdate={handleEditUpdate}
-                        handleWYSIWYGupdate={handleWYSIWYGupdate}
-                        subSection={subSection}
-                        createTemplate={newStudentData}
-                        content={studentData.length > 0 && filterAnthologyContentBySubsection}
-                        getContentObjIndex={getContentObjIndex} />
+      <AnthologyContent
+        viewEditMode={viewEditMode}
+        handleEditToggle={handleEditToggle}
+        handleEditUpdate={handleEditUpdate}
+        handleWYSIWYGupdate={handleWYSIWYGupdate}
+        subSection={subSection}
+        createTemplate={newStudentData}
+        content={studentData.length > 0 && filterAnthologyContentBySubsection}
+        getContentObjIndex={getContentObjIndex}
+      />
     </React.Fragment>
   );
 };

@@ -982,6 +982,7 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
     TEACHER: 'Teacher',
+    CURRICULAM: 'Curriculam',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
     EDIT: 'edit',
