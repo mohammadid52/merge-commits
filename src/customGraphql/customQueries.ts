@@ -23,6 +23,18 @@ export const getDashboardData = /* GraphQL */ `
                   role
                   phone
                 }
+                coTeachers {
+                  items {
+                    teacher {
+                      firstName
+                      lastName
+                      image
+                      email
+                      role
+                      phone
+                    }
+                  }
+                }
                 curricula {
                   items {
                     id
