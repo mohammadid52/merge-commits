@@ -24,7 +24,6 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   // Essentials
   const {
     isHomescreen,
-    isTeacher,
     currentPage,
     setCurrentPage,
     activeRoom,
@@ -57,7 +56,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
   const history: any = useHistory();
-
+  const isTeacher = state && (state.user.role === 'TR' || state.user.role === 'FLW');
   /**
    * INIT ADMIN NOT LOADING ANYTHING
    */
@@ -79,6 +78,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
           email: email,
         })
       );
+
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = response?.data.getPerson.classes.items;
 
@@ -93,12 +93,12 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   };
 
   useEffect(() => {
-    if (state.user.role === 'ST') {
+    if (state.user.role === 'ST' || isTeacher) {
       const authId = state.user.authId;
       const email = state.user.email;
       getDashboardData(authId, email);
     }
-  }, [state.user.role]);
+  }, [state.user.role, isTeacher]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -455,6 +455,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
 
   return isHomescreen ? (
     <Home
+      isTeacher={isTeacher}
       homeData={homeData}
       setHomeData={setHomeData}
       classList={classList}

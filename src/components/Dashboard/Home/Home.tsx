@@ -24,7 +24,8 @@ export interface ModifiedListProps {
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const { homeData, classList } = props;
+  const { homeData, classList, isTeacher } = props;
+
   const { state, dispatch, theme, clientKey } = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
   const [loading, setLoading] = useState(false);
@@ -32,11 +33,11 @@ const Home = (props: ClassroomControlProps) => {
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
 
-  useEffect(() => {
-    if (state.user.role === 'ST') {
-      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (state.user.role === 'ST') {
+  //     dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
+  //   }
+  // }, []);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
@@ -170,7 +171,7 @@ const Home = (props: ClassroomControlProps) => {
               <h2 className={`text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">{user.preferredName ? user.preferredName : user.firstName}</span>, What
-                do you want to learn today?
+                do you want to {isTeacher ? 'teach' : 'learn'} today?
               </h2>
             </div>
           )}
@@ -182,7 +183,7 @@ const Home = (props: ClassroomControlProps) => {
           {/* Teachers Section */}
           <div className="my-6">
             <SectionTitleV3
-              title={'Your Teachers'}
+              title={`Your ${isTeacher ? 'Team' : 'Teachers'}`}
               fontSize="lg"
               fontStyle="semibold"
               extraContainerClass="max-w-256"
@@ -193,7 +194,11 @@ const Home = (props: ClassroomControlProps) => {
           </div>
           {/* Classmates Section */}
           <div className="my-6">
-            <StudentsTiles state={state} studentsList={studentsList} />
+            <StudentsTiles
+              title={`Your ${isTeacher ? 'Students' : 'Classmates'}`}
+              state={state}
+              studentsList={studentsList}
+            />
           </div>
         </>
       ) : (
