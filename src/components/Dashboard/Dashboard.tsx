@@ -85,6 +85,8 @@ const Dashboard = (props: DashboardProps) => {
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
+  const thereAreSideWidgets: boolean = state.roomData.widgets.some((widget: any) => widget.placement === 'sidebar');
+  // TODO: Add @thereAreSideWidgets boolean to not show side widget bar if the length is 0;
 
   // Fetching results
   const [homeData, setHomeData] = useState<{ class: any }[]>();

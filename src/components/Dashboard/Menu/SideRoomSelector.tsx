@@ -29,7 +29,7 @@ const SideRoomSelector = (props: ClassroomControlProps) => {
   const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
 
   return (
-    <div className={`${theme.sidemenu.secondary} mr-2`}>
+    <div className={'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-medium-gray'}>
       <div className={roomsTitle}>{classRoomDict[userLanguage]['LIST_TITLE']}:</div>
       <div id="roomlist">
         {state.roomData.rooms.length > 0 ? (
