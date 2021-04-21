@@ -146,8 +146,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
        */
       if (state.data.lesson.type === 'lesson') {
         const currentPageIdx = state.currentPage;
-        const matchArray = state.pages[currentPageIdx].stage.match(/checkpoint\?id=(.*)/);
-        setCheckpointsArray(pickSingleCheckpoint(matchArray[1]));
+        const matchArray = state.pages[currentPageIdx].stage.match(/checkpoint\?id=(.*)/) || [];
+        if (matchArray.length > 1) {
+          setCheckpointsArray(pickSingleCheckpoint(matchArray[1]));
+        } else {
+          setCheckpointsArray([]);
+        }
       } else {
         setCheckpointsArray(checkpointsItems);
       }

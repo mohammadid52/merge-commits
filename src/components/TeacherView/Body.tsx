@@ -69,8 +69,9 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
   };
 
   useEffect(() => {
+    const pageAfter = state.currentPage + 1;
     if (state.currentPage < state.pages.length - 1) {
-      if (state.pages[state.currentPage + 1].open) {
+      if (pageAfter && state.pages[pageAfter]?.open) {
         dispatch({ type: 'CAN_CONTINUE' });
       } else {
         dispatch({ type: 'STOP' });

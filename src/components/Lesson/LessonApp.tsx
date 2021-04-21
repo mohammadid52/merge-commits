@@ -224,8 +224,12 @@ const LessonApp = () => {
     return state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
       if (isCheckpoint) {
-        const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/);
-        return [...acc, matchArray[1]];
+        const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/) || [];
+        if (matchArray.length > 1) {
+          return [...acc, matchArray[1]];
+        } else {
+          return acc;
+        }
       } else {
         return acc;
       }

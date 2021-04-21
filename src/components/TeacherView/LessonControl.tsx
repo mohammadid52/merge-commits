@@ -29,23 +29,27 @@ const LessonControl = () => {
   let pathParams: any = location.pathname.split('/');
   pathParams = pathParams[pathParams.length - 1];
 
-  const pViewed = {
+  if (pathParams) {
+    // state.pages.map((p: any, index: number) => {
+    //   if (p.stage === pathParams) {
+    //     pViewed.pageID = index;
+    //     pViewed.stage = p.stage;
+    //   }
+    // });
+  }
+  const [pageViewed, setPageViewed] = useState({
     pageID: 0,
     stage: 'intro',
-  };
-  if (pathParams) {
-    state.pages.map((p: any, index: number) => {
-      if (p.stage === pathParams) {
-        pViewed.pageID = index;
-        pViewed.stage = p.stage;
-      }
-    });
-  }
-  const [pageViewed, setPageViewed] = useState(pViewed);
+  });
 
-  useEffect(() => {
-    dispatch({ type: 'SET_CURRENT_PAGE', payload: pageViewed.pageID });
-  }, [pageViewed]);
+  const handlePageChange = (pageID: number) => {
+    const lessonPlanStage = state.pages[pageID].stage;
+    setPageViewed({
+      pageID: pageID,
+      stage: lessonPlanStage,
+    });
+    dispatch({ type: 'SET_CURRENT_PAGE', payload: pageID });
+  };
 
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
@@ -380,7 +384,7 @@ const LessonControl = () => {
           handleClick={handleClick}
           handleHomePopup={handleHomePopup}
           pageViewed={pageViewed}
-          setPageViewed={setPageViewed}
+          handlePageChange={handlePageChange}
           setQuickRegister={setQuickRegister}
         />
         {/* END TOP MENU */}
@@ -399,7 +403,7 @@ const LessonControl = () => {
                   isSameStudentShared={isSameStudentShared}
                   handleQuitShare={handleQuitShare}
                   handleQuitViewing={handleQuitViewing}
-                  setPageViewed={setPageViewed}
+                  handlePageChange={handlePageChange}
                 />
               </div>
             </div>
@@ -416,7 +420,6 @@ const LessonControl = () => {
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}
               pageViewed={pageViewed}
-              setPageViewed={setPageViewed}
               instructions={instructions}
               setInstructions={setInstructions}
             />
