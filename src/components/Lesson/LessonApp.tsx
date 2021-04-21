@@ -51,14 +51,6 @@ const LessonApp = () => {
     }
   }, [lessonCTX.state.data]);
 
-  /***
-   *
-   * let questionSequence: any = await API.graphql(
-   graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
-   );
-   questionSequence = questionSequence?.data.getCSequences?.sequence || [];
-   * */
-
   /**
    * Function and useEffect for getting/setting checkpoints if
    * condition is met and lesson plans include
@@ -74,7 +66,6 @@ const LessonApp = () => {
         return { [`${cpId}`]: questionSequences.data.getCSequences.sequence };
       })
     );
-    // console.log('question sequences --> ', questionSequences);
     return questionSequences;
   };
 

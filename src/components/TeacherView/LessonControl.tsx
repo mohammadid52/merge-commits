@@ -14,7 +14,7 @@ import QuickRegister from '../Auth/QuickRegister';
 import { awsFormatDate, dateString } from '../../utilities/time';
 
 const LessonControl = () => {
-  const { state, theme, dispatch } = useContext(LessonControlContext);
+  const { state, theme, dispatch, checkpointsItems } = useContext(LessonControlContext);
   const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
@@ -25,19 +25,19 @@ const LessonControl = () => {
 
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
   const [open, setOpen] = useState(state.open);
-  
-  let pathParams:any = location.pathname.split('/')
-  pathParams = pathParams[pathParams.length - 1]
+
+  let pathParams: any = location.pathname.split('/');
+  pathParams = pathParams[pathParams.length - 1];
 
   const pViewed = {
     pageID: 0,
     stage: 'intro',
   };
   if (pathParams) {
-    state.pages.map((p:any, index: number) => {
-      if(p.stage === pathParams) {
-        pViewed.pageID = index
-        pViewed.stage = p.stage
+    state.pages.map((p: any, index: number) => {
+      if (p.stage === pathParams) {
+        pViewed.pageID = index;
+        pViewed.stage = p.stage;
       }
     });
   }
@@ -69,22 +69,22 @@ const LessonControl = () => {
 
   const getPageLabel = (locIndex: string) => {
     return state.pages[parseInt(locIndex)].stage;
-  }
+  };
 
   useEffect(() => {
-        console.log('TEACHER SHOULD CHANGE PAGE NOW...');
     if (state.studentViewing.live) {
-      const hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string'
-      const currentLocationDefined = typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !== 'undefined';
-      const lessonProgressDefined = typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !== 'undefined';
-
+      const hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+      const currentLocationDefined =
+        typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !== 'undefined';
+      const lessonProgressDefined =
+        typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !== 'undefined';
 
       if (hasCurrentLocation) {
-        if(currentLocationDefined){
+        if (currentLocationDefined) {
           history.push(`${match.url}/${state.pages[state.studentViewing.studentInfo.currentLocation]?.stage}`);
         }
       } else if (!hasCurrentLocation) {
-        if(lessonProgressDefined) {
+        if (lessonProgressDefined) {
           history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
         }
       }
@@ -143,7 +143,7 @@ const LessonControl = () => {
     };
 
     try {
-      console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData)
+      console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData);
       const updatedSyllabusLesson = await API.graphql(
         graphqlOperation(customMutations.updateSyllabusLesson, {
           input: updatedSyllabusLessonData,
@@ -310,10 +310,7 @@ const LessonControl = () => {
 
         {/* QUICK REGISTER */}
 
-        {
-          quickRegister &&
-            <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
-        }
+        {quickRegister && <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />}
 
         {/* USER MANAGEMENT */}
         <div className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleClick}>
@@ -467,7 +464,13 @@ const LessonControl = () => {
                    *
                    *
                    */}
-                  <Body fullscreenInstructions={fullscreenInstructions} setInstructions={setInstructions} />
+                  {checkpointsItems && (
+                    <Body
+                      fullscreenInstructions={fullscreenInstructions}
+                      setInstructions={setInstructions}
+                      checkpointsItems={checkpointsItems}
+                    />
+                  )}
                 </Suspense>
               </div>
             </div>
