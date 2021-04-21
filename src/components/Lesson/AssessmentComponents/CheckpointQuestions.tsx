@@ -30,6 +30,7 @@ export interface ResponseState {
 interface ResponseObject {
   qid: string;
   response: string[];
+  other?: string;
 }
 
 export interface QuestionInterface {
@@ -219,7 +220,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   /**
    * HANDLE CHANGE OF QUESTION SELECTION
    */
-  const handleInputChange = (id: number | string, value: string | string[], checkpointID: string) => {
+  const handleInputChange = (
+    id: number | string,
+    value: string | string[],
+    checkpointID: string,
+    otherValue?: string
+  ) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
       if (checkpointIDgroup === checkpointID) {
@@ -229,6 +235,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             return {
               qid: id,
               response: valueArray,
+              // Add this value to query
+              otherValue: value === 'other' ? otherValue : null,
             };
           } else {
             return obj;
