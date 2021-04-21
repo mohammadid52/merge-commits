@@ -48,7 +48,7 @@ const SelectManyQuestions = (props: QuestionProps) => {
         <label htmlFor={question.question.label}>
           <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
             <b>{questionIndex + 1}. </b>
-            {question.question.question}
+            {question.question.question} (Select one or more)
           </p>
         </label>
         {/*<div id={question.label} className={'flex'}>*/}

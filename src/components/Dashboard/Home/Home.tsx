@@ -11,6 +11,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 import { getAsset } from '../../../assets';
 import { times } from 'lodash';
+import { title } from 'process';
 
 export interface ModifiedListProps {
   id: any;
@@ -40,6 +41,7 @@ const Home = (props: ClassroomControlProps) => {
   // }, []);
 
   const [teacherList, setTeacherList] = useState<any[]>();
+  const [coTeachersList, setCoTeachersList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
 
   const getImageURL = async (uniqKey: string) => {
@@ -66,8 +68,29 @@ const Home = (props: ClassroomControlProps) => {
         }, [])
       : [];
 
+  const getCoTeacherList = () => {
+    let coTeachersList: any[] = [];
+
+    homeData &&
+      homeData.length > 0 &&
+      homeData.forEach((item: any) => {
+        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
+          item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
+            coTeachersList.push(_item.teacher);
+          });
+        }
+      });
+
+    return coTeachersList;
+  };
+
   const teacherListWithImages = Promise.all(
     getTeacherList.map(async (teacherObj: any, idx: number) => {
+      return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
+    })
+  );
+  const coTeacherListWithImages = Promise.all(
+    getCoTeacherList().map(async (teacherObj: any, idx: number) => {
       return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
     })
   );
@@ -136,6 +159,7 @@ const Home = (props: ClassroomControlProps) => {
     const fetchAndProcessDashboardData = async () => {
       setTeacherList(await teacherListWithImages);
       setStudentsList(await studentsListWithImages);
+      setCoTeachersList(await coTeacherListWithImages);
     };
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
@@ -190,7 +214,7 @@ const Home = (props: ClassroomControlProps) => {
               borderBottom
               extraClass="leading-6 text-gray-900"
             />
-            <TeacherRows teacherList={teacherList} />
+            <TeacherRows coTeachersList={coTeachersList} teacherList={teacherList} />
           </div>
           {/* Classmates Section */}
           <div className="my-6">

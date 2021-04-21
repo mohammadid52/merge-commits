@@ -120,9 +120,7 @@ type Room
   coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
 }
 
-type RoomCoTeachers
-  @model
-  @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
+type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
   id: ID!
   roomID: ID!
   teacherID: ID!

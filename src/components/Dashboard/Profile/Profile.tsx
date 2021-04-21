@@ -326,6 +326,9 @@ const Profile = (props: ProfilePageProps) => {
     return (
       <>
         {/* Hero Section */}
+        {/* TODO: Replace hardcoded banner with Hero Banner Component */}
+        {/* TODO: Add fade__animation class and paste it in the component.*/}
+
         <div className="relative">
           <div className="absolute inset-0 w-full h-60">
             <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
@@ -334,7 +337,7 @@ const Profile = (props: ProfilePageProps) => {
           <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
             <h1
               style={{ fontSize: '6rem' }}
-              className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+              className="z-100 fade__animation flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
               Profile
             </h1>
           </div>
