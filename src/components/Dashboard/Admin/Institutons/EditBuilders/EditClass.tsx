@@ -97,6 +97,7 @@ const EditClass = (props: EditClassProps) => {
             ...stu.student,
             email: stu.studentEmail,
             name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
+            avatar: stu.student.image ? getImageFromS3(stu.student.image) : '',
           },
         };
       });
