@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { lessonState } from '../state/LessonState';
 import { lessonReducer } from '../reducers/LessonReducer';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
@@ -10,8 +10,7 @@ import * as customQueries from '../customGraphql/customQueries';
 import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
-import * as queries from '../graphql/queries';
-import { createFilterToFetchSpecificItemsOnly, getClientKey } from '../utilities/strings';
+import { getClientKey } from '../utilities/strings';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -48,32 +47,30 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
-  const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
-  const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
+
+  /**
+   *
+   *
+   * HELP SECTION:
+   *
+   * On mount ->
+   *  1. loadPersonData();
+   *  2. getSyllabusLesson();
+   *
+   * Then ->
+   *  3. updatePersonLocation() -OR- createPersonLocation()
+   *  4. updateStudentData() -OR- createStudentData()
+   *
+   * Then ->
+   *  5. setInitialComponentState()
+   *  6. subscribeToSyllabusLesson()
+   *
+   *  Then ->
+   *  7. updateOnIncomingSubscriptionData()
+   *
+   */
 
   // INIT PERSON LOCATION STATE
-  useEffect(() => {
-    loadPersonData();
-  }, []);
-
-  useEffect(() => {
-    if (loaded && state.syllabusLessonID && state.studentAuthID) {
-      if (recentOp === 'created' || recentOp === 'updated') {
-        if (personLocationObj && personLocationObj.currentLocation) {
-          updatePersonLocation();
-        }
-      }
-      if (recentOp === '') {
-        createPersonLocation();
-      }
-    }
-  }, [loaded, state.syllabusLessonID, state.studentAuthID]);
-
-  useEffect(() => {
-    if (recentOp !== '') {
-      updatePersonLocation();
-    }
-  }, [state.currentPage]);
 
   // CREATE LOCATION RECORD or UPDATE
   async function loadPersonData() {
@@ -95,6 +92,10 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       setLoaded(true);
     }
   }
+
+  useEffect(() => {
+    loadPersonData();
+  }, []);
 
   async function createPersonLocation() {
     const newLocation = {
@@ -142,6 +143,25 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       setRecentOp('updated');
     }
   }
+
+  useEffect(() => {
+    if (loaded && state.syllabusLessonID && state.studentAuthID) {
+      if (recentOp === 'created' || recentOp === 'updated') {
+        if (personLocationObj && personLocationObj.currentLocation) {
+          updatePersonLocation();
+        }
+      }
+      if (recentOp === '') {
+        createPersonLocation();
+      }
+    }
+  }, [loaded, state.syllabusLessonID, state.studentAuthID]);
+
+  useEffect(() => {
+    if (recentOp !== '') {
+      updatePersonLocation();
+    }
+  }, [state.currentPage]);
 
   //  END OF LOCATION TRACKING SCRIPT
 
@@ -204,224 +224,23 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     }
   }
 
-  /***
-   *
-   * let questionSequence: any = await API.graphql(
-   graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
-   );
-   questionSequence = questionSequence?.data.getCSequences?.sequence || [];
-   * */
-
-  /**
-   * Function and useEffect for getting/setting checkpoints if
-   * condition is met and lesson plans include
-   * checkpoints in their name
-   */
-  const correctCheckpointQuestionSequence = async (checkpointId: string, checkpointObj: any) => {
-    const questionSequences: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpointId}` })
-    );
-    const currentQuestions = await checkpointObj.questions.items;
-    const qSequence = questionSequences.data.getCSequences.sequence;
-    const orderedQuestions = qSequence.map((sequenceID: string) => {
-      const findQuestion = currentQuestions.find((questionObj: any) => questionObj.question.id === sequenceID);
-      return findQuestion;
+  function setInitialComponentState(data: any) {
+    let initialComponentState: any = {};
+    let initialComponentStateSecondary: any = { notes: '' };
+    lesson?.lessonPlan.forEach((item: { type: string; stage: string }) => {
+      initialComponentState[item.type] = data[item.stage];
     });
-
-    // console.log('orderedQuestions -> ', orderedQuestions);
-    return { ...checkpointObj, questions: { ...checkpointObj.questions, items: orderedQuestions } };
-  };
-
-  const getAllCheckpoints = async () => {
-    const allCheckpointIDS = state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
-      const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
-      if (isCheckpoint) {
-        return [...acc, lessonPlanObj.stage.match(/checkpoint\?id=(.*)/)[1]];
-      } else {
-        return acc;
-      }
-    }, []);
-    if (allCheckpointIDS.length > 0) {
-      try {
-        const checkpoints: any = await API.graphql(
-          graphqlOperation(customQueries.listCheckpoints, {
-            filter: { ...createFilterToFetchSpecificItemsOnly(allCheckpointIDS, 'id') },
-          })
-        );
-
-        const items = checkpoints.data.listCheckpoints.items;
-        const orderCorrected = allCheckpointIDS.map((checkpointID: string, idx: number) => {
-          const pickCheckpointObj = items.find((targetCheckpointObj: any) => targetCheckpointObj?.id === checkpointID);
-          return pickCheckpointObj;
-        });
-
-        console.log('checkpoints --> ', items);
-        console.log('checkpoints --> ordered --> ', orderCorrected);
-
-        /**
-         *
-         * HOTFIX TO CORRECT QUESTION ORDER
-         *
-         * */
-        const questionOrderCorrected =
-          orderCorrected &&
-          Promise.all(
-            orderCorrected.map(async (checkpointObj: any) => {
-              return await correctCheckpointQuestionSequence(checkpointObj.id, checkpointObj);
-            })
-          );
-
-        // console.log('questionOrder corrected -> ', await questionOrderCorrected);
-
-        const listCheckpoints = questionOrderCorrected
-          ? { ...checkpoints.data.listCheckpoints, items: await questionOrderCorrected }
-          : { ...checkpoints.data.listCheckpoints, items: await orderCorrected };
-
-        setLesson({ ...lesson, lesson: { ...lesson.lesson, checkpoints: listCheckpoints } });
-
-        // INIT CONTEXT WITH EMPTY QUESTIONDATA!
-        const initCheckpointsObj = listCheckpoints.items.reduce((acc: any, checkpointObj: any) => {
-          return { ...acc, [checkpointObj?.id]: {} };
-        }, {});
-
-        dispatch({
-          type: 'SET_QUESTION_DATA',
-          payload: {
-            data: initCheckpointsObj,
-          },
-        });
-      } catch (e) {
-        console.error('err fetch checkpoints ::: ', e);
-      } finally {
-        setCheckpointsLoaded(true);
-      }
-    } else {
-      setCheckpointsLoaded(false);
-    }
-  };
-
-  /**
-   * GET or CREATE QUESTION DATA
-   */
-  const createQuestionData = async (responseObj: any) => {
-    try {
-      const newQuestionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: responseObj })
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleCreateQuestionData = async () => {
-    let studentID: string;
-    let studentAuthID: string;
-
-    await Auth.currentAuthenticatedUser().then((user) => {
-      studentID = user.attributes.email;
-      studentAuthID = user.attributes.sub;
+    dispatch({
+      type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
+      payload: { ...initialComponentState, ...initialComponentStateSecondary },
     });
-
-    if (typeof state.questionData === 'object') {
-      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      await checkpointIdKeys.reduce((_: any, key: string) => {
-        let responseObject = {
-          syllabusLessonID: state.syllabusLessonID,
-          checkpointID: key,
-          componentType: state.data.lesson.type,
-          lessonID: state.data.lesson.id,
-          authID: studentAuthID,
-          email: studentID,
-          responseObject: state.questionData[key],
-        };
-
-        createQuestionData(responseObject);
-      }, null);
-      setRecentQuestionOp('created');
-    }
-  };
-
-  async function getOrCreateQuestionData() {
-    const { lessonID } = urlParams;
-    let studentID: string;
-    let studentAuthID: string;
-
-    await Auth.currentAuthenticatedUser().then((user) => {
-      studentID = user.attributes.email;
-      studentAuthID = user.attributes.sub;
-    });
-
-    // console.log('getOrCreateQuestionData -> recentQuestionOp, ', recentQuestionOp)
-
-    try {
-      const questionDatas: any = await API.graphql(
-        graphqlOperation(queries.listQuestionDatas, {
-          filter: {
-            syllabusLessonID: { eq: lessonID },
-            email: { eq: studentID },
-          },
-        })
-      );
-      const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
-        return [
-          ...acc,
-          {
-            id: val.id,
-            checkpointID: val.checkpointID,
-          },
-        ];
-      }, []);
-
-      const noQuestionDatas = questionDatas.data.listQuestionDatas.items.length === 0;
-      const existQuestionDatas = questionDatas.data.listQuestionDatas.items.length > 0;
-
-      if (noQuestionDatas && recentQuestionOp === '') {
-        await handleCreateQuestionData();
-      }
-
-      if ((existQuestionDatas && recentQuestionOp === '') || (existQuestionDatas && recentQuestionOp === 'created')) {
-        dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
-        setRecentQuestionOp('fetched');
-      }
-    } catch (e) {
-      console.error('getOrCreateQuestionData -> ', e);
-    }
   }
 
-  // Collect and fetch checkpoints when lesson loaded
-  // useEffect(() => {
-  //   const getAdditionalLessonData = async () => {
-  //     if (state.data && state.data.lessonPlan) {
-  //       await getAllCheckpoints();
-  //     }
-  //   };
-  //   if (!checkpointsLoaded) {
-  //     getAdditionalLessonData();
-  //   }
-  // }, [state.data.lesson]);
-
   useEffect(() => {
-    const getAdditionalLessonData = async () => {
-      if (state.data && state.data.lessonPlan) {
-        await getAllCheckpoints();
-      }
-    };
-    if (!checkpointsLoaded && state.status === 'loaded') {
-      getAdditionalLessonData();
+    if (data) {
+      setInitialComponentState(data);
     }
-  }, [state.status]);
-
-  // Init questionData in DB if necessary
-  useEffect(() => {
-    const initQuestionDataDB = async () => {
-      await getOrCreateQuestionData();
-    };
-    if (checkpointsLoaded && state.data.lesson.type === 'lesson') {
-      if (recentQuestionOp === '' || recentQuestionOp === 'created') {
-        getOrCreateQuestionData();
-      }
-    }
-  }, [checkpointsLoaded, recentQuestionOp]);
+  }, [data]);
 
   /**
    * GET SYLLABUS LESSON
@@ -441,6 +260,35 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       history.push('/dashboard');
     }
   }
+
+  useEffect(() => {
+    getSyllabusLesson();
+
+    return function cleanup() {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      dispatch({ type: 'CLEANUP' });
+    };
+  }, []);
+
+  useEffect(() => {
+    if (lesson) {
+      dispatch({
+        type: 'SET_INITIAL_STATE',
+        payload: {
+          syllabusLessonID: lesson.id,
+          data: lesson,
+          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+            return !item.disabled;
+          }),
+          displayData: lesson.displayData,
+          word_bank: [''],
+          subscribeFunc: subscribeToSyllabusLesson,
+        },
+      });
+    }
+  }, [lesson]);
 
   /**
    * SUBSCRIBE TO SYLLABUS LESSON
@@ -472,68 +320,29 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     return syllabusLessonSubscription;
   };
 
-  useEffect(() => {
-    getSyllabusLesson();
+  const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
+    dispatch({
+      type: 'UPDATE_LESSON_PLAN',
+      payload: {
+        pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
+          return !item.disabled;
+        }),
 
-    return function cleanup() {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-      dispatch({ type: 'CLEANUP' });
-    };
-  }, []);
+        displayData: {
+          ...subscriptionData.displayData,
+          //@ts-ignore
+          breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage,
+        },
+        viewing: subscriptionData.viewing,
+      },
+    });
+  };
 
   useEffect(() => {
     if (subscriptionData) {
-      dispatch({
-        type: 'UPDATE_LESSON_PLAN',
-        payload: {
-          pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
-            return !item.disabled;
-          }),
-
-          displayData: {
-            ...subscriptionData.displayData,
-            //@ts-ignore
-            breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage,
-          },
-          viewing: subscriptionData.viewing,
-        },
-      });
+      updateOnIncomingSubscriptionData(subscriptionData);
     }
   }, [subscriptionData]);
-
-  useEffect(() => {
-    if (data) {
-      let initialComponentState: any = {};
-      let initialComponentStateSecondary: any = { notes: '' };
-      lesson?.lessonPlan.forEach((item: { type: string; stage: string }) => {
-        initialComponentState[item.type] = data[item.stage];
-      });
-      dispatch({
-        type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
-        payload: { ...initialComponentState, ...initialComponentStateSecondary },
-      });
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (lesson) {
-      dispatch({
-        type: 'SET_INITIAL_STATE',
-        payload: {
-          syllabusLessonID: lesson.id,
-          data: lesson,
-          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
-            return !item.disabled;
-          }),
-          displayData: lesson.displayData,
-          word_bank: [''],
-          subscribeFunc: subscribeToSyllabusLesson,
-        },
-      });
-    }
-  }, [lesson]);
 
   return (
     <LessonContext.Provider
@@ -541,6 +350,8 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         state,
         dispatch,
         theme,
+        lesson,
+        setLesson,
         subscription,
         subscribeToSyllabusLesson,
         userLanguage,

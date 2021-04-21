@@ -18,10 +18,11 @@ const Checkpoint = lazy(() => import('../Lesson/AssessmentComponents/Checkpoint'
 interface BodyProps {
   fullscreenInstructions: boolean;
   setInstructions: React.Dispatch<React.SetStateAction<{ visible: boolean; available: boolean; content: any }>>;
+  checkpointsItems?: any[];
 }
 
 const Body: React.FC<BodyProps> = (props: BodyProps) => {
-  const { fullscreenInstructions, setInstructions } = props;
+  const { fullscreenInstructions, setInstructions, checkpointsItems } = props;
 
   const { state, dispatch } = useContext(LessonControlContext);
   const location = useLocation();
@@ -47,7 +48,7 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
       case 'truthgame':
         return <TruthGameView fullscreen={fullscreen} />;
       case 'poll':
-        return <PollView/>;
+        return <PollView />;
       default:
         return <LessonError />;
     }
@@ -82,12 +83,18 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
   return (
     // <div className="z-0 p-4 md:h-8.2/10 bg-dark">
     <Switch>
-      <Route path={`${match.url}/intro`} render={() => <IntroView fullscreen={fullscreen} />} />
+      <Route
+        path={`${match.url}/intro`}
+        render={() => <IntroView fullscreen={fullscreen} checkpointsItems={checkpointsItems} />}
+      />
 
       <Route path={`${match.url}/warmup`} render={() => pageFetch('warmup')} />
       <Route path={`${match.url}/corelesson`} render={() => pageFetch('corelesson')} />
       <Route path={`${match.url}/activity`} render={() => pageFetch('activity')} />
-      <Route path={`${match.url}/checkpoint`} render={() => <Checkpoint isTeacher={true}/>} />
+      <Route
+        path={`${match.url}/checkpoint`}
+        render={() => <Checkpoint isTeacher={true} checkpointsItems={checkpointsItems} />}
+      />
       <Route path={`${match.url}/outro`} render={() => <OutroView fullscreen={fullscreen} />} />
       <Route
         exact
