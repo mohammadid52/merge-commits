@@ -268,6 +268,7 @@ const EditRoom = (props: EditRoomProps) => {
   };
 
   const getClassLists = async (allInstiId: string[]) => {
+    const instId = roomData.institute.id;
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
@@ -283,9 +284,12 @@ const EditRoom = (props: EditRoomProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-        const filteredClassList = sortedList.filter(
-          (classItem: any) => classItem.institution.isServiceProvider !== true
-        );
+        const filteredClassList = sortedList.filter((classItem: any) => {
+          return (
+            classItem?.institution.isServiceProvider === false ||
+            (classItem?.institution.isServiceProvider === true && classItem.institution.id === instId)
+          );
+        });
         const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
