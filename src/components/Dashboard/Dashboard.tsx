@@ -526,101 +526,109 @@ const Dashboard = (props: DashboardProps) => {
         role={userData.role}
         handleRoomSelection={handleRoomSelection}
       />
-      <div className="flex flex-col w-0 flex-1 overflow-hidden">
-        <main className="flex-1 relative overflow-y-auto focus:outline-none">
-          <div className="max-w-7xl mx-auto">
-            <Suspense
-              fallback={
-                <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                  <ComponentLoading />
-                </div>
-              }>
-              <Switch>
-                <Route
-                  path={`${match.url}`}
-                  exact
-                  render={() => {
-                    if (userData && userData.role !== '') {
-                      if (userData.role === 'FLW' || userData.role === 'TR') {
-                        return <Redirect to={`${match.url}/lesson-planner`} />;
-                      } else if (userData.role === 'ST') {
-                        return <Redirect to={`${match.url}/home`} />;
-                        // return <Redirect to={`${match.url}/home`} />;
-                      } else return <Redirect to={`${match.url}/manage-institutions`} />;
-                    } else
-                      return (
-                        <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                          <ComponentLoading />
-                        </div>
-                      );
-                  }}
-                />
-                <Route
-                  exact
-                  path={`${match.url}/home`}
-                  render={() => (
-                    <Home
-                      homeData={homeData}
-                      classList={classList}
-                      setActiveRoomInfo={setActiveRoomInfo}
-                      handleRoomSelection={handleRoomSelection}
-                    />
-                  )}
-                />
-                <Route
-                  exact
-                  path={`${match.url}/classroom/:roomId`}
-                  render={() => (
-                    <Classroom
-                      currentPage={currentPage}
-                      setCurrentPage={setCurrentPage}
-                      activeRoomInfo={activeRoomInfo}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
-                      visibleLessonGroup={visibleLessonGroup}
-                      setVisibleLessonGroup={setVisibleLessonGroup}
-                      lessonLoading={lessonLoading}
-                      handleRoomSelection={handleRoomSelection}
-                      syllabusLoading={syllabusLoading}
-                    />
-                  )}
-                />
-                <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
-                <Route
-                  path={`${match.url}/noticeboard`}
-                  render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
-                />
-                <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
-                <Route path={`${match.url}/registration`} render={() => <Registration />} />
-                <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
-                <Route
-                  path={`${match.url}/lesson-planner`}
-                  render={() => (
-                    <LessonPlanHome
-                      currentPage={currentPage}
-                      setCurrentPage={setCurrentPage}
-                      activeRoomInfo={activeRoomInfo}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
-                      visibleLessonGroup={visibleLessonGroup}
-                      setVisibleLessonGroup={setVisibleLessonGroup}
-                      lessonLoading={lessonLoading}
-                      setLessonLoading={setLessonLoading}
-                      syllabusLoading={syllabusLoading}
-                      setSyllabusLoading={setSyllabusLoading}
-                    />
-                  )}
-                />
-                <Route
-                  path={`${match.url}/manage-institutions`}
-                  render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
-                />
-                <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
-                <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
-              </Switch>
-            </Suspense>
+
+      <div className="flex-1 relative z-0 flex">
+        <main className="flex-1 relative z-0-auto focus:outline-none">
+          <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
+            <div className="h-full border-2 border-gray-200 border-dashed rounded-lg">
+              <Suspense
+                fallback={
+                  <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                    <ComponentLoading />
+                  </div>
+                }>
+                <Switch>
+                  <Route
+                    path={`${match.url}`}
+                    exact
+                    render={() => {
+                      if (userData && userData.role !== '') {
+                        if (userData.role === 'FLW' || userData.role === 'TR') {
+                          return <Redirect to={`${match.url}/lesson-planner`} />;
+                        } else if (userData.role === 'ST') {
+                          return <Redirect to={`${match.url}/home`} />;
+                          // return <Redirect to={`${match.url}/home`} />;
+                        } else return <Redirect to={`${match.url}/manage-institutions`} />;
+                      } else
+                        return (
+                          <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                            <ComponentLoading />
+                          </div>
+                        );
+                    }}
+                  />
+                  <Route
+                    exact
+                    path={`${match.url}/home`}
+                    render={() => (
+                      <Home
+                        homeData={homeData}
+                        classList={classList}
+                        setActiveRoomInfo={setActiveRoomInfo}
+                        handleRoomSelection={handleRoomSelection}
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path={`${match.url}/classroom/:roomId`}
+                    render={() => (
+                      <Classroom
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        activeRoomInfo={activeRoomInfo}
+                        activeRoomName={activeRoomName}
+                        setActiveRoomName={setActiveRoomName}
+                        visibleLessonGroup={visibleLessonGroup}
+                        setVisibleLessonGroup={setVisibleLessonGroup}
+                        lessonLoading={lessonLoading}
+                        handleRoomSelection={handleRoomSelection}
+                        syllabusLoading={syllabusLoading}
+                      />
+                    )}
+                  />
+                  <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+                  <Route
+                    path={`${match.url}/noticeboard`}
+                    render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
+                  />
+                  <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
+                  <Route path={`${match.url}/registration`} render={() => <Registration />} />
+                  <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
+                  <Route
+                    path={`${match.url}/lesson-planner`}
+                    render={() => (
+                      <LessonPlanHome
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        activeRoomInfo={activeRoomInfo}
+                        activeRoomName={activeRoomName}
+                        setActiveRoomName={setActiveRoomName}
+                        visibleLessonGroup={visibleLessonGroup}
+                        setVisibleLessonGroup={setVisibleLessonGroup}
+                        lessonLoading={lessonLoading}
+                        setLessonLoading={setLessonLoading}
+                        syllabusLoading={syllabusLoading}
+                        setSyllabusLoading={setSyllabusLoading}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`${match.url}/manage-institutions`}
+                    render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+                  />
+                  <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+                  <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
+                </Switch>
+              </Suspense>
+            </div>
           </div>
         </main>
+        <aside className="hidden relative xl:flex xl:flex-col flex-shrink-0 w-96 border-l border-gray-200">
+          <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
+            <div className="h-full border-2 border-gray-200 border-dashed rounded-lg" />
+          </div>
+        </aside>
       </div>
     </div>
   );
