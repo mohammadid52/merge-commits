@@ -529,10 +529,10 @@ const Dashboard = (props: DashboardProps) => {
         handleRoomSelection={handleRoomSelection}
       />
 
-      <div className="flex-1 relative z-0 flex">
-        <main className="flex-1 relative z-0-auto focus:outline-none">
-          <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-            <div className="h-full border-2 border-gray-200 border-dashed rounded-lg">
+      <div className="flex-1 relative overflow-y-auto z-0 flex">
+        <main className="flex-1 relative z-0-auto mb-10 focus:outline-none">
+          <div className="absolute inset-0">
+            <div className="h-full rounded-lg">
               <Suspense
                 fallback={
                   <div className="min-h-screen w-full flex flex-col justify-center items-center">
@@ -598,7 +598,7 @@ const Dashboard = (props: DashboardProps) => {
                   <Route path={`${match.url}/registration`} render={() => <Registration />} />
                   <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
                   <Route
-                    path={`${match.url}/lesson-planner`}
+                    path={`${match.url}/lesson-planner/:roomId`}
                     render={() => (
                       <LessonPlanHome
                         currentPage={currentPage}
@@ -626,11 +626,6 @@ const Dashboard = (props: DashboardProps) => {
             </div>
           </div>
         </main>
-        <aside className="hidden relative xl:flex xl:flex-col flex-shrink-0 w-96 border-l border-gray-200">
-          <div className="absolute inset-0 py-6 px-4 sm:px-6 lg:px-8">
-            <div className="h-full border-2 border-gray-200 border-dashed rounded-lg" />
-          </div>
-        </aside>
       </div>
     </div>
   );
