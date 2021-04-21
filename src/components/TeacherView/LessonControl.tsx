@@ -43,6 +43,10 @@ const LessonControl = () => {
   }
   const [pageViewed, setPageViewed] = useState(pViewed);
 
+  useEffect(() => {
+    dispatch({ type: 'SET_CURRENT_PAGE', payload: pageViewed.pageID });
+  }, [pageViewed]);
+
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
       return !fullscreen;
