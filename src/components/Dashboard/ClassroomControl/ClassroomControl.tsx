@@ -10,6 +10,7 @@ import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings
 import useDictionary from '../../../customHooks/dictionary';
 import * as queries from '../../../graphql/queries';
 import Home from '../Home/Home';
+import HomeForTeachers from '../Home/HomeForTeachers';
 import SideRoomSelector from '../Menu/SideRoomSelector';
 import { useHistory } from 'react-router';
 
@@ -46,6 +47,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
 
   // Fetching results
   const [homeData, setHomeData] = useState<{ class: any }[]>();
+  const [homeDataForTeachers, setHomeDataForTeachers] = useState([]);
   const [classList, setClassList] = useState<any[]>();
 
   const [classIds, setClassIds] = useState<string[]>([]);
@@ -67,20 +69,21 @@ const ClassroomControl = (props: ClassroomControlProps) => {
     }
   }, []);
 
+  
+
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
    ******************************************/
   const getDashboardData = async (authId: string, email: string) => {
     try {
+      // Just for testing :::::::::::
+      // const input = isTeacher ? {authId: "9101f663-f819-4180-9d31-63afd81d7b56", email: "jasperprague@yopmail.com"} : {authId, email}
       const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, {
-          authId: authId,
-          email: email,
-        })
+        graphqlOperation(customQueries.getDashboardData, {authId, email})
       );
-
+      
       const response = await dashboardDataFetch;
-      let arrayOfResponseObjects = response?.data.getPerson.classes.items;
+      let arrayOfResponseObjects = response?.data?.getPerson?.classes?.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter((item: any) => item.class !== null);
 
@@ -91,13 +94,37 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       // need to do some cleanup
     }
   };
+  const getDashboardDataForTeachers = async (teacherAuthID: string) => {
+    try {
+
+      const dashboardDataFetch: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForTeachers, { filter: { teacherAuthID: { eq: teacherAuthID } } })
+      );
+      
+      const response = await dashboardDataFetch;
+      let arrayOfResponseObjects = response?.data?.listRooms?.items;
+      arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
+        return { class: { rooms: { items: arrayOfResponseObjects }}}
+      })
+      setHomeDataForTeachers(arrayOfResponseObjects);
+
+    } catch (e) {
+      console.error('getDashboardDataForTeachers -> ', e);
+    } finally {
+      // need to do some cleanup
+    }
+  };
 
   useEffect(() => {
-    if (state.user.role === 'ST' || isTeacher) {
-      const authId = state.user.authId;
-      const email = state.user.email;
+    const authId = state.user.authId;
+    const email = state.user.email;
+    if (state.user.role === 'ST') {
       getDashboardData(authId, email);
     }
+    if(isTeacher){
+      getDashboardDataForTeachers(authId)
+    }
+
   }, [state.user.role, isTeacher]);
 
   /******************************************
@@ -144,6 +171,7 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       const classIdFromRoomsFetch: any = await API.graphql(
         graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: teacherAuthID } } })
       );
+      
       const response = await classIdFromRoomsFetch;
       const arrayOfResponseObjects = response?.data?.listRooms?.items;
 
@@ -167,6 +195,8 @@ const ClassroomControl = (props: ClassroomControlProps) => {
       listRoomTeacher(teacherAuthID);
     }
   }, [state.user.role]);
+
+  
 
   /******************************************
    * 3.1 LIST ALL WIDGETS FOR ROOM          *
@@ -452,16 +482,23 @@ const ClassroomControl = (props: ClassroomControlProps) => {
   // const roomsTitle =
   //   'h-12 p-2 font-semibold text-grayscale-lightest flex items-center justify-start bg-darker-gray bg-opacity-60';
   // const linkClass = 'w-full p-2 text-grayscale-lightest text-xs tracking-wider mx-auto border-b-0 border-medium-gray';
-
+  const HomeComponent = isTeacher ?  <HomeForTeachers
+  isTeacher={isTeacher}
+  homeData={homeDataForTeachers}
+  setHomeData={setHomeData}
+  classList={classList}
+  setActiveRoomInfo={setActiveRoomInfo}
+  handleRoomSelection={handleRoomSelection}
+  /> : 
+  <Home
+  homeData={homeData}
+  setHomeData={setHomeData}
+  classList={classList}
+  setActiveRoomInfo={setActiveRoomInfo}
+  handleRoomSelection={handleRoomSelection}
+  />
   return isHomescreen ? (
-    <Home
-      isTeacher={isTeacher}
-      homeData={homeData}
-      setHomeData={setHomeData}
-      classList={classList}
-      setActiveRoomInfo={setActiveRoomInfo}
-      handleRoomSelection={handleRoomSelection}
-    />
+    HomeComponent
   ) : (
     <SideRoomSelector
       homeData={homeData}

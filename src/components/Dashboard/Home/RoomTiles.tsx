@@ -15,8 +15,8 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { ModifiedListProps } from './Home';
 import Tooltip from '../../Atoms/Tooltip';
 
-const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
-  const { classList: classes } = props;
+const RoomTiles = (props: { classList: ModifiedListProps[],isTeacher?:boolean }) => {
+  const { classList: classes,isTeacher } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
   const [showMore, setShowMore] = useState(false);
@@ -145,7 +145,7 @@ const RoomTiles = (props: { classList: ModifiedListProps[] }) => {
                             </a>
                           </p>
                           <a href="#" className="block mt-2">
-                            <p className="text-lg font-semibold text-gray-900">{name}</p>
+                            <p className="text-lg font-semibold text-gray-900">{name} {isTeacher && `(${item.roomName})`}</p>
                             <p className="mt-2 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>
