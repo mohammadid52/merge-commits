@@ -11,6 +11,7 @@ import { Auth } from '@aws-amplify/auth';
 import * as queries from '../../graphql/queries';
 import { createFilterToFetchSpecificItemsOnly } from '../../utilities/strings';
 import * as customMutations from '../../customGraphql/customMutations';
+import NotesForm from './LessonComponents/Notes/NotesForm';
 
 const LessonApp = () => {
   const lessonCTX = useContext(LessonContext);
@@ -348,7 +349,7 @@ const LessonApp = () => {
         className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${
           overlay === '' ? 'z-0' : 'z-50'
         }`}>
-        {/*<NotesForm overlay={overlay} setOverlay={setOverlay} />*/}
+        <NotesForm overlay={overlay} setOverlay={setOverlay} />
       </div>
 
       {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
