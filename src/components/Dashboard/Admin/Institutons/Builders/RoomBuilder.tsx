@@ -289,7 +289,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
 
         const filteredClassList = sortedList.filter(
-          (classItem: any) => classItem.institution.isServiceProvider !== true
+          (classItem: any) => classItem.institution.isServiceProvider === false
         );
 
         const classList = filteredClassList.map((item: any, i: any) => ({
