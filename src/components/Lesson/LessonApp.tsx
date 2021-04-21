@@ -254,7 +254,7 @@ const LessonApp = () => {
     let studentID: string;
     let studentAuthID: string;
 
-    await Auth.currentAuthenticatedUser().then((user) => {
+    await Auth.currentAuthenticatedUser().then((user: any) => {
       studentID = user.attributes.email;
       studentAuthID = user.attributes.sub;
     });
@@ -283,7 +283,7 @@ const LessonApp = () => {
     let studentID: string;
     let studentAuthID: string;
 
-    await Auth.currentAuthenticatedUser().then((user) => {
+    await Auth.currentAuthenticatedUser().then((user: any) => {
       studentID = user.attributes.email;
       studentAuthID = user.attributes.sub;
     });
