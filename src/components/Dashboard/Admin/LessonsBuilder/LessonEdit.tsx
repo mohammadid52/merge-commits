@@ -296,7 +296,7 @@ const LessonEdit = (props: LessonEditProps) => {
             lessonName={formData.name}
             enablePublish
             lessonID={lessonId || assessmentId}
-            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonPlans={savedLessonDetails.lessonPlans || []}
             lessonType={formData.type?.value}
           />
         );
