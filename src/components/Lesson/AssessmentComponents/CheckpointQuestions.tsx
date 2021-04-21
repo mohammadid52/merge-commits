@@ -18,6 +18,7 @@ import LessonElementCard from '../../Atoms/LessonElementCard';
 import { CheckpointInterface } from './Checkpoint';
 import { BodyProps } from '../Body/Body';
 import { a } from 'aws-amplify';
+import { useParams } from 'react-router';
 
 interface CheckpointQuestionsProps {
   setupComplete?: boolean;
@@ -61,6 +62,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const { isTeacher, handleSetTitle, checkpointType, checkpointsItems } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
+  const urlParams: any = useParams();
 
   /**
    * State
@@ -121,6 +123,11 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     return collectQuestionGroups(src);
   };
 
+  const pickSingleCheckpoint = (searchID: string) => {
+    const findCP = checkpointsItems.filter((checkpointObj: any) => checkpointObj.id === searchID);
+    return findCP;
+  };
+
   /**
    * USEEFFECT 1 - ON CHECKPOINT MOUNT
    */
@@ -129,15 +136,29 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
       if (!isTeacher) {
         setInput(state.questionData);
       }
-      setCheckpointsArray(checkpointsItems);
+      /**
+       * Logic below is to test for lesson,
+       * and if it is a lesson, we only put the checkpoint for that lesson
+       * into the array.
+       *
+       * For surveys we put all checkpoints in the array,
+       * so that the numbering can be continuous and calculated
+       */
+      if (state.data.lesson.type === 'lesson') {
+        const currentPageIdx = state.currentPage;
+        const matchArray = state.pages[currentPageIdx].stage.match(/checkpoint\?id=(.*)/);
+        setCheckpointsArray(pickSingleCheckpoint(matchArray[1]));
+      } else {
+        setCheckpointsArray(checkpointsItems);
+      }
     }
   }, [checkpointsItems]);
 
   useEffect(() => {
     console.log('checkpointsArray', checkpointsArray);
     if (checkpointsArray.length > 0) {
-      setQuestionsArray(allQuestions(checkpointsItems));
-      setQuestionGroups(allQuestionGroups(checkpointsItems));
+      setQuestionsArray(allQuestions(checkpointsArray));
+      setQuestionGroups(allQuestionGroups(checkpointsArray));
     }
   }, [checkpointsArray]);
 
