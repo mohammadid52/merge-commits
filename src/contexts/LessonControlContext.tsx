@@ -140,6 +140,81 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
     }
   };
 
+  const reorderCheckpoints = (checkpointsArray: any[], orderArray: string[]) => {
+    const ordered = orderArray.map((seqObj: any) => {
+      const key = Object.keys(seqObj);
+      const val: string[] = Object.values(seqObj);
+      const findCP = checkpointsArray.find((cpObj: any) => cpObj.id === key[0]);
+      return findCP;
+    });
+    return ordered;
+  };
+
+  const reorderCheckpointQuestions = (checkpointQuestions: any[], orderArray: string[]) => {
+    const ordered = orderArray.map((qStr: string) => {
+      const findQ = checkpointQuestions.find((qObj: any) => qObj.question.id === qStr);
+      return findQ;
+    });
+    return ordered;
+  };
+
+  const setCheckpointsToLessonData = (checkpointsArray: any[]) => {
+    setCheckpointsItems(checkpointsArray);
+  };
+
+  useEffect(() => {
+    const reorderProcess = async () => {
+      if (checkpointsLoaded && checkpointsItems) {
+        if (state.data.lesson.type !== 'lesson') {
+          if (checkpointsSequence.length === checkpointsItems.length) {
+            const ordered = reorderCheckpoints(checkpointsItems, checkpointsSequence);
+            setCheckpointsToLessonData(ordered);
+          }
+        }
+      }
+    };
+
+    const reorderProcess2 = async () => {
+      if (checkpointsLoaded && checkpointsQuestionsSequence.length > 0) {
+        const mapCheckpointQuestions = checkpointsItems.map((checkpoint: any) => {
+          const questions = checkpoint.questions.items;
+          const questionsOrder = checkpointsQuestionsSequence.reduce((acc: any[], seqObj: any) => {
+            const key = Object.keys(seqObj);
+            const val: string[] = Object.values(seqObj);
+            if (key[0] === checkpoint.id) {
+              //@ts-ignore
+              return [...acc, ...val[0]];
+            } else {
+              return acc;
+            }
+          }, []);
+
+          if (questionsOrder) {
+            // @ts-ignore
+            const ordered = reorderCheckpointQuestions(questions, questionsOrder);
+            return { ...checkpoint, questions: { ...checkpoint.questions, items: ordered } };
+          } else {
+            return checkpoint;
+          }
+        });
+
+        setCheckpointsToLessonData(mapCheckpointQuestions);
+      } else {
+        console.log('skipped reorderProcess2()');
+      }
+    };
+
+    const process = async () => {
+      await reorderProcess();
+      await reorderProcess2();
+    };
+
+    if (checkpointsLoaded && checkpointsQuestionsSequence.length > 0) {
+      process();
+      setReordered(true);
+    }
+  }, [checkpointsLoaded, checkpointsSequence, checkpointsQuestionsSequence]);
+
   /**
    * GET additional data / checkpoints separately
    */
@@ -166,7 +241,8 @@ export const LessonControlContextProvider = ({ children }: LessonControlProps) =
     return state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any) => {
       const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
       if (isCheckpoint) {
-        return [...acc, lessonPlanObj.stage.match(/[^?id=]*$/g)[0]];
+        const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/);
+        return [...acc, matchArray[1]];
       } else {
         return acc;
       }
