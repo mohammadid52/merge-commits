@@ -825,8 +825,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                         {/* Drag and drop listing */}
                         <DragDropContext onDragEnd={onDragEnd}>
                           <Droppable droppableId="droppable">
-                            {(provided, snapshot) => (
-                              <div {...provided.droppableProps} ref={provided.innerRef}>
+                            {(provided1, snapshot) => (
+                              <div {...provided1.droppableProps} ref={provided1.innerRef}>
                                 {selectedLessonsList.map((item, index) => {
                                   return (
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -897,7 +897,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                     </Draggable>
                                   );
                                 })}
-                                {provided.placeholder}
+                                {provided1.placeholder}
                               </div>
                             )}
                           </Droppable>

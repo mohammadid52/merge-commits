@@ -507,7 +507,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                         </div> */}
                         <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
                           <div className="w-6 h-6 cursor-pointer" onClick={() => toggleModal(item.id)}>
-                            <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
+                            <IconContext.Provider value={{ size: '1rem', color: '#B22222' }}>
                               <FaTrash />
                             </IconContext.Provider>
                           </div>

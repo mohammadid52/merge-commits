@@ -13,6 +13,7 @@ import ImageAlternate from '../../Atoms/ImageAlternative';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { ModifiedListProps } from './Home';
+import Tooltip from '../../Atoms/Tooltip';
 
 const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedListProps[] }) => {
   const { classList: classes, handleRoomSelection } = props;

@@ -101,6 +101,7 @@ const dashboardProfileDict: any = {
       EMAIL: 'Email address',
       CONTACT: 'Contact Number',
       ROLE: 'Role',
+      PASSWORD: 'Password',
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
@@ -153,6 +154,7 @@ const dashboardProfileDict: any = {
       LANGUAGE: 'Idioma',
       EMAIL: 'dirección de correo electrónico',
       CONTACT: 'número de contacto',
+      PASSWORD: 'contraseña',
       ROLE: 'Papel',
     },
     INSTITUTION_INFO: {

@@ -97,6 +97,7 @@ const EditClass = (props: EditClassProps) => {
             ...stu.student,
             email: stu.studentEmail,
             name: `${stu.student.firstName || ''} ${stu.student.lastName || ''}`,
+            avatar: stu.student.image ? getImageFromS3(stu.student.image) : '',
           },
         };
       });
@@ -346,7 +347,7 @@ const EditClass = (props: EditClassProps) => {
       </div>
 
       <PageWrapper>
-        <div className="w-6/10 px-2 m-auto">
+        <div className="w-6/10 px-2 m-auto mb-4">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.heading}</h3>
           <div className="">
             <div className="flex items-center">
@@ -371,19 +372,23 @@ const EditClass = (props: EditClassProps) => {
           </div>
         </div>
 
-        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">{dictionary.heading2}</h3>
-
-        <div className="flex items-center w-6/10 m-auto px-2">
-          <div>
-            <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">Add students to class</label>
+        <div className="flex flex-col items-center justify-center w-6/10 m-auto px-2">
+          <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">Add students to class</label>
+          <div className="flex items-center justify-between">
             <SelectorWithAvatar
               selectedItem={newMember}
               list={students}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
               onChange={onStudentSelect}
+              imageFromS3={false}
+            />
+
+            <Buttons
+              btnClass="ml-5 py-1 px-5 mt-auto"
+              label={dictionary.ADD_STUDENT_BUTTON}
+              onClick={addStudentInClass}
             />
           </div>
-          <Buttons btnClass="ml-4 py-1" label={dictionary.ADD_STUDENT_BUTTON} onClick={addStudentInClass} />
         </div>
 
         {classStudents ? (

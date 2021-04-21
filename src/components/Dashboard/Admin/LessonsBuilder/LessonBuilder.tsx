@@ -173,7 +173,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <PreviewForm
             lessonName={formData.name}
             lessonID={lessonId}
-            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonPlans={savedLessonDetails.lessonPlans || []}
             lessonType={formData.type?.value}
           />
         );

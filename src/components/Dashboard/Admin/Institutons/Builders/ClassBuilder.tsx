@@ -44,6 +44,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     avatar: '',
   });
   const [studentList, setStudentList] = useState([]);
+
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
   const [allStudentList, setAllStudentList] = useState([]);
@@ -101,7 +102,6 @@ const ClassBuilder = (props: ClassBuilderProps) => {
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
     if (imageUrl) {
-      console.log(imageUrl);
       return imageUrl;
     } else {
       return '';
@@ -408,15 +408,13 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             </div> */}
           </div>
         </div>
-        <h3 className="text-center text-lg text-gray-600 font-medium mt-12 mb-6">
-          {classBuilderdict[userLanguage]['HEADING2']}
-        </h3>
-        <div className="flex items-center w-6/10 m-auto px-2">
+        <div className="flex items-center w-6/10 m-auto px-3">
           <SelectorWithAvatar
             selectedItem={newMember}
             list={studentList}
             placeholder={classBuilderdict[userLanguage]['MEMBER_PLACEHOLDER']}
             onChange={onStudentSelect}
+            imageFromS3={false}
           />
           <Buttons
             btnClass="ml-4 py-1"
@@ -427,8 +425,10 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         <div className="my-4 w-6/10 m-auto px-2 max-h-88 overflow-y-scroll">
           {selectedStudents.length > 0 && (
             <Fragment>
-              {selectedStudents.map((item, index) =>
-                <div className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200" key={index}>
+              {selectedStudents.map((item, index) => (
+                <div
+                  className="flex justify-between w-full items-center px-8 py-4 whitespace-nowrap border-b-0 border-gray-200"
+                  key={index}>
                   <div className="flex w-3/10 items-center">
                     <div className="flex-shrink-0 h-10 w-10 flex items-center">
                       {item.avatar ? (
@@ -458,7 +458,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
                     </IconContext.Provider>
                   </span>
                 </div>
-              )}
+              ))}
             </Fragment>
           )}
         </div>

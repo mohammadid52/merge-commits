@@ -38,6 +38,7 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
                               <p className="text-sm font-medium text-indigo-600 truncate">
                                 {teacher.firstName + ' ' + teacher.lastName}
                               </p>
+
                               <p className="mt-2 flex items-center text-sm text-gray-500">
                                 <svg
                                   className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
@@ -74,7 +75,6 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
         </ul>
         {coTeachersList && coTeachersList.length > 0 && (
           <ul className="">
-            <p className="px-4 text-gray-500 sm:px-6 py-2">Co teachers:</p>
             {coTeachersList.map(
               (
                 teacher: {

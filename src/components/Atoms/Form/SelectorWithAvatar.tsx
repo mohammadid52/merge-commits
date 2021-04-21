@@ -11,11 +11,12 @@ interface selectorProps {
   btnClass?: string;
   arrowHidden?: boolean;
   placeholder: string;
+  imageFromS3?: boolean;
   onChange: (c: string, n: string, id: string, avatar: string) => void;
 }
 
 const SelectorWithAvatar = (props: selectorProps) => {
-  const { list, selectedItem, btnClass, arrowHidden, placeholder, onChange } = props;
+  const { list, selectedItem, btnClass, arrowHidden, placeholder, onChange, imageFromS3 = true } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
   const [teacherList, setTeacherList] = useState([]);
@@ -62,10 +63,14 @@ const SelectorWithAvatar = (props: selectorProps) => {
 
   React.useEffect(() => {
     if (list && list.length > 0) {
-      const modifiedlist = getList(list);
-      setTeacherList(modifiedlist);
+      if (imageFromS3) {
+        const modifiedlist = getList(list);
+        setTeacherList(modifiedlist);
+      } else {
+        setTeacherList(list);
+      }
     }
-  }, [list]);
+  }, [list, imageFromS3]);
 
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
