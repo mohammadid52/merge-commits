@@ -40,8 +40,8 @@ export const standardTheme = {
   },
   sidemenu: {
     bg: 'bg-darker-gray',
-    primary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-darker-gray',
-    secondary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-medium-gray  border-r-0 border-white',
+    primary: 'z-50 min-h-screen w-65 min-w-65 flex flex-col bg-darker-gray',
+    secondary: 'z-50 min-h-screen w-65 min-w-65 flex flex-col bg-medium-gray  border-r-0 border-white',
     darktone: 'bg-black bg-opacity-80',
   },
   block: {

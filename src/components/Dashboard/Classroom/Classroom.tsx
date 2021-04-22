@@ -1,4 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router';
+import isEmpty from 'lodash/isEmpty';
+
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import * as customQueries from '../../../customGraphql/customQueries';
 import API, { graphqlOperation } from '@aws-amplify/api';
@@ -21,8 +24,6 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 import Selector from '../../Atoms/Form/Selector';
-
-import isEmpty from 'lodash/isEmpty';
 
 interface Artist {
   id: string;
@@ -97,11 +98,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     handleSyllabusActivation,
     lessonLoading,
     syllabusLoading,
+    handleRoomSelection,
   } = props;
   const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const showClassDetails: boolean = !isEmpty(activeRoomInfo);
+  const match: any = useRouteMatch();
 
   const { classRoomDict } = useDictionary(clientKey);
   const [survey] = useState<any>({
@@ -124,6 +127,17 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
     }
   }, [state.user.role]);
+
+  const roomId = match?.params?.roomId;
+
+  useEffect(() => {
+    if (!isEmpty(roomId) && state.roomData?.rooms?.length > 0) {
+      const roomIndex = state.roomData.rooms.findIndex((d: any) => d.id === roomId);
+      const room = state.roomData.rooms[roomIndex];
+      const name = room?.name;
+      handleRoomSelection(roomId, name, roomIndex);
+    }
+  }, [roomId, state.roomData.rooms]);
 
   /**
    * ASSESSMENTS & SURVEYS

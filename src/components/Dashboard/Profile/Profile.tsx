@@ -345,7 +345,7 @@ const Profile = (props: ProfilePageProps) => {
         {/* Header */}
         {person && (
           <div
-            className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+            className={`${theme.section} relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
             <h2 className={`text-base text-center font-normal`}>
               <span className="font-semibold">{person.preferredName ? person.preferredName : person.firstName}</span>,
               update your avatar, personal information & profile questions here.

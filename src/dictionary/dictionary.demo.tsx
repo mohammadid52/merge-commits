@@ -266,6 +266,7 @@ const sideBarLinksDict: any = {
     LESSON_BUILDER: 'Lesson Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
+    DASHBOARD: 'Dashboard',
   },
   ES: {
     REGISTRATION: 'Registro',
