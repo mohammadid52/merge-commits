@@ -16,7 +16,7 @@ const ComponentLoading = () => {
           />
         </div>
         <div
-          className={`w-64 h-16 p-8 text-lg text-center text-blue-100 flex flex-col justify-center items-center font-light bg-darker-gray  shadow-xl rounded-b-lg`}>
+          className={`w-64 h-16 p-8 text-sm text-center text-blue-100 flex flex-col justify-center items-center font-light bg-darker-gray  shadow-xl rounded-b-lg`}>
           <p>{appDict[userLanguage].LOADING} </p>
         </div>
       </div>
