@@ -18,7 +18,12 @@ export interface QuestionProps {
   question?: QuestionInterface;
   questionIndex?: number;
   questionKey: any;
-  handleInputChange?: (id: number | string, value: string | string[], checkpointID: string) => void;
+  handleInputChange?: (
+    id: number | string,
+    value: string | string[],
+    checkpointID: string,
+    otherValue?: string
+  ) => void;
   value?: ResponseState;
 }
 
@@ -94,11 +99,7 @@ const Question = (props: QuestionProps) => {
     }
   };
 
-  return (
-    <>
-      {question && question.question.type ? questionSwitch(questionIndex, questionKey) : null}
-    </>
-  );
+  return <>{question && question.question.type ? questionSwitch(questionIndex, questionKey) : null}</>;
 };
 
 export default Question;

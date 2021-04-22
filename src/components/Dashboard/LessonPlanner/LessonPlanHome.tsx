@@ -33,26 +33,11 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     setLessonLoading,
     syllabusLoading,
     setSyllabusLoading,
+    handleRoomSelection,
   } = props;
 
   const { state, dispatch } = useContext(GlobalContext);
   useHistory();
-
-
-  // useEffect(() => {
-  //   getCourse('1');
-  // }, []);
-  //
-  // async function getCourse(id: string) {
-  //   try {
-  //     const courses: any = await API.graphql(graphqlOperation(customQueries.getCourse, { id: '1' }));
-  //     const lessons = courses.data.getCourse.classrooms.items;
-  //     setListCurriculum(lessons);
-  //     setStatus('done');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 
   const handleSyllabusActivation = async (syllabusID: string) => {
     const roomID = state.activeRoom;
@@ -81,9 +66,8 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       maxPersons: roomStateObject.room.maxPersons,
       activeSyllabus: syllabusID,
     };
-    console.log('lessonplanhome activateSyl --> ', input)
+    console.log('lessonplanhome activateSyl --> ', input);
 
-    //console.log('lessonplanner -> roomstateObj -> ', roomStateObject )
     try {
       const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));
       await updateRoomMutation;
@@ -102,6 +86,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   return (
     <Classroom
+      handleRoomSelection={handleRoomSelection}
       activeRoomInfo={activeRoomInfo}
       currentPage={currentPage}
       setCurrentPage={setCurrentPage}
