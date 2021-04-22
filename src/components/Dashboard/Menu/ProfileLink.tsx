@@ -55,11 +55,13 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
               </div>
             )}
           </div>
-          <div className="ml-3">
+          <div className="ml-3 flex items-start w-auto flex-col">
             <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">{`${state.user.firstName} ${state.user.lastName}`}</p>
-            <p className="text-xs font-medium text-gray-400 group-hover:text-gray-300">
-              {getUserRoleString(state.user.role)}
-            </p>
+            <div className="flex items-center justify-center px-1.5 py-0.5 bg-gray-600 rounded mt-0.5 w-auto">
+              <p className="text-xs font-semibold text-gray-300  group-hover:text-gray-300">
+                {getUserRoleString(state.user.role)}
+              </p>
+            </div>
           </div>
         </div>
       </a>
