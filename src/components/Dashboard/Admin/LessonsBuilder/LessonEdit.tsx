@@ -136,11 +136,18 @@ const LessonEdit = (props: LessonEditProps) => {
       if (currentStepIdx === 0) {
         history.push('/dashboard/lesson-builder');
       } else {
-        const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-        setActiveStep(prevStep);
+        if (lessonType === 'lesson') {
+          const prevStep: string = lessonScrollerStep[0].name;
+          setActiveStep(prevStep);
+        } else {
+          const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
+          setActiveStep(prevStep);
+        }
       }
     }
   };
+
+  console.log(activeStep);
 
   const onModalSave = () => {
     if (currentStepIdx === 0) {
