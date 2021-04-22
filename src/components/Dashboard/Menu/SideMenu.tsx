@@ -34,9 +34,11 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
   };
 
   return (
-    <div className="bg-gray-800 md:flex w-auto md:flex-shrink-0">
-      <div className="flex flex-col w-56">
-        <div className="flex flex-col h-0 flex-1">
+    <div
+      style={{ minWidth: '16rem', maxWidth: '16rem' }}
+      className="md:flex w-auto md:flex-shrink-0 w-60 overflow-x-hidden">
+      <div className="flex flex-col">
+        <div className="flex flex-col h-screen flex-1">
           <div onClick={handleLink} className="flex items-center h-16 justify-center flex-shrink-0 px-4 bg-gray-900">
             <img className="h-8 w-auto" src={getAsset(clientKey, 'main_logo')} alt="Workflow" />
           </div>
@@ -51,7 +53,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
             />
-            <nav className="flex-1 px-2 py-4 bg-gray-800 space-y-1">
+            <nav className="flex-1 py-4 bg-gray-800 space-y-1">
               <Links
                 handleRoomSelection={handleRoomSelection}
                 setActiveRoomSyllabus={setActiveRoomSyllabus}

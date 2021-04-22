@@ -185,7 +185,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     title: room.name,
                     active: room.id === state.activeRoom && state.currentPage === 'lesson-planner',
                     path: room.id,
-                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
+                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
                   };
                 }),
             },
@@ -319,15 +319,22 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
 
               const exists = openItems.indexOf(link.label) !== -1;
 
+              const innerLinkActive = (link.subMenuItems || []).filter((d: any) => {
+                const activeLink =
+                  findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1 || d.active;
+
+                return activeLink;
+              });
+
               return link.subMenuItems && link.subMenuItems.length > 0 ? (
-                <div key={`link_${key}`} className={`space-y-1`}>
+                <div key={`link_${key}`} className={`pb-2`}>
                   <a
                     id={link.path}
                     onClick={(e) => handleLink(e, link.label, true)}
                     type="button"
                     className={`${
-                      open && `bg-gray-700 hover:bg-gray-700`
-                    } text-gray-400 hover:text-gray-300 my-2 cursor-pointer hover:text-white flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                      (open || innerLinkActive.length > 0) && `bg-gray-700 hover:bg-gray-700`
+                    } text-gray-400 hover:text-gray-300 cursor-pointer px-4 hover:text-white flex items-center py-2 text-sm font-medium`}
                     aria-controls="sub-menu-1"
                     aria-expanded="false">
                     {getMenuIcon(link.label, link.path)}
@@ -342,7 +349,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     </svg>
                   </a>
                   {exists && (
-                    <div className="space-y-1" id="sub-menu-1">
+                    <div className="" id="sub-menu-1">
                       {link.subMenuItems.map((d: any) => {
                         const activeLink =
                           findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1 || d.active;
@@ -351,12 +358,13 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                           <a
                             key={`${d.path}_key`}
                             id={d.path}
+                            style={{ paddingLeft: '3.3rem' }}
                             onClick={(e) => {
                               if (d.onClick) {
                                 d.onClick();
                               } else handleLink(e, link.label);
                             }}
-                            className={`group block cursor-pointer truncate ... w-full items-center pl-11 pr-2 py-2 text-sm font-medium rounded-md hover:bg-gray-50 ${
+                            className={`group block cursor-pointer my-1 truncate w-full px-4 items-center pr-4 py-2 text-sm font-medium hover:bg-gray-50 ${
                               activeLink ? 'text-gray-300' : 'text-gray-600'
                             }`}>
                             {d.title}
@@ -373,7 +381,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                   onClick={(e) => handleLink(e, link.label)}
                   className={`${
                     path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
-                  } text-gray-400 hover:text-gray-300 my-2 truncate ... cursor-pointer hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md`}>
+                  } text-gray-400 hover:text-gray-300 truncate px-4 mb-2 cursor-pointer hover:text-white group flex items-center py-2 text-sm font-medium`}>
                   <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
                   {link.name}
                 </a>
