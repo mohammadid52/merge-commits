@@ -252,7 +252,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
             !dataLoading ?
               <>
                 <div className="flex items-center w-6/10 m-auto px-2 mb-8">
-                  <SelectorWithAvatar selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
+                  <SelectorWithAvatar imageFromS3={false} selectedItem={newMember} list={availableUsers} placeholder={dictionary['ADD_PLACEHOLDER']} onChange={onChange} />
                   <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
                 </div>
 
