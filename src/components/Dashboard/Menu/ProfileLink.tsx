@@ -32,7 +32,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
     getUrl();
   }, [state.user]);
-
+  
   return (
     <div
       onClick={handleLink}
@@ -41,7 +41,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
         <div className="flex items-center">
           <div style={{ width: 48, height: 48, minWidth: 48, minHeight: 48 }} className="">
             {state.user.image ? (
-              <img className="inline-block rounded" style={{ width: 48, height: 48 }} src={imageUrl} alt="" />
+              imageUrl.length > 0 ? <img className="inline-block rounded" style={{ width: 48, height: 48 }} src={imageUrl} alt="" /> : <div className="inline-block rounded bg-gray-400" style={{ width: 48, height: 48 }}/>
             ) : (
               <div
                 style={{
