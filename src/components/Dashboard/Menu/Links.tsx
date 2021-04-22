@@ -364,7 +364,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                                 d.onClick();
                               } else handleLink(e, link.label);
                             }}
-                            className={`group block cursor-pointer my-1 truncate w-full px-4 items-center pr-4 py-2 text-sm font-medium hover:bg-gray-50 ${
+                            className={`group block cursor-pointer my-1 truncate w-full px-4 items-center pr-4 py-2 text-sm font-medium hover:text-gray-400 ${
                               activeLink ? 'text-gray-300' : 'text-gray-600'
                             }`}>
                             {d.title}
