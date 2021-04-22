@@ -519,7 +519,7 @@ const Dashboard = (props: DashboardProps) => {
   }, [syllabusLessonSequence]);
 
   return (
-    <div className="h-screen flex overflow-hidden bg-gray-100">
+    <div className="h-screen flex overflow-hidden container_background">
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}

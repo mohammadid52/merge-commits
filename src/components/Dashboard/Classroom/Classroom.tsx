@@ -306,7 +306,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         bannerImg={bannerImg}
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
-        <div className="p-8 h-full w-full">
+        <div className="p-8 w-full">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
             <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
               <span>

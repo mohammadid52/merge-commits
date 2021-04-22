@@ -274,23 +274,23 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const getMenuIcon = (label: string, url: string) => {
     switch (label) {
       case 'People':
-        return <IoIosPeople className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <IoIosPeople className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Registration':
-        return <AiOutlineUsergroupAdd className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <AiOutlineUsergroupAdd className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Classroom':
-        return <IoBookOutline className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <IoBookOutline className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Dashboard':
-        return <IoBookOutline className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <IoBookOutline className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Lesson Planner':
-        return <FaAppleAlt className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <FaAppleAlt className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Lesson Builder':
-        return <IoMdBuild className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <IoMdBuild className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Institutions':
-        return <HiOutlineOfficeBuilding className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <HiOutlineOfficeBuilding className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Anthology':
-        return <AiOutlineBook className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <AiOutlineBook className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Noticeboard':
-        return <BsReverseLayoutSidebarReverse className="text-gray-500 mr-3 h-6 w-6" id={url} />;
+        return <BsReverseLayoutSidebarReverse className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       default:
         return '';
     }
@@ -333,16 +333,20 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     onClick={(e) => handleLink(e, link.label, true)}
                     type="button"
                     className={`${
-                      (open || innerLinkActive.length > 0) && `bg-gray-700 hover:bg-gray-700`
-                    } text-gray-400 hover:text-gray-300 cursor-pointer px-4 hover:text-white flex items-center py-2 text-sm font-medium`}
+                      path === currentPath
+                        ? `sidenav_main_item_active ${theme.borderColor[themeColor]}`
+                        : 'border-transparent'
+                    } ${
+                      open || (innerLinkActive.length > 0 && 'sidenav_main_item_active_color')
+                    } cursor-pointer sidenav_main_item border-l-4 px-4 flex items-center py-2 text-sm font-regular`}
                     aria-controls="sub-menu-1"
                     aria-expanded="false">
                     {getMenuIcon(link.label, link.path)}
                     {link.name}
                     <svg
                       className={`${
-                        exists ? 'text-gray-400 rotate-90' : 'text-gray-300'
-                      } text-gray-300 ml-auto h-5 w-5 transform group-hover:text-gray-400 transition-colors ease-in-out duration-150`}
+                        exists ? 'rotate-90' : 'text-gray-300'
+                      }  ml-auto h-5 w-5 transform transition-colors ease-in-out duration-150`}
                       viewBox="0 0 20 20"
                       aria-hidden="true">
                       <path d="M6 6L14 10L6 14V6Z" fill="currentColor" />
@@ -364,9 +368,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                                 d.onClick();
                               } else handleLink(e, link.label);
                             }}
-                            className={`group block cursor-pointer my-1 truncate w-full px-4 items-center pr-4 py-2 text-sm font-medium hover:text-gray-400 ${
-                              activeLink ? 'text-gray-300' : 'text-gray-600'
-                            }`}>
+                            className={`${
+                              activeLink
+                                ? `sidenav_sub_item_active ${theme.borderColor[themeColor]}`
+                                : 'border-transparent'
+                            } group sidenav_sub_item block cursor-pointer my-1 border-l-4 truncate w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
                             {d.title}
                           </a>
                         );
@@ -379,9 +385,11 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                   key={`link_${key}`}
                   id={link.path}
                   onClick={(e) => handleLink(e, link.label)}
-                  className={`${
-                    path === `/dashboard/${link.path}` && `bg-gray-700 hover:bg-gray-700 ${theme.text[themeColor]}`
-                  } text-gray-400 hover:text-gray-300 truncate px-4 mb-2 cursor-pointer hover:text-white group flex items-center py-2 text-sm font-medium`}>
+                  className={`truncate px-4 mb-2 cursor-pointer sidenav_main_item group border-l-4 flex items-center py-2 text-sm font-regular ${
+                    path === `/dashboard/${link.path}`
+                      ? `sidenav_main_item_active  ${theme.borderColor[themeColor]}`
+                      : `border-transparent`
+                  }`}>
                   <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
                   {link.name}
                 </a>

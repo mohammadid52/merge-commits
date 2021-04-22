@@ -45,6 +45,60 @@
   }
 }
 
+.container_background {
+  background-color: #f0f2f5;
+}
+
+.sidenav {
+  background: #20262b;
+  user-select: none;
+  position: relative;
+  transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  .sidenav_icon {
+    color: #c6c6c6;
+  }
+
+  .sidenav_icon_collapsed {
+    position: absolute;
+    right: -15px;
+  }
+
+  .sidenav_logo,
+  .sidenav_profile {
+    min-width: 16rem;
+    border-bottom: 1px solid #2b343b;
+  }
+
+  .sidenav_sub_item {
+    color: #c6c6c6;
+
+    &:hover {
+      background: #2b343b;
+    }
+  }
+
+  .sidenav_main_item {
+    color: #c6c6c6;
+
+    &:hover {
+      background: #2b343b;
+    }
+  }
+
+  .sidenav_sub_item_active {
+    background: #2b343b;
+  }
+
+  .sidenav_main_item_active {
+    background: #2b343b;
+  }
+
+  .sidenav_main_item_active_color {
+    color: #fff;
+  }
+}
+
 .white_back {
   background-color: white;
   border-radius: 1rem;

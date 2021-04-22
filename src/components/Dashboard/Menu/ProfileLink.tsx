@@ -34,12 +34,14 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   }, [state.user]);
 
   return (
-    <div onClick={handleLink} className="flex-shrink-0 bg-gray-700 flex border-t cursor-pointer border-gray-200 p-4">
+    <div
+      onClick={handleLink}
+      className="flex-shrink-0 flex border-t sidenav_profile cursor-pointer border-gray-200 p-4">
       <a className="flex-shrink-0 w-full group block">
         <div className="flex items-center">
-          <div style={{ width: 64, height: 64, minWidth: 64, minHeight: 64 }} className="">
+          <div style={{ width: 48, height: 48, minWidth: 48, minHeight: 48 }} className="">
             {state.user.image ? (
-              <img className="inline-block rounded" style={{ width: 64, height: 64 }} src={imageUrl} alt="" />
+              <img className="inline-block rounded" style={{ width: 48, height: 48 }} src={imageUrl} alt="" />
             ) : (
               <div
                 style={{
@@ -58,7 +60,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
           <div className="ml-3 flex items-start w-auto flex-col">
             <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">{`${state.user.firstName} ${state.user.lastName}`}</p>
             <div className="flex items-center justify-center px-1.5 py-0.5 bg-gray-600 rounded mt-0.5 w-auto">
-              <p className="text-xs font-semibold text-gray-300  group-hover:text-gray-300">
+              <p className="text-xs font-regular text-gray-300  group-hover:text-gray-300">
                 {getUserRoleString(state.user.role)}
               </p>
             </div>
