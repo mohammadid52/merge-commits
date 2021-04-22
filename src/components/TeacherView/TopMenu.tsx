@@ -26,15 +26,13 @@ interface TopMenuControlProps {
   handleClick: () => void;
   handleHomePopup: () => void;
   pageViewed: { pageID: number; stage: string };
-  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+  handlePageChange: any;
   setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type LessonInfoTitleBarProps = Pick<TopMenuControlProps, 'handleOpen' | 'handleComplete' | 'handleLessonButton'>;
 
-const TopMenuControl: React.FC<TopMenuControlProps> = (
-  props: TopMenuControlProps
-) => {
+const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProps) => {
   const {
     shareable,
     setShareable,
@@ -48,8 +46,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
     handleClick,
     handleHomePopup,
     pageViewed,
-    setPageViewed,
-    setQuickRegister
+    handlePageChange,
+    setQuickRegister,
   } = props;
 
   const { state, theme, dispatch } = useContext(LessonControlContext);
@@ -62,15 +60,14 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
     } else {
       return 0;
     }
-  }
+  };
 
   return (
     <>
       {/* LABELS */}
 
       <div
-        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b-0 border-gray-400 flex flex-row items-center`}
-      >
+        className={`relative  h-0.5/10 h-8 top-0 font-medium bg-light-gray bg-opacity-10 border-b-0 border-gray-400 flex flex-row items-center`}>
         {/* LEFT */}
         <LessonInfoTitleBar
           handleOpen={handleOpen}
@@ -94,15 +91,18 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
 
       {/* BUTTONS & CONTENT */}
 
-      <div
-        className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50`}
-      >
+      <div className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50`}>
         {/* LEFT */}
         <div className="h-full  w-4/10 min-w-100 max-w-160  border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between ">
           <div className="w-full flex flex-col my-auto">
-            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}: {studentsOnline()}</p>
+            <p className="text-xs">
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDDENT_ONLINE']}: {studentsOnline()}
+            </p>
             <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity</p>
-            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}: {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}</p>
+            <p className="text-xs">
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}:{' '}
+              {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}
+            </p>
             <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: 1 hr 15 mins</p>
           </div>
         </div>
@@ -112,12 +112,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (
         {/* CONTROL START */}
         <div
           className="relative 
-            w-6/10 lg:w-full h-20 flex flex-col items-center z-100"
-        >
-          <LessonControlBar
-            pageViewed={pageViewed}
-            setPageViewed={setPageViewed}
-          />
+            w-6/10 lg:w-full h-20 flex flex-col items-center z-100">
+          <LessonControlBar pageViewed={pageViewed} handlePageChange={handlePageChange} />
         </div>
         {/* CONTROL END */}
       </div>

@@ -6,7 +6,6 @@ import { AnthologyContentInterface } from '../components/Dashboard/Anthology/Ant
 import * as mutations from '../graphql/mutations';
 import { useParams } from 'react-router-dom';
 
-
 interface inputs {
   subscription?: any;
   subscribeFunc?: () => any;
@@ -27,7 +26,7 @@ interface timerStateType {
 }
 
 const useStudentTimer = (inputs?: inputs) => {
-  const urlParams: any = useParams()
+  const urlParams: any = useParams();
   const { subscription, subscribeFunc, dispatch, callback, state } = inputs;
   const [params, setParams] = useState<timerStateType>({
     subscription: subscription,
@@ -54,10 +53,12 @@ const useStudentTimer = (inputs?: inputs) => {
     if (isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
-        setactivityTimeout(setTimeout(() => {
-          console.log('VIEWING -> page switch -> save')
-          dispatch({ type: 'INCREMENT_SAVE_COUNT' })
-        }, 2000));
+        setactivityTimeout(
+          setTimeout(() => {
+            console.log('VIEWING -> page switch -> save');
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+          }, 2000)
+        );
       } else if (!state.viewing) {
         if (typeOfTimeout === '') {
           console.log('%c save timer: ', 'background: #222; color: #bada55', 'page switch save triggered after 10s');
@@ -79,14 +80,15 @@ const useStudentTimer = (inputs?: inputs) => {
   // COMPONENT CHANGE --> checkpoint in lesson && lesson
   useEffect(() => {
     const isLesson = state.data.lesson.type === 'lesson';
-    if(isLesson) {
+    if (isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
-        setactivityTimeout(setTimeout(() => {
-          dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-          console.log('VIEWING -> EDIT -> save');
-        }, 2000));
-
+        setactivityTimeout(
+          setTimeout(() => {
+            dispatch({ type: 'INCREMENT_SAVE_COUNT' });
+            console.log('VIEWING -> EDIT -> save');
+          }, 2000)
+        );
       } else if (!state.viewing) {
         if (typeOfTimeout === '') {
           console.log('%c save timer: ', 'background: #bada55; color: #25362a', 'edit save triggered after 60s');
@@ -106,23 +108,22 @@ const useStudentTimer = (inputs?: inputs) => {
 
   // STUDENT STATUS SAVE TRIGGER
   // --- CAN MAYBE BE DELETED ---
-  useEffect(() => {
-    if (params.state.studentStatus === 'ACTIVE' && params.state.subscription._state === 'closed') {
-      params.subscribeFunc();
-      updateStudentData('status');
-    }
-
-    if (params.state.studentStatus === 'IDLE' || params.state.studentStatus === 'OFFLINE') {
-      updateStudentData('status');
-    }
-
-    if (params.subscription && params.state.studentStatus === 'OFFLINE') {
-      clearAllTimers();
-      params.subscription.unsubscribe();
-      console.log('unsubscribed', params.state.subscription);
-    }
-  }, [params.state.studentStatus]);
-
+  // useEffect(() => {
+  //   if (params.state.studentStatus === 'ACTIVE' && params.state.subscription.state === 'closed') {
+  //     params.subscribeFunc();
+  //     updateStudentData('status');
+  //   }
+  //
+  //   if (params.state.studentStatus === 'IDLE' || params.state.studentStatus === 'OFFLINE') {
+  //     updateStudentData('status');
+  //   }
+  //
+  //   if (params.subscription && params.state.studentStatus === 'OFFLINE') {
+  //     clearAllTimers();
+  //     params.subscription.unsubscribe();
+  //     console.log('unsubscribed', params.state.subscription);
+  //   }
+  // }, [params.state.studentStatus]);
 
   /**
    *
@@ -130,10 +131,9 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   useEffect(() => {
-      updateStudentData('autosave');
-      handleUpdateQuestionData();
+    updateStudentData('autosave');
+    handleUpdateQuestionData();
   }, [params.state.saveCount]);
-
 
   /**
    *
@@ -157,7 +157,7 @@ const useStudentTimer = (inputs?: inputs) => {
       default:
         return {};
     }
-  }
+  };
 
   const getAnthologyContent = () => {
     const template: AnthologyContentInterface = {
@@ -175,23 +175,23 @@ const useStudentTimer = (inputs?: inputs) => {
             return {
               ...template,
               subType: 'story',
-              title: (params.state.componentState?.story) ? params.state.componentState?.story.title : '',
-              content: (params.state.componentState?.story) ? params.state.componentState.story.story : '',
+              title: params.state.componentState?.story ? params.state.componentState?.story.title : '',
+              content: params.state.componentState?.story ? params.state.componentState.story.story : '',
             };
           case 'poem':
             return {
               ...template,
               subType: 'poem',
-              title: (params.state.componentState?.poem) ? params.state.componentState?.poem.title : '',
-              content: (params.state.componentState?.poem) ? params.state.componentState.poem?.editInput : '',
+              title: params.state.componentState?.poem ? params.state.componentState?.poem.title : '',
+              content: params.state.componentState?.poem ? params.state.componentState.poem?.editInput : '',
             };
           case 'notes':
             return {
               ...template,
               type: 'notes',
               subType: 'notes',
-              title: (params.state.componentState?.notes) ? params.state.data.lesson.title : '',
-              content: (params.state.componentState?.notes) ? params.state.componentState.notes?.content : '',
+              title: params.state.componentState?.notes ? params.state.data.lesson.title : '',
+              content: params.state.componentState?.notes ? params.state.componentState.notes?.content : '',
             };
           default:
             return {};
@@ -205,7 +205,6 @@ const useStudentTimer = (inputs?: inputs) => {
       }
     }, []);
   };
-
 
   /**
    *
@@ -232,15 +231,13 @@ const useStudentTimer = (inputs?: inputs) => {
       try {
         const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
         dispatch({ type: 'SAVED_CHANGES' });
-
       } catch (error) {
         console.error(error);
       }
     } else {
-      console.log('studentDataID not yet created')
+      console.log('studentDataID not yet created');
     }
   };
-
 
   /**
    * GET or CREATE QUESTION DATA
@@ -248,7 +245,7 @@ const useStudentTimer = (inputs?: inputs) => {
   const updateQuestionData = async (responseObj: any) => {
     try {
       const updatedQuestionData = await API.graphql(
-        graphqlOperation(mutations.updateQuestionData, { input: responseObj }),
+        graphqlOperation(mutations.updateQuestionData, { input: responseObj })
       );
       // console.log('updateQuestionData responseObj -> ', responseObj);
     } catch (err) {
@@ -259,8 +256,7 @@ const useStudentTimer = (inputs?: inputs) => {
   const handleUpdateQuestionData = async () => {
     if (typeof state.questionData === 'object') {
       let questionDataUpdateArray = state.questionDataUpdate;
-      if(questionDataUpdateArray){
-
+      if (questionDataUpdateArray) {
         await questionDataUpdateArray.reduce((_: any, val: any) => {
           let responseObject = {
             id: val.id,
@@ -275,11 +271,9 @@ const useStudentTimer = (inputs?: inputs) => {
 
           updateQuestionData(responseObject);
         }, null);
-
       }
-
     }
-  }
+  };
 
   /**
    *

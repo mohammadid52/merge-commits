@@ -1,8 +1,7 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { globalReducer } from '../reducers/GlobalReducer';
 import { globalState } from '../state/GlobalState';
 import { getClientKey } from '../utilities/strings';
-import { useCookies } from 'react-cookie';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 
@@ -120,8 +119,6 @@ export const standardTheme = {
   },
 };
 
-// TODO: replace dashboard.sectionTitle with << font-medium h-12 justify-center items-center text-left >>
-
 interface GlobalProps {
   children: React.ReactNode;
 }
@@ -130,7 +127,6 @@ export const GlobalContext = React.createContext(null);
 
 export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const [state, dispatch] = useReducer(globalReducer, globalState);
-  // const [cookies, setCookie] = useCookies([`location`]);
 
   const theme = standardTheme;
   const globalStateAccess = state;
@@ -138,11 +134,11 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const uLang = userLanguage;
   const clientKey = getClientKey();
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (state.user && state.user.location && state.user.location.length > 0) {
       updatePersonLocation();
-    } else {
-      // console.log('dashboard: ', 'user location not initialized yet...')
     }
   }, [state.user]);
 

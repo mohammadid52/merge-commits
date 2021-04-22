@@ -6,8 +6,10 @@ import Banner from '../LessonComponents/Banner';
 import { stripStyleFromHTML } from '../../../utilities/strings';
 
 interface QuestionGroupInfoProps {
+  checkpointsLoaded?: boolean;
   isTeacher?: boolean;
   checkpointID: string;
+  checkpoint?: any;
   showTitle?: boolean;
 }
 
@@ -15,7 +17,7 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, checkpointID, showTitle } = props;
+  const { checkpointsLoaded, isTeacher, checkpointID, checkpoint, showTitle } = props;
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme } = switchContext;
 
@@ -31,32 +33,16 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
     instructionsTitle: '',
   });
 
-  const getQuestionGroupInfo = () => {
-    const getCheckpointObj = state.data.lesson.checkpoints.items.find(
-      (checkpointObj: any) => checkpointObj.id === checkpointID
-    );
-
-    const quickRepair = (str: string) => {
-      if (str) {
-        return str.replace('color: black', 'color: white');
-      } else return '';
-    };
-
-    setInfo({
-      title: getCheckpointObj?.title,
-      subtitle: getCheckpointObj?.subtitle,
-      instructions: stripStyleFromHTML(getCheckpointObj?.instructions),
-      instructionsTitle: getCheckpointObj?.instructionsTitle,
-    });
-  };
-
   useEffect(() => {
-    if (state.data.lesson.checkpoints) {
-      if (state.data.lesson.checkpoints.items.length > 0) {
-        getQuestionGroupInfo();
-      }
+    if (checkpoint) {
+      setInfo({
+        title: checkpoint?.title,
+        subtitle: checkpoint?.subtitle,
+        instructions: stripStyleFromHTML(checkpoint?.instructions),
+        instructionsTitle: checkpoint?.instructionsTitle,
+      });
     }
-  }, [state.data.lesson.checkpoints]);
+  }, [checkpoint]);
 
   return (
     <div className={theme.section}>

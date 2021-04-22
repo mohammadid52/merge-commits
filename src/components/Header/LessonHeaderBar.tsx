@@ -8,21 +8,23 @@ import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
 import SurveyTopMenu from '../Lesson/Header/SurveyTopMenu';
 import { LessonHeaderBarProps } from '../../interfaces/LessonComponentsInterfaces';
-
+import ErrorBoundary from '../Error/ErrorBoundary';
 
 const LessonHeaderBar = (props: LessonHeaderBarProps) => {
-  const {overlay, setOverlay} = props;
+  const { lessonDataLoaded, checkpointsLoaded, overlay, setOverlay } = props;
   const history = useHistory();
   const { theme, state, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
   useEffect(() => {
-    const shouldDispatch = state.pages.length > 0 ;
+    if (lessonDataLoaded) {
+      const shouldDispatch = state.pages.length > 0;
       if (shouldDispatch && !state.pages[0].active) {
         dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress });
       }
-  }, [state.pages, state.currentPage]);
+    }
+  }, [lessonDataLoaded, state.pages, state.currentPage]);
 
   useEffect(() => {
     if (cookies.lesson) {
@@ -43,7 +45,10 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
   };
 
   return (
-    <div className={`z-40 relative center w-full ${state.data.lesson.type === 'lesson' ? 'h-.7/10' : ''} ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
+    <div
+      className={`z-40 relative center w-full ${
+        lessonDataLoaded && state.data.lesson.type === 'lesson' ? 'h-.7/10' : ''
+      } ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
       {/**
        *
        * Potentially need to fix html below
@@ -64,17 +69,14 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
         />
       </div>
 
-      {
-        state.data.lesson.type === 'lesson' && (
+      {lessonDataLoaded ? (
+        state.data.lesson.type === 'lesson' ? (
           <LessonTopMenu handlePopup={handlePopup} />
+        ) : (
+          <SurveyTopMenu lessonDataLoaded={lessonDataLoaded} checkpointsLoaded={checkpointsLoaded} />
         )
-      }
-      {
-        state.data.lesson.type === 'survey' && (
-          <SurveyTopMenu />
-        )
-      }
-
+      ) : null}
+      {/*  */}
 
       {/*<NotificationBar />*/}
 
@@ -86,7 +88,14 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
        *
        */}
 
-      <SideMenu handlePopup={handlePopup} overlay={overlay} setOverlay={setOverlay}/>
+      {lessonDataLoaded && (
+        <SideMenu
+          lessonDataLoaded={lessonDataLoaded}
+          handlePopup={handlePopup}
+          overlay={overlay}
+          setOverlay={setOverlay}
+        />
+      )}
     </div>
   );
 };
