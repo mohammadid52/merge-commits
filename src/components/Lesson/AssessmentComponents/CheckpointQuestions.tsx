@@ -21,6 +21,7 @@ interface CheckpointQuestionsProps {
   isTeacher?: boolean;
   handleSetTitle?: React.Dispatch<React.SetStateAction<string>>;
   checkpointType?: string;
+  checkpointsItems?: any[];
 }
 
 export interface ResponseState {
