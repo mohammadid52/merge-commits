@@ -17,6 +17,7 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
+import { getSessionData, setSessionData } from '../../utilities/sessionData';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -136,11 +137,20 @@ const Dashboard = (props: DashboardProps) => {
     const userEmail = state.user?.email ? state.user?.email : cookies.auth?.email;
     const userAuthId = state.user?.authId ? state.user?.authId : cookies.auth?.authId;
     try {
-      // this any needs to be changed once a solution is found!!!
-      const user: any = await API.graphql(
-        graphqlOperation(queries.getPerson, { email: userEmail, authId: userAuthId })
-      );
-      setUser(user.data.getPerson);
+      const queryObj = {
+        name: 'queries.getPerson',
+        valueObj: { email: userEmail, authId: userAuthId },
+      };
+      const sessionData = getSessionData(queryObj);
+      if (sessionData) {
+        console.log('getUser -> ', 'getUser fetch skipped');
+        setUser(sessionData.user.data.getPerson);
+      } else {
+        const user: any = await API.graphql(graphqlOperation(queries.getPerson, queryObj.valueObj));
+        console.log('getUser -> ', 'getUser fetch set to session');
+        setSessionData(queryObj, user);
+        setUser(user.data.getPerson);
+      }
     } catch (error) {
       if (!userEmail && !userAuthId) {
         removeCookie('auth', { path: '/' });
@@ -178,18 +188,33 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
   const getDashboardData = async (authId: string, email: string) => {
     try {
-      const dashboardDataFetch: any = await API.graphql(
-        graphqlOperation(customQueries.getDashboardData, {
+      const queryObj = {
+        name: 'customQueries.getDashboardData',
+        valueObj: {
           authId: authId,
           email: email,
-        })
-      );
-      const response = await dashboardDataFetch;
-      let arrayOfResponseObjects = response?.data.getPerson.classes.items;
+        },
+      };
+      const sessionData = getSessionData(queryObj);
+      if (sessionData) {
+        setHomeData(sessionData);
+        console.log('sessionData GET Dashboard --> ');
+      } else {
+        const dashboardDataFetch: any = await API.graphql(
+          graphqlOperation(customQueries.getDashboardData, {
+            authId: authId,
+            email: email,
+          })
+        );
+        const response = await dashboardDataFetch;
+        let arrayOfResponseObjects = response?.data.getPerson.classes.items;
 
-      arrayOfResponseObjects = arrayOfResponseObjects.filter((item: any) => item.class !== null);
+        arrayOfResponseObjects = arrayOfResponseObjects.filter((item: any) => item.class !== null);
 
-      setHomeData(arrayOfResponseObjects);
+        setHomeData(arrayOfResponseObjects);
+        console.log('sessionData SET Dashboard --> ');
+        setSessionData(queryObj, arrayOfResponseObjects);
+      }
     } catch (e) {
       console.error('getDashbaordData -> ', e);
     } finally {
