@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation, useParams, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoImage } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
