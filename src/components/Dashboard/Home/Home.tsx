@@ -197,9 +197,9 @@ const Home = (props: ClassroomControlProps) => {
           <div className="my-8">
             <SectionTitleV3
               title={'Your Teachers'}
-              fontSize="lg"
+              fontSize="xl"
               fontStyle="semibold"
-              extraContainerClass="max-w-256"
+              extraContainerClass="max-w-256 px-6"
               borderBottom
               extraClass="leading-6 text-gray-900"
             />

@@ -50,7 +50,7 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
   return (
     <>
       <SectionTitleV3
-        extraContainerClass="max-w-256 mt-8"
+        extraContainerClass="max-w-256 mt-8 px-6"
         title={'Your Classrooms'}
         withButton={
           classList &&
@@ -64,7 +64,7 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
             </div>
           )
         }
-        fontSize="lg"
+        fontSize="xl"
         fontStyle="semibold"
         extraClass="leading-6 text-gray-900"
         borderBottom
@@ -109,7 +109,7 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
                             <a className="hover:underline">{type}</a>
                           </p>
                           <a className="block mt-2">
-                            <p className="text-lg font-semibold text-gray-900">{name}</p>
+                            <p className="text-lg font-medium text-gray-900">{name}</p>
                             <p className="mt-2 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>
@@ -125,7 +125,7 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
                             </a>
                           </div>
                           <div className="ml-3 w-auto">
-                            <p className="text-sm font-semibold text-gray-900">
+                            <p className="text-sm font-medium text-gray-900">
                               <a className="hover:underline">{firstName + ' ' + lastName}</a>
                             </p>
                             <p

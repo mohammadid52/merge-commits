@@ -35,8 +35,8 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
     <>
       <SectionTitleV3
         title={'Your Classmates'}
-        extraContainerClass="max-w-256"
-        fontSize="lg"
+        extraContainerClass="max-w-256 px-6"
+        fontSize="xl"
         fontStyle="semibold"
         borderBottom
         extraClass="leading-6 text-gray-900"
@@ -86,7 +86,7 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
                           )}
                           <div className="space-y-2">
                             <div className="text-xs font-medium lg:text-sm">
-                              <h3 className="font-semibold">{student.firstName + ' ' + student.lastName}</h3>
+                              <h3 className="font-medium">{student.firstName + ' ' + student.lastName}</h3>
                             </div>
                           </div>
                         </div>
