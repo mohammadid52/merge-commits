@@ -119,7 +119,10 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   const handleRoomSelection = (id: string, name: string, i: number, route = 'classroom') => {
-    if (state.activeRoom !== id) {
+    if (
+      (state.activeRoom !== id && state.currentPage !== 'lesson-planner') ||
+      (state.activeRoom !== id && state.currentPage !== 'classroom')
+    ) {
       setActiveRoomName(name);
       dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
       setSyllabusLoading(true); // Trigger loading ui element
