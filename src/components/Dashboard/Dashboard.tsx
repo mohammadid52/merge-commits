@@ -518,6 +518,8 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [syllabusLessonSequence]);
 
+  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+
   return (
     <div className="h-screen flex overflow-hidden container_background">
       {/* <ResizablePanels> */}
@@ -578,6 +580,7 @@ const Dashboard = (props: DashboardProps) => {
               path={`${match.url}/classroom/:roomId`}
               render={() => (
                 <Classroom
+                  isTeacher={isTeacher}
                   currentPage={currentPage}
                   setCurrentPage={setCurrentPage}
                   activeRoomInfo={activeRoomInfo}

@@ -328,7 +328,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 </div>
               </div>
             )}
-
             {isTeacher && state.currentPage === 'lesson-planner' && (
               <>
                 <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
@@ -370,7 +369,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             ) : null}
 
             {showClassDetails && (
-              <div className={`w-full min-h-56 pt-8 pb-4 px-6 bg-white rounded-lg shadow mb-4`}>
+              <div className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
                 <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
               </div>
             )}
