@@ -147,8 +147,6 @@ const LessonEdit = (props: LessonEditProps) => {
     }
   };
 
-  console.log(activeStep);
-
   const onModalSave = () => {
     if (currentStepIdx === 0) {
       return history.goBack();

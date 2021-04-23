@@ -22,6 +22,8 @@ import TextArea from '../../../../Atoms/Form/TextArea';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 interface EditCurricularProps {}
 
@@ -74,6 +76,12 @@ const EditCurricular = (props: EditCurricularProps) => {
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const { BreadcrumsTitles, EditCurriculardict } = useDictionary(clientKey);
 
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+  });
+
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
@@ -83,11 +91,32 @@ const EditCurricular = (props: EditCurricularProps) => {
     },
   ];
 
+  const onModalSave = () => {
+    toggleModal();
+    history.goBack();
+  };
+
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show,
+    });
+  };
+
+  const goBack = () => {
+    if (unsavedChanges) {
+      toggleModal();
+    } else {
+      history.goBack();
+    }
+  };
+
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
       [e.target.name]: e.target.value,
     });
+    setUnsavedChanges(true);
     if (messages.show) {
       setMessages({
         show: false,
@@ -105,6 +134,8 @@ const EditCurricular = (props: EditCurricularProps) => {
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
+    setUnsavedChanges(true);
+
     setCurricularData({
       ...curricularData,
       languages: updatedList,
@@ -120,6 +151,8 @@ const EditCurricular = (props: EditCurricularProps) => {
         value: val,
       },
     });
+    setUnsavedChanges(true);
+
     if (messages.show) {
       setMessages({
         show: false,
@@ -138,6 +171,8 @@ const EditCurricular = (props: EditCurricularProps) => {
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
+    setUnsavedChanges(true);
+
     setSelectedDesigners(updatedList);
   };
 
@@ -196,6 +231,7 @@ const EditCurricular = (props: EditCurricularProps) => {
           isError: false,
         });
         setSaving(false);
+        setUnsavedChanges(false);
       } catch {
         setSaving(false);
         setMessages({
@@ -418,7 +454,7 @@ const EditCurricular = (props: EditCurricularProps) => {
           subtitle={EditCurriculardict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -565,6 +601,9 @@ const EditCurricular = (props: EditCurricularProps) => {
             saveCroppedImage={(img: string) => saveCroppedImage(img)}
             closeAction={toggleCropper}
           />
+        )}
+        {warnModal.show && (
+          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
         )}
       </PageWrapper>
     </div>
