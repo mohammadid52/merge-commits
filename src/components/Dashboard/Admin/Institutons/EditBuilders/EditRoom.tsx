@@ -66,6 +66,7 @@ const EditRoom = (props: EditRoomProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'],
       url: `/dashboard/room-edit?id=${params.get('id')}`,

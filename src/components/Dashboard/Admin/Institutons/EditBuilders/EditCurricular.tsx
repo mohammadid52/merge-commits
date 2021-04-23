@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams, useParams } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoImage } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
@@ -73,6 +73,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
+
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const { BreadcrumsTitles, EditCurriculardict } = useDictionary(clientKey);
 
@@ -84,6 +85,7 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], goBack: true, last: false },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCURRICULUM'],
       url: `/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`,

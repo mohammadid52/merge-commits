@@ -5,7 +5,7 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 import { getAsset } from '../../assets';
 
 interface BreadCrumProps {
-  items: { title: string; url: string; last: boolean; goBack?: boolean }[];
+  items: { title: string; url?: string; last: boolean; goBack?: boolean }[];
 }
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
@@ -21,13 +21,21 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
           <ol className="list-none flex items-center justify-start">
             {items.map((item, i) => (
               <li className="flex items-center w-auto mr-2" style={{ minWidth: 'fit-content' }} key={i}>
-                <NavLink to={item.url}>
+                {!item.goBack ? (
+                  <NavLink to={item.url}>
+                    <span
+                      className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}
+                      onClick={item?.goBack && history.goBack}>
+                      {i === 0 ? item.title.toUpperCase() : item.title}
+                    </span>
+                  </NavLink>
+                ) : (
                   <span
                     className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}
                     onClick={item?.goBack && history.goBack}>
                     {i === 0 ? item.title.toUpperCase() : item.title}
                   </span>
-                </NavLink>
+                )}
                 {!item.last && (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

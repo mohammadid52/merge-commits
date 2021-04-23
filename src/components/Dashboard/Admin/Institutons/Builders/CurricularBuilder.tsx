@@ -84,6 +84,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const checkpointsList: any = [];
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'], url: '/dashboard/curricular-creation', last: true },
   ];
 

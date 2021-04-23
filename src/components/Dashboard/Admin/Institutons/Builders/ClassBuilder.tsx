@@ -64,6 +64,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['Class_Creation'], url: '/dashboard/class-creation', last: true },
   ];
 

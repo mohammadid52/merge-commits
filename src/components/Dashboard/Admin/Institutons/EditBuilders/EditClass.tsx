@@ -66,6 +66,7 @@ const EditClass = (props: EditClassProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `${match.url}?id=${urlParams.get('id')}`, last: true },
   ];
 
