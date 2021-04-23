@@ -6,13 +6,23 @@ import { getAsset } from '../../assets';
 
 interface BreadCrumProps {
   items: { title: string; url?: string; last: boolean; goBack?: boolean }[];
+  unsavedChanges?: boolean;
+  toggleModal?: any;
 }
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
-  const { items } = brdPrps;
+  const { items, unsavedChanges = false, toggleModal } = brdPrps;
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
+
+  const goToUrl = (url: string) => {
+    if (unsavedChanges) {
+      toggleModal();
+    } else {
+      history.push(url);
+    }
+  };
 
   return (
     <div className="flex flex-row my-0 py-0 mb-4">
@@ -22,17 +32,15 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
             {items.map((item, i) => (
               <li className="flex items-center w-auto mr-2" style={{ minWidth: 'fit-content' }} key={i}>
                 {!item.goBack ? (
-                  <NavLink to={item.url}>
-                    <span
-                      className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}
-                      onClick={item?.goBack && history.goBack}>
+                  <div onClick={() => goToUrl(item.url)}>
+                    <span className={`mr-2 cursor-pointer  ${item.last ? theme.text.secondary : theme.text.default}`}>
                       {i === 0 ? item.title.toUpperCase() : item.title}
                     </span>
-                  </NavLink>
+                  </div>
                 ) : (
                   <span
-                    className={`mr-2 ${item.last ? theme.text.secondary : theme.text.default}`}
-                    onClick={item?.goBack && history.goBack}>
+                    className={`mr-2 cursor-pointer ${item.last ? theme.text.secondary : theme.text.default}`}
+                    onClick={() => (unsavedChanges ? toggleModal() : history.goBack())}>
                     {i === 0 ? item.title.toUpperCase() : item.title}
                   </span>
                 )}

@@ -20,6 +20,7 @@ import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { getAsset } from '../../../../../assets';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface RoomBuilderProps {}
 
@@ -62,6 +63,11 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
     { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true },
   ];
@@ -583,7 +589,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 

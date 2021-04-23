@@ -24,6 +24,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface EditCurricularProps {}
 
@@ -73,6 +74,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
+  const param: any = useParams();
 
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const { BreadcrumsTitles, EditCurriculardict } = useDictionary(clientKey);
@@ -85,6 +87,16 @@ const EditCurricular = (props: EditCurricularProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${param.institutionId}`,
+      last: false,
+    },
     { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], goBack: true, last: false },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCURRICULUM'],
@@ -109,7 +121,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      history.goBack();
+      goBackBreadCrumb(breadCrumsList, history);
     }
   };
 
@@ -449,7 +461,7 @@ const EditCurricular = (props: EditCurricularProps) => {
   return (
     <div className="">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={EditCurriculardict[userLanguage]['TITLE']}

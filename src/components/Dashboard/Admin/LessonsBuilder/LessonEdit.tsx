@@ -330,7 +330,7 @@ const LessonEdit = (props: LessonEditProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonEditDict[userLanguage]['TITLE']}

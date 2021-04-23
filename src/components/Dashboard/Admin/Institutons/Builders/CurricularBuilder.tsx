@@ -21,6 +21,7 @@ import TextArea from '../../../../Atoms/Form/TextArea';
 import Loader from '../../../../Atoms/Loader';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface CurricularBuilderProps {}
 interface InitialData {
@@ -84,8 +85,17 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const checkpointsList: any = [];
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
     { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
-    { title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'], url: '/dashboard/curricular-creation', last: true },
+    {
+      title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'],
+      url: `/dashboard/manage-institutions/institution/curricular-creation?id=${params.get('id')}`,
+      last: true,
+    },
   ];
 
   const onChange = (e: any) => {
@@ -398,7 +408,7 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
 
   const { name, description, objectives, languages, type, institute, summary } = curricularData;
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
+    <div className="">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
@@ -407,7 +417,12 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 

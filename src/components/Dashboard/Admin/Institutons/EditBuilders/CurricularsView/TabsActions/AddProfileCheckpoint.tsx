@@ -20,6 +20,7 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 import useDictionary from '../../../../../../../customHooks/dictionary';
+import { goBackBreadCrumb } from '../../../../../../../utilities/functions';
 
 interface AddProfileCheckpointProps {}
 
@@ -56,6 +57,16 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      last: false,
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
@@ -251,7 +262,6 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     fetchPersonsList();
   }, []);
 
-  // w-9/10 h-full px-4 pb-4 <--- WRAPPER STYLES; JUST FOR REFERENCE IN FUTURE
   return (
     <div className="">
       {/* Section Header */}
@@ -262,7 +272,12 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           subtitle={AddProfileCheckpointDict[userLanguage]['subtitle']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 

@@ -28,6 +28,7 @@ import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface EditClassProps {}
 
@@ -66,6 +67,11 @@ const EditClass = (props: EditClassProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
     { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `${match.url}?id=${urlParams.get('id')}`, last: true },
   ];
@@ -300,7 +306,7 @@ const EditClass = (props: EditClassProps) => {
         message: 'Do you want to save changes before going back?',
       });
     } else {
-      history.goBack();
+      goBackBreadCrumb(breadCrumsList, history);
     }
   };
 
