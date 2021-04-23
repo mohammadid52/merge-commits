@@ -113,6 +113,16 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      last: false,
+    },
+    {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
       last: false,
@@ -625,7 +635,16 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums
+        items={breadCrumsList}
+        unsavedChanges={unsavedChanges}
+        toggleModal={() => {
+          setWarnModal({
+            ...warnModal,
+            show: !warnModal.show,
+          });
+        }}
+      />
       <div className="flex justify-between">
         <SectionTitle
           title={EditSyllabusDict[userLanguage]['title']}

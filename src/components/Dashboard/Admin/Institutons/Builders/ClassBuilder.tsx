@@ -20,6 +20,7 @@ import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface ClassBuilderProps {}
 
@@ -64,6 +65,12 @@ const ClassBuilder = (props: ClassBuilderProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['Class_Creation'], url: '/dashboard/class-creation', last: true },
   ];
 
@@ -372,7 +379,12 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           subtitle={classBuilderdict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="" label="Go Back" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            btnClass=""
+            label="Go Back"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 

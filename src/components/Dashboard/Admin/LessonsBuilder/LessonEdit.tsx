@@ -147,8 +147,6 @@ const LessonEdit = (props: LessonEditProps) => {
     }
   };
 
-  console.log(activeStep);
-
   const onModalSave = () => {
     if (currentStepIdx === 0) {
       return history.goBack();
@@ -332,7 +330,7 @@ const LessonEdit = (props: LessonEditProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonEditDict[userLanguage]['TITLE']}
