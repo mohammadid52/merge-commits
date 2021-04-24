@@ -531,7 +531,7 @@ const Dashboard = (props: DashboardProps) => {
       await getSyllabusLessonCSequence(classRoomActiveSyllabus[0].id);
     };
 
-    if (state.roomData.syllabus && state.roomData.syllabus.length > 0) {
+    if (state.roomData.syllabus && state.roomData.syllabus.length > 0 && classRoomActiveSyllabus[0]) {
       getSyllabusLessonsAndCSequence();
     }
   }, [state.roomData.syllabus]);
