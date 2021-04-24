@@ -271,21 +271,41 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
   const listRoomTeacher = async (teacherAuthID: string) => {
     try {
-      const classIdFromRoomsFetch: any = await API.graphql(
-        graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: teacherAuthID } } })
-      );
-      const response = await classIdFromRoomsFetch;
-      const arrayOfResponseObjects = response?.data?.listRooms?.items;
+      const queryObj = {
+        name: 'customQueries.listRooms',
+        valueObj: { filter: { teacherAuthID: { eq: teacherAuthID } } },
+      };
+      const sessionData = getSessionData(queryObj);
 
-      setRooms(arrayOfResponseObjects);
+      if (sessionData) {
+        setRooms(sessionData);
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'rooms',
+            data: sessionData,
+          },
+        });
+        console.log('sessionData -> ', 'get roomdata from session');
+      } else {
+        const classIdFromRoomsFetch: any = await API.graphql(
+          graphqlOperation(customQueries.listRooms, queryObj.valueObj)
+        );
+        const response = await classIdFromRoomsFetch;
+        const arrayOfResponseObjects = response?.data?.listRooms?.items;
 
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'rooms',
-          data: arrayOfResponseObjects,
-        },
-      });
+        setRooms(arrayOfResponseObjects);
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'rooms',
+            data: arrayOfResponseObjects,
+          },
+        });
+
+        setSessionData(queryObj, arrayOfResponseObjects);
+        console.log('sessionData -> ', 'fetch roomdata ');
+      }
     } catch (e) {
       console.error('Classes Fetch ERR: ', e);
     }
@@ -306,20 +326,40 @@ const Dashboard = (props: DashboardProps) => {
       setWidgetLoading(true);
       //
       try {
-        const noticeboardWidgetsFetch: any = await API.graphql(
-          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: state.activeRoom } } })
-        );
+        const queryObj = {
+          name: 'queries.listNoticeboardWidgets',
+          valueObj: { filter: { roomID: { eq: state.activeRoom } } },
+        };
+        const sessionData = getSessionData(queryObj);
 
-        const response = await noticeboardWidgetsFetch;
-        const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+        if (sessionData) {
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'widgets',
+              data: sessionData,
+            },
+          });
+          console.log('widgets loaded from session');
+        } else {
+          const noticeboardWidgetsFetch: any = await API.graphql(
+            graphqlOperation(queries.listNoticeboardWidgets, queryObj.valueObj)
+          );
 
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'widgets',
-            data: arrayOfResponseObjects,
-          },
-        });
+          const response = await noticeboardWidgetsFetch;
+          const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'widgets',
+              data: arrayOfResponseObjects,
+            },
+          });
+
+          setSessionData(queryObj, arrayOfResponseObjects);
+          console.log('widgets fetched');
+        }
       } catch (e) {
         console.error('listNoticeboardWidgetsFetch: -> ', e);
       } finally {
@@ -338,17 +378,30 @@ const Dashboard = (props: DashboardProps) => {
     const listRoomCurriculums = async () => {
       if (state.roomData.rooms.length > 0) {
         try {
-          const roomCurriculumsFetch: any = API.graphql(
-            graphqlOperation(customQueries.listRoomCurriculums, {
-              filter: { roomID: { contains: state.activeRoom } },
-            })
-          );
-          const response = await roomCurriculumsFetch;
-          console.log('response curriculums', response);
-          const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
-          const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
-          setCurriculumIds(arrayOfCurriculumIds);
-          // console.log('3 --> ', arrayOfCurriculumIds);
+          const queryObj = {
+            name: 'customQueries.listRoomCurriculums',
+            valueObj: {
+              roomID: { contains: state.activeRoom },
+            },
+          };
+          const sessionData = getSessionData(queryObj);
+
+          if (sessionData) {
+            setCurriculumIds(sessionData);
+            console.log('getCurriculum ids --> ', ' from session');
+          } else {
+            const roomCurriculumsFetch: any = API.graphql(
+              graphqlOperation(customQueries.listRoomCurriculums, {
+                filter: { roomID: { contains: state.activeRoom } },
+              })
+            );
+            const response = await roomCurriculumsFetch;
+            const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+            const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
+            setCurriculumIds(arrayOfCurriculumIds);
+            console.log('getCurriculum ids --> ', arrayOfCurriculumIds);
+            setSessionData(queryObj, arrayOfCurriculumIds);
+          }
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
         }
@@ -375,51 +428,72 @@ const Dashboard = (props: DashboardProps) => {
     const listSyllabus = async () => {
       if (curriculumIds.length > 0) {
         try {
-          const syllabusCSequenceFetch: any = await API.graphql(
-            graphqlOperation(queries.getCSequences, { id: `s_${curriculumIds[0]}` })
-          );
-          const syllabusMultiFetch: any = API.graphql(
-            graphqlOperation(customQueries.listSyllabuss, {
+          const queryObj = {
+            name: 'customQueries.listSyllabuss',
+            valueObj: {
               filter: { ...createFilterToFetchSpecificItemsOnly(curriculumIds, 'curriculumID') },
-            })
-          );
-
-          const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
-          const responseRoomSyllabus = await syllabusMultiFetch;
-
-          const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
-          const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
-
-          // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
-          const roomSyllabusReordered = arrayOfRoomSyllabusSequence
-            ? arrayOfRoomSyllabusSequence.reduce((acc: any[], syllabusID: string, idx: number) => {
-                const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
-                if (matchedSyllabus) {
-                  return [...acc, matchedSyllabus];
-                } else {
-                  return acc;
-                }
-              }, [])
-            : arrayOfRoomSyllabus;
-
-          const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
-            if (activeRoomSyllabus === responseObject.id) {
-              return { ...responseObject, active: true };
-            } else {
-              return { ...responseObject, active: false };
-            }
-          });
-
-          dispatch({
-            type: 'UPDATE_ROOM',
-            payload: {
-              property: 'syllabus',
-              data: mappedResponseObjects,
             },
-          });
+          };
+          const sessionData = getSessionData(queryObj);
 
-          setSyllabusLoading(false);
-          setLessonLoading(false);
+          if (sessionData) {
+            dispatch({
+              type: 'UPDATE_ROOM',
+              payload: {
+                property: 'syllabus',
+                data: sessionData,
+              },
+            });
+
+            setSyllabusLoading(false);
+            setLessonLoading(false);
+          } else {
+            const syllabusCSequenceFetch: any = await API.graphql(
+              graphqlOperation(queries.getCSequences, { id: `s_${curriculumIds[0]}` })
+            );
+            const syllabusMultiFetch: any = API.graphql(
+              graphqlOperation(customQueries.listSyllabuss, queryObj.valueObj)
+            );
+
+            const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
+            const responseRoomSyllabus = await syllabusMultiFetch;
+
+            const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
+            const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
+
+            // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
+            const roomSyllabusReordered = arrayOfRoomSyllabusSequence
+              ? arrayOfRoomSyllabusSequence.reduce((acc: any[], syllabusID: string, idx: number) => {
+                  const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
+                  if (matchedSyllabus) {
+                    return [...acc, matchedSyllabus];
+                  } else {
+                    return acc;
+                  }
+                }, [])
+              : arrayOfRoomSyllabus;
+
+            const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
+              if (activeRoomSyllabus === responseObject.id) {
+                return { ...responseObject, active: true };
+              } else {
+                return { ...responseObject, active: false };
+              }
+            });
+
+            dispatch({
+              type: 'UPDATE_ROOM',
+              payload: {
+                property: 'syllabus',
+                data: mappedResponseObjects,
+              },
+            });
+
+            setSessionData(queryObj, mappedResponseObjects);
+
+            setSyllabusLoading(false);
+            setLessonLoading(false);
+          }
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);
         }
@@ -436,13 +510,25 @@ const Dashboard = (props: DashboardProps) => {
    ******************************************/
 
   const getSyllabusLessonCSequence = async (syllabusID: string) => {
+    console.log('getSyllabusLessonCSequence --> ', syllabusID);
     try {
-      const syllabusLessonCSequenceFetch: any = await API.graphql(
-        graphqlOperation(queries.getCSequences, { id: `lesson_${syllabusID}` })
-      );
-      const response = await syllabusLessonCSequenceFetch;
-      const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
-      setSyllabusLessonSequence(arrayOfResponseObjects);
+      const queryObj = {
+        name: 'queries.getCSequences',
+        valueObj: { id: `lesson_${syllabusID}` },
+      };
+      const sessionData = getSessionData(queryObj);
+
+      if (sessionData) {
+        setSyllabusLessonSequence(sessionData);
+        console.log('syllabusLessoNCSequence --> ', 'from Session');
+      } else {
+        const syllabusLessonCSequenceFetch: any = await API.graphql(
+          graphqlOperation(queries.getCSequences, queryObj.valueObj)
+        );
+        const response = await syllabusLessonCSequenceFetch;
+        const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
+        setSyllabusLessonSequence(arrayOfResponseObjects);
+      }
     } catch (e) {
       console.error('getSyllabusLessonCSequence -> ', e);
     }
@@ -475,36 +561,54 @@ const Dashboard = (props: DashboardProps) => {
      */
     if (getActiveSyllabus.length > 0) {
       try {
-        const syllabusLessonFetch: any = API.graphql(
-          graphqlOperation(customQueries.listSyllabusLessons, {
+        const queryObj = {
+          name: 'customQueries.listSyllabusLessons',
+          valueObj: {
             syllabusID: getActiveSyllabus[0].id,
-          })
-        );
-        const response = await syllabusLessonFetch;
-        const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
-        // SOMETHING TO REFACTOR
-        const syllabusLessonsReordered = syllabusLessonSequence.reduce(
-          (acc: any[], syllabusLessonID: string, idx: number) => {
-            const matchedLesson = arrayOfResponseObjects.find(
-              (responseObj: any) => responseObj.id === syllabusLessonID
-            );
-            if (matchedLesson) {
-              return [...acc, matchedLesson];
-            } else {
-              return acc;
-            }
           },
-          []
-        );
+        };
+        const sessionData = getSessionData(queryObj);
 
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'lessons',
-            data: syllabusLessonsReordered,
-          },
-        });
-        setLessonLoading(false);
+        if (sessionData) {
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'lessons',
+              data: sessionData,
+            },
+          });
+          console.log('lessons list -> ', ' from session');
+        } else {
+          const syllabusLessonFetch: any = API.graphql(
+            graphqlOperation(customQueries.listSyllabusLessons, queryObj.valueObj)
+          );
+          const response = await syllabusLessonFetch;
+          const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
+          // SOMETHING TO REFACTOR
+          const syllabusLessonsReordered = syllabusLessonSequence.reduce(
+            (acc: any[], syllabusLessonID: string, idx: number) => {
+              const matchedLesson = arrayOfResponseObjects.find(
+                (responseObj: any) => responseObj.id === syllabusLessonID
+              );
+              if (matchedLesson) {
+                return [...acc, matchedLesson];
+              } else {
+                return acc;
+              }
+            },
+            []
+          );
+
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'lessons',
+              data: syllabusLessonsReordered,
+            },
+          });
+
+          setSessionData(queryObj, syllabusLessonsReordered);
+        }
       } catch (e) {
         console.error('syllabus lessons: ', e);
       } finally {
