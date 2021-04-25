@@ -11,7 +11,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 import { getAsset } from '../../../assets';
 import { times } from 'lodash';
-import uniq from 'lodash/uniq'
+import uniq from 'lodash/uniq';
 import { title } from 'process';
 
 export interface ModifiedListProps {
@@ -25,8 +25,8 @@ export interface ModifiedListProps {
   };
 }
 
-const Home = (props: ClassroomControlProps) => {
-  const { homeData, classList, isTeacher } = props;
+const HomeForTeachers = (props: ClassroomControlProps) => {
+  const { homeData, handleRoomSelection, classList, isTeacher } = props;
 
   const { state, dispatch, theme, clientKey } = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
@@ -69,24 +69,24 @@ const Home = (props: ClassroomControlProps) => {
         }, [])
       : [];
 
-      const getCoTeacherList = () => {
-        let coTeachersList: any[] = [];
-        let uniqIds : string[] = []
-        homeData &&
-          homeData.length > 0 &&
-          homeData.forEach((item: any) => {
-            if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-              item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
-                if(!uniqIds.includes(_item.teacher.email)){
-                  coTeachersList.push(_item.teacher);
-                  uniqIds.push(_item.teacher.email);
-                }
-              });
+  const getCoTeacherList = () => {
+    let coTeachersList: any[] = [];
+    let uniqIds: string[] = [];
+    homeData &&
+      homeData.length > 0 &&
+      homeData.forEach((item: any) => {
+        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
+          item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
+            if (!uniqIds.includes(_item.teacher.email)) {
+              coTeachersList.push(_item.teacher);
+              uniqIds.push(_item.teacher.email);
             }
           });
-    
-        return coTeachersList;
-      };
+        }
+      });
+
+    return coTeachersList;
+  };
 
   const teacherListWithImages = Promise.all(
     getTeacherList.map(async (teacherObj: any, idx: number) => {
@@ -103,10 +103,10 @@ const Home = (props: ClassroomControlProps) => {
     homeData && homeData.length > 0
       ? homeData
           .reduce((acc: any[], dataObj: any) => {
-            if(isEmpty(dataObj)){
+            if (isEmpty(dataObj)) {
               return [...acc, ...dataObj?.class?.students?.items];
             }
-            return []
+            return [];
           }, [])
           .reduce((acc: any[], studentObj: any) => {
             const studentIsPresent = acc.find(
@@ -140,8 +140,7 @@ const Home = (props: ClassroomControlProps) => {
 
     homeData &&
       homeData.length > 0 &&
-      homeData.forEach((item:any) => {
-        
+      homeData.forEach((item: any) => {
         item?.class?.rooms?.items.forEach(async (_item: any) => {
           const curriculum = _item.curricula?.items[0].curriculum;
           if (curriculum !== null) {
@@ -199,23 +198,23 @@ const Home = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div
-              className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+              className={`${theme.section} z-50 relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">{user.preferredName ? user.preferredName : user.firstName}</span>, What
-                do you want to {isTeacher ? 'teach' : 'learn'} today?
+                do you want to teach today?
               </h2>
             </div>
           )}
 
           {/* Classroom Section */}
 
-          <RoomTiles classList={getClassList()} />
+          <RoomTiles handleRoomSelection={handleRoomSelection} classList={getClassList()} />
 
           {/* Teachers Section */}
           <div className="my-6">
             <SectionTitleV3
-              title={`Your ${isTeacher ? 'Team' : 'Teachers'}`}
+              title={`Your Team`}
               fontSize="lg"
               fontStyle="semibold"
               extraContainerClass="max-w-256"
@@ -226,11 +225,7 @@ const Home = (props: ClassroomControlProps) => {
           </div>
           {/* Classmates Section */}
           <div className="my-6">
-            <StudentsTiles
-              title={`Your ${isTeacher ? 'Students' : 'Classmates'}`}
-              state={state}
-              studentsList={studentsList}
-            />
+            <StudentsTiles title={`Your Students`} state={state} studentsList={studentsList} />
           </div>
         </>
       ) : (
@@ -240,4 +235,4 @@ const Home = (props: ClassroomControlProps) => {
   );
 };
 
-export default Home;
+export default HomeForTeachers;

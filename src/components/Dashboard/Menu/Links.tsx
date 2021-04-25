@@ -160,6 +160,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         return setLinks((links) => {
           return [
             {
+              title: sideBarLinksDict[userLanguage].DASHBOARD,
+              name: sideBarLinksDict[userLanguage].DASHBOARD,
+              label: 'Dashboard',
+              path: 'home',
+            },
+            {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
@@ -212,6 +218,22 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].DASHBOARD,
               label: 'Dashboard',
               path: 'home',
+              subMenuItems:
+                state.roomData.rooms.length &&
+                state.roomData.rooms.map((room: Room, i: number) => {
+                  return {
+                    title: room.name,
+                    active: room.id === state.activeRoom && state.currentPage === 'classroom',
+                    path: room.id,
+                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
+                  };
+                }),
+            },
+            {
+              title: sideBarLinksDict[userLanguage].DASHBOARD,
+              name: sideBarLinksDict[userLanguage].DASHBOARD,
+              label: 'Classrooms',
+              path: '',
               subMenuItems:
                 state.roomData.rooms.length &&
                 state.roomData.rooms.map((room: Room, i: number) => {
@@ -316,6 +338,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               const open =
                 path === currentPath ||
                 (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
+              console.log();
 
               const exists = openItems.indexOf(link.label) !== -1;
 
