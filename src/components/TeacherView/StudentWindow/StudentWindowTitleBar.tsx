@@ -9,7 +9,6 @@ interface StudentWindowTitleBarProps {
   handleFullscreen: () => void;
   fullscreen: boolean;
   pageViewed: { pageID: number; stage: string };
-  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
   instructions: {
     visible: boolean;
     available: boolean;
@@ -25,7 +24,6 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
     handleFullscreen,
     fullscreen,
     pageViewed,
-    setPageViewed,
     instructions,
     setInstructions,
   } = props;

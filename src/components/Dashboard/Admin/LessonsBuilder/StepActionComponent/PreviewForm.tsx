@@ -212,7 +212,7 @@ const PreviewForm = (props: PreviewFormProps) => {
           } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-full`}>
           <p className="w-9.3/10" key={checkpItem.id}>
             <span>
-              {index + 1}.{checkpItem?.question?.question}{' '}
+              {index + 1}. {checkpItem?.question?.question}{' '}
             </span>
             <span
               className={`py-0.5 px-1 ml-2 text-xs  rounded ${

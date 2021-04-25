@@ -83,7 +83,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           render={() => <EditRoom />} // Edit current room.
         />
         <Route
-          path={`${match.url}/curricular/edit`}
+          path={`${match.url}/:institutionId/curricular/edit`}
           render={() => <EditCurricular />} // Edit current curricular
         />
         <Route

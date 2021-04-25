@@ -13,10 +13,10 @@ const SyllabusSwitch = (props: DashboardProps) => {
   return (
     <>
       {syllabusLoading ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Loading units...</div>
+        <div className={`shadow text-center bg-white rounded-lg p-6 ${theme.elem.textDark}`}>Loading units...</div>
       ) : null}
 
-      <div className={`grid grid-cols-3 gap-2`}>
+      <div className={`grid grid-cols-3 md:grid-cols-2 gap-2`}>
         {!syllabusLoading && state.roomData?.syllabus?.length > 0
           ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
               return (
@@ -25,10 +25,8 @@ const SyllabusSwitch = (props: DashboardProps) => {
                   id={`testSyllabus_${i}`}
                   className={`flex relative flex-col bg-white rounded-lg shadow py-4 pb-10 justify-center items-center`}>
                   <div className={``}>
-                    <p className={`text-sm text-darker-gray text-center`}>
-                      <b>Unit Name: </b>
-                    </p>
-                    <p className={`text-xl my-2 text-darker-gray text-center`}>{syllabus.name}</p>
+                    <p className={`text-sm text-semibold text-darker-gray text-center`}>Unit Name:</p>
+                    <p className={`text-base py-4 my-2 text-darker-gray text-center`}>{syllabus.name}</p>
                   </div>
 
                   {!syllabus.active ? (

@@ -27,6 +27,7 @@ import Loader from '../../Atoms/Loader';
 import useDictionary from '../../../customHooks/dictionary';
 import { getUniqItems, createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
 import { getAsset } from '../../../assets';
+import HeroBanner from '../../Header/HeroBanner';
 
 export interface UserInfo {
   authId: string;
@@ -329,23 +330,13 @@ const Profile = (props: ProfilePageProps) => {
         {/* TODO: Replace hardcoded banner with Hero Banner Component */}
         {/* TODO: Add fade__animation class and paste it in the component.*/}
 
-        <div className="relative">
-          <div className="absolute inset-0 w-full h-60">
-            <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
-            <img className="object-cover w-full h-full bg-center bg-no-repeat bg-contain" src={profileBanner1} alt="" />
-          </div>
-          <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
-            <h1
-              style={{ fontSize: '6rem' }}
-              className="z-100 fade__animation flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
-              Profile
-            </h1>
-          </div>
+        <div>
+          <HeroBanner imgUrl={profileBanner1} title={'Profile'} />
         </div>
         {/* Header */}
         {person && (
           <div
-            className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+            className={`${theme.section} relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
             <h2 className={`text-base text-center font-normal`}>
               <span className="font-semibold">{person.preferredName ? person.preferredName : person.firstName}</span>,
               update your avatar, personal information & profile questions here.

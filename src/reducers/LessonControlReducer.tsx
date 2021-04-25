@@ -2,31 +2,36 @@ import { lessonControlStateType, lessonControlState } from '../state/LessonContr
 
 type lessonControlActions =
   | {
-  type: 'INITIAL_LESSON_SETUP';
-  payload: any;
-} | {
-  type: 'UPDATE_LESSON_DATA';
-  payload: { [key: string]: any };
-}
+      type: 'INITIAL_LESSON_SETUP';
+      payload: any;
+    }
   | {
-  type: 'UPDATE_STUDENT_ROSTER';
-  payload: any;
-}
+      type: 'UPDATE_LESSON_DATA';
+      payload: { [key: string]: any };
+    }
   | {
-  type:
-    | 'OPEN_LESSON'
-    | 'DISABLE_LESSON'
-    | 'CLOSE_LESSON'
-    | 'DELETE_DISPLAY_DATA'
-    | 'SET_DISPLAY_DATA'
-    | 'SET_STUDENT_VIEWING'
-    | 'SET_SHARE_MODE'
-    | 'QUIT_SHARE_MODE'
-    | 'SAVED_CHANGES'
-    | 'UPDATE_STUDENT_DATA'
-    | 'QUIT_STUDENT_VIEWING'
-    | 'RESET_DONE'
-    | 'START_CLASSROOM'
+      type: 'UPDATE_STUDENT_ROSTER';
+      payload: any;
+    }
+  | {
+      type: 'SET_CURRENT_PAGE';
+      payload: number;
+    }
+  | {
+      type:
+        | 'OPEN_LESSON'
+        | 'DISABLE_LESSON'
+        | 'CLOSE_LESSON'
+        | 'DELETE_DISPLAY_DATA'
+        | 'SET_DISPLAY_DATA'
+        | 'SET_STUDENT_VIEWING'
+        | 'SET_SHARE_MODE'
+        | 'QUIT_SHARE_MODE'
+        | 'SAVED_CHANGES'
+        | 'UPDATE_STUDENT_DATA'
+        | 'QUIT_STUDENT_VIEWING'
+        | 'RESET_DONE'
+        | 'START_CLASSROOM'
         | 'COMPLETE_CLASSROOM';
       payload: any;
     }
@@ -59,6 +64,11 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
       return {
         ...state,
         roster: action.payload.students,
+      };
+    case 'SET_CURRENT_PAGE':
+      return {
+        ...state,
+        currentPage: action.payload,
       };
     case 'OPEN_LESSON':
       return {
@@ -134,7 +144,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         }),
       };
     case 'SET_SHARE_MODE':
-      console.log('set_share_mode:  ', action.payload)
+      console.log('set_share_mode:  ', action.payload);
       return {
         ...state,
         sharing: true,
@@ -142,8 +152,8 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         pages: state.pages.map((page, pageIndex: number) => {
           console.log('set_share_mode:  ', {
             payload: parseInt(action.payload),
-            pageIndex: pageIndex
-          })
+            pageIndex: pageIndex,
+          });
           if (parseInt(action.payload) !== pageIndex) {
             return page;
           } else {
@@ -162,17 +172,17 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
       let viewing = state.studentViewing.studentInfo?.personAuthID === action.payload.studentAuthID;
 
       const updatedRoster = state.roster.map((student: any) => {
-        if(student.personAuthID === action.payload.studentAuthID){
+        if (student.personAuthID === action.payload.studentAuthID) {
           return {
             ...student,
             saveType: action.payload.saveType,
             currentLocation: action.payload.currentLocation,
             lessonProgress: action.payload.lessonProgress,
-          }
+          };
         } else {
           return student;
         }
-      })
+      });
 
       return {
         ...state,
@@ -180,7 +190,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         roster: updatedRoster,
         studentViewing: {
           ...state.studentViewing,
-          studentInfo: {...state.studentViewing.studentInfo, ...action.payload},
+          studentInfo: { ...state.studentViewing.studentInfo, ...action.payload },
         },
       };
 
@@ -223,9 +233,10 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         },
       };
     case 'SET_STUDENT_VIEWING':
-
-
-      if (state.studentViewing.studentInfo && state.studentViewing.studentInfo.studentAuthID === action.payload.personAuthID) {
+      if (
+        state.studentViewing.studentInfo &&
+        state.studentViewing.studentInfo.studentAuthID === action.payload.personAuthID
+      ) {
         console.log('SET_STUDENT_VIEWING', action.payload);
         return {
           ...state,

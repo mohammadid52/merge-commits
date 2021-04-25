@@ -7,14 +7,15 @@ import { getPageLabel } from '../../../getPageLabel';
 import Banner from '../../../Lesson/LessonComponents/Banner';
 import QuoteBlock from '../../../Lesson/LessonComponents/Intro/QuoteBlock';
 
-interface props {
-  fullscreen: boolean;
+interface IntroViewProps {
+  fullscreen?: boolean;
+  checkpointsItems?: any[];
 }
 
-const IntroView = (props: props) => {
+const IntroView = (props: IntroViewProps) => {
   const { state, theme, dispatch } = useContext(LessonControlContext);
   const [doFirstData, setDoFirstData] = useState<{ [key: string]: any }>();
-  const { fullscreen } = props;
+  const { fullscreen, checkpointsItems } = props;
   const imgArray = state.data?.lesson?.artist?.images;
 
   let displayStudentData = state.studentViewing.live
@@ -25,19 +26,19 @@ const IntroView = (props: props) => {
 
   return (
     <div className={theme.section}>
-      <Banner isTeacher={true} title={state.data.lesson.title} iconName={'FaHourglassStart'}/>
+      <Banner isTeacher={true} title={state.data.lesson.title} iconName={'FaHourglassStart'} />
       <div
-        className='h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10'
+        className="h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-xl z-10"
         style={{ backgroundImage: `url(${imgArray ? imgArray[0] : null})` }}>
-        <QuoteBlock isTeacher={true}/>
+        <QuoteBlock isTeacher={true} />
         {/* <Block /> */}
       </div>
       <Connect isTeacher={true} />
-      <div className='flex flex-col justify-between items-center mt-4'>
-        <Keyword isTeacher={true}/>
+      <div className="flex flex-col justify-between items-center mt-4">
+        <Keyword isTeacher={true} />
       </div>
-      <div className='flex flex-col justify-between items-center mt-4'>
-        <DoFirst />
+      <div className="flex flex-col justify-between items-center mt-4">
+        <DoFirst checkpointsItems={checkpointsItems} />
       </div>
     </div>
   );

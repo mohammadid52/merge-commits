@@ -21,6 +21,9 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface EditRoomProps {}
 
@@ -67,11 +70,43 @@ const EditRoom = (props: EditRoomProps) => {
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
+    {
       title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'],
       url: `/dashboard/room-edit?id=${params.get('id')}`,
       last: true,
     },
   ];
+
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+  });
+
+  const onModalSave = () => {
+    toggleModal();
+    history.goBack();
+  };
+
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show,
+    });
+  };
+
+  const goBack = () => {
+    if (unsavedChanges) {
+      toggleModal();
+    } else {
+      goBackBreadCrumb(breadCrumsList, history);
+    }
+  };
 
   const selectTeacher = (val: string, name: string, id: string) => {
     setRoomData({
@@ -84,6 +119,7 @@ const EditRoom = (props: EditRoomProps) => {
     });
 
     const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    setUnsavedChanges(true);
     setCoTeachersList(filteredDefaultTeacher);
     setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
   };
@@ -99,6 +135,7 @@ const EditRoom = (props: EditRoomProps) => {
     } else {
       updatedList = currentCoTeachers.filter((item) => item.id !== id);
     }
+    setUnsavedChanges(true);
 
     setSelectedCoTeachers(updatedList);
   };
@@ -108,6 +145,8 @@ const EditRoom = (props: EditRoomProps) => {
       ...roomData,
       [e.target.name]: e.target.value,
     });
+    setUnsavedChanges(true);
+
     removeErrorMsg();
   };
 
@@ -125,6 +164,8 @@ const EditRoom = (props: EditRoomProps) => {
         classRoom: { id: '', name: '', value: '' },
         curricular: { id: '', name: '', value: '' },
       });
+      setUnsavedChanges(true);
+
       removeErrorMsg();
     }
   };
@@ -138,6 +179,8 @@ const EditRoom = (props: EditRoomProps) => {
         value: val,
       },
     });
+    setUnsavedChanges(true);
+
     removeErrorMsg();
   };
   const selectCurriculum = (val: string, name: string, id: string) => {
@@ -149,6 +192,8 @@ const EditRoom = (props: EditRoomProps) => {
         value: val,
       },
     });
+    setUnsavedChanges(true);
+
     removeErrorMsg();
   };
 
@@ -268,6 +313,7 @@ const EditRoom = (props: EditRoomProps) => {
   };
 
   const getClassLists = async (allInstiId: string[]) => {
+    const instId = roomData.institute.id;
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
@@ -283,9 +329,12 @@ const EditRoom = (props: EditRoomProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-        const filteredClassList = sortedList.filter(
-          (classItem: any) => classItem.institution.isServiceProvider !== true
-        );
+        const filteredClassList = sortedList.filter((classItem: any) => {
+          return (
+            classItem?.institution.isServiceProvider === false ||
+            (classItem?.institution.isServiceProvider === true && classItem.institution.id === instId)
+          );
+        });
         const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
@@ -462,6 +511,7 @@ const EditRoom = (props: EditRoomProps) => {
         const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
         await saveRoomTeachers(roomData.id);
         await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
+        setUnsavedChanges(false);
       } catch {
         setMessages({
           show: true,
@@ -627,13 +677,13 @@ const EditRoom = (props: EditRoomProps) => {
   const { name, curricular, classRoom, maxPersons, institute, teacher } = roomData;
 
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
+    <div className="">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title={RoomEDITdict[userLanguage]['TITLE']} subtitle={RoomEDITdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -753,6 +803,9 @@ const EditRoom = (props: EditRoomProps) => {
             onClick={saveRoomDetails}
           />
         </div>
+        {warnModal.show && (
+          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
+        )}
       </PageWrapper>
     </div>
   );

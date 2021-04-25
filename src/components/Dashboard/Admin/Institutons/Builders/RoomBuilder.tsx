@@ -20,6 +20,7 @@ import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { getAsset } from '../../../../../assets';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface RoomBuilderProps {}
 
@@ -62,6 +63,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true },
   ];
 
@@ -272,6 +279,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
 
   const getClassLists = async (allInstiId: string[]) => {
+    const instId = roomData.institute.id;
+
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
@@ -287,10 +296,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-
-        const filteredClassList = sortedList.filter(
-          (classItem: any) => classItem.institution.isServiceProvider === false
-        );
+        const filteredClassList = sortedList.filter((classItem: any) => {
+          return (
+            classItem?.institution?.isServiceProvider === false ||
+            (classItem?.institution?.isServiceProvider === true && classItem?.institution?.id === instId)
+          );
+        });
 
         const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
@@ -578,7 +589,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 

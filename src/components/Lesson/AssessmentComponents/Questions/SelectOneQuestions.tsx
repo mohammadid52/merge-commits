@@ -20,14 +20,25 @@ const SelectOneQuestions = (props: QuestionProps) => {
   const { state, theme, dispatch } = switchContext;
 
   const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
-
+  const [otherOptSel, setOtherOptSel] = useState(false);
   const questionId = question.question.id;
+  const [other, setOther] = useState('');
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
     const { id } = e.target as HTMLElement;
     setInput({ id: questionId, value: id });
     handleInputChange(questionId, id, checkpointID);
+    if (id === 'other') {
+      setOtherOptSel(true);
+    } else {
+      setOtherOptSel(false);
+    }
+  };
+
+  const onOtherSave = () => {
+    setOtherOptSel(false);
+    handleInputChange(questionId, input.value, checkpointID, other);
   };
   return (
     <>
@@ -39,7 +50,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
               {question.question.question} (Select one)
             </p>
           </label>
-          <div className={'w-auto flex flex-wrap mx-auto'}>
+          <div className={'w-auto flex flex-wrap'}>
             {question.question.options.map(
               (
                 option: {
@@ -65,6 +76,20 @@ const SelectOneQuestions = (props: QuestionProps) => {
                   </div>
                 );
               }
+            )}
+            {otherOptSel && (
+              <div>
+                <input
+                  value={other}
+                  onChange={(e) => setOther(e.target.value)}
+                  className="bg-transparent border-b-2 my-8 text-white border-sea-green pb-2"
+                  placeholder="Other"
+                  type="text"
+                />
+                <button onClick={onOtherSave} className="bg-sea-green w-auto py-2 px-4 rounded">
+                  save
+                </button>
+              </div>
             )}
           </div>
         </div>

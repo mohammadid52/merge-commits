@@ -1,27 +1,27 @@
 import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { GlobalContext } from '../../contexts/GlobalContext';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
+
+import { getArrayOfUniqueValueByProperty } from '../../utilities/arrays';
+import { createFilterToFetchSpecificItemsOnly } from '../../utilities/strings';
 import SideMenu from './Menu/SideMenu';
 import { useCookies } from 'react-cookie';
 import * as queries from '../../graphql/queries';
+import * as customQueries from '../../customGraphql/customQueries';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
 import QuestionBank from './Admin/Questions/QuestionBank';
 import LessonsBuilderHome from './Admin/LessonsBuilder/LessonsBuilderHome';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
-import SideWidgetBar from './Noticebooard/SideWidgetBar';
-import SideRoomSelector from './Menu/SideRoomSelector';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
-import ClassroomControl from './ClassroomControl/ClassroomControl';
+// import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
-const Links = lazy(() => import('./Menu/Links'));
-const ProfileLink = lazy(() => import('./Menu/ProfileLink'));
 const Registration = lazy(() => import('./Admin/UserManagement/Registration'));
 const UserManagement = lazy(() => import('./Admin/UserManagement/UserManagement'));
 
@@ -50,6 +50,7 @@ export interface DashboardProps {
   setLessonLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   syllabusLoading?: boolean;
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleRoomSelection?: Function;
 }
 
 export interface ClassroomControlProps extends DashboardProps {
@@ -60,6 +61,7 @@ export interface ClassroomControlProps extends DashboardProps {
 const Dashboard = (props: DashboardProps) => {
   const { updateAuthState } = props;
   const match = useRouteMatch();
+  const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
 
   const [userData, setUserData] = useState({
@@ -75,10 +77,24 @@ const Dashboard = (props: DashboardProps) => {
   // Page switching
   const [currentPage, setCurrentPage] = useState<string>('');
   const [visibleLessonGroup, setVisibleLessonGroup] = useState<string>('today');
-  const [activeRoom, setActiveRoom] = useState<string>('');
+  // const [activeRoom, setActiveRoom] = useState<string>('');
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
   const [activeRoomSyllabus, setActiveRoomSyllabus] = useState<string>('');
+  const thereAreSideWidgets: boolean = state.roomData.widgets.some((widget: any) => widget.placement === 'sidebar');
+  // TODO: Add @thereAreSideWidgets boolean to not show side widget bar if the length is 0;
+
+  // Fetching results
+  const [homeData, setHomeData] = useState<{ class: any }[]>();
+  const [classList, setClassList] = useState<any[]>();
+
+  const [classIds, setClassIds] = useState<string[]>([]);
+  const [rooms, setRooms] = useState<any[]>([]);
+  const [curriculumIds, setCurriculumIds] = useState<string[]>([]);
+  const [syllabusLessonSequence, setSyllabusLessonSequence] = useState<string[]>(['']);
+  // Menu state
+  const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
+  const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -100,6 +116,17 @@ const Dashboard = (props: DashboardProps) => {
     });
 
     setCookie('auth', { ...cookies.auth, role: user.role, firstName: firstName, id: user.id }, { path: '/' });
+  };
+
+  const handleRoomSelection = (id: string, name: string, i: number, route = 'classroom') => {
+    if (state.activeRoom !== id) {
+      setActiveRoomName(name);
+      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
+      setSyllabusLoading(true); // Trigger loading ui element
+      setLessonLoading(true);
+      setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
+      history.push(`/dashboard/${route}/${id}`);
+    }
   };
 
   async function getUser() {
@@ -133,165 +160,478 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [state.user.role]);
 
+  /**
+   * INIT ADMIN NOT LOADING ANYTHING
+   */
+  useEffect(() => {
+    const userRole = state.user.role;
+    if (userRole === 'ADM') {
+      setRoomsLoading(true);
+    }
+  }, []);
+
+  /******************************************
+   * 1.1 PROCESS STUDENT ROOM FETCHING      *
+   ******************************************/
+  const getDashboardData = async (authId: string, email: string) => {
+    try {
+      const dashboardDataFetch: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, {
+          authId: authId,
+          email: email,
+        })
+      );
+      const response = await dashboardDataFetch;
+      let arrayOfResponseObjects = response?.data.getPerson.classes.items;
+
+      arrayOfResponseObjects = arrayOfResponseObjects.filter((item: any) => item.class !== null);
+
+      setHomeData(arrayOfResponseObjects);
+    } catch (e) {
+      console.error('getDashbaordData -> ', e);
+    } finally {
+      // need to do some cleanup
+    }
+  };
+
+  useEffect(() => {
+    if (state.user.role === 'ST') {
+      const authId = state.user.authId;
+      const email = state.user.email;
+      getDashboardData(authId, email);
+    }
+  }, [state.user.role]);
+
+  /******************************************
+   * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
+   ******************************************/
+  const getClassList =
+    homeData && homeData.length > 0
+      ? homeData.reduce((acc: any[], dataObj: any) => {
+          return [
+            ...acc,
+            { name: dataObj?.class?.name, rooms: dataObj?.class?.rooms, students: dataObj?.class?.students },
+          ];
+        }, [])
+      : [];
+
+  useEffect(() => {
+    if (homeData && homeData.length > 0 && getClassList.length > 0) {
+      setClassList(getClassList);
+    }
+  }, [homeData]);
+
+  const getRoomsFromClassList =
+    classList && classList.length > 0
+      ? classList.reduce((acc: any[], classObj: any) => {
+          return [...acc, classObj.rooms.items[0]];
+        }, [])
+      : [];
+
+  useEffect(() => {
+    dispatch({
+      type: 'UPDATE_ROOM',
+      payload: {
+        property: 'rooms',
+        data: getRoomsFromClassList,
+      },
+    });
+  }, [classList]);
+
+  /******************************************
+   * 2.1 LIST TEACHER ROOMS                 *
+   ******************************************/
+  const listRoomTeacher = async (teacherAuthID: string) => {
+    try {
+      const classIdFromRoomsFetch: any = await API.graphql(
+        graphqlOperation(customQueries.listRooms, { filter: { teacherAuthID: { eq: teacherAuthID } } })
+      );
+      const response = await classIdFromRoomsFetch;
+      const arrayOfResponseObjects = response?.data?.listRooms?.items;
+
+      setRooms(arrayOfResponseObjects);
+
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'rooms',
+          data: arrayOfResponseObjects,
+        },
+      });
+    } catch (e) {
+      console.error('Classes Fetch ERR: ', e);
+    }
+  };
+
+  useEffect(() => {
+    if (state.user.role === 'FLW' || state.user.role === 'TR') {
+      const teacherAuthID = state.user.authId;
+      listRoomTeacher(teacherAuthID);
+    }
+  }, [state.user.role]);
+
+  /******************************************
+   * 3.1 LIST ALL WIDGETS FOR ROOM          *
+   ******************************************/
+  useEffect(() => {
+    const listRoomWidgets = async () => {
+      setWidgetLoading(true);
+      //
+      try {
+        const noticeboardWidgetsFetch: any = await API.graphql(
+          graphqlOperation(queries.listNoticeboardWidgets, { filter: { roomID: { eq: state.activeRoom } } })
+        );
+
+        const response = await noticeboardWidgetsFetch;
+        const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'widgets',
+            data: arrayOfResponseObjects,
+          },
+        });
+      } catch (e) {
+        console.error('listNoticeboardWidgetsFetch: -> ', e);
+      } finally {
+        setWidgetLoading(false);
+      }
+    };
+    if (state.activeRoom && widgetLoading === false) {
+      listRoomWidgets();
+    }
+  }, [state.activeRoom]);
+
+  /**
+   * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
+   */
+  useEffect(() => {
+    const listRoomCurriculums = async () => {
+      if (state.roomData.rooms.length > 0) {
+        try {
+          const roomCurriculumsFetch: any = API.graphql(
+            graphqlOperation(customQueries.listRoomCurriculums, {
+              filter: { roomID: { contains: state.activeRoom } },
+            })
+          );
+          const response = await roomCurriculumsFetch;
+          console.log('response curriculums', response);
+          const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+          const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(arrayOfResponseObjects, 'curriculumID');
+          setCurriculumIds(arrayOfCurriculumIds);
+          // console.log('3 --> ', arrayOfCurriculumIds);
+        } catch (e) {
+          console.error('RoomCurriculums fetch ERR: ', e);
+        }
+      }
+    };
+    listRoomCurriculums();
+  }, [state.activeRoom]);
+
+  // Save info of selected room to cookie
+  useEffect(() => {
+    const getRoomFromState = state.roomData.rooms.filter((room: any) => room.id === state.activeRoom);
+    if (getRoomFromState.length === 1) {
+      setCookie('room_info', getRoomFromState[0]);
+      setActiveRoomInfo(getRoomFromState[0]);
+    } else {
+      setCookie('room_info', {});
+    }
+  }, [state.activeRoom]);
+
+  /**
+   * 5. LIST AVAILABLE SYLLABUS and GET SEQUENCE TO SORT SYLLABI
+   */
+  useEffect(() => {
+    const listSyllabus = async () => {
+      if (curriculumIds.length > 0) {
+        try {
+          const syllabusCSequenceFetch: any = await API.graphql(
+            graphqlOperation(queries.getCSequences, { id: `s_${curriculumIds[0]}` })
+          );
+          const syllabusMultiFetch: any = API.graphql(
+            graphqlOperation(customQueries.listSyllabuss, {
+              filter: { ...createFilterToFetchSpecificItemsOnly(curriculumIds, 'curriculumID') },
+            })
+          );
+
+          const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
+          const responseRoomSyllabus = await syllabusMultiFetch;
+
+          const arrayOfRoomSyllabusSequence = responseRoomSyllabusSequence?.data.getCSequences?.sequence;
+          const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
+
+          // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
+          const roomSyllabusReordered = arrayOfRoomSyllabusSequence
+            ? arrayOfRoomSyllabusSequence.reduce((acc: any[], syllabusID: string, idx: number) => {
+                const matchedSyllabus = arrayOfRoomSyllabus.find((responseObj: any) => responseObj.id === syllabusID);
+                if (matchedSyllabus) {
+                  return [...acc, matchedSyllabus];
+                } else {
+                  return acc;
+                }
+              }, [])
+            : arrayOfRoomSyllabus;
+
+          const mappedResponseObjects = roomSyllabusReordered.map((responseObject: any, idx: number) => {
+            if (activeRoomSyllabus === responseObject.id) {
+              return { ...responseObject, active: true };
+            } else {
+              return { ...responseObject, active: false };
+            }
+          });
+
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'syllabus',
+              data: mappedResponseObjects,
+            },
+          });
+
+          setSyllabusLoading(false);
+          setLessonLoading(false);
+        } catch (e) {
+          console.error('Curriculum ids ERR: ', e);
+        }
+      }
+    };
+
+    listSyllabus();
+  }, [curriculumIds]);
+
+  /******************************************
+   * 6.1 LIST ALL THE SYLLABUS LESSON       *
+   *      - SEQUENCES                       *
+   *      - LESSONS                         *
+   ******************************************/
+
+  const getSyllabusLessonCSequence = async (syllabusID: string) => {
+    try {
+      const syllabusLessonCSequenceFetch: any = await API.graphql(
+        graphqlOperation(queries.getCSequences, { id: `lesson_${syllabusID}` })
+      );
+      const response = await syllabusLessonCSequenceFetch;
+      const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
+      setSyllabusLessonSequence(arrayOfResponseObjects);
+    } catch (e) {
+      console.error('getSyllabusLessonCSequence -> ', e);
+    }
+  };
+
+  const listSyllabusLessons = async (lessonPlannerSyllabus: any, classRoomActiveSyllabus: any) => {
+    setLessonLoading(true);
+    dispatch({
+      type: 'UPDATE_ROOM',
+      payload: {
+        property: 'lessons',
+        data: [],
+      },
+    });
+    /**
+     * getActiveSyllabus explanation:
+     *  IF we're on the lesson-planner page, that means the teacher has the ability to activate
+     *  a syllabus
+     *    SO the first filter will return an array with max length 1 if any syllabus for that room are active
+     *    BUT it will return array with length 0 if no syllabus for that room are active
+     *  IF we're on the classroom page, multiple syllabus will not be loaded
+     *    SO the room objects in room array should contain an activeSyllabus property
+     *    THEREFORE if there is an active syllabus, this filter will return a string OR []
+     *  FINALLY if there are no active syllabus anywhere, return empty array
+     */
+
+    const getActiveSyllabus = state.currentPage === 'lesson-planner' ? lessonPlannerSyllabus : classRoomActiveSyllabus;
+    /**
+     * IF there are any syllabus active, do a fetch for lessons
+     */
+    if (getActiveSyllabus.length > 0) {
+      try {
+        const syllabusLessonFetch: any = API.graphql(
+          graphqlOperation(customQueries.listSyllabusLessons, {
+            syllabusID: getActiveSyllabus[0].id,
+          })
+        );
+        const response = await syllabusLessonFetch;
+        const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
+        // SOMETHING TO REFACTOR
+        const syllabusLessonsReordered = syllabusLessonSequence.reduce(
+          (acc: any[], syllabusLessonID: string, idx: number) => {
+            const matchedLesson = arrayOfResponseObjects.find(
+              (responseObj: any) => responseObj.id === syllabusLessonID
+            );
+            if (matchedLesson) {
+              return [...acc, matchedLesson];
+            } else {
+              return acc;
+            }
+          },
+          []
+        );
+
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'lessons',
+            data: syllabusLessonsReordered,
+          },
+        });
+        setLessonLoading(false);
+      } catch (e) {
+        console.error('syllabus lessons: ', e);
+      } finally {
+        setLessonLoading(false);
+      }
+    }
+  };
+
+  const lessonPlannerSyllabus =
+    state.roomData.syllabus.length > 0
+      ? state.roomData.syllabus.filter((syllabusObject: any) => {
+          if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
+            return syllabusObject;
+          }
+        })
+      : [];
+
+  const classRoomActiveSyllabus = state.roomData.rooms
+    .filter((room: any) => room.id === state.activeRoom)
+    .map((room: any) => {
+      return { id: room.activeSyllabus };
+    });
+
+  useEffect(() => {
+    const getSyllabusLessonsAndCSequence = async () => {
+      await getSyllabusLessonCSequence(classRoomActiveSyllabus[0].id);
+    };
+
+    if (state.roomData.syllabus && state.roomData.syllabus.length > 0) {
+      getSyllabusLessonsAndCSequence();
+    }
+  }, [state.roomData.syllabus]);
+
+  useEffect(() => {
+    if (syllabusLessonSequence && syllabusLessonSequence.length > 0) {
+      listSyllabusLessons(lessonPlannerSyllabus, classRoomActiveSyllabus);
+    } else {
+      setLessonLoading(false);
+    }
+  }, [syllabusLessonSequence]);
+
+  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+
   return (
-    <>
-      <Noticebar inputContext={'global'} />
-      <div className={`w-screen md:w-full h-screen md:h-full flex overflow-hidden`}>
-        {/**
-         *  SIDEMENU
-         */}
-        <SideMenu setCurrentPage={setCurrentPage} currentPage={currentPage} updateAuthState={updateAuthState}>
-          <ProfileLink setCurrentPage={setCurrentPage} currentPage={currentPage} image={userData.image} />
-          <Links setCurrentPage={setCurrentPage} currentPage={currentPage} role={userData.role} />
-        </SideMenu>
+    <div className="h-screen flex overflow-hidden container_background">
+      {/* <ResizablePanels> */}
+      <SideMenu
+        setActiveRoomSyllabus={setActiveRoomSyllabus}
+        setLessonLoading={setLessonLoading}
+        setSyllabusLoading={setSyllabusLoading}
+        setActiveRoomName={setActiveRoomName}
+        updateAuthState={updateAuthState}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        role={userData.role}
+        handleRoomSelection={handleRoomSelection}
+      />
 
-        {(state.currentPage === 'lesson-planner' && userData.role === 'TR') ||
-          (state.currentPage === 'lesson-planner' && userData.role === 'FLW') ||
-          (state.currentPage === 'classroom' && userData.role === 'ST') ? (
-            <ClassroomControl
-              isHomescreen={false}
-              currentPage={currentPage}
-              activeRoom={activeRoom}
-              setActiveRoom={setActiveRoom}
-              setActiveRoomInfo={setActiveRoomInfo}
-              setActiveRoomName={setActiveRoomName}
-              activeRoomName={activeRoomName}
-              activeRoomInfo={activeRoomInfo}
-              lessonLoading={lessonLoading}
-              setLessonLoading={setLessonLoading}
-              syllabusLoading={syllabusLoading}
-              setSyllabusLoading={setSyllabusLoading}
-              activeRoomSyllabus={activeRoomSyllabus}
-              setActiveRoomSyllabus={setActiveRoomSyllabus}
+      <div className="h-full overflow-y-auto">
+        <Noticebar inputContext={'global'} />
+        <Suspense
+          fallback={
+            <div className="min-h-screen w-full flex flex-col justify-center items-center">
+              <ComponentLoading />
+            </div>
+          }>
+          <Switch>
+            <Route
+              path={`${match.url}`}
+              exact
+              render={() => {
+                if (userData && userData.role !== '') {
+                  if (userData.role === 'FLW' || userData.role === 'TR') {
+                    return <Redirect to={`${match.url}/lesson-planner`} />;
+                  } else if (userData.role === 'ST') {
+                    return <Redirect to={`${match.url}/home`} />;
+                    // return <Redirect to={`${match.url}/home`} />;
+                  } else return <Redirect to={`${match.url}/manage-institutions`} />;
+                } else
+                  return (
+                    <div className="min-h-screen w-full flex flex-col justify-center items-center">
+                      <ComponentLoading />
+                    </div>
+                  );
+              }}
             />
-          ) : null}
-
-        {/**
-         *  MAIN CONTENT
-         */}
-        <div className={`flex flex-row overflow-x-hidden overflow-y-scroll`}>
-          <div className={`height h-full flex flex-col`}>
-            <Suspense
-              fallback={
-                <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                  <ComponentLoading />
-                </div>
-              }>
-              <Switch>
-                <Route
-                  path={`${match.url}`}
-                  exact
-                  render={() => {
-                    if (userData && userData.role !== '') {
-                      if (userData.role === 'FLW' || userData.role === 'TR' || userData.role === 'ST') {
-                        return <Redirect to={`${match.url}/home`} />;
-                      } else return <Redirect to={`${match.url}/manage-institutions`} />;
-                    } else
-                      return (
-                        <div className="min-h-screen w-full flex flex-col justify-center items-center">
-                          <ComponentLoading />
-                        </div>
-                      );
-                  }}
+            <Route
+              exact
+              path={`${match.url}/home`}
+              render={() => (
+                <Home
+                  homeData={homeData}
+                  classList={classList}
+                  setActiveRoomInfo={setActiveRoomInfo}
+                  handleRoomSelection={handleRoomSelection}
                 />
-
-                <Route
-                  exact
-                  path={`${match.url}/home`}
-                  render={() => (
-                    <ClassroomControl
-                      isHomescreen={true}
-                      currentPage={currentPage}
-                      activeRoom={activeRoom}
-                      setActiveRoom={setActiveRoom}
-                      setActiveRoomInfo={setActiveRoomInfo}
-                      setActiveRoomName={setActiveRoomName}
-                      lessonLoading={lessonLoading}
-                      setLessonLoading={setLessonLoading}
-                      syllabusLoading={syllabusLoading}
-                      setSyllabusLoading={setSyllabusLoading}
-                      activeRoomSyllabus={activeRoomSyllabus}
-                      setActiveRoomSyllabus={setActiveRoomSyllabus}
-                    />
-                  )}
+              )}
+            />
+            <Route
+              exact
+              path={`${match.url}/classroom/:roomId`}
+              render={() => (
+                <Classroom
+                  isTeacher={isTeacher}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  activeRoomInfo={activeRoomInfo}
+                  activeRoomName={activeRoomName}
+                  setActiveRoomName={setActiveRoomName}
+                  visibleLessonGroup={visibleLessonGroup}
+                  setVisibleLessonGroup={setVisibleLessonGroup}
+                  lessonLoading={lessonLoading}
+                  handleRoomSelection={handleRoomSelection}
+                  syllabusLoading={syllabusLoading}
                 />
-
-                <Route
-                  exact
-                  path={`${match.url}/classroom`}
-                  render={() => (
-                    <Classroom
-                      currentPage={currentPage}
-                      setCurrentPage={setCurrentPage}
-                      activeRoom={activeRoom}
-                      activeRoomInfo={activeRoomInfo}
-                      setActiveRoom={setActiveRoom}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
-                      visibleLessonGroup={visibleLessonGroup}
-                      setVisibleLessonGroup={setVisibleLessonGroup}
-                      lessonLoading={lessonLoading}
-                      syllabusLoading={syllabusLoading}
-                    />
-                  )}
+              )}
+            />
+            <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+            <Route
+              path={`${match.url}/noticeboard`}
+              render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
+            />
+            <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
+            <Route path={`${match.url}/registration`} render={() => <Registration />} />
+            <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
+            <Route
+              path={`${match.url}/lesson-planner/:roomId`}
+              render={() => (
+                <LessonPlanHome
+                  handleRoomSelection={handleRoomSelection}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  activeRoomInfo={activeRoomInfo}
+                  activeRoomName={activeRoomName}
+                  setActiveRoomName={setActiveRoomName}
+                  visibleLessonGroup={visibleLessonGroup}
+                  setVisibleLessonGroup={setVisibleLessonGroup}
+                  lessonLoading={lessonLoading}
+                  setLessonLoading={setLessonLoading}
+                  syllabusLoading={syllabusLoading}
+                  setSyllabusLoading={setSyllabusLoading}
                 />
-
-                <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
-
-                <Route
-                  path={`${match.url}/noticeboard`}
-                  render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
-                />
-
-                <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
-
-                <Route path={`${match.url}/registration`} render={() => <Registration />} />
-
-                <Route path={`${match.url}/profile`} render={() => <Profile updateAuthState={updateAuthState} />} />
-
-                <Route
-                  path={`${match.url}/lesson-planner`}
-                  render={() => (
-                    <LessonPlanHome
-                      currentPage={currentPage}
-                      setCurrentPage={setCurrentPage}
-                      activeRoom={activeRoom}
-                      activeRoomInfo={activeRoomInfo}
-                      activeRoomName={activeRoomName}
-                      setActiveRoomName={setActiveRoomName}
-                      visibleLessonGroup={visibleLessonGroup}
-                      setVisibleLessonGroup={setVisibleLessonGroup}
-                      lessonLoading={lessonLoading}
-                      setLessonLoading={setLessonLoading}
-                      syllabusLoading={syllabusLoading}
-                      setSyllabusLoading={setSyllabusLoading}
-                    />
-                  )}
-                />
-
-                <Route
-                  path={`${match.url}/manage-institutions`}
-                  render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
-                />
-
-                <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
-
-                <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
-              </Switch>
-            </Suspense>
-          </div>
-
-          {/**
-           *  SIDEWIDGETSBAR
-           */}
-          {state.currentPage === 'classroom' ||
-            state.currentPage === 'lesson-planner' ||
-            state.currentPage === 'noticeboard' ? (
-              <SideWidgetBar currentPage={state.currentPage} />
-            ) : null}
-        </div>
+              )}
+            />
+            <Route
+              path={`${match.url}/manage-institutions`}
+              render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
+            />
+            <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+            <Route path={`${match.url}/lesson-builder`} render={() => <LessonsBuilderHome />} />
+          </Switch>
+        </Suspense>
       </div>
-    </>
+      {/* </ResizablePanels> */}
+    </div>
   );
 };
 

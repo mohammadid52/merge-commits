@@ -16,10 +16,10 @@ interface MultipleSelectorProps {
 }
 
 const MultipleSelector = (props: MultipleSelectorProps) => {
-  const { list, disabled, withAvatar, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
+  const { list, disabled, withAvatar=false, selectedItems, btnClass, arrowHidden, placeholder, onChange } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
-  const [teacherList, setTeacherList] = useState([]);
+  const [modifiedList, setModifiedList] = useState([]);
 
   const { theme, clientKey } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -58,10 +58,14 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
 
   React.useEffect(() => {
     if (list && list.length > 0) {
-      const modifiedlist = getList(list);
-      setTeacherList(modifiedlist);
-    }
-  }, [list]);
+      if(withAvatar){
+        const modifiedlist = getList(list);
+        setModifiedList(modifiedlist);
+       } else {
+        setModifiedList(list);
+       }
+    } 
+  }, [list,withAvatar]);
 
   return (
     <div className="relative" ref={currentRef}>
@@ -104,8 +108,8 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
             className="max-h-60 focus:shadow-none rounded-md py-1 text-base leading-6 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-            {teacherList.length > 0 ? (
-              teacherList.map((item: { id: string; name: string; value: string; avatar?: string }, key: number) => {
+            {modifiedList.length > 0 ? (
+            modifiedList.map((item: { id: string; name: string; value: string; avatar?: string }, key: number) => {
                 return (
                   <li
                     key={key}
@@ -113,7 +117,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
                     id={item.id}
                     role="option"
                     className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
-                    {item.avatar && withAvatar ? (
+                    {withAvatar ? (item.avatar ? (
                       <img src={item.avatar} alt="" className="flex-shrink-0 mr-2 h-6 w-6 rounded-full" />
                     ) : (
                       <div
@@ -128,28 +132,13 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
                           ? initials(getInitialsFromString(item.name)[0], getInitialsFromString(item.name)[1])
                           : initials('N', 'A')}
                       </div>
-                    )}
-                    {!withAvatar && (
-                      <span
-                        className={`${selectedItems.find((i) => i.id === item.id) ? 'display' : 'hidden'} ${
-                          theme.textColor[themeColor]
-                        } relative w-auto flex items-center`}>
-                        <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </span>
-                    )}
+                    )): null}
+                    
                     <span
-                      className={`${selectedItems.find((i) => i.id === item.id) ? 'font-semibold' : 'font-normal'} ${
-                        !withAvatar ? 'pl-9' : ''
-                      } pl-4 block truncate`}>
+                      className={`${selectedItems.find((i) => i.id === item.id) ? 'font-semibold' : 'font-normal'} pl-4 block truncate`}>
                       {item.name}
                     </span>
-                    {withAvatar && (
+                    
                       <span
                         className={`${selectedItems.find((i) => i.id === item.id) ? 'display' : 'hidden'} ${
                           theme.textColor[themeColor]
@@ -162,7 +151,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
                           />
                         </svg>
                       </span>
-                    )}
+                    
                   </li>
                 );
               })
