@@ -131,7 +131,7 @@ const RoomsList = (props: RoomListProps) => {
                         .join(',')}
                     </div>
                     <span
-                      className={`w-1/10 h-6 flex items-center cursor-pointer text-center py-2 ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 flex items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentRoom(item.id)}>
                       <Tooltip text="Click to edit" placement="left">
                         {InstitueRomms[userLanguage]['EDIT']}
