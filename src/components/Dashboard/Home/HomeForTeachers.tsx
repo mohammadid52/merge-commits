@@ -252,6 +252,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Classroom Section */}
 
           <RoomTiles
+            isTeacher
             handleRoomSelection={handleRoomSelection}
             classList={getClassList()}
           />
