@@ -3,6 +3,7 @@ import { DashboardProps } from '../Dashboard';
 import { Syllabus } from './Classroom';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
+import Tooltip from '../../Atoms/Tooltip';
 
 const SyllabusSwitch = (props: DashboardProps) => {
   const { activeRoom, currentPage, syllabusLoading, handleSyllabusActivation } = props;
@@ -12,32 +13,31 @@ const SyllabusSwitch = (props: DashboardProps) => {
   return (
     <>
       {syllabusLoading ? (
-        <div className={`${theme.dashboard.card} ${theme.elem.textDark}`}>Loading units...</div>
+        <div className={`shadow text-center bg-white rounded-lg p-6 ${theme.elem.textDark}`}>Loading units...</div>
       ) : null}
 
-      <div className={`grid grid-cols-3 gap-2`}>
+      <div className={`grid grid-cols-3 md:grid-cols-2 gap-2`}>
         {!syllabusLoading && state.roomData?.syllabus?.length > 0
           ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
               return (
                 <div
                   key={`testSyllabus_${i}`}
                   id={`testSyllabus_${i}`}
-                  className={`flex flex-col bg-white rounded-lg shadow py-4 justify-center items-center`}>
+                  className={`flex relative flex-col bg-white rounded-lg shadow py-4 pb-10 justify-center items-center`}>
                   <div className={``}>
-                    <p className={`text-sm text-darker-gray text-center`}>
-                      <b>Unit Name: </b>
-                    </p>
-                    <p className={`text-xl my-2 text-darker-gray text-center`}>{syllabus.name}</p>
+                    <p className={`text-sm text-semibold text-darker-gray text-center`}>Unit Name:</p>
+                    <p className={`text-base py-4 my-2 text-darker-gray text-center`}>{syllabus.name}</p>
                   </div>
 
                   {!syllabus.active ? (
                     <div
-                      className="text-center cursor-pointer text-base text-indigo-500 hover:bg-indigo-400 hover:text-white transition-all font-semibold w-auto py-0 px-2 rounded-md duration-300"
+                      className="text-center rounded-b-lg absolute bottom-0 left-0 right-0 cursor-pointer text-base text-indigo-500 hover:bg-indigo-400 hover:text-white transition-all font-semibold w-auto py-2 duration-150"
                       onClick={() => handleSyllabusActivation(syllabus.id)}>
                       Activate
                     </div>
                   ) : (
-                    <div className={`w-full flex justify-center items-center text-base text-green-400 font-semibold`}>
+                    <div
+                      className={`w-full absolute rounded-b-lg bottom-0 left-0 right-0 py-2 flex justify-center  items-center text-base bg-green-400 text-white  font-semibold`}>
                       Active
                     </div>
                   )}

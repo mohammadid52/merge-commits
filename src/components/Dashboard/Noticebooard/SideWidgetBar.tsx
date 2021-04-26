@@ -69,7 +69,9 @@ const SideWidgetBar = (props: DashboardProps) => {
         {/**
          * STATIC INSTITUTE LOGO
          */}
-        <LogoWidget source={getAsset(clientKey, 'logo_symbol')} altdesc={`school-logo`} card={false} />
+        {state.roomData && state.roomData.widgets.length > 0 && (
+          <LogoWidget source={getAsset(clientKey, 'logo_symbol')} altdesc={`school-logo`} card={false} />
+        )}
 
         {/**
          * DYNAMIC MAP

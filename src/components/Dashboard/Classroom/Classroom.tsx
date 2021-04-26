@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router';
+import isEmpty from 'lodash/isEmpty';
+
 import { GlobalContext } from '../../../contexts/GlobalContext';
-import * as customQueries from '../../../customGraphql/customQueries';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import TodayUpcomingTabs from './TodayUpcomingTabs';
-import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
+
 import SurveyCard from './SurveyCard';
 import Today from './TodayLesson';
 import UpcomingLessons from './UpcomingLessons';
@@ -21,8 +21,8 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 import Selector from '../../Atoms/Form/Selector';
-
-import isEmpty from 'lodash/isEmpty';
+import HeroBanner from '../../Header/HeroBanner';
+import DashboardContainer from '../DashboardContainer';
 
 interface Artist {
   id: string;
@@ -97,11 +97,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     handleSyllabusActivation,
     lessonLoading,
     syllabusLoading,
+    handleRoomSelection,
   } = props;
   const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const showClassDetails: boolean = !isEmpty(activeRoomInfo);
+  const match: any = useRouteMatch();
+  const bannerImg = getAsset(clientKey, 'dashboardBanner1');
 
   const { classRoomDict } = useDictionary(clientKey);
   const [survey] = useState<any>({
@@ -124,6 +127,17 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
     }
   }, [state.user.role]);
+
+  const roomId = match?.params?.roomId;
+
+  useEffect(() => {
+    if (!isEmpty(roomId) && state.roomData?.rooms?.length > 0) {
+      const roomIndex = state.roomData.rooms.findIndex((d: any) => d.id === roomId);
+      const room = state.roomData.rooms[roomIndex];
+      const name = room?.name;
+      handleRoomSelection(roomId, name, roomIndex);
+    }
+  }, [roomId, state.roomData.rooms]);
 
   /**
    * ASSESSMENTS & SURVEYS
@@ -287,86 +301,82 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     });
 
   return (
-    <div className="p-8 h-full w-full">
-      {/**
-       *  TOP WIDGET BAR
-       *  - Hide for teacher
-       */}
-      {/* Top bar   */}
-      <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-        <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
-          <span>
-            {!isTeacher ? (activeRoomName !== '' ? activeRoomName : classRoomDict[userLanguage]['TITLE']) : null}
-            {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
-          </span>
-        </div>
-        <div>
-          <span className={`mr-0 float-right text-gray-600 text-right`}>
-            <DateAndTime />
-          </span>
-        </div>
-      </div>
-      {/* <Selector placeholder="Select Classroom" btnClass="w-auto" onChange={() => {}} list={classList} /> */}
-      <div>
-        {thereAreTopWidgets && (
-          <div className={`bg-opacity-10`}>
-            <div className={`pb-4 m-auto`}>
-              <TopWidgetBar />
+    <>
+      <DashboardContainer
+        bannerImg={bannerImg}
+        currentPage={state.currentPage}
+        bannerTitle={classRoomDict[userLanguage]['TITLE']}>
+        <div className="p-8 w-full">
+          <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
+            <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+              <span>
+                {!isTeacher ? (activeRoomName !== '' ? activeRoomName : classRoomDict[userLanguage]['TITLE']) : null}
+                {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
+              </span>
+            </div>
+            <div>
+              <span className={`mr-0 float-right text-gray-600 text-right`}>
+                <DateAndTime />
+              </span>
             </div>
           </div>
-        )}
-
-        {isTeacher && state.currentPage === 'lesson-planner' && (
-          <>
-            <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
-            <div className={`bg-opacity-10`}>
-              <div className={`pb-4 m-auto`}>
-                <SyllabusSwitch
-                  activeRoom={state.activeRoom}
-                  currentPage={currentPage}
-                  syllabusLoading={syllabusLoading}
-                  handleSyllabusActivation={handleSyllabusActivation}
-                />
+          <div>
+            {thereAreTopWidgets && (
+              <div className={`bg-opacity-10`}>
+                <div className={`pb-4 m-auto`}>
+                  <TopWidgetBar />
+                </div>
               </div>
-            </div>
-          </>
-        )}
-
-        {/**
-         *  ASSESSMENTS/SURVEYS
-         */}
-
-        {state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-          <>
-            <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']} />
-            <div className={`bg-opacity-10`}>
-              <div className={`text-xl m-auto`}>
-                <SurveyCard
-                  isTeacher={isTeacher}
-                  link={'/lesson/on-boarding-survey-1'}
-                  lessons={assessmentsSurveys}
-                  lessonType={`survey`}
-                  accessible={survey.display}
+            )}
+            {isTeacher && state.currentPage === 'lesson-planner' && (
+              <>
+                <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
+                <div className={`bg-opacity-10`}>
+                  <div className={`pb-4 m-auto`}>
+                    <SyllabusSwitch
+                      activeRoom={state.activeRoom}
+                      currentPage={currentPage}
+                      syllabusLoading={syllabusLoading}
+                      handleSyllabusActivation={handleSyllabusActivation}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+            {state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+              <>
+                <SectionTitleV3
+                  fontSize="2xl"
+                  fontStyle="bold"
+                  title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']}
                 />
+                <div className={`bg-opacity-10`}>
+                  <div className={`text-xl m-auto`}>
+                    <SurveyCard
+                      isTeacher={isTeacher}
+                      link={'/lesson/on-boarding-survey-1'}
+                      lessons={assessmentsSurveys}
+                      lessonType={`survey`}
+                      accessible={survey.display}
+                    />
+                  </div>
+                </div>
+              </>
+            ) : null}
+
+            {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+              <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['LIST_LESSON']} />
+            ) : null}
+
+            {showClassDetails && (
+              <div className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
+                <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
               </div>
-            </div>
-          </>
-        ) : null}
-
-        {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-          <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['LIST_LESSON']} />
-        ) : null}
-
-        {showClassDetails && (
-          <div className={`w-full min-h-56 pt-8 pb-4 px-6 bg-white rounded-lg shadow mb-4`}>
-            {/**
-             *  LESSON TAB TOGGLE
-             */}
-            <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
+            )}
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      </DashboardContainer>
+    </>
   );
 };
 

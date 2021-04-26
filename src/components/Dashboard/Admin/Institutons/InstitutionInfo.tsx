@@ -134,106 +134,114 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   } = instProps?.institute;
   return (
     <div>
-      <div className="h-9/10 flex flex-col md:flex-row">
+      <div className="h-9/10 flex flex-col">
         {/* Profile section */}
-        <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
-          {image ? (
-            <img
-              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-              src={imageUrl}
-            />
-          ) : (
-            <div
-              className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+        <div className="flex-row flex items-center justify-center">
+          <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
+            {image ? (
+              imageUrl ? (
+                <img
+                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                  src={imageUrl}
+                />
+              ) : (
+                <div
+                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 bg-gray-400 shadow-elem-light`}
+                />
+              )
+            ) : (
               <div
-                className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
-                style={{
-                  background: `${
-                    name
-                      ? stringToHslColor(getInitialsFromString(name)[0] + ' ' + getInitialsFromString(name)[1])
-                      : null
-                  }`,
-                  textShadow: '0.2rem 0.2rem 3px #423939b3',
-                }}>
-                {name && initials(getInitialsFromString(name)[0], getInitialsFromString(name)[1])}
+                className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>
+                <div
+                  className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
+                  style={{
+                    background: `${
+                      name
+                        ? stringToHslColor(getInitialsFromString(name)[0] + ' ' + getInitialsFromString(name)[1])
+                        : null
+                    }`,
+                    textShadow: '0.2rem 0.2rem 3px #423939b3',
+                  }}>
+                  {name && initials(getInitialsFromString(name)[0], getInitialsFromString(name)[1])}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <div className="text-xl font-bold font-open text-gray-900 mt-4 w-48">
-            <p>{name ? name : ''}</p>
+            <div className="text-xl font-bold font-open text-gray-900 mt-4 w-48">
+              <p>{name ? name : ''}</p>
+            </div>
           </div>
-        </div>
 
-        {/* General information section */}
-        <div className="w-full">
-          <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-            <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">{Institute_info[userLanguage]['TITLE']}</h3>
-            </div>
-
-            <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
-              <div className="p-2 px-4">
-                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['ADDRESS']}:</span>
-                  <span className="w-auto">
-                    {address && (
-                      <Fragment>
-                        {address + ', '} <br />
-                      </Fragment>
-                    )}
-                    {addressLine2 && (
-                      <Fragment>
-                        {addressLine2 + ', '} <br />
-                      </Fragment>
-                    )}
-                    {city && city + ', '} {state && state} <br />
-                    {zip && zip}
-                  </span>
-                </p>
-                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['CONTACT']}:</span>
-                  <span className="w-auto">{phone ? formatPhoneNumber(phone) : '--'}</span>
-                </p>
+          {/* General information section */}
+          <div className="">
+            <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
+              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">{Institute_info[userLanguage]['TITLE']}</h3>
               </div>
-              <div className="p-2 px-8">
-                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">
-                    {' '}
-                    {Institute_info[userLanguage]['INSTITUTION_TYPE']}:
-                  </span>
-                  <span className="w-auto">{type ? type : '--'}</span>
-                </p>
-                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['WEBSITE']}:</span>
-                  {website ? (
-                    <span className="w-auto hover:text-blue-700">
-                      <a href={website} target="_blank">
-                        {getHostNameFromUrl(website)}
-                      </a>
+
+              <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
+                <div className="p-2 px-4">
+                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                    <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['ADDRESS']}:</span>
+                    <span className="w-auto">
+                      {address && (
+                        <Fragment>
+                          {address + ', '} <br />
+                        </Fragment>
+                      )}
+                      {addressLine2 && (
+                        <Fragment>
+                          {addressLine2 + ', '} <br />
+                        </Fragment>
+                      )}
+                      {city && city + ', '} {state && state} <br />
+                      {zip && zip}
                     </span>
-                  ) : (
-                    '--'
-                  )}
-                </p>
-                <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-                  <span className="text-gray-900 mr-2 w-3/10">
-                    {' '}
-                    {Institute_info[userLanguage]['SERVICE_PROVIDER']}:
-                  </span>
-                  <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
-                </p>
+                  </p>
+                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                    <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['CONTACT']}:</span>
+                    <span className="w-auto">{phone ? formatPhoneNumber(phone) : '--'}</span>
+                  </p>
+                </div>
+                <div className="p-2 px-8">
+                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                    <span className="text-gray-900 mr-2 w-3/10">
+                      {' '}
+                      {Institute_info[userLanguage]['INSTITUTION_TYPE']}:
+                    </span>
+                    <span className="w-auto">{type ? type : '--'}</span>
+                  </p>
+                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                    <span className="text-gray-900 mr-2 w-3/10"> {Institute_info[userLanguage]['WEBSITE']}:</span>
+                    {website ? (
+                      <span className="w-auto hover:text-blue-700">
+                        <a href={website} target="_blank">
+                          {getHostNameFromUrl(website)}
+                        </a>
+                      </span>
+                    ) : (
+                      '--'
+                    )}
+                  </p>
+                  <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+                    <span className="text-gray-900 mr-2 w-3/10">
+                      {' '}
+                      {Institute_info[userLanguage]['SERVICE_PROVIDER']}:
+                    </span>
+                    <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-          {instProps?.institute?.id && (
-            <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
-              <div className="px-4 pt-5 sm:px-6">
-                <UnderlinedTabs tabs={tabs} activeTab={tabProps.tabsData.inst} updateTab={updateTab} />
-              </div>
-            </div>
-          )}
         </div>
+        {instProps?.institute?.id && (
+          <div className="overflow-hidden sm:rounded-lg">
+            <div className="px-4 pt-5 sm:px-6">
+              <UnderlinedTabs tabs={tabs} activeTab={tabProps.tabsData.inst} updateTab={updateTab} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

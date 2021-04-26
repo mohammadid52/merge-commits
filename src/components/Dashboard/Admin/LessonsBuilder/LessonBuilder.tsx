@@ -173,7 +173,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <PreviewForm
             lessonName={formData.name}
             lessonID={lessonId}
-            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonPlans={savedLessonDetails.lessonPlans || []}
             lessonType={formData.type?.value}
           />
         );
@@ -266,7 +266,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums items={breadCrumsList} unsavedChanges={unsavedChanges} toggleModal={toggleModal} />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonBuilderDict[userLanguage]['TITLE']}

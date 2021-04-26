@@ -1,8 +1,7 @@
-import React, { useState, useReducer, useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { globalReducer } from '../reducers/GlobalReducer';
 import { globalState } from '../state/GlobalState';
 import { getClientKey } from '../utilities/strings';
-import { useCookies } from 'react-cookie';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 
@@ -32,17 +31,17 @@ export const standardTheme = {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
     card: 'p-2 relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex',
-    cardNoBG: 'relative h-auto p-2 flex'
+    cardNoBG: 'relative h-auto p-2 flex',
   },
   lessonCard: {
     title: 'flex items-center text-2xl text-black font-open text-left',
     subtitle: 'text-sm text-gray-400',
-    border: 'border-dark-gray border-opacity-20'
+    border: 'border-dark-gray border-opacity-20',
   },
   sidemenu: {
     bg: 'bg-darker-gray',
-    primary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-darker-gray',
-    secondary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-medium-gray  border-r-0 border-white',
+    primary: 'z-50 min-h-screen w-65 min-w-65 flex flex-col bg-darker-gray',
+    secondary: 'z-50 min-h-screen w-65 min-w-65 flex flex-col bg-medium-gray  border-r-0 border-white',
     darktone: 'bg-black bg-opacity-80',
   },
   block: {
@@ -94,32 +93,31 @@ export const standardTheme = {
     iconoclastIndigo: 'border-indigo-400',
     curateBlue: 'border-blue-400',
   },
-  backGround : {
+  backGround: {
     iconoclastIndigo: 'bg-indigo-500',
     curateBlue: 'bg-blue-500',
   },
-  backGroundLight : {
+  backGroundLight: {
     iconoclastIndigo: 'bg-indigo-400',
     curateBlue: 'bg-blue-400',
   },
   modals: {
     header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
-    footer: 'flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200',
+    footer:
+      'flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200',
     content: ' border-0  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
   },
-  notice:{
+  notice: {
     bar: '',
-    category:{
+    category: {
       error: '',
       alert: '',
-      info:'',
+      info: '',
       help: '',
-      tip: ''
-    }
-  }
+      tip: '',
+    },
+  },
 };
-
-// TODO: replace dashboard.sectionTitle with << font-medium h-12 justify-center items-center text-left >>
 
 interface GlobalProps {
   children: React.ReactNode;
@@ -129,7 +127,6 @@ export const GlobalContext = React.createContext(null);
 
 export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const [state, dispatch] = useReducer(globalReducer, globalState);
-  // const [cookies, setCookie] = useCookies([`location`]);
 
   const theme = standardTheme;
   const globalStateAccess = state;
@@ -137,11 +134,11 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const uLang = userLanguage;
   const clientKey = getClientKey();
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (state.user && state.user.location && state.user.location.length > 0) {
       updatePersonLocation();
-    } else {
-      // console.log('dashboard: ', 'user location not initialized yet...')
     }
   }, [state.user]);
 

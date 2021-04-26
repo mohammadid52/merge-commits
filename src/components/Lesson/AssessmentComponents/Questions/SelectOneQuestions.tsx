@@ -20,14 +20,25 @@ const SelectOneQuestions = (props: QuestionProps) => {
   const { state, theme, dispatch } = switchContext;
 
   const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
-
+  const [otherOptSel, setOtherOptSel] = useState(false);
   const questionId = question.question.id;
+  const [other, setOther] = useState('');
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
     const { id } = e.target as HTMLElement;
     setInput({ id: questionId, value: id });
     handleInputChange(questionId, id, checkpointID);
+    if (id === 'other') {
+      setOtherOptSel(true);
+    } else {
+      setOtherOptSel(false);
+    }
+  };
+
+  const onOtherSave = () => {
+    setOtherOptSel(false);
+    handleInputChange(questionId, input.value, checkpointID, other);
   };
   return (
     <>
@@ -36,10 +47,10 @@ const SelectOneQuestions = (props: QuestionProps) => {
           <label htmlFor={question.question.label}>
             <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
               <b>{questionIndex + 1}. </b>
-              {question.question.question}
+              {question.question.question} (Select one)
             </p>
           </label>
-          <div className={'w-auto flex flex-wrap mx-auto'}>
+          <div className={'w-auto flex flex-wrap'}>
             {question.question.options.map(
               (
                 option: {
@@ -48,11 +59,12 @@ const SelectOneQuestions = (props: QuestionProps) => {
                   color: string;
                   text: string;
                 },
-                questionOptionIndex: number,
+                questionOptionIndex: number
               ) => {
                 return (
-                  <div key={`question_${questionId}_${questionOptionIndex}`}
-                       className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
+                  <div
+                    key={`question_${questionId}_${questionOptionIndex}`}
+                    className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
                     <span
                       id={option.label}
                       className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
@@ -63,7 +75,21 @@ const SelectOneQuestions = (props: QuestionProps) => {
                     <span className={`w-24`}>{option.text}</span>
                   </div>
                 );
-              },
+              }
+            )}
+            {otherOptSel && (
+              <div>
+                <input
+                  value={other}
+                  onChange={(e) => setOther(e.target.value)}
+                  className="bg-transparent border-b-2 my-8 text-white border-sea-green pb-2"
+                  placeholder="Other"
+                  type="text"
+                />
+                <button onClick={onOtherSave} className="bg-sea-green w-auto py-2 px-4 rounded">
+                  save
+                </button>
+              </div>
             )}
           </div>
         </div>

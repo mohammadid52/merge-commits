@@ -68,6 +68,16 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      last: false,
+    },
+    {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
       last: false,

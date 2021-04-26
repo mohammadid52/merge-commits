@@ -8,8 +8,10 @@ import Connect from './Connect';
 import InstructionBlock from '../InstructionBlock';
 import useDictionary from '../../../../customHooks/dictionary';
 import { stripStyleFromHTML } from '../../../../utilities/strings';
+import { LessonComponentsInterface } from '../../../../interfaces/LessonComponentsInterfaces';
 
-const Intro = () => {
+const Intro = (props: LessonComponentsInterface) => {
+  const { checkpointsItems } = props;
   const { state, theme, dispatch, clientKey, userLanguage } = useContext(LessonContext);
   const { lessonDict } = useDictionary(clientKey);
 
@@ -72,7 +74,7 @@ const Intro = () => {
         <Keyword />
       </div>
       <div className="flex flex-col justify-between items-center mt-4">
-        <DoFirst />
+        <DoFirst checkpointsItems={checkpointsItems} />
       </div>
     </div>
   );

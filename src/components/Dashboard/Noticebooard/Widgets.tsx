@@ -18,7 +18,7 @@ export const LogoWidget = (props: {
 }) => {
   const { source, altdesc, title, card, classProp } = props;
   return (
-    <div className={`p-2 mb-4 bg-white  border-0 border-dark-gray border-opacity-10`}>
+    <div className={`p-2 mb-4 shadow bg-white rounded`}>
       {title && (
         <p className={`${responsiveClass} text-sm p-2 font-semibold border-b-0 border-dark-gray border-opacity-10`}>
           {title}:

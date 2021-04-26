@@ -28,14 +28,14 @@ const UnderlinedTabs = (props: TabsProps) => {
   };
   return (
     <div className="flex flex-wrap flex-col w-full ">
-      <div className="flex flex-nowrap flex-row mr-2 bg-white">
+      <div className="flex flex-nowrap overflow-hidden sm:overflow-x-auto flex-row mr-2 bg-white">
         {tabs.map((tab, key) => (
           <div key={key} className="">
             <button
               onClick={() => {
                 changeActiveTab(tab.index);
               }}
-              className={`font-bold uppercase bg-white text-xs p-3 px-8 border-b-2 flex items-center h-full justify-center hover:${
+              className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center hover:${
                 theme.borderColor[themeColor]
               } ${theme.outlineNone} ${openTab === tab.index ? `bg-gray-100 ${theme.borderColor[themeColor]}` : ''}`}
               type="button">

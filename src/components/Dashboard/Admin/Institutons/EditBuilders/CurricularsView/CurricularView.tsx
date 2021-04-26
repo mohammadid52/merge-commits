@@ -23,6 +23,7 @@ import LearningObjective from './TabsListing/LearningObjective';
 import CheckpointList from './TabsListing/CheckpointList';
 import { GlobalContext } from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import { goBackBreadCrumb } from '../../../../../../utilities/functions';
 
 interface CurricularViewProps {
   tabProps?: any;
@@ -80,6 +81,16 @@ const CurricularView = (props: CurricularViewProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      last: false,
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get('id')}`,
@@ -188,12 +199,19 @@ const CurricularView = (props: CurricularViewProps) => {
           subtitle={curricularviewdict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
           {currentPath !== 'edit' ? (
             <Buttons
               btnClass="mr-4 px-6"
               label="Edit"
-              onClick={() => history.push(`/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`)}
+              onClick={() =>
+                history.push(`/dashboard/manage-institutions/${institutionId}/curricular/edit?id=${params.get('id')}`)
+              }
               Icon={FaEdit}
             />
           ) : null}

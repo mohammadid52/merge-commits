@@ -18,6 +18,7 @@ import CheckpointQueTable from '../../../../LessonsBuilder/StepActionComponent/C
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import { getAsset } from '../../../../../../../assets';
 import useDictionary from '../../../../../../../customHooks/dictionary';
+import { goBackBreadCrumb } from '../../../../../../../utilities/functions';
 
 interface ProfileCheckpointlookupProps {}
 
@@ -40,6 +41,16 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
+      last: false,
+    },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
@@ -155,7 +166,12 @@ const ProfileCheckpointlookup = (props: ProfileCheckpointlookupProps) => {
           subtitle={ProfileCheckpointlookupDict[userLanguage]['subtitle']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 

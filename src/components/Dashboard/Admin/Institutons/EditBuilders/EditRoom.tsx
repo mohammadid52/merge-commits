@@ -2,8 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
+import differenceBy from 'lodash/differenceBy';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+
 import * as queries from '../../../../../graphql/queries';
 import * as mutation from '../../../../../graphql/mutations';
 import SectionTitle from '../../../../Atoms/SectionTitle';
@@ -17,6 +20,10 @@ import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
+import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface EditRoomProps {}
 
@@ -29,6 +36,7 @@ const EditRoom = (props: EditRoomProps) => {
     name: '',
     institute: { id: '', name: '', value: '' },
     teacher: { id: '', name: '', value: '' },
+    coTeachers: [{}],
     classRoom: { id: '', name: '', value: '' },
     curricular: { id: '', name: '', value: '' },
     maxPersons: '',
@@ -37,6 +45,7 @@ const EditRoom = (props: EditRoomProps) => {
   const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
   const [teachersList, setTeachersList] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
   const [prevName, setPrevName] = useState('');
@@ -46,6 +55,11 @@ const EditRoom = (props: EditRoomProps) => {
     message: '',
     isError: false,
   });
+  const [originalTeacher, setOriginalTeacher] = useState([]);
+  const [coTeachersList, setCoTeachersList] = useState(teachersList);
+  const [selectedCoTeachers, setSelectedCoTeachers] = useState<
+    { email?: string; authId: string; value?: string; id?: string; name?: string }[]
+  >([]);
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
@@ -56,11 +70,43 @@ const EditRoom = (props: EditRoomProps) => {
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
+    {
       title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'],
       url: `/dashboard/room-edit?id=${params.get('id')}`,
       last: true,
     },
   ];
+
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+  });
+
+  const onModalSave = () => {
+    toggleModal();
+    history.goBack();
+  };
+
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show,
+    });
+  };
+
+  const goBack = () => {
+    if (unsavedChanges) {
+      toggleModal();
+    } else {
+      goBackBreadCrumb(breadCrumsList, history);
+    }
+  };
 
   const selectTeacher = (val: string, name: string, id: string) => {
     setRoomData({
@@ -71,6 +117,27 @@ const EditRoom = (props: EditRoomProps) => {
         value: val,
       },
     });
+
+    const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    setUnsavedChanges(true);
+    setCoTeachersList(filteredDefaultTeacher);
+    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
+  };
+
+  const selectCoTeacher = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentCoTeachers = selectedCoTeachers;
+    const selectedItem = currentCoTeachers.find((item) => item.id === id);
+
+    if (!selectedItem) {
+      const selectedItem = coTeachersList.find((item) => item.id === id);
+      updatedList = [...currentCoTeachers, { id, name, value, ...selectedItem }];
+    } else {
+      updatedList = currentCoTeachers.filter((item) => item.id !== id);
+    }
+    setUnsavedChanges(true);
+
+    setSelectedCoTeachers(updatedList);
   };
 
   const editInputField = (e: any) => {
@@ -78,6 +145,8 @@ const EditRoom = (props: EditRoomProps) => {
       ...roomData,
       [e.target.name]: e.target.value,
     });
+    setUnsavedChanges(true);
+
     removeErrorMsg();
   };
 
@@ -91,9 +160,12 @@ const EditRoom = (props: EditRoomProps) => {
           value: val,
         },
         teacher: { id: '', name: '', value: '' },
+        coTeachers: [{}],
         classRoom: { id: '', name: '', value: '' },
         curricular: { id: '', name: '', value: '' },
       });
+      setUnsavedChanges(true);
+
       removeErrorMsg();
     }
   };
@@ -107,6 +179,8 @@ const EditRoom = (props: EditRoomProps) => {
         value: val,
       },
     });
+    setUnsavedChanges(true);
+
     removeErrorMsg();
   };
   const selectCurriculum = (val: string, name: string, id: string) => {
@@ -118,6 +192,8 @@ const EditRoom = (props: EditRoomProps) => {
         value: val,
       },
     });
+    setUnsavedChanges(true);
+
     removeErrorMsg();
   };
 
@@ -205,7 +281,10 @@ const EditRoom = (props: EditRoomProps) => {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
         );
-        const staffList = sortedList.map((item: any) => ({
+        const filterByRole = sortedList.filter(
+          (teacher: any) => teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
+        );
+        const staffList = filterByRole.map((item: any) => ({
           id: item.staffMember?.id,
           name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
           value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
@@ -222,6 +301,7 @@ const EditRoom = (props: EditRoomProps) => {
           return !duplicate;
         });
         setTeachersList(filteredArray);
+        setCoTeachersList(filteredArray.filter((item: any) => item.id !== teacher.id));
       }
     } catch {
       setMessages({
@@ -233,6 +313,7 @@ const EditRoom = (props: EditRoomProps) => {
   };
 
   const getClassLists = async (allInstiId: string[]) => {
+    const instId = roomData.institute.id;
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
@@ -248,7 +329,13 @@ const EditRoom = (props: EditRoomProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-        const classList = sortedList.map((item: any, i: any) => ({
+        const filteredClassList = sortedList.filter((classItem: any) => {
+          return (
+            classItem?.institution.isServiceProvider === false ||
+            (classItem?.institution.isServiceProvider === true && classItem.institution.id === instId)
+          );
+        });
+        const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
           value: `${item.name ? item.name : ''}`,
@@ -381,12 +468,14 @@ const EditRoom = (props: EditRoomProps) => {
         const addCurricular: any = await API.graphql(
           graphqlOperation(mutation.updateRoomCurriculum, { input: curricularInput })
         );
+        setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['classupdate'],
           isError: false,
         });
       } catch {
+        setLoading(false);
         setMessages({
           show: true,
           message: RoomEDITdict[userLanguage]['messages']['errupdating'],
@@ -394,6 +483,7 @@ const EditRoom = (props: EditRoomProps) => {
         });
       }
     } else {
+      setLoading(false);
       setMessages({
         show: true,
         message: RoomEDITdict[userLanguage]['messages']['errprocess'],
@@ -403,6 +493,7 @@ const EditRoom = (props: EditRoomProps) => {
   };
 
   const saveRoomDetails = async () => {
+    setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
@@ -416,8 +507,11 @@ const EditRoom = (props: EditRoomProps) => {
           maxPersons: roomData.maxPersons,
         };
         const newRoom: any = await API.graphql(graphqlOperation(mutation.updateRoom, { input: input }));
+
         const curriculaId = newRoom.data.updateRoom.curricula.items[0].id;
-        saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
+        await saveRoomTeachers(roomData.id);
+        await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
+        setUnsavedChanges(false);
       } catch {
         setMessages({
           show: true,
@@ -425,6 +519,51 @@ const EditRoom = (props: EditRoomProps) => {
           isError: true,
         });
       }
+    }
+  };
+
+  const saveRoomTeachers = async (roomID: string) => {
+    const updatedTeachers = selectedCoTeachers;
+    const originalTeachers = originalTeacher;
+
+    const deletedItems: any[] = [];
+    const newItems: any[] = [];
+
+    originalTeachers.forEach((d) => {
+      if (updatedTeachers.map((d) => d.id).indexOf(d.id) === -1) {
+        deletedItems.push(d.rowId);
+      }
+    });
+
+    updatedTeachers.forEach((d) => {
+      if (originalTeachers.map((d) => d.id).indexOf(d.id) === -1) {
+        const input = {
+          roomID,
+          teacherID: d.id,
+          teacherEmail: d.email,
+          teacherAuthID: d.authId,
+        };
+        newItems.push(input);
+      }
+    });
+
+    if (newItems.length > 0) {
+      await Promise.all(
+        newItems.map(async (teacher) => {
+          await API.graphql(graphqlOperation(customMutations.createRoomCoTeachers, { input: teacher }));
+        })
+      );
+    }
+
+    if (deletedItems.length > 0) {
+      await Promise.all(
+        deletedItems.map(async (id) => {
+          const input = {
+            id: id,
+          };
+          await API.graphql(graphqlOperation(mutation.deleteRoomCoTeachers, { input: input }));
+        })
+      );
     }
   };
 
@@ -445,9 +584,32 @@ const EditRoom = (props: EditRoomProps) => {
     const currID = params.get('id');
     if (currID) {
       try {
-        const result: any = await API.graphql(graphqlOperation(queries.getRoom, { id: currID }));
+        const result: any = await API.graphql(graphqlOperation(customQueries.getRoom, { id: currID }));
         const savedData = result.data.getRoom;
         const curricularId = savedData.curricula.items[0].curriculumID;
+
+        const coTeachers = savedData.coTeachers?.items;
+        setOriginalTeacher(
+          coTeachers?.map((d: any) => {
+            return {
+              rowId: d.id,
+              id: d.teacherID,
+            };
+          })
+        );
+        setSelectedCoTeachers(
+          coTeachers?.map((d: any) => {
+            return {
+              id: d.teacherID,
+              authId: d.teacherAuthID,
+              email: d.teacherEmail,
+              name: `${d.teacher.firstName} ${d.teacher.lastName}`,
+              value: `${d.teacher.firstName} ${d.teacher.lastName}`,
+              rowId: d.id,
+            };
+          })
+        );
+
         setRoomData({
           ...roomData,
           id: savedData.id,
@@ -467,6 +629,8 @@ const EditRoom = (props: EditRoomProps) => {
             name: savedData.class?.name,
             value: savedData.class?.name,
           },
+          // ***** UNCOMMENT THIS ******
+          // coTeachers: savedData.coTeachers,
           maxPersons: savedData.maxPersons,
         });
         setPrevName(savedData.name);
@@ -513,13 +677,13 @@ const EditRoom = (props: EditRoomProps) => {
   const { name, curricular, classRoom, maxPersons, institute, teacher } = roomData;
 
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
+    <div className="">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title={RoomEDITdict[userLanguage]['TITLE']} subtitle={RoomEDITdict[userLanguage]['SUBTITLE']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -563,6 +727,18 @@ const EditRoom = (props: EditRoomProps) => {
                   list={teachersList}
                   placeholder={RoomEDITdict[userLanguage]['TEACHER_PLACEHOLDER']}
                   onChange={selectTeacher}
+                />
+              </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {RoomEDITdict[userLanguage]['CO_TEACHER_LABEL']}
+                </label>
+                <MultipleSelector
+                  withAvatar
+                  selectedItems={selectedCoTeachers}
+                  list={coTeachersList}
+                  placeholder={RoomEDITdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
+                  onChange={selectCoTeacher}
                 />
               </div>
               <div className="px-3 py-4">
@@ -621,11 +797,15 @@ const EditRoom = (props: EditRoomProps) => {
             transparent
           />
           <Buttons
+            disabled={loading}
             btnClass="py-3 px-12 text-sm ml-4"
-            label={RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
+            label={loading ? 'Saving...' : RoomEDITdict[userLanguage]['BUTTON']['SAVE']}
             onClick={saveRoomDetails}
           />
         </div>
+        {warnModal.show && (
+          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
+        )}
       </PageWrapper>
     </div>
   );
