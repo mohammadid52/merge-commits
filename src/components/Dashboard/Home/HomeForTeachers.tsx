@@ -182,10 +182,10 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             roomIndex: index,
           };
 
-          if (!uniqIds.includes(curriculum?.id)) {
-            modifiedClassList.push(modifiedItem);
-            uniqIds.push(curriculum?.id);
-          }
+          // if (!uniqIds.includes(curriculum?.id)) {
+          modifiedClassList.push(modifiedItem);
+          uniqIds.push(curriculum?.id);
+          // }
         }
       });
 
