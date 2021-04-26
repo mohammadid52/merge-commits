@@ -8,8 +8,8 @@ import filter from 'lodash/filter';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
-const StudentsTiles = (props: { studentsList: any; state: any }) => {
-  const { studentsList, state } = props;
+const StudentsTiles = (props: { studentsList: any; state: any; title: string }) => {
+  const { studentsList, title, state } = props;
 
   const [slicedList, setSlicedList] = useState<any[]>([]);
 
@@ -34,7 +34,7 @@ const StudentsTiles = (props: { studentsList: any; state: any }) => {
   return (
     <>
       <SectionTitleV3
-        title={'Your Classmates'}
+        title={title}
         extraContainerClass="max-w-256 px-6"
         fontSize="xl"
         fontStyle="semibold"

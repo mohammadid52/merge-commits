@@ -17,6 +17,7 @@ import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
+import HomeForTeachers from './Home/HomeForTeachers';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -63,6 +64,7 @@ const Dashboard = (props: DashboardProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
+  const [homeDataForTeachers, setHomeDataForTeachers] = useState([]);
 
   const [userData, setUserData] = useState({
     role: '',
@@ -95,6 +97,8 @@ const Dashboard = (props: DashboardProps) => {
   // Menu state
   const [roomsLoading, setRoomsLoading] = useState<boolean>(false);
   const [widgetLoading, setWidgetLoading] = useState<boolean>(false);
+
+  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
   const setUser = (user: userObject) => {
     setUserData({
@@ -197,13 +201,37 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
+  const getDashboardDataForTeachers = async (teacherAuthID: string) => {
+    try {
+      const dashboardDataFetch: any = await API.graphql(
+        graphqlOperation(customQueries.getDashboardDataForTeachers, {
+          filter: { teacherAuthID: { eq: teacherAuthID } },
+        })
+      );
+
+      const response = await dashboardDataFetch;
+      let arrayOfResponseObjects = response?.data?.listRooms?.items;
+      arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
+        return { class: { rooms: { items: arrayOfResponseObjects } } };
+      });
+
+      setHomeDataForTeachers(arrayOfResponseObjects);
+    } catch (e) {
+      console.error('getDashboardDataForTeachers -> ', e);
+    } finally {
+      // need to do some cleanup
+    }
+  };
   useEffect(() => {
+    const authId = state.user.authId;
+    const email = state.user.email;
     if (state.user.role === 'ST') {
-      const authId = state.user.authId;
-      const email = state.user.email;
       getDashboardData(authId, email);
     }
-  }, [state.user.role]);
+    if (isTeacher) {
+      getDashboardDataForTeachers(authId);
+    }
+  }, [state.user.role, isTeacher]);
 
   /******************************************
    * 1.2 REDUCE ROOMS FROM CLASSLIST ARRAY  *
@@ -521,7 +549,22 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [syllabusLessonSequence]);
 
-  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+  const HomeSwitch = () =>
+    isTeacher ? (
+      <HomeForTeachers
+        homeData={homeDataForTeachers}
+        classList={classList}
+        setActiveRoomInfo={setActiveRoomInfo}
+        handleRoomSelection={handleRoomSelection}
+      />
+    ) : (
+      <Home
+        homeData={homeData}
+        classList={classList}
+        setActiveRoomInfo={setActiveRoomInfo}
+        handleRoomSelection={handleRoomSelection}
+      />
+    );
 
   return (
     <div className="h-screen flex overflow-hidden container_background">
@@ -553,7 +596,7 @@ const Dashboard = (props: DashboardProps) => {
               render={() => {
                 if (userData && userData.role !== '') {
                   if (userData.role === 'FLW' || userData.role === 'TR') {
-                    return <Redirect to={`${match.url}/lesson-planner`} />;
+                    return <Redirect to={`${match.url}/home`} />;
                   } else if (userData.role === 'ST') {
                     return <Redirect to={`${match.url}/home`} />;
                     // return <Redirect to={`${match.url}/home`} />;
@@ -566,18 +609,7 @@ const Dashboard = (props: DashboardProps) => {
                   );
               }}
             />
-            <Route
-              exact
-              path={`${match.url}/home`}
-              render={() => (
-                <Home
-                  homeData={homeData}
-                  classList={classList}
-                  setActiveRoomInfo={setActiveRoomInfo}
-                  handleRoomSelection={handleRoomSelection}
-                />
-              )}
-            />
+            <Route exact path={`${match.url}/home`} render={() => <HomeSwitch />} />
             <Route
               exact
               path={`${match.url}/classroom/:roomId`}

@@ -10,7 +10,9 @@ import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 import { getAsset } from '../../../assets';
-import HeroBanner from '../../Header/HeroBanner';
+import { times } from 'lodash';
+import uniq from 'lodash/uniq';
+import { title } from 'process';
 
 export interface ModifiedListProps {
   id: any;
@@ -23,20 +25,21 @@ export interface ModifiedListProps {
   };
 }
 
-const Home = (props: ClassroomControlProps) => {
-  const { homeData, classList, handleRoomSelection, isTeacher } = props;
+const HomeForTeachers = (props: ClassroomControlProps) => {
+  const { homeData, handleRoomSelection, classList, isTeacher } = props;
+
   const { state, dispatch, theme, clientKey } = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
+  const [loading, setLoading] = useState(false);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
 
-  useEffect(() => {
-    if (state.user.role === 'ST') {
-      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: null } });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (state.user.role === 'ST') {
+  //     dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
+  //   }
+  // }, []);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
@@ -68,13 +71,16 @@ const Home = (props: ClassroomControlProps) => {
 
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
-
+    let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
         if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-          item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
-            coTeachersList.push(_item.teacher);
+          item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
+            if (!uniqIds.includes(_item.teacher.email)) {
+              coTeachersList.push(_item.teacher);
+              uniqIds.push(_item.teacher.email);
+            }
           });
         }
       });
@@ -84,12 +90,12 @@ const Home = (props: ClassroomControlProps) => {
 
   const teacherListWithImages = Promise.all(
     getTeacherList.map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
+      return { ...teacherObj, image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null) };
     })
   );
   const coTeacherListWithImages = Promise.all(
     getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
+      return { ...teacherObj, image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null) };
     })
   );
 
@@ -97,7 +103,10 @@ const Home = (props: ClassroomControlProps) => {
     homeData && homeData.length > 0
       ? homeData
           .reduce((acc: any[], dataObj: any) => {
-            return [...acc, ...dataObj?.class?.students?.items];
+            if (isEmpty(dataObj)) {
+              return [...acc, ...dataObj?.class?.students?.items];
+            }
+            return [];
           }, [])
           .reduce((acc: any[], studentObj: any) => {
             const studentIsPresent = acc.find(
@@ -129,24 +138,18 @@ const Home = (props: ClassroomControlProps) => {
     let modifiedClassList: ModifiedListProps[] = [];
     let uniqIds: string[] = [];
 
-    classList &&
-      classList.length > 0 &&
-      classList.forEach((item: { rooms: { items: any[] }; name: string; id: string }) => {
-        item.rooms.items.forEach(async (_item: any, index) => {
+    homeData &&
+      homeData.length > 0 &&
+      homeData.forEach((item: any) => {
+        item?.class?.rooms?.items.forEach(async (_item: any) => {
           const curriculum = _item.curricula?.items[0].curriculum;
           if (curriculum !== null) {
             const imagePath = curriculum?.image;
 
             const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-            const teacherProfileImg = await (_item.teacher.image ? getImageFromS3(_item.teacher.image) : false);
+            const teacherProfileImg = await (_item.teacher?.image ? getImageFromS3(_item.teacher?.image) : false);
 
-            const modifiedItem = {
-              ..._item,
-              roomName: item?.name,
-              bannerImage: image,
-              teacherProfileImg,
-              roomIndex: index,
-            };
+            const modifiedItem = { ..._item, roomName: item?.name, bannerImage: image, teacherProfileImg };
 
             if (!uniqIds.includes(curriculum?.id)) {
               modifiedClassList.push(modifiedItem);
@@ -174,17 +177,32 @@ const Home = (props: ClassroomControlProps) => {
     <>
       {homeData ? (
         <>
-          <div>
-            <HeroBanner imgUrl={dashboardBanner1} title={'Dashboard'} />
+          {/* Hero Section */}
+          <div className="relative">
+            <div className="absolute inset-0 w-full h-60">
+              <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
+              <img
+                className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"
+                src={dashboardBanner1}
+                alt=""
+              />
+            </div>
+            <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
+              <h1
+                style={{ fontSize: '6rem' }}
+                className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+                Dashboard
+              </h1>
+            </div>
           </div>
           {/* Header */}
           {user && (
             <div
-              className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+              className={`${theme.section} z-50 relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">{user.preferredName ? user.preferredName : user.firstName}</span>, What
-                do you want to {isTeacher ? 'teach' : 'learn'} today?
+                do you want to teach today?
               </h2>
             </div>
           )}
@@ -194,12 +212,12 @@ const Home = (props: ClassroomControlProps) => {
           <RoomTiles handleRoomSelection={handleRoomSelection} classList={getClassList()} />
 
           {/* Teachers Section */}
-          <div className="my-8">
+          <div className="my-6">
             <SectionTitleV3
-              title={'Your Teachers'}
-              fontSize="xl"
+              title={`Your Team`}
+              fontSize="lg"
               fontStyle="semibold"
-              extraContainerClass="max-w-256 px-6"
+              extraContainerClass="max-w-256"
               borderBottom
               extraClass="leading-6 text-gray-900"
             />
@@ -207,11 +225,7 @@ const Home = (props: ClassroomControlProps) => {
           </div>
           {/* Classmates Section */}
           <div className="my-6">
-            <StudentsTiles
-              title={`Your ${isTeacher ? 'Students' : 'Classmates'}`}
-              state={state}
-              studentsList={studentsList}
-            />
+            <StudentsTiles title={`Your Students`} state={state} studentsList={studentsList} />
           </div>
         </>
       ) : (
@@ -221,4 +235,4 @@ const Home = (props: ClassroomControlProps) => {
   );
 };
 
-export default Home;
+export default HomeForTeachers;

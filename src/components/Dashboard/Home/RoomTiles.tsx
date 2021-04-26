@@ -15,8 +15,8 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import { ModifiedListProps } from './Home';
 import Tooltip from '../../Atoms/Tooltip';
 
-const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedListProps[] }) => {
-  const { classList: classes, handleRoomSelection } = props;
+const RoomTiles = (props: { isTeacher?: boolean; handleRoomSelection: Function; classList: ModifiedListProps[] }) => {
+  const { classList: classes, isTeacher, handleRoomSelection } = props;
   const { state, dispatch } = useContext(GlobalContext);
   const history = useHistory();
   const [showMore, setShowMore] = useState(false);
@@ -108,8 +108,10 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
                           <p className="text-sm font-medium text-indigo-600">
                             <a className="hover:underline">{type}</a>
                           </p>
-                          <a className="block mt-2">
-                            <p className="text-lg font-medium text-gray-900">{name}</p>
+                          <a href="#" className="block mt-2">
+                            <p className="text-lg font-semibold text-gray-900">
+                              {name} {isTeacher && `(${item.roomName})`}
+                            </p>
                             <p className="mt-2 text-base text-gray-500">{limitDesc(summary, 250)}</p>
                           </a>
                         </div>
@@ -140,76 +142,6 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
                   );
                 })}
               </div>
-
-              {/* Second Row */}
-              {/* <div
-              className={`mt-5 roomTiles ${
-                showMore ? 'is-open' : 'hide'
-              } max-w-lg mx-auto gap-5 px-4 pb-4 lg:grid-cols-3 lg:max-w-none grid`}
-              hidden>
-              {restRow.map((item, idx: number) => {
-                const { teacherProfileImg, bannerImage, teacher, curricula } = item;
-                const { name, summary, type } = curricula?.items[0]?.curriculum;
-
-                const { email, firstName, lastName } = teacher;
-
-                return (
-                  <div
-                    key={`homepage__classrooms-${idx}`}
-                    className="flex flex-col rounded-lg  border-0 border-gray-300 overflow-hidden transition-all">
-                    <div className="flex-shrink-0">
-                      {bannerImage ? (
-                        <img
-                          className="cursor-pointer h-48 w-full object-cover hover:scale-105 transform transition-transform duration-500"
-                          src={bannerImage}
-                          alt=""
-                        />
-                      ) : (
-                        <div
-                          className={`profile justify-center items-center content-center h-48 w-full bg-gray-100 flex border-gray-400`}>
-                          <IoImage className="fill-current text-gray-80" size={32} />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 bg-white p-6 flex flex-col justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-indigo-600">
-                          <a href="#" className="hover:underline">
-                            {type}
-                          </a>
-                        </p>
-                        <a href="#" className="block mt-2">
-                          <p className="text-xl font-semibold text-gray-900">{name}</p>
-                          <p className="mt-3 text-base text-gray-500">{limitDesc(summary, 250)}</p>
-                        </a>
-                      </div>
-                      <div className="mt-6 flex items-center">
-                        <div className="flex-shrink-0 w-auto">
-                          <a href="#">
-                            <span className="sr-only">{firstName + ' ' + lastName}</span>
-                            {teacherProfileImg ? (
-                              <img className="h-10 w-10 rounded-full" src={teacherProfileImg} alt="" />
-                            ) : (
-                              <ImageAlternate user={{ firstName, lastName }} styleClass="h-10 w-10 rounded-full" />
-                            )}
-                          </a>
-                        </div>
-                        <div className="ml-3 w-auto">
-                          <p className="text-sm font-semibold text-gray-900">
-                            <a href="#" className="hover:underline">
-                              {firstName + ' ' + lastName}
-                            </a>
-                          </p>
-                          <p className="space-x-1 text-sm text-gray-500">
-                            <a href="#">{email}</a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div> */}
             </div>
           </div>
         ) : (
