@@ -55,7 +55,18 @@
   position: relative;
   transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  .sidenav_icon {
+  .sidenav_sub_icon_wrapper {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+  }
+
+  .sidenav_sub_icon_color {
+    color: #c6c6c6;
+  }
+
+  .sidenav_icon_inactive {
     color: #c6c6c6;
   }
 
@@ -70,11 +81,30 @@
     border-bottom: 1px solid #2b343b;
   }
 
+  .sidenav_icon_wrapper {
+    background: #4b5359;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    margin-right: 1rem;
+    padding: 4px;
+
+    svg {
+      text-shadow: 0 0 10px rgba(22, 199, 255, 0.5);
+    }
+  }
+
   .sidenav_sub_item {
-    color: #c6c6c6;
+    color: #c3c3c3;
 
     &:hover {
       background: #2b343b;
+
+      svg {
+        animation: bellshake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        backface-visibility: hidden;
+        transform-origin: top right;
+      }
     }
   }
 
@@ -83,11 +113,18 @@
 
     &:hover {
       background: #2b343b;
+
+      svg:first-child {
+        animation: bellshake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        backface-visibility: hidden;
+        transform-origin: top right;
+      }
     }
   }
 
   .sidenav_sub_item_active {
     background: #2b343b;
+    color: #c6c6c6;
   }
 
   .sidenav_main_item_active {
@@ -96,6 +133,44 @@
 
   .sidenav_main_item_active_color {
     color: #fff;
+  }
+
+  @keyframes bellshake {
+    0% {
+      transform: rotate(0);
+    }
+
+    15% {
+      transform: rotate(5deg);
+    }
+
+    30% {
+      transform: rotate(-5deg);
+    }
+
+    45% {
+      transform: rotate(4deg);
+    }
+
+    60% {
+      transform: rotate(-4deg);
+    }
+
+    75% {
+      transform: rotate(2deg);
+    }
+
+    85% {
+      transform: rotate(-2deg);
+    }
+
+    92% {
+      transform: rotate(1deg);
+    }
+
+    100% {
+      transform: rotate(0);
+    }
   }
 }
 

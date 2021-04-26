@@ -5,6 +5,7 @@ import { GlobalContext } from '../../../contexts/GlobalContext';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen } from 'react-icons/fa';
 import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
+import { IoMdDisc } from 'react-icons/io';
 import { RiDoorClosedLine } from 'react-icons/ri';
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import { IoIosPeople, IoMdBuild } from 'react-icons/io';
@@ -259,8 +260,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
-  const handleLink = (e: any, label: string, toggle: boolean = false) => {
-    const id = e.target.id.toLowerCase();
+  const handleLink = (id: any, label: string, toggle: boolean = false) => {
     const lastCharacter = match.url.charAt(match.url.length - 1);
 
     if (id !== '') {
@@ -294,26 +294,71 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   //   return pageUrl.indexOf(pageLabel) !== -1;
   // };
 
-  const getMenuIcon = (label: string, url: string) => {
+  const getMenuIcon = (label: string, url: string, active: boolean = false) => {
     switch (label) {
       case 'People':
-        return <IoIosPeople className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <IoIosPeople
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Registration':
-        return <AiOutlineUsergroupAdd className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <AiOutlineUsergroupAdd
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Classroom':
-        return <IoBookOutline className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <IoBookOutline
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Dashboard':
-        return <IoBookOutline className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <IoBookOutline
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Lesson Planner':
-        return <FaAppleAlt className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <FaAppleAlt
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Lesson Builder':
-        return <IoMdBuild className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <IoMdBuild
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Institutions':
-        return <HiOutlineOfficeBuilding className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <HiOutlineOfficeBuilding
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Anthology':
-        return <AiOutlineBook className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <AiOutlineBook
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       case 'Noticeboard':
-        return <BsReverseLayoutSidebarReverse className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <BsReverseLayoutSidebarReverse
+            className={`h-4 w-4 ${active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'} sidenav_icon`}
+            id={url}
+          />
+        );
       default:
         return '';
     }
@@ -339,7 +384,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               const open =
                 path === currentPath ||
                 (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
-              console.log();
 
               const exists = openItems.indexOf(link.label) !== -1;
 
@@ -354,18 +398,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 <div key={`link_${key}`} className={`pb-2`}>
                   <a
                     id={link.path}
-                    onClick={(e) => handleLink(e, link.label, true)}
+                    onClick={(e) => handleLink(link.path, link.label, true)}
                     type="button"
                     className={`${
                       path === currentPath
                         ? `sidenav_main_item_active ${theme.borderColor[themeColor]}`
                         : 'border-transparent'
                     } ${
-                      open || (innerLinkActive.length > 0 && 'sidenav_main_item_active_color')
+                      (open || innerLinkActive.length > 0) && 'sidenav_main_item_active_color'
                     } cursor-pointer sidenav_main_item border-l-4 px-4 flex items-center py-2 text-sm font-regular`}
                     aria-controls="sub-menu-1"
                     aria-expanded="false">
-                    {getMenuIcon(link.label, link.path)}
+                    <span className={`sidenav_icon_wrapper`}>{getMenuIcon(link.label, link.path, open)}</span>
                     {link.name}
                     <svg
                       className={`${
@@ -386,18 +430,23 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                           <a
                             key={`${d.path}_key`}
                             id={d.path}
-                            style={{ paddingLeft: '3.3rem' }}
+                            style={{ paddingLeft: '3.5rem' }}
                             onClick={(e) => {
                               if (d.onClick) {
                                 d.onClick();
-                              } else handleLink(e, link.label);
+                              } else handleLink(d.path, link.label);
                             }}
                             className={`${
                               activeLink
                                 ? `sidenav_sub_item_active ${theme.borderColor[themeColor]}`
                                 : 'border-transparent'
-                            } group sidenav_sub_item block cursor-pointer my-1 border-l-4 truncate w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
-                            {d.title}
+                            } group sidenav_sub_item block flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
+                            <span className="sidenav_sub_icon_wrapper">
+                              <IoMdDisc
+                                className={activeLink ? theme.textColor[themeColor] : 'sidenav_sub_icon_color'}
+                              />
+                            </span>
+                            <span className="truncate">{d.title}</span>
                           </a>
                         );
                       })}
@@ -408,13 +457,15 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 <a
                   key={`link_${key}`}
                   id={link.path}
-                  onClick={(e) => handleLink(e, link.label)}
+                  onClick={(e) => handleLink(link.path, link.label)}
                   className={`truncate px-4 mb-2 cursor-pointer sidenav_main_item group border-l-4 flex items-center py-2 text-sm font-regular ${
                     path === `/dashboard/${link.path}`
-                      ? `sidenav_main_item_active  ${theme.borderColor[themeColor]}`
+                      ? `sidenav_main_item_active sidenav_main_item_active_color ${theme.borderColor[themeColor]}`
                       : `border-transparent`
                   }`}>
-                  <div className="w-auto ">{getMenuIcon(link.label, link.path)}</div>
+                  <span className="sidenav_icon_wrapper">
+                    {getMenuIcon(link.label, link.path, path === `/dashboard/${link.path}`)}
+                  </span>
                   {link.name}
                 </a>
               );
