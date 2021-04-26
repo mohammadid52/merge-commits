@@ -50,8 +50,8 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
           <Banner
             isTeacher={isTeacher}
-            subtitleSection={`${info && info.title ? info.title : null}`}
-            subtitleSection2={info.subtitle ? `- ( ${info.subtitle} )` : null}
+            subtitleSection={`${info && info.title ? info.title : ''}`}
+            subtitleSection2={info.subtitle ? `- ( ${info.subtitle} )` : ''}
           />
 
           <InstructionBlock
