@@ -29,12 +29,6 @@ const RoomTiles = (props: { isTeacher?: boolean; handleRoomSelection: Function; 
     }
   }, [classes]);
 
-  useEffect(() => {
-    if (state.activeRoom !== '') {
-      history.push('/dashboard/home');
-    }
-  }, [state.activeRoom]);
-
   const limitDesc = (str: string, len: number = 250): string => {
     if (str) {
       if (str.length <= len) {
@@ -145,7 +139,7 @@ const RoomTiles = (props: { isTeacher?: boolean; handleRoomSelection: Function; 
             </div>
           </div>
         ) : (
-          <div>No classes found</div>
+          <div className="flex justify-center items-center p-12">No classes found</div>
         )}
       </ContentCard>
     </>

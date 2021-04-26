@@ -33,10 +33,14 @@ const Home = (props: ClassroomControlProps) => {
 
   useEffect(() => {
     if (state.user.role === 'ST') {
-      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: null } });
+      if (state.currentPage !== 'home') {
+        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
+      }
+      if (state.activeRoom && state.activeRoom.length > 0) {
+        dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: null } });
+      }
     }
-  }, []);
+  }, [state.user.role]);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();

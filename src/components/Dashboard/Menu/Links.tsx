@@ -63,7 +63,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   useEffect(() => {
     userLinks(role);
     if (state.roomData?.rooms?.length > 0) {
-      setOpenItems([...openItems, 'Dashboard', 'Lesson Planner']);
+      setOpenItems([...openItems, 'Classrooms', 'Lesson Planner']);
     }
   }, [role, state.roomData.rooms, state.activeRoom, state.currentPage]);
 
@@ -183,7 +183,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
-              path: 'lesson-planner',
+              path: '',
               subMenuItems:
                 state.roomData.rooms.length &&
                 state.roomData.rooms.map((room: Room, i: number) => {
@@ -263,11 +263,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     const id = e.target.id.toLowerCase();
     const lastCharacter = match.url.charAt(match.url.length - 1);
 
-    if (lastCharacter === '/') {
-      const sliced = match.url.slice(0, match.url.length - 1);
-      history.push(`${sliced}/${id}`);
-    } else {
-      history.push(`${match.url}/${id}`);
+    if (id !== '') {
+      if (lastCharacter === '/') {
+        const sliced = match.url.slice(0, match.url.length - 1);
+        history.push(`${sliced}/${id}`);
+      } else {
+        history.push(`${match.url}/${id}`);
+      }
+      linkProps.setCurrentPage(id);
     }
 
     if (toggle) {
@@ -278,8 +281,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
         setOpenItems([...openItems, label]);
       }
     }
-
-    linkProps.setCurrentPage(id);
   };
 
   // const pageUrlEndsWith = (pageLabel: string) => {

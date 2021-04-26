@@ -10,10 +10,6 @@ import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 import { getAsset } from '../../../assets';
-import { times } from 'lodash';
-import uniq from 'lodash/uniq';
-import { title } from 'process';
-
 export interface ModifiedListProps {
   id: any;
   name: any;
@@ -35,11 +31,16 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
 
   const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
 
-  // useEffect(() => {
-  //   if (state.user.role === 'ST') {
-  //     dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (state.user.role === 'TR' || state.user.role === 'FLW') {
+      if (state.currentPage !== 'home') {
+        // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
+      }
+      if (state.activeRoom && state.activeRoom.length > 0) {
+        dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: null } });
+      }
+    }
+  }, [state.user.role]);
 
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
@@ -88,16 +89,23 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     return coTeachersList;
   };
 
-  const teacherListWithImages = Promise.all(
-    getTeacherList.map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null) };
-    })
-  );
-  const coTeacherListWithImages = Promise.all(
-    getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null) };
-    })
-  );
+  const teacherListWithImages = async () => {
+    const data = await Promise.all(
+      getTeacherList.map(async (teacherObj: any, idx: number) => {
+        return { ...teacherObj, image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null) };
+      })
+    );
+    setTeacherList(data);
+  };
+
+  const coTeacherListWithImages = async () => {
+    const data = await Promise.all(
+      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
+        return { ...teacherObj, image: await (teacherObj?.image ? getImageURL(teacherObj?.image) : null) };
+      })
+    );
+    setCoTeachersList(data);
+  };
 
   const getStudentsList =
     homeData && homeData.length > 0
@@ -122,17 +130,20 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           }, [])
       : [];
 
-  const studentsListWithImages = Promise.all(
-    getStudentsList.map(async (studentObj: any, idx: number) => {
-      return {
-        ...studentObj,
-        student: {
-          ...studentObj?.student,
-          image: await (studentObj?.student?.image ? getImageURL(studentObj?.student?.image) : null),
-        },
-      };
-    })
-  );
+  const studentsListWithImages = async () => {
+    const data = await Promise.all(
+      getStudentsList.map(async (studentObj: any, idx: number) => {
+        return {
+          ...studentObj,
+          student: {
+            ...studentObj?.student,
+            image: await (studentObj?.student?.image ? getImageURL(studentObj?.student?.image) : null),
+          },
+        };
+      })
+    );
+    setStudentsList(data);
+  };
 
   const getClassList = (): ModifiedListProps[] => {
     let modifiedClassList: ModifiedListProps[] = [];
@@ -162,12 +173,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     return modifiedClassList;
   };
 
+  const fetchAndProcessDashboardData = () => {
+    teacherListWithImages();
+    studentsListWithImages();
+    coTeacherListWithImages();
+  };
+
   useEffect(() => {
-    const fetchAndProcessDashboardData = async () => {
-      setTeacherList(await teacherListWithImages);
-      setStudentsList(await studentsListWithImages);
-      setCoTeachersList(await coTeacherListWithImages);
-    };
     if (homeData && homeData.length > 0) {
       fetchAndProcessDashboardData();
     }
@@ -224,9 +236,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             <TeacherRows coTeachersList={coTeachersList} teacherList={teacherList} />
           </div>
           {/* Classmates Section */}
-          <div className="my-6">
+          {/* <div className="my-6">
             <StudentsTiles title={`Your Students`} state={state} studentsList={studentsList} />
-          </div>
+          </div> */}
         </>
       ) : (
         <ComponentLoading />

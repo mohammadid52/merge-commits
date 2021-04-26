@@ -7,7 +7,7 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
 
   return (
     <ContentCard hasBackground={false}>
-      <div className="bg-white shadow overflow-hidden ">
+      <div className="bg-white shadow overflow-hidden rounded-b-lg">
         <ul className="">
           {teacherList &&
             teacherList.length > 0 &&
@@ -73,7 +73,7 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
               }
             )}
         </ul>
-        {coTeachersList && coTeachersList.length > 0 && (
+        {coTeachersList && coTeachersList.length > 0 ? (
           <ul className="">
             {coTeachersList.map(
               (
@@ -136,6 +136,8 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
               }
             )}
           </ul>
+        ) : (
+          <div className="flex justify-center items-center p-12">No teachers found</div>
         )}
       </div>
     </ContentCard>
