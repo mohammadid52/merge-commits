@@ -2006,7 +2006,7 @@ const EditSyllabusDict: any = {
     type: 'Type',
     status: 'Status',
     action: 'Actions',
-    edit: 'edit',
+    edit: 'Edit',
     nolesson: 'No Lessons Selected',
     createnew: 'Create New Lesson',
     messages: {
