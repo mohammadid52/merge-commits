@@ -971,7 +971,7 @@ const InstitueRomms: any = {
     CURRICULAM: 'Curriculam',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
-    EDIT: 'edit',
+    EDIT: 'Edit',
     messages: {
       nothaveclass: 'This institute does not have any classroom. Please create a new classroom.',
       fetcherr: 'Error while fetching classroom data please Try again later.',
@@ -979,6 +979,7 @@ const InstitueRomms: any = {
     BUTTON: {
       CREATE: 'Create new Classroom',
     },
+    LOADING: 'Loading Classrooms...',
   },
   ES: {
     TITLE: 'TBD',
@@ -989,7 +990,7 @@ const InstitueRomms: any = {
     TEACHER: 'TBD',
     MXSTUDENTS: 'TBD',
     ACTION: 'TBD',
-    EDIT: 'TBD',
+    EDIT: 'Editar',
     messages: {
       nothaveclass: 'TBD',
       fetcherr: 'TBD',
@@ -997,6 +998,7 @@ const InstitueRomms: any = {
     BUTTON: {
       CREATE: 'TBD',
     },
+    LOADING: 'Cargando aulas...',
   },
 };
 

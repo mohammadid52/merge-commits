@@ -26,6 +26,7 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
+import Loader from '../../../../Atoms/Loader';
 interface StaffBuilderProps {
   instituteId: String;
   serviceProviders: { items: { id: string; providerID: string }[] };
@@ -408,8 +409,11 @@ const StaffBuilder = (props: StaffBuilderProps) => {
               )}
             </>
           ) : (
-            <div className="text-center p-16">
-              <p>{dictionary['LOADING']}</p>
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+              <div className="w-5/10">
+                <Loader color="rgba(107, 114, 128, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">{dictionary['LOADING']}</p>
+              </div>
             </div>
           )}
         </PageWrapper>
