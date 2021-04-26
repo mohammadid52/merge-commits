@@ -45,6 +45,8 @@ const RoomTiles = (props: {
     }
   };
 
+  console.log(classList.length);
+
   return (
     <>
       <SectionTitleV3
@@ -79,7 +81,7 @@ const RoomTiles = (props: {
                 }}
                 className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
                 {classList
-                  .slice(0, showMore ? classList.length - 1 : 3)
+                  .slice(0, showMore ? classList.length : 3)
                   .map((item, idx: number) => {
                     const {
                       teacherProfileImg,
