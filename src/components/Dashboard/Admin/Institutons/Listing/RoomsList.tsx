@@ -9,6 +9,8 @@ import * as queries from '../../../../../graphql/queries';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
 import useDictionary from '../../../../../customHooks/dictionary';
+import Loader from '../../../../Atoms/Loader';
+import Tooltip from '../../../../Atoms/Tooltip';
 
 interface RoomListProps {
   instId: string;
@@ -68,8 +70,8 @@ const RoomsList = (props: RoomListProps) => {
   return (
     <div className="py-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+        <PageWrapper>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center">
             {instName ? instName.toUpperCase() : 'INSTITUTE'} {InstitueRomms[userLanguage]['TITLE']}
           </h3>
 
@@ -97,7 +99,6 @@ const RoomsList = (props: RoomListProps) => {
                   <span>{InstitueRomms[userLanguage]['TEACHER']}</span>
                 </div>
 
-                {/* ---- Not Important ---- */}
                 <div className="w-2/10 px-4 py-2 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>{InstitueRomms[userLanguage]['CURRICULAM']}</span>
                 </div>
@@ -130,15 +131,17 @@ const RoomsList = (props: RoomListProps) => {
                         .join(',')}
                     </div>
                     <span
-                      className={`w-1/10 h-6 flex items-center cursor-pointer text-left px-4 py-2 ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 flex items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentRoom(item.id)}>
-                      {InstitueRomms[userLanguage]['EDIT']}
+                      <Tooltip text="Click to edit class" placement="left">
+                        {InstitueRomms[userLanguage]['EDIT']}
+                      </Tooltip>
                     </span>
                   </div>
                 ))}
               </div>
             </Fragment>
-          ) : (
+          ) : roomList.length < 0 ? (
             <Fragment>
               <div className="flex justify-center mt-8">
                 <Buttons
@@ -147,8 +150,17 @@ const RoomsList = (props: RoomListProps) => {
                   onClick={createNewRoom}
                 />
               </div>
-              <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>{messages.message} </p>
+              <p className={`text-center text-lg text-gray-500 ${messages.isError ? 'text-red-600' : ''}`}>
+                {messages.message}
+              </p>
             </Fragment>
+          ) : (
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+              <div className="w-5/10">
+                <Loader color="rgba(107, 114, 128, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">{InstitueRomms[userLanguage]['LOADING']}</p>
+              </div>
+            </div>
           )}
         </PageWrapper>
       </div>
