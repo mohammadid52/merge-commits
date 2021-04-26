@@ -71,7 +71,7 @@ const RoomsList = (props: RoomListProps) => {
     <div className="py-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center">
             {instName ? instName.toUpperCase() : 'INSTITUTE'} {InstitueRomms[userLanguage]['TITLE']}
           </h3>
 
