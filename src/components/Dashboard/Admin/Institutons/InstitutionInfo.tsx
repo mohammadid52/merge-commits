@@ -139,10 +139,16 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         <div className="flex-row flex items-center justify-center">
           <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
             {image ? (
-              <img
-                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
-                src={imageUrl}
-              />
+              imageUrl ? (
+                <img
+                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light`}
+                  src={imageUrl}
+                />
+              ) : (
+                <div
+                  className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 bg-gray-400 shadow-elem-light`}
+                />
+              )
             ) : (
               <div
                 className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex flex-shrink-0 justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light`}>

@@ -6,6 +6,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import { getAsset } from '../../../../../assets';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import Tooltip from '../../../../Atoms/Tooltip';
 
 interface ClassListProps {
   classes: { items: { name?: string; id: string }[] };
@@ -29,7 +30,7 @@ const ClassList = (props: ClassListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium uppercase text-gray-900 text-center pb-4">
             {`${instName} classes` || Institute_class[userLanguage]['TITLE']}
           </h3>
 
@@ -61,16 +62,18 @@ const ClassList = (props: ClassListProps) => {
                 {classes.items.map((item, index) => (
                   <div
                     key={index}
-                    className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                    className="flex justify-between w-full px-8 py-2 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">{index + 1}.</div>
 
                     <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                       {item.name ? item.name : ''}
                     </div>
                     <span
-                      className={`w-3/10 h-6 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
+                      className={`w-3/10 cursor-pointer flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
                       onClick={() => history.push(`/dashboard/manage-institutions/class-edit?id=${item.id}`)}>
-                      {Institute_class[userLanguage]['EDIT']}
+                      <Tooltip text="Click to edit class" placement="left">
+                        {Institute_class[userLanguage]['EDIT']}
+                      </Tooltip>
                     </span>
                   </div>
                 ))}

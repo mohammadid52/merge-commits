@@ -918,7 +918,7 @@ const Institute_class: any = {
     NO: 'No.',
     CLASSNAME: 'Class Name',
     ACTION: 'Actions',
-    EDIT: 'edit',
+    EDIT: 'Edit',
     INFO: 'This institute does not have any class. Please create a new class.',
     BUTTON: {
       CREATE: 'Create new class',
@@ -929,7 +929,7 @@ const Institute_class: any = {
     NO: 'TBD',
     CLASSNAME: 'TBD',
     ACTION: 'TBD',
-    EDIT: 'TBD',
+    EDIT: 'Editar',
     INFO: 'TBD',
     BUTTON: {
       CREATE: 'TBD',

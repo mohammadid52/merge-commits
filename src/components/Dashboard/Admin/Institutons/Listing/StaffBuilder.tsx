@@ -379,6 +379,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                             className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
                                               item.status === 'Inactive'
                                                 ? 'bg-yellow-100 text-yellow-800'
+                                                : item.status === 'Dropped'
+                                                ? 'bg-red-100 text-red-800'
                                                 : 'bg-green-100 text-green-800'
                                             }`}>
                                             {item.status || 'Active'}
@@ -396,7 +398,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                           <span
                                             className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
                                             onClick={() => setStatusEdit(item.id)}>
-                                            <Tooltip text="Click to edit" placement="left">
+                                            <Tooltip text="Click to edit status" placement="left">
                                               Edit
                                             </Tooltip>
                                           </span>
