@@ -623,8 +623,7 @@ const Dashboard = (props: DashboardProps) => {
     isTeacher ? (
       <HomeForTeachers
         homeData={homeDataForTeachers}
-        classList={classList}
-        setActiveRoomInfo={setActiveRoomInfo}
+        isTeacher={isTeacher}
         handleRoomSelection={handleRoomSelection}
       />
     ) : (

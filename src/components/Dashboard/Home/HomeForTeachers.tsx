@@ -30,7 +30,7 @@ export interface ModifiedListProps {
 }
 
 const HomeForTeachers = (props: ClassroomControlProps) => {
-  const {homeData, handleRoomSelection, classList, isTeacher} = props;
+  const {homeData, handleRoomSelection, isTeacher} = props;
 
   const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
@@ -55,6 +55,22 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   const [teacherList, setTeacherList] = useState<any[]>();
   const [coTeachersList, setCoTeachersList] = useState<any[]>();
   const [studentsList, setStudentsList] = useState<any[]>();
+
+  const getStudentsList = () => {
+    let list: any[] = [];
+    let uniqIds: string[] = [];
+    homeData &&
+      homeData.length > 0 &&
+      homeData[0]?.class?.rooms?.items.forEach((item: any) => {
+        item?.class?.students?.items.forEach((student: any) => {
+          if (!uniqIds.includes(student.student.id)) {
+            list.push(student);
+            uniqIds.push(student.student.id);
+          }
+        });
+      });
+    return list;
+  };
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -125,32 +141,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     setCoTeachersList(data);
   };
 
-  const getStudentsList =
-    homeData && homeData.length > 0
-      ? homeData
-          .reduce((acc: any[], dataObj: any) => {
-            if (isEmpty(dataObj)) {
-              return [...acc, ...dataObj?.class?.students?.items];
-            }
-            return [];
-          }, [])
-          .reduce((acc: any[], studentObj: any) => {
-            const studentIsPresent = acc.find(
-              (studentObj2: any) =>
-                studentObj2?.student?.firstName === studentObj?.student?.firstName &&
-                studentObj2?.student?.lastName === studentObj?.student?.lastName
-            );
-            if (studentIsPresent) {
-              return acc;
-            } else {
-              return [...acc, studentObj];
-            }
-          }, [])
-      : [];
-
   const studentsListWithImages = async () => {
     const data = await Promise.all(
-      getStudentsList.map(async (studentObj: any, idx: number) => {
+      getStudentsList().map(async (studentObj: any, idx: number) => {
         return {
           ...studentObj,
           student: {
@@ -165,37 +158,39 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
     setStudentsList(data);
   };
 
-  const getClassList = (): ModifiedListProps[] => {
-    let modifiedClassList: ModifiedListProps[] = [];
+  const getClassList = (): any => {
+    let modifiedClassList: any[] = [];
     let uniqIds: string[] = [];
 
     homeData &&
       homeData.length > 0 &&
-      homeData.forEach((item: any) => {
-        item?.class?.rooms?.items.forEach(async (_item: any, index: number) => {
-          const curriculum = _item.curricula?.items[0].curriculum;
-          if (curriculum !== null) {
-            const imagePath = curriculum?.image;
+      homeData[0].class?.rooms?.items.forEach(async (_item: any, index: number) => {
+        console.log(
+          '🚀 ~ file: HomeForTeachers.tsx ~ line 168 ~ homeData[0].class?.rooms?.items.forEach ~ _item',
+          _item
+        );
+        const curriculum = _item.curricula?.items[0].curriculum;
+        if (curriculum !== null) {
+          const imagePath = curriculum?.image;
 
-            const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-            const teacherProfileImg = await (_item.teacher?.image
-              ? getImageFromS3(_item.teacher?.image)
-              : false);
+          const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
+          const teacherProfileImg = await (_item.teacher?.image
+            ? getImageFromS3(_item.teacher?.image)
+            : false);
 
-            const modifiedItem = {
-              ..._item,
-              roomName: item?.name,
-              bannerImage: image,
-              teacherProfileImg,
-              roomIndex: index,
-            };
+          const modifiedItem = {
+            ..._item,
+            roomName: _item?.name,
+            bannerImage: image,
+            teacherProfileImg,
+            roomIndex: index,
+          };
 
-            if (!uniqIds.includes(curriculum?.id)) {
-              modifiedClassList.push(modifiedItem);
-              uniqIds.push(curriculum?.id);
-            }
+          if (!uniqIds.includes(curriculum?.id)) {
+            modifiedClassList.push(modifiedItem);
+            uniqIds.push(curriculum?.id);
           }
-        });
+        }
       });
 
     return modifiedClassList;
@@ -252,6 +247,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Classroom Section */}
 
           <RoomTiles
+            isTeacher={isTeacher}
             handleRoomSelection={handleRoomSelection}
             classList={getClassList()}
           />
@@ -269,9 +265,13 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             <TeacherRows coTeachersList={coTeachersList} teacherList={teacherList} />
           </div>
           {/* Classmates Section */}
-          {/* <div className="my-6">
-            <StudentsTiles title={`Your Students`} state={state} studentsList={studentsList} />
-          </div> */}
+          <div className="my-6">
+            <StudentsTiles
+              title={`Your Students`}
+              state={state}
+              studentsList={studentsList}
+            />
+          </div>
         </>
       ) : (
         <ComponentLoading />
