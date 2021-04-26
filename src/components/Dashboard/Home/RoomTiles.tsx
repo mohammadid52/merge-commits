@@ -50,7 +50,7 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
   return (
     <>
       <SectionTitleV3
-        extraContainerClass="max-w-256 mt-8 px-6"
+        extraContainerClass="max-w-256 my-8 px-6"
         title={'Your Classrooms'}
         withButton={
           classList &&
@@ -69,7 +69,7 @@ const RoomTiles = (props: { handleRoomSelection: Function; classList: ModifiedLi
         extraClass="leading-6 text-gray-900"
         borderBottom
       />
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white mb-6 rounded-b-lg">
+      <ContentCard hasBackground={false} additionalClass="shadow bg-white rounded-b-lg">
         {classList.length > 0 ? (
           <div className="relative">
             <div className="relative max-w-7xl mx-auto">
