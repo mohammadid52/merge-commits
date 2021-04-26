@@ -12,6 +12,7 @@ import {IoIosPeople, IoMdBuild} from 'react-icons/io';
 import {GiShinyApple} from 'react-icons/gi';
 import {IoBookOutline, IoSchoolOutline} from 'react-icons/io5';
 import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
+import {IoIosHome} from 'react-icons/io';
 
 import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
@@ -226,21 +227,10 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].DASHBOARD,
               label: 'Dashboard',
               path: 'home',
-              subMenuItems:
-                state.roomData.rooms.length &&
-                state.roomData.rooms.map((room: Room, i: number) => {
-                  return {
-                    title: room.name,
-                    active:
-                      room.id === state.activeRoom && state.currentPage === 'classroom',
-                    path: room.id,
-                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
-                  };
-                }),
             },
             {
-              title: sideBarLinksDict[userLanguage].DASHBOARD,
-              name: sideBarLinksDict[userLanguage].DASHBOARD,
+              title: sideBarLinksDict[userLanguage].CLASSROOM,
+              name: sideBarLinksDict[userLanguage].CLASSROOM,
               label: 'Classrooms',
               path: '',
               subMenuItems:
@@ -347,9 +337,18 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             id={url}
           />
         );
-      case 'Dashboard':
+      case 'Classrooms':
         return (
           <IoBookOutline
+            className={`h-4 w-4 ${
+              active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'
+            } sidenav_icon`}
+            id={url}
+          />
+        );
+      case 'Dashboard':
+        return (
+          <IoIosHome
             className={`h-4 w-4 ${
               active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'
             } sidenav_icon`}
