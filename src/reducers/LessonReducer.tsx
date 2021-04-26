@@ -14,6 +14,10 @@ export type LessonActions =
       };
     }
   | {
+      type: 'UPDATE_CHECKPOINT_DATA';
+      payload: any[];
+    }
+  | {
       type: 'UPDATE_LESSON_PLAN';
       payload: {
         pages: PagesType;
@@ -150,6 +154,14 @@ export const lessonReducer = (state: LessonStateType, action: LessonActions) => 
         word_bank: action.payload.word_bank,
         displayData: action.payload.displayData,
         subscribeFunc: action.payload.subscribeFunc,
+      };
+    case 'UPDATE_CHECKPOINT_DATA':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          lesson: { ...state.data.lesson, checkpoints: { ...state.data.lesson.checkpoints, items: action.payload } },
+        },
       };
     case 'SET_CURRENT_PAGE':
       return {

@@ -42,11 +42,16 @@ const SignOutButton = (props: SignOutButtonProps) => {
   return (
     <>
       {state.isAuthenticated ? (
-        <div className="w-full text-xs text-center" onClick={handleSignOut}>
-          <IconContext.Provider value={{ size: '24px', className: 'self-center', style: { cursor: 'pointer' } }}>
-            <FiLogOut />
-          </IconContext.Provider>
-          Logout
+        <div onClick={handleSignOut} className="flex-shrink-0 bg-gray-700 flex border-t border-gray-200 p-4">
+          <a href="#" className="flex-shrink-0 group block">
+            <div className="flex items-center">
+              <IconContext.Provider
+                value={{ size: '24px', className: 'text-white w-auto mr-1', style: { cursor: 'pointer' } }}>
+                <FiLogOut />
+              </IconContext.Provider>
+              <p className="text-sm ml-2 font-medium text-gray-300">Logout</p>
+            </div>
+          </a>
         </div>
       ) : null}
     </>

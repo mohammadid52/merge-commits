@@ -136,8 +136,13 @@ const LessonEdit = (props: LessonEditProps) => {
       if (currentStepIdx === 0) {
         history.push('/dashboard/lesson-builder');
       } else {
-        const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-        setActiveStep(prevStep);
+        if (lessonType === 'lesson') {
+          const prevStep: string = lessonScrollerStep[0].name;
+          setActiveStep(prevStep);
+        } else {
+          const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
+          setActiveStep(prevStep);
+        }
       }
     }
   };
@@ -296,7 +301,7 @@ const LessonEdit = (props: LessonEditProps) => {
             lessonName={formData.name}
             enablePublish
             lessonID={lessonId || assessmentId}
-            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonPlans={savedLessonDetails.lessonPlans || []}
             lessonType={formData.type?.value}
           />
         );
@@ -325,7 +330,7 @@ const LessonEdit = (props: LessonEditProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonEditDict[userLanguage]['TITLE']}

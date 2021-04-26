@@ -101,6 +101,7 @@ const dashboardProfileDict: any = {
       EMAIL: 'Email address',
       CONTACT: 'Contact Number',
       ROLE: 'Role',
+      PASSWORD: 'Password',
     },
     INSTITUTION_INFO: {
       TITLE: 'Institution Information',
@@ -153,6 +154,7 @@ const dashboardProfileDict: any = {
       LANGUAGE: 'Idioma',
       EMAIL: 'dirección de correo electrónico',
       CONTACT: 'número de contacto',
+      PASSWORD: 'contraseña',
       ROLE: 'Papel',
     },
     INSTITUTION_INFO: {
@@ -267,6 +269,7 @@ const sideBarLinksDict: any = {
     LESSON_BUILDER: 'Lesson Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
+    DASHBOARD: 'Dashboard',
   },
   ES: {
     REGISTRATION: 'Registro',
@@ -915,7 +918,7 @@ const Institute_class: any = {
     NO: 'No.',
     CLASSNAME: 'Class Name',
     ACTION: 'Actions',
-    EDIT: 'edit',
+    EDIT: 'Edit',
     INFO: 'This institute does not have any class. Please create a new class.',
     BUTTON: {
       CREATE: 'Create new class',
@@ -926,7 +929,7 @@ const Institute_class: any = {
     NO: 'TBD',
     CLASSNAME: 'TBD',
     ACTION: 'TBD',
-    EDIT: 'TBD',
+    EDIT: 'Editar',
     INFO: 'TBD',
     BUTTON: {
       CREATE: 'TBD',
@@ -965,9 +968,10 @@ const InstitueRomms: any = {
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
     TEACHER: 'Teacher',
+    CURRICULAM: 'Curriculam',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
-    EDIT: 'edit',
+    EDIT: 'Edit',
     messages: {
       nothaveclass: 'This institute does not have any classroom. Please create a new classroom.',
       fetcherr: 'Error while fetching classroom data please Try again later.',
@@ -975,16 +979,18 @@ const InstitueRomms: any = {
     BUTTON: {
       CREATE: 'Create new Classroom',
     },
+    LOADING: 'Loading Classrooms...',
   },
   ES: {
     TITLE: 'TBD',
     NO: 'TBD',
+    CURRICULAM: 'TBD',
     CLASSROOMS_NAME: 'TBD',
     CLASS_NAME: 'TBD',
     TEACHER: 'TBD',
     MXSTUDENTS: 'TBD',
     ACTION: 'TBD',
-    EDIT: 'TBD',
+    EDIT: 'Editar',
     messages: {
       nothaveclass: 'TBD',
       fetcherr: 'TBD',
@@ -992,6 +998,7 @@ const InstitueRomms: any = {
     BUTTON: {
       CREATE: 'TBD',
     },
+    LOADING: 'Cargando aulas...',
   },
 };
 
@@ -1138,7 +1145,9 @@ const RoomBuilderdict: any = {
     NAME_LABEL: 'Classroom Name',
     NAME_PLACEHOLDER: 'Add Classroom name',
     TEACHER_LABEL: 'Teacher',
+    CO_TEACHER_LABEL: 'Co-Teachers',
     TEACHER_PLACEHOLDER: 'Select teacher',
+    CO_TEACHER_PLACEHOLDER: 'Select Co-Teachers',
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Curriculum',
@@ -1293,6 +1302,8 @@ const RoomEDITdict: any = {
     NAME_PLACEHOLDER: 'Add Classroom name',
     TEACHER_LABEL: 'Teacher',
     TEACHER_PLACEHOLDER: 'Select teacher',
+    CO_TEACHER_LABEL: 'Co-teachers',
+    CO_TEACHER_PLACEHOLDER: 'Select Co-teacher',
     CLASS_NAME_LABEL: 'Class Name',
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Curriculum',
@@ -1335,6 +1346,8 @@ const RoomEDITdict: any = {
     NAME_PLACEHOLDER: 'TBD',
     TEACHER_LABEL: 'TBD',
     TEACHER_PLACEHOLDER: 'TBD',
+    CO_TEACHER_LABEL: 'TBD',
+    CO_TEACHER_PLACEHOLDER: 'TBD',
     CLASS_NAME_LABEL: 'TBD',
     CLASS_NAME_PLACEHOLDER: 'TBD',
     CURRICULUM_LABEL: 'TBD',

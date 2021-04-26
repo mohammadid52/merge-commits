@@ -20,8 +20,10 @@ interface StartProps {
 const Start: React.FC<StartProps> = (props: StartProps) => {
   const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
   const { classRoomDict } = useDictionary(clientKey);
-  const { isTeacher, lessonKey, open, accessible, type } = props;
+  const { lessonKey, open, accessible, type } = props;
   const history = useHistory();
+
+  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR'
 
   const mutateToggleEnableDisable = async () => {
     const mutatedLessonData = {
@@ -128,14 +130,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       }
     }
   };
-
+  
   return (
     <div>
       <Buttons
         type="submit"
         onClick={handleLink}
         label={`${firstPart()} ${secondPart()}`}
-        disabled={!open}
+        disabled={!open && !isTeacher}
         btnClass={`h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
         } transition duration-150 ease-in-out`}></Buttons>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { IoArrowUndoCircleOutline, IoImage } from 'react-icons/io5';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
@@ -22,6 +22,9 @@ import TextArea from '../../../../Atoms/Form/TextArea';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface EditCurricularProps {}
 
@@ -71,11 +74,30 @@ const EditCurricular = (props: EditCurricularProps) => {
     return new URLSearchParams(location.search);
   };
   const params = useQuery();
+  const param: any = useParams();
+
   const { clientKey, userLanguage, theme } = useContext(GlobalContext);
   const { BreadcrumsTitles, EditCurriculardict } = useDictionary(clientKey);
 
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+  });
+
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `/dashboard/manage-institutions/institution?id=${param.institutionId}`,
+      last: false,
+    },
+    { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], goBack: true, last: false },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCURRICULUM'],
       url: `/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`,
@@ -83,11 +105,32 @@ const EditCurricular = (props: EditCurricularProps) => {
     },
   ];
 
+  const onModalSave = () => {
+    toggleModal();
+    history.goBack();
+  };
+
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show,
+    });
+  };
+
+  const goBack = () => {
+    if (unsavedChanges) {
+      toggleModal();
+    } else {
+      goBackBreadCrumb(breadCrumsList, history);
+    }
+  };
+
   const onChange = (e: any) => {
     setCurricularData({
       ...curricularData,
       [e.target.name]: e.target.value,
     });
+    setUnsavedChanges(true);
     if (messages.show) {
       setMessages({
         show: false,
@@ -105,6 +148,8 @@ const EditCurricular = (props: EditCurricularProps) => {
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
+    setUnsavedChanges(true);
+
     setCurricularData({
       ...curricularData,
       languages: updatedList,
@@ -120,6 +165,8 @@ const EditCurricular = (props: EditCurricularProps) => {
         value: val,
       },
     });
+    setUnsavedChanges(true);
+
     if (messages.show) {
       setMessages({
         show: false,
@@ -138,6 +185,8 @@ const EditCurricular = (props: EditCurricularProps) => {
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
+    setUnsavedChanges(true);
+
     setSelectedDesigners(updatedList);
   };
 
@@ -196,6 +245,7 @@ const EditCurricular = (props: EditCurricularProps) => {
           isError: false,
         });
         setSaving(false);
+        setUnsavedChanges(false);
       } catch {
         setSaving(false);
         setMessages({
@@ -411,14 +461,14 @@ const EditCurricular = (props: EditCurricularProps) => {
   return (
     <div className="">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={EditCurriculardict[userLanguage]['TITLE']}
           subtitle={EditCurriculardict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
       </div>
 
@@ -565,6 +615,9 @@ const EditCurricular = (props: EditCurricularProps) => {
             saveCroppedImage={(img: string) => saveCroppedImage(img)}
             closeAction={toggleCropper}
           />
+        )}
+        {warnModal.show && (
+          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
         )}
       </PageWrapper>
     </div>

@@ -15,7 +15,7 @@ interface StageButtonProps {
   menuOpen: boolean;
   handleOpenMenu: (stage: string) => void;
   pageViewed: { pageID: number; stage: string };
-  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+  handlePageChange: any;
   counter?: number;
 }
 
@@ -31,7 +31,7 @@ const StageButton = (props: StageButtonProps) => {
     handleOpenMenu,
     disabled,
     pageViewed,
-    setPageViewed,
+    handlePageChange,
     counter,
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
@@ -52,10 +52,7 @@ const StageButton = (props: StageButtonProps) => {
      *
      **/
 
-    setPageViewed({
-      pageID: iconID,
-      stage: stage,
-    });
+    handlePageChange(iconID);
 
     return history.push(`${match.url}/${stage}`);
   };
@@ -67,7 +64,7 @@ const StageButton = (props: StageButtonProps) => {
   const stageButtonChoice = () => {
     if (iconID === 0) {
       return (
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <a
             onClick={() => {
               handleView();
@@ -75,52 +72,52 @@ const StageButton = (props: StageButtonProps) => {
             className={`text-sm font-medium text-gray-500 
             ${stageIsDisabled ? null : 'hover:font-bold hover:underline hover:text-sea-green'} 
             ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold' : null}`}>
-            <div className='text-blueberry text-center flex flex-row'>
-              <StageLabels label={buttonLabel()} counter={counter}/>
+            <div className="text-blueberry text-center flex flex-row">
+              <StageLabels label={buttonLabel()} counter={counter} />
             </div>
           </a>
         </div>
       );
     } else if (iconID < state.pages.length - 1) {
       return (
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <svg
-            className='flex-shrink-0 w-2 h-6 text-light-gray'
-            viewBox='0 0 24 44'
-            preserveAspectRatio='none'
-            fill='currentColor'
-            xmlns='http://www.w3.org/2000/svg'
-            aria-hidden='true'>
-            <path d='M.293 0l22 22-22 22h1.414l22-22-22-22H.293z' />
+            className="flex-shrink-0 w-2 h-6 text-light-gray"
+            viewBox="0 0 24 44"
+            preserveAspectRatio="none"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
           </svg>
           <a
             onClick={() => {
               handleView();
             }}
             className={`text-sm font-medium 
-            ${stageIsDisabled ? 'line-through' : null }
-            ${stageIsClosed || stageIsDisabled ? 'text-gray-500':null}
+            ${stageIsDisabled ? 'line-through' : null}
+            ${stageIsClosed || stageIsDisabled ? 'text-gray-500' : null}
             ${stageIsClosed ? 'hover:underline' : null}
             ${stageIsViewed && stageIsClosed ? 'font-bold underline' : null}
             ${!stageIsClosed && !stageIsDisabled ? 'hover:text-sea-green hover:underline' : null}
             ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold text-sea-green underline' : null}`}>
             <div className={`pl-2 text-center flex flex-row`}>
-              <StageLabels label={buttonLabel()} counter={counter}/>
+              <StageLabels label={buttonLabel()} counter={counter} />
             </div>
           </a>
         </div>
       );
     } else {
       return (
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <svg
-            className='flex-shrink-0 w-2 h-6 text-light-gray'
-            viewBox='0 0 24 44'
-            preserveAspectRatio='none'
-            fill='currentColor'
-            xmlns='http://www.w3.org/2000/svg'
-            aria-hidden='true'>
-            <path d='M.293 0l22 22-22 22h1.414l22-22-22-22H.293z' />
+            className="flex-shrink-0 w-2 h-6 text-light-gray"
+            viewBox="0 0 24 44"
+            preserveAspectRatio="none"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
           </svg>
           <a
             onClick={() => {
@@ -133,7 +130,7 @@ const StageButton = (props: StageButtonProps) => {
               className={`text-ketchup pl-2 text-center  flex flex-row ${
                 stageIsDisabled ? 'line-through text-gray-500' : null
               }`}>
-              <StageLabels label={buttonLabel()} counter={counter}/>
+              <StageLabels label={buttonLabel()} counter={counter} />
             </div>
           </a>
         </div>
@@ -142,7 +139,7 @@ const StageButton = (props: StageButtonProps) => {
   };
 
   return (
-    <li className='relative flex w-full'>{stageButtonChoice()}</li>
+    <li className="relative flex w-full">{stageButtonChoice()}</li>
     // </div>
   );
 };

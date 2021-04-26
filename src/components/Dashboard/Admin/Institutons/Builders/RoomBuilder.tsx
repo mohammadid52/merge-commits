@@ -19,6 +19,8 @@ import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { getAsset } from '../../../../../assets';
+import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
+import { goBackBreadCrumb } from '../../../../../utilities/functions';
 
 interface RoomBuilderProps {}
 
@@ -43,6 +45,11 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const [teachersList, setTeachersList] = useState([]);
   const [classList, setClassList] = useState([]);
   const [curricularList, setCurricularList] = useState([]);
+  const [coTeachersList, setCoTeachersList] = useState(teachersList);
+  const [selectedCoTeachers, setSelectedCoTeachers] = useState<
+    { email?: string; authId: string; value?: string; id?: string; name?: string }[]
+  >([]);
+
   const { RoomBuilderdict, BreadcrumsTitles } = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
@@ -56,6 +63,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const params = useQuery();
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true },
   ];
 
@@ -77,6 +90,24 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         value: val,
       },
     });
+    const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    setCoTeachersList(filteredDefaultTeacher);
+    setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
+  };
+
+  const selectCoTeacher = (id: string, name: string, value: string) => {
+    let updatedList;
+    const currentCoTeachers = selectedCoTeachers;
+    const selectedItem = currentCoTeachers.find((item) => item.id === id);
+
+    if (!selectedItem) {
+      const selectedItem = coTeachersList.find((item) => item.id === id);
+      updatedList = [...currentCoTeachers, { id, name, value, ...selectedItem }];
+    } else {
+      updatedList = currentCoTeachers.filter((item) => item.id !== id);
+    }
+
+    setSelectedCoTeachers(updatedList);
   };
 
   const editInputField = (e: any) => {
@@ -211,13 +242,17 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         const sortedList = listStaffs.sort((a: any, b: any) =>
           a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
         );
-        const staffList = sortedList
+        const filterByRole = sortedList.filter(
+          (teacher: any) => teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
+        );
+        const staffList = filterByRole
           .filter((staff: any) => staff.staffMember)
           .map((item: any) => ({
             id: item.staffMember?.id,
             name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
             value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
             email: item.staffMember?.email ? item.staffMember?.email : '',
+            image: item.staffMember?.image,
             authId: item.staffMember?.authId ? item.staffMember?.authId : '',
           }));
 
@@ -229,7 +264,9 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             return item;
           }
         });
+
         setTeachersList(updatedList);
+        setCoTeachersList(updatedList);
       }
     } catch (err) {
       console.log(err);
@@ -242,6 +279,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
 
   const getClassLists = async (allInstiId: string[]) => {
+    const instId = roomData.institute.id;
+
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
@@ -257,7 +296,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         });
       } else {
         const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
-        const classList = sortedList.map((item: any, i: any) => ({
+        const filteredClassList = sortedList.filter((classItem: any) => {
+          return (
+            classItem?.institution?.isServiceProvider === false ||
+            (classItem?.institution?.isServiceProvider === true && classItem?.institution?.id === instId)
+          );
+        });
+
+        const classList = filteredClassList.map((item: any, i: any) => ({
           id: item.id,
           name: `${item.name ? item.name : ''}`,
           value: `${item.name ? item.name : ''}`,
@@ -414,11 +460,35 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   };
 
+  const saveRoomTeachers = async (roomID: string) => {
+    const updatedTeachers = selectedCoTeachers;
+
+    const newItems: any[] = [];
+
+    updatedTeachers.forEach((d) => {
+      const input = {
+        roomID,
+        teacherID: d.id,
+        teacherEmail: d.email,
+        teacherAuthID: d.authId,
+      };
+      newItems.push(input);
+    });
+
+    if (newItems.length > 0) {
+      await Promise.all(
+        newItems.map(async (teacher) => {
+          await API.graphql(graphqlOperation(customMutation.createRoomCoTeachers, { input: teacher }));
+        })
+      );
+    }
+  };
+
   const createNewRoom = async () => {
+    setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
-        setLoading(true);
         const input = {
           institutionID: roomData.institute.id,
           classID: roomData.classRoom.id,
@@ -427,10 +497,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           name: roomData.name,
           maxPersons: roomData.maxPersons,
         };
+
         const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
         const roomId = newRoom.data.createRoom.id;
         if (roomData.curricular.id) {
           await saveRoomCurricular(roomId, roomData.curricular.id);
+          await saveRoomTeachers(roomId);
         } else {
           setMessages({
             show: true,
@@ -438,6 +510,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             isError: false,
           });
           setRoomData(initialData);
+          setSelectedCoTeachers([]);
           setLoading(false);
         }
       } catch {
@@ -448,7 +521,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         });
         setLoading(false);
       }
-    }
+    } else setLoading(false);
   };
   const fetchOtherList = async (id: string) => {
     const items: any = await getInstituteInfo(id);
@@ -516,7 +589,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
@@ -566,6 +644,19 @@ const RoomBuilder = (props: RoomBuilderProps) => {
                   onClick={() => createNewEntry('teacher')}>
                   Add new teacher
                 </p>
+              </div>
+              <div className="px-3 py-4">
+                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                  {RoomBuilderdict[userLanguage]['CO_TEACHER_LABEL']}
+                </label>
+                <MultipleSelector
+                  withAvatar
+                  selectedItems={selectedCoTeachers}
+                  list={coTeachersList}
+                  placeholder={RoomBuilderdict[userLanguage]['CO_TEACHER_PLACEHOLDER']}
+                  onChange={selectCoTeacher}
+                  disabled={roomData.teacher.id === ''}
+                />
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">

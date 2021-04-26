@@ -23,6 +23,18 @@ export const getDashboardData = /* GraphQL */ `
                   role
                   phone
                 }
+                coTeachers {
+                  items {
+                    teacher {
+                      firstName
+                      lastName
+                      image
+                      email
+                      role
+                      phone
+                    }
+                  }
+                }
                 curricula {
                   items {
                     id
@@ -54,6 +66,125 @@ export const getDashboardData = /* GraphQL */ `
           }
         }
       }
+    }
+  }
+`;
+
+export const getDashboardDataForTeachers = /* GraphQL */ `
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+          students {
+            items {
+              student {
+                firstName
+                lastName
+                image
+                id
+              }
+            }
+          } 
+        }
+        curricula {
+          items {
+            id
+            curriculumID
+            curriculum {
+              name
+              image
+              id
+              description
+              designers
+              objectives
+              summary
+              type
+            }
+          }
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          items {
+            teacher {
+              firstName
+              lastName
+              image
+              email
+              role
+              phone
+            }
+          }
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;
@@ -444,6 +575,245 @@ export const listRooms = /* GraphQL */ `
           preferredName
           lastName
         }
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getRoom = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      maxPersons
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      filters
+      location
+      startDate
+      startTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+          teacher {
+            firstName
+            lastName
+          }
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const listRoomsDashboard = /* GraphQL */ `
+  query ListRooms(
+    $filter: ModelRoomFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+          items {
+            id
+            curriculumID
+            curriculum {
+              name
+            }
+          }
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        createdAt
+        updatedAt
       }
       nextToken
     }
@@ -1176,6 +1546,8 @@ export const listServiceProviders = /* GraphQL */ `
     }
   }
 `;
+
+
 
 export const getInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {

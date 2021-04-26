@@ -266,6 +266,7 @@ const sideBarLinksDict: any = {
     LESSON_BUILDER: 'Lesson Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
+    DASHBOARD: 'Dashboard',
   },
   ES: {
     REGISTRATION: 'Registro',
@@ -961,6 +962,7 @@ const InstitueRomms: any = {
     NO: 'No.',
     CLASSROOMS_NAME: 'Classroom Name',
     CLASS_NAME: 'Class Name',
+    CURRICULAM: 'Curriculam',
     TEACHER: 'Teacher',
     MXSTUDENTS: 'Max. Students',
     ACTION: 'Actions',
