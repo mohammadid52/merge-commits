@@ -11,6 +11,7 @@ import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { standardTheme } from './GlobalContext';
 import { getClientKey } from '../utilities/strings';
+import { handleFetchAndCache } from '../utilities/sessionData';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -247,9 +248,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
    */
   async function getSyllabusLesson() {
     const { lessonID } = urlParams;
+    const queryObj = {
+      name: 'customQueries.getSyllabusLesson',
+      valueObj: { id: lessonID },
+    };
     if (lessonID) {
       try {
-        const classroom: any = await API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID }));
+        const classroom = await handleFetchAndCache(queryObj);
         setLesson(classroom.data.getSyllabusLesson);
         getOrCreateStudentData();
         subscription = subscribeToSyllabusLesson();
