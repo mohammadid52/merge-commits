@@ -1,35 +1,46 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import { getImageFromS3 } from '../../../utilities/services';
+import {getImageFromS3} from '../../../utilities/services';
 import RoomTiles from './RoomTiles';
 import TeacherRows from './TeacherRows';
 import StudentsTiles from './StudentsTiles';
-import { ClassroomControlProps } from '../Dashboard';
+import {ClassroomControlProps} from '../Dashboard';
 import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
-import { getAsset } from '../../../assets';
+import {getAsset} from '../../../assets';
 import HeroBanner from '../../Header/HeroBanner';
+import times from 'lodash/times';
 
 export interface ModifiedListProps {
   id: any;
   name: any;
   teacherProfileImg: string;
   bannerImage: string;
-  teacher: { email: string; firstName: string; lastName: string; image: string };
+  teacher: {email: string; firstName: string; lastName: string; image: string};
   curricula: {
-    items: { curriculum: { name: string; description?: string; id: string; summary?: string; type?: string } }[];
+    items: {
+      curriculum: {
+        name: string;
+        description?: string;
+        id: string;
+        summary?: string;
+        type?: string;
+      };
+    }[];
   };
 }
 
 const Home = (props: ClassroomControlProps) => {
-  const { homeData, classList, handleRoomSelection, isTeacher } = props;
-  const { state, dispatch, theme, clientKey } = useContext(GlobalContext);
+  const {homeData, classList, handleRoomSelection, isTeacher} = props;
+  const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
 
-  const user = !isEmpty(state) ? { firstName: state.user.firstName, preferredName: state.user.firstName } : null;
+  const user = !isEmpty(state)
+    ? {firstName: state.user.firstName, preferredName: state.user.firstName}
+    : null;
 
   useEffect(() => {
     if (state.user.role === 'ST') {
@@ -37,7 +48,7 @@ const Home = (props: ClassroomControlProps) => {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
       }
       if (state.activeRoom && state.activeRoom.length > 0) {
-        dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: null } });
+        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: null}});
       }
     }
   }, [state.user.role]);
@@ -60,7 +71,9 @@ const Home = (props: ClassroomControlProps) => {
       ? homeData.reduce((acc: any[], dataObj: any) => {
           const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
           const teacherIsPresent = acc?.find(
-            (teacher: any) => teacher?.firstName === teacherObj?.firstName && teacher?.lastName === teacherObj?.lastName
+            (teacher: any) =>
+              teacher?.firstName === teacherObj?.firstName &&
+              teacher?.lastName === teacherObj?.lastName
           );
           if (teacherIsPresent) {
             return acc;
@@ -88,12 +101,18 @@ const Home = (props: ClassroomControlProps) => {
 
   const teacherListWithImages = Promise.all(
     getTeacherList.map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
+      return {
+        ...teacherObj,
+        image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+      };
     })
   );
   const coTeacherListWithImages = Promise.all(
     getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-      return { ...teacherObj, image: await (teacherObj.image ? getImageURL(teacherObj.image) : null) };
+      return {
+        ...teacherObj,
+        image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+      };
     })
   );
 
@@ -123,7 +142,9 @@ const Home = (props: ClassroomControlProps) => {
         ...studentObj,
         student: {
           ...studentObj?.student,
-          image: await (studentObj?.student?.image ? getImageURL(studentObj?.student?.image) : null),
+          image: await (studentObj?.student?.image
+            ? getImageURL(studentObj?.student?.image)
+            : null),
         },
       };
     })
@@ -135,14 +156,16 @@ const Home = (props: ClassroomControlProps) => {
 
     classList &&
       classList.length > 0 &&
-      classList.forEach((item: { rooms: { items: any[] }; name: string; id: string }) => {
+      classList.forEach((item: {rooms: {items: any[]}; name: string; id: string}) => {
         item.rooms.items.forEach(async (_item: any, index) => {
           const curriculum = _item.curricula?.items[0].curriculum;
           if (curriculum !== null) {
             const imagePath = curriculum?.image;
 
             const image = await (imagePath !== null ? getImageFromS3(imagePath) : null);
-            const teacherProfileImg = await (_item.teacher.image ? getImageFromS3(_item.teacher.image) : false);
+            const teacherProfileImg = await (_item.teacher.image
+              ? getImageFromS3(_item.teacher.image)
+              : false);
 
             const modifiedItem = {
               ..._item,
@@ -187,15 +210,20 @@ const Home = (props: ClassroomControlProps) => {
               className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome,{' '}
-                <span className="font-semibold">{user.preferredName ? user.preferredName : user.firstName}</span>, What
-                do you want to {isTeacher ? 'teach' : 'learn'} today?
+                <span className="font-semibold">
+                  {user.preferredName ? user.preferredName : user.firstName}
+                </span>
+                , What do you want to {isTeacher ? 'teach' : 'learn'} today?
               </h2>
             </div>
           )}
 
           {/* Classroom Section */}
 
-          <RoomTiles handleRoomSelection={handleRoomSelection} classList={getClassList()} />
+          <RoomTiles
+            handleRoomSelection={handleRoomSelection}
+            classList={getClassList()}
+          />
 
           {/* Teachers Section */}
           <div className="my-8">
