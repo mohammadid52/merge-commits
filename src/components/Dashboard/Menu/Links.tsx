@@ -1,20 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 // Iconz
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen } from 'react-icons/fa';
-import { AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook } from 'react-icons/ai';
-import { RiDoorClosedLine } from 'react-icons/ri';
-import { HiOutlineOfficeBuilding } from 'react-icons/hi';
-import { IoIosPeople, IoMdBuild } from 'react-icons/io';
-import { GiShinyApple } from 'react-icons/gi';
-import { IoBookOutline, IoSchoolOutline } from 'react-icons/io5';
-import { BsReverseLayoutSidebarReverse } from 'react-icons/bs';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen} from 'react-icons/fa';
+import {AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook} from 'react-icons/ai';
+import {RiDoorClosedLine} from 'react-icons/ri';
+import {HiOutlineOfficeBuilding} from 'react-icons/hi';
+import {IoIosPeople, IoMdBuild} from 'react-icons/io';
+import {GiShinyApple} from 'react-icons/gi';
+import {IoBookOutline, IoSchoolOutline} from 'react-icons/io5';
+import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
 
 import useDictionary from '../../../customHooks/dictionary';
-import { getAsset } from '../../../assets';
-import { findIndex } from 'lodash';
+import {getAsset} from '../../../assets';
+import {findIndex} from 'lodash';
 
 type LinkObject = {
   name: string;
@@ -45,14 +45,14 @@ export interface LinkProps {
 }
 
 const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { state, dispatch, theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { handleRoomSelection } = linkProps;
+  const {state, dispatch, theme, userLanguage, clientKey} = useContext(GlobalContext);
+  const {handleRoomSelection} = linkProps;
 
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { sideBarLinksDict } = useDictionary(clientKey);
+  const {sideBarLinksDict} = useDictionary(clientKey);
   const history = useHistory();
   const match = useRouteMatch();
-  const { role } = linkProps;
+  const {role} = linkProps;
   const [links, setLinks] = useState<Array<LinkObject>>([]);
   const [openItems, setOpenItems] = useState([]);
 
@@ -119,14 +119,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
               label: 'Institutions',
               path: 'manage-institutions',
-              subMenuItems: [{ title: 'Add New', path: 'manage-institutions/add' }],
+              subMenuItems: [{title: 'Add New', path: 'manage-institutions/add'}],
             },
             {
               title: sideBarLinksDict[userLanguage].PEOPLE,
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
               path: 'manage-users',
-              subMenuItems: [{ title: 'Add New Person', path: 'registration' }],
+              subMenuItems: [{title: 'Add New Person', path: 'registration'}],
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
@@ -145,7 +145,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
-              subMenuItems: [{ title: 'Add New Lesson', path: 'lesson-builder/lesson/add' }],
+              subMenuItems: [
+                {title: 'Add New Lesson', path: 'lesson-builder/lesson/add'},
+              ],
             },
             {
               title: sideBarLinksDict[userLanguage].ANTHOLOGY,
@@ -177,7 +179,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
               path: 'manage-users',
-              subMenuItems: [{ title: 'Add New Person', path: 'registration' }],
+              subMenuItems: [{title: 'Add New Person', path: 'registration'}],
             },
             {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
@@ -189,9 +191,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 state.roomData.rooms.map((room: Room, i: number) => {
                   return {
                     title: room.name,
-                    active: room.id === state.activeRoom && state.currentPage === 'lesson-planner',
+                    active:
+                      room.id === state.activeRoom &&
+                      state.currentPage === 'lesson-planner',
                     path: room.id,
-                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
+                    onClick: (e: any) =>
+                      handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
                   };
                 }),
             },
@@ -206,7 +211,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
               path: 'lesson-builder',
-              subMenuItems: [{ title: 'Add New Lesson', path: 'lesson-builder/lesson/add' }],
+              subMenuItems: [
+                {title: 'Add New Lesson', path: 'lesson-builder/lesson/add'},
+              ],
             },
           ];
         });
@@ -223,7 +230,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 state.roomData.rooms.map((room: Room, i: number) => {
                   return {
                     title: room.name,
-                    active: room.id === state.activeRoom && state.currentPage === 'classroom',
+                    active:
+                      room.id === state.activeRoom && state.currentPage === 'classroom',
                     path: room.id,
                     onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
                   };
@@ -239,7 +247,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                 state.roomData.rooms.map((room: Room, i: number) => {
                   return {
                     title: room.name,
-                    active: room.id === state.activeRoom && state.currentPage === 'classroom',
+                    active:
+                      room.id === state.activeRoom && state.currentPage === 'classroom',
                     path: room.id,
                     onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
                   };
@@ -259,9 +268,24 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
   };
 
+  const isRoomLink = (linkStr: string) => {
+    const isMatch = linkStr.match(
+      /[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/gi
+    );
+    if (isMatch) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const handleLink = (e: any, label: string, toggle: boolean = false) => {
     const id = e.target.id.toLowerCase();
     const lastCharacter = match.url.charAt(match.url.length - 1);
+
+    if (!isRoomLink(id)) {
+      dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: ''}});
+    }
 
     if (id !== '') {
       if (lastCharacter === '/') {
@@ -313,7 +337,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Anthology':
         return <AiOutlineBook className="sidenav_icon mr-3 h-6 w-6" id={url} />;
       case 'Noticeboard':
-        return <BsReverseLayoutSidebarReverse className="sidenav_icon mr-3 h-6 w-6" id={url} />;
+        return (
+          <BsReverseLayoutSidebarReverse className="sidenav_icon mr-3 h-6 w-6" id={url} />
+        );
       default:
         return '';
     }
@@ -334,18 +360,34 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
     <div className={`link w-full h-12 z-40`}>
       {state.user.role && links && links.length > 0
         ? links.map(
-            (link: { subMenuItems: any; name: string; path: string; label: string; active: boolean }, key: number) => {
+            (
+              link: {
+                subMenuItems: any;
+                name: string;
+                path: string;
+                label: string;
+                active: boolean;
+              },
+              key: number
+            ) => {
               const currentPath = `/dashboard/${link.path}`;
               const open =
                 path === currentPath ||
-                (link.subMenuItems && findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1);
+                (link.subMenuItems &&
+                  findIndex(
+                    link.subMenuItems,
+                    (d: any) => path === `/dashboard/${d.path}`
+                  ) !== -1);
               console.log();
 
               const exists = openItems.indexOf(link.label) !== -1;
 
               const innerLinkActive = (link.subMenuItems || []).filter((d: any) => {
                 const activeLink =
-                  findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1 || d.active;
+                  findIndex(
+                    link.subMenuItems,
+                    (d: any) => path === `/dashboard/${d.path}`
+                  ) !== -1 || d.active;
 
                 return activeLink;
               });
@@ -361,7 +403,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                         ? `sidenav_main_item_active ${theme.borderColor[themeColor]}`
                         : 'border-transparent'
                     } ${
-                      open || (innerLinkActive.length > 0 && 'sidenav_main_item_active_color')
+                      open ||
+                      (innerLinkActive.length > 0 && 'sidenav_main_item_active_color')
                     } cursor-pointer sidenav_main_item border-l-4 px-4 flex items-center py-2 text-sm font-regular`}
                     aria-controls="sub-menu-1"
                     aria-expanded="false">
@@ -380,13 +423,16 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     <div className="" id="sub-menu-1">
                       {link.subMenuItems.map((d: any) => {
                         const activeLink =
-                          findIndex(link.subMenuItems, (d: any) => path === `/dashboard/${d.path}`) !== -1 || d.active;
+                          findIndex(
+                            link.subMenuItems,
+                            (d: any) => path === `/dashboard/${d.path}`
+                          ) !== -1 || d.active;
 
                         return (
                           <a
                             key={`${d.path}_key`}
                             id={d.path}
-                            style={{ paddingLeft: '3.3rem' }}
+                            style={{paddingLeft: '3.3rem'}}
                             onClick={(e) => {
                               if (d.onClick) {
                                 d.onClick();
