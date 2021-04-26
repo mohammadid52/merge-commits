@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../contexts/LessonContext';
+import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import InstructionBlock from '../LessonComponents/InstructionBlock';
 import Banner from '../LessonComponents/Banner';
-import { stripStyleFromHTML } from '../../../utilities/strings';
+import {stripStyleFromHTML} from '../../../utilities/strings';
 
 interface QuestionGroupInfoProps {
   checkpointsLoaded?: boolean;
@@ -17,9 +17,11 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
   /**
    * Teacher switch
    */
-  const { checkpointsLoaded, isTeacher, checkpointID, checkpoint, showTitle } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme } = switchContext;
+  const {checkpointsLoaded, isTeacher, checkpointID, checkpoint, showTitle} = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme} = switchContext;
 
   const [info, setInfo] = useState<{
     title: string;
@@ -35,12 +37,14 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
 
   useEffect(() => {
     if (checkpoint) {
-      setInfo({
-        title: checkpoint?.title,
-        subtitle: checkpoint?.subtitle,
-        instructions: stripStyleFromHTML(checkpoint?.instructions),
-        instructionsTitle: checkpoint?.instructionsTitle,
-      });
+      if (checkpoint.hasOwnProperty('title')) {
+        setInfo({
+          title: checkpoint?.title,
+          subtitle: checkpoint?.subtitle,
+          instructions: stripStyleFromHTML(checkpoint?.instructions),
+          instructionsTitle: checkpoint?.instructionsTitle,
+        });
+      }
     }
   }, [checkpoint]);
 
@@ -50,7 +54,7 @@ const QuestionGroupInfo = (props: QuestionGroupInfoProps) => {
         <div className="w-full h-full flex flex-col flex-wrap justify-around items-center">
           <Banner
             isTeacher={isTeacher}
-            subtitleSection={`${info && info.title ? info.title : null}`}
+            subtitleSection={info && info.title ? info.title : null}
             subtitleSection2={info.subtitle ? `- ( ${info.subtitle} )` : null}
           />
 
