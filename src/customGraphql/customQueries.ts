@@ -134,6 +134,16 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
           name
           createdAt
           updatedAt
+          students {
+            items {
+              student {
+                firstName
+                lastName
+                image
+                id
+              }
+            }
+          } 
         }
         curricula {
           items {
