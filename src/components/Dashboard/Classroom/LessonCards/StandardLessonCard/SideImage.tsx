@@ -28,7 +28,7 @@ const SideImage = (props: LessonCardProps) => {
         </div>
         <div className="h-3/10 flex flex-row-reverse">
           <h2
-            className={`first w-full text-2xl text-right font-open font-medium tracking-widest mt-2 mr-1 text-gray-200`}
+            className={`first w-full text-2xl sm:text-xl text-right font-open font-medium tracking-widest mt-2 mr-1 text-gray-200`}
             style={{ textShadow: '1px 1px black' }}>
             {lessonProps && lessonProps.lesson?.artist?.name ? lessonProps.lesson?.artist?.name : null}
           </h2>

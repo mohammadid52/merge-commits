@@ -15,7 +15,7 @@ const BottomBar = (props: LessonCardProps) => {
         lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
       }`}>
       {/* TIME */}
-      <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-500`}>
+      <div className={`flex justify-center items-center my-2 sm:w-3/10 w-3.3/10 text-gray-500`}>
         <div className="w-auto text-gray-500">
           <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
             <AiOutlineClockCircle />
@@ -25,7 +25,7 @@ const BottomBar = (props: LessonCardProps) => {
       </div>
 
       {/* TEACHER */}
-      <div className={`flex justify-center items-center my-2 w-3.3/10 mr-2`}>
+      <div className={`flex justify-center items-center my-2 sm:w-5/10 w-3.3/10 mr-2`}>
         <div className="w-auto text-gray-500">
           {lessonType !== 'survey' && (
             <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
@@ -53,7 +53,9 @@ const BottomBar = (props: LessonCardProps) => {
         </div>
       </div>
       {/* FILLER */}
-      {lessonType === 'survey' && <div className={`flex justify-center items-center my-2 w-3.3/10 text-gray-300`} />}
+      {lessonType === 'survey' && (
+        <div className={`flex justify-center items-center my-2 sm:w-3/10 w-3.3/10 text-gray-300`} />
+      )}
 
       {/* START */}
       <div className="flex w-3.3/10">
