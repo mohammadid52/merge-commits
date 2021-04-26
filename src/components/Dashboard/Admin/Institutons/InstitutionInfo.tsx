@@ -134,7 +134,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   } = instProps?.institute;
   return (
     <div>
-      <div className="h-9/10 flex flex-col md:flex-row">
+      <div className="h-9/10 flex flex-col">
         {/* Profile section */}
         <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
           {image ? (
@@ -166,7 +166,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
         </div>
 
         {/* General information section */}
-        <div className="w-full">
+        <div className="">
           <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
             <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">{Institute_info[userLanguage]['TITLE']}</h3>
@@ -226,14 +226,14 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               </div>
             </div>
           </div>
-          {instProps?.institute?.id && (
-            <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
-              <div className="px-4 pt-5 sm:px-6">
-                <UnderlinedTabs tabs={tabs} activeTab={tabProps.tabsData.inst} updateTab={updateTab} />
-              </div>
-            </div>
-          )}
         </div>
+        {instProps?.institute?.id && (
+          <div className="overflow-hidden sm:rounded-lg">
+            <div className="px-4 pt-5 sm:px-6">
+              <UnderlinedTabs tabs={tabs} activeTab={tabProps.tabsData.inst} updateTab={updateTab} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
