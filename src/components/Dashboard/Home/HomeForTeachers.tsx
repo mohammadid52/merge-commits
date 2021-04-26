@@ -118,7 +118,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   };
 
   const teacherListWithImages = async () => {
-    const data = await Promise.all(
+    let data: any[] = await Promise.all(
       getTeacherList.map(async (teacherObj: any, idx: number) => {
         return {
           ...teacherObj,
@@ -126,11 +126,12 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
         };
       })
     );
+    data = data.filter((d: any) => d.id !== state.user.id);
     setTeacherList(data);
   };
 
   const coTeacherListWithImages = async () => {
-    const data = await Promise.all(
+    let data: any[] = await Promise.all(
       getCoTeacherList().map(async (teacherObj: any, idx: number) => {
         return {
           ...teacherObj,
@@ -138,6 +139,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
         };
       })
     );
+    data = data.filter((d: any) => d.id !== state.user.id);
     setCoTeachersList(data);
   };
 
