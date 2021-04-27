@@ -12,7 +12,7 @@ const Chat = (props: Chat) => {
     }
 
     return (
-        <>
+        <div className="w-full min-h-24 bg-green-200 p-8">
             <div>Chat</div>
             {
                 !selectedRoom ?
@@ -21,7 +21,7 @@ const Chat = (props: Chat) => {
                     <RoomChat selectedRoom={selectedRoom}/>
             }
 
-        </>
+        </div>
     );
 };
 
