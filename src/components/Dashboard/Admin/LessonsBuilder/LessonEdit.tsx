@@ -123,38 +123,33 @@ const LessonEdit = (props: LessonEditProps) => {
     { id: '2', name: 'Assessment', value: 'assessment' },
     { id: '3', name: 'Survey', value: 'survey' },
   ];
-  const goBack = () => {
-    history.push('/dashboard/lesson-builder');
-  };
 
-  const currentStepIdx = findIndex(assessmentScrollerStep, { name: activeStep });
+  const [historyList, setHistoryList] = useState(['Overview']);
+
+  const goBack = () => {
+    const currentStepIdx = historyList.indexOf(activeStep);
+    if (currentStepIdx < 0) {
+      setHistoryList(['Overview']);
+    } else if (historyList.length === 1) {
+      history.goBack();
+    } else {
+      const prevStep: string = historyList[currentStepIdx - 1];
+      setActiveStep(prevStep);
+      historyList.pop();
+      setHistoryList([...historyList]);
+    }
+  };
 
   const gobackToLessonsList = () => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      if (currentStepIdx === 0) {
-        history.push('/dashboard/lesson-builder');
-      } else {
-        if (lessonType === 'lesson') {
-          const prevStep: string = lessonScrollerStep[0].name;
-          setActiveStep(prevStep);
-        } else {
-          const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-          setActiveStep(prevStep);
-        }
-      }
+      goBack();
     }
   };
 
   const onModalSave = () => {
-    if (currentStepIdx === 0) {
-      return history.goBack();
-    } else {
-      setUnsavedChanges(false);
-      const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-      setActiveStep(prevStep);
-    }
+    goBack();
     toggleModal();
   };
 
@@ -350,7 +345,11 @@ const LessonEdit = (props: LessonEditProps) => {
               <WizardScroller
                 stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep}
                 activeStep={activeStep}
-                setActiveStep={(step) => setActiveStep(step)}
+                setActiveStep={(step) => {
+                  setActiveStep(step);
+
+                  setHistoryList([...historyList, step]);
+                }}
               />
             </div>
             <div className="sm:col-span-4">

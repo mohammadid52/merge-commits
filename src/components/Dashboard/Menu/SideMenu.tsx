@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import SignOutButton from '../../Auth/SignOut';
-import { getAsset } from '../../../assets';
+import {getAsset} from '../../../assets';
 import Links from './Links';
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 import ProfileLink from './ProfileLink';
-import { IoIosMenu } from 'react-icons/io';
+import {IoIosMenu} from 'react-icons/io';
 
 interface SideMenuProps {
   children?: React.ReactNode;
@@ -14,7 +14,7 @@ interface SideMenuProps {
   role: string;
 }
 
-const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps) => {
+const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) => {
   const {
     currentPage,
     setCurrentPage,
@@ -26,13 +26,13 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
     setLessonLoading,
     handleRoomSelection,
   } = props;
-  const { dispatch, theme, clientKey } = useContext(GlobalContext);
+  const {dispatch, theme, clientKey} = useContext(GlobalContext);
   const history = useHistory();
   const [collapse, setCollapse] = useState(false);
 
   const handleLink = (e: React.MouseEvent) => {
     history.push('/dashboard/home');
-    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'homepage' } });
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
   };
 
   return (
@@ -46,7 +46,9 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
         minWidth: collapse ? '0.5rem' : '16rem',
         maxWidth: collapse ? '0.5rem' : '16rem',
       }}
-      className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav overflow-x-hidden ${collapse && 'cursor-pointer'}`}>
+      className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav overflow-x-hidden ${
+        collapse && 'cursor-pointer'
+      }`}>
       {!collapse && (
         <div
           style={{
@@ -56,10 +58,15 @@ const SideMenu: React.FC<SideMenuProps> = ({ children, ...props }: SideMenuProps
           className="flex flex-col">
           <div className="flex flex-col h-screen flex-1">
             <div className="flex justify-between sidenav_logo items-center h-16 flex-shrink-0 px-4">
-              <img onClick={handleLink} className="h-8 w-auto" src={getAsset(clientKey, 'main_logo')} alt="Workflow" />
+              <img
+                onClick={handleLink}
+                className="h-8 w-auto"
+                src={getAsset(clientKey, 'main_logo')}
+                alt="Workflow"
+              />
               <IoIosMenu
                 onClick={() => setCollapse(!collapse)}
-                className="w-auto cursor-pointer sidenav_icon h-6 w-6"
+                className="w-auto cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
               />
             </div>
             <div className="flex-1 flex flex-col overflow-y-auto">
