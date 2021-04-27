@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import { UserInfo } from './User';
+import {UserInfo} from './User';
 import UserStatus from './UserStatus';
 import UserRole from './UserRole';
 import useDictionary from '../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -13,9 +13,9 @@ interface UserInfoProps {
 }
 
 const UserInformation = (props: UserInfoProps) => {
-  const { user, status } = props;
-  const { theme, userLanguage, clientKey } = useContext(GlobalContext);
-  const { UserInformationDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {user, status} = props;
+  const {theme, userLanguage, clientKey, state} = useContext(GlobalContext);
+  const {UserInformationDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   let created = () => {
     let date = new Date(user.createdAt);
@@ -98,6 +98,15 @@ const UserInformation = (props: UserInfoProps) => {
             </dl>
           </div>
         </div>
+        {(state.user.role === 'FLW' ||
+          state.user.role === 'TR' ||
+          state.user.role === 'ADM') && (
+          <div>
+            <p className="text-center cursor-pointer text-gray-500 p-4">
+              see private checkpoints
+            </p>
+          </div>
+        )}
 
         {/* TODO: NEED TO CONFIRM FOR GIVING ACCESS TO ADMIN ON PROFILE BUILDER. */}
         {/* <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg">
