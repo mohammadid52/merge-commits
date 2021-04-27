@@ -47,18 +47,18 @@ export const CallWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}
     <>
       {widgets.length > 0 ? (
         widgets.map((widgetObj: Widget, idx: number) => {
-          return (
-            <div key={`${widgetObj.id}_${idx}`} className={``}>
+          return widgetObj.links.map((link: Link, idx1: number) => (
+            <div key={`${widgetObj.id}_${idx}_${idx1}`}>
               {/**
                * MOBILE VERSION WIDGET ICON
                */}
               <span className={`w-full mr-0 mb-2 flex flex-col`}>
                 <a
                   id={`links_${idx}_mini`}
-                  className={`text-xs font-semibold text-blueberry hover:underline`}
-                  href={widgetObj.link.url}
+                  className={`text-center text-gray-200 text-xs hover:underline`}
+                  href={link.url}
                   target={`_blank`}>
-                  {getCallInfo(widgetObj.link.url)?.iconUrl === null ? (
+                  {getCallInfo(link.url)?.iconUrl === null ? (
                     <IconContext.Provider value={{className: 'mx-auto my-2'}}>
                       <IoCallOutline size={24} />
                     </IconContext.Provider>
@@ -66,18 +66,18 @@ export const CallWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}
                     <div className={`w-8 h-8 mx-auto my-2`}>
                       <img
                         className={`pointer-events-none`}
-                        src={getCallInfo(widgetObj.link.url)?.iconUrl}
+                        src={getCallInfo(link.url)?.iconUrl}
                         alt={`call_link_icon`}
                       />
                     </div>
                   )}
-                  <p className={`${responsiveClass} text-center`}>
-                    {getCallInfo(widgetObj.link.url)?.joinLabel}
+                  <p className={`text-center text-gray-200 text-xs`}>
+                    {getCallInfo(link.url)?.joinLabel}
                   </p>
                 </a>
               </span>
             </div>
-          );
+          ));
         })
       ) : (
         <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">

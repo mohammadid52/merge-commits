@@ -18,10 +18,10 @@ const FloatingSideMenu = () => {
         transform transition ease-in-out duration-400 sm:duration-400
         ${open ? '-translate-x-64 scale-x-1 w-64' : '-translate-x-12 w-0'} 
         top-1/2 -translate-y-1/2
-        h-auto min-h-64
+        min-h-64
         bg-gray-800 
         shadow`}>
-        <div className={`relative`}>
+        <div className={`relative min-h-64`}>
           <FloatingBar toggleMenu={toggleMenu} isOpen={open} />
           <ExpandedMenu isOpen={open} toggleMenu={toggleMenu} />
         </div>

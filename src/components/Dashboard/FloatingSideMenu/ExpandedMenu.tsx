@@ -36,9 +36,10 @@ const ExpandedMenu = (props: {isOpen: boolean; toggleMenu: () => void}) => {
   return (
     <div
       className={`
-    transform transition ease-in-out duration-400 sm:duration-400
-    ${!isOpen ? 'scale-0 overflow-hidden' : 'scale-1'}
-    relative flex flex-col`}>
+      h-auto min-h-64
+      transform transition ease-in-out duration-400 sm:duration-400
+      ${!isOpen ? 'scale-0 overflow-hidden' : 'scale-1'}
+      relative flex flex-col`}>
       <div className={`p-2`}>
         <SideMenuSection sectionTitle={'Chat Rooms'}>
           <Rooms />
