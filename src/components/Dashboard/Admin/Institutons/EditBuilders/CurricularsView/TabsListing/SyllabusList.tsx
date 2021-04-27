@@ -1,16 +1,17 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
-import { useHistory } from 'react-router';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {Fragment, useEffect, useState, useContext} from 'react';
+import {useHistory} from 'react-router';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
-import { reorder } from '../../../../../../../utilities/strings';
+import {reorder} from '../../../../../../../utilities/strings';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
-import { getAsset } from '../../../../../../../assets';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import {getAsset} from '../../../../../../../assets';
+import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
+import Tooltip from '../../../../../../Atoms/Tooltip';
 
 interface SyllabusListProps {
   savedSyllabi?: any[];
@@ -20,15 +21,15 @@ interface SyllabusListProps {
 }
 
 const SyllabusList = (props: SyllabusListProps) => {
-  const { curricularId, savedSyllabi, loading, institutionId } = props;
+  const {curricularId, savedSyllabi, loading, institutionId} = props;
   const [isLoading, setLoading] = useState(loading);
   const [syllabusList, setSyllabusList] = useState(savedSyllabi);
   const [syllabusIds, setSyllabusIds] = useState([]);
   const history = useHistory();
 
-  const { clientKey, theme, userLanguage } = useContext(GlobalContext);
+  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { SYLLABUS, BreadcrumsTitles } = useDictionary(clientKey);
+  const {SYLLABUS, BreadcrumsTitles} = useDictionary(clientKey);
 
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
@@ -37,12 +38,14 @@ const SyllabusList = (props: SyllabusListProps) => {
       let updatedList = syllabusList
         .map((t: any) => {
           let index = list.indexOf(t.id);
-          return { ...t, index };
+          return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
       setSyllabusList(updatedList);
       let seqItem: any = await API.graphql(
-        graphqlOperation(mutations.updateCSequences, { input: { id: `s_${curricularId}`, sequence: list } })
+        graphqlOperation(mutations.updateCSequences, {
+          input: {id: `s_${curricularId}`, sequence: list},
+        })
       );
       seqItem = seqItem.data.updateCSequences;
       console.log('seq updated');
@@ -50,20 +53,26 @@ const SyllabusList = (props: SyllabusListProps) => {
   };
 
   const createNewSyllabus = () => {
-    history.push(`/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/add`);
+    history.push(
+      `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/add`
+    );
   };
 
   const editCurrentSyllabus = (id: string) => {
-    history.push(`/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${id}`);
+    history.push(
+      `/dashboard/manage-institutions/${institutionId}/curricular/${curricularId}/syllabus/edit?id=${id}`
+    );
   };
 
   const setSyllabusSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `s_${curricularId}` }));
+    let item: any = await API.graphql(
+      graphqlOperation(queries.getCSequences, {id: `s_${curricularId}`})
+    );
     item = item?.data.getCSequences?.sequence || [];
     let list = savedSyllabi
       ?.map((t: any) => {
         let index = item.indexOf(t.id);
-        return { ...t, index };
+        return {...t, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
     setSyllabusList(list);
@@ -72,9 +81,11 @@ const SyllabusList = (props: SyllabusListProps) => {
     const listLength = savedSyllabi?.length;
     if (listLength && !sequenceLength) {
       // create sequence
-      let syllabusId = savedSyllabi?.map((item: { id: string }) => item.id);
+      let syllabusId = savedSyllabi?.map((item: {id: string}) => item.id);
       let seqItem: any = await API.graphql(
-        graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: syllabusId } })
+        graphqlOperation(mutations.createCSequences, {
+          input: {id: `s_${curricularId}`, sequence: syllabusId},
+        })
       );
       seqItem = seqItem.data.createCSequences;
       setSyllabusIds(syllabusId);
@@ -107,7 +118,11 @@ const SyllabusList = (props: SyllabusListProps) => {
               {syllabusList && syllabusList.length > 0 ? (
                 <Fragment>
                   <div className="flex justify-end w-8/10 m-auto ">
-                    <Buttons btnClass="mx-4" label={SYLLABUS[userLanguage]['ADDNEW']} onClick={createNewSyllabus} />
+                    <Buttons
+                      btnClass="mx-4"
+                      label={SYLLABUS[userLanguage]['ADDNEW']}
+                      onClick={createNewSyllabus}
+                    />
                   </div>
                   <div className="my-8 w-8/10 m-auto">
                     <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
@@ -132,7 +147,10 @@ const SyllabusList = (props: SyllabusListProps) => {
                           {(provided, snapshot) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
                               {syllabusList.map((item, index) => (
-                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                <Draggable
+                                  key={item.id}
+                                  draggableId={item.id}
+                                  index={index}>
                                   {(provided, snapshot) => (
                                     <div
                                       ref={provided.innerRef}
@@ -153,7 +171,11 @@ const SyllabusList = (props: SyllabusListProps) => {
                                         </div> */}
                                         <span
                                           className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `}>
-                                          {SYLLABUS[userLanguage]['EDIT']}
+                                          <Tooltip
+                                            placement="left"
+                                            text={`Click to edit`}>
+                                            {SYLLABUS[userLanguage]['EDIT']}
+                                          </Tooltip>
                                         </span>
                                       </div>
                                     </div>
@@ -171,7 +193,11 @@ const SyllabusList = (props: SyllabusListProps) => {
               ) : (
                 <Fragment>
                   <div className="flex justify-center mt-8">
-                    <Buttons btnClass="mx-4" label="Add new unit" onClick={createNewSyllabus} />
+                    <Buttons
+                      btnClass="mx-4"
+                      label="Add new unit"
+                      onClick={createNewSyllabus}
+                    />
                   </div>
                   <p className="text-center p-16"> {SYLLABUS[userLanguage]['INFO']}</p>
                 </Fragment>
