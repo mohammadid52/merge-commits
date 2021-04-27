@@ -1,25 +1,13 @@
 module.exports = {
   purge: {
     enabled: false,
-    content: ['./src/**/*.html', './src/**/*.tsx', './src/**/*.ts', './src/**/*.js', './src/**/*.jsx'],
-    options: {
-      whitelist: [
-        'bg-fire-orange',
-        'bg-sea-green',
-        'bg-dark-red',
-        'border-white20',
-        'translate-y-1/2',
-        'animate-jiggle',
-        'animate-spin',
-        'animate-bounce',
-        'animate-activation',
-        'text-purple-400',
-        'border-red-700',
-        'text-red-400',
-        'text-red-700',
-        'bg-purple-300',
-      ],
-    },
+    content: [
+      './src/**/*.html',
+      './src/**/*.tsx',
+      './src/**/*.ts',
+      './src/**/*.js',
+      './src/**/*.jsx',
+    ],
   },
   corePlugins: {
     translate: true,
@@ -142,9 +130,7 @@ module.exports = {
       '1/2': '50%',
     },
     fontFamily: {
-      // open: ['Barlow', 'sans-serif'],
-      // 'open': ['Open Sans Condensed', 'sans-serif'],
-      'open': ['Open Sans', 'sans-serif'],
+      open: ['Open Sans', 'sans-serif'],
     },
     colors: {
       transparent: 'transparent',
@@ -302,8 +288,8 @@ module.exports = {
       'medium-blue': '#30445e',
       'med-dark-blue': '#273548',
       'off-white': '#ffffffe6',
-      'mustard': '#febd01',
-      'tahini': '#c4b896',
+      mustard: '#febd01',
+      tahini: '#c4b896',
       'orange-light': '#e4a04f',
       'orange-medium': '#e4714f',
       'pink-light': '#c64575',
@@ -316,15 +302,14 @@ module.exports = {
     },
     extend: {
       transitionProperty: {
-        'height': 'height'
+        height: 'height',
       },
       backgroundImage: (theme) => ({
         'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
-        'demo-bg':
-          "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
+        'demo-bg': "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',
@@ -714,7 +699,7 @@ module.exports = {
     minHeight: ['responsive', 'hover', 'focus'],
     zIndex: ['responsive', 'hover', 'focus'],
     position: ['responsive', 'hover', 'focus'],
-    display: ['group-hover', 'responsive', 'group-focus']
+    display: ['group-hover', 'responsive', 'group-focus'],
   },
   plugins: [],
 };

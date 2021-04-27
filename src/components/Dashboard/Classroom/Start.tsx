@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useHistory } from 'react-router-dom';
+import React, {useContext} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useHistory} from 'react-router-dom';
 
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { dateString } from '../../../utilities/time';
-import { Lesson } from './Classroom';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {dateString} from '../../../utilities/time';
+import {Lesson} from './Classroom';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import Buttons from '../../Atoms/Buttons';
@@ -18,12 +18,12 @@ interface StartProps {
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
-  const { state, dispatch, userLanguage, clientKey } = useContext(GlobalContext);
-  const { classRoomDict } = useDictionary(clientKey);
-  const { lessonKey, open, accessible, type } = props;
+  const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
+  const {classRoomDict} = useDictionary(clientKey);
+  const {lessonKey, open, accessible, type} = props;
   const history = useHistory();
 
-  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR'
+  const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
   const mutateToggleEnableDisable = async () => {
     const mutatedLessonData = {
@@ -38,15 +38,20 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   };
 
   const toggleEnableDisable = async () => {
-    const arrayWithToggledLesson = state.roomData.lessons.map((lesson: Lesson, i: number) => {
-      if (lesson.id === lessonKey) {
-        return { ...lesson, status: lesson.status === 'Active' ? 'Inactive' : 'Active' };
-      } else {
-        return lesson;
+    const arrayWithToggledLesson = state.roomData.lessons.map(
+      (lesson: Lesson, i: number) => {
+        if (lesson.id === lessonKey) {
+          return {...lesson, status: lesson.status === 'Active' ? 'Inactive' : 'Active'};
+        } else {
+          return lesson;
+        }
       }
-    });
+    );
     await mutateToggleEnableDisable();
-    dispatch({ type: 'TOGGLE_LESSON', payload: { property: 'lessons', data: arrayWithToggledLesson } });
+    dispatch({
+      type: 'TOGGLE_LESSON',
+      payload: {property: 'lessons', data: arrayWithToggledLesson},
+    });
   };
 
   const handleLink = () => {
@@ -55,7 +60,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     }
 
     if (isTeacher) {
-      if (type.includes('survey') || type.includes('assessment')) {
+      if (type === 'survey' || type === 'assessment') {
         toggleEnableDisable();
       } else {
         history.push(`${`/lesson-control/${lessonKey}`}`);
@@ -96,41 +101,22 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     }
   };
 
-  const buttonClassSurvey =
-    'text-white bg-green-500 hover:bg-green-400 focus:border-green-700 focus:ring-lime active:bg-green-500 cursor-pointer';
-  const buttonClassLesson =
-    'text-white bg-ketchup hover:bg-red-300 focus:border-red-700 focus:ring-red active:bg-red-500 cursor-pointer';
-  const buttonClassInactive = 'bg-gray-500 text-gray-700 cursor-default';
-
-  const classSwitch = () => {
-    if (isTeacher) {
-      if (type === 'survey' || type === 'assessment') {
-        if (!open) {
-          return buttonClassLesson;
-        } else {
-          return buttonClassSurvey;
-        }
+  const studentTeacherButtonTheme = () => {
+    if (type === 'lesson') {
+      return theme.btn.lessonStart;
+    } else {
+      if (!isTeacher) {
+        return theme.btn.surveyStart;
       } else {
-        return buttonClassLesson;
-      }
-    }
-    if (!isTeacher) {
-      if (type === 'survey' || type === 'assessment') {
-        if (!open) {
-          return buttonClassInactive;
+        if (open) {
+          return theme.btn.surveyStart;
         } else {
-          return buttonClassSurvey;
-        }
-      } else {
-        if (!open) {
-          return buttonClassInactive;
-        } else {
-          return buttonClassLesson;
+          return theme.btn.lessonStart;
         }
       }
     }
   };
-  
+
   return (
     <div>
       <Buttons
@@ -138,9 +124,13 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         onClick={handleLink}
         label={`${firstPart()} ${secondPart()}`}
         disabled={!open && !isTeacher}
-        btnClass={`h-full w-full text-xs focus:outline-none ${
+        overrideClass={true}
+        btnClass={`
+        ${studentTeacherButtonTheme()}
+        h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
-        } transition duration-150 ease-in-out`}></Buttons>
+        } transition duration-150 ease-in-out`}
+      />
     </div>
   );
 };
