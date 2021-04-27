@@ -24,6 +24,7 @@ import Selector from '../../Atoms/Form/Selector';
 import HeroBanner from '../../Header/HeroBanner';
 import DashboardContainer from '../DashboardContainer';
 import Chat from '../../RoomChat/Chat';
+import FloatingSideMenu from '../FloatingSideMenu/FloatingSideMenu';
 
 interface Artist {
   id: string;

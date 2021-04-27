@@ -50,7 +50,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const {state, dispatch, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {handleRoomSelection} = linkProps;
 
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const themeColor = getAsset(clientKey, 'themeClassNameAlt');
   const {sideBarLinksDict} = useDictionary(clientKey);
   const history = useHistory();
   const match = useRouteMatch();

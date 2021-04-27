@@ -281,7 +281,7 @@ module.exports = {
       'grayscale-light': '#959aa3',
       'grayscale-lighter': '#f9f9f947',
       'grayscale-lightest': '#fffbfb',
-      ketchup: '#CA2222',
+      'ketchup': '#CA2222',
       'sea-green': '#17A589',
       transparent: '#ffffff00',
       'lighter-blue': '#1a202c',

@@ -79,6 +79,7 @@ export const standardTheme = {
   formSelect: 'bg-white border-gray-400 text-gray-900 border-0',
   outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
   verticalBorder: {
+    iconoclastRed: 'border-red-600',
     iconoclastIndigo: 'border-indigo-700',
     curateBlue: 'border-theme-blue',
   },
@@ -91,6 +92,7 @@ export const standardTheme = {
     curateBlue: '#0081CB',
   },
   textColor: {
+    iconoclastRed: 'text-red-400',
     iconoclastIndigo: 'text-indigo-600',
     curateBlue: 'text-theme-blue',
   },
