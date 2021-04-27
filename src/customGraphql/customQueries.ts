@@ -2158,6 +2158,7 @@ export const getCheckpointDetails = /* GraphQL */ `
       title
       stage
       type
+      scope
       questions {
         items {
           id
