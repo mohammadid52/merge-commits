@@ -2,8 +2,8 @@ import ContentCard from '../../Atoms/ContentCard';
 import React from 'react';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
-const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
-  const { teacherList, coTeachersList } = props;
+const TeacherRows = (props: {coTeachersList: any; teacherList: any}) => {
+  const {teacherList, coTeachersList} = props;
 
   return (
     <ContentCard hasBackground={false}>
@@ -28,9 +28,16 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
                       <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                           {teacher.image ? (
-                            <img className="h-12 w-12 rounded-full" src={teacher.image} alt="" />
+                            <img
+                              className="h-12 w-12 rounded-full"
+                              src={teacher.image}
+                              alt=""
+                            />
                           ) : (
-                            <ImageAlternate user={teacher} styleClass="h-12 w-12 rounded-full" />
+                            <ImageAlternate
+                              user={teacher}
+                              styleClass="h-12 w-12 rounded-full"
+                            />
                           )}
 
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -92,9 +99,16 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
                       <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                           {teacher.image ? (
-                            <img className="h-12 w-12 rounded-full" src={teacher.image} alt="" />
+                            <img
+                              className="h-12 w-12 rounded-full"
+                              src={teacher.image}
+                              alt=""
+                            />
                           ) : (
-                            <ImageAlternate user={teacher} styleClass="h-12 w-12 rounded-full" />
+                            <ImageAlternate
+                              user={teacher}
+                              styleClass="h-12 w-12 rounded-full"
+                            />
                           )}
 
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -136,9 +150,7 @@ const TeacherRows = (props: { coTeachersList: any; teacherList: any }) => {
               }
             )}
           </ul>
-        ) : (
-          <div className="flex justify-center items-center p-12">No teachers found</div>
-        )}
+        ) : null}
       </div>
     </ContentCard>
   );
