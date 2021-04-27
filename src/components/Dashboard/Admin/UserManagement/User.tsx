@@ -95,7 +95,6 @@ const User = () => {
     try {
       const result: any = await API.graphql(graphqlOperation(queries.userById, {id: id}));
       const userData = result.data.userById.items.pop();
-      console.log(userData);
 
       setStatus('done');
       setUser(() => {
