@@ -776,6 +776,7 @@ export const createCheckpoint = /* GraphQL */ `
       instructionsTitle
       instructions
       purpose
+      scope
       objectives
       designers
       language
