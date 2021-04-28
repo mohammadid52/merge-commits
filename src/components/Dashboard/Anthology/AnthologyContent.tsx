@@ -30,7 +30,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     createTemplate,
     content,
     getContentObjIndex,
-    onCancel,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
@@ -62,18 +61,20 @@ const AnthologyContent = (props: ContentCardProps) => {
               className={'mx-auto px-8 border-t-0 my-2 border-gray-200'}
             />
           )}
-        <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
-          {contentObj.title ? contentObj.title : `No title`}
-        </h4>
-        <div className={`p-3 border-l-0 overflow-ellipsis overflow-hidden ellipsis`}>
-          {contentObj.content.length > 0 ? (
-            <p
-              className="font-normal"
-              dangerouslySetInnerHTML={{__html: contentObj.content}}
-            />
-          ) : (
-            `No content`
-          )}
+        <div className="border-gray-200">
+          <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
+            {contentObj.title ? contentObj.title : `No title`}
+          </h4>
+          <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
+            {contentObj.content.length > 0 ? (
+              <p
+                className="font-normal"
+                dangerouslySetInnerHTML={{__html: contentObj.content}}
+              />
+            ) : (
+              `No content`
+            )}
+          </div>
         </div>
       </>
     </>
@@ -200,7 +201,7 @@ const AnthologyContent = (props: ContentCardProps) => {
             <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
               <div
                 id={`anthology_${subSection}${idx}`}
-                className={`flex flex-col px-6 p-2`}>
+                className={`flex flex-col px-6 py-6 p-2`}>
                 {viewEditMode &&
                 viewEditMode.mode === 'edit' &&
                 viewEditMode.studentDataID === contentObj.studentDataID &&
@@ -210,7 +211,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                 {/**
                  *  section:  VIEW/EDIT BUTTON
                  */}
-                <div className={`flex pt-2 mt-2`}>
+                <div className={`flex pt-2 pb-6 border-b-0 border-gray-200 mt-2`}>
                   {viewEditMode.mode === 'edit' &&
                   viewEditMode.studentDataID === contentObj.studentDataID &&
                   viewEditMode.idx === getContentObjIndex(contentObj) ? (

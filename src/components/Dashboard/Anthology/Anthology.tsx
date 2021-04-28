@@ -207,6 +207,7 @@ const Anthology = () => {
   // Function group to handle section-switching
   const handleTabClick = (tab: string, e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
+    setViewEditMode({...viewEditMode, mode: ''});
 
     if (id !== subSection) {
       if (id !== 'subSectionTabs') {
