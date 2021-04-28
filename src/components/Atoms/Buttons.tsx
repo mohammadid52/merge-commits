@@ -13,6 +13,7 @@ interface ButtonProps {
   overrideClass?: boolean;
   labelClass?: string;
   disabled?: boolean;
+  customStyles?: object;
 }
 
 const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
@@ -26,6 +27,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
     overrideClass,
     labelClass,
     disabled,
+    customStyles,
   } = btnPrps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -34,6 +36,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
     <button
       disabled={disabled}
       type={type ? type : 'button'}
+      style={customStyles}
       className={`font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${
         theme.outlineNone
       } ${transparent ? theme.btn.cancel : !overrideClass ? theme.btn[themeColor] : ''} ${
