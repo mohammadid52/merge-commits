@@ -4,14 +4,16 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as customMutations from '../../customGraphql/customMutations';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import {GlobalContext} from '../../contexts/GlobalContext';
+import {IconContext} from 'react-icons';
+import {AiOutlineSend} from 'react-icons/all';
 
 interface RoomChatProps {
   selectedRoom: any;
-  fullSection?: string;
+  focusSection?: string;
 }
 
 const RoomChat = (props: RoomChatProps) => {
-  const {selectedRoom, fullSection} = props;
+  const {selectedRoom, focusSection} = props;
   const {state, dispatch} = useContext(GlobalContext);
   const [msgs, setMsgs] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -55,15 +57,19 @@ const RoomChat = (props: RoomChatProps) => {
 
   const showNomsgs = () => {
     return (
-      <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
-        No messages in the room in last 24 hours.
+      <div
+        className={`flex flex-col flex-1 p-2 bg-gradient-to-t from-gray-500 to-gray-600`}>
+        <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
+          No recent messages (24 hrs)
+        </div>
       </div>
     );
   };
 
   const listMsgs = () => {
     return (
-      <div className={`h-full p-2 bg-gradient-to-t from-gray-200 rounded-lg`}>
+      <div
+        className={`flex flex-col flex-1 p-2 bg-gradient-to-t from-gray-500 to-gray-600`}>
         {msgs.map((msg: any, index: any) => {
           return (
             <div key={index} className={`animate-slideUp`}>
@@ -92,18 +98,29 @@ const RoomChat = (props: RoomChatProps) => {
 
   const msgInputBox = () => {
     return (
-      <div>
-        <form onSubmit={(e) => sendMsg(e)}>
+      <div className={`h-12 flex flex-none`}>
+        <form className={`flex flex-row`} onSubmit={(e) => sendMsg(e)}>
           <input
+            className={`flex-1`}
             type="text"
             name="message"
             placeholder="Type your message here..."
             onChange={handleChange}
             value={msg}
           />
-          <button type="submit" onClick={(e) => sendMsg(e)}>
-            Send
-          </button>
+          <div className={`flex-none bg-white w-12 h-12`}>
+            <div
+              className={`w-12 h-12 flex items-center cursor-pointer border border-indigo-600 bg-white shadow-sm rounded-full hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400`}
+              onClick={(e) => sendMsg(e)}>
+              <IconContext.Provider
+                value={{
+                  className:
+                    'w-auto h-auto mx-auto my-auto text-indigo-600 pointer-events-none',
+                }}>
+                <AiOutlineSend size={32} />
+              </IconContext.Provider>
+            </div>
+          </div>
         </form>
       </div>
     );
@@ -248,14 +265,14 @@ const RoomChat = (props: RoomChatProps) => {
   }, [msgs]);
 
   return (
-    fullSection &&
-    fullSection === 'Chat' &&
+    focusSection &&
+    focusSection === 'Chat' &&
     Object.keys(selectedRoom).length > 0 && (
-      <>
+      <div id={`roomchat_container`} className={`flex flex-col flex-1`}>
         {loading && showLoader()}
         {!loading && showRoomMsgs()}
         {!loading && msgInputBox()}
-      </>
+      </div>
     )
   );
 };
