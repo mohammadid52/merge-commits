@@ -8,6 +8,7 @@ import slice from 'lodash/slice';
 import filter from 'lodash/filter';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
+import SearchInput from '../../Atoms/Form/SearchInput';
 
 const StudentsTiles = (props: {
   studentsList: any;
@@ -16,16 +17,61 @@ const StudentsTiles = (props: {
   isTeacher?: boolean;
 }) => {
   const {studentsList, title, state, isTeacher = false} = props;
+
   const [viewMore, setViewMore] = useState(false);
   const history = useHistory();
 
-  const filteredList: object[] = filter(
-    studentsList,
-    ({student}: any) => student.id !== state.user.id
-  );
+  const [searchInput, setSearchInput] = useState({
+    value: '',
+    isActive: false,
+  });
 
-  // current: http://localhost:8085/dashboard/home
-  // target: http://localhost:8085/dashboard/manage-users/user?id=b7cac388-8348-481b-931e-39a33e9f3ef3
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    if (studentsList && studentsList.length > 0) {
+      setList(studentsList);
+    }
+  }, [studentsList]);
+
+  const setSearch = (str: string) => {
+    setSearchInput({
+      ...searchInput,
+      value: str,
+    });
+  };
+
+  const searchStudentFromList = () => {
+    if (searchInput.value) {
+      const currentStudentList = [...studentsList];
+      const newList = currentStudentList.filter(({student}: any) => {
+        // Search on name for match.
+        const {firstName, lastName} = student;
+        const fullName = `${firstName} ${lastName}`?.toLowerCase();
+        const searchValue = searchInput.value.toLowerCase();
+        return (
+          student.firstName?.toLowerCase().includes(searchValue) ||
+          student.lastName?.toLowerCase().includes(searchValue) ||
+          fullName.includes(searchValue)
+        );
+      });
+      setSearchInput({
+        ...searchInput,
+        isActive: true,
+      });
+      setList(newList);
+    } else {
+      // reset search state
+      removeSearchAction();
+    }
+  };
+
+  const removeSearchAction = () => {
+    setSearchInput({value: '', isActive: false});
+    if (studentsList && studentsList.length > 0) {
+      setList(studentsList);
+    }
+  };
 
   return (
     <>
@@ -37,15 +83,31 @@ const StudentsTiles = (props: {
         borderBottom
         extraClass="leading-6 text-gray-900"
         withButton={
-          filteredList.length > 12 && (
-            <div className="flex justify-end">
-              <Buttons
-                label={!viewMore ? 'Show All' : 'Show Few'}
-                onClick={() => setViewMore(!viewMore)}
-                type="button"
-              />
-            </div>
-          )
+          <div
+            className={`flex items-center justify-${
+              list.length > 12 && isTeacher ? 'center' : 'end'
+            } w-full`}>
+            {isTeacher && (
+              <div className="w-8/10">
+                <SearchInput
+                  value={searchInput.value}
+                  onChange={setSearch}
+                  onKeyDown={searchStudentFromList}
+                  closeAction={removeSearchAction}
+                  style="mr-4 w-full"
+                />
+              </div>
+            )}
+            {list.length > 12 && (
+              <div className="flex justify-end w-3/10">
+                <Buttons
+                  label={!viewMore ? 'Show All' : 'Show Few'}
+                  onClick={() => setViewMore(!viewMore)}
+                  type="button"
+                />
+              </div>
+            )}
+          </div>
         }
       />
       <ContentCard
@@ -53,11 +115,11 @@ const StudentsTiles = (props: {
         additionalClass="shadow bg-white mb-20 rounded-b-lg">
         <div className="max-w-7xl mx-auto py-12 px-4 text-center sm:px-6 lg:px-8">
           <div className="space-y-8 sm:space-y-12">
-            {filteredList && filteredList.length > 0 ? (
+            {list && list.length > 0 ? (
               <ul className="mx-auto grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 md:gap-x-6 lg:max-w-5xl lg:gap-x-8 lg:gap-y-12 xl:grid-cols-6">
-                {filteredList &&
-                  filteredList.length > 0 &&
-                  filteredList.slice(0, viewMore ? filteredList.length - 1 : 12).map(
+                {list &&
+                  list.length > 0 &&
+                  list.slice(0, viewMore ? list.length - 1 : 12).map(
                     (
                       {
                         student,
