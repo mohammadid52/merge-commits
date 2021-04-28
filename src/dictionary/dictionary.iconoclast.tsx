@@ -209,7 +209,7 @@ const anthologyDict: any = {
     ACTIONS: {
       EDIT: 'Edit',
       SAVE: 'Save',
-      CREATE: 'Create New',
+      CREATE: 'New Entry',
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
