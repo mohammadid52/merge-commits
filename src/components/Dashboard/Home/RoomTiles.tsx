@@ -45,8 +45,6 @@ const RoomTiles = (props: {
     }
   };
 
-  console.log(classList.length);
-
   return (
     <>
       <SectionTitleV3

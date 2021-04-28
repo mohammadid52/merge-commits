@@ -9,6 +9,8 @@ import Storage from '@aws-amplify/storage';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
+import * as customQueries from '../../../../customGraphql/customQueries';
+
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
@@ -20,6 +22,7 @@ import {getImageFromS3} from '../../../../utilities/services';
 import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
+import {getUniqItems} from '../../../../utilities/strings';
 
 export interface UserInfo {
   authId: string;
@@ -50,6 +53,8 @@ const User = () => {
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [questionData, setQuestionData] = useState([]);
+  const [stdCheckpoints, setStdCheckpoints] = useState([]);
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -91,10 +96,77 @@ const User = () => {
     },
   ];
 
+  const getQuestionData = async (checkpointIDs: any[]) => {
+    const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
+      return {
+        checkpointID: {
+          eq: item,
+        },
+      };
+    });
+    const filter = {
+      and: [
+        {email: {eq: state.user.email}},
+        {authID: {eq: state.user.authId}},
+        {syllabusLessonID: {eq: '999999'}},
+        {
+          or: [...checkpointIDFilter],
+        },
+      ],
+    };
+    const results: any = await API.graphql(
+      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+    );
+    const questionData: any = results.data.listQuestionDatas?.items;
+    setQuestionData(questionData);
+    console.log(questionData, 'questionData');
+  };
+
   async function getUserById(id: string) {
     try {
-      const result: any = await API.graphql(graphqlOperation(queries.userById, {id: id}));
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.userById, {id: id})
+      );
       const userData = result.data.userById.items.pop();
+
+      let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
+      studentClasses = studentClasses.filter((d: any) => d !== null);
+
+      const studentInstitutions: any = studentClasses?.map(
+        (item: any) => item?.institution
+      );
+      const studentRooms: any = studentClasses
+        ?.map((item: any) => item?.rooms?.items)
+        ?.flat(1);
+      const studentCurriculars: any = studentRooms
+        .map((item: any) => item?.curricula?.items)
+        .flat(1);
+      const uniqCurriculars: any = getUniqItems(
+        studentCurriculars.filter((d: any) => d !== null),
+        'curriculumID'
+      );
+      const studCurriCheckp: any = uniqCurriculars
+        .map((item: any) => item?.curriculum?.checkpoints?.items)
+        .flat(1);
+      const studentCheckpoints: any = studCurriCheckp.map(
+        (item: any) => item?.checkpoint
+      );
+
+      const sCheckpoints: any[] = [];
+
+      studentCheckpoints.forEach((item: any) => {
+        if (item && item.scope === 'private') sCheckpoints.push(item);
+      });
+
+      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+      const personalInfo: any = {...userData};
+      delete personalInfo.classes;
+      if (uniqCheckpointIDs?.length > 0) {
+        getQuestionData(uniqCheckpointIDs);
+      }
+
+      setStdCheckpoints([...uniqCheckpoints]);
 
       setStatus('done');
       setUser(() => {
@@ -294,6 +366,7 @@ const User = () => {
                           <div
                             className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
                             style={{
+                              /* stylelint-disable */
                               background: `${stringToHslColor(
                                 user.firstName + ' ' + user.lastName
                               )}`,
@@ -344,7 +417,14 @@ const User = () => {
                 />
                 <Route
                   path={`${match.url}/`}
-                  render={() => <UserInformation user={user} status={status} />}
+                  render={() => (
+                    <UserInformation
+                      questionData={questionData}
+                      stdCheckpoints={stdCheckpoints}
+                      user={user}
+                      status={status}
+                    />
+                  )}
                 />
               </Switch>
             </div>
