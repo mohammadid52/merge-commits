@@ -281,7 +281,7 @@ module.exports = {
       'grayscale-light': '#959aa3',
       'grayscale-lighter': '#f9f9f947',
       'grayscale-lightest': '#fffbfb',
-      'ketchup': '#CA2222',
+      ketchup: '#CA2222',
       'sea-green': '#17A589',
       transparent: '#ffffff00',
       'lighter-blue': '#1a202c',
@@ -303,6 +303,7 @@ module.exports = {
     extend: {
       transitionProperty: {
         height: 'height',
+        width: 'width',
       },
       backgroundImage: (theme) => ({
         'iconoclast-bg':
@@ -327,6 +328,7 @@ module.exports = {
         fadeIn: 'fadeIn 1s ease-in-out',
         spin: 'spin 1s linear infinite',
         activation: 'activation 1s ease-in-out infinite',
+        slideUp: 'slideUp 0.2s linear',
       },
       keyframes: {
         bounce: {
@@ -394,6 +396,10 @@ module.exports = {
           '100%': {
             boxShadow: '0 0 0 0 #00488AC7',
           },
+        },
+        slideUp: {
+          '0%': {transform: 'translateY(-12px)'},
+          '100%': {transform: 'translateY(0px)'},
         },
       },
       width: {

@@ -1,10 +1,10 @@
-import {Link, Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import {Link, Widget} from '../../../../interfaces/ClassroomComponentsInterfaces';
 import React, {useContext} from 'react';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import useDictionary from '../../../customHooks/dictionary';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import useDictionary from '../../../../customHooks/dictionary';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoCallOutline} from 'react-icons/io5';
-import {responsiveClass} from '../Noticebooard/Widgets';
+import {responsiveClass} from '../../Noticebooard/Widgets';
 
 export const CallWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}) => {
   const {classProp, widgets} = props;

@@ -4,12 +4,13 @@ import * as customQueries from '../../customGraphql/customQueries';
 import {GlobalContext} from '../../contexts/GlobalContext';
 
 interface Rooms {
-  selectRoom?: Function;
+  chatroom?: any;
+  setSelectedChatroom?: Function;
 }
 
 const Rooms = (props: Rooms) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const {selectRoom} = props;
+  const {chatroom, setSelectedChatroom} = props;
   const [rooms, setRooms] = useState(null);
   const [loadingRooms, setLoadingRooms] = useState(false);
 
@@ -36,27 +37,40 @@ const Rooms = (props: Rooms) => {
   }, []);
 
   const showLoader = () => {
-    return <div>Loading Rooms...</div>;
+    return (
+      <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
+        Loading Rooms...
+      </div>
+    );
   };
 
   const showNoRooms = () => {
-    return <div>You are not part of any room. Please contact admin.</div>;
+    return (
+      <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
+        You are not part of any room. Please contact admin.
+      </div>
+    );
   };
 
   const listRooms = () => {
     return (
-      <div>
-        {rooms.map((rm: any, index: any) => {
-          return (
-            <button
-              key={index}
-              onClick={() => selectRoom(rm)}
-              type="button"
-              className="truncate inline-flex items-center p-2 mb-2 border border-gray-200 text-gray-200 bg-gray-600 shadow-sm text-xs font-medium rounded hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              {rm.name}
-            </button>
-          );
-        })}
+      <div
+        className={`
+      transform transition ease-in-out duration-400 sm:duration-400
+      ${Object.keys(chatroom).length > 0 ? 'h-0 overflow-hidden' : 'h-auto'}
+      `}>
+        {!(Object.keys(chatroom).length > 0) &&
+          rooms.map((rm: any, index: any) => {
+            return (
+              <button
+                key={index}
+                onClick={() => setSelectedChatroom(rm)}
+                type="button"
+                className="truncate inline-flex items-center p-2 mb-2 border border-gray-200 text-gray-200 bg-gray-600 shadow-sm text-xs font-medium rounded hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                {rm.name}
+              </button>
+            );
+          })}
       </div>
     );
   };
