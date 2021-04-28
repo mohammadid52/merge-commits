@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react';
+import {FaEdit} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
-import { useHistory } from 'react-router-dom';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import {Switch, Route, useRouteMatch} from 'react-router-dom';
 
 import * as queries from '../../../../graphql/queries';
 import * as customQueries from '../../../../customGraphql/customQueries';
@@ -16,8 +16,8 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import useDictionary from '../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
-import { goBackBreadCrumb } from '../../../../utilities/functions';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {goBackBreadCrumb} from '../../../../utilities/functions';
 
 interface InstitutionProps {
   tabProps?: any;
@@ -32,7 +32,7 @@ export interface InstitutionInfo {
   city?: string;
   state?: string;
   zip?: string;
-  contact?: { name: string; email: string; phone: string };
+  contact?: {name: string; email: string; phone: string};
   website?: string;
   phone?: string;
   type?: string;
@@ -41,9 +41,11 @@ export interface InstitutionInfo {
   updatedAt?: string;
   addressLine2?: any;
   isServiceProvider?: boolean;
-  classes?: { items: { name?: string; id: string }[] };
-  curricula?: { items: { name?: string; id: string }[] };
-  serviceProviders?: { items: { id: string; providerID: string; status: string; providerInstitution?: any }[] };
+  classes?: {items: {name?: string; id: string}[]};
+  curricula?: {items: {name?: string; id: string}[]};
+  serviceProviders?: {
+    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+  };
 }
 
 /**
@@ -61,7 +63,7 @@ const Institution = (props: InstitutionProps) => {
     city: '',
     state: '',
     zip: '',
-    contact: { name: '', email: '', phone: '' },
+    contact: {name: '', email: '', phone: ''},
     website: '',
     type: null,
     image: '',
@@ -70,9 +72,9 @@ const Institution = (props: InstitutionProps) => {
     addressLine2: '',
     phone: '',
     isServiceProvider: false,
-    classes: { items: [{ name: '', id: '' }] },
-    serviceProviders: { items: [{ id: '', providerID: '', status }] },
-    curricula: { items: [{ name: '', id: '' }] },
+    classes: {items: [{name: '', id: ''}]},
+    serviceProviders: {items: [{id: '', providerID: '', status}]},
+    curricula: {items: [{name: '', id: ''}]},
   });
   const [isNewUpdate, setISNewUpdate] = useState(false);
   const history = useHistory();
@@ -81,12 +83,12 @@ const Institution = (props: InstitutionProps) => {
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 });
-  const { clientKey, userLanguage } = useContext(GlobalContext);
-  const { BreadcrumsTitles } = useDictionary(clientKey);
+  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {BreadcrumsTitles} = useDictionary(clientKey);
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
@@ -111,7 +113,7 @@ const Institution = (props: InstitutionProps) => {
            * DO NOT change the ' urlQueryParams.id ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(customQueries.GetInstitutionDetails, { id: urlQueryParams.id })
+          graphqlOperation(customQueries.GetInstitutionDetails, {id: urlQueryParams.id})
         );
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
@@ -169,7 +171,12 @@ const Institution = (props: InstitutionProps) => {
         <Switch>
           <Route
             path={`${match.url}/edit`}
-            render={() => <InstitutionEdit institute={institutionData} toggleUpdateState={toggleUpdateState} />}
+            render={() => (
+              <InstitutionEdit
+                institute={institutionData}
+                toggleUpdateState={toggleUpdateState}
+              />
+            )}
           />
           <Route
             path={`${match.url}/`}

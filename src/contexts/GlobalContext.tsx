@@ -36,7 +36,7 @@ export const standardTheme = {
     cardNoBG: 'relative h-auto p-2 flex',
   },
   lessonCard: {
-    title: 'flex items-center text-2xl text-black font-open text-left',
+    title: 'flex items-center text-2xl text-black text-left',
     subtitle: 'text-sm text-gray-400',
     border: 'border-dark-gray border-opacity-20',
   },
