@@ -219,8 +219,8 @@ const anthologyDict: any = {
     TITLE: 'Cuaderno',
     TABS: {
       A: 'Diario',
-      B: 'Class Work',
-      C: 'Class Notes',
+      B: 'trabajo en clase',
+      C: 'Apuntes de clase',
     },
     ACTIONS: {
       EDIT: 'Editar',

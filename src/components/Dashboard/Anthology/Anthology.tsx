@@ -12,6 +12,8 @@ import HeroBanner from '../../Header/HeroBanner';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
+import Button from '../../../standard/Button/Button';
+import Buttons from '../../Atoms/Buttons';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -59,7 +61,6 @@ const Anthology = () => {
     studentID: state.user.email,
     studentAuthID: state.user.authId,
   });
-
   // For switching sections & knowing which field to edit
   const [subSection, setSubSection] = useState<string>('Journal');
   // For editing specific poems/stories
@@ -195,8 +196,16 @@ const Anthology = () => {
     setViewEditMode({mode: editMode, studentDataID: studentDataID, idx: idx});
   };
 
+  const onCancel = (type: string) => {
+    setNewStudentData({...newStudentData, content: '', title: ''});
+    console.log(
+      '🚀 ~ file: Anthology.tsx ~ line 208 ~ onCancel ~ newStudentData',
+      newStudentData
+    );
+  };
+
   // Function group to handle section-switching
-  const handleTabClick = (e: React.MouseEvent) => {
+  const handleTabClick = (tab: string, e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
 
     if (id !== subSection) {
@@ -321,27 +330,40 @@ const Anthology = () => {
     return anthologyDict[userLanguage].TABS[key];
   });
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
+  const Content = (
+    <AnthologyContent
+      viewEditMode={viewEditMode}
+      handleEditToggle={handleEditToggle}
+      handleEditUpdate={handleEditUpdate}
+      handleWYSIWYGupdate={handleWYSIWYGupdate}
+      subSection={subSection}
+      createTemplate={newStudentData}
+      content={studentData.length > 0 && filterAnthologyContentBySubsection}
+      getContentObjIndex={getContentObjIndex}
+    />
+  );
 
   const tabs = [
     {
       index: 0,
-      title: 'Journal',
-      content: <div>hey</div>,
+      title: anthologyDict[userLanguage].TABS.A,
+      id: 'Journal',
+      content: Content,
     },
-
     {
       index: 1,
-      title: 'Work',
-      content: <div>hey</div>,
+      title: anthologyDict[userLanguage].TABS.B,
+      id: 'Work',
+      content: Content,
     },
     {
       index: 2,
-      title: 'Notes',
-      content: <div>hey</div>,
+      title: anthologyDict[userLanguage].TABS.C,
+      id: 'Notes',
+      content: Content,
     },
   ];
 
-  // RETURN
   return (
     <React.Fragment>
       <div>
@@ -360,12 +382,20 @@ const Anthology = () => {
         fontStyle="bold"
         extraContainerClass="max-w-256"
         extraClass="leading-6 text-gray-900"
+        withButton={
+          <Buttons
+            customStyles={{width: '10rem'}}
+            label={anthologyDict[userLanguage].ACTIONS.CREATE}
+            onClick={() => handleEditToggle('create', newStudentData.syllabusLessonID, 0)}
+            type="button"
+          />
+        }
         title={anthologyDict[userLanguage].TITLE}
       />
 
       <div
-        className={`mx-auto max-w-256 min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-        <UnderlinedTabs tabs={tabs} />
+        className={`mx-auto max-w-256 min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
+        <UnderlinedTabs tabs={tabs} updateTab={handleTabClick} />
       </div>
 
       {/*
