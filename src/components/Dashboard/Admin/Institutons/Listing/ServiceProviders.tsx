@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useContext, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useEffect, useState, useContext, Fragment} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
 import Selector from '../../../../Atoms/Form/Selector';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 
-import { createFilterToFetchAllItemsExcept } from '../../../../../utilities/strings';
-import { statusList } from '../../../../../utilities/staticData';
-import { getAsset } from '../../../../../assets';
+import {createFilterToFetchAllItemsExcept} from '../../../../../utilities/strings';
+import {statusList} from '../../../../../utilities/staticData';
+import {getAsset} from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -17,29 +17,34 @@ import * as mutations from '../../../../../graphql/mutations';
 import Tooltip from '../../../../Atoms/Tooltip';
 interface ServiceProvidersProps {
   instId: string;
-  serviceProviders: { items: { id: string; providerID: string; status: string; providerInstitution?: any }[] };
+  serviceProviders: {
+    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+  };
   updateServiceProviders: Function;
   instName: string;
 }
 
 const ServiceProviders = (props: ServiceProvidersProps) => {
-  const { userLanguage, clientKey, theme } = useContext(GlobalContext);
+  const {userLanguage, clientKey, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { spBuilderDict, BUTTONS } = useDictionary(clientKey);
+  const {spBuilderDict, BUTTONS} = useDictionary(clientKey);
   const dictionary = spBuilderDict[userLanguage];
 
-  const { instId, serviceProviders, instName } = props;
+  const {instId, serviceProviders, instName} = props;
   const existingPartners = serviceProviders.items.map((item: any) => {
     return {
       id: item.id,
       status: item.status,
-      partner: { ...item.providerInstitution },
+      partner: {...item.providerInstitution},
     };
   });
   const [availableServiceProviders, setAvailableServiceProviders] = useState([]);
   const [partners, setPartners] = useState(existingPartners);
-  const [showModal, setShowModal] = useState<{ show: boolean; item: any }>({ show: false, item: {} });
-  const [newServPro, setNewServPro] = useState({ id: '', name: '', value: '' });
+  const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
+    show: false,
+    item: {},
+  });
+  const [newServPro, setNewServPro] = useState({id: '', name: '', value: ''});
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
 
@@ -54,14 +59,14 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
   const fetchAvailableServiceProviders = async () => {
     try {
       const {
-        serviceProviders: { items },
+        serviceProviders: {items},
       } = props;
       const serviceProvidersIds = items.map((sp: any) => sp.providerID);
       // fetch list of service providers expect the self and partner institutes
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listServiceProviders, {
           filter: {
-            isServiceProvider: { eq: true },
+            isServiceProvider: {eq: true},
             ...createFilterToFetchAllItemsExcept([instId, ...serviceProvidersIds], 'id'),
           },
         })
@@ -74,7 +79,9 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           name: item.name || '',
           value: item.name || '',
         }))
-        .sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
+        .sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        );
       setAvailableServiceProviders(servProList);
     } catch (err) {
       console.log('Error while fetching service providers lists', err);
@@ -97,18 +104,18 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
           status: 'Active',
         };
         const addedPartner: any = await API.graphql(
-          graphqlOperation(mutations.createServiceProvider, { input: input })
+          graphqlOperation(mutations.createServiceProvider, {input: input})
         );
         const item = addedPartner.data.createServiceProvider;
         props.updateServiceProviders(item);
         const updatedPartners = [
           ...partners,
-          { id: item.id, status: 'Active', partner: { ...item.providerInstitution } },
+          {id: item.id, status: 'Active', partner: {...item.providerInstitution}},
         ];
         const updatedAvailableServiceProviders = availableServiceProviders.filter(
           (item: any) => item.id !== newServPro.id
         );
-        setNewServPro({ id: '', name: '', value: '' });
+        setNewServPro({id: '', name: '', value: ''});
         setPartners(updatedPartners);
         setAvailableServiceProviders(updatedAvailableServiceProviders);
       } else {
@@ -117,14 +124,25 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
         console.log('select a service provider to add.');
       }
     } catch (err) {
-      console.log('Error: Add partner, service provider builder: Could not add new partner in institution', err);
+      console.log(
+        'Error: Add partner, service provider builder: Could not add new partner in institution',
+        err
+      );
     }
   };
 
-  const onPartnerStatusChange = async (status: string, id: string, currentStatus: string) => {
+  const onPartnerStatusChange = async (
+    status: string,
+    id: string,
+    currentStatus: string
+  ) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
-      await API.graphql(graphqlOperation(customMutations.updateServiceProviderStatus, { input: { id, status } }));
+      await API.graphql(
+        graphqlOperation(customMutations.updateServiceProviderStatus, {
+          input: {id, status},
+        })
+      );
       const updatedPartners = partners.map((sp) => {
         if (sp.id === id) {
           sp.status = status;
@@ -137,9 +155,9 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
     setStatusEdit('');
   };
   return (
-    <div className="p-8 flex m-auto justify-center">
+    <div className="pt-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper>
+        <PageWrapper defaultClass="">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {instName?.toUpperCase()} {dictionary.TITLE}
           </h3>
@@ -150,7 +168,11 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
               placeholder={dictionary.ADD_PLACEHOLDER}
               onChange={onServProChange}
             />
-            <Buttons btnClass="ml-4 py-1" label={BUTTONS[userLanguage].ADD} onClick={addPartner} />
+            <Buttons
+              btnClass="ml-4 py-1"
+              label={BUTTONS[userLanguage].ADD}
+              onClick={addPartner}
+            />
           </div>
 
           {partners && partners.length > 0 ? (
@@ -188,7 +210,9 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
                           selectedItem={item.status}
                           placeholder="Select Status"
                           list={statusList}
-                          onChange={(val, name, id) => onPartnerStatusChange(val, item.id, item.status)}
+                          onChange={(val, name, id) =>
+                            onPartnerStatusChange(val, item.id, item.status)
+                          }
                         />
                       </div>
                     ) : (
