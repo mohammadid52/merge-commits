@@ -795,6 +795,7 @@ export const updateCheckpoint = /* GraphQL */ `
       subtitle
       stage
       type
+      scope
       instructionsTitle
       instructions
       purpose

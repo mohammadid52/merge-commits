@@ -41,10 +41,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     scope: '',
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
-  console.log(
-    '🚀 ~ file: EditProfileCheckpoint.tsx ~ line 43 ~ EditProfileCheckpoint ~ checkpointData',
-    checkpointData
-  );
+
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigner] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState([]);
@@ -214,6 +211,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           title: checkpointData.title,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
+          scope: checkpointData.scope,
         };
         const results: any = await API.graphql(
           graphqlOperation(customMutations.updateCheckpoint, {input: input})
@@ -291,6 +289,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
         throw new Error('fail!');
       } else {
         const results = savedCheckpointData.data?.getCheckpoint;
+
         const designers = sortedDesignersList.filter((item: any) =>
           results.designers.includes(item.id)
         );
@@ -312,7 +311,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           title: results.title,
           label: results.label,
           language: selectedLanguage,
-          // scope: results.scope,
+          scope: results.scope,
         });
         setDesignersList([...sortedDesignersList]);
         setSelectedDesigner(designers);
@@ -417,7 +416,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                   </div>
                 </div>
 
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-3">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {EditProfileCheckpointDict[userLanguage]['designer']}
@@ -434,8 +433,8 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                       Select Scope
                     </label>
                     <Selector
-                      selectedItem={checkpointData.scope}
-                      placeholder={checkpointData.scope}
+                      selectedItem={checkpointData.scope || 'public'}
+                      placeholder="Update scope"
                       list={scopeList}
                       onChange={(c, name) =>
                         setCheckpointData({...checkpointData, scope: name})

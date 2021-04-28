@@ -196,7 +196,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           stage: 'checkpoint',
           type: 'profile',
           label: checkpointData.label,
-          // scope: checkpointData.scope,
+          scope: checkpointData.scope,
           title: checkpointData.title,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
@@ -370,7 +370,10 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       }
                       list={scopeList}
                       onChange={(c, name) =>
-                        setCheckpointData({...checkpointData, scope: name})
+                        setCheckpointData({
+                          ...checkpointData,
+                          scope: name,
+                        })
                       }
                     />
                   </div>

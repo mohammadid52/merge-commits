@@ -136,8 +136,6 @@ const Dashboard = (props: DashboardProps) => {
     i: number,
     route = 'classroom'
   ) => {
-    console.log(id, name, i, route);
-
     if (
       (state.activeRoom !== id && state.currentPage !== 'lesson-planner') ||
       (state.activeRoom !== id && state.currentPage !== 'classroom')
@@ -163,7 +161,6 @@ const Dashboard = (props: DashboardProps) => {
       const user: any = await API.graphql(
         graphqlOperation(queries.getPerson, queryObj.valueObj)
       );
-      console.log('getUser -> ', 'getUser fetch set to session');
       setUser(user.data.getPerson);
     } catch (error) {
       if (!userEmail && !userAuthId) {

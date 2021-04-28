@@ -498,21 +498,6 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                 onChange={selectDesigner}
               />
             </div>
-            {/* <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      Select Scope
-                    </label>
-                    <Selector
-                      selectedItem={checkpointData.scope}
-                      placeholder={
-                        AddProfileCheckpointDict[userLanguage]['typePlaceholder']
-                      }
-                      list={scopeList}
-                      onChange={(c, name) =>
-                        setCheckpointData({...checkpointData, scope: name})
-                      }
-                    />
-                  </div> */}
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 {EditCheckPointDict[userLanguage]['ESTIMATE']}
