@@ -14,7 +14,7 @@ import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
-import {FaPencilAlt} from 'react-icons/fa';
+import {FaEdit} from 'react-icons/fa';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -383,7 +383,7 @@ const Anthology = () => {
         withButton={
           tab === 0 && (
             <Buttons
-              Icon={FaPencilAlt}
+              Icon={FaEdit}
               customStyles={{width: '14rem'}}
               label={anthologyDict[userLanguage].ACTIONS.CREATE}
               onClick={() =>

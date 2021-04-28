@@ -311,7 +311,8 @@ const Profile = (props: ProfilePageProps) => {
       const sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
-        if (item) sCheckpoints.push(item);
+        console.log(item);
+        if (item && item.scope !== 'private') sCheckpoints.push(item);
       });
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
