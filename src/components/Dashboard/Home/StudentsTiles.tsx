@@ -76,7 +76,7 @@ const StudentsTiles = (props: {
                           key={`homepage__student-${idx}`}
                           className=""
                           onClick={() => {
-                            if (student.id) {
+                            if (student.id && isTeacher) {
                               history.push(`manage-users/user?id=${student.id}`);
                             }
                           }}>
