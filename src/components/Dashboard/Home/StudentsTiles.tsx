@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 
 import ContentCard from '../../Atoms/ContentCard';
 import ImageAlternate from '../../Atoms/ImageAlternative';
@@ -8,14 +9,23 @@ import filter from 'lodash/filter';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
-const StudentsTiles = (props: {studentsList: any; state: any; title: string}) => {
-  const {studentsList, title, state} = props;
+const StudentsTiles = (props: {
+  studentsList: any;
+  state: any;
+  title: string;
+  isTeacher?: boolean;
+}) => {
+  const {studentsList, title, state, isTeacher = false} = props;
   const [viewMore, setViewMore] = useState(false);
+  const history = useHistory();
 
   const filteredList: object[] = filter(
     studentsList,
     ({student}: any) => student.id !== state.user.id
   );
+
+  // current: http://localhost:8085/dashboard/home
+  // target: http://localhost:8085/dashboard/manage-users/user?id=b7cac388-8348-481b-931e-39a33e9f3ef3
 
   return (
     <>
@@ -62,7 +72,14 @@ const StudentsTiles = (props: {studentsList: any; state: any; title: string}) =>
                       idx: number
                     ) => {
                       return (
-                        <li key={`homepage__student-${idx}`} className="">
+                        <li
+                          key={`homepage__student-${idx}`}
+                          className=""
+                          onClick={() => {
+                            if (student.id) {
+                              history.push(`manage-users/user?id=${student.id}`);
+                            }
+                          }}>
                           <div className="space-y-4">
                             {student.image ? (
                               <img
