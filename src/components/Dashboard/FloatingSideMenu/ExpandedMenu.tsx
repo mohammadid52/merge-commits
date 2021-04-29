@@ -11,7 +11,7 @@ import RoomChat from '../../RoomChat/RoomChat';
 
 const ExpandedMenu = (props: {
   menuState?: number;
-  setMenuState?: (level: number) => void;
+  setMenuState?: (level: number, section: string) => void;
   focusSection?: string;
   setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   chatroom?: any;
@@ -31,10 +31,8 @@ const ExpandedMenu = (props: {
     if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
       setChatroom(roomObj);
     }
-    if (focusSection !== 'Chatroom') {
-      setFocusSection('Chatroom');
-    }
-    setMenuState(2);
+
+    setMenuState(2, 'Chatroom');
   };
 
   const [widgets, setWidgets] = useState<any>([]);
@@ -71,13 +69,14 @@ const ExpandedMenu = (props: {
         className={`
         absolute w-full h-full
         transform transition-transform ease-in-out duration-700 
-        ${menuState > 0 && focusSection === 'Chatroom' ? 'pt-2 pr-2 bg-container' : ''}
-        ${menuState > 0 && focusSection !== 'Chatroom' ? 'p-2 bg-gray-700' : ''}
+        ${menuState > 0 && focusSection === 'Chatroom' ? 'bg-container' : ''}
+        ${menuState > 0 && focusSection !== 'Chatroom' ? 'bg-gray-600' : ''}
         ${menuState > 0 ? '' : 'w-0 p-2 invisible'}
          overflow-hidden
         flex flex-col`}>
         <SideMenuSection
           menuState={menuState}
+          setMenuState={setMenuState}
           sectionLabel={`Chat`}
           sectionTitle={`Chat Rooms`}
           focusSection={focusSection}>
@@ -90,6 +89,7 @@ const ExpandedMenu = (props: {
         </SideMenuSection>
         <SideMenuSection
           menuState={menuState}
+          setMenuState={setMenuState}
           sectionLabel={`Call`}
           sectionTitle={'Call Links'}
           focusSection={focusSection}>
@@ -97,6 +97,7 @@ const ExpandedMenu = (props: {
         </SideMenuSection>
         <SideMenuSection
           menuState={menuState}
+          setMenuState={setMenuState}
           sectionLabel={`File`}
           sectionTitle={'File Links'}
           focusSection={focusSection}>
@@ -105,6 +106,7 @@ const ExpandedMenu = (props: {
         {focusSection === 'Chatroom' && (
           <SideMenuSection
             menuState={menuState}
+            setMenuState={setMenuState}
             sectionLabel={`Chatroom`}
             sectionTitle={`${
               Object.keys(chatroom).length > 0 ? chatroom.name + ' Chat' : 'Chat Rooms'

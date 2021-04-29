@@ -4,29 +4,22 @@ import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 
 const FloatingSideMenu = () => {
-  const [chatActive, setChatActive] = useState(false);
-
   const [menuOpenLevel, setMenuOpenLevel] = useState<number>(0);
   const [focusSection, setFocusSection] = useState<string>('');
   const [chatroom, setChatroom] = useState<any>({});
 
-  useEffect(() => {
-    if (menuOpenLevel < 2) {
-      setFocusSection('');
-      setChatActive(false);
-      setChatroom({});
-    }
-  }, [menuOpenLevel]);
-
-  const toggleChat = (desiredState: boolean) => {
-    setChatActive(desiredState);
-  };
-
-  const setMenuState = (level: number) => {
-    if (menuOpenLevel !== level) {
-      setMenuOpenLevel(level);
-    } else if (menuOpenLevel > 0 && level > 0) {
-      setMenuOpenLevel(level - 1);
+  const setMenuState = (level: number, section: string) => {
+    if (section === focusSection) {
+      if (level !== menuOpenLevel) {
+        setMenuOpenLevel(level);
+      } else {
+        setMenuOpenLevel(0);
+      }
+    } else {
+      setFocusSection(section);
+      if (level !== menuOpenLevel) {
+        setMenuOpenLevel(level);
+      }
     }
   };
 
@@ -48,7 +41,9 @@ const FloatingSideMenu = () => {
           <FloatingBar
             menuState={menuOpenLevel}
             setMenuState={setMenuState}
-            toggleChat={toggleChat}
+            focusSection={focusSection}
+            setFocusSection={setFocusSection}
+            chatroom={chatroom}
           />
           <ExpandedMenu
             menuState={menuOpenLevel}

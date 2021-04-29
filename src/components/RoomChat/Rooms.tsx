@@ -15,7 +15,6 @@ const Rooms = (props: Rooms) => {
   const {chatroom, setSelectedChatroom, focusSection, setFocusSection} = props;
   const [rooms, setRooms] = useState(null);
   const [loadingRooms, setLoadingRooms] = useState(false);
-  const [limited, setLimited] = useState(true);
 
   const fetchRooms = async () => {
     setLoadingRooms(true);
@@ -55,22 +54,6 @@ const Rooms = (props: Rooms) => {
     );
   };
 
-  useEffect(() => {
-    if (focusSection !== 'Chat' && !limited) {
-      setLimited(true);
-    }
-  }, [focusSection]);
-
-  const handleShowMore = () => {
-    if (limited) {
-      setLimited(false);
-      setFocusSection('Chat');
-    } else {
-      setLimited(true);
-      setFocusSection('');
-    }
-  };
-
   const listRooms = () => {
     return (
       <>
@@ -81,15 +64,12 @@ const Rooms = (props: Rooms) => {
       `}>
           {!(Object.keys(chatroom).length > 0) &&
             rooms.reduce((acc: any[], rm: any, index: any) => {
-              if (limited) {
-                if (index < 2) {
-                  return [
-                    ...acc,
-                    <button
-                      key={index}
-                      onClick={() => setSelectedChatroom(rm)}
-                      type="button"
-                      className={`
+              return (
+                <button
+                  key={index}
+                  onClick={() => setSelectedChatroom(rm)}
+                  type="button"
+                  className={`
                     ${index < rooms.length - 1 ? 'mb-2' : ''}
                     p-2
                     truncate inline-flex 
@@ -98,47 +78,11 @@ const Rooms = (props: Rooms) => {
                     text-gray-200 bg-gray-500 
                     shadow-sm text-xs font-medium rounded 
                     hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-                      {rm.name}
-                    </button>,
-                  ];
-                } else {
-                  return acc;
-                }
-              } else {
-                return [
-                  ...acc,
-                  <button
-                    key={index}
-                    onClick={() => setSelectedChatroom(rm)}
-                    type="button"
-                    className={`
-                    ${index < rooms.length - 1 ? 'mb-2' : ''}
-                    p-2
-                    truncate inline-flex 
-                    items-center
-                    border border-gray-200 
-                    text-gray-200 bg-gray-500 
-                    shadow-sm text-xs font-medium rounded 
-                    hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-                    {rm.name}
-                  </button>,
-                ];
-              }
-            }, [])}
+                  {rm.name}
+                </button>
+              );
+            })}
         </div>
-        {limited ? (
-          <p
-            onClick={() => handleShowMore()}
-            className={`cursor-pointer text-xs font-medium p-2 text-center text-indigo-200`}>
-            Show More
-          </p>
-        ) : (
-          <p
-            onClick={() => handleShowMore()}
-            className={`cursor-pointer text-xs font-medium p-2 text-center text-indigo-200`}>
-            Show Less
-          </p>
-        )}
       </>
     );
   };

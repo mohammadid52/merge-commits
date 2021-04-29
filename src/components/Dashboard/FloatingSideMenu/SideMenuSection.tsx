@@ -1,8 +1,11 @@
 import React from 'react';
+import {IoDocument} from 'react-icons/io5';
+import ButtonsRound from '../../Atoms/ButtonsRound';
+import {AiOutlineCloseCircle} from 'react-icons/ai';
 
 export const SideMenuSection = (props: {
   menuState?: number;
-  setMenuState?: (level: number) => void;
+  setMenuState?: (level: number, section: string) => void;
   children?: React.ReactNode;
   sectionLabel?: string;
   sectionTitle?: string;
@@ -27,42 +30,49 @@ export const SideMenuSection = (props: {
   return (
     <div
       className={`
+      relative
+      ${menuState > 1 ? 'px-2' : ''}
       transform  ease-in-out duration-700
-      ${menuState === 0 ? 'scale-x-50 opacity-0 overflow-hidden' : ''}
-       ${menuState === 1 ? 'scale-x-100 opacity-100' : ''}
-       ${
-         menuState === 2 && !thisSectionActive && !noSectionActive
-           ? 'hidden opacity-0 overflow-hidden'
-           : ''
-       }
-       ${thisSectionActive ? 'scale-x-100 opacity-100 flex-grow flex-1' : ''}
+       ${thisSectionActive ? 'opacity-100 flex-grow flex-1' : 'h-0 opacity-0'}
       flex flex-col
     `}>
-      {menuState === 2 && thisSectionActive ? (
-        <p
-          className={`h-12 cursor-pointer text-indigo-800 flex items-center p-2 text-xl font-semibold rounded-md z-100`}>
-          {sectionTitle || 'Section Title'}
-        </p>
-      ) : (
-        <p
-          className={`h-12 cursor-pointer text-indigo-100 flex items-center p-2 text-sm font-medium rounded-md z-100`}>
-          {sectionTitle || 'Section Title'}
-        </p>
-      )}
-      {children ? (
-        menuState < 2 ? (
-          <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg p-2`}>
-            {menuState === 1
-              ? thisSectionActive
-                ? children
-                : noSectionActive
-                ? children
-                : ''
-              : ''}
+      {menuState > 0 && thisSectionActive ? (
+        <>
+          <p
+            className={`h-12 max-w-72 truncate overflow-ellipsis overflow-hidden ${
+              menuState === 2
+                ? 'text-gray-900 text-xl'
+                : 'ml-2 text-indigo-100 text-sm border-b-0 border-gray-400'
+            } flex items-center  font-medium z-50`}>
+            {sectionTitle || 'Section Title'}{' '}
+          </p>
+          <div
+            onClick={() => setMenuState(0, sectionLabel)}
+            className={`w-auto absolute right-0 ${
+              menuState > 0 ? '' : 'w-0 overflow-hidden'
+            } text-sm fond-medium text-indigo-600 cursor-pointer z-100`}>
+            <ButtonsRound
+              Icon={AiOutlineCloseCircle}
+              iconSizePX={32}
+              buttonWHClass={`w-8 h-8`}
+              containerBgClass={`bg-transparent p-2`}
+              buttonBgClass={`bg-transparent`}
+              iconTxtColorClass={`${
+                menuState === 2 ? 'text-gray-900' : 'text-indigo-100'
+              }`}
+            />
           </div>
-        ) : (
+        </>
+      ) : null}
+
+      {children ? (
+        menuState === 1 && thisSectionActive ? (
+          <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg p-2`}>
+            {children}
+          </div>
+        ) : menuState === 2 && thisSectionActive ? (
           <div className={`flex flex-col flex-1 p-2`}>{children}</div>
-        )
+        ) : null
       ) : null}
     </div>
   );
