@@ -280,7 +280,11 @@ const Dashboard = (props: DashboardProps) => {
   const getRoomsFromClassList =
     classList && classList.length > 0
       ? classList.reduce((acc: any[], classObj: any) => {
-          return [...acc, classObj.rooms.items[0]];
+          if (classObj.rooms.items.length > 0) {
+            return [...acc, classObj.rooms.items[0]];
+          } else {
+            return acc;
+          }
         }, [])
       : [];
 
@@ -677,6 +681,7 @@ const Dashboard = (props: DashboardProps) => {
               }}
             />
             <Route exact path={`${match.url}/home`} render={() => <HomeSwitch />} />
+
             <Route
               exact
               path={`${match.url}/classroom/:roomId`}
@@ -739,7 +744,6 @@ const Dashboard = (props: DashboardProps) => {
         </Suspense>
       </div>
       {/* </ResizablePanels> */}
-      
     </div>
   );
 };

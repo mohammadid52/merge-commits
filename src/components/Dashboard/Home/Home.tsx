@@ -69,16 +69,20 @@ const Home = (props: ClassroomControlProps) => {
   const getTeacherList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
-          const teacherIsPresent = acc?.find(
-            (teacher: any) =>
-              teacher?.firstName === teacherObj?.firstName &&
-              teacher?.lastName === teacherObj?.lastName
-          );
-          if (teacherIsPresent) {
-            return acc;
+          if (dataObj?.class?.rooms.items.length > 0) {
+            const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+            const teacherIsPresent = acc?.find(
+              (teacher: any) =>
+                teacher?.firstName === teacherObj?.firstName &&
+                teacher?.lastName === teacherObj?.lastName
+            );
+            if (teacherIsPresent) {
+              return acc;
+            } else {
+              return [...acc, teacherObj];
+            }
           } else {
-            return [...acc, teacherObj];
+            return acc;
           }
         }, [])
       : [];
@@ -89,32 +93,38 @@ const Home = (props: ClassroomControlProps) => {
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-          item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
-            coTeachersList.push(_item.teacher);
-          });
+        if (item?.class?.rooms?.items.length > 0) {
+          if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
+            item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
+              coTeachersList.push(_item.teacher);
+            });
+          }
         }
       });
 
     return coTeachersList;
   };
 
-  const teacherListWithImages = Promise.all(
-    getTeacherList.map(async (teacherObj: any, idx: number) => {
-      return {
-        ...teacherObj,
-        image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
-      };
-    })
-  );
-  const coTeacherListWithImages = Promise.all(
-    getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-      return {
-        ...teacherObj,
-        image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
-      };
-    })
-  );
+  const teacherListWithImages =
+    getTeacherList.length > 0 &&
+    Promise.all(
+      getTeacherList.map(async (teacherObj: any, idx: number) => {
+        return {
+          ...teacherObj,
+          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+        };
+      })
+    );
+  const coTeacherListWithImages =
+    getCoTeacherList().length > 0 &&
+    Promise.all(
+      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
+        return {
+          ...teacherObj,
+          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+        };
+      })
+    );
 
   const getStudentsList =
     homeData && homeData.length > 0
