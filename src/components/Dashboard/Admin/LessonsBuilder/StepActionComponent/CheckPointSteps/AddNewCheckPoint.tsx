@@ -1,10 +1,14 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoCaretDownCircleOutline, IoCaretUpCircleOutline, IoOptionsOutline } from 'react-icons/io5';
-import { IoIosKeypad } from 'react-icons/io';
-import { RiArrowRightLine } from 'react-icons/ri';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, {Fragment, useState, useEffect, useContext} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {
+  IoCaretDownCircleOutline,
+  IoCaretUpCircleOutline,
+  IoOptionsOutline,
+} from 'react-icons/io5';
+import {IoIosKeypad} from 'react-icons/io';
+import {RiArrowRightLine} from 'react-icons/ri';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import isEqual from 'lodash/isEqual';
 
 import * as customMutations from '../../../../../../customGraphql/customMutations';
@@ -16,11 +20,11 @@ import FormInput from '../../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../../Atoms/Buttons';
 import RichTextEditor from '../../../../../Atoms/RichTextEditor';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
-import { LessonPlansProps } from '../../LessonEdit';
+import {LessonPlansProps} from '../../LessonEdit';
 
-import { getTypeString, reorder } from '../../../../../../utilities/strings';
-import { getAsset } from '../../../../../../assets';
-import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import {getTypeString, reorder} from '../../../../../../utilities/strings';
+import {getAsset} from '../../../../../../assets';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 export interface AddNewCheckPointProps {
   changeStep: (step: string) => void;
@@ -85,10 +89,10 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     purposeHtml: '<p></p>',
     objectiveHtml: '<p></p>',
     instructionHtml: '<p></p>',
-    language: { id: '1', name: 'English', value: 'EN' },
+    language: {id: '1', name: 'English', value: 'EN'},
   };
   const [selectedBlock, setSelectedBlock] = useState('');
-  const [questionOptions, setQuestionOptions] = useState({ quesId: '', options: [] });
+  const [questionOptions, setQuestionOptions] = useState({quesId: '', options: []});
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
     title: '',
@@ -98,13 +102,13 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     isError: true,
   });
 
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { AddNewCheckPointDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {AddNewCheckPointDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const languageList = [
-    { id: 1, name: 'English', value: 'EN' },
-    { id: 2, name: 'Spanish', value: 'ES' },
+    {id: 1, name: 'English', value: 'EN'},
+    {id: 2, name: 'Spanish', value: 'ES'},
   ];
 
   const accordionSteps = [
@@ -180,7 +184,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
       let questionsList = checkpQuestions
         .map((t: any) => {
           let index = list.indexOf(t.id);
-          return { ...t, index };
+          return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
       setCheckpQuestions(questionsList);
@@ -192,7 +196,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -200,9 +204,9 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
   };
   const showOptions = (quesId: string, options: any[]) => {
     if (questionOptions.quesId !== quesId) {
-      setQuestionOptions({ quesId, options });
+      setQuestionOptions({quesId, options});
     } else {
-      setQuestionOptions({ quesId: '', options: [] });
+      setQuestionOptions({quesId: '', options: []});
     }
   };
   const gobackToPreviousStep = () => {
@@ -218,7 +222,11 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     setCheckpQuestions(questionsList);
   };
 
-  const addCheckpointQuestions = async (quesId: string, checkpointID: string, required: boolean) => {
+  const addCheckpointQuestions = async (
+    quesId: string,
+    checkpointID: string,
+    required: boolean
+  ) => {
     try {
       const input = {
         checkpointID: checkpointID,
@@ -226,7 +234,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         required: required ? required : false,
       };
       const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, { input: input })
+        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
       );
     } catch {
       setValidation({
@@ -273,7 +281,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     } else {
       msgs.message = '';
     }
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -296,7 +304,9 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           language: checkPointData.language.value,
           estTime: checkPointData.estTime ? parseInt(checkPointData.estTime) : 0,
         };
-        const results: any = await API.graphql(graphqlOperation(customMutations.createCheckpoint, { input: input }));
+        const results: any = await API.graphql(
+          graphqlOperation(customMutations.createCheckpoint, {input: input})
+        );
         const newCheckpoint = results?.data?.createCheckpoint;
         if (newCheckpoint) {
           let lessonCheckpointInput = {
@@ -338,12 +348,14 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             ),
           ]);
           let questions = Promise.all(
-            checkpQuestions.map(async (item: any) => addCheckpointQuestions(item.id, newCheckpoint.id, item.required))
+            checkpQuestions.map(async (item: any) =>
+              addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
+            )
           );
           let checkpQuestionsIds = checkpQuestions.map((item) => item.id);
           let seqItem: any = await API.graphql(
             graphqlOperation(mutations.createCSequences, {
-              input: { id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds },
+              input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds},
             })
           );
 
@@ -415,19 +427,21 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     <Fragment>
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
-          <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+          <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
             <IoIosKeypad />
           </IconContext.Provider>
         </span>
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>
-            {lessonType === 'survey' ? 'Survey' : 'Assessment'} {AddNewCheckPointDict[userLanguage]['BUILDER']} -{' '}
-            {lessonName}
+          <span
+            className="w-auto flex-shrink-0 cursor-pointer"
+            onClick={() => changeStep('SelectedCheckPointsList')}>
+            {lessonType === 'survey' ? 'Survey' : 'Assessment'}{' '}
+            {AddNewCheckPointDict[userLanguage]['BUILDER']} - {lessonName}
           </span>
           <span className="w-6 h-6 flex items-center mx-4">
-            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
@@ -442,17 +456,23 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewCheckPointDict[userLanguage]['TITLE']} <span className="text-red-500"> *</span>
+                {AddNewCheckPointDict[userLanguage]['TITLE']}{' '}
+                <span className="text-red-500"> *</span>
               </label>
               <FormInput value={title} id="title" onChange={onInputChange} name="title" />
-              {validation.title && <p className="text-red-600 text-sm">{validation.title}</p>}
+              {validation.title && (
+                <p className="text-red-600 text-sm">{validation.title}</p>
+              )}
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewCheckPointDict[userLanguage]['CHECKPOINTLABEL']} <span className="text-red-500"> *</span>
+                {AddNewCheckPointDict[userLanguage]['CHECKPOINTLABEL']}{' '}
+                <span className="text-red-500"> *</span>
               </label>
               <FormInput value={label} id="label" onChange={onInputChange} name="label" />
-              {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
+              {validation.label && (
+                <p className="text-red-600 text-sm">{validation.label}</p>
+              )}
             </div>
           </div>
 
@@ -461,7 +481,12 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 {AddNewCheckPointDict[userLanguage]['SUBTITLE']}
               </label>
-              <FormInput value={subtitle} id="subtitle" onChange={onInputChange} name="subtitle" />
+              <FormInput
+                value={subtitle}
+                id="subtitle"
+                onChange={onInputChange}
+                name="subtitle"
+              />
             </div>
             <div>
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
@@ -493,8 +518,15 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                 {AddNewCheckPointDict[userLanguage]['ESTIMATE']}
                 <span className="text-red-500"> *</span>
               </label>
-              <FormInput value={estTime} id="estTime" onChange={onInputChange} name="estTime" />
-              {validation.estTime && <p className="text-red-600 text-sm">{validation.estTime}</p>}
+              <FormInput
+                value={estTime}
+                id="estTime"
+                onChange={onInputChange}
+                name="estTime"
+              />
+              {validation.estTime && (
+                <p className="text-red-600 text-sm">{validation.estTime}</p>
+              )}
             </div>
           </div>
 
@@ -521,18 +553,29 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                       }`}>
                       <div
                         className={`w-full px-8 py-6 text-left ${
-                          selectedBlock === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''
+                          selectedBlock === item.id
+                            ? 'border-0 border-indigo-400 rounded-lg'
+                            : ''
                         }`}>
-                        <div className="flex items-center justify-between" onClick={() => toggleView(item.id)}>
+                        <div
+                          className="flex items-center justify-between"
+                          onClick={() => toggleView(item.id)}>
                           <span
-                            className={`text-xs md:text-base cursor-pointer text-left ${theme.textColor[themeColor]} ${
+                            className={`text-xs md:text-base cursor-pointer text-left ${
+                              theme.textColor[themeColor]
+                            } ${
                               selectedBlock === item.id ? 'font-bold' : 'font-medium'
                             }`}>
                             {item.header}
                           </span>
                           <span className="w-8 h-8 flex items-center cursor-pointer">
-                            <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
-                              {selectedBlock === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
+                            <IconContext.Provider
+                              value={{size: '2rem', color: theme.iconColor[themeColor]}}>
+                              {selectedBlock === item.id ? (
+                                <IoCaretUpCircleOutline />
+                              ) : (
+                                <IoCaretDownCircleOutline />
+                              )}
                             </IconContext.Provider>
                           </span>
                         </div>
@@ -559,7 +602,11 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                             <RichTextEditor
                               initialValue={item.textEditorValue}
                               onChange={(htmlContent, plainText) =>
-                                setEditorContent(htmlContent, plainText, item.textEditorName)
+                                setEditorContent(
+                                  htmlContent,
+                                  plainText,
+                                  item.textEditorName
+                                )
                               }
                             />
                           </div>
@@ -574,13 +621,16 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         </div>
 
         {/* Question table */}
-        <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
+        <div className="p-6 border-gray-400 border-0 my-4 mx-2">
           <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
             {AddNewCheckPointDict[userLanguage]['CHECKPOINTQUESTION']}:{' '}
           </p>
           {!checkpQuestions?.length ? (
             <div className="my-8">
-              <p className="text-center p-8"> {AddNewCheckPointDict[userLanguage]['ADDQUESTION']}</p>
+              <p className="text-center p-8">
+                {' '}
+                {AddNewCheckPointDict[userLanguage]['ADDQUESTION']}
+              </p>
               <div className="flex w-full mx-auto p-8 justify-center ">
                 <Buttons
                   btnClass="mr-4"
@@ -623,7 +673,10 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                         {(provided, snapshot) => (
                           <div {...provided.droppableProps} ref={provided.innerRef}>
                             {checkpQuestions.map((item, index) => (
-                              <Draggable key={item.id} draggableId={item.id} index={index}>
+                              <Draggable
+                                key={item.id}
+                                draggableId={item.id}
+                                index={index}>
                                 {(provided, snapshot) => (
                                   <div
                                     ref={provided.innerRef}
@@ -633,7 +686,8 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                       <div
                                         key={item.id}
                                         className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                                          questionOptions.quesId === item.id && 'bg-gray-200'
+                                          questionOptions.quesId === item.id &&
+                                          'bg-gray-200'
                                         }`}>
                                         <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                           {' '}
@@ -650,18 +704,26 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                           <span className="cursor-pointer">
                                             <CheckBox
                                               value={item.required ? true : false}
-                                              onChange={() => makeQuestionRequired(item.id)}
+                                              onChange={() =>
+                                                makeQuestionRequired(item.id)
+                                              }
                                               name="isRequired"
                                             />
                                           </span>
                                         </div>
                                         <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                                          {(item.type === 'selectMany' || item.type === 'selectOne') && (
+                                          {(item.type === 'selectMany' ||
+                                            item.type === 'selectOne') && (
                                             <div
                                               className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
-                                              onClick={() => showOptions(item.id, item.options)}>
+                                              onClick={() =>
+                                                showOptions(item.id, item.options)
+                                              }>
                                               <IconContext.Provider
-                                                value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+                                                value={{
+                                                  size: '1.5rem',
+                                                  color: theme.iconColor[themeColor],
+                                                }}>
                                                 <IoOptionsOutline />
                                               </IconContext.Provider>
                                             </div>
@@ -670,7 +732,9 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                       </div>
                                       {questionOptions.quesId === item.id && (
                                         <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
-                                          <p className="text-gray-900 px-2 py-2 text-base">Options:</p>
+                                          <p className="text-gray-900 px-2 py-2 text-base">
+                                            Options:
+                                          </p>
                                           {questionOptions.options?.map((item, index) => (
                                             <span className="px-12 py-2" key={item.label}>
                                               {index + 1}. {item.text}
@@ -715,7 +779,9 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
         <div className="mt-8 px-6 pb-4">
           {validation.message && (
             <div className="py-4 m-auto mt-2 text-center">
-              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+                {validation.message}
+              </p>
             </div>
           )}
           <div className="flex justify-center my-6">

@@ -1,14 +1,20 @@
-import React, { useState, useContext, useEffect, ChangeEvent, KeyboardEvent } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+import React, {useState, useContext, useEffect, ChangeEvent, KeyboardEvent} from 'react';
+import {LessonContext} from '../../../../../contexts/LessonContext';
+import {useCookies} from 'react-cookie';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 const TChartForm = () => {
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {state, theme, dispatch} = useContext(LessonContext);
   // const [cookies, setCookie] = useCookies(['tchart']);
   const [input, setInput] = useState({
-    list: state.componentState.list && state.componentState.tchart.list ? state.componentState.tchart.list : '',
-    list2: state.componentState.list2 && state.componentState.tchart.list2 ? state.componentState.tchart.list2 : '',
+    list:
+      state.componentState.list && state.componentState.tchart.list
+        ? state.componentState.tchart.list
+        : '',
+    list2:
+      state.componentState.list2 && state.componentState.tchart.list2
+        ? state.componentState.tchart.list2
+        : '',
   });
 
   useEffect(() => {
@@ -34,7 +40,7 @@ const TChartForm = () => {
     }
   }, [input]);
 
-  const handleInputChange = (e: { target: { id: string; value: string } }) => {
+  const handleInputChange = (e: {target: {id: string; value: string}}) => {
     setInput({
       ...input,
       [e.target.id]: e.target.value,
@@ -62,11 +68,13 @@ const TChartForm = () => {
 
   return (
     <div className="bg-gradient-to-tl from-dark-blue to-med-dark-blue w-full h-full px-4 md:px-8 py-4 flex flex-col text-dark-blue rounded-lg border-l-4 border-orange-600">
-      <h3 className={`text-xl text-gray-200 font-open font-light ${theme.underline}`}>Compare and Contrast </h3>
+      <h3 className={`text-xl text-gray-200  font-light ${theme.underline}`}>
+        Compare and Contrast{' '}
+      </h3>
       <div className="flex h-9/10 w-full justify-between">
         {/* LEFT TEXT AREA */}
         <div className="relative text-gray-800 h-full w-4.8/10 flex flex-col items-center mb-5 mt-2">
-          <label className="h-1/10 flex justify-center items-center text-lg text-center font-open font-light text-gray-100">
+          <label className="h-1/10 flex justify-center items-center text-lg text-center  font-light text-gray-100">
             Things I would change about myself
           </label>
           <textarea
@@ -82,7 +90,7 @@ const TChartForm = () => {
 
         {/* RIGHT TEXT AREA */}
         <div className="relative text-gray-800 h-full w-4.8/10 flex flex-col items-center mb-5 mt-2">
-          <label className="h-1/10 flex justify-center items-center text-lg font-open font-light text-center text-gray-100">
+          <label className="h-1/10 flex justify-center items-center text-lg  font-light text-center text-gray-100">
             Things I love about myself
           </label>
           <textarea

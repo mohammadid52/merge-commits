@@ -1,7 +1,7 @@
 import React, {useState, Fragment, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline, IoOptionsOutline} from 'react-icons/io5';
+import {IoArrowUndoCircleOutline, IoClose, IoOptionsOutline} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 
 import {getTypeString} from '../../../../../../../utilities/strings';
@@ -154,7 +154,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
   };
 
   // Removed question from checkpoint
-  const removeCheckpointQuestion = async (quesId: string) => {
+  const removeCheckpointQuestion = async (quesId: string, cb?: Function) => {
     const deletedQuestions: any = [...checkpQuestionId];
     const deletedQuesID = deletedQuestions.find((item: any) => item.questionID === quesId)
       ?.id;
@@ -165,6 +165,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
       const result: any = await API.graphql(
         graphqlOperation(customMutations.deleteCheckpointQuestions, {input: input})
       );
+      if (cb) cb();
     } catch {
       setValidation({
         title: '',
@@ -340,6 +341,10 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
     {id: 1, name: 'private'},
   ];
 
+  const handleRemoveQuestionFromCheckpoint = (questionID: string) => {
+    removeCheckpointQuestion(questionID, fetchCheckpointDetails);
+  };
+
   const {title, language, label} = checkpointData;
   return (
     <div className="w-full h-full">
@@ -380,14 +385,14 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
           </Fragment>
         ) : (
           <Fragment>
-            <div className="w-8/10 m-auto">
+            <div className="md:w-full lg:w-8/10 m-auto">
               <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
                 {EditProfileCheckpointDict[userLanguage]['heading']}
               </h3>
             </div>
-            <div className="w-9/10 m-auto">
-              <div className="">
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+            <div className="md:w-full lg:w-8/10 m-auto">
+              <div className="px-3">
+                <div className="py-4 grid gap-x-6 grid-cols-2">
                   <div>
                     <FormInput
                       value={title}
@@ -416,7 +421,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                   </div>
                 </div>
 
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-3">
+                <div className="py-4 grid gap-x-6 grid-cols-3">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {EditProfileCheckpointDict[userLanguage]['designer']}
@@ -455,7 +460,7 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                 </div>
 
                 {/* Question table */}
-                <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
+                <div className="p-6 inner_card my-4">
                   <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
                     {EditProfileCheckpointDict[userLanguage]['checkpoint']}:{' '}
                   </p>
@@ -505,8 +510,16 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                             checkpQuestions.map((item: any, index: number) => (
                               <Fragment key={item.id}>
                                 <div
+                                  onClick={() => {
+                                    if (
+                                      item.type === 'selectMany' ||
+                                      item.type === 'selectOne'
+                                    ) {
+                                      showOptions(item.id, item.options);
+                                    }
+                                  }}
                                   key={item.id}
-                                  className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
+                                  className={`flex cursor-pointer justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
                                     questionOptions.quesId === item.id && 'bg-gray-200'
                                   }`}>
                                   <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
@@ -526,22 +539,18 @@ const EditProfileCheckpoint = (props: EditProfileCheckpointProps) => {
                                       </span>
                                     </div> */}
                                   <div className="flex w-1.5/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                                    {(item.type === 'selectMany' ||
-                                      item.type === 'selectOne') && (
-                                      <div
-                                        className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
-                                        onClick={() =>
-                                          showOptions(item.id, item.options)
-                                        }>
-                                        <IconContext.Provider
-                                          value={{
-                                            size: '1.5rem',
-                                            color: theme.iconColor[themeColor],
-                                          }}>
-                                          <IoOptionsOutline />
-                                        </IconContext.Provider>
-                                      </div>
-                                    )}
+                                    <IconContext.Provider
+                                      value={{
+                                        size: '1.5rem',
+                                        color: theme.iconColor[themeColor],
+                                      }}>
+                                      <IoClose
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleRemoveQuestionFromCheckpoint(item.id);
+                                        }}
+                                      />
+                                    </IconContext.Provider>
                                   </div>
                                 </div>
                                 {questionOptions.quesId === item.id && (

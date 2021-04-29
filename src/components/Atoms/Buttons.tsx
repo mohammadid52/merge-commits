@@ -48,7 +48,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
       ) : null}
       {Icon ? (
         <span className="w-8 h-8 flex items-center">
-          <IconContext.Provider value={{size: '1rem', color: '#ffffff'}}>
+          <IconContext.Provider value={{size: '1.2rem', color: '#ffffff'}}>
             <Icon />
           </IconContext.Provider>
         </span>

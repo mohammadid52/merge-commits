@@ -49,6 +49,13 @@
   background-color: #f0f2f5;
 }
 
+.inner_card {
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.05);
+  border-color: rgba(203, 213, 224, 0.5);
+  border-width: 1px;
+  border-radius: 0.375rem;
+}
+
 .sidenav {
   background: #20262b;
   user-select: none;

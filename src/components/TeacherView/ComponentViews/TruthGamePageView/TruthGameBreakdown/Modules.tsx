@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
+import React, {useContext} from 'react';
+import {LessonControlContext} from '../../../../../contexts/LessonControlContext';
 
-type InputProp = [{ name: string; example: string; prompt: string }];
+type InputProp = [{name: string; example: string; prompt: string}];
 
 export interface TruthInput {
   id: string;
@@ -55,8 +55,8 @@ const keywordParser = (str: string) => {
 };
 
 const Modules = (props: ModulesProps) => {
-  const { fullscreen, dataProps } = props;
-  const { theme, state } = useContext(LessonControlContext);
+  const {fullscreen, dataProps} = props;
+  const {theme, state} = useContext(LessonControlContext);
 
   if (!dataProps || !dataProps.additional) {
     return null;
@@ -65,7 +65,8 @@ const Modules = (props: ModulesProps) => {
   const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
 
   return (
-    <div className={`flex md:w-full h-2.8/10 justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>
+    <div
+      className={`flex md:w-full h-2.8/10 justify-between text-sm md:text-base text-gray-200 mb-4 md:mb-0`}>
       {dataProps && dataProps.additional
         ? dataProps.additional.map((item: any, key: number) => {
             let wordArray = keywordParser(item.input);
@@ -73,15 +74,27 @@ const Modules = (props: ModulesProps) => {
               <div
                 key={key}
                 className={`${
-                  length === 1 ? 'w-full' : length === 2 ? 'w-4.8/10' : length === 3 ? 'md:w-3.2/10' : ''
-                } h-full ${theme.gradient.cardBase} font-open font-light shadow-2 rounded-lg px-4 py-2 ${
+                  length === 1
+                    ? 'w-full'
+                    : length === 2
+                    ? 'w-4.8/10'
+                    : length === 3
+                    ? 'md:w-3.2/10'
+                    : ''
+                } h-full ${
+                  theme.gradient.cardBase
+                }  font-light shadow-2 rounded-lg px-4 py-2 ${
                   key === dataProps.additional.length - 1 ? '' : ''
                 }`}>
                 <h3>{keywordCapitilizer(item.name)}:</h3>
                 <div className="w-full px-2 overflow-scroll h-8/10">
                   {item.input
                     ? wordArray.map((word: string, key: number) => (
-                        <p key={key} className={`${fullscreen ? 'text-sm md:text-base' : 'text-xs'} font-normal`}>
+                        <p
+                          key={key}
+                          className={`${
+                            fullscreen ? 'text-sm md:text-base' : 'text-xs'
+                          } font-normal`}>
                           {word}
                         </p>
                       ))
@@ -91,15 +104,15 @@ const Modules = (props: ModulesProps) => {
             );
           })
         : null}
-      {/* <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
+      {/* <div className="bg-dark-blue  font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>Culture:</h3>
                 <p className="text-2xl">{displayProps.culture}</p>
             </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
+            <div className="bg-dark-blue  font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>My Storyteller:</h3>
                 <p className="text-2xl">{displayProps.storyteller}</p>
             </div>
-            <div className="bg-dark-blue font-open font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
+            <div className="bg-dark-blue  font-bold h-32 shadow-2 rounded px-4 py-2 mb-2">
                 <h3>Morals:</h3>
                 <div className="h-24 flex flex-col overflow-scroll">
                     {keywordParser(displayProps.lessons).map((term, key) => (
