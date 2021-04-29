@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Auth } from '@aws-amplify/auth';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useEffect} from 'react';
+import {Auth} from '@aws-amplify/auth';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import * as customMutations from '../../customGraphql/customMutations';
-import { useCookies } from 'react-cookie';
+import {useCookies} from 'react-cookie';
 interface newUserInput {
   key: number;
   authId: string;
@@ -48,13 +48,13 @@ interface QuickRegisterProps {
 }
 
 const QuickRegister = (props: QuickRegisterProps) => {
-  const { active, setQuickRegister } = props;
+  const {active, setQuickRegister} = props;
   const [newUserInputs, setNewUserInputs] = useState(initialState);
   const [waiting, setWaiting] = useState<boolean>(false);
   const [cookies] = useCookies(['room_info']);
   const roomInfoCookie = cookies['room_info'];
-  const [classID, setClassID] = useState(roomInfoCookie.classID)
-  console.log('classID-----------', classID)
+  const [classID, setClassID] = useState(roomInfoCookie.classID);
+  console.log('classID-----------', classID);
 
   const [message, setMessage] = useState<{
     show: boolean;
@@ -81,8 +81,8 @@ const QuickRegister = (props: QuickRegisterProps) => {
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setNewUserInputs(() => {
       if (id === 'email') {
         return {
@@ -104,7 +104,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
     if (isValid) {
       let userData = await cognitoSignUp();
       const registeredUser = await registerUser(userData);
-      await addToClass({...userData, id: registeredUser.id })
+      await addToClass({...userData, id: registeredUser.id});
       setNewUserInputs(initialState);
       setWaiting(false);
     }
@@ -117,12 +117,14 @@ const QuickRegister = (props: QuickRegisterProps) => {
       studentID: user.id,
       studentAuthID: user.authId,
       studentEmail: user.email,
-      status: 'Active'
+      status: 'Active',
     };
-    let newStudent: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input }));
+    let newStudent: any = await API.graphql(
+      graphqlOperation(customMutations.createClassStudent, {input})
+    );
     newStudent = newStudent.data.createClassStudent;
     return;
-  }
+  };
 
   const registerUser = async (userData: any) => {
     let user = {
@@ -139,13 +141,24 @@ const QuickRegister = (props: QuickRegisterProps) => {
       language: 'EN',
     };
     try {
-      let createdPerson: any = await API.graphql(graphqlOperation(mutations.createPerson, { input: user }));
+      let createdPerson: any = await API.graphql(
+        graphqlOperation(mutations.createPerson, {input: user})
+      );
       handleMessage('success', 'User registered successfully');
       setNewUserInputs((prev) => {
         return {
-          ...prev, key: 0, authId: '', email: '', password: 'xIconoclast.5x',
-          firstName: '', lastName: '', phone: '', birthdate: '', grade: '',
-          role: '', externalId: '',
+          ...prev,
+          key: 0,
+          authId: '',
+          email: '',
+          password: 'xIconoclast.5x',
+          firstName: '',
+          lastName: '',
+          phone: '',
+          birthdate: '',
+          grade: '',
+          role: '',
+          externalId: '',
         };
       });
       return createdPerson.data.createPerson;
@@ -156,7 +169,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
         handleMessage('error', error.message);
       }
     }
-  }
+  };
 
   const cognitoSignUp = async () => {
     let username = newUserInputs.email;
@@ -166,8 +179,10 @@ const QuickRegister = (props: QuickRegisterProps) => {
         username,
         password,
       });
-      let userData = { ...newUserInputs, authId: user.userSub };
-      setNewUserInputs(() => { return userData; });
+      let userData = {...newUserInputs, authId: user.userSub};
+      setNewUserInputs(() => {
+        return userData;
+      });
       return userData;
     } catch (error) {
       console.log('error signing up:', error);
@@ -198,40 +213,41 @@ const QuickRegister = (props: QuickRegisterProps) => {
       });
       handleMessage('error', error.message);
     }
-  }
+  };
 
   const validation = () => {
     let username = newUserInputs.email;
     let isValid = true;
-    let msg = { show: true, type: 'loading', message: 'Loading...', field: '' };
+    let msg = {show: true, type: 'loading', message: 'Loading...', field: ''};
     if (!newUserInputs.firstName) {
       isValid = false;
       msg.message = `User's first name cannot be blank`;
-      msg.field = 'firstName'
+      msg.field = 'firstName';
     } else if (!newUserInputs.lastName) {
       isValid = false;
       msg.message = `User's last name cannot be blank`;
-      msg.field = 'lastName'
+      msg.field = 'lastName';
     } else if (!username) {
       isValid = false;
       msg.message = `User's email cannot be blank`;
-      msg.field = 'email'
+      msg.field = 'email';
     } else if (!username.includes('@')) {
       isValid = false;
       msg.message = `User's email is not in the expected email address format`;
-      msg.field = 'email'
+      msg.field = 'email';
     }
-    setMessage(msg)
+    setMessage(msg);
     return isValid;
   };
 
   return (
     <div
-      className={`${!active ? 'hidden' : 'display'
-        } fixed z-100 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50`}>
+      className={`${
+        !active ? 'hidden' : 'display'
+      } fixed z-100 w-full h-full flex flex-col justify-center items-center bg-black bg-opacity-50`}>
       <div className="flex flex-col w-128 p-4 overflow-hidden bg-white shadow-xl rounded-lg">
         <div className="w-full flex flex-row justify-between">
-          <h1 className="text-3xl font-open font-medium">Quick Register</h1>
+          <h1 className="text-3xl  font-medium">Quick Register</h1>
           <span
             className={`text-right font-bold hover:text-blueberry text-gray-700 hover:text-lg hover:cursor-pointer`}
             onClick={() => setQuickRegister(false)}>
@@ -255,7 +271,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
               />
             </div>
             <span className={'text-xs text-dark-red'}>
-              {message.type === 'error' && message.field === 'firstName' ? message.message : null}
+              {message.type === 'error' && message.field === 'firstName'
+                ? message.message
+                : null}
             </span>
           </div>
 
@@ -272,7 +290,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
               />
             </div>
             <span className={'text-xs text-dark-red'}>
-              {message.type === 'error' && message.field === 'lastName' ? message.message : null}
+              {message.type === 'error' && message.field === 'lastName'
+                ? message.message
+                : null}
             </span>
           </div>
 
@@ -289,13 +309,17 @@ const QuickRegister = (props: QuickRegisterProps) => {
               />
             </div>
             <span className={'text-xs text-dark-red'}>
-              {message.type === 'error' && message.field === 'email' ? message.message : null}
+              {message.type === 'error' && message.field === 'email'
+                ? message.message
+                : null}
             </span>
           </div>
         </form>
 
         <span className={'text-xs text-dark-red'}>
-          {message.type === 'error' && message.field === 'lastName' ? message.message : null}
+          {message.type === 'error' && message.field === 'lastName'
+            ? message.message
+            : null}
         </span>
 
         <div className="w-full flex flex-col justify-center">
@@ -315,8 +339,8 @@ const QuickRegister = (props: QuickRegisterProps) => {
           </span>
 
           <p className={'mt-2 text-xs text-center'}>
-            The students will receive an e-mail to confirm their registration (please ask them to check their spam
-            folder!)
+            The students will receive an e-mail to confirm their registration (please ask
+            them to check their spam folder!)
           </p>
         </div>
       </div>

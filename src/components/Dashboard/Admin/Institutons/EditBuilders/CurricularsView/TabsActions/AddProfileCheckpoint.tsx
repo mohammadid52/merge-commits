@@ -393,7 +393,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                 </div>
 
                 {/* Question table */}
-                <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
+                <div className="p-6 border-gray-400  border-0 my-4 mx-2">
                   <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
                     {AddProfileCheckpointDict[userLanguage]['checkpointq']}:{' '}
                   </p>

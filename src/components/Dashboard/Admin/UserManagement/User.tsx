@@ -6,9 +6,11 @@ import {FaEdit} from 'react-icons/fa';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
+import useUrlState from '@ahooksjs/use-url-state';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
+import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
 
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -48,13 +50,17 @@ export interface UserInfo {
 const User = () => {
   const history = useHistory();
   const match = useRouteMatch();
-  const {theme, userLanguage, clientKey, state, dispatch} = useContext(GlobalContext);
+  const {theme, userLanguage, clientKey} = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [questionData, setQuestionData] = useState([]);
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  const [urlState, setUrlState] = useUrlState(
+    {id: '', t: 'p'},
+    {navigateMode: 'replace'}
+  );
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -80,7 +86,9 @@ const User = () => {
   const location = useLocation();
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
-  const queryParams = queryString.parse(location.search);
+
+  const {id, t: tab} = urlState;
+
   const {UserDict, BreadcrumsTitles} = useDictionary(clientKey);
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -96,7 +104,7 @@ const User = () => {
     },
   ];
 
-  const getQuestionData = async (checkpointIDs: any[]) => {
+  const getQuestionData = async (checkpointIDs: any[], user: any) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
       return {
         checkpointID: {
@@ -106,8 +114,8 @@ const User = () => {
     });
     const filter = {
       and: [
-        {email: {eq: state.user.email}},
-        {authID: {eq: state.user.authId}},
+        {email: {eq: user.email}},
+        {authID: {eq: user.authId}},
         {syllabusLessonID: {eq: '999999'}},
         {
           or: [...checkpointIDFilter],
@@ -119,6 +127,13 @@ const User = () => {
     );
     const questionData: any = results.data.listQuestionDatas?.items;
     setQuestionData(questionData);
+
+    // questionData.forEach(async (item: any) => {
+    //   await API.graphql(
+    //     graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
+    //   );
+    // });
+
     console.log(questionData, 'questionData');
   };
 
@@ -155,16 +170,13 @@ const User = () => {
       const sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
-        if (item && item.scope === 'private') sCheckpoints.push(item);
+        if (item) sCheckpoints.push(item);
       });
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
       delete personalInfo.classes;
-      if (uniqCheckpointIDs?.length > 0) {
-        getQuestionData(uniqCheckpointIDs);
-      }
 
       setStdCheckpoints([...uniqCheckpoints]);
 
@@ -175,6 +187,10 @@ const User = () => {
         }
         return user;
       });
+
+      if (uniqCheckpointIDs?.length > 0) {
+        getQuestionData(uniqCheckpointIDs, userData);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -283,7 +299,6 @@ const User = () => {
   };
 
   useEffect(() => {
-    let id = queryParams.id;
     if (typeof id === 'string') {
       getUserById(id);
     }
@@ -294,6 +309,10 @@ const User = () => {
   }
 
   const disableProfileChange = user.role !== 'ST';
+
+  const setTab = (value: string) => {
+    setUrlState({t: value});
+  };
 
   {
     return (
@@ -393,8 +412,7 @@ const User = () => {
                     </label>
                   )}
                 </div>
-                <div
-                  className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
+                <div className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
                   {`${user.preferredName ? user.preferredName : user.firstName} ${
                     user.lastName
                   }`}
@@ -408,10 +426,14 @@ const User = () => {
                   path={`${match.url}/edit`}
                   render={() => (
                     <UserEdit
+                      tab={tab}
+                      setTab={setTab}
                       user={user}
                       status={status}
                       setStatus={setStatus}
                       getUserById={getUserById}
+                      questionData={questionData}
+                      stdCheckpoints={stdCheckpoints}
                     />
                   )}
                 />
@@ -419,6 +441,8 @@ const User = () => {
                   path={`${match.url}/`}
                   render={() => (
                     <UserInformation
+                      tab={tab}
+                      setTab={setTab}
                       questionData={questionData}
                       stdCheckpoints={stdCheckpoints}
                       user={user}

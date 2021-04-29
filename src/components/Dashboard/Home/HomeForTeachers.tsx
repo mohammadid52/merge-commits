@@ -266,6 +266,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Classmates Section */}
           <div className="my-6">
             <StudentsTiles
+              isTeacher
               title={`Your Students`}
               state={state}
               studentsList={studentsList}

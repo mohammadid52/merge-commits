@@ -86,6 +86,7 @@ export interface LessonCardProps {
   openCards?: string;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
+  roomID?: string;
 }
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
@@ -321,7 +322,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
         <div className="mx-auto max-w-256">
-
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
             <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
               <span>
@@ -376,6 +376,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 <div className={`bg-opacity-10`}>
                   <div className={`text-xl m-auto`}>
                     <SurveyCard
+                      roomID={roomId}
                       isTeacher={isTeacher}
                       link={'/lesson/on-boarding-survey-1'}
                       lessons={assessmentsSurveys}

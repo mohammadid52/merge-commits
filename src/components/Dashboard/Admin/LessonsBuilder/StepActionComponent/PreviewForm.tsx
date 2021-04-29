@@ -1,11 +1,11 @@
-import React, { useState, useContext, useEffect, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useContext, useEffect, Fragment} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
 
 import Buttons from '../../../../Atoms/Buttons';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
@@ -13,7 +13,7 @@ import * as queries from '../../../../../graphql/queries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
-import { getTypeString } from '../../../../../utilities/strings';
+import {getTypeString} from '../../../../../utilities/strings';
 import Loader from '../../../../Atoms/Loader';
 
 interface PreviewFormProps {
@@ -24,9 +24,9 @@ interface PreviewFormProps {
   lessonType: string;
 }
 const PreviewForm = (props: PreviewFormProps) => {
-  const { lessonName, enablePublish, lessonID, lessonPlans, lessonType } = props;
-  const { userLanguage, clientKey } = useContext(GlobalContext);
-  const { BUTTONS, PreviewFormDict } = useDictionary(clientKey);
+  const {lessonName, enablePublish, lessonID, lessonPlans, lessonType} = props;
+  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {BUTTONS, PreviewFormDict} = useDictionary(clientKey);
 
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -50,7 +50,9 @@ const PreviewForm = (props: PreviewFormProps) => {
       id: syllabusLessonId,
       lessonPlan: updatedLessonPlan,
     };
-    const result: any = await API.graphql(graphqlOperation(customMutations.updateSyllabusLesson, { input: input }));
+    const result: any = await API.graphql(
+      graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
+    );
   };
 
   const updateAllLessonPlans = () => {
@@ -91,7 +93,18 @@ const PreviewForm = (props: PreviewFormProps) => {
 
   const publishAction = () => {
     if (relatedUnitsID?.length) {
-      toggleModal();
+      if (
+        lessonDetails?.checkpoints?.items?.length === 0 &&
+        lessonDetails.type === 'survey'
+      ) {
+        setMessage({
+          ...message,
+          isError: true,
+          msg: 'No checkpoints added. Please add atleast one checkpoint.',
+        });
+      } else {
+        toggleModal();
+      }
     } else {
       setMessage({
         ...message,
@@ -106,7 +119,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       try {
         const result: any = await API.graphql(
           graphqlOperation(queries.listSyllabusLessons, {
-            filter: { lessonID: { eq: lessonID } },
+            filter: {lessonID: {eq: lessonID}},
           })
         );
         const savedData = result?.data?.listSyllabusLessons?.items;
@@ -142,7 +155,9 @@ const PreviewForm = (props: PreviewFormProps) => {
           )?.sequence;
 
           let questionSequence: any = await API.graphql(
-            graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${checkpoint.checkpointID}` })
+            graphqlOperation(queries.getCSequences, {
+              id: `Ch_Ques_${checkpoint.checkpointID}`,
+            })
           );
           questionSequence = questionSequence?.data.getCSequences?.sequence || [];
           checkpoint?.checkpoint?.questions?.items.forEach((t: any) => {
@@ -151,7 +166,9 @@ const PreviewForm = (props: PreviewFormProps) => {
             t.index = index;
           });
 
-          checkpoint?.checkpoint?.questions?.items.sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+          checkpoint?.checkpoint?.questions?.items.sort((a: any, b: any) =>
+            a.index > b.index ? 1 : -1
+          );
 
           return {
             ...checkpoint,
@@ -167,7 +184,7 @@ const PreviewForm = (props: PreviewFormProps) => {
         items: checkpointSequence,
       };
 
-      setLessonDetails({ ...savedData });
+      setLessonDetails({...savedData});
       setLoading(false);
     } catch {
       setMessage({
@@ -196,12 +213,14 @@ const PreviewForm = (props: PreviewFormProps) => {
     }
   }, [message.msg]);
 
-  const fieldClass = 'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
-  const QuestionList = ({ checkpItem, index }: any) => {
+  const fieldClass =
+    'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
+  const QuestionList = ({checkpItem, index}: any) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const showListAndDropDown =
-      checkpItem?.question?.type === 'selectMany' || checkpItem?.question?.type === 'selectOne';
+      checkpItem?.question?.type === 'selectMany' ||
+      checkpItem?.question?.type === 'selectOne';
     return (
       <div className="my-4 w-full question__container">
         <div
@@ -216,7 +235,9 @@ const PreviewForm = (props: PreviewFormProps) => {
             </span>
             <span
               className={`py-0.5 px-1 ml-2 text-xs  rounded ${
-                showListAndDropDown ? 'bg-indigo-200  text-indigo-700' : 'bg-red-200 text-red-700'
+                showListAndDropDown
+                  ? 'bg-indigo-200  text-indigo-700'
+                  : 'bg-red-200 text-red-700'
               }`}>
               {getTypeString(checkpItem?.question?.type)}
             </span>
@@ -227,7 +248,11 @@ const PreviewForm = (props: PreviewFormProps) => {
             <div className="w-.7/10" />
           )}
         </div>
-        <div id="option__list" className={`px-12 py-2 option__list ${isOpen ? 'show' : isAllOpen ? 'show' : 'hide'}`}>
+        <div
+          id="option__list"
+          className={`px-12 py-2 option__list ${
+            isOpen ? 'show' : isAllOpen ? 'show' : 'hide'
+          }`}>
           {showListAndDropDown && (
             <ul className="list-disc">
               {checkpItem?.question?.options?.map((opt: any) => (
@@ -240,12 +265,15 @@ const PreviewForm = (props: PreviewFormProps) => {
     );
   };
 
-  const QuestionContainer = ({ item }: any) => {
+  const QuestionContainer = ({item}: any) => {
     const htmlTitle = item?.checkpoint?.instructions.replace(/(<([^>]+)>)/gi, '');
 
     const questionsLen = item.checkpoint?.questions?.items.length;
-    const showQuestions = item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
-    const outerContainerStyles = showQuestions ? `w-full mb-4 p-6 px-4 border-0 border-gray-300 rounded relative` : '';
+    const showQuestions =
+      item.checkpoint?.title || item.checkpoint?.estTime || questionsLen > 0;
+    const outerContainerStyles = showQuestions
+      ? `w-full mb-4 p-6 px-4 border-0 border-gray-300 rounded relative`
+      : '';
     return (
       <div className={outerContainerStyles} key={item.id}>
         {showQuestions ? (
@@ -255,15 +283,22 @@ const PreviewForm = (props: PreviewFormProps) => {
                 {item.checkpoint?.title || ''}{' '}
                 {item.checkpoint?.estTime && (
                   <span>
-                    ({item.checkpoint?.estTime} {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
+                    ({item.checkpoint?.estTime}{' '}
+                    {item.checkpoint?.estTime > 1 ? 'mins' : 'min'})
                   </span>
                 )}
                 <span className="py-0.5 px-1 ml-2 text-xs bg-gray-200 text-gray-700 rounded-md">
                   {item.checkpoint?.questions?.items.length || ''}{' '}
-                  {questionsLen === 0 ? 'no questions' : questionsLen === 1 ? 'question' : 'questions'}
+                  {questionsLen === 0
+                    ? 'no questions'
+                    : questionsLen === 1
+                    ? 'question'
+                    : 'questions'}
                 </span>
                 <br />
-                <span className="text-gray-700 text-sm font-semibold">{item.checkpoint?.subtitle || ''}</span>
+                <span className="text-gray-700 text-sm font-semibold">
+                  {item.checkpoint?.subtitle || ''}
+                </span>
               </h4>
             </div>
           </div>
@@ -271,7 +306,9 @@ const PreviewForm = (props: PreviewFormProps) => {
         <div className={`option__list`}>
           {item.checkpoint?.instructionsTitle || (htmlTitle && htmlTitle.length > 0) ? (
             <div className="py-2">
-              <h4 className="text-gray-600 text-base font-medium mb-2">{item.checkpoint?.instructionsTitle} </h4>
+              <h4 className="text-gray-600 text-base font-medium mb-2">
+                {item.checkpoint?.instructionsTitle}{' '}
+              </h4>
               {htmlTitle.length > 0 && (
                 <div className="border-dashed border-0 w-full bg-gray-100 border-gray-300 rounded-md p-2 px-3">
                   instructions: {ReactHtmlParser(item.checkpoint?.instructions)}
@@ -281,9 +318,11 @@ const PreviewForm = (props: PreviewFormProps) => {
           ) : null}
           {item.checkpoint?.questions?.items?.length > 0 ? (
             <div className="py-2">
-              {item.checkpoint?.questions?.items?.map((checkpItem: any, index: number) => (
-                <QuestionList index={index} key={index} checkpItem={checkpItem} />
-              ))}
+              {item.checkpoint?.questions?.items?.map(
+                (checkpItem: any, index: number) => (
+                  <QuestionList index={index} key={index} checkpItem={checkpItem} />
+                )
+              )}
             </div>
           ) : null}
         </div>
@@ -294,7 +333,7 @@ const PreviewForm = (props: PreviewFormProps) => {
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-        <h3 style={{ color: '#374151' }} className="text-lg leading-6 font-semibold">
+        <h3 style={{color: '#374151'}} className="text-lg leading-6 font-semibold">
           {PreviewFormDict[userLanguage]['PREVIEW_DETAILS']['TITLE']} - {lessonName}
         </h3>
       </div>
@@ -302,7 +341,9 @@ const PreviewForm = (props: PreviewFormProps) => {
         <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
           <div className="w-5/10">
             <Loader color="rgba(107, 114, 128, 1)" />
-            <p className="mt-2 text-center text-lg text-gray-500">{PreviewFormDict[userLanguage]['FETCHING']}</p>
+            <p className="mt-2 text-center text-lg text-gray-500">
+              {PreviewFormDict[userLanguage]['FETCHING']}
+            </p>
           </div>
         </div>
       ) : (
@@ -312,21 +353,33 @@ const PreviewForm = (props: PreviewFormProps) => {
               <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
                 {PreviewFormDict[userLanguage]['PURPOSE']}
               </h3>
-              <p className="w-3/4">{lessonDetails?.purpose ? ReactHtmlParser(lessonDetails?.purpose) : ''}</p>
+              <p className="w-3/4">
+                {lessonDetails?.purpose ? ReactHtmlParser(lessonDetails?.purpose) : ''}
+              </p>
             </div>
             <div className={fieldClass}>
               <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
                 {PreviewFormDict[userLanguage]['OBJECTIVE']}:{' '}
               </h3>
-              <p className="w-3/4">{lessonDetails?.objectives ? ReactHtmlParser(lessonDetails?.objectives[0]) : ''}</p>
+              <p className="w-3/4">
+                {lessonDetails?.objectives
+                  ? ReactHtmlParser(lessonDetails?.objectives[0])
+                  : ''}
+              </p>
             </div>
 
             <div className={fieldClass}>
-              <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">Welcome Message:</h3>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+                Welcome Message:
+              </h3>
               <div className="w-3/4">
-                <p className="font-semibold text-base">{lessonDetails?.introductionTitle || ''}</p>
+                <p className="font-semibold text-base">
+                  {lessonDetails?.introductionTitle || ''}
+                </p>
                 <p className="w-3/4 mb-4 mt-2">
-                  {lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.introduction) : ''}
+                  {lessonDetails?.introduction
+                    ? ReactHtmlParser(lessonDetails?.introduction)
+                    : ''}
                 </p>
               </div>
             </div>
@@ -335,9 +388,13 @@ const PreviewForm = (props: PreviewFormProps) => {
                 {lessonType === 'survey' ? 'Survey' : 'Assessment'} Instructions:
               </h3>
               <div className="w-3/4">
-                <p className="font-semibold text-base">{lessonDetails?.instructionsTitle || ''}</p>
+                <p className="font-semibold text-base">
+                  {lessonDetails?.instructionsTitle || ''}
+                </p>
                 <p className="w-3/4 mb-4 mt-2">
-                  {lessonDetails?.instructions ? ReactHtmlParser(lessonDetails?.instructions[0]) : ''}
+                  {lessonDetails?.instructions
+                    ? ReactHtmlParser(lessonDetails?.instructions[0])
+                    : ''}
                 </p>
               </div>
             </div>
@@ -352,7 +409,8 @@ const PreviewForm = (props: PreviewFormProps) => {
                   label="Toggle All Questions"
                 />
               </div>
-              {lessonDetails?.checkpoints?.items?.length > 0 && !fetchingQuestionSequence ? (
+              {lessonDetails?.checkpoints?.items?.length > 0 &&
+              !fetchingQuestionSequence ? (
                 <div className="mt-4">
                   {lessonDetails?.checkpoints?.items?.map((item: any, key: number) => (
                     <QuestionContainer key={key} item={item} />
@@ -364,21 +422,36 @@ const PreviewForm = (props: PreviewFormProps) => {
             </div>
 
             <div className={fieldClass}>
-              <h3 className="w-1/4 font-medium text-gray-500 text-base mb-2">Closing Message :</h3>
+              <h3 className="w-1/4 font-medium text-gray-500 text-base mb-2">
+                Closing Message :
+              </h3>
               <div className="w-3/4">
-                <h3 className="font-semibold text-gray-900 text-base">{lessonDetails?.summaryTitle || ''}</h3>
-                <Fragment>{lessonDetails?.introduction ? ReactHtmlParser(lessonDetails?.summary) : ''}</Fragment>
+                <h3 className="font-semibold text-gray-900 text-base">
+                  {lessonDetails?.summaryTitle || ''}
+                </h3>
+                <Fragment>
+                  {lessonDetails?.introduction
+                    ? ReactHtmlParser(lessonDetails?.summary)
+                    : ''}
+                </Fragment>
               </div>
             </div>
           </div>
           {message ? (
             <div className="py-4 m-auto mt-2 text-center">
-              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}>{message.msg} </p>
+              <p className={`${message.isError ? 'text-red-600' : 'text-green-600'}`}>
+                {message.msg}{' '}
+              </p>
             </div>
           ) : null}
           {enablePublish && (
             <div className="w-2/10 mx-auto py-4">
-              <Buttons btnClass="mx-auto w-full" onClick={publishAction} label={BUTTONS[userLanguage]['PUBLISH']} />
+              <Buttons
+                disabled={lessonDetails?.checkpoints?.items?.length === 0}
+                btnClass="mx-auto w-full"
+                onClick={publishAction}
+                label={BUTTONS[userLanguage]['PUBLISH']}
+              />
             </div>
           )}
           {warnModal.show && (

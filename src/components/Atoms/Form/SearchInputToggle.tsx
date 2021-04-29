@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons';
 import {IoSearchSharp, IoClose} from 'react-icons/io5';
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -12,7 +12,7 @@ interface SearchProps {
   style?: string;
 }
 
-const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
+const SearchInputToggle: React.FC<SearchProps> = (searchProps: SearchProps) => {
   const {value, onChange, onKeyDown, closeAction, style} = searchProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -22,14 +22,31 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
       onKeyDown();
     }
   };
+
+  const [showFull, setShowFull] = React.useState(false);
+
+  useEffect(() => {
+    if (!showFull) {
+      onChange('');
+    }
+  }, [showFull]);
+
   return (
     <div
-      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${
-        theme.outlineNone
-      } ${style ? style : ''}`}>
-      <span className="w-6 mr-4 cursor-pointer" onClick={onKeyDown}>
+      style={{width: showFull ? '200px' : '32px'}}
+      onBlur={() => setShowFull(false)}
+      className={`flex w-auto transition items-center py-1 rounded px-2 justify-center ${
+        theme.formSelect
+      } ${theme.outlineNone} ${style ? style : ''}`}>
+      <span
+        style={{minWidth: 24, minHeight: 24, maxWidth: 24}}
+        className={`items-center justify-center flex cursor-pointer`}
+        onClick={() => {
+          setShowFull(!showFull);
+          onKeyDown();
+        }}>
         <IconContext.Provider
-          value={{size: '1.5rem', color: theme.searchIcon[themeColor]}}>
+          value={{size: '1.2rem', color: theme.searchIcon[themeColor]}}>
           <IoSearchSharp />
         </IconContext.Provider>
       </span>
@@ -39,11 +56,11 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
         value={value ? value : ''}
         onChange={(e: any) => onChange(e.target.value)}
         onKeyDown={(e: any) => search(e.keyCode)}
-        className={`${theme.outlineNone}`}
+        className={`text-sm ${theme.outlineNone}`}
       />
       {value !== '' && (
         <span className="w-6 ml-4 cursor-pointer" onClick={closeAction}>
-          <IconContext.Provider value={{size: '1.5rem', color: '#000000'}}>
+          <IconContext.Provider value={{size: '1.2rem', color: '#000000'}}>
             <IoClose />
           </IconContext.Provider>
         </span>
@@ -52,4 +69,4 @@ const SearchInput: React.FC<SearchProps> = (searchProps: SearchProps) => {
   );
 };
 
-export default SearchInput;
+export default SearchInputToggle;

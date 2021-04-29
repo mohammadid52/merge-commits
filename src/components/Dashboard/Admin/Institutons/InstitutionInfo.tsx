@@ -184,7 +184,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
               </div>
             )}
 
-            <div className="text-xl font-bold font-open text-gray-900 mt-4 w-48">
+            <div className="text-xl font-bold  text-gray-900 mt-4 w-48">
               <p>{name ? name : ''}</p>
             </div>
           </div>

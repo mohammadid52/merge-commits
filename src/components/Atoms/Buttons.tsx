@@ -37,18 +37,24 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
       disabled={disabled}
       type={type ? type : 'button'}
       style={customStyles}
-      className={`font-bold uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${
+      className={`font-bold  uppercase text-xs px-4 py-2 rounded-lg flex items-center justify-center w-auto ${
         theme.outlineNone
-      } ${transparent ? theme.btn.cancel : !overrideClass ? theme.btn[themeColor] : ''} ${
-        btnClass ? btnClass : ''
-      } ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+      } ${
+        transparent
+          ? theme.btn.cancel
+          : !overrideClass
+          ? `${disabled ? 'bg-gray-400 text-gray-200' : theme.btn[themeColor]}`
+          : ''
+      } ${btnClass ? btnClass : ''} ${
+        disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+      }`}
       onClick={onClick}>
       {label ? (
         <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span>
       ) : null}
       {Icon ? (
         <span className="w-8 h-8 flex items-center">
-          <IconContext.Provider value={{size: '1.5rem', color: '#ffffff'}}>
+          <IconContext.Provider value={{size: '1.2rem', color: '#ffffff'}}>
             <Icon />
           </IconContext.Provider>
         </span>

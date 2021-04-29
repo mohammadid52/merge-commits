@@ -265,7 +265,10 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           graphqlOperation(customMutations.updateLesson, {input: input})
         );
         const lessonsData = results?.data?.updateLesson;
-        console.log(lessonsData);
+
+        if (selectedMeasu.id !== '') {
+          addNewMeasurement();
+        }
 
         // if (lessonsData.type !== 'lesson') {
         //   const assessmentInput = {

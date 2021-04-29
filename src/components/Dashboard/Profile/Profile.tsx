@@ -272,7 +272,6 @@ const Profile = (props: ProfilePageProps) => {
     );
     const questionData: any = results.data.listQuestionDatas?.items;
     setQuestionData(questionData);
-    console.log(questionData, 'questionData');
   };
 
   async function getUser() {
@@ -311,7 +310,8 @@ const Profile = (props: ProfilePageProps) => {
       const sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
-        if (item) sCheckpoints.push(item);
+        console.log(item);
+        if (item && item.scope !== 'private') sCheckpoints.push(item);
       });
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
@@ -464,8 +464,7 @@ const Profile = (props: ProfilePageProps) => {
                 <p className="text-gray-600 my-2">
                   {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
                 </p>
-                <div
-                  className={`text-lg md:text-xl font-bold font-open text-gray-900 mt-4 w-52`}>
+                <div className={`text-lg md:text-xl font-bold  text-gray-900 mt-4 w-52`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${
                     person.lastName
                   }`}

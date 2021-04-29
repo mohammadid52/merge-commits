@@ -15,12 +15,13 @@ interface StartProps {
   open: boolean;
   accessible: boolean;
   type?: string;
+  roomID: string;
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
-  const {lessonKey, open, accessible, type} = props;
+  const {lessonKey, open, accessible, type, roomID} = props;
   const history = useHistory();
 
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
@@ -56,7 +57,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   const handleLink = () => {
     if (!isTeacher && accessible && open) {
-      history.push(`${`/lesson/${lessonKey}`}`);
+      history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
     }
 
     if (isTeacher) {

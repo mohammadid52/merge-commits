@@ -2189,6 +2189,7 @@ export const getPersonData = /* GraphQL */ `
                   type
                   typeID
                   checkpoint {
+                    scope
                     id
                     label
                     title
@@ -2221,6 +2222,7 @@ export const getPersonData = /* GraphQL */ `
                           type
                           typeID
                           checkpoint {
+                            scope
                             id
                             label
                             title

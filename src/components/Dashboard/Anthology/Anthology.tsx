@@ -12,8 +12,9 @@ import HeroBanner from '../../Header/HeroBanner';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Button from '../../../standard/Button/Button';
 import Buttons from '../../Atoms/Buttons';
+
+import {FaEdit} from 'react-icons/fa';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -45,6 +46,7 @@ const Anthology = () => {
   const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const [tab, setTab] = useState(0);
 
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
   const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
@@ -198,16 +200,13 @@ const Anthology = () => {
 
   const onCancel = (type: string) => {
     setNewStudentData({...newStudentData, content: '', title: ''});
-    console.log(
-      '🚀 ~ file: Anthology.tsx ~ line 208 ~ onCancel ~ newStudentData',
-      newStudentData
-    );
   };
 
   // Function group to handle section-switching
-  const handleTabClick = (tab: string, e: React.MouseEvent) => {
+  const handleTabClick = (tab: number, e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
     setViewEditMode({...viewEditMode, mode: ''});
+    setTab(tab);
 
     if (id !== subSection) {
       if (id !== 'subSectionTabs') {
@@ -370,26 +369,29 @@ const Anthology = () => {
       <div>
         <HeroBanner imgUrl={notebookBanner} title={'Notebook'} />
       </div>
-      {
-        <div
-          className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-          <h2 className={`text-base text-center font-semibold`}>
-            All your work in place
-          </h2>
-        </div>
-      }
+
+      <div
+        className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+        <h2 className={`text-base text-center font-semibold`}>All your work in place</h2>
+      </div>
+
       <SectionTitleV3
         fontSize="2xl"
         fontStyle="bold"
         extraContainerClass="max-w-256"
         extraClass="leading-6 text-gray-900"
         withButton={
-          <Buttons
-            customStyles={{width: '10rem'}}
-            label={anthologyDict[userLanguage].ACTIONS.CREATE}
-            onClick={() => handleEditToggle('create', newStudentData.syllabusLessonID, 0)}
-            type="button"
-          />
+          tab === 0 && (
+            <Buttons
+              Icon={FaEdit}
+              customStyles={{width: '14rem'}}
+              label={anthologyDict[userLanguage].ACTIONS.CREATE}
+              onClick={() =>
+                handleEditToggle('create', newStudentData.syllabusLessonID, 0)
+              }
+              type="button"
+            />
+          )
         }
         title={anthologyDict[userLanguage].TITLE}
       />

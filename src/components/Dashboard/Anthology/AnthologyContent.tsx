@@ -201,7 +201,9 @@ const AnthologyContent = (props: ContentCardProps) => {
             <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
               <div
                 id={`anthology_${subSection}${idx}`}
-                className={`flex flex-col px-6 py-6 p-2`}>
+                className={`flex flex-col ${
+                  idx !== content.length - 1 && 'border-b-0'
+                } border-gray-200 px-6 py-6 p-2`}>
                 {viewEditMode &&
                 viewEditMode.mode === 'edit' &&
                 viewEditMode.studentDataID === contentObj.studentDataID &&
@@ -211,7 +213,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                 {/**
                  *  section:  VIEW/EDIT BUTTON
                  */}
-                <div className={`flex pt-2 pb-6 border-b-0 border-gray-200 mt-2`}>
+                <div className={`flex pt-2 pb-6  mt-2`}>
                   {viewEditMode.mode === 'edit' &&
                   viewEditMode.studentDataID === contentObj.studentDataID &&
                   viewEditMode.idx === getContentObjIndex(contentObj) ? (
