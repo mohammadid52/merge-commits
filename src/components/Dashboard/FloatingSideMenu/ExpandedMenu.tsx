@@ -81,7 +81,12 @@ const ExpandedMenu = (props: {
           sectionLabel={`Chat`}
           sectionTitle={`Chat Rooms`}
           focusSection={focusSection}>
-          <Rooms chatroom={chatroom} setSelectedChatroom={setSelectedChatroom} />
+          <Rooms
+            chatroom={chatroom}
+            setSelectedChatroom={setSelectedChatroom}
+            focusSection={focusSection}
+            setFocusSection={setFocusSection}
+          />
         </SideMenuSection>
         <SideMenuSection
           menuState={menuState}

@@ -6,13 +6,16 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 interface Rooms {
   chatroom?: any;
   setSelectedChatroom?: Function;
+  focusSection?: string;
+  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Rooms = (props: Rooms) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const {chatroom, setSelectedChatroom} = props;
+  const {chatroom, setSelectedChatroom, focusSection, setFocusSection} = props;
   const [rooms, setRooms] = useState(null);
   const [loadingRooms, setLoadingRooms] = useState(false);
+  const [limited, setLimited] = useState(true);
 
   const fetchRooms = async () => {
     setLoadingRooms(true);
@@ -52,22 +55,42 @@ const Rooms = (props: Rooms) => {
     );
   };
 
+  useEffect(() => {
+    if (focusSection !== 'Chat' && !limited) {
+      setLimited(true);
+    }
+  }, [focusSection]);
+
+  const handleShowMore = () => {
+    if (limited) {
+      setLimited(false);
+      setFocusSection('Chat');
+    } else {
+      setLimited(true);
+      setFocusSection('');
+    }
+  };
+
   const listRooms = () => {
     return (
-      <div
-        className={`
+      <>
+        <div
+          className={`
       transform transition ease-in-out duration-400 sm:duration-400
       ${Object.keys(chatroom).length > 0 ? 'h-0 overflow-hidden' : 'h-auto'}
       `}>
-        {!(Object.keys(chatroom).length > 0) &&
-          rooms.map((rm: any, index: any) => {
-            return (
-              <button
-                key={index}
-                onClick={() => setSelectedChatroom(rm)}
-                type="button"
-                className={`
-                    ${index > 0 && index < rooms.length - 1 ? 'my-2' : ''}
+          {!(Object.keys(chatroom).length > 0) &&
+            rooms.reduce((acc: any[], rm: any, index: any) => {
+              if (limited) {
+                if (index < 2) {
+                  return [
+                    ...acc,
+                    <button
+                      key={index}
+                      onClick={() => setSelectedChatroom(rm)}
+                      type="button"
+                      className={`
+                    ${index < rooms.length - 1 ? 'mb-2' : ''}
                     p-2
                     truncate inline-flex 
                     items-center
@@ -75,11 +98,48 @@ const Rooms = (props: Rooms) => {
                     text-gray-200 bg-gray-500 
                     shadow-sm text-xs font-medium rounded 
                     hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-                {rm.name}
-              </button>
-            );
-          })}
-      </div>
+                      {rm.name}
+                    </button>,
+                  ];
+                } else {
+                  return acc;
+                }
+              } else {
+                return [
+                  ...acc,
+                  <button
+                    key={index}
+                    onClick={() => setSelectedChatroom(rm)}
+                    type="button"
+                    className={`
+                    ${index < rooms.length - 1 ? 'mb-2' : ''}
+                    p-2
+                    truncate inline-flex 
+                    items-center
+                    border border-gray-200 
+                    text-gray-200 bg-gray-500 
+                    shadow-sm text-xs font-medium rounded 
+                    hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+                    {rm.name}
+                  </button>,
+                ];
+              }
+            }, [])}
+        </div>
+        {limited ? (
+          <p
+            onClick={() => handleShowMore()}
+            className={`cursor-pointer text-xs font-medium p-2 text-center text-indigo-200`}>
+            Show More
+          </p>
+        ) : (
+          <p
+            onClick={() => handleShowMore()}
+            className={`cursor-pointer text-xs font-medium p-2 text-center text-indigo-200`}>
+            Show Less
+          </p>
+        )}
+      </>
     );
   };
 

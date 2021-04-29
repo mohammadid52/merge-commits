@@ -8,6 +8,7 @@ export const SideMenuSection = (props: {
   sectionTitle?: string;
   setIsolatedSection?: (sectionStr: string) => void;
   focusSection?: string;
+  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   isOpen?: boolean;
   isChatActive?: boolean;
 }) => {
@@ -18,6 +19,7 @@ export const SideMenuSection = (props: {
     sectionLabel,
     sectionTitle,
     focusSection,
+    setFocusSection,
   } = props;
   const thisSectionActive = focusSection === sectionLabel;
   const noSectionActive = focusSection === '';
@@ -33,11 +35,7 @@ export const SideMenuSection = (props: {
            ? 'hidden opacity-0 overflow-hidden'
            : ''
        }
-       ${
-         menuState === 2 && thisSectionActive
-           ? 'scale-x-100 opacity-100 flex-grow flex-1'
-           : ''
-       }
+       ${thisSectionActive ? 'scale-x-100 opacity-100 flex-grow flex-1' : ''}
       flex flex-col
     `}>
       {menuState === 2 && thisSectionActive ? (
@@ -54,7 +52,13 @@ export const SideMenuSection = (props: {
       {children ? (
         menuState < 2 ? (
           <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg p-2`}>
-            {children}
+            {menuState === 1
+              ? thisSectionActive
+                ? children
+                : noSectionActive
+                ? children
+                : ''
+              : ''}
           </div>
         ) : (
           <div className={`flex flex-col flex-1 p-2`}>{children}</div>
