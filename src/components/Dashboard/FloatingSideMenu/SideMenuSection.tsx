@@ -72,6 +72,10 @@ export const SideMenuSection = (props: {
           </div>
         ) : menuState === 2 && thisSectionActive ? (
           <div className={`flex flex-col flex-1 pt-2`}>{children}</div>
+        ) : menuState === 0 && thisSectionActive ? (
+          <div className={`flex flex-col flex-1 pt-2 w-0 overflow-hidden`}>
+            {children}
+          </div>
         ) : null
       ) : null}
     </div>
