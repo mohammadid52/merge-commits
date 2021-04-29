@@ -17,12 +17,13 @@ interface SaveQuitProps {
     like: string;
     text: string;
   };
+  roomID: string;
 }
 
 const SaveQuit = (props: SaveQuitProps) => {
   const {state, dispatch, theme} = useContext(LessonContext);
   const {globalStateAccess} = useContext(GlobalContext);
-  const {id, feedback} = props;
+  const {id, feedback, roomID} = props;
   const history = useHistory();
   const {visible, setVisible, ref} = useOutsideAlerter(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -43,7 +44,8 @@ const SaveQuit = (props: SaveQuitProps) => {
       console.error(err);
     } finally {
       handlePopup();
-      history.push('/dashboard');
+      console.log(state.data);
+      window.location.href = `/dashboard/classroom/${roomID}`;
     }
   };
 
@@ -82,7 +84,7 @@ const SaveQuit = (props: SaveQuitProps) => {
       } else {
         handleCreateQuestionData();
       }
-      history.push('/dashboard/home');
+      window.location.href = `/dashboard/classroom/${roomID}`;
     }
   };
 
