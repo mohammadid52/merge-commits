@@ -46,7 +46,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
         minWidth: collapse ? '0.5rem' : '16rem',
         maxWidth: collapse ? '0.5rem' : '16rem',
       }}
-      className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav overflow-x-hidden ${
+      className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav bg-charcoal overflow-x-hidden ${
         collapse && 'cursor-pointer'
       }`}>
       {!collapse && (

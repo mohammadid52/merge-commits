@@ -48,7 +48,6 @@ const FloatingSideMenu = () => {
           <FloatingBar
             menuState={menuOpenLevel}
             setMenuState={setMenuState}
-            isChatActive={chatActive}
             toggleChat={toggleChat}
           />
           <ExpandedMenu
@@ -58,8 +57,6 @@ const FloatingSideMenu = () => {
             setFocusSection={setFocusSection}
             chatroom={chatroom}
             setChatroom={setChatroom}
-            isChatActive={chatActive}
-            toggleChat={toggleChat}
           />
         </div>
       </div>

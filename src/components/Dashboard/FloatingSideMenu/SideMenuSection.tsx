@@ -17,10 +17,7 @@ export const SideMenuSection = (props: {
     children,
     sectionLabel,
     sectionTitle,
-    setIsolatedSection,
     focusSection,
-    isOpen,
-    isChatActive,
   } = props;
   const thisSectionActive = focusSection === sectionLabel;
   const noSectionActive = focusSection === '';
@@ -28,12 +25,12 @@ export const SideMenuSection = (props: {
   return (
     <div
       className={`
-      transform transition-all ease-in-out duration-700 
+      transform  ease-in-out duration-700
       ${menuState === 0 ? 'scale-x-50 opacity-0 overflow-hidden' : ''}
        ${menuState === 1 ? 'scale-x-100 opacity-100' : ''}
        ${
          menuState === 2 && !thisSectionActive && !noSectionActive
-           ? 'h-0 opacity-0 overflow-hidden'
+           ? 'hidden opacity-0 overflow-hidden'
            : ''
        }
        ${
@@ -43,22 +40,26 @@ export const SideMenuSection = (props: {
        }
       flex flex-col
     `}>
-      <p
-        className={`cursor-pointer text-indigo-100 group flex items-center p-2 text-sm font-medium rounded-md`}>
-        {sectionTitle || 'Section Title'}
-      </p>
-      {children ? (
-        <div className={`flex flex-col flex-1`}>{children}</div>
+      {menuState === 2 && thisSectionActive ? (
+        <p
+          className={`h-12 cursor-pointer text-indigo-800 flex items-center p-2 text-xl font-semibold rounded-md z-100`}>
+          {sectionTitle || 'Section Title'}
+        </p>
       ) : (
-        <div className={`grid grid-cols-3 gap-2 p-2 bg-indigo-600`}>
-          <div className="cursor-pointer mx-auto inline-block h-10 w-10 rounded-full bg-gray-700" />
-          <div className="cursor-pointer mx-auto inline-block h-10 w-10 rounded-full bg-gray-700" />
-          <div className="cursor-pointer mx-auto inline-block h-10 w-10 rounded-full bg-gray-700" />
-          <div className="cursor-pointer mx-auto inline-block h-10 w-10 rounded-full bg-gray-700" />
-          <div className="cursor-pointer mx-auto inline-block h-10 w-10 rounded-full bg-gray-700" />
-          <div className="cursor-pointer mx-auto inline-block h-10 w-10 rounded-full bg-gray-700" />
-        </div>
+        <p
+          className={`h-12 cursor-pointer text-indigo-100 flex items-center p-2 text-sm font-medium rounded-md z-100`}>
+          {sectionTitle || 'Section Title'}
+        </p>
       )}
+      {children ? (
+        menuState < 2 ? (
+          <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg p-2`}>
+            {children}
+          </div>
+        ) : (
+          <div className={`flex flex-col flex-1 p-2`}>{children}</div>
+        )
+      ) : null}
     </div>
   );
 };

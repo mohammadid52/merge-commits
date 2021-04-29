@@ -12,6 +12,7 @@ interface ButtonRoundProps {
   buttonWHClass?: string;
   iconTxtColorClass?: string;
   disabled?: boolean;
+  pointerEvents?: boolean;
 }
 
 const ButtonsRound: React.FC<ButtonRoundProps> = (props: ButtonRoundProps) => {
@@ -25,17 +26,28 @@ const ButtonsRound: React.FC<ButtonRoundProps> = (props: ButtonRoundProps) => {
     iconTxtColorClass,
     onClick,
     disabled,
+    pointerEvents,
   } = props;
 
   return (
     <>
       <div
         className={`
+        ${
+          pointerEvents !== undefined && pointerEvents === false
+            ? 'pointer-events-none'
+            : ''
+        }
         ${containerBgClass ? containerBgClass : 'bg-white'} 
         ${containerWHClass ? containerWHClass : 'w-12 h-12'}
         flex-none flex items-center justify-center`}>
         <div
           className={`
+          ${
+            pointerEvents !== undefined && pointerEvents === false
+              ? 'pointer-events-none'
+              : ''
+          }
           ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
           ${buttonBgClass ? buttonBgClass : 'bg-white'}
           ${buttonWHClass ? buttonWHClass : 'w-12 h-12'}

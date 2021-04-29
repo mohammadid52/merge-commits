@@ -1,4 +1,4 @@
-import API, { graphqlOperation } from '@aws-amplify/api';
+import API, {graphqlOperation} from '@aws-amplify/api';
 const queries = require('../graphql/queries');
 const customQueries = require('../customGraphql/customQueries');
 
@@ -27,12 +27,14 @@ export const handleFetchAndCache = async (query: SessionDataManagement['queryObj
   const sessionData = getSessionData(query);
 
   if (sessionData) {
-    console.log('session data --> ', query.valueObj);
+    // console.log('session data --> ', query.valueObj);
     return sessionData;
   } else {
     try {
-      const fetchData: any = await API.graphql(graphqlOperation(querySource[querySelector], query.valueObj));
-      console.log('new fetch -> ', query.valueObj);
+      const fetchData: any = await API.graphql(
+        graphqlOperation(querySource[querySelector], query.valueObj)
+      );
+      // console.log('new fetch -> ', query.valueObj);
       setSessionData(query, fetchData);
       return fetchData;
     } catch (e) {

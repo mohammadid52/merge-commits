@@ -16,8 +16,6 @@ const ExpandedMenu = (props: {
   setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   chatroom?: any;
   setChatroom?: React.Dispatch<React.SetStateAction<any>>;
-  isChatActive: boolean;
-  toggleChat: (desiredState: boolean) => void;
 }) => {
   const {
     menuState,
@@ -26,8 +24,6 @@ const ExpandedMenu = (props: {
     setFocusSection,
     chatroom,
     setChatroom,
-    isChatActive,
-    toggleChat,
   } = props;
   const {state, clientKey} = useContext(GlobalContext);
 
@@ -35,8 +31,8 @@ const ExpandedMenu = (props: {
     if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
       setChatroom(roomObj);
     }
-    if (focusSection !== 'Chat') {
-      setFocusSection('Chat');
+    if (focusSection !== 'Chatroom') {
+      setFocusSection('Chatroom');
     }
     setMenuState(2);
   };
@@ -67,9 +63,6 @@ const ExpandedMenu = (props: {
     return widgets.filter((widgetObj: Widget) => widgetObj.type === 'file');
   };
 
-  // ${menuState === 0 ? 'w-auto h-100 overflow-hidden' : ''}
-  // ${menuState === 1 && 'w-56 h-128'}
-  // ${menuState === 2 && 'w-84 h-136'}
   return (
     <div
       className={`
@@ -77,36 +70,44 @@ const ExpandedMenu = (props: {
       <div
         className={`
         absolute w-full h-full
-        transform transition-all ease-in-out duration-700 
-        ${isChatActive ? 'py-2' : 'p-2 '}
+        transform transition-transform ease-in-out duration-700 
+        ${menuState > 0 && focusSection === 'Chatroom' ? 'pt-2 pr-2 bg-container' : ''}
+        ${menuState > 0 && focusSection !== 'Chatroom' ? 'p-2 bg-gray-700' : ''}
+        ${menuState > 0 ? '' : 'w-0 p-2 invisible'}
+         overflow-hidden
         flex flex-col`}>
         <SideMenuSection
           menuState={menuState}
           sectionLabel={`Chat`}
-          sectionTitle={`${
-            Object.keys(chatroom).length > 0 ? chatroom.name + ' Chat' : 'Chat Rooms'
-          }`}
-          focusSection={focusSection}
-          isChatActive={isChatActive}>
+          sectionTitle={`Chat Rooms`}
+          focusSection={focusSection}>
           <Rooms chatroom={chatroom} setSelectedChatroom={setSelectedChatroom} />
-          <RoomChat selectedRoom={chatroom} focusSection={focusSection} />
         </SideMenuSection>
         <SideMenuSection
           menuState={menuState}
           sectionLabel={`Call`}
           sectionTitle={'Call Links'}
-          focusSection={focusSection}
-          isChatActive={isChatActive}>
+          focusSection={focusSection}>
           <CallWidgetsSmall widgets={getCallWidgets()} />
         </SideMenuSection>
         <SideMenuSection
           menuState={menuState}
           sectionLabel={`File`}
           sectionTitle={'File Links'}
-          focusSection={focusSection}
-          isChatActive={isChatActive}>
+          focusSection={focusSection}>
           <FileWidgetsSmall widgets={getFileWidgets()} />
         </SideMenuSection>
+        {focusSection === 'Chatroom' && (
+          <SideMenuSection
+            menuState={menuState}
+            sectionLabel={`Chatroom`}
+            sectionTitle={`${
+              Object.keys(chatroom).length > 0 ? chatroom.name + ' Chat' : 'Chat Rooms'
+            }`}
+            focusSection={focusSection}>
+            <RoomChat selectedRoom={chatroom} focusSection={focusSection} />
+          </SideMenuSection>
+        )}
       </div>
     </div>
   );

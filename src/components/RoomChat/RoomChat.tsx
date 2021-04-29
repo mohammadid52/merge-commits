@@ -6,6 +6,8 @@ import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {IconContext} from 'react-icons';
 import {AiOutlineSend} from 'react-icons/all';
+import isEmpty from 'lodash/isEmpty';
+import MessageGroupWrapper from './MessageGroupWrapper';
 
 interface RoomChatProps {
   selectedRoom: any;
@@ -49,42 +51,86 @@ const RoomChat = (props: RoomChatProps) => {
 
   const showLoader = () => {
     return (
-      <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
-        Loading room messages...
+      <div className={`absolute inset-0 flex  items-center justify-center p-2`}>
+        <p className="w-min text-center text-lg font-light text-charcoal">
+          Loading chat...
+        </p>
       </div>
     );
   };
 
   const showNomsgs = () => {
     return (
-      <div
-        className={`flex flex-col flex-1 p-2 bg-gradient-to-t from-gray-500 to-gray-600`}>
-        <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
-          No recent messages (24 hrs)
-        </div>
+      <div className={`absolute inset-0 flex  items-center justify-center p-2`}>
+        <p className="w-min text-center text-lg font-light text-charcoal">
+          No recent messages.
+        </p>
       </div>
     );
   };
 
-  const listMsgs = () => {
-    return (
-      <div
-        className={`flex flex-col flex-1 p-2 bg-gradient-to-t from-gray-500 to-gray-600`}>
-        {msgs.map((msg: any, index: any) => {
+  const groupMessages = (msgArray: any[], tmpArray: any[], outArray: any[]): any[] => {
+    const [head, ...tail] = msgArray;
+    if (typeof head === 'undefined') {
+      if (tmpArray.length === 0) {
+        return outArray;
+      } else if (tmpArray.length > 0) {
+        return [...outArray, tmpArray];
+      }
+    } else {
+      if (tmpArray.length === 0) {
+        return groupMessages(tail, [head], outArray);
+      } else if (tmpArray.length > 0) {
+        if (head.sender.email === tmpArray[0].sender.email) {
+          return groupMessages(tail, [...tmpArray, head], outArray);
+        } else {
+          return groupMessages([head, ...tail], [], [...outArray, tmpArray]);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (msgs) {
+      const groupedMessages = groupMessages(msgs, [], []);
+      console.log('groupedMessages - ', groupedMessages);
+    }
+  }, [msgs]);
+
+  const userEmail = !isEmpty(state) ? state.user.email : null;
+
+  const listMsgs = (messageArray: any[]) => {
+    const groupedMessages = groupMessages(messageArray, [], []);
+    if (groupedMessages) {
+      const mappedMessageGroups = groupedMessages.map(
+        (messageGroup: any[], idx: number) => {
+          const senderWholeName = `${messageGroup[0].sender.firstName}`;
+          const senderIsMe = messageGroup[0].sender.email === userEmail;
           return (
-            <div key={index} className={`animate-slideUp`}>
-              {msg.sender.firstName}: {msg.body}
-              {/*{msg.sender.id === state.user.id ? (*/}
-              {/*  <div>*/}
-              {/*    <button onClick={() => editMsg(msg)}>Edit</button>*/}
-              {/*    <button onClick={() => deleteMsg(msg)}>Delete</button>*/}
-              {/*  </div>*/}
-              {/*) : null}*/}
-            </div>
+            <MessageGroupWrapper
+              key={`messageGroup_${idx}`}
+              senderIsMe={senderIsMe}
+              senderName={senderWholeName}>
+              {messageGroup &&
+                messageGroup.map((msg: any, index: any) => {
+                  return (
+                    <span key={`singlemessage_${idx}_${index}`}>
+                      {msg.body}
+                      {/*{msg.sender.id === state.user.id ? (*/}
+                      {/*  <div>*/}
+                      {/*    <button onClick={() => editMsg(msg)}>Edit</button>*/}
+                      {/*    <button onClick={() => deleteMsg(msg)}>Delete</button>*/}
+                      {/*  </div>*/}
+                      {/*) : null}*/}
+                    </span>
+                  );
+                })}
+            </MessageGroupWrapper>
           );
-        })}
-      </div>
-    );
+        }
+      );
+      return mappedMessageGroups;
+    }
   };
 
   const showRoomMsgs = () => {
@@ -92,37 +138,42 @@ const RoomChat = (props: RoomChatProps) => {
       return showNomsgs();
     }
     if (Array.isArray(msgs) && msgs.length) {
-      return listMsgs();
+      return listMsgs(msgs);
     }
   };
 
   const msgInputBox = () => {
     return (
-      <div className={`h-12 flex flex-none`}>
-        <form className={`flex flex-row`} onSubmit={(e) => sendMsg(e)}>
-          <input
-            className={`flex-1`}
-            type="text"
-            name="message"
-            placeholder="Type your message here..."
-            onChange={handleChange}
-            value={msg}
-          />
-          <div className={`flex-none bg-white w-12 h-12`}>
-            <div
-              className={`w-12 h-12 flex items-center cursor-pointer border border-indigo-600 bg-white shadow-sm rounded-full hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400`}
-              onClick={(e) => sendMsg(e)}>
-              <IconContext.Provider
-                value={{
-                  className:
-                    'w-auto h-auto mx-auto my-auto text-indigo-600 pointer-events-none',
-                }}>
-                <AiOutlineSend size={32} />
-              </IconContext.Provider>
-            </div>
+      <form className={`flex flex-row px-2`} onSubmit={(e) => sendMsg(e)}>
+        <input
+          className={`rounded-full px-2 mr-2 text-sm flex-1 border-2 border-gray-400 shadow-sm `}
+          type="text"
+          name="message"
+          placeholder="Type your message here..."
+          onChange={handleChange}
+          value={msg}
+        />
+        <div
+          id={`sendMsg-button-container`}
+          onClick={(e) => sendMsg(e)}
+          className={`
+            w-10 h-10 
+            flex items-center content-center justify-center flex-none 
+            cursor-pointer`}>
+          <div
+            className={`
+            w-10 h-10 flex items-center content-center justify-center 
+            rounded-full bg-indigo-600
+            shadow hover:shadow-lg`}>
+            <IconContext.Provider
+              value={{
+                className: 'w-auto h-auto mx-auto my-auto text-white pointer-events-none',
+              }}>
+              <AiOutlineSend size={24} />
+            </IconContext.Provider>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     );
   };
 
@@ -265,15 +316,29 @@ const RoomChat = (props: RoomChatProps) => {
   }, [msgs]);
 
   return (
-    focusSection &&
-    focusSection === 'Chat' &&
-    Object.keys(selectedRoom).length > 0 && (
-      <div id={`roomchat_container`} className={`flex flex-col flex-1`}>
-        {loading && showLoader()}
-        {!loading && showRoomMsgs()}
-        {!loading && msgInputBox()}
+    <>
+      <div id={`roomchat_container`} className={`flex-1 bg-container`}>
+        <div className={`${loading ? 'p-2 absolute inset-0 top-2.5 bottom-0' : 'h-0'}`}>
+          {showLoader()}
+        </div>
+
+        <div
+          className={`absolute bottom-3.5 h-6 min-w-48 bg-gradient-to-t from-gray-100 to-transparent pointer-events-none z-50`}
+        />
+        <div
+          className={`
+                      transform transition-opacity ease-in-out duration-700 
+                      ${!loading ? 'opacity-100' : 'opacity-0'}
+                      absolute inset-0 top-3 bottom-3.5 overflow-y-scroll container_background
+                      border-t-0 border-gray-400`}>
+          {!loading && showRoomMsgs()}
+        </div>
       </div>
-    )
+      <div
+        className={`flex-none absolute bottom-0 h-14 flex items-center border-t-0 border-b-0 border-gray-400`}>
+        {msgInputBox()}
+      </div>
+    </>
   );
 };
 

@@ -66,7 +66,15 @@ const Rooms = (props: Rooms) => {
                 key={index}
                 onClick={() => setSelectedChatroom(rm)}
                 type="button"
-                className="truncate inline-flex items-center p-2 mb-2 border border-gray-200 text-gray-200 bg-gray-600 shadow-sm text-xs font-medium rounded hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                className={`
+                    ${index > 0 && index < rooms.length - 1 ? 'my-2' : ''}
+                    p-2
+                    truncate inline-flex 
+                    items-center
+                    border border-gray-200 
+                    text-gray-200 bg-gray-500 
+                    shadow-sm text-xs font-medium rounded 
+                    hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
                 {rm.name}
               </button>
             );
