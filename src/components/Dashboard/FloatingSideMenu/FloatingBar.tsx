@@ -39,6 +39,10 @@ export const FloatingBar = (props: {
         if (focusSection !== section) setFocusSection('File');
         setMenuState(1, section);
         break;
+      case '':
+        if (focusSection === section) setFocusSection('Chat');
+        setMenuState(1, 'Chat');
+        break;
       default:
         break;
     }
@@ -50,7 +54,7 @@ export const FloatingBar = (props: {
       className={`
       w-12 -translate-x-12 left-0 top-1/2 -translate-y-1/2
       absolute 
-      transform transition-all ease-in-out duration-700 
+      transform transition-all ease-in-out duration-400 
         ${menuState === 0 && 'h-100'}
         ${menuState === 1 && 'h-128'}
         ${menuState === 2 && 'h-136'}
@@ -93,33 +97,16 @@ export const FloatingBar = (props: {
         />
       </div>
       <div
-        className={`flex flex-1 flex-col items-center justify-center text-center items-center bg-charcoal rounded-bl-lg cursor-pointer`}>
+        onClick={() => handleSectionButtons(focusSection)}
+        className={`flex flex-1 flex-col items-center justify-center text-center items-center bg-charcoal hover:bg-gray-800 rounded-bl-lg cursor-pointer`}>
         <div
           className={`transform -rotate-90 w-max flex flex-1 justify-center content-center items-center`}>
           <div
             className={`text-sm font-regular text-white w-64 h-8 text-center transform translate-y-1`}>
             Links & Chatrooms
           </div>
-          {/*<ButtonsRound*/}
-          {/*  Icon={menuState > 0 ? AiOutlineArrowDown : AiOutlineArrowUp}*/}
-          {/*  iconSizePX={24}*/}
-          {/*  buttonWHClass={`w-8 h-8`}*/}
-          {/*  containerBgClass={`bg-transparent h-auto hover:bg-gray-800`}*/}
-          {/*  buttonBgClass={`bg-transparent`}*/}
-          {/*  iconTxtColorClass={`text-white`}*/}
-          {/*/>*/}
         </div>
       </div>
-      {/*<div className={`flex-0 h-12`}>*/}
-      {/*  <ButtonsRound*/}
-      {/*    Icon={AiOutlineInfoCircle}*/}
-      {/*    iconSizePX={16}*/}
-      {/*    buttonWHClass={`w-8 h-8`}*/}
-      {/*    containerBgClass={`bg-transparent hover:bg-gray-800`}*/}
-      {/*    buttonBgClass={`bg-transparent`}*/}
-      {/*    iconTxtColorClass={`text-indigo-400`}*/}
-      {/*  />*/}
-      {/*</div>*/}
     </div>
   );
 };

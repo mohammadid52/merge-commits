@@ -31,9 +31,9 @@ export const SideMenuSection = (props: {
     <div
       className={`
       relative
-      ${menuState > 1 ? 'px-2' : ''}
-      transform  ease-in-out duration-700
-       ${thisSectionActive ? 'opacity-100 flex-grow flex-1' : 'h-0 opacity-0'}
+      transform transition-all ease-in-out duration-400
+       ${thisSectionActive ? 'opacity-100 flex-grow flex-1' : 'w-0 opacity-0'}
+       ${thisSectionActive && menuState === 1 ? 'px-2' : ''}
       flex flex-col
     `}>
       {menuState > 0 && thisSectionActive ? (
@@ -41,8 +41,8 @@ export const SideMenuSection = (props: {
           <p
             className={`h-12 max-w-72 truncate overflow-ellipsis overflow-hidden ${
               menuState === 2
-                ? 'text-gray-900 text-xl'
-                : 'ml-2 text-indigo-100 text-sm border-b-0 border-gray-400'
+                ? 'pl-2 text-gray-800 text-xl'
+                : 'text-indigo-100 text-sm border-b-0 border-gray-400'
             } flex items-center  font-medium z-50`}>
             {sectionTitle || 'Section Title'}{' '}
           </p>
@@ -67,11 +67,11 @@ export const SideMenuSection = (props: {
 
       {children ? (
         menuState === 1 && thisSectionActive ? (
-          <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg p-2`}>
+          <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg pt-2`}>
             {children}
           </div>
         ) : menuState === 2 && thisSectionActive ? (
-          <div className={`flex flex-col flex-1 p-2`}>{children}</div>
+          <div className={`flex flex-col flex-1 pt-2`}>{children}</div>
         ) : null
       ) : null}
     </div>

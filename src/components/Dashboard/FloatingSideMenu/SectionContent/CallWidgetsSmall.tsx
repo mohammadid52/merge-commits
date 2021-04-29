@@ -46,13 +46,12 @@ export const CallWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}
   return (
     <>
       {widgets.length > 0 ? (
-        widgets.map((widgetObj: Widget, idx: number) => {
-          return widgetObj.links.map((link: Link, idx1: number) => (
-            <div key={`${widgetObj.id}_${idx}_${idx1}`}>
-              {/**
-               * MOBILE VERSION WIDGET ICON
-               */}
-              <span className={`w-full mr-0 mb-2 flex flex-col`}>
+        <div className={`grid grid-cols-3`}>
+          {widgets.map((widgetObj: Widget, idx: number) => {
+            return widgetObj.links.map((link: Link, idx1: number) => (
+              <span
+                key={`${widgetObj.id}_${idx}_${idx1}`}
+                className={`w-full mr-0 mb-2 flex flex-col`}>
                 <a
                   id={`links_${idx}_mini`}
                   className={`text-center text-gray-200 text-xs hover:underline`}
@@ -76,9 +75,9 @@ export const CallWidgetsSmall = (props: {classProp?: string; widgets?: Widget[]}
                   </p>
                 </a>
               </span>
-            </div>
-          ));
-        })
+            ));
+          })}
+        </div>
       ) : (
         <div className="truncate inline-flex items-center p-2 mb-2 border-0 border-dashed border-gray-600 text-gray-200 shadow-sm text-xs font-medium rounded">
           No call links

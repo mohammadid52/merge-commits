@@ -68,12 +68,12 @@ const ExpandedMenu = (props: {
       <div
         className={`
         absolute w-full h-full
-        transform transition-transform ease-in-out duration-700 
+        transform transition-transform ease-in-out duration-400 
         ${menuState > 0 && focusSection === 'Chatroom' ? 'bg-container' : ''}
         ${menuState > 0 && focusSection !== 'Chatroom' ? 'bg-gray-600' : ''}
-        ${menuState > 0 ? '' : 'w-0 p-2 invisible'}
+        ${menuState > 0 ? '' : 'w-0 invisible'}
          overflow-hidden
-        flex flex-col`}>
+        flex flex-row`}>
         <SideMenuSection
           menuState={menuState}
           setMenuState={setMenuState}

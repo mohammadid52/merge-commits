@@ -28,7 +28,7 @@ const FloatingSideMenu = () => {
       <div
         className={`
         fixed
-        transform transition-all ease-in-out duration-700 
+        transform transition-all ease-in-out duration-400 
        ${menuOpenLevel === 0 ? 'w-0 -translate-x-0 h-100' : ''}
        ${menuOpenLevel === 1 ? 'w-56 -translate-x-56 h-128' : ''}
        ${menuOpenLevel === 2 ? 'w-84 -translate-x-84 h-136' : ''}
@@ -37,7 +37,7 @@ const FloatingSideMenu = () => {
         bg-gray-800 
         shadow`}>
         <div
-          className={`relative transition transition-all ease-in-out duration-700 w-full h-full`}>
+          className={`relative transition transition-all ease-in-out duration-400 w-full h-full`}>
           <FloatingBar
             menuState={menuOpenLevel}
             setMenuState={setMenuState}
