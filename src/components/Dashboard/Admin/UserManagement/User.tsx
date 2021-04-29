@@ -170,7 +170,7 @@ const User = () => {
       const sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
-        if (item && item.scope === 'private') sCheckpoints.push(item);
+        if (item) sCheckpoints.push(item);
       });
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
