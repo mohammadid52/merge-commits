@@ -4,11 +4,9 @@ import {useHistory} from 'react-router-dom';
 import ContentCard from '../../Atoms/ContentCard';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 
-import slice from 'lodash/slice';
-import filter from 'lodash/filter';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
-import SearchInput from '../../Atoms/Form/SearchInput';
+import SearchInput from '../../Atoms/Form/SearchInputToggle';
 
 const StudentsTiles = (props: {
   studentsList: any;
@@ -94,7 +92,7 @@ const StudentsTiles = (props: {
                   onChange={setSearch}
                   onKeyDown={searchStudentFromList}
                   closeAction={removeSearchAction}
-                  style="mr-4 w-full"
+                  style="w-full"
                 />
               </div>
             )}

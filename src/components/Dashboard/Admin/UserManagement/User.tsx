@@ -57,7 +57,10 @@ const User = () => {
   const [imageLoading, setImageLoading] = useState(false);
   const [questionData, setQuestionData] = useState([]);
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
-  const [urlState, setUrlState] = useUrlState({id: '', t: 0}, {navigateMode: 'replace'});
+  const [urlState, setUrlState] = useUrlState(
+    {id: '', t: 'p'},
+    {navigateMode: 'replace'}
+  );
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
