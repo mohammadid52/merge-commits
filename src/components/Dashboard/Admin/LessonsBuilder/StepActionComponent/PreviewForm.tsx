@@ -447,6 +447,7 @@ const PreviewForm = (props: PreviewFormProps) => {
           {enablePublish && (
             <div className="w-2/10 mx-auto py-4">
               <Buttons
+                disabled={lessonDetails?.checkpoints?.items?.length === 0}
                 btnClass="mx-auto w-full"
                 onClick={publishAction}
                 label={BUTTONS[userLanguage]['PUBLISH']}
