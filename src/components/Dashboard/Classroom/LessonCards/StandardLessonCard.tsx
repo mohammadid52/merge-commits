@@ -10,7 +10,15 @@ import BottomBar from './StandardLessonCard/BottomBar';
 import MainSummary from './StandardLessonCard/MainSummary';
 
 const StandardLessonCard = (props: LessonCardProps) => {
-  const {isTeacher, keyProps, roomID, lessonProps, accessible, lessonType} = props;
+  const {
+    isTeacher,
+    keyProps,
+    roomID,
+    activeRoomInfo,
+    lessonProps,
+    accessible,
+    lessonType,
+  } = props;
   const {theme} = useContext(GlobalContext);
 
   return (
@@ -32,6 +40,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
 
         <BottomBar
           isTeacher={isTeacher}
+          activeRoomInfo={activeRoomInfo}
           accessible={accessible}
           roomID={roomID}
           lessonProps={lessonProps}
