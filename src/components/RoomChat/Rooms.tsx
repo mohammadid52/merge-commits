@@ -24,6 +24,7 @@ const Rooms = (props: Rooms) => {
         authId: state.user.authId,
       })
     );
+    console.log('chatrooms query - ', rooms);
     let classes = rooms.data.getPerson?.classes?.items || [];
     let chatRooms: any = [];
     classes.map((cls: any, i: any) => {
@@ -63,10 +64,10 @@ const Rooms = (props: Rooms) => {
       ${Object.keys(chatroom).length > 0 ? 'h-0 overflow-hidden' : 'h-auto'}
       `}>
           {!(Object.keys(chatroom).length > 0) &&
-            rooms.reduce((acc: any[], rm: any, index: any) => {
+            rooms.map((rm: any, index: any) => {
               return (
                 <button
-                  key={index}
+                  key={`chatroom_${index}`}
                   onClick={() => setSelectedChatroom(rm)}
                   type="button"
                   className={`
