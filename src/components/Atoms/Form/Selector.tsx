@@ -1,9 +1,9 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import { getAsset } from '../../../assets';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import React, {useState, useRef, useContext, useEffect} from 'react';
+import {getAsset} from '../../../assets';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 interface SelectorProps {
-  list?: { id: number; name: string }[];
+  list?: {id: number; name: string}[];
   selectedItem?: string;
   btnClass?: string;
   arrowHidden?: boolean;
@@ -13,10 +13,18 @@ interface SelectorProps {
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
-  const { list, selectedItem, btnClass, disabled, arrowHidden, placeholder, onChange } = selectorProps;
+  const {
+    list,
+    selectedItem,
+    btnClass,
+    disabled,
+    arrowHidden,
+    placeholder,
+    onChange,
+  } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
-  const { theme, clientKey } = useContext(GlobalContext);
+  const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const updateSelectedItem = (str: string, name: string, id: string) => {
@@ -49,6 +57,13 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     }
   }, [showList]);
 
+  function capitalizeFirstLetter(str: string = '') {
+    if (str.length > 0) {
+      const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+      return capitalized;
+    }
+  }
+
   return (
     <div className="relative" ref={currentRef}>
       <span className="inline-block w-full h-full rounded-md shadow-sm">
@@ -61,16 +76,27 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           aria-labelledby="listbox-label"
           className={`${
             disabled ? 'bg-gray-100' : ''
-          } flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          } flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
-          <span className="block truncate text-gray-700">{selectedItem ? selectedItem : placeholder}</span>
+          <span className="block truncate text-gray-700">
+            {capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
+          </span>
           <span
             className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
               arrowHidden ? 'hidden' : 'flex'
             }`}>
-            <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
-              <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              className="h-5 w-5 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor">
+              <path
+                d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </span>
         </button>
@@ -83,7 +109,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             aria-activedescendant="listbox-item-3"
             className="rounded-md  max-h-60 py-1 text-base overflow-y-auto leading-6 focus:shadow-none focus:outline-none sm:text-sm sm:leading-5">
             {list.length > 0 ? (
-              list.map((item: { name: string; id: any; value: string }, key: number) => (
+              list.map((item: {name: string; id: any; value: string}, key: number) => (
                 <li
                   key={key}
                   onClick={() => updateSelectedItem(item.value, item.name, item.id)}
@@ -104,7 +130,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   </span>
                   <span
                     className={`${
-                      selectedItem === item.name ? 'font-semibold pl-4' : 'font-normal pl-9'
+                      selectedItem === item.name
+                        ? 'font-semibold pl-4'
+                        : 'font-normal pl-9'
                     } block truncate`}>
                     {item.name}
                   </span>

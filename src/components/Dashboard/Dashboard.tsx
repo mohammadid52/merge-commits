@@ -19,6 +19,7 @@ import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
 import {handleFetchAndCache} from '../../utilities/sessionData';
+import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -135,8 +136,6 @@ const Dashboard = (props: DashboardProps) => {
     i: number,
     route = 'classroom'
   ) => {
-    console.log(id, name, i, route);
-
     if (
       (state.activeRoom !== id && state.currentPage !== 'lesson-planner') ||
       (state.activeRoom !== id && state.currentPage !== 'classroom')
@@ -162,7 +161,6 @@ const Dashboard = (props: DashboardProps) => {
       const user: any = await API.graphql(
         graphqlOperation(queries.getPerson, queryObj.valueObj)
       );
-      console.log('getUser -> ', 'getUser fetch set to session');
       setUser(user.data.getPerson);
     } catch (error) {
       if (!userEmail && !userAuthId) {
@@ -282,7 +280,11 @@ const Dashboard = (props: DashboardProps) => {
   const getRoomsFromClassList =
     classList && classList.length > 0
       ? classList.reduce((acc: any[], classObj: any) => {
-          return [...acc, classObj.rooms.items[0]];
+          if (classObj.rooms.items.length > 0) {
+            return [...acc, classObj.rooms.items[0]];
+          } else {
+            return acc;
+          }
         }, [])
       : [];
 
@@ -636,7 +638,7 @@ const Dashboard = (props: DashboardProps) => {
     );
 
   return (
-    <div className="h-screen flex overflow-hidden container_background">
+    <div className="relative h-screen flex overflow-hidden container_background">
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}
@@ -651,6 +653,7 @@ const Dashboard = (props: DashboardProps) => {
       />
 
       <div className="h-full overflow-y-auto">
+        <FloatingSideMenu />
         <Noticebar inputContext={'global'} />
         <Suspense
           fallback={
@@ -679,6 +682,7 @@ const Dashboard = (props: DashboardProps) => {
               }}
             />
             <Route exact path={`${match.url}/home`} render={() => <HomeSwitch />} />
+
             <Route
               exact
               path={`${match.url}/classroom/:roomId`}

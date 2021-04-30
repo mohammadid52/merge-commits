@@ -1,25 +1,31 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, {useEffect, useState, useContext} from 'react';
+import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { FaEdit } from 'react-icons/fa';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {FaEdit} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
+import useUrlState from '@ahooksjs/use-url-state';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import * as mutations from '../../../../graphql/mutations';
+import * as customQueries from '../../../../customGraphql/customQueries';
+
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import { getImageFromS3 } from '../../../../utilities/services';
+import {getImageFromS3} from '../../../../utilities/services';
 import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
+import {getUniqItems} from '../../../../utilities/strings';
+import {sortBy} from 'lodash';
 
 export interface UserInfo {
   authId: string;
@@ -45,11 +51,17 @@ export interface UserInfo {
 const User = () => {
   const history = useHistory();
   const match = useRouteMatch();
-  const { theme, userLanguage, clientKey, state, dispatch } = useContext(GlobalContext);
+  const {theme, userLanguage, clientKey} = useContext(GlobalContext);
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [questionData, setQuestionData] = useState([]);
+  const [stdCheckpoints, setStdCheckpoints] = useState([]);
+  const [urlState, setUrlState] = useUrlState(
+    {id: '', t: 'p'},
+    {navigateMode: 'replace'}
+  );
 
   const [user, setUser] = useState<UserInfo>({
     id: '',
@@ -75,19 +87,101 @@ const User = () => {
   const location = useLocation();
   const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
-  const queryParams = queryString.parse(location.search);
-  const { UserDict, BreadcrumsTitles } = useDictionary(clientKey);
+
+  const {id, t: tab} = urlState;
+
+  const {UserDict, BreadcrumsTitles} = useDictionary(clientKey);
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['PEOPLE'], url: '/dashboard/manage-users', last: false },
-    { title: BreadcrumsTitles[userLanguage]['UserInfo'], url: `${location.pathname}${location.search}`, last: true },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['PEOPLE'],
+      url: '/dashboard/manage-users',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['UserInfo'],
+      url: `${location.pathname}${location.search}`,
+      last: true,
+    },
   ];
+
+  const getQuestionData = async (checkpointIDs: any[], user: any) => {
+    const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
+      return {
+        checkpointID: {
+          eq: item,
+        },
+      };
+    });
+    const filter = {
+      and: [
+        {email: {eq: user.email}},
+        {authID: {eq: user.authId}},
+        {syllabusLessonID: {eq: '999999'}},
+        {
+          or: [...checkpointIDFilter],
+        },
+      ],
+    };
+    const results: any = await API.graphql(
+      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+    );
+    const questionData: any = results.data.listQuestionDatas?.items;
+    setQuestionData(questionData);
+
+    // questionData.forEach(async (item: any) => {
+    //   await API.graphql(
+    //     graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
+    //   );
+    // });
+
+    console.log(questionData, 'questionData');
+  };
 
   async function getUserById(id: string) {
     try {
-      const result: any = await API.graphql(graphqlOperation(queries.userById, { id: id }));
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.userById, {id: id})
+      );
       const userData = result.data.userById.items.pop();
-      console.log(userData);
+
+      let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
+      studentClasses = studentClasses.filter((d: any) => d !== null);
+
+      const studentInstitutions: any = studentClasses?.map(
+        (item: any) => item?.institution
+      );
+      const studentRooms: any = studentClasses
+        ?.map((item: any) => item?.rooms?.items)
+        ?.flat(1);
+      const studentCurriculars: any = studentRooms
+        .map((item: any) => item?.curricula?.items)
+        .flat(1);
+      const uniqCurriculars: any = getUniqItems(
+        studentCurriculars.filter((d: any) => d !== null),
+        'curriculumID'
+      );
+      const studCurriCheckp: any = uniqCurriculars
+        .map((item: any) => item?.curriculum?.checkpoints?.items)
+        .flat(1);
+      const studentCheckpoints: any = studCurriCheckp.map(
+        (item: any) => item?.checkpoint
+      );
+
+      let sCheckpoints: any[] = [];
+
+      studentCheckpoints.forEach((item: any) => {
+        if (item) sCheckpoints.push(item);
+      });
+
+      sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
+
+      const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
+      const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
+      const personalInfo: any = {...userData};
+      delete personalInfo.classes;
+
+      setStdCheckpoints([...uniqCheckpoints]);
 
       setStatus('done');
       setUser(() => {
@@ -96,6 +190,10 @@ const User = () => {
         }
         return user;
       });
+
+      if (uniqCheckpointIDs?.length > 0) {
+        getQuestionData(uniqCheckpointIDs, userData);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -149,7 +247,7 @@ const User = () => {
     await uploadImageToS3(image, user.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(`user_profile_image_${user.id}`);
     setImageUrl(imageUrl);
-    setUser({ ...user, image: `user_profile_image_${user.id}` });
+    setUser({...user, image: `user_profile_image_${user.id}`});
     updateImageParam(`user_profile_image_${user.id}`);
 
     toggleCropper();
@@ -174,7 +272,9 @@ const User = () => {
     };
 
     try {
-      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }));
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updatePerson, {input: input})
+      );
       setUser({
         ...user,
       });
@@ -202,7 +302,6 @@ const User = () => {
   };
 
   useEffect(() => {
-    let id = queryParams.id;
     if (typeof id === 'string') {
       getUserById(id);
     }
@@ -214,6 +313,10 @@ const User = () => {
 
   const disableProfileChange = user.role !== 'ST';
 
+  const setTab = (value: string) => {
+    setUrlState({t: value});
+  };
+
   {
     return (
       <>
@@ -223,7 +326,12 @@ const User = () => {
             <SectionTitle title={UserDict[userLanguage]['title']} />
 
             <div className="flex justify-end py-4 mb-4 w-5/10">
-              <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+              <Buttons
+                label="Go Back"
+                btnClass="mr-4"
+                onClick={history.goBack}
+                Icon={IoArrowUndoCircleOutline}
+              />
               {currentPath !== 'edit' ? (
                 <Buttons
                   btnClass="mr-4 px-6"
@@ -234,7 +342,8 @@ const User = () => {
               ) : null}
             </div>
           </div>
-          <div className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
+          <div
+            className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
             <div className="h-9/10 flex flex-col md:flex-row">
               <div className="w-1/3 p-4 flex flex-col text-center items-center">
                 <div className="cursor-pointer">
@@ -243,10 +352,17 @@ const User = () => {
                       {!imageLoading ? (
                         <>
                           <label className="cursor-pointer">
-                            <img
-                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                              src={imageUrl}
-                            />
+                            {imageUrl ? (
+                              <img
+                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                src={imageUrl}
+                              />
+                            ) : (
+                              <div
+                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                              />
+                            )}
+
                             <input
                               type="file"
                               className="hidden"
@@ -272,10 +388,16 @@ const User = () => {
                           <div
                             className="h-full w-full flex justify-center items-center text-5xl text-extrabold text-white rounded-full"
                             style={{
-                              background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`,
+                              /* stylelint-disable */
+                              background: `${stringToHslColor(
+                                user.firstName + ' ' + user.lastName
+                              )}`,
                               textShadow: '0.2rem 0.2rem 3px #423939b3',
                             }}>
-                            {initials(user.preferredName ? user.preferredName : user.firstName, user.lastName)}
+                            {initials(
+                              user.preferredName ? user.preferredName : user.firstName,
+                              user.lastName
+                            )}
                           </div>
                         </div>
                       ) : (
@@ -293,19 +415,44 @@ const User = () => {
                     </label>
                   )}
                 </div>
-                <div className={`text-lg md:text-3xl font-bold font-open text-gray-900 mt-4`}>
-                  {`${user.preferredName ? user.preferredName : user.firstName} ${user.lastName}`}
-                  <p className="text-md md:text-lg">{`${user.institution ? user.institution : ''}`}</p>
+                <div className={`text-lg md:text-3xl font-bold  text-gray-900 mt-4`}>
+                  {`${user.preferredName ? user.preferredName : user.firstName} ${
+                    user.lastName
+                  }`}
+                  <p className="text-md md:text-lg">{`${
+                    user.institution ? user.institution : ''
+                  }`}</p>
                 </div>
               </div>
               <Switch>
                 <Route
                   path={`${match.url}/edit`}
                   render={() => (
-                    <UserEdit user={user} status={status} setStatus={setStatus} getUserById={getUserById} />
+                    <UserEdit
+                      tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                      setTab={setTab}
+                      user={user}
+                      status={status}
+                      setStatus={setStatus}
+                      getUserById={getUserById}
+                      questionData={questionData}
+                      stdCheckpoints={stdCheckpoints}
+                    />
                   )}
                 />
-                <Route path={`${match.url}/`} render={() => <UserInformation user={user} status={status} />} />
+                <Route
+                  path={`${match.url}/`}
+                  render={() => (
+                    <UserInformation
+                      tab={stdCheckpoints.length > 0 ? tab : 'p'}
+                      setTab={setTab}
+                      questionData={questionData}
+                      stdCheckpoints={stdCheckpoints}
+                      user={user}
+                      status={status}
+                    />
+                  )}
+                />
               </Switch>
             </div>
           </div>

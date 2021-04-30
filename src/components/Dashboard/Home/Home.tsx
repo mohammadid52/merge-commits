@@ -69,16 +69,20 @@ const Home = (props: ClassroomControlProps) => {
   const getTeacherList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
-          const teacherIsPresent = acc?.find(
-            (teacher: any) =>
-              teacher?.firstName === teacherObj?.firstName &&
-              teacher?.lastName === teacherObj?.lastName
-          );
-          if (teacherIsPresent) {
-            return acc;
+          if (dataObj?.class?.rooms.items.length > 0) {
+            const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+            const teacherIsPresent = acc?.find(
+              (teacher: any) =>
+                teacher?.firstName === teacherObj?.firstName &&
+                teacher?.lastName === teacherObj?.lastName
+            );
+            if (teacherIsPresent) {
+              return acc;
+            } else {
+              return [...acc, teacherObj];
+            }
           } else {
-            return [...acc, teacherObj];
+            return acc;
           }
         }, [])
       : [];
@@ -89,32 +93,38 @@ const Home = (props: ClassroomControlProps) => {
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
-        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
-          item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
-            coTeachersList.push(_item.teacher);
-          });
+        if (item?.class?.rooms?.items.length > 0) {
+          if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
+            item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
+              coTeachersList.push(_item.teacher);
+            });
+          }
         }
       });
 
     return coTeachersList;
   };
 
-  const teacherListWithImages = Promise.all(
-    getTeacherList.map(async (teacherObj: any, idx: number) => {
-      return {
-        ...teacherObj,
-        image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
-      };
-    })
-  );
-  const coTeacherListWithImages = Promise.all(
-    getCoTeacherList().map(async (teacherObj: any, idx: number) => {
-      return {
-        ...teacherObj,
-        image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
-      };
-    })
-  );
+  const teacherListWithImages =
+    getTeacherList.length > 0 &&
+    Promise.all(
+      getTeacherList.map(async (teacherObj: any, idx: number) => {
+        return {
+          ...teacherObj,
+          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+        };
+      })
+    );
+  const coTeacherListWithImages =
+    getCoTeacherList().length > 0 &&
+    Promise.all(
+      getCoTeacherList().map(async (teacherObj: any, idx: number) => {
+        return {
+          ...teacherObj,
+          image: await (teacherObj.image ? getImageURL(teacherObj.image) : null),
+        };
+      })
+    );
 
   const getStudentsList =
     homeData && homeData.length > 0
@@ -213,7 +223,7 @@ const Home = (props: ClassroomControlProps) => {
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
                 </span>
-                , What do you want to {isTeacher ? 'teach' : 'learn'} today?
+                . What do you want to {isTeacher ? 'teach' : 'learn'} today?
               </h2>
             </div>
           )}
@@ -226,17 +236,19 @@ const Home = (props: ClassroomControlProps) => {
           />
 
           {/* Teachers Section */}
-          <div className="my-8">
-            <SectionTitleV3
-              title={'Your Teachers'}
-              fontSize="xl"
-              fontStyle="semibold"
-              extraContainerClass="max-w-256 px-6"
-              borderBottom
-              extraClass="leading-6 text-gray-900"
-            />
-            <TeacherRows coTeachersList={coTeachersList} teacherList={teacherList} />
-          </div>
+          {teacherList && teacherList.length > 0 && (
+            <div className="my-8">
+              <SectionTitleV3
+                title={'Your Teachers'}
+                fontSize="xl"
+                fontStyle="semibold"
+                extraContainerClass="max-w-256 px-6"
+                borderBottom
+                extraClass="leading-6 text-gray-900"
+              />
+              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+            </div>
+          )}
           {/* Classmates Section */}
           <div className="my-6">
             <StudentsTiles

@@ -2025,6 +2025,134 @@ export const listLessonRubricss = /* GraphQL */ `
   }
 `;
 
+export const userById = /* GraphQL */ `
+  query UserById(
+    $id: ID
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userById(
+      id: $id
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          items {
+            classID
+            class {
+              id
+              institutionID
+              institution {
+                name
+                checkpoints {
+                  items {
+                    type
+                    typeID
+                    checkpoint {
+                      scope
+                      id
+                      label
+                      title
+                      questions {
+                        items {
+                          id
+                          required
+                          question {
+                            id
+                            label
+                            type
+                            question
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              rooms {
+                items {
+                  id
+                  curricula {
+                    items {
+                      curriculumID
+                      curriculum {
+                        name
+                        checkpoints {
+                          items {
+                            type
+                            typeID
+                            checkpoint {
+                              scope
+                              id
+                              label
+                              title
+                              questions {
+                                items {
+                                  id
+                                  required
+                                  question {
+                                    id
+                                    label
+                                    type
+                                    question
+                                    options {
+                                      text
+                                      label
+                                      icon
+                                      color
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    nextToken
+                  }
+                }
+                nextToken
+              }
+            }
+          }
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getPersonData = /* GraphQL */ `
   query GetPerson($email: String!, $authId: String!) {
     getPerson(email: $email, authId: $authId) {
@@ -2061,6 +2189,7 @@ export const getPersonData = /* GraphQL */ `
                   type
                   typeID
                   checkpoint {
+                    scope
                     id
                     label
                     title
@@ -2093,6 +2222,7 @@ export const getPersonData = /* GraphQL */ `
                           type
                           typeID
                           checkpoint {
+                            scope
                             id
                             label
                             title
@@ -2158,6 +2288,7 @@ export const getCheckpointDetails = /* GraphQL */ `
       title
       stage
       type
+      scope
       questions {
         items {
           id

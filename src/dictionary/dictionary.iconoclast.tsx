@@ -129,7 +129,8 @@ const dashboardProfileDict: any = {
       SAVE: 'Save New Password',
       CANCEL: 'Cancel',
       SUCCESS_MSG: 'Success',
-      WARN_MSG: 'This will log you out and take you to the reset password page, do you want to continue?',
+      WARN_MSG:
+        'This will log you out and take you to the reset password page, do you want to continue?',
       CONTINUE_BTN: 'Continue',
       ERRORS: {
         NO_OLD_PASS: 'Please enter your old password',
@@ -142,7 +143,8 @@ const dashboardProfileDict: any = {
   ES: {
     PROFILE: 'Perfil',
     TITLE: 'PERFIL DEL USUARIO',
-    PROFILE_INSTRUCTON: 'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
+    PROFILE_INSTRUCTON:
+      'Haga clic en el círculo de arriba para actualizar la imagen de perfil.',
     SUBTITLE: 'Esto contiene la información de su perfil.',
     PERSONAL_INFO: {
       TITLE: 'Informacion personal',
@@ -175,7 +177,8 @@ const dashboardProfileDict: any = {
     },
     CHANGE_PASSWORD: {
       TITLE: 'Cambia tu contraseña',
-      INFO: 'La contraseña debe tener al menos 8 caracteres e incluir mayúsculas y minúsculas',
+      INFO:
+        'La contraseña debe tener al menos 8 caracteres e incluir mayúsculas y minúsculas',
       OLD_PASS: 'Contraseña anterior',
       NEW_PASS: 'Nueva contraseña',
       CONFIRM_PASS: 'Confirmar contraseña',
@@ -206,7 +209,7 @@ const anthologyDict: any = {
     ACTIONS: {
       EDIT: 'Edit',
       SAVE: 'Save',
-      CREATE: 'Create New',
+      CREATE: 'New Entry',
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
@@ -216,8 +219,8 @@ const anthologyDict: any = {
     TITLE: 'Cuaderno',
     TABS: {
       A: 'Diario',
-      B: 'Class Work',
-      C: 'Class Notes',
+      B: 'trabajo en clase',
+      C: 'Apuntes de clase',
     },
     ACTIONS: {
       EDIT: 'Editar',
@@ -340,7 +343,8 @@ const spBuilderDict: any = {
     ACTION: 'Actions',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
-    INFO: 'This institute does not have any service provider. Please add new service provider.',
+    INFO:
+      'This institute does not have any service provider. Please add new service provider.',
   },
   ES: {
     TITLE: 'PROVEEDORES DE SERVICIO',
@@ -468,9 +472,12 @@ const noticeboardDict: any = {
     WIDGET_DESCRIPTION: {
       TEXT:
         'This is the default text widget. Use this if you want to show a text message/notice to students in your room.',
-      QUOTES: 'Add multiple quotes above the lessons or to the side widget bar to inspire your students.',
-      CALL: "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
-      FILE: 'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.',
+      QUOTES:
+        'Add multiple quotes above the lessons or to the side widget bar to inspire your students.',
+      CALL:
+        "This is a basic widget to post the zoom/meet/teams links you'll use to communicate with your students.",
+      FILE:
+        'This is a basic widget to share your drive/onedrive/dropbox files for student assignments etc.',
     },
   },
   ES: {
@@ -652,12 +659,14 @@ const PreviewFormDict: any = {
 
     MESSAGES: {
       UPDATESUCCESS: 'Successfully updated lesson plans in all units.',
-      UPDATEERR: 'Error while updating lesson plans for units, please try again after some time.',
+      UPDATEERR:
+        'Error while updating lesson plans for units, please try again after some time.',
       CONNECTERR: 'This lesson is not connected to any units.',
       FETCHERR: 'Error while fetching units for this lesson.Please try after some time.',
     },
     PREVIEW_DETAILS: {
-      WARN_MESSAGE: 'Changes will applay to all assigned lesson plans. Do you want to continue?',
+      WARN_MESSAGE:
+        'Changes will applay to all assigned lesson plans. Do you want to continue?',
       TITLE: 'Preview Details',
     },
   },
@@ -973,7 +982,8 @@ const InstitueRomms: any = {
     ACTION: 'Actions',
     EDIT: 'Edit',
     messages: {
-      nothaveclass: 'This institute does not have any classroom. Please create a new classroom.',
+      nothaveclass:
+        'This institute does not have any classroom. Please create a new classroom.',
       fetcherr: 'Error while fetching classroom data please Try again later.',
     },
     BUTTON: {
@@ -1018,12 +1028,16 @@ const classBuilderdict: any = {
     },
     MESSAGES: {
       ERROR: {
-        FETCHSTUDENT: 'Error while fetching student list, Please try again or you can add them later.',
-        FETCHINSTITUTION: 'Error while fetching institution list, Please try again later.',
-        STUDENTADDERROR: 'Error while adding students data, you can add them saperately from class.',
+        FETCHSTUDENT:
+          'Error while fetching student list, Please try again or you can add them later.',
+        FETCHINSTITUTION:
+          'Error while fetching institution list, Please try again later.',
+        STUDENTADDERROR:
+          'Error while adding students data, you can add them saperately from class.',
         SAVECLASSERROR: 'Unable to save new class. Please try again later.',
         PROCESSINGERROR: 'Error while processing please Try again later.',
-        INVALIDPATH: 'Invalid path please go back to institution selection page to select your institute.',
+        INVALIDPATH:
+          'Invalid path please go back to institution selection page to select your institute.',
       },
       VALIDATION: {
         NAME: 'Class name is required please enter.',
@@ -1087,7 +1101,8 @@ const CurricularBuilderdict: any = {
         fetch: 'Unable to fetch institution list pleas try later.',
         designerlist: 'Error while fetching Designers list Please try again later.',
         process: 'Error while processing please Try again later.',
-        invalid: 'Invalid path please go back to institution selection page to select your institute.',
+        invalid:
+          'Invalid path please go back to institution selection page to select your institute.',
       },
       validation: {
         name: 'Curricular name is required please enter name.',
@@ -1170,7 +1185,8 @@ const RoomBuilderdict: any = {
         process: 'Error while processing please Try again later.',
         classroomadd: 'Error while adding Classroom curricular. Please try again later.',
         ecreateclass: 'Error while creating Classroom. Please try again later.',
-        invalid: 'Invalid path please go back to institution selection page to select your institute.',
+        invalid:
+          'Invalid path please go back to institution selection page to select your institute.',
       },
       validation: {
         classroomname: 'Classroom name is required please enter name.',
@@ -1313,9 +1329,11 @@ const RoomEDITdict: any = {
     messages: {
       institutebefor: 'Please create an institute before creating Classroom.',
       unabletofetch: 'Unable to fetch institution list. Please try again later.',
-      addstaffirst: 'Please add staff member first for the selected institute or select another institute.',
+      addstaffirst:
+        'Please add staff member first for the selected institute or select another institute.',
       unableteacher: 'Unable to fetch teachers list. Please try again later.',
-      addclassfirst: 'Please add class first for the selected institute or select another institute.',
+      addclassfirst:
+        'Please add class first for the selected institute or select another institute.',
       unableclass: 'Unable to fetch class list. Please try again later.',
       unablecurricular: 'Unable to fetch curricular list. Please try again later.',
       errorprocess: 'Error while processing please Try again later.',
@@ -1443,7 +1461,8 @@ const CHECKPOINTSDICT: any = {
 const LEARINGOBJECTIVEDICT: any = {
   EN: {
     TITLE: 'LEARNING OBJECTIVES',
-    INFO: 'This curricular does not have any learning objectives yet. Please create a new one.',
+    INFO:
+      'This curricular does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
       ADD: 'Add New Learning Objective',
@@ -1465,7 +1484,7 @@ const SYLLABUS: any = {
     NO: 'No.',
     NAME: 'Unit Name',
     ACTION: 'Actions',
-    EDIT: 'edit',
+    EDIT: 'Edit',
     INFO: 'This curricular does not have any units yet. Please create a new one.',
     FETCH: 'Fetching details...',
     ADDNEW: 'Add new Unit',
@@ -1475,7 +1494,7 @@ const SYLLABUS: any = {
     NO: 'TBD',
     NAME: 'TBD',
     ACTION: 'TBD',
-    EDIT: 'TBD',
+    EDIT: 'Editar',
     INFO: 'TBD',
     FETCH: 'TBD',
     ADDNEW: 'TBD',
@@ -1987,7 +2006,7 @@ const EditSyllabusDict: any = {
     type: 'Type',
     status: 'Status',
     action: 'Actions',
-    edit: 'edit',
+    edit: 'Edit',
     nolesson: 'No Lessons Selected',
     createnew: 'Create New Lesson',
     messages: {
@@ -2187,7 +2206,7 @@ const UserDict: any = {
 
 const UserEditDict: any = {
   EN: {
-    heading: 'Edit Information',
+    heading: 'Edit Personal Information',
     firstname: 'First Name',
     lastname: 'Last Name',
     nickname: 'Nickname',
@@ -2217,6 +2236,7 @@ const UserEditDict: any = {
 const UserInformationDict: any = {
   EN: {
     heading: 'Personal Information',
+    details: 'Private Details',
     fullname: 'Full Name',
     nickname: 'Nickname',
     role: 'Role',
@@ -2226,6 +2246,7 @@ const UserInformationDict: any = {
   },
   ES: {
     heading: 'TBD',
+    details: 'TBD',
     fullname: 'TBD',
     nickname: 'TBD',
     role: 'TBD',
@@ -2930,7 +2951,8 @@ const QuestionBuilderDict: any = {
 const UnitLookupDict: any = {
   EN: {
     HEADING: 'Assign Unit',
-    NOTE: 'NOTE: Please select Curricular and then units to add current lesson to that unit.',
+    NOTE:
+      'NOTE: Please select Curricular and then units to add current lesson to that unit.',
     NO: 'No.',
     CURRICULUMNAME: 'Curriculum Name',
     UNITNAME: 'Unit Name',

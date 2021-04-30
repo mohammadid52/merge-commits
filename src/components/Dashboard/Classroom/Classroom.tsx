@@ -1,28 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useRouteMatch } from 'react-router';
+import React, {useContext, useEffect, useState} from 'react';
+import {useRouteMatch} from 'react-router';
 import isEmpty from 'lodash/isEmpty';
 
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 import SurveyCard from './SurveyCard';
 import Today from './TodayLesson';
 import UpcomingLessons from './UpcomingLessons';
 import CompletedLessons from './CompletedLessons';
-import { DashboardProps } from '../Dashboard';
+import {DashboardProps} from '../Dashboard';
 import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import useDictionary from '../../../customHooks/dictionary';
-import { initRosterSyllabusLessons } from '../../../uniqueScripts/InitRoster_in_SyllabusLessons';
+import {initRosterSyllabusLessons} from '../../../uniqueScripts/InitRoster_in_SyllabusLessons';
 import BreadCrums from '../../Atoms/BreadCrums';
-import { BreadcrumsTitles } from '../../../dictionary/dictionary.iconoclast';
-import { getAsset } from '../../../assets';
+import {BreadcrumsTitles} from '../../../dictionary/dictionary.iconoclast';
+import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 import Selector from '../../Atoms/Form/Selector';
 import HeroBanner from '../../Header/HeroBanner';
 import DashboardContainer from '../DashboardContainer';
+import Chat from '../../RoomChat/Chat';
+import FloatingSideMenu from '../FloatingSideMenu/FloatingSideMenu';
 
 interface Artist {
   id: string;
@@ -84,6 +86,7 @@ export interface LessonCardProps {
   openCards?: string;
   setOpenCards?: React.Dispatch<React.SetStateAction<string>>;
   lessonType?: string;
+  roomID?: string;
 }
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
@@ -99,20 +102,24 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     syllabusLoading,
     handleRoomSelection,
   } = props;
-  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
+  const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const showClassDetails: boolean = !isEmpty(activeRoomInfo);
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
 
-  const { classRoomDict } = useDictionary(clientKey);
+  const {classRoomDict} = useDictionary(clientKey);
   const [survey] = useState<any>({
     display: false,
     data: null,
   });
 
-  const [lessonGroupCount, setLessonGroupCount] = useState<{ today: number; upcoming: number; completed: number }>({
+  const [lessonGroupCount, setLessonGroupCount] = useState<{
+    today: number;
+    upcoming: number;
+    completed: number;
+  }>({
     today: 0,
     upcoming: 0,
     completed: 0,
@@ -121,10 +128,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
     if (state.user.role === 'ST') {
-      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'classroom' } });
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
     }
     if (state.user.role === 'TR' || state.user.role === 'FLW') {
-      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'lesson-planner' } });
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'lesson-planner'}});
     }
   }, [state.user.role]);
 
@@ -146,7 +153,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const assessmentsSurveys =
     state.roomData.lessons.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
-          if (lesson?.lesson?.type.includes('survey') || lesson?.lesson?.type.includes('assessment')) {
+          if (
+            lesson?.lesson?.type.includes('survey') ||
+            lesson?.lesson?.type.includes('assessment')
+          ) {
             return lesson;
           }
         })
@@ -191,7 +201,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const todayAndUpcomingLessons = [...todayLessons, ...upcomingLessons];
 
   // if there are top widgets
-  const thereAreTopWidgets: boolean = state.roomData.widgets.some((widget: any) => widget.placement === 'topbar');
+  const thereAreTopWidgets: boolean = state.roomData.widgets.some(
+    (widget: any) => widget.placement === 'topbar'
+  );
   /**
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
@@ -226,7 +238,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     });
   };
 
-  const Counter: React.FC<{ count: number }> = ({ count }) => {
+  const Counter: React.FC<{count: number}> = ({count}) => {
     return (
       <div className="w-5 h-5 p-1  bg-indigo-500 rounded-full flex justify-center align-center items-center content-center">
         <span className="w-auto h-auto text-xs text-white font-bold">{count}</span>
@@ -277,7 +289,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       content: (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <CompletedLessons isTeacher={isTeacher} lessons={sortedLessons(completedLessons, 'expectedEndDate')} />
+            <CompletedLessons
+              isTeacher={isTeacher}
+              lessons={sortedLessons(completedLessons, 'expectedEndDate')}
+            />
           </div>
         </div>
       ),
@@ -306,11 +321,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         bannerImg={bannerImg}
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
-        <div className="p-8 w-full">
+        <div className="mx-auto max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
             <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
               <span>
-                {!isTeacher ? (activeRoomName !== '' ? activeRoomName : classRoomDict[userLanguage]['TITLE']) : null}
+                {!isTeacher
+                  ? activeRoomName !== ''
+                    ? activeRoomName
+                    : classRoomDict[userLanguage]['TITLE']
+                  : null}
                 {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
               </span>
             </div>
@@ -321,16 +340,20 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             </div>
           </div>
           <div>
-            {thereAreTopWidgets && (
+            {/* {thereAreTopWidgets && (
               <div className={`bg-opacity-10`}>
                 <div className={`pb-4 m-auto`}>
                   <TopWidgetBar />
                 </div>
               </div>
-            )}
+            )} */}
             {isTeacher && state.currentPage === 'lesson-planner' && (
               <>
-                <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['UNIT_TITLE']} />
+                <SectionTitleV3
+                  fontSize="2xl"
+                  fontStyle="bold"
+                  title={classRoomDict[userLanguage]['UNIT_TITLE']}
+                />
                 <div className={`bg-opacity-10`}>
                   <div className={`pb-4 m-auto`}>
                     <SyllabusSwitch
@@ -353,6 +376,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 <div className={`bg-opacity-10`}>
                   <div className={`text-xl m-auto`}>
                     <SurveyCard
+                      roomID={roomId}
                       isTeacher={isTeacher}
                       link={'/lesson/on-boarding-survey-1'}
                       lessons={assessmentsSurveys}
@@ -364,12 +388,19 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </>
             ) : null}
 
-            {!isTeacher && state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
-              <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={classRoomDict[userLanguage]['LIST_LESSON']} />
+            {!isTeacher &&
+            state.roomData.lessons.length > 0 &&
+            assessmentsSurveys.length > 0 ? (
+              <SectionTitleV3
+                fontSize="2xl"
+                fontStyle="bold"
+                title={classRoomDict[userLanguage]['LIST_LESSON']}
+              />
             ) : null}
 
             {showClassDetails && (
-              <div className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
+              <div
+                className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
                 <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
               </div>
             )}

@@ -1,25 +1,13 @@
 module.exports = {
   purge: {
     enabled: false,
-    content: ['./src/**/*.html', './src/**/*.tsx', './src/**/*.ts', './src/**/*.js', './src/**/*.jsx'],
-    options: {
-      whitelist: [
-        'bg-fire-orange',
-        'bg-sea-green',
-        'bg-dark-red',
-        'border-white20',
-        'translate-y-1/2',
-        'animate-jiggle',
-        'animate-spin',
-        'animate-bounce',
-        'animate-activation',
-        'text-purple-400',
-        'border-red-700',
-        'text-red-400',
-        'text-red-700',
-        'bg-purple-300',
-      ],
-    },
+    content: [
+      './src/**/*.html',
+      './src/**/*.tsx',
+      './src/**/*.ts',
+      './src/**/*.js',
+      './src/**/*.jsx',
+    ],
   },
   corePlugins: {
     translate: true,
@@ -107,11 +95,16 @@ module.exports = {
       6: '6px',
       8: '8px',
     },
+    top: {
+      2.5: '2.5rem',
+    },
     inset: {
       0: '0rem',
       1: '1rem',
+      2.5: '2.5rem',
       2: '2rem',
       3: '3rem',
+      3.5: '3.5rem',
       4: '4rem',
       5: '5rem',
       6: '6rem',
@@ -142,9 +135,7 @@ module.exports = {
       '1/2': '50%',
     },
     fontFamily: {
-      // open: ['Barlow', 'sans-serif'],
-      // 'open': ['Open Sans Condensed', 'sans-serif'],
-      'open': ['Open Sans', 'sans-serif'],
+      open: ['Open Sans', 'sans-serif'],
     },
     colors: {
       transparent: 'transparent',
@@ -263,16 +254,13 @@ module.exports = {
         800: '#97266d',
         900: '#702459',
       },
-      black10: 'rgba(0,0,0,.1)',
       black20: 'rgba(0,0,0,.2)',
-      black30: 'rgba(0,0,0,.3)',
-      black40: 'rgba(0,0,0,.4)',
       black50: 'rgba(0,0,0,.5)',
-      black60: 'rgba(0,0,0,.6)',
-      black70: 'rgba(0,0,0,.7)',
       black80: 'rgba(0,0,0,.8)',
       background: '#f2f2f2',
       blueberry: '#488AC7',
+      charcoal: '#20262b',
+      container: '#f0f2f5',
       'dark-red-faded': 'rgba(202, 34, 34, 0.2)',
       'dark-red': '#CA2222',
       'dark-blue': '#1C2C42',
@@ -302,29 +290,24 @@ module.exports = {
       'medium-blue': '#30445e',
       'med-dark-blue': '#273548',
       'off-white': '#ffffffe6',
-      'mustard': '#febd01',
-      'tahini': '#c4b896',
+      mustard: '#febd01',
+      tahini: '#c4b896',
       'orange-light': '#e4a04f',
       'orange-medium': '#e4714f',
       'pink-light': '#c64575',
-      white5: 'rgba(255,255,255,.05)',
-      white10: 'rgba(255,255,255,.1)',
       white20: 'rgba(255,255,255,.2)',
-      white30: 'rgba(255,255,255,.3)',
-      white40: 'rgba(255,255,255,.4)',
-      white50: 'rgba(255,255,255,.5)',
     },
     extend: {
       transitionProperty: {
-        'height': 'height'
+        height: 'height',
+        width: 'width',
       },
       backgroundImage: (theme) => ({
         'iconoclast-bg':
           "url('https://zoiqclients.s3.amazonaws.com/IconoclastArtist/IconoclastArtistsLogos/iconoclast_frontpage_bg.jpg')",
         'curate-bg':
           "url('https://zoiqclients.s3.amazonaws.com/ProjectCurate/ProjectCurateLogos/LoginImage_PC.jpg')",
-        'demo-bg':
-          "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
+        'demo-bg': "url('https://zoiqappdemoimages.s3.amazonaws.com/MainPic.jpg')",
       }),
       backgroundOpacity: {
         10: '0.1',
@@ -342,6 +325,7 @@ module.exports = {
         fadeIn: 'fadeIn 1s ease-in-out',
         spin: 'spin 1s linear infinite',
         activation: 'activation 1s ease-in-out infinite',
+        slideUp: 'slideUp 0.2s linear',
       },
       keyframes: {
         bounce: {
@@ -409,6 +393,10 @@ module.exports = {
           '100%': {
             boxShadow: '0 0 0 0 #00488AC7',
           },
+        },
+        slideUp: {
+          '0%': {transform: 'translateY(-12px)'},
+          '100%': {transform: 'translateY(0px)'},
         },
       },
       width: {
@@ -714,7 +702,7 @@ module.exports = {
     minHeight: ['responsive', 'hover', 'focus'],
     zIndex: ['responsive', 'hover', 'focus'],
     position: ['responsive', 'hover', 'focus'],
-    display: ['group-hover', 'responsive', 'group-focus']
+    display: ['group-hover', 'responsive', 'group-focus'],
   },
   plugins: [],
 };

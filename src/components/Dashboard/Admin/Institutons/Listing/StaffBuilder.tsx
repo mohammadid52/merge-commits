@@ -1,13 +1,13 @@
-import React, { useEffect, useState, Fragment, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useHistory } from 'react-router';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, {useEffect, useState, Fragment, useContext} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useHistory} from 'react-router';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
-import { reorder } from '../../../../../utilities/strings';
+import {reorder} from '../../../../../utilities/strings';
 
 import {
   getInitialsFromString,
@@ -15,11 +15,11 @@ import {
   stringToHslColor,
   createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
-import { getImageFromS3 } from '../../../../../utilities/services';
-import { statusList } from '../../../../../utilities/staticData';
-import { getAsset } from '../../../../../assets';
+import {getImageFromS3} from '../../../../../utilities/services';
+import {statusList} from '../../../../../utilities/staticData';
+import {getAsset} from '../../../../../assets';
 
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -28,18 +28,19 @@ import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
+import Status from '../../../../Atoms/Status';
 interface StaffBuilderProps {
   instituteId: String;
-  serviceProviders: { items: { id: string; providerID: string }[] };
+  serviceProviders: {items: {id: string; providerID: string}[]};
   instName: string;
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const { instName, instituteId } = props;
-  const { userLanguage, clientKey, theme } = useContext(GlobalContext);
+  const {instName, instituteId} = props;
+  const {userLanguage, clientKey, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const { staffBuilderDict } = useDictionary(clientKey);
+  const {staffBuilderDict} = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
   const [availableUsers, setAvailableUsers] = useState([]);
   const [allAvailableUsers, setAllAvailableUsers] = useState([]);
@@ -51,7 +52,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   });
   const [activeStaffList, setActiveStaffList] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const [showModal, setShowModal] = useState<{ show: boolean; item: any }>({ show: false, item: {} });
+  const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
+    show: false,
+    item: {},
+  });
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
 
@@ -88,7 +92,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       let updatedList = previousList
         .map((t: any) => {
           let index = list.indexOf(t.userId);
-          return { ...t, index };
+          return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
       setActiveStaffList(updatedList);
@@ -101,7 +105,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
           // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
-          filter: { role: { ne: 'ST' } },
+          filter: {role: {ne: 'ST'}},
         })
       );
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) =>
@@ -109,8 +113,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       );
       const personsList = sortedList.map((item: any, i: any) => ({
         id: item.id,
-        name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
-        value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
+        name: `${item.firstName ? item.firstName : ''} ${
+          item.lastName ? item.lastName : ''
+        }`,
+        value: `${item.firstName ? item.firstName : ''} ${
+          item.lastName ? item.lastName : ''
+        }`,
         authId: item.authId,
         email: item.email,
         avatar: item.image ? getImageFromS3(item.image) : '',
@@ -121,19 +129,25 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
   };
   const getStaffSequence = async () => {
-    let sequence: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `staff_${instituteId}` }));
+    let sequence: any = await API.graphql(
+      graphqlOperation(queries.getCSequences, {id: `staff_${instituteId}`})
+    );
     sequence = sequence?.data?.getCSequences?.sequence;
     return sequence ? [...sequence] : [];
   };
   const updateStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
-      graphqlOperation(mutations.updateCSequences, { input: { id: `staff_${instituteId}`, sequence: newList } })
+      graphqlOperation(mutations.updateCSequences, {
+        input: {id: `staff_${instituteId}`, sequence: newList},
+      })
     );
   };
 
   const createStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
-      graphqlOperation(mutations.createCSequences, { input: { id: `staff_${instituteId}`, sequence: newList } })
+      graphqlOperation(mutations.createCSequences, {
+        input: {id: `staff_${instituteId}`, sequence: newList},
+      })
     );
   };
 
@@ -141,7 +155,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     try {
       // get service providers of the institute and create a list and fetch the staff
       const {
-        serviceProviders: { items },
+        serviceProviders: {items},
         instituteId,
       } = props;
       const institutions = [instituteId];
@@ -153,7 +167,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
       const staff: any = await API.graphql(
         graphqlOperation(queries.listStaffs, {
-          filter: { ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID') },
+          filter: {
+            ...createFilterToFetchSpecificItemsOnly(institutions, 'institutionID'),
+          },
         })
       );
       // We are removing duplicate staff memebers across institution and service providers.
@@ -165,8 +181,12 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id);
           member.userId = member.staffMember.id;
-          member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''}`;
-          member.image = member.staffMember.image ? getImageFromS3(member?.staffMember?.image) : null;
+          member.name = `${member.staffMember.firstName || ''} ${
+            member.staffMember.lastName || ''
+          }`;
+          member.image = member.staffMember.image
+            ? getImageFromS3(member?.staffMember?.image)
+            : null;
           member.role = member.staffMember.role;
           member.email = member.staffMember.email;
           return member;
@@ -174,7 +194,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       });
       return staffMembers;
     } catch (err) {
-      console.log('Error: Get Staff, StaffBuilder: Could not get list of Institution staff members', err);
+      console.log(
+        'Error: Get Staff, StaffBuilder: Could not get list of Institution staff members',
+        err
+      );
     }
   };
 
@@ -191,19 +214,27 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           status: 'Active',
           statusChangeDate: new Date().toISOString().split('T')[0],
         };
-        const staff: any = await API.graphql(graphqlOperation(mutations.createStaff, { input: input }));
+        const staff: any = await API.graphql(
+          graphqlOperation(mutations.createStaff, {input: input})
+        );
         // use the mutation result to add the selected user to the staff list
         const addedMember = staff.data.createStaff;
         addedMember.userId = addedMember.staffMember.id;
-        addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''}`;
-        addedMember.image = addedMember.staffMember.image ? getImageFromS3(addedMember?.staffMember?.image) : null;
+        addedMember.name = `${addedMember.staffMember.firstName || ''} ${
+          addedMember.staffMember.lastName || ''
+        }`;
+        addedMember.image = addedMember.staffMember.image
+          ? getImageFromS3(addedMember?.staffMember?.image)
+          : null;
         addedMember.role = addedMember.staffMember.role;
         addedMember.email = addedMember.staffMember.email;
         setActiveStaffList([...activeStaffList, addedMember]);
         // remove the selected user
-        setNewMember({ name: '', id: '', value: '', avatar: '' });
+        setNewMember({name: '', id: '', value: '', avatar: ''});
         // remove the selected user from the available users list
-        let updatedAvailableUsers = availableUsers.filter((item: any) => item.id !== member.id);
+        let updatedAvailableUsers = availableUsers.filter(
+          (item: any) => item.id !== member.id
+        );
         setAvailableUsers(updatedAvailableUsers);
       } else {
         // TODO: Add the validation msg or error msg on UI for the user.
@@ -211,7 +242,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         console.log('select a user to add.');
       }
     } catch (err) {
-      console.log('Error: Add Staff, StaffBuilder: Could not add new staff member in institution', err);
+      console.log(
+        'Error: Add Staff, StaffBuilder: Could not add new staff member in institution',
+        err
+      );
     }
   };
 
@@ -221,7 +255,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const fetchStaffData = async () => {
     // const staffMembers = await getStaff()
-    let [staffLists, staffSequence]: any = await Promise.all([await getStaff(), await getStaffSequence()]);
+    let [staffLists, staffSequence]: any = await Promise.all([
+      await getStaff(),
+      await getStaffSequence(),
+    ]);
     const staffMembersIds = staffLists.map((item: any) => item.userId);
     if (staffSequence?.length === 0) {
       createStaffSequence(staffMembersIds);
@@ -231,12 +268,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     staffLists = staffLists
       .map((item: any) => {
         let index = staffSequence.indexOf(item.userId);
-        return { ...item, index };
+        return {...item, index};
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
     let users = await getPersonsList();
-    let availableUsersList = users.filter((item: any) => staffMembersIds.indexOf(item.id) < 0);
+    let availableUsersList = users.filter(
+      (item: any) => staffMembersIds.indexOf(item.id) < 0
+    );
     setActiveStaffList(staffLists);
     setAvailableUsers(availableUsersList);
     // saving the initial all users list for future use. see removeStaff member function for use.
@@ -248,10 +287,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     fetchStaffData();
   }, []);
 
-  const onStaffStatusChange = async (status: string, staffId: string, currentStatus: string) => {
+  const onStaffStatusChange = async (
+    status: string,
+    staffId: string,
+    currentStatus: string
+  ) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
-      await API.graphql(graphqlOperation(customMutations.updateStaff, { input: { id: staffId, status } }));
+      await API.graphql(
+        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
+      );
       const updatedStaff = activeStaffList.map((staff) => {
         if (staff.id === staffId) {
           staff.status = status;
@@ -264,9 +309,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     setStatusEdit('');
   };
   return (
-    <div className="py-8 flex m-auto justify-center">
+    <div className="pb-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper>
+        <PageWrapper defaultClass="">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {instName?.toUpperCase()} {dictionary['TITLE']}
           </h3>
@@ -280,12 +325,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   placeholder={dictionary['ADD_PLACEHOLDER']}
                   onChange={onChange}
                 />
-                <Buttons btnClass="ml-4 py-1" label={dictionary['ADD_BUTTON']} onClick={addStaffMember} />
+                <Buttons
+                  btnClass="ml-4 py-1"
+                  label={dictionary['ADD_BUTTON']}
+                  onClick={addStaffMember}
+                />
               </div>
 
               {activeStaffList?.length > 0 ? (
                 <Fragment>
-                  <div className="flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                  <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-gray-200">
                     <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span>{dictionary['NO']}</span>
                     </div>
@@ -310,7 +359,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                         {(provided, snapshot) => (
                           <div {...provided.droppableProps} ref={provided.innerRef}>
                             {activeStaffList.map((item, index) => (
-                              <Draggable key={item.id} draggableId={item.id} index={index}>
+                              <Draggable
+                                key={item.id}
+                                draggableId={item.id}
+                                index={index}>
                                 {(provided, snapshot) => (
                                   <div
                                     ref={provided.innerRef}
@@ -318,7 +370,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                     {...provided.dragHandleProps}>
                                     <div
                                       key={index}
-                                      className="flex justify-between w-auto  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
+                                      className="flex justify-between w-auto py-1 whitespace-nowrap border-b-0 border-gray-200">
                                       <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
                                         {index + 1}.
                                       </div>
@@ -331,6 +383,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                             <div
                                               className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
                                               style={{
+                                                /* stylelint-disable */
                                                 background: `${stringToHslColor(
                                                   getInitialsFromString(item.name)[0] +
                                                     ' ' +
@@ -347,7 +400,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                             </div>
                                           ) : (
                                             <div className="h-8 w-8 rounded-full flex justify-center items-center">
-                                              <img src={item.image} className="rounded-full" />
+                                              <img
+                                                src={item.image}
+                                                className="rounded-full"
+                                              />
                                             </div>
                                           )}
                                         </div>
@@ -355,7 +411,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                           <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
                                             {item.name}
                                           </div>
-                                          <div className="text-sm leading-5 text-gray-500">{item.email}</div>
+                                          <div className="text-sm leading-5 text-gray-500">
+                                            {item.email}
+                                          </div>
                                         </div>
                                       </div>
 
@@ -370,21 +428,18 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                             selectedItem={item.status}
                                             placeholder="Select Status"
                                             list={statusList}
-                                            onChange={(val, name, id) => onStaffStatusChange(val, item.id, item.status)}
+                                            onChange={(val, name, id) =>
+                                              onStaffStatusChange(
+                                                val,
+                                                item.id,
+                                                item.status
+                                              )
+                                            }
                                           />
                                         </div>
                                       ) : (
                                         <div className="flex w-2.5/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                          <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
-                                              item.status === 'Inactive'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : item.status === 'Dropped'
-                                                ? 'bg-red-100 text-red-800'
-                                                : 'bg-green-100 text-green-800'
-                                            }`}>
-                                            {item.status || 'Active'}
-                                          </span>
+                                          <Status status={item.status} />
                                         </div>
                                       )}
                                       <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">
@@ -398,7 +453,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                           <span
                                             className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
                                             onClick={() => setStatusEdit(item.id)}>
-                                            <Tooltip text="Click to edit status" placement="left">
+                                            <Tooltip
+                                              text="Click to edit status"
+                                              placement="left">
                                               Edit
                                             </Tooltip>
                                           </span>

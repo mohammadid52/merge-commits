@@ -1,14 +1,14 @@
-import React, { useState, Fragment, useEffect, useContext } from 'react';
-import { useHistory, useParams } from 'react-router';
-import { IoArrowUndoCircleOutline, IoOptionsOutline } from 'react-icons/io5';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, Fragment, useEffect, useContext} from 'react';
+import {useHistory, useParams} from 'react-router';
+import {IoArrowUndoCircleOutline, IoOptionsOutline} from 'react-icons/io5';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
-import { getTypeString } from '../../../../../../../utilities/strings';
+import {getTypeString} from '../../../../../../../utilities/strings';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import { getAsset } from '../../../../../../../assets';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import {getAsset} from '../../../../../../../assets';
+import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
 import SectionTitle from '../../../../../../Atoms/SectionTitle';
@@ -20,7 +20,7 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import AddQuestion from './QuestionComponents/AddQuestion';
 import SelectPreviousQuestion from './QuestionComponents/SelectPreviousQuestion';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-import { goBackBreadCrumb } from '../../../../../../../utilities/functions';
+import {goBackBreadCrumb} from '../../../../../../../utilities/functions';
 
 interface AddProfileCheckpointProps {}
 
@@ -31,21 +31,21 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   const curricularId = urlParams.curricularId;
   const institutionId = urlParams.institutionId;
 
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { AddProfileCheckpointDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {AddProfileCheckpointDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const initialData = {
     title: '',
     label: '',
-    scope: 'Public',
-    language: { id: '1', name: 'English', value: 'EN' },
+    scope: 'public',
+    language: {id: '1', name: 'English', value: 'EN'},
   };
   const [checkpointData, setCheckpointData] = useState(initialData);
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigner] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState([]);
-  const [questionOptions, setQuestionOptions] = useState({ quesId: '', options: [] });
+  const [questionOptions, setQuestionOptions] = useState({quesId: '', options: []});
   const [currentState, setCurrentState] = useState('checkpoint');
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
@@ -56,7 +56,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
@@ -80,13 +80,13 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
   ];
 
   const languageList = [
-    { id: 1, name: 'English', value: 'EN' },
-    { id: 2, name: 'Spanish', value: 'ES' },
+    {id: 1, name: 'English', value: 'EN'},
+    {id: 2, name: 'Spanish', value: 'ES'},
   ];
 
   const scopeList = [
-    { id: 0, name: 'Public' },
-    { id: 1, name: 'Private' },
+    {id: 0, name: 'public'},
+    {id: 1, name: 'private'},
   ];
 
   const onInputChange = (e: any) => {
@@ -119,7 +119,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -128,9 +128,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
 
   const showOptions = (quesId: string, options: any[]) => {
     if (questionOptions.quesId !== quesId) {
-      setQuestionOptions({ quesId, options });
+      setQuestionOptions({quesId, options});
     } else {
-      setQuestionOptions({ quesId: '', options: [] });
+      setQuestionOptions({quesId: '', options: []});
     }
   };
 
@@ -138,7 +138,11 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     setCurrentState('checkpoint');
   };
 
-  const addCheckpointQuestions = async (quesId: string, checkpointID: string, required: boolean) => {
+  const addCheckpointQuestions = async (
+    quesId: string,
+    checkpointID: string,
+    required: boolean
+  ) => {
     try {
       const input = {
         checkpointID: checkpointID,
@@ -146,7 +150,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         required: false,
       };
       const questions: any = await API.graphql(
-        graphqlOperation(customMutations.createCheckpointQuestions, { input: input })
+        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
       );
     } catch {
       setValidation({
@@ -179,7 +183,7 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     } else {
       msgs.message = '';
     }
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -192,12 +196,14 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           stage: 'checkpoint',
           type: 'profile',
           label: checkpointData.label,
-          // scope: checkpointData.scope,
+          scope: checkpointData.scope,
           title: checkpointData.title,
           designers: selectedDesigners.map((item: any) => item.id),
           language: checkpointData.language.value,
         };
-        const results: any = await API.graphql(graphqlOperation(customMutations.createCheckpoint, { input: input }));
+        const results: any = await API.graphql(
+          graphqlOperation(customMutations.createCheckpoint, {input: input})
+        );
         const newCheckpoint = results?.data?.createCheckpoint;
         if (newCheckpoint) {
           let profileCheckpointInput = {
@@ -212,7 +218,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
           );
 
           let questions = Promise.all(
-            checkpQuestions.map(async (item: any) => addCheckpointQuestions(item.id, newCheckpoint.id, item.required))
+            checkpQuestions.map(async (item: any) =>
+              addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
+            )
           );
           history.goBack();
         } else {
@@ -241,20 +249,22 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
     setCheckpQuestions([...checkpQuestions, obj]);
   };
 
-  const { title, language, label } = checkpointData;
+  const {title, language, label} = checkpointData;
 
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
+        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
       })
     );
     const savedData = result.data.listPersons;
-    const updatedList = savedData?.items.map((item: { id: string; firstName: string; lastName: string }) => ({
-      id: item?.id,
-      name: `${item?.firstName || ''} ${item.lastName || ''}`,
-      value: `${item?.firstName || ''} ${item.lastName || ''}`,
-    }));
+    const updatedList = savedData?.items.map(
+      (item: {id: string; firstName: string; lastName: string}) => ({
+        id: item?.id,
+        name: `${item?.firstName || ''} ${item.lastName || ''}`,
+        value: `${item?.firstName || ''} ${item.lastName || ''}`,
+      })
+    );
     setDesignersList(updatedList);
   };
 
@@ -286,7 +296,10 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
         {currentState !== 'checkpoint' ? (
           <Fragment>
             {currentState === 'addQuestion' && (
-              <AddQuestion goBackToPreviousStep={backToInitials} addNewQuestion={addQuesToCheckpoint} />
+              <AddQuestion
+                goBackToPreviousStep={backToInitials}
+                addNewQuestion={addQuesToCheckpoint}
+              />
             )}
             {currentState === 'questionsList' && (
               <SelectPreviousQuestion
@@ -315,7 +328,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       label={AddProfileCheckpointDict[userLanguage]['label']}
                       isRequired
                     />
-                    {validation.title && <p className="text-red-600 text-sm">{validation.title}</p>}
+                    {validation.title && (
+                      <p className="text-red-600 text-sm">{validation.title}</p>
+                    )}
                   </div>
                   <div>
                     <FormInput
@@ -326,11 +341,13 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       label={AddProfileCheckpointDict[userLanguage]['checkpointlabel']}
                       isRequired
                     />
-                    {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
+                    {validation.label && (
+                      <p className="text-red-600 text-sm">{validation.label}</p>
+                    )}
                   </div>
                 </div>
 
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                <div className="px-3 py-4 grid gap-x-6 grid-cols-3">
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {AddProfileCheckpointDict[userLanguage]['selectdesigner']}
@@ -342,22 +359,33 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                       onChange={selectDesigner}
                     />
                   </div>
-                  {/* <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">Select Scope</label>
+                  <div>
+                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                      Select Scope
+                    </label>
                     <Selector
                       selectedItem={checkpointData.scope}
-                      placeholder={AddProfileCheckpointDict[userLanguage]['typePlaceholder']}
+                      placeholder={
+                        AddProfileCheckpointDict[userLanguage]['typePlaceholder']
+                      }
                       list={scopeList}
-                      onChange={(c, name) => setCheckpointData({ ...checkpointData, scope: name })}
+                      onChange={(c, name) =>
+                        setCheckpointData({
+                          ...checkpointData,
+                          scope: name,
+                        })
+                      }
                     />
-                  </div> */}
+                  </div>
                   <div>
                     <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                       {AddProfileCheckpointDict[userLanguage]['languageselect']}
                     </label>
                     <Selector
                       selectedItem={language.name}
-                      placeholder={AddProfileCheckpointDict[userLanguage]['placeholderlanguage']}
+                      placeholder={
+                        AddProfileCheckpointDict[userLanguage]['placeholderlanguage']
+                      }
                       list={languageList}
                       onChange={selectLanguage}
                     />
@@ -365,18 +393,23 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                 </div>
 
                 {/* Question table */}
-                <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
+                <div className="p-6 border-gray-400  border-0 my-4 mx-2">
                   <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
                     {AddProfileCheckpointDict[userLanguage]['checkpointq']}:{' '}
                   </p>
                   {!checkpQuestions?.length ? (
                     <div className="my-8">
-                      <p className="text-center p-8"> {AddProfileCheckpointDict[userLanguage]['addquestion']}</p>
+                      <p className="text-center p-8">
+                        {' '}
+                        {AddProfileCheckpointDict[userLanguage]['addquestion']}
+                      </p>
                       <div className="flex w-full mx-auto p-8 justify-center ">
                         <Buttons
                           btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
-                          label={AddProfileCheckpointDict[userLanguage]['button']['existing']}
+                          label={
+                            AddProfileCheckpointDict[userLanguage]['button']['existing']
+                          }
                         />
                         <Buttons
                           btnClass="ml-4"
@@ -393,13 +426,17 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                             <span>{AddProfileCheckpointDict[userLanguage]['no']}</span>
                           </div>
                           <div className="w-6/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            <span>{AddProfileCheckpointDict[userLanguage]['question']}</span>
+                            <span>
+                              {AddProfileCheckpointDict[userLanguage]['question']}
+                            </span>
                           </div>
                           <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                             <span>{AddProfileCheckpointDict[userLanguage]['type']}</span>
                           </div>
                           <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                            <span>{AddProfileCheckpointDict[userLanguage]['option']}</span>
+                            <span>
+                              {AddProfileCheckpointDict[userLanguage]['option']}
+                            </span>
                           </div>
                         </div>
 
@@ -429,12 +466,18 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                                       </span>
                                     </div> */}
                                   <div className="flex w-1.5/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                                    {(item.type === 'selectMany' || item.type === 'selectOne') && (
+                                    {(item.type === 'selectMany' ||
+                                      item.type === 'selectOne') && (
                                       <div
                                         className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
-                                        onClick={() => showOptions(item.id, item.options)}>
+                                        onClick={() =>
+                                          showOptions(item.id, item.options)
+                                        }>
                                         <IconContext.Provider
-                                          value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+                                          value={{
+                                            size: '1.5rem',
+                                            color: theme.iconColor[themeColor],
+                                          }}>
                                           <IoOptionsOutline />
                                         </IconContext.Provider>
                                       </div>
@@ -457,7 +500,14 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                             ))
                           ) : (
                             <div className="py-12 my-6 text-center">
-                              <p> {AddProfileCheckpointDict[userLanguage]['messages']['noquestion']}</p>
+                              <p>
+                                {' '}
+                                {
+                                  AddProfileCheckpointDict[userLanguage]['messages'][
+                                    'noquestion'
+                                  ]
+                                }
+                              </p>
                             </div>
                           )}
                         </div>
@@ -466,7 +516,9 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
                         <Buttons
                           btnClass="mr-4"
                           onClick={() => setCurrentState('questionsList')}
-                          label={AddProfileCheckpointDict[userLanguage]['button']['existing']}
+                          label={
+                            AddProfileCheckpointDict[userLanguage]['button']['existing']
+                          }
                         />
                         <Buttons
                           btnClass="ml-4"
@@ -481,7 +533,10 @@ const AddProfileCheckpoint = (props: AddProfileCheckpointProps) => {
             </div>
             {validation.message && (
               <div className="py-4 m-auto mt-2 text-center">
-                <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+                <p
+                  className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+                  {validation.message}
+                </p>
               </div>
             )}
             <div className="flex my-8 justify-center">

@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
-import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import React, {useState, useContext, useEffect} from 'react';
+import {LessonContext} from '../../../../contexts/LessonContext';
+import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 
-import { QuestionInterface } from '../CheckpointQuestions';
-import { QuestionProps } from '../Question';
+import {QuestionInterface} from '../CheckpointQuestions';
+import {QuestionProps} from '../Question';
 import LessonElementCard from '../../../Atoms/LessonElementCard';
 
 interface SelectOneRowState {
@@ -15,19 +15,30 @@ const SelectOneQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { checkpointID, visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme, dispatch } = switchContext;
+  const {
+    checkpointID,
+    visible,
+    isTeacher,
+    questionIndex,
+    question,
+    handleInputChange,
+    questionKey,
+    value,
+  } = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme, dispatch} = switchContext;
 
-  const [input, setInput] = useState<SelectOneRowState>({ id: '', value: '' });
+  const [input, setInput] = useState<SelectOneRowState>({id: '', value: ''});
   const [otherOptSel, setOtherOptSel] = useState(false);
   const questionId = question.question.id;
   const [other, setOther] = useState('');
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
-    const { id } = e.target as HTMLElement;
-    setInput({ id: questionId, value: id });
+    const {id} = e.target as HTMLElement;
+    setInput({id: questionId, value: id});
     handleInputChange(questionId, id, checkpointID);
     if (id === 'other') {
       setOtherOptSel(true);
@@ -43,9 +54,13 @@ const SelectOneQuestions = (props: QuestionProps) => {
   return (
     <>
       {visible && (
-        <div key={questionKey} className={'flex flex-col my-4'} id={`question_${questionId}`}>
+        <div
+          key={questionKey}
+          className={'flex flex-col my-4'}
+          id={`question_${questionId}`}>
           <label htmlFor={question.question.label}>
-            <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
+            <p
+              className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
               <b>{questionIndex + 1}. </b>
               {question.question.question} (Select one)
             </p>
@@ -64,15 +79,19 @@ const SelectOneQuestions = (props: QuestionProps) => {
                 return (
                   <div
                     key={`question_${questionId}_${questionOptionIndex}`}
-                    className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}>
+                    className={`w-auto flex justify-center items-center mr-8 mb-2 `}>
                     <span
                       id={option.label}
                       className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
-                ${input.value === option.label ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
+                ${
+                  input.value === option.label
+                    ? 'bg-blueberry border-white'
+                    : 'bg-white border-black '
+                }`}
                       data-value={option.label}
                       onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}
                     />
-                    <span className={`w-24`}>{option.text}</span>
+                    <span className={`w-auto`}>{option.text}</span>
                   </div>
                 );
               }
@@ -86,7 +105,9 @@ const SelectOneQuestions = (props: QuestionProps) => {
                   placeholder="Other"
                   type="text"
                 />
-                <button onClick={onOtherSave} className="bg-sea-green w-auto py-2 px-4 rounded">
+                <button
+                  onClick={onOtherSave}
+                  className="bg-sea-green w-auto py-2 px-4 rounded">
                   save
                 </button>
               </div>

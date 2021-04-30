@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
+import React, {useContext} from 'react';
+import {LessonContext} from '../../../../../contexts/LessonContext';
 
 const keywordCapitilizer = (str: string) => {
   let capitalizedStr = str.replace(/^\w/, (char) => char.toUpperCase());
@@ -28,8 +28,8 @@ const keywordParser = (str: string) => {
 };
 
 const Modules = (props: any) => {
-  const { theme, state } = useContext(LessonContext);
-  const { additional, displayMode } = props;
+  const {theme, state} = useContext(LessonContext);
+  const {additional, displayMode} = props;
 
   const length = state.data.lesson.warmUp.inputs.additionalInputs.length;
 
@@ -69,7 +69,7 @@ const Modules = (props: any) => {
               ? 'md:h-full md:w-3.2/10'
               : 'h-auto'
           } 
-            ${theme.gradient.cardBase} font-open font-light h-16 rounded-lg px-4 py-2 ${
+            ${theme.gradient.cardBase}  font-light h-16 rounded-lg px-4 py-2 ${
               key === additional.length - 1 ? '' : ''
             }`}>
             <h3>{keywordCapitilizer(item.name)}:</h3>

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../../contexts/LessonContext';
 import StarRating from './Feedback/StarRating';
 
 interface FeedbackProps {
@@ -12,15 +12,15 @@ interface FeedbackProps {
 }
 
 const Feedback = (props: FeedbackProps) => {
-  const { theme, state } = useContext(LessonContext);
-  const { setFeedback } = props;
+  const {theme, state} = useContext(LessonContext);
+  const {setFeedback} = props;
   const [thumb, setThumb] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
   const [isRated, setIsRated] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(0);
 
-  const handleTextChange = (e: { target: { value: string } }) => {
-    const { value } = e.target;
+  const handleTextChange = (e: {target: {value: string}}) => {
+    const {value} = e.target;
 
     setFeedbackText(value);
   };
@@ -39,13 +39,14 @@ const Feedback = (props: FeedbackProps) => {
   return (
     <div className={`w-full h-full rounded-xl`}>
       <div className={`w-full`}>
-        <div className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
+        <div
+          className={`w-full flex flex-row text-xl ${theme.banner} border-b-4 border-sea-green`}>
           <h3>What did you think about the {state.data.lesson.type}?</h3>
         </div>
       </div>
 
       <h3
-        className={`w-full text-lg w-auto relative font-open font-light text-left flex flex-row items-center text-gray-200 border-b-0 border-white border-opacity-10 pb-2 my-6`}>
+        className={`w-full text-lg w-auto relative  font-light text-left flex flex-row items-center text-gray-200 border-b-0 border-white border-opacity-10 pb-2 my-6`}>
         Rating:
       </h3>
 
@@ -58,7 +59,7 @@ const Feedback = (props: FeedbackProps) => {
       />
 
       <h3
-        className={`w-full text-lg w-auto relative font-open font-light text-left flex flex-row items-center text-gray-200  mb-2 mt-6`}>
+        className={`w-full text-lg w-auto relative  font-light text-left flex flex-row items-center text-gray-200  mb-2 mt-6`}>
         Feedback:
       </h3>
 

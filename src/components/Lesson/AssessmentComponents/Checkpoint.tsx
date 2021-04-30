@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../contexts/LessonContext';
 import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
 import SurveyOutro from './SurveyOutro';
-import { BodyProps } from '../Body/Body';
+import {BodyProps} from '../Body/Body';
+import useUrlState from '@ahooksjs/use-url-state';
 
 export interface CheckpointInterface {
   title: string;
@@ -27,9 +28,14 @@ const Checkpoint = (props: {
   /**
    * Teacher switch
    */
-  const { isTeacher, checkpointsLoaded, setupComplete, checkpointsItems } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme, dispatch } = switchContext;
+  const {isTeacher, checkpointsLoaded, setupComplete, checkpointsItems} = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme, dispatch} = switchContext;
+
+  const [urlState] = useUrlState({roomId: ''});
+  const {roomId} = urlState;
 
   const [title, setTitle] = useState('');
 
@@ -53,7 +59,10 @@ const Checkpoint = (props: {
   useEffect(() => {
     if (!isTeacher) {
       if (!state.pages[state.currentPage].active) {
-        dispatch({ type: 'ACTIVATE_LESSON', payload: state.pages[state.currentPage].stage });
+        dispatch({
+          type: 'ACTIVATE_LESSON',
+          payload: state.pages[state.currentPage].stage,
+        });
       }
     }
   }, [state.currentPage]);
@@ -91,7 +100,7 @@ const Checkpoint = (props: {
       {!isTeacher && state.data.lesson.type !== 'lesson' && (
         <>
           <SurveyOutro />
-          <SaveQuit />
+          <SaveQuit roomID={roomId} />
         </>
       )}
     </div>

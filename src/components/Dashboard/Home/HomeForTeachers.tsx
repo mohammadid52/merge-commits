@@ -69,6 +69,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           }
         });
       });
+
     return list;
   };
 
@@ -237,7 +238,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
                 </span>
-                , What do you want to teach today?
+                . What do you want to teach today?
               </h2>
             </div>
           )}
@@ -251,20 +252,23 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           />
 
           {/* Teachers Section */}
-          <div className="my-6">
-            <SectionTitleV3
-              title={`Your Team`}
-              fontSize="lg"
-              fontStyle="semibold"
-              extraContainerClass="max-w-256"
-              borderBottom
-              extraClass="leading-6 text-gray-900"
-            />
-            <TeacherRows coTeachersList={coTeachersList} teacherList={teacherList} />
-          </div>
+          {teacherList && teacherList.length > 0 && (
+            <div className="my-6">
+              <SectionTitleV3
+                title={`Your Team`}
+                fontSize="lg"
+                fontStyle="semibold"
+                extraContainerClass="max-w-256"
+                borderBottom
+                extraClass="leading-6 text-gray-900"
+              />
+              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+            </div>
+          )}
           {/* Classmates Section */}
           <div className="my-6">
             <StudentsTiles
+              isTeacher
               title={`Your Students`}
               state={state}
               studentsList={studentsList}
