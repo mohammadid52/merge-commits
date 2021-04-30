@@ -11,7 +11,7 @@ const FloatingSideMenu = () => {
   const setMenuState = (level: number, section: string) => {
     if (level === -1 && section === 'reset') {
       setMenuOpenLevel(0);
-      setFocusSection('');
+      setFocusSection('Chat');
       setChatroom({});
     } else {
       if (section === focusSection) {
