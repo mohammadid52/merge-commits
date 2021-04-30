@@ -83,7 +83,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
             {capitalizeFirstLetter(selectedItem ? selectedItem : placeholder)}
           </span>
           <span
-            className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
+            className={`relative justify-end inset-y-0 right-0 items-center w-12 pr-2 pointer-events-none ${
               arrowHidden ? 'hidden' : 'flex'
             }`}>
             <svg
