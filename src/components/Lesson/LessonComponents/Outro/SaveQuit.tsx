@@ -22,11 +22,12 @@ interface SaveQuitProps {
 
 const SaveQuit = (props: SaveQuitProps) => {
   const {state, dispatch, theme} = useContext(LessonContext);
-  const {globalStateAccess} = useContext(GlobalContext);
-  const {id, feedback, roomID} = props;
+  const {state: globalStateAccess} = useContext(GlobalContext);
+  const {id, feedback, roomID: roomIDFromProps} = props;
   const history = useHistory();
   const {visible, setVisible, ref} = useOutsideAlerter(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const roomID = globalStateAccess.activeRoom || roomIDFromProps;
 
   /**
    * QUESTION SAVING
@@ -44,8 +45,9 @@ const SaveQuit = (props: SaveQuitProps) => {
       console.error(err);
     } finally {
       handlePopup();
-      console.log(state.data);
-      window.location.href = `/dashboard/classroom/${roomID}`;
+      if (roomID) {
+        window.location.href = `/dashboard/classroom/${roomID}`;
+      } else history.push('/dashboard/home');
     }
   };
 
@@ -84,7 +86,9 @@ const SaveQuit = (props: SaveQuitProps) => {
       } else {
         handleCreateQuestionData();
       }
-      window.location.href = `/dashboard/classroom/${roomID}`;
+      if (roomID) {
+        window.location.href = `/dashboard/classroom/${roomID}`;
+      } else history.push('/dashboard/home');
     }
   };
 
