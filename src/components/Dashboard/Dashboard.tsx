@@ -20,6 +20,7 @@ import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
 import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
+import Csv from './Csv/Csv';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -681,6 +682,9 @@ const Dashboard = (props: DashboardProps) => {
               }}
             />
             <Route exact path={`${match.url}/home`} render={() => <HomeSwitch />} />
+            {isTeacher && (
+              <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
+            )}
 
             <Route
               exact
