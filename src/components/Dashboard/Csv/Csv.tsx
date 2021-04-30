@@ -517,6 +517,10 @@ const Csv = (props: Csv) => {
         <button
           type="button"
           className="col-end-5 disabled:opacity-50 mt-5 inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
+          style={{
+            opacity: isCSVDownloadReady ? 1 : 0.5,
+            cursor: isCSVDownloadReady ? 'cursor-pointer' : 'not-allowed',
+          }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
             <CSVLink data={CSVData} headers={CSVHeaders} filename={'students_data.csv'}>
