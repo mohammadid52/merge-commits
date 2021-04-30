@@ -89,6 +89,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     lessonEdit: false,
     message: EditSyllabusDict[userLanguage]['messages']['wantsave'],
   });
+  const [warnModal2, setWarnModal2] = useState({
+    show: false,
+    message: '',
+    action: () => {},
+  });
   const [selecetedLesson, setSelectedLesson] = useState({
     id: '',
     name: '',
@@ -141,13 +146,10 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       const list = reorder(lessonsIds, result.source.index, result.destination.index);
       setLessonsIds(list);
 
-      const filteredList = selectedLessonsList
-        .map((lesson) => list.filter((id) => id === lesson.uniqlessonId))
-        .flat(1);
-
       let lessonsList = selectedLessonsList
         .map((t: any) => {
-          let index = findIndex(list, (id) => id === t.uniqlessonId);
+          let index = list.indexOf(t.id);
+
           return {...t, index};
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
@@ -160,8 +162,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         // sorting issue : error in sequence key in graphql
       );
       seqItem = seqItem.data.updateCSequences;
-
-      console.log({list, lessonsList, filteredList, lessonsIds});
     }
   };
 
@@ -298,20 +298,42 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     val: string,
     name: string,
     id: string,
-    uniqlessonId: string
+    uniqlessonId: string,
+    lessonName?: string
   ) => {
     try {
       setEditState({...editState, action: 'updating...'});
-      const input = {
-        id: uniqlessonId,
-        status: val,
-      };
-      const result: any = await API.graphql(
-        graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
-      );
-      const newLesson = result.data.updateSyllabusLesson;
+
+      if (val === 'Dropped') {
+        const onDrop = async () => {
+          const result: any = await API.graphql(
+            graphqlOperation(mutations.deleteSyllabusLesson, {input: {id: uniqlessonId}})
+          );
+          setSelectedLessonsList((list: any) =>
+            list.filter((item: any) => item.uniqlessonId !== uniqlessonId)
+          );
+          setWarnModal2({
+            ...warnModal2,
+            show: false,
+          });
+        };
+        setWarnModal2({
+          show: true,
+          message: `Are you sure you want to delete (${lessonName})?`,
+          action: onDrop,
+        });
+      } else {
+        const input = {
+          id: uniqlessonId,
+          status: val,
+        };
+        const result: any = await API.graphql(
+          graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
+        );
+        const newLesson = result.data.updateSyllabusLesson;
+        updateStatusOnTable(newLesson.lessonID, newLesson.status);
+      }
       setEditState({id: ''});
-      updateStatusOnTable(newLesson.lessonID, newLesson.status);
     } catch {
       setMessages({
         show: true,
@@ -961,7 +983,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                                         val,
                                                         name,
                                                         id,
-                                                        item.uniqlessonId
+                                                        item.uniqlessonId,
+                                                        item.title
                                                       )
                                                     }
                                                   />
@@ -1041,6 +1064,14 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             </div>
           </div>
         </div>
+        {warnModal2.show && (
+          <ModalPopUp
+            closeAction={toggleModal}
+            saveAction={warnModal2.action}
+            saveLabel="Yes"
+            message={warnModal2.message}
+          />
+        )}
       </PageWrapper>
     </div>
   );
