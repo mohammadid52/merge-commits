@@ -53,13 +53,11 @@ export const SideMenuSection = (props: {
             } text-sm fond-medium text-indigo-600 cursor-pointer z-100`}>
             <ButtonsRound
               Icon={AiOutlineCloseCircle}
-              iconSizePX={32}
+              iconSizePX={24}
               buttonWHClass={`w-8 h-8`}
               containerBgClass={`bg-transparent p-2`}
               buttonBgClass={`bg-transparent`}
-              iconTxtColorClass={`${
-                menuState === 2 ? 'text-gray-900' : 'text-indigo-100'
-              }`}
+              iconTxtColorClass={`${menuState === 2 ? 'text-gray-800' : 'text-white'}`}
             />
           </div>
         </>
