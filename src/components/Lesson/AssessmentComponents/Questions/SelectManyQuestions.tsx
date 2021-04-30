@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { IconContext } from 'react-icons';
-import { ImCheckboxChecked, ImCheckboxUnchecked } from 'react-icons/im';
-import { LessonContext } from '../../../../contexts/LessonContext';
-import { LessonControlContext } from '../../../../contexts/LessonControlContext';
+import React, {useState, useContext, useEffect} from 'react';
+import {IconContext} from 'react-icons';
+import {ImCheckboxChecked, ImCheckboxUnchecked} from 'react-icons/im';
+import {LessonContext} from '../../../../contexts/LessonContext';
+import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 
-import { QuestionProps } from '../Question';
+import {QuestionProps} from '../Question';
 import LessonElementCard from '../../../Atoms/LessonElementCard';
 
 interface SelectManyState {
@@ -16,11 +16,22 @@ const SelectManyQuestions = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { checkpointID, visible, isTeacher, questionIndex, question, handleInputChange, questionKey, value } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme, dispatch } = switchContext;
+  const {
+    checkpointID,
+    visible,
+    isTeacher,
+    questionIndex,
+    question,
+    handleInputChange,
+    questionKey,
+    value,
+  } = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme, dispatch} = switchContext;
 
-  const [input, setInput] = useState<SelectManyState>({ id: '', value: [] });
+  const [input, setInput] = useState<SelectManyState>({id: '', value: []});
 
   const questionId = question.question.id;
 
@@ -30,14 +41,14 @@ const SelectManyQuestions = (props: QuestionProps) => {
    * @param e
    */
   const handleMultiSelect = (e: React.MouseEvent<HTMLElement>) => {
-    const { id } = e.target as HTMLElement;
+    const {id} = e.target as HTMLElement;
 
     if (input.value.indexOf(id) === -1) {
-      setInput({ id: questionId, value: [...input.value, id] });
+      setInput({id: questionId, value: [...input.value, id]});
       handleInputChange(questionId, [...input.value, id], checkpointID);
     } else {
       const filterOutId = input.value.filter((elem: string) => elem !== id);
-      setInput({ id: questionId, value: filterOutId });
+      setInput({id: questionId, value: filterOutId});
       handleInputChange(questionId, filterOutId, checkpointID);
     }
   };
@@ -52,16 +63,19 @@ const SelectManyQuestions = (props: QuestionProps) => {
           </p>
         </label>
         {/*<div id={question.label} className={'flex'}>*/}
-        <div className={'w-auto flex flex-wrap mx-auto'}>
+        <div className={'w-auto flex flex-wrap'}>
           {question.question.options.map(
-            (option: { label: string; icon: string; color: string; text: string }, key: any) => (
+            (
+              option: {label: string; icon: string; color: string; text: string},
+              key: any
+            ) => (
               <div
                 key={key}
-                className={`w-1/5 min-w-48 flex justify-center items-center mb-2 `}
+                className={`w-auto flex justify-center items-center mb-2 `}
                 onClick={(e) => (!isTeacher ? handleMultiSelect(e) : null)}
                 data-key={questionId}>
                 {input.value.indexOf(`${option.label}`) >= 0 ? (
-                  <label className={`flex justify-center items-center mb-2 `}>
+                  <label className={`flex justify-center items-center mr-8 mb-2 `}>
                     <input
                       id={`${option.label}`}
                       data-key={questionId}
@@ -69,17 +83,17 @@ const SelectManyQuestions = (props: QuestionProps) => {
                       className="form-checkbox h-5 w-5 text-pink-600"
                       checked
                     />
-                    <span className={`w-24 ml-2 ${theme.elem.text}`}>{option.text}</span>
+                    <span className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 ) : (
-                  <label className={`flex justify-center items-center mb-2 `}>
+                  <label className={`flex justify-center items-center mr-8 mb-2 `}>
                     <input
                       id={`${option.label}`}
                       data-key={questionId}
                       type="checkbox"
                       className="form-checkbox h-5 w-5 text-pink-600"
                     />
-                    <span className={`w-24 ml-2 ${theme.elem.text}`}>{option.text}</span>
+                    <span className={`ml-2 ${theme.elem.text}`}>{option.text}</span>
                   </label>
                 )}
               </div>

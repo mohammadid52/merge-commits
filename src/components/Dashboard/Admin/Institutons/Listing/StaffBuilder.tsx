@@ -28,6 +28,7 @@ import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
+import Status from '../../../../Atoms/Status';
 interface StaffBuilderProps {
   instituteId: String;
   serviceProviders: {items: {id: string; providerID: string}[]};
@@ -438,16 +439,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                         </div>
                                       ) : (
                                         <div className="flex w-2.5/10 px-8 py-3 text-left text-s leading-4 items-center">
-                                          <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium  w-auto ${
-                                              item.status === 'Inactive'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : item.status === 'Dropped'
-                                                ? 'bg-red-100 text-red-800'
-                                                : 'bg-green-100 text-green-800'
-                                            }`}>
-                                            {item.status || 'Active'}
-                                          </span>
+                                          <Status status={item.status} />
                                         </div>
                                       )}
                                       <div className="flex w-1/10 px-8 py-3 text-left text-s leading-4 items-center">

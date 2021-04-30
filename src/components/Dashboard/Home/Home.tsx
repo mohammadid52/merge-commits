@@ -236,17 +236,19 @@ const Home = (props: ClassroomControlProps) => {
           />
 
           {/* Teachers Section */}
-          <div className="my-8">
-            <SectionTitleV3
-              title={'Your Teachers'}
-              fontSize="xl"
-              fontStyle="semibold"
-              extraContainerClass="max-w-256 px-6"
-              borderBottom
-              extraClass="leading-6 text-gray-900"
-            />
-            <TeacherRows coTeachersList={coTeachersList} teacherList={teacherList} />
-          </div>
+          {teacherList && teacherList.length > 0 && (
+            <div className="my-8">
+              <SectionTitleV3
+                title={'Your Teachers'}
+                fontSize="xl"
+                fontStyle="semibold"
+                extraContainerClass="max-w-256 px-6"
+                borderBottom
+                extraClass="leading-6 text-gray-900"
+              />
+              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+            </div>
+          )}
           {/* Classmates Section */}
           <div className="my-6">
             <StudentsTiles

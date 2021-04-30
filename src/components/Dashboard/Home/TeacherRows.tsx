@@ -1,27 +1,33 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React from 'react';
 import ImageAlternate from '../../Atoms/ImageAlternative';
+interface TeacherProps {
+  coTeachersList: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    image: string | null;
+  }[];
+  teachersList: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    image: string | null;
+  }[];
+}
 
-const TeacherRows = (props: {coTeachersList: any; teacherList: any}) => {
-  const {teacherList = [], coTeachersList = []} = props;
-  const allTeachers = [...teacherList, ...coTeachersList];
-
+const TeacherRows = (props: TeacherProps) => {
+  const {coTeachersList = [], teachersList = []} = props;
+  const allTeachers = [...teachersList, ...coTeachersList];
   return (
     <ContentCard hasBackground={false}>
       <div className="bg-white shadow overflow-hidden rounded-b-lg">
-        {allTeachers && allTeachers.length > 0 ? (
-          <ul className="">
-            {allTeachers.map(
-              (
-                teacher: {
-                  firstName: string;
-                  lastName: string;
-                  phone: string;
-                  email: string;
-                  image: string | null;
-                },
-                idx: number
-              ) => {
+        {
+          allTeachers && allTeachers.length > 0 ? (
+            <ul className="">
+              {allTeachers.map((teacher, idx: number) => {
                 return (
                   <li key={`home__teacher-${idx}`} className="border-b-0">
                     <a href="#" className="block hover:bg-gray-100">
@@ -76,12 +82,11 @@ const TeacherRows = (props: {coTeachersList: any; teacherList: any}) => {
                     </a>
                   </li>
                 );
-              }
-            )}
-          </ul>
-        ) : (
-          <div className="flex justify-center items-center p-12">No teachers found</div>
-        )}
+              })}
+            </ul>
+          ) : null
+          // <div className="flex justify-center items-center p-12">No teachers found</div>
+        }
       </div>
     </ContentCard>
   );

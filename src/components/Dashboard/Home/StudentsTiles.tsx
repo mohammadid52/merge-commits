@@ -167,11 +167,7 @@ const StudentsTiles = (props: {
                     }
                   )}
               </ul>
-            ) : (
-              <div className="flex justify-center items-center p-12">
-                No students found
-              </div>
-            )}
+            ) : null}
           </div>
         </div>
       </ContentCard>

@@ -25,6 +25,7 @@ import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
 import {getUniqItems} from '../../../../utilities/strings';
+import {sortBy} from 'lodash';
 
 export interface UserInfo {
   authId: string;
@@ -167,11 +168,13 @@ const User = () => {
         (item: any) => item?.checkpoint
       );
 
-      const sCheckpoints: any[] = [];
+      let sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
         if (item) sCheckpoints.push(item);
       });
+
+      sCheckpoints = sortBy(sCheckpoints, (item: any) => item.scope === 'private');
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
@@ -426,7 +429,7 @@ const User = () => {
                   path={`${match.url}/edit`}
                   render={() => (
                     <UserEdit
-                      tab={tab}
+                      tab={stdCheckpoints.length > 0 ? tab : 'p'}
                       setTab={setTab}
                       user={user}
                       status={status}
@@ -441,7 +444,7 @@ const User = () => {
                   path={`${match.url}/`}
                   render={() => (
                     <UserInformation
-                      tab={tab}
+                      tab={stdCheckpoints.length > 0 ? tab : 'p'}
                       setTab={setTab}
                       questionData={questionData}
                       stdCheckpoints={stdCheckpoints}
