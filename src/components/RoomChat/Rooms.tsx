@@ -36,8 +36,19 @@ const Rooms = (props: Rooms) => {
   };
 
   useEffect(() => {
-    fetchRooms();
-  }, []);
+    const chatrooms = state.roomData.rooms;
+    if (chatrooms.length > 0) {
+      setLoadingRooms(true);
+      try {
+        setRooms(chatrooms);
+      } catch (e) {
+        console.error('error setting chatrooms -> ', e);
+      } finally {
+        setLoadingRooms(false);
+      }
+    }
+    // fetchRooms();
+  }, [state.roomData.rooms]);
 
   const showLoader = () => {
     return (

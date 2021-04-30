@@ -47,7 +47,7 @@ export const SideMenuSection = (props: {
             {sectionTitle || 'Section Title'}{' '}
           </p>
           <div
-            onClick={() => setMenuState(0, sectionLabel)}
+            onClick={() => setMenuState(-1, 'reset')}
             className={`w-auto absolute right-0 ${
               menuState > 0 ? '' : 'w-0 overflow-hidden'
             } text-sm fond-medium text-indigo-600 cursor-pointer z-100`}>
