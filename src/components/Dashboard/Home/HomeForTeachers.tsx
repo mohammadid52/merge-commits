@@ -238,7 +238,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
                 </span>
-                , What do you want to teach today?
+                . What do you want to teach today?
               </h2>
             </div>
           )}
