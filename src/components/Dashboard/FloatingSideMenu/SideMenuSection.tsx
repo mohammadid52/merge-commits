@@ -41,7 +41,7 @@ export const SideMenuSection = (props: {
           <p
             className={`h-12 max-w-72 truncate overflow-ellipsis overflow-hidden ${
               menuState === 2
-                ? 'pl-2 text-gray-800 text-xl'
+                ? 'pl-2 text-gray-700 text-xl'
                 : 'text-indigo-100 text-sm border-b-0 border-gray-400'
             } flex items-center  font-medium z-50`}>
             {sectionTitle || 'Section Title'}{' '}
