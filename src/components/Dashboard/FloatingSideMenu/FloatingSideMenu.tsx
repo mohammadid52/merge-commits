@@ -9,16 +9,22 @@ const FloatingSideMenu = () => {
   const [chatroom, setChatroom] = useState<any>({});
 
   const setMenuState = (level: number, section: string) => {
-    if (section === focusSection) {
-      if (level !== menuOpenLevel) {
-        setMenuOpenLevel(level);
-      } else {
-        setMenuOpenLevel(0);
-      }
+    if (level === -1 && section === 'reset') {
+      setMenuOpenLevel(0);
+      setFocusSection('');
+      setChatroom({});
     } else {
-      setFocusSection(section);
-      if (level !== menuOpenLevel) {
-        setMenuOpenLevel(level);
+      if (section === focusSection) {
+        if (level !== menuOpenLevel) {
+          setMenuOpenLevel(level);
+        } else {
+          setMenuOpenLevel(0);
+        }
+      } else {
+        setFocusSection(section);
+        if (level !== menuOpenLevel) {
+          setMenuOpenLevel(level);
+        }
       }
     }
   };
