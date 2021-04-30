@@ -59,6 +59,17 @@ const UserInformation = (props: UserInfoProps) => {
     } else return [];
   };
 
+  const publicCheckpoints =
+    stdCheckpoints.length > 0
+      ? stdCheckpoints.filter(
+          (item: any) => item.scope === 'public' || item.scope === null
+        )
+      : [];
+  const privateCheckpoints =
+    stdCheckpoints.length > 0
+      ? stdCheckpoints.filter((item: any) => item.scope === 'private')
+      : [];
+
   return (
     <div className="w-full md:px-2 pt-2">
       <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
@@ -79,35 +90,37 @@ const UserInformation = (props: UserInfoProps) => {
               state.user.role === 'TR' ||
               state.user.role === 'ADM') &&
               stdCheckpoints.length > 0 &&
-              stdCheckpoints.map((checkpoint: any, index: number) => {
-                return (
-                  <a
-                    onClick={() => setTab(index)}
-                    key={checkpoint.id}
-                    className={classNames(
-                      parseInt(tab, 10) === index
-                        ? 'border-indigo-500 text-indigo-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200',
-                      'whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm'
-                    )}>
-                    {checkpoint.title}
-                    {checkpoint.scope === 'private' && (
-                      <IconContext.Provider
-                        value={{
-                          size: '0.8rem',
-                          className: classNames(
-                            parseInt(tab, 10) === index
-                              ? 'text-indigo-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
-                            'ml-2 h-5 w-5'
-                          ),
-                        }}>
-                        <IoLockClosed />
-                      </IconContext.Provider>
-                    )}
-                  </a>
-                );
-              })}
+              [...publicCheckpoints, ...privateCheckpoints].map(
+                (checkpoint: any, index: number) => {
+                  return (
+                    <a
+                      onClick={() => setTab(index)}
+                      key={checkpoint.id}
+                      className={classNames(
+                        parseInt(tab, 10) === index
+                          ? 'border-indigo-500 text-indigo-600'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200',
+                        'whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm'
+                      )}>
+                      {checkpoint.title}
+                      {checkpoint.scope === 'private' && (
+                        <IconContext.Provider
+                          value={{
+                            size: '0.8rem',
+                            className: classNames(
+                              parseInt(tab, 10) === index
+                                ? 'text-indigo-500'
+                                : 'text-gray-400 group-hover:text-gray-500',
+                              'ml-2 h-5 w-5'
+                            ),
+                          }}>
+                          <IoLockClosed />
+                        </IconContext.Provider>
+                      )}
+                    </a>
+                  );
+                }
+              )}
           </nav>
           <h3 className="text-lg leading-6 font-medium text-gray-900"></h3>
         </div>
