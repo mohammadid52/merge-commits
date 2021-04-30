@@ -5,7 +5,7 @@ import * as customMutations from '../../customGraphql/customMutations';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {IconContext} from 'react-icons';
-import {AiOutlineSend} from 'react-icons/all';
+import {AiOutlineSend, GrClose} from 'react-icons/all';
 import isEmpty from 'lodash/isEmpty';
 import MessageGroupWrapper from './MessageGroupWrapper';
 import MessageWrapper from './MessageWrapper';
@@ -119,7 +119,8 @@ const RoomChat = (props: RoomChatProps) => {
                   return (
                     <MessageWrapper
                       key={`singlemessage_${idx}_${index}`}
-                      senderIsMe={senderIsMe}>
+                      senderIsMe={senderIsMe}
+                      deleteMessage={senderIsMe ? () => deleteMsg(msg) : undefined}>
                       <span>{msg.body}</span>
                       <span
                         className={`float-right w-auto pl-4 ml-auto mr-0 text-xs text-gray-800 transform translate-y-0.5`}>{`${hour}:${minute}`}</span>
