@@ -16,7 +16,6 @@ import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../Atoms/Form/FormInput';
 import Selector from '../../../Atoms/Form/Selector';
 import {convertArrayIntoObj} from '../../../../utilities/strings';
-import {isNaN} from 'lodash';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
