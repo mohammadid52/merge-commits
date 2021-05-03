@@ -9,6 +9,7 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
+import {uniqBy} from 'lodash';
 
 interface Csv {}
 
@@ -44,6 +45,12 @@ const Csv = (props: Csv) => {
 
   const [SCQAnswers, setSCQAnswers] = useState([]);
   const [DCQAnswers, setDCQAnswers] = useState([]);
+
+  const [institutionsLoading, setInstitutionsLoading] = useState(false);
+  const [classRoomLoading, setClassRoomLoading] = useState(false);
+  const [unitsLoading, setUnitsLoading] = useState(false);
+  const [surveysLoading, setSurveysLoading] = useState(false);
+  const [csvGettingReady, setCsvGettingReady] = useState(false);
 
   // methods to clear state data
 
@@ -87,6 +94,7 @@ const Csv = (props: Csv) => {
   }, []);
 
   const listInstitutions = async () => {
+    setInstitutionsLoading(true);
     let institutions: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionsList)
     );
@@ -99,9 +107,11 @@ const Csv = (props: Csv) => {
       };
     });
     setInstitutions(institutions);
+    setInstitutionsLoading(false);
   };
 
   const onInstSelect = async (id: string, name: string, value: string) => {
+    setClassRoomLoading(true);
     try {
       let sInst = selectedInst;
       let inst = {id, name, value};
@@ -132,8 +142,9 @@ const Csv = (props: Csv) => {
         });
         setClassRoomsList(classrooms);
         setInstClassRooms(instCRs);
+        setClassRoomLoading(false);
       } else {
-        console.log('institution already selected');
+        // console.log('institution already selected');
       }
     } catch (err) {
       console.log('inst select, fetch classrooms err', err);
@@ -151,6 +162,7 @@ const Csv = (props: Csv) => {
         setSelectedClass(classroom.class);
         setSelectedCurriculum(classroom.curriculum);
         // fetch students of the selected class. (This list of students will be used in the csv)
+        setUnitsLoading(true);
         const studentsEmails = await fetchStudents(classroom.class.id);
         await fetchUnits(classroom.curriculum.id, studentsEmails);
         // units (syllabus fetched)
@@ -185,6 +197,7 @@ const Csv = (props: Csv) => {
           demographicsQues.push({question: q.question, checkpointID: cc.checkpoint.id});
         });
       });
+      setUnitsLoading(false);
       setDemographicsQuestions(demographicsQues);
       // here we have curricularCheckpoints and use syllabusLessonId 999999 to fetch list of question data
       getStudentsDemographicsQuestionsResponse(cCheckpoints, '999999', studentsEmails);
@@ -235,6 +248,7 @@ const Csv = (props: Csv) => {
   };
 
   const fetchSurveys = async (unitId: string) => {
+    setSurveysLoading(true);
     try {
       let syllabusLessons: any = await API.graphql(
         graphqlOperation(customQueries.listSurveys, {
@@ -259,9 +273,11 @@ const Csv = (props: Csv) => {
           return les.lesson;
         }
       });
+
       // setSyllabusLessons(syllabusLessons)
       setSyllabusLessonsData(syllabusLessonsData);
-      setSurveys(surveys);
+      setSurveys(uniqBy(surveys, 'id'));
+      setSurveysLoading(false);
     } catch (err) {
       console.log('fetch surveys list error', err);
     }
@@ -328,21 +344,22 @@ const Csv = (props: Csv) => {
   };
 
   const getCSVReady = async () => {
+    setCsvGettingReady(true);
     let students = classStudents;
     let qids: any = [];
     let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
       qids.push(ques.question.id);
       return {label: `${ques.question.question}`, key: `${ques.question.id}`};
     });
-    let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
-      qids.push(ques.question.id);
-      return {
-        label: `${ques.question.question} (demographic)`,
-        key: `${ques.question.id}`,
-      };
-    });
-    console.log('surveyQuestionHeaders', surveyQuestionHeaders);
-    console.log('demographicsQuestionHeaders', demographicsQuestionHeaders);
+    // let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
+    //   qids.push(ques.question.id);
+    //   return {
+    //     label: `${ques.question.question} (demographic)`,
+    //     key: `${ques.question.id}`,
+    //   };
+    // });
+    // console.log('surveyQuestionHeaders', surveyQuestionHeaders);
+    // console.log('demographicsQuestionHeaders', demographicsQuestionHeaders);
     setCSVHeaders([
       {label: 'AuthId', key: 'authId'},
       {label: 'Email', key: 'email'},
@@ -351,14 +368,20 @@ const Csv = (props: Csv) => {
       {label: 'Institute', key: 'institute'},
       {label: 'Curriculum', key: 'curriculum'},
       {label: 'Unit', key: 'unit'},
+      {label: 'Classroom', key: 'classroom'},
       {label: 'Survey name', key: 'surveyName'},
+      {label: 'Completed', key: 'completedAt'},
       ...surveyQuestionHeaders,
-      ...demographicsQuestionHeaders,
+      // ...demographicsQuestionHeaders,
     ]);
     let data = students.map((stu: any) => {
       let studentAnswers: any = {};
       SCQAnswers.map((ans: any) => {
         if (ans.person.id === stu.id) {
+          studentAnswers['completedAt'] =
+            new Date(ans.updatedAt || ans.createdAt).toLocaleString('en-US') ||
+            'Not completed';
+
           ans.responseObject.map((resp: any) => {
             if (qids.indexOf(resp.qid) >= 0) {
               studentAnswers[resp.qid] =
@@ -369,43 +392,47 @@ const Csv = (props: Csv) => {
           });
         }
       });
-      DCQAnswers.map((ans: any) => {
-        if (ans.person.id === stu.id) {
-          ans.responseObject.map((resp: any) => {
-            if (qids.indexOf(resp.qid) >= 0) {
-              studentAnswers[resp.qid] =
-                Array.isArray(resp.response) && resp.response.length
-                  ? resp.response[0]
-                  : '';
-            }
-          });
-        }
-      });
+
+      // DCQAnswers.map((ans: any) => {
+      //   if (ans.person.id === stu.id) {
+      //     ans.responseObject.map((resp: any) => {
+      //       if (qids.indexOf(resp.qid) >= 0) {
+      //         studentAnswers[resp.qid] =
+      //           Array.isArray(resp.response) && resp.response.length
+      //             ? resp.response[0]
+      //             : '';
+      //       }
+      //     });
+      //   }
+      // });
       return {
         ...stu,
         institute: selectedInst.name,
         curriculum: selectedCurriculum.name,
         unit: selectedUnit.name,
+        classroom: selectedClassRoom.name,
         surveyName: selectedSurvey.name,
         ...studentAnswers,
       };
     });
     setCSVData(data);
     setIsCSVDownloadReady(true);
+    setCsvGettingReady(false);
   };
 
   useEffect(() => {
     if (isCSVReady) {
-      console.log('SCQAnswers', SCQAnswers);
       getCSVReady();
     }
   }, [isCSVReady]);
 
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const listArr: any[] = [{}, {}];
+  const listArr: any[] = [];
+
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
-  const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500';
+  const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
+
   const Table = () => {
     return (
       <div className="flex flex-col ">
@@ -415,44 +442,52 @@ const Csv = (props: Csv) => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" className={theadStyles}>
+                    <th scope="col" style={{width: '10%'}} className={theadStyles}>
+                      Student Name
+                    </th>
+                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       Institute Name
                     </th>
-                    <th scope="col" className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Curriculum
                     </th>
-                    <th scope="col" className={theadStyles}>
+                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       Unit Name
                     </th>
-                    <th scope="col" className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Classroom
                     </th>
-
-                    <th scope="col" className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Survey Name
+                    </th>
+                    <th scope="col" style={{width: '10%'}} className={theadStyles}>
+                      Completed
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {listArr.map((listItem, idx) => (
-                    <tr
-                      // TODO: Uncomment this
-                      // key={`${listItem.selectedInst.name}_${idx}`}
-                      className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {selectedInst ? selectedInst.name : 'not selected'}
+                  {CSVData.map((listItem, idx) => (
+                    <tr className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                      <td style={{width: '10%'}} className={tdataStyles}>
+                        {listItem.firstName + ' ' + listItem.lastName}
                       </td>
-                      <td className={tdataStyles}>
-                        {selectedCurriculum ? selectedCurriculum.name : 'not selected'}
+                      <td style={{width: '15%'}} className={tdataStyles}>
+                        {listItem.institute}
                       </td>
-                      <td className={tdataStyles}>
-                        {selectedUnit ? selectedUnit.name : 'not selected'}
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem.curriculum}
                       </td>
-                      <td className={tdataStyles}>
-                        {selectedClassRoom ? selectedClassRoom.name : 'not selected'}
+                      <td style={{width: '15%'}} className={tdataStyles}>
+                        {listItem.unit}
                       </td>
-                      <td className={tdataStyles}>
-                        {selectedSurvey ? selectedSurvey.name : 'not selected'}
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem.classroom}
+                      </td>
+                      <td style={{width: '20%'}} className={tdataStyles}>
+                        {listItem.surveyName}
+                      </td>
+                      <td style={{width: '10%'}} className={tdataStyles}>
+                        {listItem.completedAt}
                       </td>
                     </tr>
                   ))}
@@ -486,6 +521,7 @@ const Csv = (props: Csv) => {
       />
       <div className="grid grid-cols-4 gap-x-4">
         <Selector
+          loading={institutionsLoading}
           selectedItem={selectedInst ? selectedInst.name : ''}
           placeholder={CsvDict[userLanguage]['SELECT_INST']}
           list={institutions}
@@ -493,6 +529,7 @@ const Csv = (props: Csv) => {
         />
 
         <Selector
+          loading={classRoomLoading}
           selectedItem={selectedClassRoom ? selectedClassRoom.name : ''}
           placeholder="select class room"
           list={instClassRooms}
@@ -500,6 +537,7 @@ const Csv = (props: Csv) => {
         />
 
         <Selector
+          loading={unitsLoading}
           selectedItem={selectedUnit ? selectedUnit.name : ''}
           placeholder="select unit"
           list={units}
@@ -508,6 +546,7 @@ const Csv = (props: Csv) => {
         />
 
         <Selector
+          loading={surveysLoading}
           disabled={!selectedUnit}
           selectedItem={selectedSurvey ? selectedSurvey.name : ''}
           placeholder="select survey"
@@ -518,6 +557,7 @@ const Csv = (props: Csv) => {
           type="button"
           className="col-end-5 disabled:opacity-50 mt-5 inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
           style={{
+            /* stylelint-disable */
             opacity: isCSVDownloadReady ? 1 : 0.5,
             cursor: isCSVDownloadReady ? 'cursor-pointer' : 'not-allowed',
           }}
@@ -538,7 +578,15 @@ const Csv = (props: Csv) => {
           // title={CsvDict[userLanguage]['SELECT_FILTERS']}
           title={'List Table'}
         />
-        <Table />
+        {CSVData.length > 0 ? (
+          <Table />
+        ) : (
+          <div className="bg-white flex justify-center items-center inner_card h-30 overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            {csvGettingReady
+              ? 'Populating Data'
+              : 'Select filters options to populate data'}
+          </div>
+        )}
       </div>
 
       {/* <span> ====**===========**======= ====**===========**======= </span>

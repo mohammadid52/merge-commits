@@ -273,6 +273,7 @@ const sideBarLinksDict: any = {
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
     DASHBOARD: 'Dashboard',
+    RESEARCHANALYTICS: 'Research & Analytics',
   },
   ES: {
     REGISTRATION: 'Registro',
@@ -283,6 +284,7 @@ const sideBarLinksDict: any = {
     LESSON_BUILDER: 'Constructor de lecciones',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
+    RESEARCHANALYTICS: 'TBD',
   },
 };
 
