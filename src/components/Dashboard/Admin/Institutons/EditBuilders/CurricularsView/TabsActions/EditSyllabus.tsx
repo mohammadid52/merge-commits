@@ -312,7 +312,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           closeLessonAction();
           const result: any = await API.graphql(
             graphqlOperation(mutations.deleteSyllabusLesson, {
-              input: {id: item.uniqlessonId},
+              input: {id: item.id},
             })
           );
 
