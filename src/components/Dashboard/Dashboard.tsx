@@ -19,7 +19,7 @@ import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
 import {handleFetchAndCache} from '../../utilities/sessionData';
-// import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
+import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import Csv from './Csv/Csv';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
