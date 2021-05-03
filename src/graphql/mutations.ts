@@ -239,6 +239,7 @@ export const createInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -348,6 +349,7 @@ export const updateInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -457,6 +459,7 @@ export const deleteInstitution = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -947,6 +950,18 @@ export const createRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1081,6 +1096,18 @@ export const updateRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1215,6 +1242,381 @@ export const deleteRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createRoomCoTeachers = /* GraphQL */ `
+  mutation CreateRoomCoTeachers(
+    $input: CreateRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    createRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateRoomCoTeachers = /* GraphQL */ `
+  mutation UpdateRoomCoTeachers(
+    $input: UpdateRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    updateRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteRoomCoTeachers = /* GraphQL */ `
+  mutation DeleteRoomCoTeachers(
+    $input: DeleteRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    deleteRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1726,6 +2128,7 @@ export const createCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -1812,6 +2215,7 @@ export const updateCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -1898,6 +2302,7 @@ export const deleteCurriculum = /* GraphQL */ `
       name
       type
       image
+      summary
       description
       objectives
       languages
@@ -1988,6 +2393,7 @@ export const createTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2053,6 +2459,7 @@ export const updateTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2118,6 +2525,7 @@ export const deleteTopic = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2272,6 +2680,7 @@ export const createRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2322,6 +2731,7 @@ export const updateRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2372,6 +2782,7 @@ export const deleteRubric = /* GraphQL */ `
           name
           type
           image
+          summary
           description
           objectives
           languages
@@ -2417,6 +2828,7 @@ export const createTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2468,6 +2880,7 @@ export const updateTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2519,6 +2932,7 @@ export const deleteTeacherCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2570,6 +2984,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2621,6 +3036,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -2672,6 +3088,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3446,6 +3863,7 @@ export const createCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      scope
       createdAt
       updatedAt
     }
@@ -3481,6 +3899,7 @@ export const updateCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      scope
       createdAt
       updatedAt
     }
@@ -3516,6 +3935,7 @@ export const deleteCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      scope
       createdAt
       updatedAt
     }
@@ -3573,6 +3993,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3621,6 +4042,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -3681,6 +4103,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3729,6 +4152,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -3789,6 +4213,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         name
         type
         image
+        summary
         description
         objectives
         languages
@@ -3837,6 +4262,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -3872,6 +4298,7 @@ export const createCheckpointQuestions = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -3925,6 +4352,7 @@ export const updateCheckpointQuestions = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -3978,6 +4406,7 @@ export const deleteCheckpointQuestions = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4294,6 +4723,7 @@ export const createAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4343,6 +4773,7 @@ export const updateAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4392,6 +4823,7 @@ export const deleteAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -6364,6 +6796,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -6530,6 +6963,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -6696,6 +7130,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -9949,6 +10384,9 @@ export const createPersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10133,6 +10571,9 @@ export const updatePersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10317,6 +10758,9 @@ export const deletePersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
