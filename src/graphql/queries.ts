@@ -174,7 +174,6 @@ export const getInstitution = /* GraphQL */ `
           name
           type
           image
-          summary
           description
           objectives
           languages
@@ -495,18 +494,6 @@ export const getRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
-      coTeachers {
-        items {
-          id
-          roomID
-          teacherID
-          teacherEmail
-          teacherAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -588,190 +575,6 @@ export const listRooms = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getRoomCoTeachers = /* GraphQL */ `
-  query GetRoomCoTeachers($id: ID!) {
-    getRoomCoTeachers(id: $id) {
-      id
-      roomID
-      teacherID
-      teacherEmail
-      teacherAuthID
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        filters
-        location
-        startDate
-        startTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      teacher {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listRoomCoTeacherss = /* GraphQL */ `
-  query ListRoomCoTeacherss(
-    $filter: ModelRoomCoTeachersFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listRoomCoTeacherss(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        roomID
-        teacherID
-        teacherEmail
-        teacherAuthID
-        room {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          filters
-          location
-          startDate
-          startTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
         createdAt
         updatedAt
       }
@@ -1042,7 +845,6 @@ export const getCurriculum = /* GraphQL */ `
       name
       type
       image
-      summary
       description
       objectives
       languages
@@ -1139,7 +941,6 @@ export const listCurriculums = /* GraphQL */ `
         name
         type
         image
-        summary
         description
         objectives
         languages
@@ -1187,7 +988,6 @@ export const getTopic = /* GraphQL */ `
         name
         type
         image
-        summary
         description
         objectives
         languages
@@ -1263,7 +1063,6 @@ export const listTopics = /* GraphQL */ `
           name
           type
           image
-          summary
           description
           objectives
           languages
@@ -1383,7 +1182,6 @@ export const getRubric = /* GraphQL */ `
           name
           type
           image
-          summary
           description
           objectives
           languages
@@ -1467,7 +1265,6 @@ export const getRoomCurriculum = /* GraphQL */ `
         name
         type
         image
-        summary
         description
         objectives
         languages
@@ -1521,7 +1318,6 @@ export const listRoomCurriculums = /* GraphQL */ `
           name
           type
           image
-          summary
           description
           objectives
           languages
@@ -1926,7 +1722,6 @@ export const getCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
-      scope
       createdAt
       updatedAt
     }
@@ -1956,7 +1751,6 @@ export const listCheckpoints = /* GraphQL */ `
         designers
         language
         estTime
-        scope
         createdAt
         updatedAt
       }
@@ -2148,7 +1942,6 @@ export const getAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
-        scope
         createdAt
         updatedAt
       }
@@ -2195,7 +1988,6 @@ export const listAssessmentCheckpoints = /* GraphQL */ `
           designers
           language
           estTime
-          scope
           createdAt
           updatedAt
         }
@@ -4344,9 +4136,6 @@ export const getPersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
-        coTeachers {
-          nextToken
-        }
         createdAt
         updatedAt
       }
