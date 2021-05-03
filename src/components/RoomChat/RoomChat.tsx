@@ -342,7 +342,7 @@ const RoomChat = (props: RoomChatProps) => {
         </div>
       </div>
       <div
-        className={`flex-none absolute bottom-0 h-14 flex items-center border-t-0 border-b-0 border-gray-400`}>
+        className={`flex-none absolute bottom-0 h-14 flex items-center bg-container border-t-0 border-b-0 border-gray-400`}>
         {msgInputBox()}
       </div>
     </>

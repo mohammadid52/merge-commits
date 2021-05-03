@@ -224,7 +224,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
               <h1
                 style={{fontSize: '6rem'}}
-                className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+                className="z-50 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
                 Dashboard
               </h1>
             </div>

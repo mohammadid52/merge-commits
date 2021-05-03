@@ -1,6 +1,6 @@
 import React from 'react';
 import ButtonsRound from '../../Atoms/ButtonsRound';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import {AiOutlineCloseCircle} from 'react-icons/ai';
 
 export const SideMenuSection = (props: {
   menuState?: number;
@@ -30,7 +30,7 @@ export const SideMenuSection = (props: {
     <div
       className={`
       relative flex flex-col
-      transform transition-all ease-in-out duration-400
+      transform transition-all ease-in-out duration-400 z-100
        ${thisSectionActive ? 'opacity-100 flex-grow flex-1' : 'w-0 opacity-0'}
        ${thisSectionActive && menuState === 1 ? 'px-2' : ''}
        ${thisSectionActive && menuState === 2 ? 'bg-white' : ''}
@@ -38,11 +38,15 @@ export const SideMenuSection = (props: {
       {menuState > 0 && thisSectionActive ? (
         <>
           <p
-            className={`h-12 max-w-72 truncate overflow-ellipsis overflow-hidden border-b-0 border-gray-400 ${
+            className={`
+              h-12 max-w-72 truncate overflow-ellipsis overflow-hidden
+              flex items-center  font-medium z-100
+              border-b-0 border-gray-400 
+            ${
               menuState === 2
-                ? 'pl-2 text-gray-700 text-xl bg-white'
+                ? 'border-t-0 pl-2 text-gray-700 text-xl bg-white'
                 : 'text-indigo-100 text-sm '
-            } flex items-center  font-medium z-50`}>
+            } `}>
             {sectionTitle || 'Section Title'}{' '}
           </p>
           <div
@@ -54,7 +58,9 @@ export const SideMenuSection = (props: {
               Icon={AiOutlineCloseCircle}
               iconSizePX={24}
               buttonWHClass={`w-8 h-8`}
-              containerBgClass={`bg-transparent p-2 border-b-0 border-gray-400`}
+              containerBgClass={`bg-transparent p-2 border-b-0 border-gray-400 ${
+                menuState === 2 ? 'border-t-0' : ''
+              }`}
               buttonBgClass={`bg-transparent`}
               iconTxtColorClass={`${menuState === 2 ? 'text-gray-800' : 'text-white'}`}
             />
