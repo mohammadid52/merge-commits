@@ -37,17 +37,19 @@ const SaveQuit = (props: SaveQuitProps) => {
    * GET or CREATE QUESTION DATA
    */
   const createQuestionData = async (responseObj: any) => {
+
     try {
       const newQuestionData = await API.graphql(
         graphqlOperation(customMutations.createQuestionData, {input: responseObj})
       );
+      console.log('saveQuit -> createQuestionData -> ', responseObj)
     } catch (err) {
       console.error(err);
     } finally {
       handlePopup();
-      if (roomID) {
-        window.location.href = `/dashboard/classroom/${roomID}`;
-      } else history.push('/dashboard/home');
+      // if (roomID) {
+      //   window.location.href = `/dashboard/classroom/${roomID}`;
+      // } else history.push('/dashboard/home');
     }
   };
 
@@ -62,6 +64,7 @@ const SaveQuit = (props: SaveQuitProps) => {
 
     if (typeof state.questionData === 'object') {
       let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
+      console.log('handleCreateQuestionData - checkpointIdKeys - ', checkpointIdKeys)
       await checkpointIdKeys.reduce((_: any, key: string) => {
         let responseObject = {
           syllabusLessonID: state.syllabusLessonID,
@@ -72,7 +75,6 @@ const SaveQuit = (props: SaveQuitProps) => {
           email: studentID,
           responseObject: state.questionData[key],
         };
-
         createQuestionData(responseObject);
       }, null);
     }
@@ -86,9 +88,9 @@ const SaveQuit = (props: SaveQuitProps) => {
       } else {
         handleCreateQuestionData();
       }
-      if (roomID) {
-        window.location.href = `/dashboard/classroom/${roomID}`;
-      } else history.push('/dashboard/home');
+      // if (roomID) {
+      //   window.location.href = `/dashboard/classroom/${roomID}`;
+      // } else history.push('/dashboard/home');
     }
   };
 

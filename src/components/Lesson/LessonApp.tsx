@@ -304,6 +304,10 @@ const LessonApp = () => {
           },
         })
       );
+      const listQuestionDatasItems = questionDatas.data.listQuestionDatas.items;
+
+      console.log('listQUestionDatasItems --', listQuestionDatasItems)
+
       const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
         return [
           ...acc,
