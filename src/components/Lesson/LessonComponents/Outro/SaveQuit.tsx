@@ -1,15 +1,15 @@
-import React, { useContext, useState } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
-import { LessonContext } from '../../../../contexts/LessonContext';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useContext, useState} from 'react';
+import {NavLink, useHistory} from 'react-router-dom';
+import {LessonContext} from '../../../../contexts/LessonContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../../../../customGraphql/customMutations';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import Popup from '../../../General/Popup';
-import { useOutsideAlerter } from '../../../General/hooks/outsideAlerter';
-import { Auth } from '@aws-amplify/auth';
-import { FiLogOut } from 'react-icons/all';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineSave } from 'react-icons/ai';
+import {useOutsideAlerter} from '../../../General/hooks/outsideAlerter';
+import {Auth} from '@aws-amplify/auth';
+import {FiLogOut} from 'react-icons/all';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineSave} from 'react-icons/ai';
 
 interface SaveQuitProps {
   id?: string;
@@ -17,20 +17,21 @@ interface SaveQuitProps {
     like: string;
     text: string;
   };
+  roomID: string;
 }
 
 const SaveQuit = (props: SaveQuitProps) => {
-  const { state, dispatch, theme } = useContext(LessonContext);
-  const { globalStateAccess } = useContext(GlobalContext);
-  const { id, feedback } = props;
+  const {state, dispatch, theme} = useContext(LessonContext);
+  const {state: globalStateAccess} = useContext(GlobalContext);
+  const {id, feedback, roomID: roomIDFromProps} = props;
   const history = useHistory();
-  const { visible, setVisible, ref } = useOutsideAlerter(false);
+  const {visible, setVisible, ref} = useOutsideAlerter(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const roomID = globalStateAccess.activeRoom || roomIDFromProps;
 
   /**
    * QUESTION SAVING
    */
-
 
   /**
    * GET or CREATE QUESTION DATA
@@ -38,13 +39,15 @@ const SaveQuit = (props: SaveQuitProps) => {
   const createQuestionData = async (responseObj: any) => {
     try {
       const newQuestionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: responseObj }),
+        graphqlOperation(customMutations.createQuestionData, {input: responseObj})
       );
     } catch (err) {
       console.error(err);
     } finally {
       handlePopup();
-      history.push('/dashboard');
+      if (roomID) {
+        window.location.href = `/dashboard/classroom/${roomID}`;
+      } else history.push('/dashboard/home');
     }
   };
 
@@ -79,11 +82,13 @@ const SaveQuit = (props: SaveQuitProps) => {
     if (!isSaving) {
       setIsSaving(true);
       if (state.data.lesson.type === 'lesson') {
-        dispatch({ type: 'INCREMENT_SAVE_COUNT' });
-        history.push('/dashboard');
+        dispatch({type: 'INCREMENT_SAVE_COUNT'});
       } else {
         handleCreateQuestionData();
       }
+      if (roomID) {
+        window.location.href = `/dashboard/classroom/${roomID}`;
+      } else history.push('/dashboard/home');
     }
   };
 
@@ -94,25 +99,28 @@ const SaveQuit = (props: SaveQuitProps) => {
   return (
     <>
       {alert ? (
-        <div className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`} onClick={handlePopup}>
+        <div
+          className={`${alert ? 'absolute z-100 top-0' : 'hidden'}`}
+          onClick={handlePopup}>
           <Popup
             alert={visible}
             setAlert={setVisible}
-            header='You have completed a lesson!'
-            button1='Save your lesson'
-            svg='smile'
+            header="You have completed a lesson!"
+            button1="Save your lesson"
+            svg="smile"
             handleButton1={handleManualSave}
-            fill='screen'
+            fill="screen"
           />
         </div>
       ) : null}
 
-      <div className="w-full flex flex-col my-4">
+      <div className="w-full flex flex-col my-24">
         <button
-          type='submit'
+          type="submit"
           className={`self-center w-auto px-4 h-10 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded-full my-4`}
           onClick={handlePopup}>
-          <IconContext.Provider value={{ className: 'w-auto mr-2', style: { cursor: 'pointer' } }}>
+          <IconContext.Provider
+            value={{className: 'w-auto mr-2', style: {cursor: 'pointer'}}}>
             <AiOutlineSave size={24} />
           </IconContext.Provider>
           <div>Save and Go to Dashboard</div>

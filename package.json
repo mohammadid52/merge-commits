@@ -15,6 +15,7 @@
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
+    "@headlessui/react": "^1.1.0",
     "@tailwindcss/postcss7-compat": "^2.0.4",
     "@types/amplify": "^1.1.24",
     "@types/lodash": "^4.14.168",
@@ -55,6 +56,7 @@
     "webpack-merge": "^5.1.4"
   },
   "dependencies": {
+    "@ahooksjs/use-url-state": "^2.5.6",
     "@aws-amplify/api": "^3.2.6",
     "@aws-amplify/auth": "^3.4.6",
     "@aws-amplify/core": "^3.6.0",
@@ -72,6 +74,7 @@
     "debug": "~2.6.9",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
+    "encoding": "^0.1.13",
     "html-to-draftjs": "^1.5.0",
     "postcss-import": "^13.0.0",
     "postcss-loader": "^3.0.0",

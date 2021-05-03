@@ -1,13 +1,20 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 
-import { LessonCardProps } from '../Classroom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {LessonCardProps} from '../Classroom';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 const SmallLessonCard = (props: LessonCardProps) => {
-  const { keyProps, activeRoomInfo, lessonProps, openCards, setOpenCards, lessonType } = props;
-  const { theme } = useContext(GlobalContext);
+  const {
+    keyProps,
+    activeRoomInfo,
+    lessonProps,
+    openCards,
+    setOpenCards,
+    lessonType,
+  } = props;
+  const {theme} = useContext(GlobalContext);
 
   /**
    * Function to toggle card opening
@@ -66,15 +73,15 @@ const SmallLessonCard = (props: LessonCardProps) => {
             <div className="text-center">
               <div
                 className="tracking-widest border-b-0 text-gray-300 border-ketchup"
-                style={{ textShadow: '1px 1px black' }}>
+                style={{textShadow: '1px 1px black'}}>
                 FEATURED PERSON
               </div>
             </div>
 
             <div className="text-center">
               <h2
-                className={`first w-full text-lg font-open leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`}
-                style={{ textShadow: '1px 1px black' }}>
+                className={`first w-full text-lg  leading-8 font-medium tracking-widest mb-4 text-gray-200 text-center`}
+                style={{textShadow: '1px 1px black'}}>
                 <p> {lessonProps?.lesson?.artist?.name} </p>
               </h2>
             </div>
@@ -87,9 +94,13 @@ const SmallLessonCard = (props: LessonCardProps) => {
               className={`${
                 openCards.includes(keyProps) ? 'min-h-72 h-full' : 'h-32'
               }  p-4 mb-10 flex flex-col justify-start overflow-hidden transition ease-in-out duration-500 bg-white`}>
-              <h1 className={`text-lg text-black font-open text-left`}>{lessonProps.lesson.title}</h1>
+              <h1 className={`text-lg text-black  text-left`}>
+                {lessonProps.lesson.title}
+              </h1>
               <p className={`text-sm text-left`}>
-                {lessonProps.lesson.summary ? lessonProps.lesson.summary : 'No Information Available'}
+                {lessonProps.lesson.summary
+                  ? lessonProps.lesson.summary
+                  : 'No Information Available'}
               </p>
             </div>
 
@@ -97,9 +108,11 @@ const SmallLessonCard = (props: LessonCardProps) => {
 
             {/* LESSON CARD BOTTOM - DETAILS */}
             <div className={`h-10 ${theme.dashboard.bg} flex justify-between rounded-b`}>
-              <div className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
+              <div
+                className={`flex mx-2 justify-center items-center my-2 w-5/10 text-gray-300`}>
                 <div className="w-auto text-gray-300">
-                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' }, className: '' }}>
+                  <IconContext.Provider
+                    value={{size: '1.5rem', style: {width: 'auto'}, className: ''}}>
                     <AiOutlineClockCircle />
                   </IconContext.Provider>
                 </div>
@@ -107,17 +120,14 @@ const SmallLessonCard = (props: LessonCardProps) => {
               </div>
               <div className={`flex mx-2 justify-center items-center my-2 w-5/10`}>
                 <div className="w-auto text-gray-300">
-                  <IconContext.Provider value={{ size: '1.5rem', style: { width: 'auto' } }}>
+                  <IconContext.Provider value={{size: '1.5rem', style: {width: 'auto'}}}>
                     <AiOutlineUser />
                   </IconContext.Provider>
                 </div>
                 <div className={`w-auto ml-2 text-sm text-gray-200`}>
-                  {
-                    typeof activeRoomInfo !== 'undefined'
-                      ? (
-                        `${activeRoomInfo?.teacher?.firstName} ${activeRoomInfo?.teacher?.lastName}`
-                      ) : null
-                  }
+                  {typeof activeRoomInfo !== 'undefined'
+                    ? `${activeRoomInfo?.teacher?.firstName} ${activeRoomInfo?.teacher?.lastName}`
+                    : null}
                 </div>
               </div>
             </div>

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
-import { string } from 'prop-types';
+import React, {useState, useEffect, useContext} from 'react';
+import {LessonContext} from '../../../../../contexts/LessonContext';
+import {useCookies} from 'react-cookie';
+import {string} from 'prop-types';
 
-type InputProp = [{ name: string; example: string; prompt: string }];
+type InputProp = [{name: string; example: string; prompt: string}];
 
 interface ModulesProps {
   inputs: InputProp;
@@ -14,13 +14,13 @@ interface FormInputsState {
 }
 
 const Modules = (props: ModulesProps) => {
-  const { inputs } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {inputs} = props;
+  const {state, theme, dispatch} = useContext(LessonContext);
   const [cookies, setCookie] = useCookies(['story']);
   const [formInputs, setFormInputs] = useState<FormInputsState>();
 
   useEffect(() => {
-    inputs.forEach((item: { name: string; example: string; prompt: string }) => {
+    inputs.forEach((item: {name: string; example: string; prompt: string}) => {
       setFormInputs((prev) => {
         return {
           ...prev,
@@ -29,8 +29,12 @@ const Modules = (props: ModulesProps) => {
       });
     });
 
-    if (cookies.story && cookies.story.additional && cookies.story.additional.length > 0) {
-      cookies.story.additional.forEach((item: { name: string; input: string }) => {
+    if (
+      cookies.story &&
+      cookies.story.additional &&
+      cookies.story.additional.length > 0
+    ) {
+      cookies.story.additional.forEach((item: {name: string; input: string}) => {
         setFormInputs((prev) => {
           return {
             ...prev,
@@ -45,20 +49,26 @@ const Modules = (props: ModulesProps) => {
       state.componentState.tchart.additional &&
       state.componentState.tchart.additional.length > 0
     ) {
-      state.componentState.tchart.additional.map((item: { name: string; input: string }) => {
-        setFormInputs((prev) => {
-          return {
-            ...prev,
-            [item.name]: item.input,
-          };
-        });
-      });
+      state.componentState.tchart.additional.map(
+        (item: {name: string; input: string}) => {
+          setFormInputs((prev) => {
+            return {
+              ...prev,
+              [item.name]: item.input,
+            };
+          });
+        }
+      );
     }
   }, []);
 
   useEffect(() => {
-    if (formInputs && state.componentState.tchart.additional && state.componentState.tchart.additional.length > 0) {
-      let tempArray: Array<{ name: string; input: string }> = [];
+    if (
+      formInputs &&
+      state.componentState.tchart.additional &&
+      state.componentState.tchart.additional.length > 0
+    ) {
+      let tempArray: Array<{name: string; input: string}> = [];
       inputs.forEach((input) => {
         let tempObj = {
           name: input.name,
@@ -77,11 +87,11 @@ const Modules = (props: ModulesProps) => {
         },
       });
 
-      setCookie('story', { ...cookies.story, additional: tempArray });
+      setCookie('story', {...cookies.story, additional: tempArray});
     }
   }, [formInputs]);
 
-  const handleFormInputChange = (e: { target: { id: string; value: string } }) => {
+  const handleFormInputChange = (e: {target: {id: string; value: string}}) => {
     setFormInputs({
       ...formInputs,
       [e.target.id]: e.target.value,
@@ -90,7 +100,7 @@ const Modules = (props: ModulesProps) => {
 
   return (
     <div className="md:h-5.8/10 w-full bg-gradient-to-tl from-dark-blue to-med-dark-blue text-gray-200 md:mb-0 px-4 md:px-8 py-4 rounded-lg overflow-hidden">
-      <h3 className={`text-xl font-open font-light ${theme.underline}`}>Focus Questions</h3>
+      <h3 className={`text-xl  font-light ${theme.underline}`}>Focus Questions</h3>
       <div className="w-full h-full ">
         {formInputs
           ? inputs.map((input, key) => (

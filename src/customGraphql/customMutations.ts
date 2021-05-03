@@ -148,6 +148,7 @@ export const updateStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       student {
+        image
         id
         authId
         email
@@ -440,6 +441,8 @@ export const createCurriculum = /* GraphQL */ `
     createCurriculum(input: $input, condition: $condition) {
       id
       name
+      type
+      summary
       institutionID
     }
   }
@@ -477,6 +480,21 @@ export const updateClassStudent = /* GraphQL */ `
     updateClassStudent(input: $input, condition: $condition) {
       id
       status
+    }
+  }
+`;
+
+export const createRoomCoTeachers = /* GraphQL */ `
+  mutation CreateRoomCoTeachers(
+    $input: CreateRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    createRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
     }
   }
 `;
@@ -758,6 +776,7 @@ export const createCheckpoint = /* GraphQL */ `
       instructionsTitle
       instructions
       purpose
+      scope
       objectives
       designers
       language
@@ -776,6 +795,7 @@ export const updateCheckpoint = /* GraphQL */ `
       subtitle
       stage
       type
+      scope
       instructionsTitle
       instructions
       purpose
@@ -871,10 +891,6 @@ export const createLessonRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id

@@ -1,15 +1,14 @@
-import React, { useContext } from 'react';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaCompress, FaExpand, FaInfoCircle } from 'react-icons/fa';
+import React, {useContext} from 'react';
+import {LessonControlContext} from '../../../contexts/LessonControlContext';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {FaCompress, FaExpand, FaInfoCircle} from 'react-icons/fa';
 
 interface StudentWindowTitleBarProps {
   setFullscreenInstructions: React.Dispatch<React.SetStateAction<boolean>>;
   fullscreenInstructions: boolean;
   handleFullscreen: () => void;
   fullscreen: boolean;
-  pageViewed: { pageID: number; stage: string };
-  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+  pageViewed: {pageID: number; stage: string};
   instructions: {
     visible: boolean;
     available: boolean;
@@ -18,18 +17,19 @@ interface StudentWindowTitleBarProps {
   setInstructions: React.Dispatch<React.SetStateAction<object>>;
 }
 
-const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: StudentWindowTitleBarProps) => {
+const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
+  props: StudentWindowTitleBarProps
+) => {
   const {
     setFullscreenInstructions,
     fullscreenInstructions,
     handleFullscreen,
     fullscreen,
     pageViewed,
-    setPageViewed,
     instructions,
     setInstructions,
   } = props;
-  const { state, dispatch } = useContext(LessonControlContext);
+  const {state, dispatch} = useContext(LessonControlContext);
 
   /**
    * Function for getting the object from state of
@@ -48,7 +48,10 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
 
   const beforeBreakdownDisabled = () => {
     if (pageViewed.pageID !== null) {
-      return getCurrentPage().type === 'breakdown' && state.pages[pageViewed.pageID - 1].disabled;
+      return (
+        getCurrentPage().type === 'breakdown' &&
+        state.pages[pageViewed.pageID - 1].disabled
+      );
     }
   };
 
@@ -62,7 +65,10 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
    * @param type - Context action e.g. 'DISABLE_LESSON'
    */
   const handleStateChange = (type: string) => {
-    dispatch({ type: type, payload: { stage: pageViewed.stage, pageIndex: pageViewed.pageID } });
+    dispatch({
+      type: type,
+      payload: {stage: pageViewed.stage, pageIndex: pageViewed.pageID},
+    });
   };
 
   /**
@@ -77,7 +83,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
   };
 
   return (
-    <div className={`w-full h-8 top-0 flex space-between font-medium bg-light-gray bg-opacity-10`}>
+    <div
+      className={`w-full h-8 top-0 flex space-between font-medium bg-light-gray bg-opacity-10`}>
       <div className="h-8 pl-2 align-middle font-bold text-xs leading-8 ">
         <span className="mr-2">Workspace:</span>
 
@@ -109,7 +116,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
           )
         ) : null}
 
-        {!beforeBreakdownDisabled() && pageViewed.pageID !== 0 && !state.studentViewing.live ? (
+        {/*{!beforeBreakdownDisabled() && pageViewed.pageID !== 0 && !state.studentViewing.live ? (
           getCurrentPage().disabled ? (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
@@ -123,7 +130,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (props: Stud
               Disable Component
             </span>
           )
-        ) : null}
+        ) : null}*/}
       </div>
 
       <div className="w-auto flex justify-between">

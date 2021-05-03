@@ -17,5 +17,7 @@
   ],
   "css.validate": false,
   "less.validate": false,
-  "scss.validate": false
+  "scss.validate": false,
+  "workbench.tree.indent": 24,
+  "editor.showFoldingControls": "always"
 }

@@ -1,8 +1,8 @@
 /* OTHER / GENERAL */
-@import "general/scrollbars";
+@import 'general/scrollbars';
 
 /* MAIN PARTS */
-@import "lessons";
+@import 'lessons';
 
 /*
   NOTE: This file should be converted into simple css file and
@@ -28,7 +28,6 @@
 .main_container {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
 
   @media screen and (max-width: 767px) {
     padding: 1rem;
@@ -43,6 +42,142 @@
   @media screen and (max-width: 767px) {
     padding: 1rem;
     overflow: scroll;
+  }
+}
+
+.container_background {
+  background-color: #f0f2f5;
+}
+
+.inner_card {
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.05);
+  border-color: rgba(203, 213, 224, 0.5);
+  border-width: 1px;
+  border-radius: 0.375rem;
+}
+
+.sidenav {
+  background: #20262b;
+  user-select: none;
+  position: relative;
+  transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  .sidenav_sub_icon_wrapper {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+  }
+
+  .sidenav_sub_icon_color {
+    color: #c6c6c6;
+  }
+
+  .sidenav_icon_inactive {
+    color: #c6c6c6;
+  }
+
+  .sidenav_icon_collapsed {
+    position: absolute;
+    right: -15px;
+  }
+
+  .sidenav_logo,
+  .sidenav_profile {
+    min-width: 16rem;
+    border-bottom: 1px solid #2b343b;
+  }
+
+  .sidenav_icon_wrapper {
+    background: #4b5359;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    margin-right: 1rem;
+    padding: 4px;
+
+    svg {
+      text-shadow: 0 0 10px rgba(22, 199, 255, 0.5);
+    }
+  }
+
+  .sidenav_sub_item {
+    color: #c3c3c3;
+
+    &:hover {
+      background: #2b343b;
+
+      svg {
+        animation: bellshake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        backface-visibility: hidden;
+        transform-origin: top right;
+      }
+    }
+  }
+
+  .sidenav_main_item {
+    color: #c6c6c6;
+
+    &:hover {
+      background: #2b343b;
+
+      svg:first-child {
+        animation: bellshake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        backface-visibility: hidden;
+        transform-origin: top right;
+      }
+    }
+  }
+
+  .sidenav_sub_item_active {
+    background: #2b343b;
+    color: #c6c6c6;
+  }
+
+  .sidenav_main_item_active {
+    background: #2b343b;
+  }
+
+  .sidenav_main_item_active_color {
+    color: #fff;
+  }
+
+  @keyframes bellshake {
+    0% {
+      transform: rotate(0);
+    }
+
+    15% {
+      transform: rotate(5deg);
+    }
+
+    30% {
+      transform: rotate(-5deg);
+    }
+
+    45% {
+      transform: rotate(4deg);
+    }
+
+    60% {
+      transform: rotate(-4deg);
+    }
+
+    75% {
+      transform: rotate(2deg);
+    }
+
+    85% {
+      transform: rotate(-2deg);
+    }
+
+    92% {
+      transform: rotate(1deg);
+    }
+
+    100% {
+      transform: rotate(0);
+    }
   }
 }
 
@@ -120,6 +255,81 @@
   padding: 0;
 }
 
+.roomTiles {
+  &.is-open {
+    transition: transform ease-out 0.3s;
+    transition-delay: 0ms;
+    transform-origin: top;
+    animation: showCards 0.3s linear;
+  }
+
+  &.hide {
+    transform-origin: top;
+    animation: hideCards 0.2s linear;
+    transition: transform ease-in 0.2s;
+  }
+}
+
+@keyframes showCards {
+  0% {
+    opacity: 0;
+    transform: scaleY(50%);
+  }
+
+  25% {
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scaleY(100%);
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hideCards {
+  0% {
+    opacity: 0.1;
+    transform: scaleY(100%);
+  }
+
+  100% {
+    transform: scaleY(0%);
+    opacity: 0;
+  }
+}
+
+.hide__scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.option__list {
+  display: block;
+  overflow: hidden;
+
+  &.hide {
+    visibility: hidden;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-out;
+  }
+
+  &.show {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-in, display 0.3s ease-in;
+  }
+}
+
 @media screen and (max-width: 767px) {
   .test {
     max-height: 80vh;
@@ -137,7 +347,7 @@
       font-size: 1.5rem;
     }
   }
-W
+
   .reg {
     padding: 1rem;
 
@@ -181,4 +391,188 @@ W
     padding: 0.5rem;
     height: 4rem;
   }
+}
+
+// For Overlay Text Animation
+.fade__animation {
+  animation: fade 1.5s ease-in-out;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+// Tooltip Styles
+
+[data-tooltip] {
+  position: relative;
+  z-index: 9999;
+}
+
+/* Positioning and visibility settings of the tooltip */
+[data-tooltip]::before,
+[data-tooltip]::after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  left: 50%;
+  bottom: calc(100% + 5px); /* 5px is the size of the arrow */
+  pointer-events: none;
+  transition: 0.2s;
+  will-change: transform;
+}
+
+/* The actual tooltip with a dynamic width */
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  padding: 5px 10px;
+  min-width: 50px;
+  max-width: 300px;
+  width: max-content;
+  width: -moz-max-content;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: rgba(59, 72, 80, 0.9);
+  background-image: linear-gradient(30deg, rgba(59, 72, 80, 0.44), rgba(59, 68, 75, 0.44), rgba(60, 82, 88, 0.44));
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  text-align: center;
+  white-space: pre-wrap;
+  transform: translate(-50%, -5px) scale(0.5);
+}
+
+/* Tooltip arrow */
+[data-tooltip]::after {
+  content: '';
+  border-style: solid;
+  border-width: 5px 5px 0 5px; /* CSS triangle */
+  border-color: rgba(55, 64, 70, 0.9) transparent transparent transparent;
+  transition-duration: 0s;
+  transform-origin: top;
+  transform: translateX(-50%) scaleY(0);
+}
+
+/* Tooltip becomes visible at hover */
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Scales from 0.5 to 1 -> grow effect */
+
+[data-tooltip]:hover::before {
+  transition-delay: 0.3s;
+  transform: translate(-50%, -5px) scale(1);
+}
+
+[data-tooltip]:hover::after {
+  transition-delay: 0.5s; /* Starting after the grow effect */
+  transition-duration: 0.2s;
+  transform: translateX(-50%) scaleY(1);
+}
+
+/* LEFT */
+// Tooltip + arrow
+
+[data-tooltip-location='left']::before,
+[data-tooltip-location='left']::after {
+  left: auto;
+  right: calc(100% + 5px);
+  bottom: 50%;
+}
+
+/* Tooltip */
+[data-tooltip-location='left']::before {
+  transform: translate(-5px, 50%) scale(0.5);
+}
+
+[data-tooltip-location='left']:hover::before {
+  transform: translate(-5px, 50%) scale(1);
+}
+
+/* Arrow */
+[data-tooltip-location='left']::after {
+  border-width: 5px 0 5px 5px;
+  border-color: transparent transparent transparent rgba(55, 64, 70, 0.9);
+  transform-origin: left;
+  transform: translateY(50%) scaleX(0);
+}
+
+[data-tooltip-location='left']:hover::after {
+  transform: translateY(50%) scaleX(1);
+}
+
+/* RIGHT */
+[data-tooltip-location='right']::before,
+[data-tooltip-location='right']::after {
+  left: calc(100% + 5px);
+  bottom: 50%;
+}
+
+[data-tooltip-location='right']::before {
+  transform: translate(5px, 50%) scale(0.5);
+}
+
+[data-tooltip-location='right']:hover::before {
+  transform: translate(5px, 50%) scale(1);
+}
+
+[data-tooltip-location='right']::after {
+  border-width: 5px 5px 5px 0;
+  border-color: transparent rgba(55, 64, 70, 0.9) transparent transparent;
+  transform-origin: right;
+  transform: translateY(50%) scaleX(0);
+}
+
+[data-tooltip-location='right']:hover::after {
+  transform: translateY(50%) scaleX(1);
+}
+
+/* BOTTOM */
+[data-tooltip-location='bottom']::before,
+[data-tooltip-location='bottom']::after {
+  top: calc(100% + 5px);
+  bottom: auto;
+}
+
+[data-tooltip-location='bottom']::before {
+  transform: translate(-50%, 5px) scale(0.5);
+}
+
+[data-tooltip-location='bottom']:hover::before {
+  transform: translate(-50%, 5px) scale(1);
+}
+
+[data-tooltip-location='bottom']::after {
+  border-width: 0 5px 5px 5px;
+  border-color: transparent transparent rgba(55, 64, 70, 0.9) transparent;
+  transform-origin: bottom;
+}
+
+/* BOTTOM LEFT */
+[data-tooltip-location='bottomleft']::before,
+[data-tooltip-location='bottomleft']::after {
+  top: calc(100% + 5px);
+  bottom: auto;
+}
+
+[data-tooltip-location='bottomleft']::before {
+  transform: translate(-50%, 5px) scale(0.5);
+}
+
+[data-tooltip-location='bottomleft']:hover::before {
+  transform: translate(-50%, 5px) scale(1);
+}
+
+[data-tooltip-location='bottomleft']::after {
+  border-width: 0 5px 5px 5px;
+  border-color: transparent transparent rgba(55, 64, 70, 0.9) transparent;
+  transform-origin: bottom;
+  left: 33%;
 }

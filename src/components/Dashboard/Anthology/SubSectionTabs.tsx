@@ -13,16 +13,20 @@ interface SubSectionTabs {
 }
 
 const SubSectionTabs = (props: SubSectionTabs) => {
-  const { subSection, subSectionList, handleTabClick, widgetTypeCount } = props;
-  const { theme} = useContext(GlobalContext);
+  const { subSection, subSectionList, handleTabClick, widgetTypeCount, translations } = props;
+  const { theme } = useContext(GlobalContext);
 
-  const getLabel = (inputLabel: string) => {
-    if(inputLabel === 'Top Widgets'){
-      return 'Topbar Widgets'
+  const getLabel = (inputLabel: string, translationIndex: number) => {
+    if (inputLabel.includes('Widgets')) {
+      if (inputLabel === 'Top Widgets') {
+        return 'Topbar Widgets';
+      } else {
+        return 'Sidebar Widgets';
+      }
     } else {
-      return 'Sidebar Widgets'
+      return translations[translationIndex];
     }
-  }
+  };
 
   return (
     <div className={`${theme.section} text-xl`}>
@@ -33,13 +37,9 @@ const SubSectionTabs = (props: SubSectionTabs) => {
               key={`subSectionTab_${index}`}
               id={listItem}
               selectedCondition={subSection === listItem}
-              label={getLabel(listItem)}
-              counter={
-                listItem.includes('Side')?
-                  widgetTypeCount?.sidebar :
-                  widgetTypeCount?.topbar
-              }
-              />
+              label={getLabel(listItem, index)}
+              counter={listItem.includes('Side') ? widgetTypeCount?.sidebar : widgetTypeCount?.topbar}
+            />
           ))}
       </div>
     </div>

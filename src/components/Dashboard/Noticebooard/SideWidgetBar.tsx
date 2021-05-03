@@ -9,7 +9,6 @@ import { QuoteWidget } from './TopWidgets';
 import { FileLinkWidget } from './Widgets/FilesWidget';
 
 const SideWidgetBar = (props: DashboardProps) => {
-
   const { state, clientKey } = useContext(GlobalContext);
 
   const getSideWidgets = () => {
@@ -31,14 +30,26 @@ const SideWidgetBar = (props: DashboardProps) => {
           <DefaultTextWidget key={`sidebar_widget_${idx}`} title={widgetObj.title} content={widgetObj.content.text} />
         );
       case 'quote':
-        return <QuoteWidget key={`sidebar_widget_${idx}`} card={true} quotes={widgetObj.quotes} />;
+        return <QuoteWidget placement="sidebar" key={`sidebar_widget_${idx}`} card={true} quotes={widgetObj.quotes} />;
       case 'call':
         return (
-          <CallLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>
+          <CallLinkWidget
+            key={`sidebar_widget_${idx}`}
+            card={true}
+            title={widgetObj.title}
+            links={widgetObj.links}
+            widgetObj={widgetObj}
+          />
         );
       case 'file':
         return (
-          <FileLinkWidget key={`sidebar_widget_${idx}`} card={true} title={widgetObj.title} links={widgetObj.links} widgetObj={widgetObj}/>
+          <FileLinkWidget
+            key={`sidebar_widget_${idx}`}
+            card={true}
+            title={widgetObj.title}
+            links={widgetObj.links}
+            widgetObj={widgetObj}
+          />
         );
       default:
         return null;
@@ -58,20 +69,22 @@ const SideWidgetBar = (props: DashboardProps) => {
         {/**
          * STATIC INSTITUTE LOGO
          */}
-        <LogoWidget
-          source={getAsset(clientKey, 'logo_symbol')}
-          altdesc={`school-logo`}
-          card={false}
-        />
+        {state.roomData && state.roomData.widgets.length > 0 && (
+          <LogoWidget source={getAsset(clientKey, 'logo_symbol')} altdesc={`school-logo`} card={false} />
+        )}
 
         {/**
          * DYNAMIC MAP
          */}
-        {
-          state.roomData && state.roomData.widgets.length > 0 &&
+        {state.roomData &&
+          state.roomData.widgets.length > 0 &&
           getSideWidgets().length > 0 &&
           getSideWidgets().map((widgetObj: Widget, idx: number) => {
-            return <div key={`sidebar_widget_${idx}_parent`} className={`mb-4`}>{switchWidgets(widgetObj, idx)}</div>;
+            return (
+              <div key={`sidebar_widget_${idx}_parent`} className={`mb-4`}>
+                {switchWidgets(widgetObj, idx)}
+              </div>
+            );
           })}
       </div>
     </>
