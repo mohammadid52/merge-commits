@@ -5,9 +5,10 @@ import * as customMutations from '../../customGraphql/customMutations';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {IconContext} from 'react-icons';
-import {AiOutlineSend} from 'react-icons/all';
+import {AiOutlineSend, GrClose} from 'react-icons/all';
 import isEmpty from 'lodash/isEmpty';
 import MessageGroupWrapper from './MessageGroupWrapper';
+import MessageWrapper from './MessageWrapper';
 
 interface RoomChatProps {
   selectedRoom: any;
@@ -113,16 +114,23 @@ const RoomChat = (props: RoomChatProps) => {
               senderName={senderWholeName}>
               {messageGroup &&
                 messageGroup.map((msg: any, index: any) => {
+                  const hour = new Date(msg.createdAt).getHours();
+                  const minute = new Date(msg.createdAt).getMinutes();
                   return (
-                    <span key={`singlemessage_${idx}_${index}`}>
-                      {msg.body}
+                    <MessageWrapper
+                      key={`singlemessage_${idx}_${index}`}
+                      senderIsMe={senderIsMe}
+                      deleteMessage={senderIsMe ? () => deleteMsg(msg) : undefined}>
+                      <span>{msg.body}</span>
+                      <span
+                        className={`float-right w-auto pl-4 ml-auto mr-0 text-xs text-gray-800 transform translate-y-0.5`}>{`${hour}:${minute}`}</span>
                       {/*{msg.sender.id === state.user.id ? (*/}
                       {/*  <div>*/}
                       {/*    <button onClick={() => editMsg(msg)}>Edit</button>*/}
                       {/*    <button onClick={() => deleteMsg(msg)}>Delete</button>*/}
                       {/*  </div>*/}
                       {/*) : null}*/}
-                    </span>
+                    </MessageWrapper>
                   );
                 })}
             </MessageGroupWrapper>

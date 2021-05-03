@@ -1,5 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {useWindowSize} from '../../../customHooks/windowSize';
+import React, {useState} from 'react';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 
@@ -10,9 +9,11 @@ const FloatingSideMenu = () => {
 
   const setMenuState = (level: number, section: string) => {
     if (level === -1 && section === 'reset') {
-      setMenuOpenLevel(0);
-      setFocusSection('Chat');
-      setChatroom({});
+      if (menuOpenLevel > 0) setMenuOpenLevel(menuOpenLevel - 1);
+      if (focusSection === 'Chatroom') {
+        setFocusSection('Chat');
+        setChatroom({});
+      }
     } else {
       if (section === focusSection) {
         if (level !== menuOpenLevel) {
@@ -30,9 +31,11 @@ const FloatingSideMenu = () => {
   };
 
   return (
-    <div className="relative w-0 h-full flex flex-row flex-1 z-100">
-      <div
-        className={`
+    <div>
+      <div className={`relative`}>
+        <div className="relative ml-auto mr-0 w-0 h-full flex flex-row flex-1 z-100">
+          <div
+            className={`
         fixed
         transform transition-all ease-in-out duration-400 
        ${menuOpenLevel === 0 ? 'w-0 -translate-x-0 h-100' : ''}
@@ -42,23 +45,25 @@ const FloatingSideMenu = () => {
         top-1/2 -translate-y-1/2
         bg-gray-800 
         shadow`}>
-        <div
-          className={`relative transition transition-all ease-in-out duration-400 w-full h-full`}>
-          <FloatingBar
-            menuState={menuOpenLevel}
-            setMenuState={setMenuState}
-            focusSection={focusSection}
-            setFocusSection={setFocusSection}
-            chatroom={chatroom}
-          />
-          <ExpandedMenu
-            menuState={menuOpenLevel}
-            setMenuState={setMenuState}
-            focusSection={focusSection}
-            setFocusSection={setFocusSection}
-            chatroom={chatroom}
-            setChatroom={setChatroom}
-          />
+            <div
+              className={`relative transition transition-all ease-in-out duration-400 w-full h-full`}>
+              <FloatingBar
+                menuState={menuOpenLevel}
+                setMenuState={setMenuState}
+                focusSection={focusSection}
+                setFocusSection={setFocusSection}
+                chatroom={chatroom}
+              />
+              <ExpandedMenu
+                menuState={menuOpenLevel}
+                setMenuState={setMenuState}
+                focusSection={focusSection}
+                setFocusSection={setFocusSection}
+                chatroom={chatroom}
+                setChatroom={setChatroom}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

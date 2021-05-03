@@ -639,7 +639,7 @@ const Dashboard = (props: DashboardProps) => {
     );
 
   return (
-    <div className="h-screen flex overflow-hidden container_background">
+    <div className="relative h-screen flex overflow-hidden container_background">
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}
@@ -654,6 +654,7 @@ const Dashboard = (props: DashboardProps) => {
       />
 
       <div className="h-full overflow-y-auto">
+        <FloatingSideMenu />
         <Noticebar inputContext={'global'} />
         <Suspense
           fallback={

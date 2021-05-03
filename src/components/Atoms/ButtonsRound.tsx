@@ -38,8 +38,8 @@ const ButtonsRound: React.FC<ButtonRoundProps> = (props: ButtonRoundProps) => {
             ? 'pointer-events-none'
             : ''
         }
-        ${containerBgClass ? containerBgClass : 'bg-white'} 
-        ${containerWHClass ? containerWHClass : 'w-12 h-12'}
+        ${containerBgClass !== undefined ? containerBgClass : 'bg-white'} 
+        ${containerWHClass !== undefined ? containerWHClass : 'w-12 h-12'}
         flex-none flex items-center justify-center`}>
         <div
           className={`
@@ -49,16 +49,25 @@ const ButtonsRound: React.FC<ButtonRoundProps> = (props: ButtonRoundProps) => {
               : ''
           }
           ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
-          ${buttonBgClass ? buttonBgClass : 'bg-white'}
-          ${buttonWHClass ? buttonWHClass : 'w-12 h-12'}
-          flex items-center border border-indigo-600 
-          shadow-sm rounded-full hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400`}
+          ${
+            buttonBgClass !== undefined
+              ? buttonBgClass
+              : 'bg-white border border-indigo-600 rounded-full hover:shadow-lg'
+          }
+          ${buttonWHClass !== undefined ? buttonWHClass : 'w-12 h-12'}
+          flex items-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400`}
           onClick={onClick}>
           {Icon ? (
             <IconContext.Provider
               value={{
-                className: `${iconTxtColorClass ? iconTxtColorClass : 'text-indigo-600'}
-                w-auto h-auto mx-auto my-auto pointer-events-none`,
+                className: `${
+                  iconTxtColorClass !== undefined ? iconTxtColorClass : 'text-indigo-600'
+                }
+                w-auto h-auto mx-auto my-auto ${
+                  pointerEvents !== undefined && pointerEvents === false
+                    ? 'pointer-events-none'
+                    : ''
+                }`,
               }}>
               <Icon size={iconSizePX ? iconSizePX : 32} />
             </IconContext.Provider>

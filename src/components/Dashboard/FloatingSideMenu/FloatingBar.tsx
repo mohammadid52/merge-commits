@@ -69,7 +69,11 @@ export const FloatingBar = (props: {
           onClick={() =>
             handleSectionButtons(Object.keys(chatroom).length > 0 ? 'Chatroom' : 'Chat')
           }
-          containerBgClass={`bg-transparent rounded-tl-lg hover:bg-gray-800`}
+          containerBgClass={`${
+            (menuState > 0 && focusSection === 'Chat') || focusSection === 'Chatroom'
+              ? 'bg-red-700 hover:bg-red-600'
+              : 'bg-transparent hover:bg-gray-800'
+          } rounded-tl-lg `}
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={`text-white`}
         />
@@ -80,7 +84,11 @@ export const FloatingBar = (props: {
           iconSizePX={16}
           buttonWHClass={`w-12 h-12`}
           onClick={() => handleSectionButtons('Call')}
-          containerBgClass={`bg-transparent hover:bg-gray-800`}
+          containerBgClass={`${
+            menuState > 0 && focusSection === 'Call'
+              ? 'bg-red-700 hover:bg-red-600'
+              : 'bg-transparent hover:bg-gray-800'
+          }`}
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={`text-white`}
         />
@@ -91,7 +99,11 @@ export const FloatingBar = (props: {
           iconSizePX={16}
           buttonWHClass={`w-12 h-12`}
           onClick={() => handleSectionButtons('File')}
-          containerBgClass={`bg-transparent hover:bg-gray-800`}
+          containerBgClass={`${
+            menuState > 0 && focusSection === 'File'
+              ? 'bg-red-700 hover:bg-red-600'
+              : 'bg-transparent hover:bg-gray-800'
+          }`}
           buttonBgClass={`bg-transparent`}
           iconTxtColorClass={`text-white`}
         />
@@ -102,7 +114,7 @@ export const FloatingBar = (props: {
         <div
           className={`transform -rotate-90 w-max flex flex-1 justify-center content-center items-center`}>
           <div
-            className={`text-sm font-regular text-white w-64 h-8 text-center transform translate-y-1`}>
+            className={`text-base tracking-wider font-regular text-white w-64 h-8 text-center transform translate-y-0.5`}>
             Links & Chatrooms
           </div>
         </div>
