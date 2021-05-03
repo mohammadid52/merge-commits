@@ -75,7 +75,9 @@ const Login = ({updateAuthState}: LoginProps) => {
         email: username,
         lastLoggedIn: new Date().toISOString(),
       };
-      // const update: any = await API.graphql(graphqlOperation(customMutations.updatePersonLoginTime, { input }));
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updatePersonLoginTime, {input})
+      );
       updateAuthState(true);
     } catch (error) {
       console.error('error signing in', error);
