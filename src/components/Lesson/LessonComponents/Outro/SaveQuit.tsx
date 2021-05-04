@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useHistory} from 'react-router-dom';
 import {LessonContext} from '../../../../contexts/LessonContext';
 import API, {graphqlOperation} from '@aws-amplify/api';
@@ -28,6 +28,30 @@ const SaveQuit = (props: SaveQuitProps) => {
   const {visible, setVisible, ref} = useOutsideAlerter(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const roomID = globalStateAccess.activeRoom || roomIDFromProps;
+  const [checkpointIdKeys, setCheckpointIdKeys] = useState<string[]>([]);
+  const [nrSaves, setNrSaves] = useState<number>(0);
+
+  useEffect(() => {
+    let checkpointIdKeysState = Object.keys(state.questionData); // doFirst, checkpoint_1
+    if (checkpointIdKeysState.length > 0) {
+      setCheckpointIdKeys(checkpointIdKeysState);
+    }
+  }, [state.questionData]);
+
+  useEffect(() => {
+    if (isSaving) {
+      if (nrSaves === checkpointIdKeys.length) {
+        if (roomID) {
+          setTimeout(
+            () => (window.location.href = `/dashboard/classroom/${roomID}`),
+            50
+          );
+        } else {
+          history.push('/dashboard/home');
+        }
+      }
+    }
+  }, [nrSaves, checkpointIdKeys]);
 
   /**
    * QUESTION SAVING
@@ -36,20 +60,16 @@ const SaveQuit = (props: SaveQuitProps) => {
   /**
    * GET or CREATE QUESTION DATA
    */
-  const createQuestionData = async (responseObj: any) => {
-
+  const createQuestionData = async (responseObj: any, saveNr: number) => {
     try {
       const newQuestionData = await API.graphql(
         graphqlOperation(customMutations.createQuestionData, {input: responseObj})
       );
-      console.log('saveQuit -> createQuestionData -> ', responseObj)
     } catch (err) {
       console.error(err);
     } finally {
+      setNrSaves(saveNr + 1);
       handlePopup();
-      // if (roomID) {
-      //   window.location.href = `/dashboard/classroom/${roomID}`;
-      // } else history.push('/dashboard/home');
     }
   };
 
@@ -62,10 +82,8 @@ const SaveQuit = (props: SaveQuitProps) => {
       studentAuthID = user.attributes.sub;
     });
 
-    if (typeof state.questionData === 'object') {
-      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      console.log('handleCreateQuestionData - checkpointIdKeys - ', checkpointIdKeys)
-      await checkpointIdKeys.reduce((_: any, key: string) => {
+    if (checkpointIdKeys.length > 0) {
+      await checkpointIdKeys.reduce(async (_: any, key: string, idx: number) => {
         let responseObject = {
           syllabusLessonID: state.syllabusLessonID,
           checkpointID: key,
@@ -75,8 +93,13 @@ const SaveQuit = (props: SaveQuitProps) => {
           email: studentID,
           responseObject: state.questionData[key],
         };
-        createQuestionData(responseObject);
+        await createQuestionData(responseObject, idx);
       }, null);
+    } else {
+      setTimeout(
+        () => (window.location.href = `/dashboard/classroom/${roomID}`),
+        50
+      );
     }
   };
 
@@ -88,9 +111,6 @@ const SaveQuit = (props: SaveQuitProps) => {
       } else {
         handleCreateQuestionData();
       }
-      // if (roomID) {
-      //   window.location.href = `/dashboard/classroom/${roomID}`;
-      // } else history.push('/dashboard/home');
     }
   };
 
