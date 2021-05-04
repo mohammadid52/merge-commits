@@ -69,7 +69,6 @@ const SaveQuit = (props: SaveQuitProps) => {
       console.error(err);
     } finally {
       setNrSaves(saveNr + 1);
-      handlePopup();
     }
   };
 
@@ -101,6 +100,7 @@ const SaveQuit = (props: SaveQuitProps) => {
         50
       );
     }
+
   };
 
   const handleManualSave = () => {
