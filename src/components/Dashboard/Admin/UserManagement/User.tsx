@@ -24,8 +24,9 @@ import {getImageFromS3} from '../../../../utilities/services';
 import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
-import {getUniqItems} from '../../../../utilities/strings';
+import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
 import {sortBy} from 'lodash';
+import SectionTitleV3 from '../../../Atoms/SectionTitleV3';
 
 export interface UserInfo {
   authId: string;
@@ -33,6 +34,7 @@ export interface UserInfo {
   createdAt: string;
   email: string;
   externalId?: string;
+  classes: any;
   firstName: string;
   grade?: string;
   id: string;
@@ -77,12 +79,14 @@ const User = () => {
     language: '',
     lastName: '',
     preferredName: null,
+    classes: null,
     role: '',
     status: '',
     phone: '',
     updatedAt: '',
     birthdate: null,
   });
+
   const [imageUrl, setImageUrl] = useState('');
   const location = useLocation();
   const pathName = location.pathname.replace(/\/$/, '');
@@ -134,8 +138,6 @@ const User = () => {
     //     graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
     //   );
     // });
-
-    console.log(questionData, 'questionData');
   };
 
   async function getUserById(id: string) {
@@ -179,6 +181,7 @@ const User = () => {
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
+
       delete personalInfo.classes;
 
       setStdCheckpoints([...uniqCheckpoints]);
@@ -283,24 +286,6 @@ const User = () => {
     }
   }
 
-  // TODO: Make below functions global(initials, stringToHslColor)
-
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase();
-    let lastInitial = lastName.charAt(0).toUpperCase();
-    return firstInitial + lastInitial;
-  };
-
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
-  };
-
   useEffect(() => {
     if (typeof id === 'string') {
       getUserById(id);
@@ -315,6 +300,41 @@ const User = () => {
 
   const setTab = (value: string) => {
     setUrlState({t: value});
+  };
+
+  const TeacherImage = ({teacher}: any) => {
+    const [teacherImgUrl, setTeacherImgUrl] = useState(null);
+    useEffect(() => {
+      async function getUrl() {
+        if (teacher.image) {
+          const imageUrl: any = await getImageFromS3(teacher.image);
+          setTeacherImgUrl(imageUrl);
+        }
+      }
+      getUrl();
+    }, [teacher.image]);
+    return teacher.image ? (
+      <img
+        className={`profile w-8 h-8 md:w-8 md:h-8 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mr-4`}
+        src={teacherImgUrl}
+      />
+    ) : (
+      <div
+        className={`w-8 h-8 md:w-8 md:h-8 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mr-4`}>
+        <div
+          className="h-full w-full flex justify-center items-center text-sm text-extrabold text-white rounded-full"
+          style={{
+            /* stylelint-disable */
+            background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`,
+            // textShadow: '0.2rem 0.2rem 3px #423939b3',
+          }}>
+          {initials(
+            user.preferredName ? user.preferredName : user.firstName,
+            user.lastName
+          )}
+        </div>
+      </div>
+    );
   };
 
   {
@@ -456,6 +476,69 @@ const User = () => {
               </Switch>
             </div>
           </div>
+          {user?.classes?.items.length > 0 && user.role === 'ST' && (
+            <div>
+              <SectionTitleV3 title={'Associated Classrooms'} />
+
+              <div
+                className={`grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-x-4 pb-8 ${theme.elem.text} mb-8`}>
+                {user?.classes?.items.map((item: any, index: number) => {
+                  const rooms = item?.class?.rooms.items;
+
+                  const curriculum = rooms.length > 0 ? rooms[0].curricula : null;
+                  const teacher = rooms.length > 0 ? rooms[0].teacher : null;
+                  return (
+                    <div
+                      className="my-2 white_back flex flex-col items-center justify-center min-w-64 min-h-32"
+                      key={item.class.id + '__' + index}>
+                      <div className="flex items-center justify-center p-4 px-6">
+                        <p className="text-gray-400 text-md font-medium mt-2">
+                          Classname:
+                        </p>{' '}
+                        <p className="text-dark text-md font-medium mt-2">
+                          {item?.class?.name}
+                        </p>
+                      </div>
+                      <div style={{height: '1px'}} className="bg-gray-200" />
+                      <div className="flex items-center justify-center px-6 p-4">
+                        <p className="text-gray-400 text-md font-medium mt-2">
+                          Institution:
+                        </p>{' '}
+                        <p className="text-dark text-md font-medium mt-2">
+                          {item?.class?.institution?.name}
+                        </p>
+                      </div>
+
+                      <div style={{height: '1px'}} className="bg-gray-200" />
+                      <div className="flex items-center justify-center px-6 p-4">
+                        <p className="text-gray-400 text-md font-medium mt-2">Teacher:</p>{' '}
+                        <div className="text-dark text-md flex items-center font-medium mt-2">
+                          {teacher ? <TeacherImage teacher={teacher} /> : null}
+                          {teacher
+                            ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
+                            : 'Not Available'}
+                        </div>
+                      </div>
+
+                      <div style={{height: '1px'}} className="bg-gray-200" />
+                      <div className="flex items-center justify-center px-6 p-4">
+                        <p className="text-gray-400 text-md font-medium mt-2">
+                          Curriculum:
+                        </p>{' '}
+                        <p className="text-dark text-md font-medium mt-2">
+                          {curriculum
+                            ? `${curriculum?.items[0]?.curriculum?.name}${
+                                curriculum?.items[0]?.length > 1 ? '...' : ''
+                              }`
+                            : 'Not Available'}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
         {showCropper && (
           <ProfileCropModal
