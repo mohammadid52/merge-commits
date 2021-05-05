@@ -345,7 +345,7 @@ const LessonApp = () => {
 
   return (
     <>
-      <FloatingSideMenu overlay={overlay} setOverlay={setOverlay}/>
+      <FloatingSideMenu/>
       <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}

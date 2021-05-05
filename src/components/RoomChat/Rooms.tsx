@@ -71,29 +71,29 @@ const Rooms = (props: Rooms) => {
       <>
         <div
           className={`
-      transform transition ease-in-out duration-400 sm:duration-400
-      ${Object.keys(chatroom).length > 0 ? 'h-0 overflow-hidden' : 'h-auto'}
-      `}>
-          {!(Object.keys(chatroom).length > 0) &&
-            rooms.map((rm: any, index: any) => {
-              return (
-                <button
-                  key={`chatroom_${index}`}
-                  onClick={() => setSelectedChatroom(rm)}
-                  type="button"
-                  className={`
-                    ${index < rooms.length - 1 ? 'mb-2' : ''}
-                    p-2
-                    truncate inline-flex 
-                    items-center
-                    border border-gray-200 
-                    text-gray-200 bg-gray-500 
-                    shadow-sm text-xs font-medium rounded 
-                    hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-                  {rm.name}
-                </button>
-              );
-            })}
+            transform transition ease-in-out duration-400 sm:duration-400
+            ${Object.keys(chatroom).length > 0 ? 'h-0 overflow-hidden' : 'h-auto'}
+            `}>
+              {!(Object.keys(chatroom).length > 0) &&
+                rooms.map((rm: any, index: any) => {
+                  return (
+                    <button
+                      key={`chatroom_${index}`}
+                      onClick={() => setSelectedChatroom(rm)}
+                      type="button"
+                      className={`
+                        ${index < rooms.length - 1 ? 'mb-2' : ''}
+                        p-2
+                        truncate inline-flex 
+                        items-center
+                        border border-gray-200 
+                        text-gray-200 bg-gray-500 
+                        shadow-sm text-xs font-medium rounded 
+                        hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+                      {rm.name}
+                    </button>
+                  );
+                })}
         </div>
       </>
     );
