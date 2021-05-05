@@ -1,26 +1,21 @@
 import React from 'react';
 import ButtonsRound from '../../Atoms/ButtonsRound';
-import {
-  AiOutlineArrowDown,
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiOutlineArrowUp,
-  AiOutlineInfoCircle,
-  AiOutlineMenu,
-} from 'react-icons/ai';
-import {RiChat1Line} from 'react-icons/ri';
+import {AiOutlineSearch} from 'react-icons/ai';
 import {IoChatbubble, IoDocument} from 'react-icons/io5';
-import {ImPhone} from 'react-icons/im';
 import {CallLinkLauncher} from './CallLinkLauncher';
+import {FloatingSideMenuProps} from './FloatingSideMenu';
+import {BsPencilSquare} from 'react-icons/bs';
 
-export const FloatingBar = (props: {
-  menuState?: number;
-  setMenuState?: (level: number, section: string) => void;
-  focusSection?: string;
-  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
-  chatroom?: any;
-}) => {
-  const {menuState, setMenuState, focusSection, setFocusSection, chatroom} = props;
+export const FloatingBar = (props: FloatingSideMenuProps) => {
+  const {
+    menuState,
+    setMenuState,
+    focusSection,
+    setFocusSection,
+    chatroom,
+    overlay,
+    setOverlay,
+  } = props;
 
   const handleSectionButtons = (section: string) => {
     switch (section) {
@@ -39,6 +34,14 @@ export const FloatingBar = (props: {
       case 'File':
         if (focusSection !== section) setFocusSection('File');
         setMenuState(1, section);
+        break;
+      case 'Notes':
+        if(overlay === ''){
+          setOverlay('notes')
+          if (focusSection !== section) setFocusSection('Notes');
+        } else {
+          setOverlay('')
+        }
         break;
       case '':
         if (focusSection === section) setFocusSection('Chat');
@@ -95,6 +98,42 @@ export const FloatingBar = (props: {
           iconTxtColorClass={`text-white`}
         />
       </div>
+      <div className={`flex-0 h-12 border-b-0 border-charcoal`}>
+        <ButtonsRound
+          Icon={AiOutlineSearch}
+          iconSizePX={16}
+          buttonWHClass={`w-12 h-12`}
+          pointerEvents={focusSection === 'Search'}
+          onClick={() => handleSectionButtons('Search')}
+          containerBgClass={`${
+            menuState > 0 && focusSection === 'Search'
+              ? 'bg-red-700 hover:bg-red-600'
+              : 'bg-transparent hover:bg-gray-800'
+          }`}
+          buttonBgClass={`bg-transparent`}
+          iconTxtColorClass={`${
+            focusSection === 'Search' ? 'text-white' : 'text-gray-600'
+          }`}
+        />
+      </div>
+      {typeof setOverlay !== 'undefined' ? (
+        <div className={`flex-0 h-12 border-b-0 border-charcoal`}>
+          <ButtonsRound
+            Icon={BsPencilSquare}
+            iconSizePX={16}
+            buttonWHClass={`w-12 h-12`}
+            onClick={() => handleSectionButtons('Notes')}
+            containerBgClass={`${
+              menuState > 0 && focusSection === 'Notes'
+                ? 'bg-red-700 hover:bg-red-600'
+                : 'bg-transparent hover:bg-gray-800'
+            }`}
+            buttonBgClass={`bg-transparent`}
+            iconTxtColorClass={`text-white`}
+          />
+        </div>
+      ) : null}
+
       <div
         onClick={() => handleSectionButtons(focusSection)}
         className={`flex flex-1 flex-col items-center justify-center text-center items-center bg-charcoal hover:bg-gray-800 cursor-pointer`}>
@@ -108,7 +147,6 @@ export const FloatingBar = (props: {
       </div>
 
       <CallLinkLauncher />
-
     </div>
   );
 };

@@ -1,8 +1,19 @@
-import React, {useState} from 'react';
+import React, { SetStateAction, useState } from 'react';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 
-const FloatingSideMenu = () => {
+export interface FloatingSideMenuProps {
+  menuState?: number;
+  setMenuState?: (level: number, section: string) => void;
+  focusSection?: string;
+  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
+  chatroom?: any;
+  setOverlay?: React.Dispatch<SetStateAction<string>>;
+  overlay?: string;
+}
+
+const FloatingSideMenu = (props: FloatingSideMenuProps) => {
+  const {overlay, setOverlay} = props;
   const [menuOpenLevel, setMenuOpenLevel] = useState<number>(0);
   const [focusSection, setFocusSection] = useState<string>('');
   const [chatroom, setChatroom] = useState<any>({});
@@ -53,6 +64,8 @@ const FloatingSideMenu = () => {
                 focusSection={focusSection}
                 setFocusSection={setFocusSection}
                 chatroom={chatroom}
+                overlay={overlay}
+                setOverlay={setOverlay}
               />
               <ExpandedMenu
                 menuState={menuOpenLevel}
