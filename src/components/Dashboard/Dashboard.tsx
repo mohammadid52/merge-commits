@@ -20,7 +20,9 @@ import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
 import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
+import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
+import { useParams } from 'react-router';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -672,7 +674,6 @@ const Dashboard = (props: DashboardProps) => {
                     return <Redirect to={`${match.url}/home`} />;
                   } else if (userData.role === 'ST') {
                     return <Redirect to={`${match.url}/home`} />;
-                    // return <Redirect to={`${match.url}/home`} />;
                   } else return <Redirect to={`${match.url}/manage-institutions`} />;
                 } else
                   return (
@@ -682,7 +683,17 @@ const Dashboard = (props: DashboardProps) => {
                   );
               }}
             />
-            <Route exact path={`${match.url}/home`} render={() => <HomeSwitch />} />
+
+            <Route
+              exact
+              path={`${match.url}/home`}
+              render={() => (
+                <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
+                  <HomeSwitch />
+                </ErrorBoundary>
+              )}
+            />
+
             {(userData.role === 'ADM' ||
               userData.role === 'TR' ||
               userData.role === 'FLW' ||
@@ -694,19 +705,21 @@ const Dashboard = (props: DashboardProps) => {
               exact
               path={`${match.url}/classroom/:roomId`}
               render={() => (
-                <Classroom
-                  isTeacher={isTeacher}
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  activeRoomInfo={activeRoomInfo}
-                  activeRoomName={activeRoomName}
-                  setActiveRoomName={setActiveRoomName}
-                  visibleLessonGroup={visibleLessonGroup}
-                  setVisibleLessonGroup={setVisibleLessonGroup}
-                  lessonLoading={lessonLoading}
-                  handleRoomSelection={handleRoomSelection}
-                  syllabusLoading={syllabusLoading}
-                />
+                <ErrorBoundary fallback={<h1>Oops with the Classroom</h1>}>
+                  <Classroom
+                    isTeacher={isTeacher}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    activeRoomInfo={activeRoomInfo}
+                    activeRoomName={activeRoomName}
+                    setActiveRoomName={setActiveRoomName}
+                    visibleLessonGroup={visibleLessonGroup}
+                    setVisibleLessonGroup={setVisibleLessonGroup}
+                    lessonLoading={lessonLoading}
+                    handleRoomSelection={handleRoomSelection}
+                    syllabusLoading={syllabusLoading}
+                  />
+                </ErrorBoundary>
               )}
             />
             <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
@@ -723,20 +736,22 @@ const Dashboard = (props: DashboardProps) => {
             <Route
               path={`${match.url}/lesson-planner/:roomId`}
               render={() => (
-                <LessonPlanHome
-                  handleRoomSelection={handleRoomSelection}
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                  activeRoomInfo={activeRoomInfo}
-                  activeRoomName={activeRoomName}
-                  setActiveRoomName={setActiveRoomName}
-                  visibleLessonGroup={visibleLessonGroup}
-                  setVisibleLessonGroup={setVisibleLessonGroup}
-                  lessonLoading={lessonLoading}
-                  setLessonLoading={setLessonLoading}
-                  syllabusLoading={syllabusLoading}
-                  setSyllabusLoading={setSyllabusLoading}
-                />
+                <ErrorBoundary fallback={<h1>Oops with the Lesson-Planner</h1>}>
+                  <LessonPlanHome
+                    handleRoomSelection={handleRoomSelection}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    activeRoomInfo={activeRoomInfo}
+                    activeRoomName={activeRoomName}
+                    setActiveRoomName={setActiveRoomName}
+                    visibleLessonGroup={visibleLessonGroup}
+                    setVisibleLessonGroup={setVisibleLessonGroup}
+                    lessonLoading={lessonLoading}
+                    setLessonLoading={setLessonLoading}
+                    syllabusLoading={syllabusLoading}
+                    setSyllabusLoading={setSyllabusLoading}
+                  />
+                </ErrorBoundary>
               )}
             />
             <Route

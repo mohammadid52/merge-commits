@@ -31,7 +31,7 @@ export interface ResponseState {
 interface ResponseObject {
   qid: string;
   response: string[];
-  other?: string;
+  // other?: string;
 }
 
 export interface QuestionInterface {
@@ -249,7 +249,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
               qid: id,
               response: valueArray,
               // Add this value to query
-              otherValue: value === 'other' ? otherValue : null,
+              // otherValue: value === 'other' ? otherValue : null,
             };
           } else {
             return obj;

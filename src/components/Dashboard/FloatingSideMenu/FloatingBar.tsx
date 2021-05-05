@@ -11,6 +11,7 @@ import {
 import {RiChat1Line} from 'react-icons/ri';
 import {IoChatbubble, IoDocument} from 'react-icons/io5';
 import {ImPhone} from 'react-icons/im';
+import {CallLinkLauncher} from './CallLinkLauncher';
 
 export const FloatingBar = (props: {
   menuState?: number;
@@ -78,21 +79,7 @@ export const FloatingBar = (props: {
           iconTxtColorClass={`text-white`}
         />
       </div>
-      <div className={`flex-0 h-12 border-b-0 border-charcoal`}>
-        <ButtonsRound
-          Icon={ImPhone}
-          iconSizePX={16}
-          buttonWHClass={`w-12 h-12`}
-          onClick={() => handleSectionButtons('Call')}
-          containerBgClass={`${
-            menuState > 0 && focusSection === 'Call'
-              ? 'bg-red-700 hover:bg-red-600'
-              : 'bg-transparent hover:bg-gray-800'
-          }`}
-          buttonBgClass={`bg-transparent`}
-          iconTxtColorClass={`text-white`}
-        />
-      </div>
+
       <div className={`flex-0 h-12 border-b-0 border-charcoal`}>
         <ButtonsRound
           Icon={IoDocument}
@@ -110,7 +97,7 @@ export const FloatingBar = (props: {
       </div>
       <div
         onClick={() => handleSectionButtons(focusSection)}
-        className={`flex flex-1 flex-col items-center justify-center text-center items-center bg-charcoal hover:bg-gray-800 rounded-bl-lg cursor-pointer`}>
+        className={`flex flex-1 flex-col items-center justify-center text-center items-center bg-charcoal hover:bg-gray-800 cursor-pointer`}>
         <div
           className={`transform -rotate-90 w-max flex flex-1 justify-center content-center items-center`}>
           <div
@@ -119,6 +106,9 @@ export const FloatingBar = (props: {
           </div>
         </div>
       </div>
+
+      <CallLinkLauncher />
+
     </div>
   );
 };

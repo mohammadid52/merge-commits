@@ -52,7 +52,7 @@ const RoomChat = (props: RoomChatProps) => {
 
   const showLoader = () => {
     return (
-      <div className={`absolute inset-0 flex  items-center justify-center p-2`}>
+      <div className={`absolute inset-0 flex  items-center justify-center px-2 pb-2`}>
         <p className="w-min text-center text-lg font-light text-charcoal">
           Loading chat...
         </p>
@@ -62,7 +62,7 @@ const RoomChat = (props: RoomChatProps) => {
 
   const showNomsgs = () => {
     return (
-      <div className={`absolute inset-0 flex  items-center justify-center p-2`}>
+      <div className={`absolute inset-0 flex  items-center justify-center px-2 pb-2`}>
         <p className="w-min text-center text-lg font-light text-charcoal">
           No recent messages.
         </p>
@@ -325,25 +325,24 @@ const RoomChat = (props: RoomChatProps) => {
 
   return (
     <>
-      <div id={`roomchat_container`} className={`flex-1 bg-container`}>
-        <div className={`${loading ? 'p-2 absolute inset-0 top-2.5 bottom-0' : 'h-0'}`}>
-          {showLoader()}
-        </div>
+      <div id={`roomchat_container`} className={`flex-1 bg-white`}>
+        {/*<div className={`${loading ? 'p-2 absolute inset-0 top-3 bottom-0' : 'h-0'}`}>*/}
+        {/*  {showLoader()}*/}
+        {/*</div>*/}
 
         <div
           className={`absolute bottom-3.5 h-6 min-w-48 bg-gradient-to-t from-gray-100 to-transparent pointer-events-none z-50`}
         />
-        <div
-          className={`
+        <div className={`
                       transform transition-opacity ease-in-out duration-700 
                       ${!loading ? 'opacity-100' : 'opacity-0'}
-                      absolute inset-0 top-3 bottom-3.5 overflow-y-scroll container_background
-                      border-t-0 border-gray-400`}>
+                      absolute inset-0 top-3 bottom-3.5 overflow-y-scroll`}>
           {!loading && showRoomMsgs()}
+          {loading && showLoader()}
         </div>
       </div>
       <div
-        className={`flex-none absolute bottom-0 h-14 flex items-center border-t-0 border-b-0 border-gray-400`}>
+        className={`flex-none absolute bottom-0 h-14 flex items-center bg-container border-t-0 border-b-0 border-gray-400`}>
         {msgInputBox()}
       </div>
     </>

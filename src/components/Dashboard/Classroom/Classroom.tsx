@@ -125,6 +125,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     completed: 0,
   });
 
+  // useEffect(() => {
+  //   throw new Error('Test error');
+  // }, []);
+
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
     if (state.user.role === 'ST') {

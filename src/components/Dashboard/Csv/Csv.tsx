@@ -370,20 +370,19 @@ const Csv = (props: Csv) => {
       {label: 'Unit', key: 'unit'},
       {label: 'Classroom', key: 'classroom'},
       {label: 'Survey name', key: 'surveyName'},
-      {label: 'Completed', key: 'completedAt'},
       ...surveyQuestionHeaders,
       // ...demographicsQuestionHeaders,
     ]);
+
     let data = students.map((stu: any) => {
       let studentAnswers: any = {};
+      const dates: any[] = [];
+
       SCQAnswers.map((ans: any) => {
         if (ans.person.id === stu.id) {
-          studentAnswers['completedAt'] =
-            new Date(ans.updatedAt || ans.createdAt).toLocaleString('en-US') ||
-            'Not completed';
-
           ans.responseObject.map((resp: any) => {
             if (qids.indexOf(resp.qid) >= 0) {
+              dates.push(ans.updatedAt);
               studentAnswers[resp.qid] =
                 Array.isArray(resp.response) && resp.response.length
                   ? resp.response[0]
@@ -405,6 +404,10 @@ const Csv = (props: Csv) => {
       //     });
       //   }
       // });
+
+      // @ts-ignore
+      const sortedDates = dates.sort((a: any, b: any) => new Date(b) - new Date(a));
+
       return {
         ...stu,
         institute: selectedInst.name,
@@ -413,8 +416,14 @@ const Csv = (props: Csv) => {
         classroom: selectedClassRoom.name,
         surveyName: selectedSurvey.name,
         ...studentAnswers,
+        first:
+          (sortedDates[sortedDates.length - 1] &&
+            new Date(sortedDates[sortedDates.length - 1]).toLocaleString('en-US')) ||
+          '-',
+        last: (sortedDates[0] && new Date(sortedDates[0]).toLocaleString('en-US')) || '-',
       };
     });
+
     setCSVData(data);
     setIsCSVDownloadReady(true);
     setCsvGettingReady(false);
@@ -442,9 +451,6 @@ const Csv = (props: Csv) => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" style={{width: '10%'}} className={theadStyles}>
-                      Student Name
-                    </th>
                     <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       Institute Name
                     </th>
@@ -460,17 +466,17 @@ const Csv = (props: Csv) => {
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Survey Name
                     </th>
-                    <th scope="col" style={{width: '10%'}} className={theadStyles}>
-                      Completed
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                      Start
+                    </th>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
+                      End
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {CSVData.map((listItem, idx) => (
-                    <tr className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{width: '10%'}} className={tdataStyles}>
-                        {listItem.firstName + ' ' + listItem.lastName}
-                      </td>
+                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td style={{width: '15%'}} className={tdataStyles}>
                         {listItem.institute}
                       </td>
@@ -486,8 +492,12 @@ const Csv = (props: Csv) => {
                       <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.surveyName}
                       </td>
+
                       <td style={{width: '10%'}} className={tdataStyles}>
-                        {listItem.completedAt}
+                        {listItem.first}
+                      </td>
+                      <td style={{width: '10%'}} className={tdataStyles}>
+                        {listItem.last}
                       </td>
                     </tr>
                   ))}
