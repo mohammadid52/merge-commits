@@ -65,13 +65,13 @@ const SurveyTopMenu = (props: LessonHeaderBarProps) => {
       }`}>
       <div className={`h-8 max-w-256 flex flex-col justify-between`}>
         <div className={`h-2 ${theme.elem.text}`}>
-          <span>Survey Progress: </span>
+          <span className="font-medium">Survey Progress: </span>
           {nrQuestions > 0 && (
             <span className={`font-bold`}>
               {nrAnswers}/{nrQuestions}
             </span>
           )}
-          <span> questions answered</span>
+          <span className="font-medium"> questions answered</span>
         </div>
         <div className="overflow-hidden h-2 text-xs flex rounded-full bg-medium-gray">
           <div
