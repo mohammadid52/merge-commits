@@ -1,13 +1,21 @@
-import React, { lazy, useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {lazy, useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../contexts/LessonContext';
+import {
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import queryString from 'query-string';
 import * as mutations from '../../../graphql/mutations';
 import NotesForm from '../LessonComponents/Notes/NotesForm';
 
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
+const IntroV2 = lazy(() => import('../LessonComponents/Intro/IntroV2'));
 const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
 const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
 const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
@@ -35,9 +43,10 @@ export interface BodyProps {
 }
 
 const Body = (props: BodyProps) => {
-  const { setupComplete, checkpointsLoaded, lessonDataLoaded, checkpointsItems } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {setupComplete, checkpointsLoaded, lessonDataLoaded, checkpointsItems} = props;
+  const {state, theme, dispatch} = useContext(LessonContext);
   const location = useLocation();
+  const history = useHistory();
   const match = useRouteMatch();
 
   const lessonType = state.data?.lesson?.type;
@@ -76,7 +85,7 @@ const Body = (props: BodyProps) => {
 
   const pageFetch = (stage: string) => {
     let pageMatch = state.pages
-      .filter((page: { stage: string }) => {
+      .filter((page: {stage: string}) => {
         return page.stage === stage;
       })
       .pop();
@@ -91,18 +100,43 @@ const Body = (props: BodyProps) => {
   useEffect(() => {
     if (state.currentPage < state.pages.length - 1) {
       if (state.pages[state.currentPage + 1].open) {
-        dispatch({ type: 'CAN_CONTINUE' });
+        dispatch({type: 'CAN_CONTINUE'});
       } else {
-        dispatch({ type: 'STOP' });
+        dispatch({type: 'STOP'});
       }
     } else {
-      dispatch({ type: 'STOP' });
+      dispatch({type: 'STOP'});
     }
   }, [state.currentPage, state.pages]);
 
+  const pageList = [
+    {
+      id: 0,
+      name: 'message',
+    },
+
+    {
+      id: 1,
+      name: 'instructions',
+    },
+
+    {
+      id: 2,
+      name: 'checkpoints',
+    },
+
+    {
+      id: 3,
+      name: 'closing',
+    },
+  ];
+
   return (
     <>
-      <div className={`z-0 px-4 pb-4 pt-8 ${theme.bg} ${state.data.lesson.type === 'survey' ? 'mt-12' : ''}`}>
+      <div
+        className={`z-0 px-4 pb-4 pt-8 ${theme.bg} ${
+          state.data.lesson.type === 'survey' ? 'mt-12' : ''
+        }`}>
         {/**
          *  COMPONENT SWITCH
          */}
@@ -111,10 +145,7 @@ const Body = (props: BodyProps) => {
             {(() => {
               if (lessonType === 'assessment' || lessonType === 'survey') {
                 return (
-                  <>
-                    <Intro />
-                    <Checkpoint isTeacher={false} checkpointsItems={checkpointsItems} />
-                  </>
+                  <IntroV2 pageList={pageList} checkpointsItems={checkpointsItems} />
                 );
               } else {
                 return <Intro checkpointsItems={checkpointsItems} />;
@@ -135,11 +166,11 @@ const Body = (props: BodyProps) => {
         </Route>*/}
           <Route
             path={`${match.url}/intro`}
-            render={({ location }) => (
+            render={({location}) => (
               <Redirect
                 to={{
                   pathname: `${match.url}`,
-                  state: { from: location },
+                  state: {from: location},
                 }}
               />
             )}

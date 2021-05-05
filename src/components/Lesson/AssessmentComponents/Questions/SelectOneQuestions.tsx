@@ -5,6 +5,7 @@ import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 import {QuestionInterface} from '../CheckpointQuestions';
 import {QuestionProps} from '../Question';
 import LessonElementCard from '../../../Atoms/LessonElementCard';
+import find from 'lodash/find';
 
 interface SelectOneRowState {
   id: string;
@@ -29,10 +30,15 @@ const SelectOneQuestions = (props: QuestionProps) => {
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
   const {state, theme, dispatch} = switchContext;
-
-  const [input, setInput] = useState<SelectOneRowState>({id: '', value: ''});
-  const [otherOptSel, setOtherOptSel] = useState(false);
   const questionId = question.question.id;
+
+  const oneQuestInitAns =
+    find(
+      state.questionData[checkpointID],
+      (q) => q.qid === questionId
+    ).response.toString() || '';
+  const [input, setInput] = useState<SelectOneRowState>({id: '', value: oneQuestInitAns});
+  const [otherOptSel, setOtherOptSel] = useState(false);
   const [other, setOther] = useState('');
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
@@ -51,6 +57,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
     setOtherOptSel(false);
     handleInputChange(questionId, input.value, checkpointID, other);
   };
+
   return (
     <>
       {visible && (
@@ -96,23 +103,24 @@ const SelectOneQuestions = (props: QuestionProps) => {
                 );
               }
             )}
-            {otherOptSel && (
-              <div>
-                <input
-                  value={other}
-                  onChange={(e) => setOther(e.target.value)}
-                  className="bg-transparent border-b-2 my-8 text-white border-sea-green pb-2"
-                  placeholder="Other"
-                  type="text"
-                />
-                <button
-                  onClick={onOtherSave}
-                  className="bg-sea-green w-auto py-2 px-4 rounded">
-                  save
-                </button>
-              </div>
-            )}
           </div>
+
+          {otherOptSel && (
+            <div>
+              <input
+                value={other}
+                onChange={(e) => setOther(e.target.value)}
+                className="bg-transparent border-b-2 my-8 text-white border-sea-green pb-2"
+                placeholder="Other"
+                type="text"
+              />
+              <button
+                onClick={onOtherSave}
+                className="bg-sea-green w-auto py-2 px-4 rounded">
+                save
+              </button>
+            </div>
+          )}
         </div>
       )}
     </>
