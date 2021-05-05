@@ -133,7 +133,6 @@ const Intro = (props: LessonComponentsInterface) => {
           {currentPage.name === 'checkpoints' && (
             <Checkpoint
               fromClosing={fromClosing}
-              pageList={pageList}
               isTeacher={false}
               checkpointsItems={checkpointsItems}
             />
