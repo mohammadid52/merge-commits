@@ -109,32 +109,10 @@ const Body = (props: BodyProps) => {
     }
   }, [state.currentPage, state.pages]);
 
-  const pageList = [
-    {
-      id: 0,
-      name: 'message',
-    },
-
-    {
-      id: 1,
-      name: 'instructions',
-    },
-
-    {
-      id: 2,
-      name: 'checkpoints',
-    },
-
-    {
-      id: 3,
-      name: 'closing',
-    },
-  ];
-
   return (
     <>
       <div
-        className={`z-0 px-4 pb-4 pt-8 ${theme.bg} ${
+        className={`z-0 px-4 pb-4 pt-8  ${theme.bg} ${
           state.data.lesson.type === 'survey' ? 'mt-12' : ''
         }`}>
         {/**
@@ -144,9 +122,7 @@ const Body = (props: BodyProps) => {
           <Route exact path={`${match.url}/`}>
             {(() => {
               if (lessonType === 'assessment' || lessonType === 'survey') {
-                return (
-                  <IntroV2 pageList={pageList} checkpointsItems={checkpointsItems} />
-                );
+                return <IntroV2 checkpointsItems={checkpointsItems} />;
               } else {
                 return <Intro checkpointsItems={checkpointsItems} />;
               }

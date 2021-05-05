@@ -19,13 +19,14 @@ import {BsArrowRight, BsArrowLeft} from 'react-icons/bs';
 import Tooltip from '../../../Atoms/Tooltip';
 
 const Intro = (props: LessonComponentsInterface) => {
-  const {checkpointsItems, pageList} = props;
+  const {checkpointsItems} = props;
   const {
     state,
     theme,
     dispatch,
     clientKey,
     userLanguage,
+    pageList,
     currentPage,
     setCurrentPage,
   } = useContext(LessonContext);
@@ -133,8 +134,6 @@ const Intro = (props: LessonComponentsInterface) => {
             <Checkpoint
               fromClosing={fromClosing}
               pageList={pageList}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
               isTeacher={false}
               checkpointsItems={checkpointsItems}
             />
@@ -145,10 +144,10 @@ const Intro = (props: LessonComponentsInterface) => {
               className={`flex mt-4 items-center  ${
                 isLastPage || !isNotFirstPage ? 'justify-center' : 'justify-between'
               } text-white `}>
-              {isNotFirstPage && (
+              {isNotFirstPage && !isLastPage && (
                 <div
                   onClick={onBack}
-                  className="w-auto px-2 py-1 border-0 border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center pageChange__btn">
+                  className="px-2 py-1 border-0 pageChange__btn border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center ">
                   <Tooltip
                     text={`${pageList[currentPageIdx - 1].name} section`}
                     placement="bottom">
@@ -162,7 +161,7 @@ const Intro = (props: LessonComponentsInterface) => {
               {!isLastPage && (
                 <div
                   onClick={onNext}
-                  className="w-auto px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green transition-all cursor-pointer flex items-center pageChange__btn">
+                  className="px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green pageChange__btn transition-all cursor-pointer flex items-center">
                   <Tooltip
                     text={`${pageList[currentPageIdx + 1].name} section`}
                     placement="bottom">

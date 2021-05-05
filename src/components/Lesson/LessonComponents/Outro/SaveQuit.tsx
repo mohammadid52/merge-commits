@@ -10,7 +10,9 @@ import {Auth} from '@aws-amplify/auth';
 import {FiLogOut} from 'react-icons/all';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineSave} from 'react-icons/ai';
-
+import Tooltip from '../../../Atoms/Tooltip';
+import {BsArrowLeft} from 'react-icons/bs';
+import findIndex from 'lodash/findIndex';
 interface SaveQuitProps {
   id?: string;
   feedback?: {
@@ -21,7 +23,9 @@ interface SaveQuitProps {
 }
 
 const SaveQuit = (props: SaveQuitProps) => {
-  const {state, dispatch, theme} = useContext(LessonContext);
+  const {state, dispatch, pageList, setCurrentPage, currentPage, theme} = useContext(
+    LessonContext
+  );
   const {state: globalStateAccess} = useContext(GlobalContext);
   const {id, feedback, roomID: roomIDFromProps} = props;
   const history = useHistory();
@@ -42,10 +46,7 @@ const SaveQuit = (props: SaveQuitProps) => {
     if (isSaving) {
       if (nrSaves === checkpointIdKeys.length) {
         if (roomID) {
-          setTimeout(
-            () => (window.location.href = `/dashboard/classroom/${roomID}`),
-            50
-          );
+          setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
         } else {
           history.push('/dashboard/home');
         }
@@ -95,12 +96,8 @@ const SaveQuit = (props: SaveQuitProps) => {
         await createQuestionData(responseObject, idx);
       }, null);
     } else {
-      setTimeout(
-        () => (window.location.href = `/dashboard/classroom/${roomID}`),
-        50
-      );
+      setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
     }
-
   };
 
   const handleManualSave = () => {
@@ -114,9 +111,15 @@ const SaveQuit = (props: SaveQuitProps) => {
     }
   };
 
+  const onBack = () => {
+    const curPage = pageList[currentPageIdx - 1];
+    setCurrentPage(curPage);
+  };
+
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
   };
+  const currentPageIdx = findIndex(pageList, (item: any) => item.id === currentPage.id);
 
   return (
     <>
@@ -136,10 +139,22 @@ const SaveQuit = (props: SaveQuitProps) => {
         </div>
       ) : null}
 
-      <div className="w-full flex flex-col my-24">
+      <div className="w-full items-center justify-center flex my-24">
+        <div
+          onClick={onBack}
+          className="px-2 py-1 border-0 pageChange__btn mr-4 border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center ">
+          <Tooltip
+            text={`${pageList[currentPageIdx - 1].name} section`}
+            placement="bottom">
+            <div className="flex back-content items-center">
+              <BsArrowLeft color="#fff" />
+              <p className="ml-2">Back</p>
+            </div>
+          </Tooltip>
+        </div>
         <button
           type="submit"
-          className={`self-center w-auto px-4 h-10 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded-full my-4`}
+          className={`self-center py-1 w-auto px-4 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded my-4`}
           onClick={handlePopup}>
           <IconContext.Provider
             value={{className: 'w-auto mr-2', style: {cursor: 'pointer'}}}>

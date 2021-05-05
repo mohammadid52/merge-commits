@@ -24,7 +24,6 @@ const Checkpoint = (props: {
   checkpointsLoaded?: BodyProps['checkpointsLoaded'];
   setupComplete?: BodyProps['setupComplete'];
   checkpointsItems?: any[];
-  pageList?: any[];
   fromClosing?: boolean;
 }) => {
   /**
@@ -35,13 +34,12 @@ const Checkpoint = (props: {
     checkpointsLoaded,
     setupComplete,
     checkpointsItems,
-    pageList,
     fromClosing,
   } = props;
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch, currentPage} = switchContext;
+  const {state, theme, dispatch} = switchContext;
 
   const [urlState] = useUrlState({roomId: ''});
   const {roomId} = urlState;
@@ -96,7 +94,6 @@ const Checkpoint = (props: {
       {checkpointsItems && checkpointsItems.length > 0 && (
         <CheckpointQuestions
           fromClosing={fromClosing}
-          pageList={pageList}
           isTeacher={isTeacher}
           checkpointType={`checkpoint`}
           handleSetTitle={handleSetTitle}
@@ -108,12 +105,12 @@ const Checkpoint = (props: {
        *  3.
        *  SHOW OUTRO + SAVE, IF SURVEY
        */}
-      {!isTeacher && state.data.lesson.type !== 'lesson' && currentPage === 'undefined' && (
+      {/* {!isTeacher && state.data.lesson.type !== 'lesson' && (
         <>
           <SurveyOutro />
           <SaveQuit roomID={roomId} />
         </>
-      )}
+      )} */}
     </div>
   );
 };

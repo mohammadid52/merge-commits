@@ -392,6 +392,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         setCurrentPage,
         state,
         dispatch,
+        pageList,
         theme,
         lesson,
         setLesson,

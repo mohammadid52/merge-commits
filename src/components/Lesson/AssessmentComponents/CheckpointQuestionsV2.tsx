@@ -23,7 +23,6 @@ import last from 'lodash/last';
 
 interface CheckpointQuestionsProps {
   isTeacher?: boolean;
-  pageList?: any[];
   handleSetTitle?: React.Dispatch<React.SetStateAction<string>>;
   checkpointType?: string;
   checkpointsItems?: any[];
@@ -65,14 +64,13 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     isTeacher,
     handleSetTitle,
     checkpointType,
-    pageList,
     checkpointsItems,
     fromClosing,
   } = props;
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch, currentPage, setCurrentPage} = switchContext;
+  const {state, theme, dispatch, pageList, currentPage, setCurrentPage} = switchContext;
 
   const checkpointId = checkpointsItems.map((item: any, idx: number) => ({
     id: idx,
@@ -386,7 +384,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             <div className="flex mt-4 items-center justify-between text-white">
               <div
                 onClick={onBack}
-                className="pageChange__btn w-auto px-2 py-1 border-0 border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center">
+                className="pageChange__btn px-2 py-1 border-0 border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center">
                 <Tooltip text={tooltipTextForBackBtn} placement="bottom">
                   <div className="flex items-center back-content">
                     <BsArrowLeft color="#fff" />
@@ -396,7 +394,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
               </div>
               <div
                 onClick={onNext}
-                className="pageChange__btn w-auto px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green transition-all cursor-pointer flex items-center">
+                className="pageChange__btn px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green transition-all cursor-pointer flex items-center">
                 <Tooltip text={tooltipTextForNextBtn} placement="bottom">
                   <div className="flex items-center next-content">
                     <p className="mr-2">Next</p>

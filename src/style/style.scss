@@ -608,17 +608,6 @@
   }
 }
 
-.pageChange__btn:hover {
-  & .next-content p {
-    transition: all 0.1s linear;
-    margin-right: 0.7rem;
-  }
-  & .back-content p {
-    transition: all 0.1s linear;
-    margin-left: 0.7rem;
-  }
-}
-
 .translate__animation {
   // to hide = -65px
   // to show = 0px
@@ -630,4 +619,13 @@
   &.hide {
     transform: translateY(-65px);
   }
+}
+
+.pageChange__btn {
+  width: 5rem;
+  transition: width 0.1s;
+  &:hover {
+    width: 5.2rem;
+  }
+  color: #fff;
 }
