@@ -23,6 +23,7 @@ import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
 import { useParams } from 'react-router';
+import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -722,17 +723,23 @@ const Dashboard = (props: DashboardProps) => {
                 </ErrorBoundary>
               )}
             />
+
             <Route path={`${match.url}/anthology`} render={() => <Anthology />} />
+
             <Route
               path={`${match.url}/noticeboard`}
               render={() => <NoticeboardAdmin setCurrentPage={setCurrentPage} />}
             />
+
             <Route path={`${match.url}/manage-users`} render={() => <UserManagement />} />
+
             <Route path={`${match.url}/registration`} render={() => <Registration />} />
+
             <Route
               path={`${match.url}/profile`}
               render={() => <Profile updateAuthState={updateAuthState} />}
             />
+
             <Route
               path={`${match.url}/lesson-planner/:roomId`}
               render={() => (
@@ -754,15 +761,24 @@ const Dashboard = (props: DashboardProps) => {
                 </ErrorBoundary>
               )}
             />
+
             <Route
               path={`${match.url}/manage-institutions`}
               render={() => <InstitutionsHome setCurrentPage={setCurrentPage} />}
             />
+
             <Route path={`${match.url}/question-bank`} render={() => <QuestionBank />} />
+
             <Route
               path={`${match.url}/lesson-builder`}
               render={() => <LessonsBuilderHome />}
             />
+
+            <Route
+              path={`${match.url}/universal-lesson-builder`}
+              render={() => <UniversalLessonBuilder />}
+            />
+
           </Switch>
         </Suspense>
       </div>

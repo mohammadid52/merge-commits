@@ -1,6 +1,6 @@
 import Buttons from '../../../../Atoms/Buttons';
 import React from 'react';
-import { FiLayers } from 'react-icons/Fi';
+import { FiLayers } from 'react-icons/fi';
 
 interface PageGalleryToggleProps {
   handleSetGalleryVisibility: () => void;

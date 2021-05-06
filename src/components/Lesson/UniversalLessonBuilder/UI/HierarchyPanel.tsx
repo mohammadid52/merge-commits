@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiLayers } from 'react-icons/Fi';
+import { FiLayers } from 'react-icons/fi';
 import ButtonsRound from '../../../Atoms/ButtonsRound';
 import { SlideOutTreeView } from './HierarchyPanel/SlideOutTreeView';
 import { Transition } from '@headlessui/react';

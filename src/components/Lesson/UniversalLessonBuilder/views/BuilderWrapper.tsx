@@ -14,6 +14,8 @@ import { CoreBuilder } from './CoreBuilder';
 import { HierarchyPanel } from '../UI/HierarchyPanel';
 import { EditPanel } from '../UI/EditPanel';
 import { BuilderMenu } from '../UI/BuilderMenu';
+import ModalPopUp from '../../../Molecules/ModalPopUp';
+import ModalPopIn from '../../../Molecules/ModalPopIn';
 
 interface ExistingLessonTemplateProps {
   mode?: 'building' | 'viewing';
@@ -58,7 +60,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
 
   return (
-    <div className=" relative bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
+    <div className="relative bg-white shadow-5 overflow-hidden sm:rounded-lg">
       <Toolbar
         selectedPageDetails={selectedPageDetails}
         hierarchyVisible={hierarchyVisible}
@@ -69,15 +71,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setBuilderMenuVisible={setBuilderMenuVisible}
       />
 
-      <PageSelector
-        universalLessonDetails={universalLessonDetails}
-        universalBuilderDict={UniversalBuilderDict}
-        userLanguage={userLanguage}
-        galleryVisible={galleryVisible}
-        loading={loading}
-        selectedPageDetails={selectedPageDetails}
-        setSelectedPageDetails={setSelectedPageDetails}
-      />
+      <ModalPopIn message={`this is a popup, it should end up containing additional controls for the universal lesson builder`}/>
 
       <HierarchyPanel
         hierarchyVisible={hierarchyVisible}
@@ -87,6 +81,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setSelectedPagePartDetails={setSelectedPagePartDetails}
         selectedPartContentDetails={selectedPartContentDetails}
         setSelectedPartContentDetails={setSelectedPartContentDetails}
+      />
+
+      <PageSelector
+        universalLessonDetails={universalLessonDetails}
+        universalBuilderDict={UniversalBuilderDict}
+        userLanguage={userLanguage}
+        galleryVisible={galleryVisible}
+        loading={loading}
+        selectedPageDetails={selectedPageDetails}
+        setSelectedPageDetails={setSelectedPageDetails}
       />
 
       <BuilderMenu

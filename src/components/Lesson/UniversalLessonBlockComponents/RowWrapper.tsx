@@ -14,7 +14,7 @@ export const RowWrapper = (props: RowWrapperProps) => {
   const buildModeClass = `ring-2 hover:ring-4`;
 
   return (
-    <div className={`m-4`}>
+    <div className={`my-4`}>
       <div
         className={`
         ${mode === 'building' ? buildModeClass : viewModeClass}
