@@ -53,21 +53,25 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     {
       id: 0,
       name: 'message',
+      tooltipText: 'Message',
     },
 
     {
       id: 1,
       name: 'instructions',
+      tooltipText: 'Instruction',
     },
 
     {
       id: 2,
       name: 'checkpoints',
+      tooltipText: 'Checkpoints',
     },
 
     {
       id: 3,
       name: 'closing',
+      tooltipText: 'Closing',
     },
   ];
 

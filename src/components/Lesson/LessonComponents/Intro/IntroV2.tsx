@@ -162,7 +162,7 @@ const Intro = (props: LessonComponentsInterface) => {
                   onClick={onBack}
                   className="px-2 py-1 border-0 pageChange__btn border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center ">
                   <Tooltip
-                    text={`${pageList[currentPageIdx - 1].name} section`}
+                    text={`${pageList[currentPageIdx - 1].tooltipText} Section`}
                     placement="bottom">
                     <div className="flex back-content items-center">
                       <BsArrowLeft color="#fff" />
@@ -176,7 +176,7 @@ const Intro = (props: LessonComponentsInterface) => {
                   onClick={onNext}
                   className="px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green pageChange__btn transition-all cursor-pointer flex items-center">
                   <Tooltip
-                    text={`${pageList[currentPageIdx + 1].name} section`}
+                    text={`${pageList[currentPageIdx + 1].tooltipText} Section`}
                     placement="bottom">
                     <div className="flex next-content items-center">
                       <p className="mr-2">Next</p>
