@@ -7,7 +7,7 @@ import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 const Lesson = () => {
     return (
         <LessonContextProvider>
-          <FloatingSideMenu/>
+
             <LessonApp />
         </LessonContextProvider>
     )

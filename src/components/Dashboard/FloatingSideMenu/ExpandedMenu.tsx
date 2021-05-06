@@ -6,6 +6,8 @@ import Rooms from '../../RoomChat/Rooms';
 import {CallWidgetsSmall} from './SectionContent/CallWidgetsSmall';
 import {FileWidgetsSmall} from './SectionContent/FileWidgetsSmall';
 import RoomChat from '../../RoomChat/RoomChat';
+import NotesForm from '../../Lesson/LessonComponents/Notes/NotesForm';
+import useDictionary from '../../../customHooks/dictionary';
 
 // GET ALL THE RELEVANT WIDGETS HERE
 
@@ -25,7 +27,8 @@ const ExpandedMenu = (props: {
     chatroom,
     setChatroom,
   } = props;
-  const {state, clientKey} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const { lessonDict } = useDictionary(clientKey);
 
   const setSelectedChatroom = (roomObj: any) => {
     if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
@@ -112,6 +115,16 @@ const ExpandedMenu = (props: {
             }`}
             focusSection={focusSection}>
             <RoomChat selectedRoom={chatroom} focusSection={focusSection} />
+          </SideMenuSection>
+        )}
+        {focusSection === 'Notes' && (
+          <SideMenuSection
+            menuState={menuState}
+            setMenuState={setMenuState}
+            sectionLabel={`Notes`}
+            sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
+            focusSection={focusSection}>
+            <NotesForm focusSection={focusSection}/>
           </SideMenuSection>
         )}
       </div>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customMutations from '../../customGraphql/customMutations';
@@ -9,6 +9,8 @@ import {AiOutlineSend, GrClose} from 'react-icons/all';
 import isEmpty from 'lodash/isEmpty';
 import MessageGroupWrapper from './MessageGroupWrapper';
 import MessageWrapper from './MessageWrapper';
+import {Simulate} from 'react-dom/test-utils';
+import load = Simulate.load;
 
 interface RoomChatProps {
   selectedRoom: any;
@@ -33,10 +35,11 @@ const RoomChat = (props: RoomChatProps) => {
   const fetchRoomChat = async () => {
     setLoading(true);
     let yesterday = getDate(1);
+    let lastWeek = getDate(8);
     let msgs: any = await API.graphql(
       graphqlOperation(customQueries.messagesByRoomId, {
         roomID: selectedRoom.id,
-        createdAt: {gt: yesterday.toISOString()},
+        createdAt: {gt: lastWeek.toISOString()},
       })
     );
     msgs = msgs?.data.messagesByRoomID?.items || [];
@@ -261,6 +264,7 @@ const RoomChat = (props: RoomChatProps) => {
   };
 
   const deleteMsg = async (message: any) => {
+    console.log('attempt delete message - ', message);
     try {
       let messages = msgs.filter((m: any) => m.id !== message.id);
       setMsgs([...messages]);
@@ -323,22 +327,32 @@ const RoomChat = (props: RoomChatProps) => {
     }
   }, [msgs]);
 
+  /**
+   * FOR SCROLL TO BOTTOM
+   */
+  const bottomChatRef = useRef();
+
+  useEffect(() => {
+    if (!loading) {
+      // @ts-ignore
+      bottomChatRef?.current?.scrollIntoView();
+    }
+  }, [loading]);
+
   return (
     <>
       <div id={`roomchat_container`} className={`flex-1 bg-white`}>
-        {/*<div className={`${loading ? 'p-2 absolute inset-0 top-3 bottom-0' : 'h-0'}`}>*/}
-        {/*  {showLoader()}*/}
-        {/*</div>*/}
-
         <div
           className={`absolute bottom-3.5 h-6 min-w-48 bg-gradient-to-t from-gray-100 to-transparent pointer-events-none z-50`}
         />
-        <div className={`
+        <div
+          className={`
                       transform transition-opacity ease-in-out duration-700 
                       ${!loading ? 'opacity-100' : 'opacity-0'}
                       absolute inset-0 top-3 bottom-3.5 overflow-y-scroll`}>
           {!loading && showRoomMsgs()}
           {loading && showLoader()}
+          <div ref={bottomChatRef} />
         </div>
       </div>
       <div

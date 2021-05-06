@@ -1,20 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
-import ButtonsRound from '../../Atoms/ButtonsRound';
-import {
-  AiOutlineArrowDown,
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiOutlineArrowUp,
-  AiOutlineInfoCircle,
-  AiOutlineMenu,
-} from 'react-icons/ai';
-import {RiChat1Line} from 'react-icons/ri';
-import {IoChatbubble, IoDocument} from 'react-icons/io5';
-import {ImPhone} from 'react-icons/im';
-import {GlobalContext} from '../../../contexts/GlobalContext';
-import {Widget} from '../../../interfaces/ClassroomComponentsInterfaces';
+import React, { useContext, useEffect, useState } from 'react';
+import ButtonsRound from '../../../Atoms/ButtonsRound';
+import { ImPhone } from 'react-icons/im';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
+import { Widget } from '../../../../interfaces/ClassroomComponentsInterfaces';
+import { FloatingSideMenuProps } from '../FloatingSideMenu';
 
-export const CallLinkLauncher = () => {
+interface CallLinkLauncherProps extends FloatingSideMenuProps {
+  callback?: any;
+}
+
+export const CallLinkLauncher = (props: CallLinkLauncherProps) => {
+  const {callback} = props;
   const {state} = useContext(GlobalContext);
   const [callLink, setCallLink] = useState<any>({});
   useEffect(() => {
@@ -42,10 +38,9 @@ export const CallLinkLauncher = () => {
         buttonWHClass={`w-12 h-12`}
         pointerEvents={isCallLink}
         onClick={
-          isCallLink ? () => handleOpenCallLink(callLink.links[0]?.url) : undefined
+          isCallLink ? () => callback('Call', () => handleOpenCallLink(callLink.links[0]?.url)) : undefined
         }
-        containerBgClass={`bg-transparent hover:bg-gray-800
-        rounded-bl-lg`}
+        containerBgClass={`bg-transparent hover:bg-gray-800 rounded-bl-lg`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={`${isCallLink ? 'text-white' : 'text-gray-600'}`}
       />
