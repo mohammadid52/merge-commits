@@ -91,7 +91,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * NOTES
          */}
-        <NotesWidget overlay={overlay} setOverlay={setOverlay} />
+        {/*<NotesWidget overlay={overlay} setOverlay={setOverlay} />*/}
       </div>
     </>
   );
