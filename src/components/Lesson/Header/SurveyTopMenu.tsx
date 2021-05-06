@@ -42,7 +42,7 @@ const SurveyTopMenu = (props: LessonHeaderBarProps) => {
       (acc: number, questionDataKey: string) => {
         const nrOfAnswers = state.questionData[questionDataKey].reduce(
           (acc2: number, questionObj: any) => {
-            if (questionObj.response.length > 0) {
+            if (questionObj.response.toString().length > 0) {
               return acc2 + 1;
             } else {
               return acc2;
