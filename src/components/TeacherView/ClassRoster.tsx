@@ -26,7 +26,7 @@ interface classRosterProps {
   handleQuitShare: () => void;
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
-  setPageViewed: React.Dispatch<React.SetStateAction<object>>;
+  handlePageChange?: any;
 }
 
 enum SortByEnum {
@@ -43,7 +43,7 @@ const ClassRoster = (props: classRosterProps) => {
     isSameStudentShared,
     handleQuitShare,
     handleQuitViewing,
-    setPageViewed,
+    handlePageChange,
   } = props;
   const { state, dispatch } = useContext(LessonControlContext);
   const { clientKey, userLanguage } = useContext(GlobalContext);
@@ -69,7 +69,7 @@ const ClassRoster = (props: classRosterProps) => {
       const classStudents: any = await API.graphql(
         graphqlOperation(queries.listClassStudents, {
           filter: { classID: { contains: cookieClassID } },
-        }),
+        })
       );
       const classStudentList = classStudents.data.listClassStudents.items;
       const initClassStudentList = classStudentList.map((student: any, i: number) => {
@@ -112,12 +112,15 @@ const ClassRoster = (props: classRosterProps) => {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
           filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
-        }),
+        })
       );
       const syllabusLessonStudentList = syllabusLessonStudents.data.listPersonLocations.items;
-      console.log('syllabusLessonStudentList :: ', syllabusLessonStudentList)
-      setPersonLocationStudents(syllabusLessonStudentList);
-      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: syllabusLessonStudentList } });
+      const studentsFromThisClass = syllabusLessonStudentList.filter((student: any)=>{
+        const findStudentInClasslist = classStudents.find((student2: any) => student2.personEmail === student.personEmail);
+        if(findStudentInClasslist) return findStudentInClasslist;
+      })
+      setPersonLocationStudents(studentsFromThisClass);
+      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentsFromThisClass } });
       subscription = subscribeToPersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
@@ -132,16 +135,18 @@ const ClassRoster = (props: classRosterProps) => {
     }
   }, [state.syllabusLessonID]);
 
-
   // Subscriptions and updating
   const subscribeToPersonLocations = () => {
     const syllabusLessonID = state.syllabusLessonID;
     // @ts-ignore
-    const personLocationSubscription = API.graphql(graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })).subscribe({
+    const personLocationSubscription = API.graphql(
+      graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })
+      //@ts-ignore
+    ).subscribe({
       next: (locationData: any) => {
         const updatedStudent = locationData.value.data.onChangePersonLocation;
 
-        console.log('new location: ', updatedStudent)
+        console.log('new location: ', updatedStudent);
         setUpdatedStudent(updatedStudent);
       },
     });
@@ -152,7 +157,7 @@ const ClassRoster = (props: classRosterProps) => {
 
   // Update the student roster
   useEffect(() => {
-    console.log('current location: ', state.studentViewing?.studentInfo?.currentLocation)
+    console.log('current location: ', state.studentViewing?.studentInfo?.currentLocation);
     const updateStudentRoster = (newStudent: any) => {
       const studentExists =
         personLocationStudents.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
@@ -177,8 +182,8 @@ const ClassRoster = (props: classRosterProps) => {
         setUpdatedStudent({});
       }
     };
-    if(Object.keys(updatedStudent).length){
-      updateStudentRoster(updatedStudent)
+    if (Object.keys(updatedStudent).length) {
+      updateStudentRoster(updatedStudent);
     }
   }, [updatedStudent]);
 
@@ -200,7 +205,9 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   const inactiveStudents = classStudents.filter((student: any) => {
-    const isInStateRoster = state.roster.find((studentTarget: any) => studentTarget.personAuthID === student.personAuthID);
+    const isInStateRoster = state.roster.find(
+      (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
+    );
     if (isInStateRoster === undefined) {
       return student;
     }
@@ -214,79 +221,82 @@ const ClassRoster = (props: classRosterProps) => {
           <span>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
           <span className={`w-auto absolute right-0 translate-x-4`} onClick={handleManualRefresh}>
             <IconContext.Provider value={{ color: '#EDF2F7' }}>
-              <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`}/>
+              <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
             </IconContext.Provider>
           </span>
         </div>
-        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}</div>
-        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}</div>
+        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>
+          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
+        </div>
+        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>
+          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
+        </div>
       </div>
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
-        {state.roster.length > 0 ?
-          (
-            <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
-            </div>
-          ) : null}
+        {state.roster.length > 0 ? (
+          <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
+          </div>
+        ) : null}
 
         {/* STUDENTS - Active */}
         {state.roster.length > 0
           ? state.roster.map((student: any, key: number) => (
-            <RosterRow
-              key={key}
-              keyProp={key}
-              number={key}
-              id={student.personAuthID}
-              active={true}
-              firstName={student.person.firstName}
-              lastName={student.person.lastName}
-              preferredName={student.person.preferredName}
-              role={student.person.role}
-              currentLocation={student.currentLocation}
-              lessonProgress={student.lessonProgress}
-              handleSelect={handleSelect}
-              handleShareStudentData={handleShareStudentData}
-              handleQuitShare={handleQuitShare}
-              handleQuitViewing={handleQuitViewing}
-              viewedStudent={viewedStudent}
-              setViewedStudent={setViewedStudent}
-              isSameStudentShared={isSameStudentShared}
-            />
-          ))
+              <RosterRow
+                key={key}
+                keyProp={key}
+                number={key}
+                id={student.personAuthID}
+                active={true}
+                firstName={student.person.firstName}
+                lastName={student.person.lastName}
+                preferredName={student.person.preferredName}
+                role={student.person.role}
+                currentLocation={student.currentLocation}
+                lessonProgress={student.lessonProgress}
+                handleSelect={handleSelect}
+                handleShareStudentData={handleShareStudentData}
+                handleQuitShare={handleQuitShare}
+                handleQuitViewing={handleQuitViewing}
+                viewedStudent={viewedStudent}
+                setViewedStudent={setViewedStudent}
+                isSameStudentShared={isSameStudentShared}
+                handlePageChange={handlePageChange}
+              />
+            ))
           : null}
 
         {/* STUDENTS - INActive */}
-        {inactiveStudents.length > 0 ?
-          (
-            <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['NOT_IN_CLASS']}
-            </div>
-          ) : null}
+        {inactiveStudents.length > 0 ? (
+          <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['NOT_IN_CLASS']}
+          </div>
+        ) : null}
         {inactiveStudents.length > 0
           ? inactiveStudents.map((student: any, key: number) => (
-            <RosterRow
-              key={key}
-              keyProp={key}
-              number={key}
-              id={student.personAuthID}
-              active={false}
-              firstName={student.person.firstName}
-              lastName={student.person.lastName}
-              preferredName={student.person.preferredName}
-              role={student.person.role}
-              currentLocation={student.currentLocation}
-              lessonProgress={student.lessonProgress}
-              handleSelect={handleSelect}
-              handleShareStudentData={handleShareStudentData}
-              handleQuitShare={handleQuitShare}
-              handleQuitViewing={handleQuitViewing}
-              viewedStudent={viewedStudent}
-              setViewedStudent={setViewedStudent}
-              isSameStudentShared={isSameStudentShared}
-            />
-          ))
+              <RosterRow
+                key={key}
+                keyProp={key}
+                number={key}
+                id={student.personAuthID}
+                active={false}
+                firstName={student.person.firstName}
+                lastName={student.person.lastName}
+                preferredName={student.person.preferredName}
+                role={student.person.role}
+                currentLocation={student.currentLocation}
+                lessonProgress={student.lessonProgress}
+                handleSelect={handleSelect}
+                handleShareStudentData={handleShareStudentData}
+                handleQuitShare={handleQuitShare}
+                handleQuitViewing={handleQuitViewing}
+                viewedStudent={viewedStudent}
+                setViewedStudent={setViewedStudent}
+                isSameStudentShared={isSameStudentShared}
+              />
+            ))
           : null}
       </div>
     </div>

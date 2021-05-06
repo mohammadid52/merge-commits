@@ -7,18 +7,18 @@ import React from 'react';
  *
  * Non-typescript explanation can be found here:
  * https://reactjs.org/docs/error-boundaries.html
- * 
+ *
  */
 interface PropsInterface {
-  test?: 'test';
+  fallback?: React.ReactNode;
 }
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component<PropsInterface> {
   public state = {
     hasError: false,
     error: '',
-    info: ''
-  }
+    info: '',
+  };
 
   constructor(props: PropsInterface) {
     super(props);
@@ -30,7 +30,7 @@ class ErrorBoundary extends React.Component {
   }
 
   public static getDerivedStateFromError() {
-    return { hasError: true };
+    return {hasError: true};
   }
 
   public componentDidCatch(error: Error, info: React.ErrorInfo) {
@@ -46,28 +46,13 @@ class ErrorBoundary extends React.Component {
       console.log('error found in boundary');
     }
   }
-  
+
   public render() {
     if (this.state.hasError) {
-      return (
-        <div className='w-full h-full flex flex-column justify-center items-center bg-dark rounded-lg'>
-          <p className='text-center text-white'>
-            Dang it! Check the console for more info about this error...
-          </p>
-          <p className='text-center text-white'>
-            {
-              this.state.error
-            }
-            <br/>
-            {
-              this.state.info
-            }
-          </p>
-        </div>
-      );
+      return this.props.fallback;
+    } else {
+      return this.props.children;
     }
-
-    return this.props.children;
   }
 }
 

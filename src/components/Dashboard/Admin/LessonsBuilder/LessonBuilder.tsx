@@ -111,18 +111,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       setLessonBuilderSteps(assessmentScrollerStep);
     }
   };
-  const currentStepIdx = findIndex(assessmentScrollerStep, { name: activeStep });
-
-  const onModalSave = () => {
-    if (currentStepIdx === 0) {
-      return history.goBack();
-    } else {
-      const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-      setActiveStep(prevStep);
-      setUnsavedChanges(false);
-    }
-    toggleModal();
-  };
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
@@ -173,7 +161,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <PreviewForm
             lessonName={formData.name}
             lessonID={lessonId}
-            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonPlans={savedLessonDetails.lessonPlans || []}
             lessonType={formData.type?.value}
           />
         );
@@ -190,17 +178,33 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const [historyList, setHistoryList] = useState(['Overview']);
+
+  const goBack = () => {
+    const currentStepIdx = historyList.indexOf(activeStep);
+    if (currentStepIdx < 0) {
+      setHistoryList(['Overview']);
+    } else if (historyList.length === 1) {
+      history.goBack();
+    } else {
+      const prevStep: string = historyList[currentStepIdx - 1];
+      setActiveStep(prevStep);
+      historyList.pop();
+      setHistoryList([...historyList]);
+    }
+  };
+
   const gobackToLessonsList = () => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      if (currentStepIdx === 0) {
-        history.push('/dashboard/lesson-builder');
-      } else {
-        const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-        setActiveStep(prevStep);
-      }
+      goBack();
     }
+  };
+
+  const onModalSave = () => {
+    goBack();
+    toggleModal();
   };
 
   const toggleModal = () => {
@@ -266,7 +270,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums items={breadCrumsList} unsavedChanges={unsavedChanges} toggleModal={toggleModal} />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonBuilderDict[userLanguage]['TITLE']}

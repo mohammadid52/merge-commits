@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from 'react';
+import {FaEdit} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
-import { useHistory } from 'react-router-dom';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import {Switch, Route, useRouteMatch} from 'react-router-dom';
 
 import * as queries from '../../../../graphql/queries';
-import * as customQueries from '../../../../customGraphql/customQueries'
+import * as customQueries from '../../../../customGraphql/customQueries';
 import InstitutionInfo from './InstitutionInfo';
 import InstitutionEdit from './InstitutionEdit';
 import BreadCrums from '../../../Atoms/BreadCrums';
@@ -16,10 +16,11 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import useDictionary from '../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {goBackBreadCrumb} from '../../../../utilities/functions';
 
 interface InstitutionProps {
-  tabProps?: any
+  tabProps?: any;
 }
 
 export interface InstitutionInfo {
@@ -31,7 +32,7 @@ export interface InstitutionInfo {
   city?: string;
   state?: string;
   zip?: string;
-  contact?: { name: string; email: string; phone: string };
+  contact?: {name: string; email: string; phone: string};
   website?: string;
   phone?: string;
   type?: string;
@@ -40,9 +41,11 @@ export interface InstitutionInfo {
   updatedAt?: string;
   addressLine2?: any;
   isServiceProvider?: boolean;
-  classes?: { items: { name?: string, id: string }[] }
-  curricula?: { items: { name?: string, id: string }[] }
-  serviceProviders?: { items: { id: string, providerID: string, status: string, providerInstitution?: any }[] }
+  classes?: {items: {name?: string; id: string}[]};
+  curricula?: {items: {name?: string; id: string}[]};
+  serviceProviders?: {
+    items: {id: string; providerID: string; status: string; providerInstitution?: any}[];
+  };
 }
 
 /**
@@ -60,7 +63,7 @@ const Institution = (props: InstitutionProps) => {
     city: '',
     state: '',
     zip: '',
-    contact: { name: '', email: '', phone: '' },
+    contact: {name: '', email: '', phone: ''},
     website: '',
     type: null,
     image: '',
@@ -69,32 +72,38 @@ const Institution = (props: InstitutionProps) => {
     addressLine2: '',
     phone: '',
     isServiceProvider: false,
-    classes: { items: [{ name: '', id: '' }] },
-    serviceProviders: { items: [{ id: '', providerID: '', status }] },
-    curricula: { items: [{ name: '', id: '' }] },
-
+    classes: {items: [{name: '', id: ''}]},
+    serviceProviders: {items: [{id: '', providerID: '', status}]},
+    curricula: {items: [{name: '', id: ''}]},
   });
   const [isNewUpdate, setISNewUpdate] = useState(false);
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
-  const pathName = location.pathname.replace(/\/$/, "");
+  const pathName = location.pathname.replace(/\/$/, '');
   const currentPath = pathName.substring(pathName.lastIndexOf('/') + 1);
   const urlQueryParams = queryString.parse(location.search);
-  const [tabsData, setTabsData] = useState({ inst: 0, instCurr: 0 });
-  const { clientKey,userLanguage} = useContext(GlobalContext);
-  const {  BreadcrumsTitles } = useDictionary(clientKey);
+  const [tabsData, setTabsData] = useState({inst: 0, instCurr: 0});
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {BreadcrumsTitles} = useDictionary(clientKey);
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'], url: '/dashboard/manage-institutions', last: false },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], url: `${location.pathname}${location.search}`, last: true }
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: '/dashboard/manage-institutions',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      url: `${location.pathname}${location.search}`,
+      last: true,
+    },
   ];
-
 
   const toggleUpdateState = () => {
     setISNewUpdate(!isNewUpdate);
-  }
+  };
   async function getInstitutionData() {
     try {
       if (urlQueryParams.id) {
@@ -104,7 +113,7 @@ const Institution = (props: InstitutionProps) => {
            * DO NOT change the ' urlQueryParams.id ' unless you also change the url
            * in ' InstitutionRow.tsx '
            */
-          graphqlOperation(customQueries.GetInstitutionDetails, { id: urlQueryParams.id })
+          graphqlOperation(customQueries.GetInstitutionDetails, {id: urlQueryParams.id})
         );
         if (!fetchInstitutionData) {
           throw new Error('getInstitutionData() fetch : fail!');
@@ -112,7 +121,7 @@ const Institution = (props: InstitutionProps) => {
           setInstitutionData(fetchInstitutionData.data.getInstitution);
         }
       } else {
-        history.push('/dashboard/manage-institutions')
+        history.push('/dashboard/manage-institutions');
       }
     } catch (error) {
       console.error(error);
@@ -123,12 +132,11 @@ const Institution = (props: InstitutionProps) => {
     getInstitutionData();
   }, []);
 
-
   const updateServiceProviders = (item: any) => {
-    const instData = institutionData
-    instData.serviceProviders.items.push(item)
+    const instData = institutionData;
+    instData.serviceProviders.items.push(item);
     setInstitutionData(instData);
-  }
+  };
 
   useEffect(() => {
     if (isNewUpdate) {
@@ -138,17 +146,25 @@ const Institution = (props: InstitutionProps) => {
 
   return (
     <div className={`w-full h-full`}>
-
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title="Institute Information" />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go Back"
+            btnClass="mr-4"
+            onClick={() => goBackBreadCrumb(breadCrumsList, history)}
+            Icon={IoArrowUndoCircleOutline}
+          />
           {currentPath !== 'edit' ? (
-            <Buttons btnClass="mr-4 px-6" label="Edit" onClick={() => history.push(`${match.url}/edit?id=${urlQueryParams.id}`)} Icon={FaEdit} />
-          ) : null
-          }
+            <Buttons
+              btnClass="mr-4 px-6"
+              label="Edit"
+              onClick={() => history.push(`${match.url}/edit?id=${urlQueryParams.id}`)}
+              Icon={FaEdit}
+            />
+          ) : null}
         </div>
       </div>
       <PageWrapper>
@@ -156,13 +172,20 @@ const Institution = (props: InstitutionProps) => {
           <Route
             path={`${match.url}/edit`}
             render={() => (
-              <InstitutionEdit institute={institutionData} toggleUpdateState={toggleUpdateState} />
+              <InstitutionEdit
+                institute={institutionData}
+                toggleUpdateState={toggleUpdateState}
+              />
             )}
           />
           <Route
             path={`${match.url}/`}
             render={() => (
-              <InstitutionInfo institute={institutionData} updateServiceProviders={updateServiceProviders} tabProps={props.tabProps} />
+              <InstitutionInfo
+                institute={institutionData}
+                updateServiceProviders={updateServiceProviders}
+                tabProps={props.tabProps}
+              />
             )}
           />
         </Switch>

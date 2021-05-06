@@ -1,14 +1,14 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useContext, useState, useEffect, Fragment} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { RiLock2Fill } from 'react-icons/ri';
-import { FaPlus, FaEdit, FaTrashAlt } from 'react-icons/fa';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import { Switch, useHistory, Route, useRouteMatch, Link, NavLink } from 'react-router-dom';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {RiLock2Fill} from 'react-icons/ri';
+import {FaPlus, FaEdit, FaTrashAlt} from 'react-icons/fa';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {Switch, useHistory, Route, useRouteMatch, Link, NavLink} from 'react-router-dom';
 
 import * as queries from '../../../graphql/queries';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import ProfileInfo from './ProfileInfo';
 import AboutMe from './AboutMe';
 import ChangePassword from './ChangePassword';
@@ -19,14 +19,18 @@ import * as customMutations from '../../../customGraphql/customMutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 import ToolTip from '../../General/ToolTip/ToolTip';
 import ProfileCropModal from './ProfileCropModal';
-import { getImageFromS3 } from '../../../utilities/services';
+import {getImageFromS3} from '../../../utilities/services';
 import BreadCrums from '../../Atoms/BreadCrums';
 import SectionTitle from '../../Atoms/SectionTitle';
 import Buttons from '../../Atoms/Buttons';
 import Loader from '../../Atoms/Loader';
 import useDictionary from '../../../customHooks/dictionary';
-import { getUniqItems, createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
-import { getAsset } from '../../../assets';
+import {
+  getUniqItems,
+  createFilterToFetchSpecificItemsOnly,
+} from '../../../utilities/strings';
+import {getAsset} from '../../../assets';
+import HeroBanner from '../../Header/HeroBanner';
 
 export interface UserInfo {
   authId: string;
@@ -54,7 +58,7 @@ interface ProfilePageProps {
 }
 
 const Profile = (props: ProfilePageProps) => {
-  const { updateAuthState } = props;
+  const {updateAuthState} = props;
   const [person, setPerson] = useState<UserInfo>({
     id: '',
     authId: '',
@@ -75,8 +79,8 @@ const Profile = (props: ProfilePageProps) => {
     updatedAt: '',
     birthdate: null,
   });
-  const { state, theme, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
-  const { dashboardProfileDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {state, theme, userLanguage, clientKey, dispatch} = useContext(GlobalContext);
+  const {dashboardProfileDict, BreadcrumsTitles} = useDictionary(clientKey);
   const match = useRouteMatch();
   const history = useHistory();
   const pathName = location.pathname.replace(/\/$/, '');
@@ -91,8 +95,12 @@ const Profile = (props: ProfilePageProps) => {
   const [questionData, setQuestionData] = useState([]);
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['PROFILE'], url: '/dashboard/profile', last: true },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['PROFILE'],
+      url: '/dashboard/profile',
+      last: true,
+    },
   ];
 
   /**
@@ -158,7 +166,7 @@ const Profile = (props: ProfilePageProps) => {
     await uploadImageToS3(image, person.id, 'image/jpeg');
     const imageUrl: any = await getImageFromS3(`profile_image_${person.id}`);
     setImageUrl(imageUrl);
-    setPerson({ ...person, image: `profile_image_${person.id}` });
+    setPerson({...person, image: `profile_image_${person.id}`});
     updateImageParam(`profile_image_${person.id}`);
     toggleCropper();
     dispatch({
@@ -196,7 +204,9 @@ const Profile = (props: ProfilePageProps) => {
       firstName: person.firstName,
     };
     try {
-      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }));
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updatePerson, {input: input})
+      );
       setPerson({
         ...person,
         ...update.data.updatePerson,
@@ -228,7 +238,9 @@ const Profile = (props: ProfilePageProps) => {
       firstName: person.firstName,
     };
     try {
-      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }));
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updatePerson, {input: input})
+      );
       setPerson({
         ...person,
         ...update.data.updatePerson,
@@ -247,49 +259,64 @@ const Profile = (props: ProfilePageProps) => {
     });
     const filter = {
       and: [
-        { email: { eq: state.user.email } },
-        { authID: { eq: state.user.authId } },
-        { syllabusLessonID: { eq: '999999' } },
+        {email: {eq: state.user.email}},
+        {authID: {eq: state.user.authId}},
+        {syllabusLessonID: {eq: '999999'}},
         {
           or: [...checkpointIDFilter],
         },
       ],
     };
-    const results: any = await API.graphql(graphqlOperation(customQueries.listQuestionDatas, { filter: filter }));
+    const results: any = await API.graphql(
+      graphqlOperation(customQueries.listQuestionDatas, {filter: filter})
+    );
     const questionData: any = results.data.listQuestionDatas?.items;
     setQuestionData(questionData);
-    console.log(questionData, 'questionData');
   };
 
   async function getUser() {
     try {
       const results: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonData, { email: state.user.email, authId: state.user.authId })
+        graphqlOperation(customQueries.getPersonData, {
+          email: state.user.email,
+          authId: state.user.authId,
+        })
       );
 
       const userData: any = results.data.getPerson;
       let studentClasses: any = userData.classes?.items.map((item: any) => item?.class);
       studentClasses = studentClasses.filter((d: any) => d !== null);
 
-      const studentInstitutions: any = studentClasses?.map((item: any) => item?.institution);
-      const studentRooms: any = studentClasses?.map((item: any) => item?.rooms?.items)?.flat(1);
-      const studentCurriculars: any = studentRooms.map((item: any) => item?.curricula?.items).flat(1);
+      const studentInstitutions: any = studentClasses?.map(
+        (item: any) => item?.institution
+      );
+      const studentRooms: any = studentClasses
+        ?.map((item: any) => item?.rooms?.items)
+        ?.flat(1);
+      const studentCurriculars: any = studentRooms
+        .map((item: any) => item?.curricula?.items)
+        .flat(1);
       const uniqCurriculars: any = getUniqItems(
         studentCurriculars.filter((d: any) => d !== null),
         'curriculumID'
       );
-      const studCurriCheckp: any = uniqCurriculars.map((item: any) => item?.curriculum?.checkpoints?.items).flat(1);
-      const studentCheckpoints: any = studCurriCheckp.map((item: any) => item?.checkpoint);
+      const studCurriCheckp: any = uniqCurriculars
+        .map((item: any) => item?.curriculum?.checkpoints?.items)
+        .flat(1);
+      const studentCheckpoints: any = studCurriCheckp.map(
+        (item: any) => item?.checkpoint
+      );
 
       const sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
-        if (item) sCheckpoints.push(item);
+        console.log(item);
+        if (item && item.scope !== 'private') sCheckpoints.push(item);
       });
 
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
-      const personalInfo: any = { ...userData };
+      const personalInfo: any = {...userData};
       delete personalInfo.classes;
       if (uniqCheckpointIDs?.length > 0) {
         getQuestionData(uniqCheckpointIDs);
@@ -326,26 +353,18 @@ const Profile = (props: ProfilePageProps) => {
     return (
       <>
         {/* Hero Section */}
-        <div className="relative">
-          <div className="absolute inset-0 w-full h-60">
-            <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
-            <img className="object-cover w-full h-full bg-center bg-no-repeat bg-contain" src={profileBanner1} alt="" />
-          </div>
-          <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
-            <h1
-              style={{ fontSize: '6rem' }}
-              className="z-100 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
-              Profile
-            </h1>
-          </div>
+        <div>
+          <HeroBanner imgUrl={profileBanner1} title={'Profile'} />
         </div>
         {/* Header */}
         {person && (
           <div
-            className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+            className={`${theme.section} relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
             <h2 className={`text-base text-center font-normal`}>
-              <span className="font-semibold">{person.preferredName ? person.preferredName : person.firstName}</span>,
-              update your avatar, personal information & profile questions here.
+              <span className="font-semibold">
+                {person.preferredName ? person.preferredName : person.firstName}
+              </span>
+              , update your avatar, personal information & profile questions here.
             </h2>
           </div>
         )}
@@ -357,9 +376,18 @@ const Profile = (props: ProfilePageProps) => {
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
             <div className="flex justify-end py-4 mb-4 w-5/10">
-              <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
-              {currentPath !== 'edit' ? (
-                <Buttons btnClass="ml-6" label="Edit" onClick={() => history.push(`${match.url}/edit`)} Icon={FaEdit} />
+              <Buttons
+                label="Go Back"
+                onClick={history.goBack}
+                Icon={IoArrowUndoCircleOutline}
+              />
+              {currentPath !== 'edit' && currentPath !== 'password' ? (
+                <Buttons
+                  btnClass="ml-6"
+                  label="Edit"
+                  onClick={() => history.push(`${match.url}/edit`)}
+                  Icon={FaEdit}
+                />
               ) : null}
             </div>
           </div>
@@ -373,10 +401,16 @@ const Profile = (props: ProfilePageProps) => {
                       {!imageLoading ? (
                         <Fragment>
                           <label className="cursor-pointer">
-                            <img
-                              className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
-                              src={imageUrl}
-                            />
+                            {imageUrl ? (
+                              <img
+                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                                src={imageUrl}
+                              />
+                            ) : (
+                              <div
+                                className={`profile w-20 h-20 md:w-40 md:h-40 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mx-auto`}
+                              />
+                            )}
                             <input
                               type="file"
                               className="hidden"
@@ -410,7 +444,7 @@ const Profile = (props: ProfilePageProps) => {
                     <label
                       className={`w-20 h-20 md:w-40 md:h-40 p-2 md:p-4 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mx-auto`}>
                       {!imageLoading ? (
-                        <IconContext.Provider value={{ size: '3rem', color: '#4a5568' }}>
+                        <IconContext.Provider value={{size: '3rem', color: '#4a5568'}}>
                           <FaPlus />
                         </IconContext.Provider>
                       ) : (
@@ -427,9 +461,13 @@ const Profile = (props: ProfilePageProps) => {
                     </label>
                   )}
                 </div>
-                <p className="text-gray-600 my-2">{dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']} </p>
-                <div className={`text-lg md:text-xl font-bold font-open text-gray-900 mt-4 w-52`}>
-                  {`${person.preferredName ? person.preferredName : person.firstName} ${person.lastName}`}
+                <p className="text-gray-600 my-2">
+                  {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
+                </p>
+                <div className={`text-lg md:text-xl font-bold  text-gray-900 mt-4 w-52`}>
+                  {`${person.preferredName ? person.preferredName : person.firstName} ${
+                    person.lastName
+                  }`}
                   <p className="text-md md:text-lg">{person.institution}</p>
                 </div>
               </div>

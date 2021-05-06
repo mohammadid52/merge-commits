@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../contexts/LessonContext';
 import CheckpointQuestions from './CheckpointQuestions';
 import Banner from '../LessonComponents/Banner';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
 import SurveyOutro from './SurveyOutro';
+import {BodyProps} from '../Body/Body';
+import useUrlState from '@ahooksjs/use-url-state';
 
 export interface CheckpointInterface {
   title: string;
@@ -17,13 +19,23 @@ export interface CheckpointInterface {
   label: string;
 }
 
-const Checkpoint = (props: { isTeacher?: boolean }) => {
+const Checkpoint = (props: {
+  isTeacher?: boolean;
+  checkpointsLoaded?: BodyProps['checkpointsLoaded'];
+  setupComplete?: BodyProps['setupComplete'];
+  checkpointsItems?: any[];
+}) => {
   /**
    * Teacher switch
    */
-  const { isTeacher } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme, dispatch } = switchContext;
+  const {isTeacher, checkpointsLoaded, setupComplete, checkpointsItems} = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme, dispatch} = switchContext;
+
+  const [urlState] = useUrlState({roomId: ''});
+  const {roomId} = urlState;
 
   const [title, setTitle] = useState('');
 
@@ -47,7 +59,10 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
   useEffect(() => {
     if (!isTeacher) {
       if (!state.pages[state.currentPage].active) {
-        dispatch({ type: 'ACTIVATE_LESSON', payload: state.pages[state.currentPage].stage });
+        dispatch({
+          type: 'ACTIVATE_LESSON',
+          payload: state.pages[state.currentPage].stage,
+        });
       }
     }
   }, [state.currentPage]);
@@ -69,21 +84,25 @@ const Checkpoint = (props: { isTeacher?: boolean }) => {
        *  2.
        *  LOAD CHECKPOINT QUESTIONS
        */}
-      <CheckpointQuestions isTeacher={isTeacher} checkpointType={`checkpoint`} handleSetTitle={handleSetTitle} />
+      {checkpointsItems && checkpointsItems.length > 0 && (
+        <CheckpointQuestions
+          isTeacher={isTeacher}
+          checkpointType={`checkpoint`}
+          handleSetTitle={handleSetTitle}
+          checkpointsItems={checkpointsItems}
+        />
+      )}
 
       {/**
        *  3.
        *  SHOW OUTRO + SAVE, IF SURVEY
        */}
-      {
-        !isTeacher && state.data.lesson.type !== 'lesson' &&
-        (
-          <>
-            <SurveyOutro />
-            <SaveQuit />
-          </>
-        )
-      }
+      {!isTeacher && state.data.lesson.type !== 'lesson' && (
+        <>
+          <SurveyOutro />
+          <SaveQuit roomID={roomId} />
+        </>
+      )}
     </div>
   );
 };

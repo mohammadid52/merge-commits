@@ -112,30 +112,6 @@ export const onChangePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-        coTeachers {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
         name
         maxPersons
         institution {
@@ -199,6 +175,9 @@ export const onChangePersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -1388,36 +1367,6 @@ export const onCreateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
-      coTeachers {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       name
       maxPersons
       institution {
@@ -1536,6 +1485,18 @@ export const onCreateRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1549,36 +1510,6 @@ export const onUpdateRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
-      coTeachers {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       name
       maxPersons
       institution {
@@ -1697,6 +1628,18 @@ export const onUpdateRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -1710,36 +1653,6 @@ export const onDeleteRoom = /* GraphQL */ `
       classID
       teacherAuthID
       teacherEmail
-      coTeachers {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
       name
       maxPersons
       institution {
@@ -1858,6 +1771,372 @@ export const onDeleteRoom = /* GraphQL */ `
       repeat
       notes
       activeSyllabus
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateRoomCoTeachers = /* GraphQL */ `
+  subscription OnCreateRoomCoTeachers {
+    onCreateRoomCoTeachers {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateRoomCoTeachers = /* GraphQL */ `
+  subscription OnUpdateRoomCoTeachers {
+    onUpdateRoomCoTeachers {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteRoomCoTeachers = /* GraphQL */ `
+  subscription OnDeleteRoomCoTeachers {
+    onDeleteRoomCoTeachers {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        filters
+        location
+        startDate
+        startTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        coTeachers {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -3957,6 +4236,7 @@ export const onCreateCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      scope
       createdAt
       updatedAt
     }
@@ -3989,6 +4269,7 @@ export const onUpdateCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      scope
       createdAt
       updatedAt
     }
@@ -4021,6 +4302,7 @@ export const onDeleteCheckpoint = /* GraphQL */ `
       designers
       language
       estTime
+      scope
       createdAt
       updatedAt
     }
@@ -4124,6 +4406,7 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4230,6 +4513,7 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4336,6 +4620,7 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4368,6 +4653,7 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4418,6 +4704,7 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4468,6 +4755,7 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4763,6 +5051,7 @@ export const onCreateAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4809,6 +5098,7 @@ export const onUpdateAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -4855,6 +5145,7 @@ export const onDeleteAssessmentCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -6743,6 +7034,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -6906,6 +7198,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -7069,6 +7362,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
         designers
         language
         estTime
+        scope
         createdAt
         updatedAt
       }
@@ -9623,30 +9917,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-        coTeachers {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
         name
         maxPersons
         institution {
@@ -9710,6 +9980,9 @@ export const onCreatePersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -9828,30 +10101,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-        coTeachers {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
         name
         maxPersons
         institution {
@@ -9915,6 +10164,9 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -10033,30 +10285,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
         classID
         teacherAuthID
         teacherEmail
-        coTeachers {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
         name
         maxPersons
         institution {
@@ -10120,6 +10348,9 @@ export const onDeletePersonLocation = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        coTeachers {
+          nextToken
+        }
         createdAt
         updatedAt
       }

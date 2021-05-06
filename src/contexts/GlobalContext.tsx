@@ -1,9 +1,8 @@
-import React, { useState, useReducer, useEffect } from 'react';
-import { globalReducer } from '../reducers/GlobalReducer';
-import { globalState } from '../state/GlobalState';
-import { getClientKey } from '../utilities/strings';
-import { useCookies } from 'react-cookie';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useEffect, useReducer} from 'react';
+import {globalReducer} from '../reducers/GlobalReducer';
+import {globalState} from '../state/GlobalState';
+import {getClientKey} from '../utilities/strings';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 
 export const standardTheme = {
@@ -13,7 +12,8 @@ export const standardTheme = {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
-  banner: 'w-auto pb-2 mb-2 relative font-open font-medium text-left flex flex-row items-center text-gray-100 mt-4',
+  banner:
+    'w-auto pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100 mt-4',
   section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',
@@ -31,18 +31,20 @@ export const standardTheme = {
   dashboard: {
     sectionTitle: 'w-auto text-black pb-2 font-medium mt-4 mb-1 text-left',
     bg: 'bg-darker-gray',
-    card: 'p-2 relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex',
-    cardNoBG: 'relative h-auto p-2 flex'
+    card:
+      'p-2 relative bg-white rounded  border-0 border-dark-gray border-opacity-10 h-auto flex',
+    cardNoBG: 'relative h-auto p-2 flex',
   },
   lessonCard: {
-    title: 'flex items-center text-2xl text-black font-open text-left',
+    title: 'flex items-center text-2xl text-black text-left',
     subtitle: 'text-sm text-gray-400',
-    border: 'border-dark-gray border-opacity-20'
+    border: 'border-dark-gray border-opacity-20',
   },
   sidemenu: {
     bg: 'bg-darker-gray',
-    primary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-darker-gray',
-    secondary: 'z-50 min-h-screen w-32 min-w-32 flex flex-col bg-medium-gray  border-r-0 border-white',
+    primary: 'z-50 min-h-screen w-65 min-w-65 flex flex-col bg-darker-gray',
+    secondary:
+      'z-50 min-h-screen w-65 min-w-65 flex flex-col bg-medium-gray  border-r-0 border-white',
     darktone: 'bg-black bg-opacity-80',
   },
   block: {
@@ -55,9 +57,15 @@ export const standardTheme = {
     text: 'text-gray-200',
   },
   btn: {
-    iconoclastIndigo: 'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
-    curateBlue: 'bg-theme-blue text-white hover:bg-blue-500 active:bg-blue-500 focus:bg-blue-500',
+    iconoclastIndigo:
+      'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
+    curateBlue:
+      'bg-theme-blue text-white hover:bg-blue-500 active:bg-blue-500 focus:bg-blue-500',
     cancel: 'bg-white text-gray-600  border-0 border-gray-600 hover:bg-gray-200',
+    lessonStart:
+      'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
+    surveyStart:
+      'bg-orange-400 text-white hover:bg-orange-500 active:bg-orange-500 focus:bg-orange-500',
   },
   btnTransparent: {
     iconoclastIndigo: 'text-indigo-600 border-indigo-600 hover:text-indigo-500',
@@ -71,6 +79,7 @@ export const standardTheme = {
   formSelect: 'bg-white border-gray-400 text-gray-900 border-0',
   outlineNone: 'outline-none hover:outline-none active:outline-none focus:outline-none',
   verticalBorder: {
+    iconoclastRed: 'border-red-600',
     iconoclastIndigo: 'border-indigo-700',
     curateBlue: 'border-theme-blue',
   },
@@ -83,6 +92,7 @@ export const standardTheme = {
     curateBlue: '#0081CB',
   },
   textColor: {
+    iconoclastRed: 'text-red-400',
     iconoclastIndigo: 'text-indigo-600',
     curateBlue: 'text-theme-blue',
   },
@@ -94,32 +104,33 @@ export const standardTheme = {
     iconoclastIndigo: 'border-indigo-400',
     curateBlue: 'border-blue-400',
   },
-  backGround : {
+  backGround: {
     iconoclastIndigo: 'bg-indigo-500',
     curateBlue: 'bg-blue-500',
   },
-  backGroundLight : {
+  backGroundLight: {
     iconoclastIndigo: 'bg-indigo-400',
     curateBlue: 'bg-blue-400',
   },
   modals: {
-    header: 'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
-    footer: 'flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200',
-    content: ' border-0  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
+    header:
+      'flex items-center justify-between p-4 border-solid rounded-t bg-white text-gray-900 border-gray-200',
+    footer:
+      'flex items-center justify-end p-4  border-t-0 border-solid rounded-b bg-white text-gray-900 border-gray-200',
+    content:
+      ' border-0  rounded-lg shadow-lg relative flex flex-col w-full outline-none bg-white text-gray-900',
   },
-  notice:{
+  notice: {
     bar: '',
-    category:{
+    category: {
       error: '',
       alert: '',
-      info:'',
+      info: '',
       help: '',
-      tip: ''
-    }
-  }
+      tip: '',
+    },
+  },
 };
-
-// TODO: replace dashboard.sectionTitle with << font-medium h-12 justify-center items-center text-left >>
 
 interface GlobalProps {
   children: React.ReactNode;
@@ -127,9 +138,8 @@ interface GlobalProps {
 
 export const GlobalContext = React.createContext(null);
 
-export const GlobalContextProvider = ({ children }: GlobalProps) => {
+export const GlobalContextProvider = ({children}: GlobalProps) => {
   const [state, dispatch] = useReducer(globalReducer, globalState);
-  // const [cookies, setCookie] = useCookies([`location`]);
 
   const theme = standardTheme;
   const globalStateAccess = state;
@@ -137,19 +147,21 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
   const uLang = userLanguage;
   const clientKey = getClientKey();
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (state.user && state.user.location && state.user.location.length > 0) {
       updatePersonLocation();
-    } else {
-      // console.log('dashboard: ', 'user location not initialized yet...')
     }
   }, [state.user]);
 
   async function updatePersonLocation() {
     const updatedLocation = {
       id: state.user.location.length > 0 ? state.user.location[0].id : '',
-      personAuthID: state.user.location.length > 0 ? state.user.location[0].personAuthID : '',
-      personEmail: state.user.location.length > 0 ? state.user.location[0].personEmail : '',
+      personAuthID:
+        state.user.location.length > 0 ? state.user.location[0].personAuthID : '',
+      personEmail:
+        state.user.location.length > 0 ? state.user.location[0].personEmail : '',
       syllabusLessonID: 'dashboard',
       roomID: '0',
       currentLocation: '',
@@ -157,7 +169,7 @@ export const GlobalContextProvider = ({ children }: GlobalProps) => {
     };
     try {
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
+        graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
       );
     } catch (e) {
       console.error('update PersonLocation : ', e);

@@ -1,36 +1,49 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React from 'react';
 import ImageAlternate from '../../Atoms/ImageAlternative';
+interface TeacherProps {
+  coTeachersList: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    image: string | null;
+  }[];
+  teachersList: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    image: string | null;
+  }[];
+}
 
-const TeacherRows = (props: { teacherList: any }) => {
-  const { teacherList } = props;
-
+const TeacherRows = (props: TeacherProps) => {
+  const {coTeachersList = [], teachersList = []} = props;
+  const allTeachers = [...teachersList, ...coTeachersList];
   return (
     <ContentCard hasBackground={false}>
-      <div className="bg-white shadow overflow-hidden ">
-        <ul className="">
-          {teacherList &&
-            teacherList.length > 0 &&
-            teacherList.map(
-              (
-                teacher: {
-                  firstName: string;
-                  lastName: string;
-                  phone: string;
-                  email: string;
-                  image: string | null;
-                },
-                idx: number
-              ) => {
+      <div className="bg-white shadow overflow-hidden rounded-b-lg">
+        {
+          allTeachers && allTeachers.length > 0 ? (
+            <ul className="">
+              {allTeachers.map((teacher, idx: number) => {
                 return (
                   <li key={`home__teacher-${idx}`} className="border-b-0">
                     <a href="#" className="block hover:bg-gray-100">
                       <div className="flex items-center px-4 py-4 sm:px-6">
                         <div className="min-w-0 flex-1 flex items-center">
                           {teacher.image ? (
-                            <img className="h-12 w-12 rounded-full" src={teacher.image} alt="" />
+                            <img
+                              className="h-12 w-12 rounded-full"
+                              src={teacher.image}
+                              alt=""
+                            />
                           ) : (
-                            <ImageAlternate user={teacher} styleClass="h-12 w-12 rounded-full" />
+                            <ImageAlternate
+                              user={teacher}
+                              styleClass="h-12 w-12 rounded-full"
+                            />
                           )}
 
                           <div className="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
@@ -69,9 +82,11 @@ const TeacherRows = (props: { teacherList: any }) => {
                     </a>
                   </li>
                 );
-              }
-            )}
-        </ul>
+              })}
+            </ul>
+          ) : null
+          // <div className="flex justify-center items-center p-12">No teachers found</div>
+        }
       </div>
     </ContentCard>
   );

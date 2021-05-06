@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaTrash } from 'react-icons/fa';
+import React, {useState, useEffect, useContext} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {FaTrash} from 'react-icons/fa';
 // import { v4 as uuidv4 } from 'uuid';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -13,9 +13,9 @@ import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import Buttons from '../../../../Atoms/Buttons';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
-import { languageList } from '../../../../../utilities/staticData';
-import { InitialData, InputValueObject } from '../LessonBuilder';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {languageList} from '../../../../../utilities/staticData';
+import {InitialData, InputValueObject} from '../LessonBuilder';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 
 interface AddNewLessonFormProps {
@@ -26,7 +26,7 @@ interface AddNewLessonFormProps {
   setFormData: (data: InitialData) => void;
   setSelectedDesigners: (designer: InputValueObject[]) => void;
   postLessonCreation: (lessonId: string) => void;
-  allMeasurement: { id: number; name: string; value: string; topic?: string }[];
+  allMeasurement: {id: number; name: string; value: string; topic?: string}[];
   lessonMeasurements: any[];
   setLessonMeasurements: (obj: any[]) => void;
   lessonId: string;
@@ -51,10 +51,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     institutionList,
   } = props;
 
-  const [selectedMeasu, setSelectedMeasu] = useState({ id: '', name: '', value: '' });
+  const [selectedMeasu, setSelectedMeasu] = useState({id: '', name: '', value: ''});
   const [measurementList, setMeasurementList] = useState(allMeasurement);
-  const { clientKey, userLanguage } = useContext(GlobalContext);
-  const { AddNewLessonFormDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {AddNewLessonFormDict, BreadcrumsTitles} = useDictionary(clientKey);
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
@@ -71,9 +71,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   });
 
   const typeList: any = [
-    { id: '1', name: 'Lecture', value: 'lesson' },
-    { id: '2', name: 'Assessment', value: 'assessment' },
-    { id: '3', name: 'Survey', value: 'survey' },
+    {id: '1', name: 'Lecture', value: 'lesson'},
+    {id: '2', name: 'Assessment', value: 'assessment'},
+    {id: '3', name: 'Survey', value: 'survey'},
   ];
 
   const onInputChange = (e: any) => {
@@ -110,7 +110,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   };
   const selectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasu({ id, name, value: val });
+    setSelectedMeasu({id, name, value: val});
   };
 
   const addNewMeasurement = () => {
@@ -119,10 +119,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       {
         id: selectedMeasu.id,
         measurement: selectedMeasu.name,
-        topic: allMeasurement.find((item) => item.id.toString() === selectedMeasu.id)?.topic || '',
+        topic:
+          allMeasurement.find((item) => item.id.toString() === selectedMeasu.id)?.topic ||
+          '',
       },
     ]);
-    setSelectedMeasu({ id: '', name: '', value: '' });
+    setSelectedMeasu({id: '', name: '', value: ''});
   };
 
   const selectLanguage = (id: string, name: string, value: string) => {
@@ -130,7 +132,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const currentLanguages = formData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
+      updatedList = [...currentLanguages, {id, name, value}];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
@@ -146,14 +148,19 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
     setSelectedDesigners(updatedList);
   };
 
-  const setEditorContent = (html: string, text: string, fieldHtml: string, field: string) => {
+  const setEditorContent = (
+    html: string,
+    text: string,
+    fieldHtml: string,
+    field: string
+  ) => {
     setFormData({
       ...formData,
       [fieldHtml]: html,
@@ -171,7 +178,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const deleteMeasurement = async () => {
     if (showDeleteModal?.id) {
-      const filteredRubrics = [...lessonMeasurements].filter((item) => item.id !== showDeleteModal?.id);
+      const filteredRubrics = [...lessonMeasurements].filter(
+        (item) => item.id !== showDeleteModal?.id
+      );
       setLessonMeasurements([...filteredRubrics]);
     }
     toggleModal();
@@ -182,7 +191,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         lessonID: lessonId,
         rubricID: rubricsId,
       };
-      const results: any = await API.graphql(graphqlOperation(customMutations.createLessonRubrics, { input: input }));
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.createLessonRubrics, {input: input})
+      );
       const lessonRubric = results.data.createLessonRubrics;
     } catch {
       setValidation({
@@ -225,7 +236,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       msgs.languages = '';
     }
     // TODO: Add validation for repeating lesson names.
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -252,13 +263,16 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             // assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
           };
 
-          const results: any = await API.graphql(graphqlOperation(customMutations.createLesson, { input: input }));
+          const results: any = await API.graphql(
+            graphqlOperation(customMutations.createLesson, {input: input})
+          );
           const lessonsData = results?.data?.createLesson;
-          console.log(lessonsData);
 
           if (lessonsData?.id) {
             let rubrics = Promise.all(
-              lessonMeasurements.map(async (item: any) => saveMeasurements(lessonsData?.id, item.id))
+              lessonMeasurements.map(async (item: any) =>
+                saveMeasurements(lessonsData?.id, item.id)
+              )
             );
             setLoading(false);
             postLessonCreation(lessonsData?.id);
@@ -298,7 +312,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             designers: selectedDesigners.map((item) => item.id),
             language: formData.languages.map((item) => item.value),
           };
-          const results: any = await API.graphql(graphqlOperation(customMutations.updateLesson, { input: input }));
+          const results: any = await API.graphql(
+            graphqlOperation(customMutations.updateLesson, {input: input})
+          );
           const lessonsData = results?.data?.updateLesson;
 
           setLoading(false);
@@ -333,31 +349,37 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   useEffect(() => {
     if (allMeasurement?.length > 0) {
       const measurementID = lessonMeasurements?.map((meas) => meas.id);
-      const measurementList = allMeasurement.filter((item) => !measurementID.includes(item.id));
+      const measurementList = allMeasurement.filter(
+        (item) => !measurementID.includes(item.id)
+      );
       setMeasurementList(measurementList);
     }
   }, [lessonMeasurements, allMeasurement]);
 
-  const { name, type, languages, purposeHtml, objectiveHtml, institution } = formData;
+  const {name, type, languages, purposeHtml, objectiveHtml, institution} = formData;
 
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">{AddNewLessonFormDict[userLanguage]['TITLE']}</h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          {AddNewLessonFormDict[userLanguage]['TITLE']}
+        </h3>
       </div>
 
       <div className="p-4">
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['NAME']} <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
+              <span className="text-red-500"> * </span>
             </label>
             <FormInput value={name} id="name" onChange={onInputChange} name="name" />
             {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['SELECTTYPE']} <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
+              <span className="text-red-500"> * </span>
             </label>
             <Selector
               disabled={lessonId !== ''}
@@ -373,7 +395,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']} <span className="text-red-500"> * </span>
+              {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
+              <span className="text-red-500"> * </span>
             </label>
             <Selector
               disabled={lessonId !== ''}
@@ -382,7 +405,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               list={institutionList}
               onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')}
             />
-            {validation.institution && <p className="text-red-600 text-sm">{validation.institution}</p>}
+            {validation.institution && (
+              <p className="text-red-600 text-sm">{validation.institution}</p>
+            )}
           </div>
           <div>
             <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
@@ -420,7 +445,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             </label>
             <RichTextEditor
               initialValue={purposeHtml}
-              onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')}
+              onChange={(htmlContent, plainText) =>
+                setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
+              }
             />
           </div>
           <div>
@@ -506,8 +533,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                           Remove
                         </div> */}
                         <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
-                          <div className="w-6 h-6 cursor-pointer" onClick={() => toggleModal(item.id)}>
-                            <IconContext.Provider value={{ size: '1.5rem', color: '#B22222' }}>
+                          <div
+                            className="w-6 h-6 cursor-pointer"
+                            onClick={() => toggleModal(item.id)}>
+                            <IconContext.Provider
+                              value={{size: '1rem', color: '#B22222'}}>
                               <FaTrash />
                             </IconContext.Provider>
                           </div>
@@ -529,7 +559,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
         {validation.message && (
           <div className="py-2 m-auto mt-2 text-center">
-            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+            <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+              {validation.message}
+            </p>
           </div>
         )}
         {showDeleteModal.state && (
@@ -544,7 +576,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         <div className="flex mb-8 mt-4 justify-center">
           <Buttons
             btnClass="py-3 px-10"
-            label={loading ? AddNewLessonFormDict[userLanguage]['SAVING'] : AddNewLessonFormDict[userLanguage]['SAVE']}
+            label={
+              loading
+                ? AddNewLessonFormDict[userLanguage]['SAVING']
+                : AddNewLessonFormDict[userLanguage]['SAVE']
+            }
             onClick={saveFormData}
             disabled={loading}
           />

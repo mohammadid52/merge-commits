@@ -1,14 +1,13 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import { LessonContext } from '../../../contexts/LessonContext';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../contexts/LessonContext';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import ProgressBar from './ProgressBar/ProgressBar';
 
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineArrowLeft, AiOutlineArrowRight, AiOutlineHome } from 'react-icons/ai';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 
-const LessonTopMenu = (props: { handlePopup: () => void }) => {
-  const { state, dispatch, theme } = useContext(LessonContext);
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+const LessonTopMenu = (props: {handlePopup: () => void}) => {
+  const {state, dispatch, theme} = useContext(LessonContext);
   const history = useHistory();
   const match = useRouteMatch();
   const userAtEnd = state.currentPage + 1 === state.pages.length;
@@ -23,19 +22,19 @@ const LessonTopMenu = (props: { handlePopup: () => void }) => {
     if (state.pages[state.currentPage + 1]) {
       if (state.pages[state.currentPage + 1].open) {
         // console.log(state.pages);
-        return dispatch({ type: 'CAN_CONTINUE' });
+        return dispatch({type: 'CAN_CONTINUE'});
       }
-      return dispatch({ type: 'NO_CONTINUE' });
+      return dispatch({type: 'NO_CONTINUE'});
     }
-    return dispatch({ type: 'NO_CONTINUE' });
+    return dispatch({type: 'NO_CONTINUE'});
   }, [state.pages, state.currentPage]);
 
   const handleForward = () => {
     if (state.canContinue && state.currentPage < state.pages.length - 1) {
       history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
-      dispatch({ type: 'PAGE_FORWARD' });
+      dispatch({type: 'PAGE_FORWARD'});
     }
-    if(userAtEnd){
+    if (userAtEnd) {
       props.handlePopup();
     }
   };
@@ -43,7 +42,7 @@ const LessonTopMenu = (props: { handlePopup: () => void }) => {
   const handleBack = () => {
     if (state.currentPage > 0) {
       history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
-      dispatch({ type: 'PAGE_BACK' });
+      dispatch({type: 'PAGE_BACK'});
     }
   };
 
@@ -57,13 +56,15 @@ const LessonTopMenu = (props: { handlePopup: () => void }) => {
 
             <div
               className={`mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.currentPage > 0 ? 'cursor-pointer bg-dark-red' : 'cursor-default bg-darker-gray'
+                state.currentPage > 0
+                  ? 'cursor-pointer bg-dark-red'
+                  : 'cursor-default bg-darker-gray'
               } }`}
               onClick={handleBack}>
               <IconContext.Provider
                 value={{
                   size: '1.5rem',
-                  style: { width: '32px' },
+                  style: {width: '32px'},
                   className: `text-white`,
                 }}>
                 <AiOutlineArrowLeft />
@@ -78,13 +79,15 @@ const LessonTopMenu = (props: { handlePopup: () => void }) => {
 
             <div
               className={`ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.canContinue || userAtEnd ? 'bg-sea-green cursor-pointer' : 'bg-dark-gray cursor-default'
+                state.canContinue || userAtEnd
+                  ? 'bg-sea-green cursor-pointer'
+                  : 'bg-dark-gray cursor-default'
               } `}
               onClick={handleForward}>
               <IconContext.Provider
                 value={{
                   size: '1.5rem',
-                  style: { width: '32px' },
+                  style: {width: '32px'},
                   className: `text-white`,
                 }}>
                 <AiOutlineArrowRight />
@@ -95,14 +98,7 @@ const LessonTopMenu = (props: { handlePopup: () => void }) => {
       </div>
 
       {/* ICON LABEL HOVER BAR */}
-      {
-        barType === 'lesson' ?
-          (
-            <div className={`w-full h-6 bg-darker-gray`} />
-          ) :
-          null
-      }
-
+      {barType === 'lesson' ? <div className={`w-full h-6 bg-darker-gray`} /> : null}
     </>
   );
 };

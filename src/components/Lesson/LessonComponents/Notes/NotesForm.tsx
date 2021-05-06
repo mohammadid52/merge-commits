@@ -1,14 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { LessonContext } from '../../../../contexts/LessonContext';
 import RichTextEditor from '../../../Atoms/RichTextEditor';
 import Banner from '../Banner';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { FaRegWindowMinimize } from 'react-icons/fa';
-import { LessonHeaderBarProps } from '../../../../interfaces/LessonComponentsInterfaces';
 import useDictionary from '../../../../customHooks/dictionary';
+import { FloatingSideMenuProps } from '../../../Dashboard/FloatingSideMenu/FloatingSideMenu';
 
-const NotesForm = (props: LessonHeaderBarProps) => {
-  const { overlay, setOverlay } = props;
+const NotesForm = (props: FloatingSideMenuProps) => {
+  const { focusSection } = props;
   const { theme, dispatch, clientKey, userLanguage } = useContext(LessonContext);
   const { lessonDict } = useDictionary(clientKey);
 
@@ -33,23 +33,13 @@ const NotesForm = (props: LessonHeaderBarProps) => {
   };
   return (
     <div className={`
-        ${overlay === 'notes' ? theme.section : null} 
-        ${overlay === 'notes' ? 'opacity-100 -translate-y-0 z-100' : 'opacity-0 -translate-y-256 z-0'}
-        transform transition duration-300 ease-in-out ...
+        transform transition duration-400 ease-in-out
+        ${focusSection === 'Notes' ? 'w-full h-full mb-2 opacity-100' : 'w-0 overflow-hidden opacity-0'}
       `}>
-      <div className={`relative px-4 pb-4 rounded-br-xl bg-tahini`}>
-        <div
-          className={`absolute w-auto right-0 top-0 p-2 m-4 text-white cursor-pointer z-50 transition duration-200 ease-in-out rounded bg-white bg-opacity-10 hover:bg-opacity-40`}
-          onClick={() => setOverlay('')}>
-          <IconContext.Provider value={{ className: 'w-auto h-auto' }}>
-            <FaRegWindowMinimize size={18} />
-          </IconContext.Provider>
-        </div>
-        <Banner subtitle={`${lessonDict[userLanguage].CLASS} Notes`} />
         <RichTextEditor initialValue={`Take notes here...`}
-                        onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'content')} />
+                        onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'content')}
+                        fullWHOverride={true}/>
       </div>
-    </div>
   );
 };
 

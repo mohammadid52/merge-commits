@@ -484,6 +484,21 @@ export const updateClassStudent = /* GraphQL */ `
   }
 `;
 
+export const createRoomCoTeachers = /* GraphQL */ `
+  mutation CreateRoomCoTeachers(
+    $input: CreateRoomCoTeachersInput!
+    $condition: ModelRoomCoTeachersConditionInput
+  ) {
+    createRoomCoTeachers(input: $input, condition: $condition) {
+      id
+      roomID
+      teacherID
+      teacherEmail
+      teacherAuthID
+    }
+  }
+`;
+
 export const createRoom = /* GraphQL */ `
   mutation CreateRoom($input: CreateRoomInput!, $condition: ModelRoomConditionInput) {
     createRoom(input: $input, condition: $condition) {
@@ -761,6 +776,7 @@ export const createCheckpoint = /* GraphQL */ `
       instructionsTitle
       instructions
       purpose
+      scope
       objectives
       designers
       language
@@ -779,6 +795,7 @@ export const updateCheckpoint = /* GraphQL */ `
       subtitle
       stage
       type
+      scope
       instructionsTitle
       instructions
       purpose
@@ -874,10 +891,6 @@ export const createLessonRubrics = /* GraphQL */ `
         id
         name
         criteria
-        distinguished
-        excelled
-        adequite
-        basic
         topicID
         topic {
           id

@@ -131,33 +131,33 @@ const LessonEdit = (props: LessonEditProps) => {
     { id: '2', name: 'Assessment', value: 'assessment' },
     { id: '3', name: 'Survey', value: 'survey' },
   ];
-  const goBack = () => {
-    history.push('/dashboard/lesson-builder');
-  };
 
-  const currentStepIdx = findIndex(assessmentScrollerStep, { name: activeStep });
+  const [historyList, setHistoryList] = useState(['Overview']);
+
+  const goBack = () => {
+    const currentStepIdx = historyList.indexOf(activeStep);
+    if (currentStepIdx < 0) {
+      setHistoryList(['Overview']);
+    } else if (historyList.length === 1) {
+      history.goBack();
+    } else {
+      const prevStep: string = historyList[currentStepIdx - 1];
+      setActiveStep(prevStep);
+      historyList.pop();
+      setHistoryList([...historyList]);
+    }
+  };
 
   const gobackToLessonsList = () => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      if (currentStepIdx === 0) {
-        history.push('/dashboard/lesson-builder');
-      } else {
-        const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-        setActiveStep(prevStep);
-      }
+      goBack();
     }
   };
 
   const onModalSave = () => {
-    if (currentStepIdx === 0) {
-      return history.goBack();
-    } else {
-      setUnsavedChanges(false);
-      const prevStep: string = assessmentScrollerStep[currentStepIdx - 1].name;
-      setActiveStep(prevStep);
-    }
+    goBack();
     toggleModal();
   };
 
@@ -316,7 +316,7 @@ const LessonEdit = (props: LessonEditProps) => {
             lessonName={formData.name}
             enablePublish
             lessonID={lessonId || assessmentId}
-            lessonPlans={savedLessonDetails.lessonPlans}
+            lessonPlans={savedLessonDetails.lessonPlans || []}
             lessonType={formData.type?.value}
           />
         );
@@ -345,7 +345,7 @@ const LessonEdit = (props: LessonEditProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonEditDict[userLanguage]['TITLE']}
@@ -365,17 +365,16 @@ const LessonEdit = (props: LessonEditProps) => {
               <WizardScroller
                 stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep}
                 activeStep={activeStep}
-                setActiveStep={(step) => setActiveStep(step)}
+                setActiveStep={(step) => {
+                  setActiveStep(step);
+
+                  setHistoryList([...historyList, step]);
+                }}
               />
             </div>
             <div className='sm:col-span-4'>
               {loading ? (
-                <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-                  <div className="w-5/10">
-                    <Loader color="rgba(107, 114, 128, 1)" />
-                    <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
-                  </div>
-                </div>
+                <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
               ) : (
                 <Fragment>
                   <div className="mx-6">{currentStepComp(activeStep)}</div>
