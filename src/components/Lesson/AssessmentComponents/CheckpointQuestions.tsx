@@ -249,7 +249,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
               qid: id,
               response: valueArray,
               // Add this value to query
-              // otherValue: value === 'other' ? otherValue : null,
+              otherValue: value === 'other' ? otherValue : null,
             };
           } else {
             return obj;

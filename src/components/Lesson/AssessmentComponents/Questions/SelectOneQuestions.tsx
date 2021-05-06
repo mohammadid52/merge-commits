@@ -26,9 +26,11 @@ const SelectOneQuestions = (props: QuestionProps) => {
     questionKey,
     value,
   } = props;
+
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
+
   const {state, theme, dispatch} = switchContext;
   const questionId = question.question.id;
 
@@ -37,9 +39,13 @@ const SelectOneQuestions = (props: QuestionProps) => {
       state.questionData[checkpointID],
       (q) => q.qid === questionId
     ).response.toString() || '';
+
+  const otherFieldValue =
+    find(state.questionData[checkpointID], (q) => q.qid === questionId).otherValue || '';
+
   const [input, setInput] = useState<SelectOneRowState>({id: '', value: oneQuestInitAns});
   const [otherOptSel, setOtherOptSel] = useState(false);
-  const [other, setOther] = useState('');
+  const [other, setOther] = useState(otherFieldValue);
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
@@ -53,10 +59,17 @@ const SelectOneQuestions = (props: QuestionProps) => {
     }
   };
 
-  const onOtherSave = () => {
-    setOtherOptSel(false);
-    handleInputChange(questionId, input.value, checkpointID, other);
+  const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {id, value} = e.target as HTMLInputElement;
+    setOther(value);
+    handleInputChange(questionId, 'other', checkpointID, value);
   };
+
+  useEffect(() => {
+    if (input.value === 'other' || otherFieldValue.length > 0) {
+      setOtherOptSel(true);
+    }
+  }, [input.value]);
 
   return (
     <>
@@ -106,19 +119,17 @@ const SelectOneQuestions = (props: QuestionProps) => {
           </div>
 
           {otherOptSel && (
-            <div>
+            <div key={`question_${questionId}`} className={`w-auto my-4`}>
               <input
-                value={other}
-                onChange={(e) => setOther(e.target.value)}
-                className="bg-transparent border-b-2 my-8 text-white border-sea-green pb-2"
-                placeholder="Other"
+                id={`${questionId}__other`}
+                className={`${theme.elem.textInput} w-full rounded-xl`}
                 type="text"
+                name={'Other'}
+                value={other}
+                onChange={(e) => {
+                  handleTextInputChange(e);
+                }}
               />
-              <button
-                onClick={onOtherSave}
-                className="bg-sea-green w-auto py-2 px-4 rounded">
-                save
-              </button>
             </div>
           )}
         </div>
