@@ -344,7 +344,7 @@ const User = () => {
           <div className="py-2 align-middle inline-block min-w-full mb-16">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg inner_card">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-100">
                   <tr>
                     <th
                       scope="col"
@@ -377,7 +377,7 @@ const User = () => {
                     return (
                       <tr
                         key={item.email}
-                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {item?.class?.name}
                         </td>
