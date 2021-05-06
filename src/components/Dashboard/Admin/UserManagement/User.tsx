@@ -337,6 +337,77 @@ const User = () => {
     );
   };
 
+  const AssociatedClasses = ({list}: any) => {
+    return (
+      <div className="flex flex-col">
+        <div className=" overflow-x-auto">
+          <div className="py-2 align-middle inline-block min-w-full mb-16">
+            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg inner_card">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Classname
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Institution
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Teacher
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Curriculum
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((item: any, idx: number) => {
+                    const rooms = item?.class?.rooms.items;
+
+                    const curriculum = rooms.length > 0 ? rooms[0].curricula : null;
+                    const teacher = rooms.length > 0 ? rooms[0].teacher : null;
+                    return (
+                      <tr
+                        key={item.email}
+                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {item?.class?.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {item?.class?.institution?.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {teacher
+                            ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
+                            : 'Not Available'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {curriculum
+                            ? `${curriculum?.items[0]?.curriculum?.name}${
+                                curriculum?.items[0]?.length > 1 ? '...' : ''
+                              }`
+                            : 'Not Available'}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   {
     return (
       <>
@@ -345,7 +416,7 @@ const User = () => {
           <div className="flex justify-between">
             <SectionTitle title={UserDict[userLanguage]['title']} />
 
-            <div className="flex justify-end py-4 mb-4 w-5/10">
+            <div className="flex justify-end py-4 mb-4 w-1/2">
               <Buttons
                 label="Go Back"
                 btnClass="mr-4"
@@ -364,7 +435,7 @@ const User = () => {
           </div>
           <div
             className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-            <div className="h-9/10 flex flex-col md:flex-row">
+            <div className="h-1/2 flex flex-col md:flex-row">
               <div className="w-1/3 p-4 flex flex-col text-center items-center">
                 <div className="cursor-pointer">
                   {user.image ? (
@@ -479,64 +550,7 @@ const User = () => {
           {user?.classes?.items.length > 0 && user.role === 'ST' && (
             <div>
               <SectionTitleV3 title={'Associated Classrooms'} />
-
-              <div
-                className={`grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-x-4 pb-8 ${theme.elem.text} mb-8`}>
-                {user?.classes?.items.map((item: any, index: number) => {
-                  const rooms = item?.class?.rooms.items;
-
-                  const curriculum = rooms.length > 0 ? rooms[0].curricula : null;
-                  const teacher = rooms.length > 0 ? rooms[0].teacher : null;
-                  return (
-                    <div
-                      className="my-2 white_back flex flex-col items-center justify-center min-w-64 min-h-32"
-                      key={item.class.id + '__' + index}>
-                      <div className="flex items-center justify-center p-4 px-6">
-                        <p className="text-gray-400 text-md font-medium mt-2">
-                          Classname:
-                        </p>{' '}
-                        <p className="text-dark text-md font-medium mt-2">
-                          {item?.class?.name}
-                        </p>
-                      </div>
-                      <div style={{height: '1px'}} className="bg-gray-200" />
-                      <div className="flex items-center justify-center px-6 p-4">
-                        <p className="text-gray-400 text-md font-medium mt-2">
-                          Institution:
-                        </p>{' '}
-                        <p className="text-dark text-md font-medium mt-2">
-                          {item?.class?.institution?.name}
-                        </p>
-                      </div>
-
-                      <div style={{height: '1px'}} className="bg-gray-200" />
-                      <div className="flex items-center justify-center px-6 p-4">
-                        <p className="text-gray-400 text-md font-medium mt-2">Teacher:</p>{' '}
-                        <div className="text-dark text-md flex items-center font-medium mt-2">
-                          {teacher ? <TeacherImage teacher={teacher} /> : null}
-                          {teacher
-                            ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
-                            : 'Not Available'}
-                        </div>
-                      </div>
-
-                      <div style={{height: '1px'}} className="bg-gray-200" />
-                      <div className="flex items-center justify-center px-6 p-4">
-                        <p className="text-gray-400 text-md font-medium mt-2">
-                          Curriculum:
-                        </p>{' '}
-                        <p className="text-dark text-md font-medium mt-2">
-                          {curriculum
-                            ? `${curriculum?.items[0]?.curriculum?.name}${
-                                curriculum?.items[0]?.length > 1 ? '...' : ''
-                              }`
-                            : 'Not Available'}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <AssociatedClasses list={user?.classes?.items} />
             </div>
           )}
         </div>
