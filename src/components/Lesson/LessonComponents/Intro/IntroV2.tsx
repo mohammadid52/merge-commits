@@ -47,11 +47,25 @@ const Intro = (props: LessonComponentsInterface) => {
 
   const onBack = () => {
     const curPage = pageList[currentPageIdx - 1];
-    setCurrentPage(curPage);
+    if (curPage.name === 'checkpoints' && checkpointsItems.length === 0) {
+      // Don't show any errors if there are no checkpoints
+      // It's not required because in latest updates. can't publish surveys with zero checkpoints.
+      // this is just for old data with no checkpoints
+      setCurrentPage(pageList[currentPageIdx - 2]);
+    } else {
+      setCurrentPage(curPage);
+    }
   };
   const onNext = () => {
     const curPage = pageList[currentPageIdx + 1];
-    setCurrentPage(curPage);
+    if (curPage.name === 'checkpoints' && checkpointsItems.length === 0) {
+      // Don't show any errors if there are no checkpoints
+      // It's not required because in latest updates. can't publish surveys with zero checkpoints.
+      // this is just for old data with no checkpoints
+      setCurrentPage(pageList[currentPageIdx + 2]);
+    } else {
+      setCurrentPage(curPage);
+    }
   };
 
   const isLastPage = currentPageIdx === pageList.length - 1;
