@@ -247,7 +247,7 @@ const useStudentTimer = (inputs?: inputs) => {
       const updatedQuestionData = await API.graphql(
         graphqlOperation(mutations.updateQuestionData, { input: responseObj })
       );
-      // console.log('updateQuestionData responseObj -> ', responseObj);
+      console.log('updateQuestionData responseObj -> ', responseObj);
     } catch (err) {
       console.error(err);
     }

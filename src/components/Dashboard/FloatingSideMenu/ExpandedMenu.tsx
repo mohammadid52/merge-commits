@@ -6,6 +6,8 @@ import Rooms from '../../RoomChat/Rooms';
 import {CallWidgetsSmall} from './SectionContent/CallWidgetsSmall';
 import {FileWidgetsSmall} from './SectionContent/FileWidgetsSmall';
 import RoomChat from '../../RoomChat/RoomChat';
+import NotesForm from '../../Lesson/LessonComponents/Notes/NotesForm';
+import useDictionary from '../../../customHooks/dictionary';
 
 // GET ALL THE RELEVANT WIDGETS HERE
 
@@ -25,7 +27,8 @@ const ExpandedMenu = (props: {
     chatroom,
     setChatroom,
   } = props;
-  const {state, clientKey} = useContext(GlobalContext);
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+  const { lessonDict } = useDictionary(clientKey);
 
   const setSelectedChatroom = (roomObj: any) => {
     if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
@@ -64,16 +67,15 @@ const ExpandedMenu = (props: {
   return (
     <div
       className={`
-       absolute w-full h-full`}>
+       absolute w-full h-full z-100`}>
       <div
         className={`
-        absolute w-full h-full
-        transform transition-transform ease-in-out duration-400 
+        absolute w-full h-full overflow-hidden flex flex-row
+        transform transition-transform ease-in-out duration-400  z-100
         ${menuState > 0 && focusSection === 'Chatroom' ? 'bg-container' : ''}
         ${menuState > 0 && focusSection !== 'Chatroom' ? 'bg-gray-600' : ''}
         ${menuState > 0 ? '' : 'w-0 invisible'}
-         overflow-hidden
-        flex flex-row`}>
+         `}>
         <SideMenuSection
           menuState={menuState}
           setMenuState={setMenuState}
@@ -113,6 +115,16 @@ const ExpandedMenu = (props: {
             }`}
             focusSection={focusSection}>
             <RoomChat selectedRoom={chatroom} focusSection={focusSection} />
+          </SideMenuSection>
+        )}
+        {focusSection === 'Notes' && (
+          <SideMenuSection
+            menuState={menuState}
+            setMenuState={setMenuState}
+            sectionLabel={`Notes`}
+            sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
+            focusSection={focusSection}>
+            <NotesForm focusSection={focusSection}/>
           </SideMenuSection>
         )}
       </div>

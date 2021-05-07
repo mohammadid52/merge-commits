@@ -3,14 +3,11 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 // Iconz
 import {IoMdDisc} from 'react-icons/io';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaRulerVertical, FaQuestionCircle, FaAppleAlt, FaDoorOpen} from 'react-icons/fa';
-import {AiOutlineSchedule, AiOutlineUsergroupAdd, AiOutlineBook} from 'react-icons/ai';
-import {RiDoorClosedLine} from 'react-icons/ri';
+import {FaAppleAlt} from 'react-icons/fa';
+import {AiOutlineUsergroupAdd, AiOutlineBook} from 'react-icons/ai';
 import {HiOutlineOfficeBuilding} from 'react-icons/hi';
 import {IoIosPeople, IoMdBuild} from 'react-icons/io';
-import {GiShinyApple} from 'react-icons/gi';
-import {IoBookOutline, IoSchoolOutline} from 'react-icons/io5';
+import {IoBarChart, IoBookOutline} from 'react-icons/io5';
 import {BsReverseLayoutSidebarReverse} from 'react-icons/bs';
 import {IoIosHome} from 'react-icons/io';
 
@@ -157,6 +154,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Anthology',
               path: 'anthology',
             },
+            {
+              title: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
+              name: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
+              label: 'Research & Analytics',
+              path: 'csv',
+            },
           ];
         });
       case 'TR':
@@ -216,6 +219,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               subMenuItems: [
                 {title: 'Add New Lesson', path: 'lesson-builder/lesson/add'},
               ],
+            },
+            {
+              title: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
+              name: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
+              label: 'Research & Analytics',
+              path: 'csv',
             },
           ];
         });
@@ -394,6 +403,15 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'Noticeboard':
         return (
           <BsReverseLayoutSidebarReverse
+            className={`h-4 w-4 ${
+              active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'
+            } sidenav_icon`}
+            id={url}
+          />
+        );
+      case 'Research & Analytics':
+        return (
+          <IoBarChart
             className={`h-4 w-4 ${
               active ? theme.textColor[themeColor] : 'sidenav_icon_inactive'
             } sidenav_icon`}

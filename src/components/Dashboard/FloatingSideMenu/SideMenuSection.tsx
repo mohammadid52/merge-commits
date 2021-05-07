@@ -1,7 +1,9 @@
-import React from 'react';
-import {IoDocument} from 'react-icons/io5';
+import React, { useContext } from 'react';
 import ButtonsRound from '../../Atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
+import {IconType} from 'react-icons';
+import {AiOutlineSave} from 'react-icons/all';
+import { LessonContext } from '../../../contexts/LessonContext';
 
 export const SideMenuSection = (props: {
   menuState?: number;
@@ -24,38 +26,66 @@ export const SideMenuSection = (props: {
     focusSection,
     setFocusSection,
   } = props;
+  const LessonCTX = useContext(LessonContext);
   const thisSectionActive = focusSection === sectionLabel;
   const noSectionActive = focusSection === '';
+
+  const switchCloseIcon = (sectionName: string): IconType => {
+    switch (sectionName) {
+      case 'Notes':
+        return AiOutlineSave;
+      default:
+        return AiOutlineCloseCircle;
+    }
+  };
+
+  const handleCloseOrSave = () => {
+    if(menuState > 0 && thisSectionActive && focusSection === 'Notes'){
+      if(LessonCTX !== null) {
+        LessonCTX.dispatch({type: 'INCREMENT_SAVE_COUNT'});
+      }
+      setMenuState(-1, 'reset')
+    } else {
+      setMenuState(-1, 'reset')
+    }
+  }
 
   return (
     <div
       className={`
-      relative
-      transform transition-all ease-in-out duration-400
+      relative flex flex-col
+      transform transition-all ease-in-out duration-400 z-100
        ${thisSectionActive ? 'opacity-100 flex-grow flex-1' : 'w-0 opacity-0'}
        ${thisSectionActive && menuState === 1 ? 'px-2' : ''}
-      flex flex-col
+       ${thisSectionActive && menuState === 2 ? 'bg-white' : ''}
+       ${thisSectionActive && menuState === 3 ? 'px-2' : ''}
     `}>
       {menuState > 0 && thisSectionActive ? (
         <>
           <p
-            className={`h-12 max-w-72 truncate overflow-ellipsis overflow-hidden ${
+            className={`
+              h-12 max-w-72 truncate overflow-ellipsis overflow-hidden
+              flex items-center  font-medium z-100
+              border-b-0 border-gray-400 
+            ${
               menuState === 2
-                ? 'pl-2 text-gray-700 text-xl'
-                : 'text-indigo-100 text-sm border-b-0 border-gray-400'
-            } flex items-center  font-medium z-50`}>
+                ? 'border-t-0 pl-2 text-gray-700 text-xl bg-white'
+                : 'text-indigo-100 text-sm '
+            } `}>
             {sectionTitle || 'Section Title'}{' '}
           </p>
           <div
-            onClick={() => setMenuState(-1, 'reset')}
+            onClick={() => handleCloseOrSave()}
             className={`w-auto absolute right-0 ${
               menuState > 0 ? '' : 'w-0 overflow-hidden'
             } text-sm fond-medium text-indigo-600 cursor-pointer z-100`}>
             <ButtonsRound
-              Icon={AiOutlineCloseCircle}
+              Icon={switchCloseIcon(sectionLabel)}
               iconSizePX={24}
               buttonWHClass={`w-8 h-8`}
-              containerBgClass={`bg-transparent p-2`}
+              containerBgClass={`bg-transparent p-2 border-b-0 border-gray-400 ${
+                menuState === 2 ? 'border-t-0' : ''
+              }`}
               buttonBgClass={`bg-transparent`}
               iconTxtColorClass={`${menuState === 2 ? 'text-gray-800' : 'text-white'}`}
             />
@@ -64,16 +94,18 @@ export const SideMenuSection = (props: {
       ) : null}
 
       {children ? (
-        menuState === 1 && thisSectionActive ? (
+        menuState === 0 && thisSectionActive ? (
+          <div className={`flex flex-col flex-1 pt-2 w-0 overflow-hidden`}>
+            {children}
+          </div>
+        ) : menuState === 1 && thisSectionActive ? (
           <div className={`flex flex-col flex-1 bg-gray-600 rounded-lg pt-2`}>
             {children}
           </div>
         ) : menuState === 2 && thisSectionActive ? (
-          <div className={`flex flex-col flex-1 pt-2`}>{children}</div>
-        ) : menuState === 0 && thisSectionActive ? (
-          <div className={`flex flex-col flex-1 pt-2 w-0 overflow-hidden`}>
-            {children}
-          </div>
+          <div className={`flex flex-col flex-1`}>{children}</div>
+        ) : menuState === 3 && thisSectionActive ? (
+          <div className={`flex flex-col flex-1`}>{children}</div>
         ) : null
       ) : null}
     </div>
