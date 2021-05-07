@@ -15,6 +15,11 @@ const MessageWrapper = (props: MessageWrapperProps) => {
   const {senderIsMe, children, deleteMessage} = props;
   const [deleteToggle, setDeleteToggle] = useState<boolean>(false);
 
+  const handleDeleteMessageCallback = () => {
+    deleteMessage()
+    setDeleteToggle(false)
+  }
+
   return (
     <div className={`flex flex-row`}>
       {senderIsMe && (
@@ -45,9 +50,11 @@ const MessageWrapper = (props: MessageWrapperProps) => {
             ${deleteToggle ? 'flex items-center justify-center' : ''}
             ${deleteToggle ? 'shadow hover:shadow-lg' : 'shadow'}
             `}>
+
+        {/* DELETE SPAN */}
         <span
-          className={`absolute w-auto h-auto ${
-            deleteToggle
+          onClick={senderIsMe && deleteToggle ? () => handleDeleteMessageCallback(): undefined}
+          className={`absolute w-auto h-auto ${ deleteToggle
               ? 'text-sm fond-semibold hover:font-bold text-red-600 cursor-pointer'
               : 'hidden opacity-0 h-0'
           }`}>

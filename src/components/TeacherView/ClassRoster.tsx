@@ -115,8 +115,12 @@ const ClassRoster = (props: classRosterProps) => {
         })
       );
       const syllabusLessonStudentList = syllabusLessonStudents.data.listPersonLocations.items;
-      setPersonLocationStudents(syllabusLessonStudentList);
-      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: syllabusLessonStudentList } });
+      const studentsFromThisClass = syllabusLessonStudentList.filter((student: any)=>{
+        const findStudentInClasslist = classStudents.find((student2: any) => student2.personEmail === student.personEmail);
+        if(findStudentInClasslist) return findStudentInClasslist;
+      })
+      setPersonLocationStudents(studentsFromThisClass);
+      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentsFromThisClass } });
       subscription = subscribeToPersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);

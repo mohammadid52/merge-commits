@@ -12,10 +12,10 @@ import * as queries from '../../graphql/queries';
 import { createFilterToFetchSpecificItemsOnly } from '../../utilities/strings';
 import * as customMutations from '../../customGraphql/customMutations';
 import NotesForm from './LessonComponents/Notes/NotesForm';
+import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 
 const LessonApp = () => {
-  const lessonCTX = useContext(LessonContext);
-  const { state } = lessonCTX;
+  const { state, theme, dispatch }  = useContext(LessonContext);
   const urlParams: any = useParams();
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
@@ -47,10 +47,10 @@ const LessonApp = () => {
    */
 
   useEffect(() => {
-    if (Object.keys(lessonCTX.state.data).length > 0 && lessonCTX.state.data.lesson && lessonCTX.state.pages) {
+    if (Object.keys(state.data).length > 0 && state.data.lesson && state.pages) {
       setLessonDataLoaded(true);
     }
-  }, [lessonCTX.state.data]);
+  }, [state.data]);
 
   /**
    * Function and useEffect for getting/setting checkpoints if
@@ -187,12 +187,12 @@ const LessonApp = () => {
         return { ...acc, [checkpointObj?.id]: initQuestionObj };
       }, {});
 
-      lessonCTX.dispatch({
+      dispatch({
         type: 'UPDATE_CHECKPOINT_DATA',
         payload: checkpointsItems,
       });
 
-      lessonCTX.dispatch({
+      dispatch({
         type: 'SET_QUESTION_DATA',
         payload: {
           data: initCheckpointsObj,
@@ -304,6 +304,10 @@ const LessonApp = () => {
           },
         })
       );
+      const listQuestionDatasItems = questionDatas.data.listQuestionDatas.items;
+
+      console.log('listQUestionDatasItems --', listQuestionDatasItems)
+
       const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
         return [
           ...acc,
@@ -322,7 +326,7 @@ const LessonApp = () => {
       }
 
       if ((existQuestionDatas && recentQuestionOp === '') || (existQuestionDatas && recentQuestionOp === 'created')) {
-        lessonCTX.dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
+        dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
         setRecentQuestionOp('fetched');
       }
     } catch (e) {
@@ -340,25 +344,28 @@ const LessonApp = () => {
   }, [checkpointsLoaded, recentQuestionOp]);
 
   return (
-    <div className={`${lessonCTX.theme.bg} w-full md:h-screen flex flex-col items-start`}>
-      <LessonHeaderBar
-        lessonDataLoaded={lessonDataLoaded}
-        checkpointsLoaded={checkpointsLoaded}
-        overlay={overlay}
-        setOverlay={setOverlay}
-      />
-      {/*<NotificationBar />*/}
+    <>
+      <FloatingSideMenu/>
+      <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
+        <LessonHeaderBar
+          lessonDataLoaded={lessonDataLoaded}
+          checkpointsLoaded={checkpointsLoaded}
+          overlay={overlay}
+          setOverlay={setOverlay}
+        />
+        {/*<NotificationBar />*/}
 
-      <div
-        className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${
-          overlay === '' ? 'z-0' : 'z-50'
-        }`}>
-        <NotesForm overlay={overlay} setOverlay={setOverlay} />
+        <div
+          className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${
+            overlay === '' ? 'z-0' : 'z-50'
+          }`}>
+          <NotesForm overlay={overlay} setOverlay={setOverlay} />
+        </div>
+
+        {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
+        {lessonDataLoaded && <Foot />}
       </div>
-
-      {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
-      {lessonDataLoaded && <Foot />}
-    </div>
+    </>
   );
 };
 
