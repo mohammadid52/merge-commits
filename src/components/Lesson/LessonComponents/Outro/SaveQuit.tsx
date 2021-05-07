@@ -40,12 +40,11 @@ const SaveQuit = (props: SaveQuitProps) => {
 
   useEffect(() => {
     if (isSaving) {
-      if (nrSaves === checkpointIdKeys.length) {
+      if (
+       nrSaves === checkpointIdKeys.length
+      ) {
         if (roomID) {
-          setTimeout(
-            () => (window.location.href = `/dashboard/classroom/${roomID}`),
-            50
-          );
+          setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
         } else {
           history.push('/dashboard/home');
         }
@@ -95,12 +94,8 @@ const SaveQuit = (props: SaveQuitProps) => {
         await createQuestionData(responseObject, idx);
       }, null);
     } else {
-      setTimeout(
-        () => (window.location.href = `/dashboard/classroom/${roomID}`),
-        50
-      );
+      setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
     }
-
   };
 
   const handleManualSave = () => {
@@ -108,6 +103,11 @@ const SaveQuit = (props: SaveQuitProps) => {
       setIsSaving(true);
       if (state.data.lesson.type === 'lesson') {
         dispatch({type: 'INCREMENT_SAVE_COUNT'});
+        if (roomID) {
+          setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
+        } else {
+          history.push('/dashboard/home');
+        }
       } else {
         handleCreateQuestionData();
       }
