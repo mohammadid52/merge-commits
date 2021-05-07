@@ -127,21 +127,21 @@ const Body = (props: props) => {
     }
   }, [state.studentViewing]);
 
-  const colorPicker = (colorName: string): string => {
-    switch (colorName) {
-      case 'dark-red':
-        return '#CA2222';
-      case 'blueberry':
-        return '#488AC7';
-      case 'sea-green':
-        return '#17A589';
-      case 'fire-orange':
-        return '#FF5733';
-      case 'erase':
-      default:
-        return '';
-    }
-  };
+  // const colorPicker = (colorName: string): string => {
+  //   switch (colorName) {
+  //     case 'dark-red':
+  //       return '#CA2222';
+  //     case 'blueberry':
+  //       return '#488AC7';
+  //     case 'sea-green':
+  //       return '#17A589';
+  //     case 'fire-orange':
+  //       return '#FF5733';
+  //     case 'erase':
+  //     default:
+  //       return '';
+  //   }
+  // };
 
   return (
     <>
@@ -162,13 +162,11 @@ const Body = (props: props) => {
           <Toolbar
             setColor={setColor}
             color={color}
-            colorPicker={colorPicker}
             fullscreen={fullscreen}
           />
 
           <LyricsBlock
             color={color}
-            colorPicker={colorPicker}
             selected={selected}
             setSelected={setSelected}
             fullscreen={fullscreen}
