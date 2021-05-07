@@ -1,31 +1,20 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineHome } from 'react-icons/ai';
-import { LessonContext } from '../../../contexts/LessonContext';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineHome} from 'react-icons/ai';
+import {LessonContext} from '../../../contexts/LessonContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
 import NotesWidget from './SideMenu/NotesWidget';
-import { LessonHeaderBarProps } from '../../../interfaces/LessonComponentsInterfaces';
+import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import HomeWidget from './SideMenu/HomeWidget';
 
 const SideMenu = (props: LessonHeaderBarProps) => {
-  const { overlay, setOverlay } = props;
+  const {overlay, setOverlay} = props;
   const [cookies, setCookie] = useCookies(['lesson']);
-  const { theme, state, dispatch } = useContext(LessonContext);
+  const {theme, state, dispatch} = useContext(LessonContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
-
-  useEffect(() => {
-    changeParams('state', state);
-  }, [
-    state.studentStatus,
-    state.currentPage,
-    state.currentLocation,
-    state.viewing,
-    state.saveCount,
-    state.subscription,
-  ]);
 
   /**
    * FUNCTION TO SAVE STUDENT DATA ON COMMAND
@@ -33,7 +22,9 @@ const SideMenu = (props: LessonHeaderBarProps) => {
    */
   const updateStudentData = async (saveType?: string) => {
     let lessonProgress =
-      state.pages[state.lessonProgress].stage === '' ? 'intro' : state.pages[state.lessonProgress].stage;
+      state.pages[state.lessonProgress].stage === ''
+        ? 'intro'
+        : state.pages[state.lessonProgress].stage;
 
     let data = {
       id: state.studentDataID,
@@ -49,16 +40,18 @@ const SideMenu = (props: LessonHeaderBarProps) => {
     };
 
     try {
-      const dataObject: any = await API.graphql(graphqlOperation(customMutations.updateStudentData, { input: data }));
+      const dataObject: any = await API.graphql(
+        graphqlOperation(customMutations.updateStudentData, {input: data})
+      );
       console.log(dataObject);
-      dispatch({ type: 'SAVED_CHANGES' });
+      dispatch({type: 'SAVED_CHANGES'});
       console.log('state', state);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const { changeParams } = useStudentTimer({
+  const {changeParams, resetParams} = useStudentTimer({
     dispatch: dispatch,
     subscription: state.subscription,
     subscribeFunc: state.subscribeFunc,
@@ -66,15 +59,34 @@ const SideMenu = (props: LessonHeaderBarProps) => {
     state: state,
   });
 
+  useEffect((): any => {
+    if(state){
+      changeParams('state', state);
+    }
+
+    return () => resetParams()
+  }, [
+    state.studentStatus,
+    state.currentPage,
+    state.currentLocation,
+    state.viewing,
+    state.saveCount,
+    state.subscription,
+  ]);
+
   // @ts-ignore
   return (
     <>
-      <div className={`absolute w-16 content-end ${state.data.lesson.type === 'survey' ? 'mt-20' : ''}`}>
+      <div
+        className={`absolute w-16 content-end ${
+          state.data.lesson.type === 'survey' ? 'mt-20' : ''
+        }`}>
         {/**
          * AUTOSAVE
          */}
         {state.viewing ? (
-          <div className={`cursor-default flex flex-col justify-center items-center mb-4`}>
+          <div
+            className={`cursor-default flex flex-col justify-center items-center mb-4`}>
             <div className="relative flex items-center justify-center h-4 w-4 m-1">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
               <span className="relative inline-flex rounded-full h-4 w-4 bg-green-600" />
@@ -86,12 +98,16 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * HOME
          */}
-        <HomeWidget overlay={overlay} setOverlay={setOverlay} handlePopup={props.handlePopup} />
+        <HomeWidget
+          overlay={overlay}
+          setOverlay={setOverlay}
+          handlePopup={props.handlePopup}
+        />
 
         {/**
          * NOTES
          */}
-        <NotesWidget overlay={overlay} setOverlay={setOverlay} />
+        {/*<NotesWidget overlay={overlay} setOverlay={setOverlay} />*/}
       </div>
     </>
   );

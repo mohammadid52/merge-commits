@@ -4,25 +4,10 @@ import { FaHighlighter, FaExpand } from 'react-icons/fa';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 import { SelectedTextGroup, FinalText } from '../LyricsModules/LyricsActivityView';
 
-const textParser = (str: string) => {
-  let tempWord = '';
-  let initialArray = Array.from(str);
-  let finalArray = [];
-  initialArray.map(letter => {
-    if (letter !== ' ') {
-      tempWord = tempWord + letter;
-    } else {
-      finalArray.push(tempWord);
-      tempWord = '';
-    }
-  })
-  finalArray.push(tempWord);
-  return finalArray;
-}
+
 
 interface LyricsBlockProps {
   color: string;
-  colorPicker: (color:string) => string;
   selected: any;
   fullscreen: boolean;
   fullscreenLyrics: boolean;
@@ -41,21 +26,15 @@ interface LyricsBlockProps {
 const LyricsBlock = (props: LyricsBlockProps) => {
   const {
     color,
-    colorPicker,
-    selected,
-    setSelected,
-    fullscreen,
-    fullscreenLyrics,
-    setFullscreenLyrics,
     initialSelectedText,
     setInitialSelectedText,
     selectGroup,
     setSelectGroup,
-    finalText,
-    setFinalText,
+
+
   } = props;
-  const { state, dispatch, theme } = useContext(LessonControlContext);
-  const buttons = state.data.lesson.coreLesson.tools
+  const { state} = useContext(LessonControlContext);
+
   const rawText = state.data.lesson.coreLesson.content.text;
   // const displayTextArray: string[][] = [];
   // rawText.map((line: string) => {
@@ -66,7 +45,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   const [firstLastSelected, setFirstLastSelected] = useState<string[]>(['', '']);
 
-  const [mouseTarget, setMouseTarget] = useState<string>('');
+  const [mouseTarget] = useState<string>('');
 
   // const colorPicker = (colorName: string): string => {
   //   switch (colorName) {
@@ -105,13 +84,17 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * Simple get functions to get arrays/values based on 'mappedWordID'
    */
   const getHighlightColor = (mappedWordID: string) => {
+    const firstSelected = firstLastSelected[0].includes(mappedWordID) ? color: undefined;
+
     const groupWithMappedWord = Object.values(initialSelectedText).filter((group) => {
       if (group['selected'].includes(mappedWordID)) {
         return group['color'];
       }
     });
 
-    if (typeof groupWithMappedWord[0] !== 'undefined') {
+    if(firstSelected !== undefined){
+      return color;
+    } else if (typeof groupWithMappedWord[0] !== 'undefined') {
       return groupWithMappedWord[0]['color'];
     }
   };
@@ -176,7 +159,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   const handleClickSelectText = (targetWordID: string) => {
     const firstWord = firstLastSelected[0];
-    const lastWord = firstLastSelected[1];
+
 
     if (targetWordID.match(/mapped/) !== null) {
       if (firstWord === '') {
@@ -228,7 +211,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   const trimWordsInArray = (strArray: string[], trimReg: RegExp) => {
-    return strArray.map((word: string, i: number) => {
+    return strArray.map((word: string) => {
       return word.replace(trimReg, '');
     });
   };
@@ -261,21 +244,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     }));
   };
 
-  const adaptTextGroupsForDispatch = (input: any) => {
-    return Object.keys(input).map((grpName: any, i: number) => {
-      const firstGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[0];
-      const lastGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[1];
-      const currentText = adaptWordGroupsForDispatch(initialSelectedText[grpName]['selected']);
 
-      return {
-        id: i + 1,
-        anchor: firstGroupNumber,
-        focus: lastGroupNumber,
-        color: initialSelectedText[grpName]['color'],
-        content: currentText,
-      };
-    });
-  };
 
   /**
    * html functionality
@@ -299,16 +268,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <span
             key={`mappedWord__${i}__${mappedWord}`}
             id={`mappedWord__${i}__${mappedWord}`}
-            className={`relative py-2
+            className={`relative my-2 py-1 w-full
                 ${
               //  Check if current mapped word is highlighted
               //  or
               //  if the word is the current target
               checkIfHighlighted(`mappedWord__${i}__${mappedWord}`)
-                ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)} bg-dark`
+                ? `text-black bg-${getHighlightColor( `mappedWord__${i}__${mappedWord}`)}`
                 : ''
-              }
-                ${checkIfHovered(`mappedWord__${i}__${mappedWord}`) ? `border border-neg1` : ''}
+            }
+                
                 `}>
             &nbsp;{`${mappedWord}`}&nbsp;
           </span>
@@ -320,7 +289,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   };
 
   useEffect(() => {
-    const firstWord = firstLastSelected[0];
+
     const lastWord = firstLastSelected[1];
 
     if (lastWord !== '') {

@@ -22,6 +22,7 @@ import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
+import { useParams } from 'react-router';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -673,7 +674,6 @@ const Dashboard = (props: DashboardProps) => {
                     return <Redirect to={`${match.url}/home`} />;
                   } else if (userData.role === 'ST') {
                     return <Redirect to={`${match.url}/home`} />;
-                    // return <Redirect to={`${match.url}/home`} />;
                   } else return <Redirect to={`${match.url}/manage-institutions`} />;
                 } else
                   return (
@@ -683,9 +683,17 @@ const Dashboard = (props: DashboardProps) => {
                   );
               }}
             />
-            <Route exact path={`${match.url}/home`} render={() => <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
+
+            <Route
+              exact
+              path={`${match.url}/home`}
+              render={() => (
+                <ErrorBoundary fallback={<h1>Oops with the Dashboard</h1>}>
                   <HomeSwitch />
-                </ErrorBoundary>} />
+                </ErrorBoundary>
+              )}
+            />
+
             {(userData.role === 'ADM' ||
               userData.role === 'TR' ||
               userData.role === 'FLW' ||
