@@ -120,9 +120,9 @@ const InstitutionLookup: React.FC = () => {
     target: string
   ) => {
     const list: any[] = [];
-    data.forEach((institution) => {
-      institution.staff.items.forEach((staff) => {
-        if (staff.staffAuthID === target) {
+    data?.forEach((institution) => {
+      institution?.staff?.items?.forEach((staff) => {
+        if (staff?.staffAuthID === target) {
           list.push(institution);
         }
       });
@@ -130,6 +130,8 @@ const InstitutionLookup: React.FC = () => {
 
     return list;
   };
+
+  const isTeacher = state.user.role === 'TR';
 
   async function getInstitutionsData() {
     try {
@@ -140,27 +142,27 @@ const InstitutionLookup: React.FC = () => {
         throw new Error('fail!');
       } else {
         const instituteList = fetchInstitutionData.data?.listInstitutions?.items;
-
-        const totalListPages = Math.floor(instituteList.length / userCount);
-        if (totalListPages * userCount === instituteList.length) {
-          setTotalPages(totalListPages);
-        } else {
-          setTotalPages(totalListPages + 1);
-        }
         const filteredInstitution = getFilteredInstitution(
           instituteList,
           state.user.authId
         );
+        const totalListPages = Math.floor(
+          (isTeacher ? filteredInstitution.length : instituteList.length) / userCount
+        );
 
-        setInstitutionsData(() => {
-          if (state.user.role === 'TR') {
-            return filteredInstitution;
-          } else {
-            return instituteList;
-          }
-        });
+        setTotalPages(
+          isTeacher
+            ? totalListPages * userCount === filteredInstitution.length
+              ? totalListPages
+              : totalListPages + 1
+            : totalListPages * userCount === instituteList.length
+            ? totalListPages
+            : totalListPages + 1
+        );
 
-        setTotalInstNum(instituteList.length);
+        setTotalInstNum(isTeacher ? filteredInstitution.length : instituteList.length);
+        setInstitutionsData(isTeacher ? filteredInstitution : instituteList);
+
         setStatus('done');
       }
     } catch (error) {
