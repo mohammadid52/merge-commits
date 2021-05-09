@@ -1,20 +1,13 @@
-// import { access } from 'fs';
-import React, { useRef, useState, useEffect, useContext, ReactNode } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaHighlighter, FaExpand } from 'react-icons/fa';
-// import { isMainThread } from 'worker_threads';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-import { SelectedTextGroup, FinalText } from './LyricsActivity';
+import React, {ReactNode, useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../../../contexts/LessonContext';
+import {FinalText, SelectedTextGroup} from './LyricsActivity';
 
 interface LyricsBlockProps {
   color: string;
-  colorPicker: (color:string) => string;
   selected: any;
   fullscreen: boolean;
   setSelected: React.Dispatch<React.SetStateAction<any[]>>;
   setFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-  // firstLastSelected: string[];
-  // setFirstLastSelected: React.Dispatch<React.SetStateAction<string[]>>;
   initialSelectedText: SelectedTextGroup;
   setInitialSelectedText: React.Dispatch<React.SetStateAction<SelectedTextGroup>>;
   finalText: FinalText;
@@ -27,27 +20,19 @@ interface LyricsBlockProps {
 const LyricsBlock = (props: LyricsBlockProps) => {
   const {
     color,
-    colorPicker,
-    selected,
     setSelected,
-    fullscreen,
-    setFullscreen,
     initialSelectedText,
     setInitialSelectedText,
     selectGroup,
     setSelectGroup,
-    finalText,
-    setFinalText,
-    children
   } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
-  const rawText = state.data.lesson.coreLesson.content.text;
+  const {state} = useContext(LessonContext);
+  const rawText = state.data.lesson?.coreLesson?.content?.text;
   // text selection
   const [firstLastSelected, setFirstLastSelected] = useState<string[]>(['', '']);
 
   //  mouse
-  const [mouseTarget, setMouseTarget] = useState<string>('');
-
+  // const [mouseTarget] = useState<string>('');
 
   /**
    * Function to check if selected textID is already somewhere in the initialSelectedText state
@@ -57,27 +42,32 @@ const LyricsBlock = (props: LyricsBlockProps) => {
     // trueOrFalse checks if initialSelectedText object contains the mapped word
     // ...or the current firstLastSelected array (during selection) contains it
     const trueOrFalse =
-      Object.values(initialSelectedText).filter((group) => group['selected'].includes(mappedWordID))
-        .length > 0 || firstLastSelected.includes(mappedWordID);
+      Object.values(initialSelectedText).filter((group) =>
+        group['selected'].includes(mappedWordID)
+      ).length > 0 || firstLastSelected.includes(mappedWordID);
     return trueOrFalse;
   };
 
-  const checkIfHovered = (mappedWordID: string) => {
-    const trueOrFalse = mappedWordID === mouseTarget;
-    return trueOrFalse;
-  };
+  // const checkIfHovered = (mappedWordID: string) => {
+  //   const trueOrFalse = mappedWordID === mouseTarget;
+  //   return trueOrFalse;
+  // };
 
   /**
    * Simple get functions to get arrays/values based on 'mappedWordID'
    */
   const getHighlightColor = (mappedWordID: string) => {
+    const firstSelected = firstLastSelected[0].includes(mappedWordID) ? color: undefined;
+
     const groupWithMappedWord = Object.values(initialSelectedText).filter((group) => {
       if (group['selected'].includes(mappedWordID)) {
         return group['color'];
       }
     });
 
-    if (typeof groupWithMappedWord[0] !== 'undefined') {
+    if(firstSelected !== undefined){
+      return color;
+    } else if (typeof groupWithMappedWord[0] !== 'undefined') {
       return groupWithMappedWord[0]['color'];
     }
   };
@@ -108,7 +98,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
       (obj: any) => selectGroupName.includes(obj) === false
     ); // group0, group1,... array
     return remainingGroups.reduce((acc: any, groupName: string) => {
-      return { ...acc, ...{ [groupName]: initialSelectedText[groupName] } };
+      return {...acc, ...{[groupName]: initialSelectedText[groupName]}};
     }, {});
   };
 
@@ -142,7 +132,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   const handleClickSelectText = (targetWordID: string) => {
     const firstWord = firstLastSelected[0];
-    const lastWord = firstLastSelected[1];
+
 
     if (targetWordID.match(/mapped/) !== null) {
       if (firstWord === '') {
@@ -194,7 +184,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   const trimWordsInArray = (strArray: string[], trimReg: RegExp) => {
-    return strArray.map((word: string, i: number) => {
+    return strArray.map((word: string) => {
       return word.replace(trimReg, '');
     });
   };
@@ -205,15 +195,12 @@ const LyricsBlock = (props: LyricsBlockProps) => {
   const minMaxOfArrays = (strArray: string[]) => {
     const parsedNumbers = strArray
       .map((str: string) => str.match(/\d+/))
-      .map((arr: string[]) =>  parseInt(arr[0])
-      )
-      .sort((a,b)=>a-b);
+      .map((arr: string[]) => parseInt(arr[0]))
+      .sort((a, b) => a - b);
 
-
-
-    return (parsedNumbers.length > 1)
-    ? [parsedNumbers[0], +parsedNumbers[1]+1]
-    : [...parsedNumbers]
+    return parsedNumbers.length > 1
+      ? [parsedNumbers[0], +parsedNumbers[1] + 1]
+      : [...parsedNumbers];
   };
 
   /**
@@ -221,17 +208,23 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    * @param input - Object of color grouped words
    */
   const adaptWordGroupsForDispatch = (input: string[]) => {
-    return trimWordsInArray(input, /^mappedWord__([0-9]+)__/).map((word: any, i: number) => ({
-      id: i,
-      text: word,
-    }));
+    return trimWordsInArray(input, /^mappedWord__([0-9]+)__/).map(
+      (word: any, i: number) => ({
+        id: i,
+        text: word,
+      })
+    );
   };
 
   const adaptTextGroupsForDispatch = (input: any) => {
     return Object.keys(input).map((grpName: any, i: number) => {
-      const firstGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[0];
+      const firstGroupNumber = minMaxOfArrays(
+        initialSelectedText[grpName]['selected']
+      )[0];
       const lastGroupNumber = minMaxOfArrays(initialSelectedText[grpName]['selected'])[1];
-      const currentText = adaptWordGroupsForDispatch(initialSelectedText[grpName]['selected']);
+      const currentText = adaptWordGroupsForDispatch(
+        initialSelectedText[grpName]['selected']
+      );
 
       return {
         id: i + 1,
@@ -256,6 +249,15 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    *
    * Punctuation: [,.-:;]
    *
+   * 5. Check if highlighter
+   * 6. Check if hovered over
+
+   ${
+      checkIfHovered(`mappedWord__${i}__${mappedWord}`)
+        ? `border border-neg1`
+        : ''
+    }
+
    * @param strArray - any string []
    */
   const mapStrToSpan = (strArray: string[]) => {
@@ -265,16 +267,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
           <span
             key={`mappedWord__${i}__${mappedWord}`}
             id={`mappedWord__${i}__${mappedWord}`}
-            className={`relative py-2 w-full
+            className={`relative my-2 py-1 w-full
                 ${
                   //  Check if current mapped word is highlighted
                   //  or
                   //  if the word is the current target
                   checkIfHighlighted(`mappedWord__${i}__${mappedWord}`)
-                    ? `text-${getHighlightColor(`mappedWord__${i}__${mappedWord}`)} bg-dark`
+                    ? `text-black bg-${getHighlightColor( `mappedWord__${i}__${mappedWord}`)}`
                     : ''
                 }
-                ${checkIfHovered(`mappedWord__${i}__${mappedWord}`) ? `border border-neg1` : ''}
+                
                 `}>
             &nbsp;{`${mappedWord}`}&nbsp;
           </span>
@@ -292,7 +294,7 @@ const LyricsBlock = (props: LyricsBlockProps) => {
    */
 
   useEffect(() => {
-    const firstWord = firstLastSelected[0];
+
     const lastWord = firstLastSelected[1];
 
     if (lastWord !== '') {
@@ -311,45 +313,16 @@ const LyricsBlock = (props: LyricsBlockProps) => {
 
   return (
     <>
-      {/* <div className={`relative w-full text-xl ${theme.banner} border-b-4 border-sea-green`}>
-        <h3 className='w-auto'>Lyrics</h3>
-
-        <div className='absolute w-auto right-0 top-0'>
-          <IconContext.Provider
-            value={{
-              color: `${props.colorPicker(color) === '' ? 'white' : props.colorPicker(color)}`,
-              size: '2rem',
-              style: { width: 'auto' },
-            }}>
-            <FaHighlighter />
-          </IconContext.Provider>
-        </div>
-        </div> */}
-
-        {/* JUST A HARMLESS DIV WITH INSTRUCTIONS */}
-        {/* @ANDREW -- TO BE REVISED */}
-        {/* <div className='w-full flex flex-row justify-between mb-1 pb-1'>
-          <div className='w-full flex flex-col justify-between border-b-0 border-white border-opacity-10 mr-4 md:mr-0'>
-            <p className='text-gray-600 text-sm text-left'>
-              - Double click a word to select <b>one</b> word
-            </p>
-            <p className='text-gray-600 text-sm text-left'>
-              - To select a sentence/phrase, click the <b>'first word'</b> and the <b>'last word'</b> of the sentence
-            </p>
-          </div>
-        </div> */}
-
-          <div
-            className={`leading-6 text-sm px-4`}
-            onClick={handleSelection} // Clickhandler on the parent...nice!
-            style={{
-              MozUserSelect: 'none',
-              WebkitUserSelect: 'none',
-              msUserSelect: 'none',
-            }}>
-            {mapStrToSpan(combineLyrics)}
-          </div>
-
+      <div
+        className={`leading-6 text-sm px-4`}
+        onClick={handleSelection} // Clickhandler on the parent...nice!
+        style={{
+          MozUserSelect: 'none',
+          WebkitUserSelect: 'none',
+          msUserSelect: 'none',
+        }}>
+        {mapStrToSpan(combineLyrics)}
+      </div>
     </>
   );
 };
