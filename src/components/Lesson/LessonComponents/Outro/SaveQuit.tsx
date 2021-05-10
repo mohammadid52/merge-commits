@@ -10,6 +10,7 @@ import {Auth} from '@aws-amplify/auth';
 import {FiLogOut} from 'react-icons/all';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineSave} from 'react-icons/ai';
+import useStudentTimer from '../../../../customHooks/timer';
 
 interface SaveQuitProps {
   id?: string;
@@ -42,10 +43,7 @@ const SaveQuit = (props: SaveQuitProps) => {
     if (isSaving) {
       if (nrSaves === checkpointIdKeys.length) {
         if (roomID) {
-          setTimeout(
-            () => (window.location.href = `/dashboard/classroom/${roomID}`),
-            50
-          );
+          setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
         } else {
           history.push('/dashboard/home');
         }
@@ -95,19 +93,21 @@ const SaveQuit = (props: SaveQuitProps) => {
         await createQuestionData(responseObject, idx);
       }, null);
     } else {
-      setTimeout(
-        () => (window.location.href = `/dashboard/classroom/${roomID}`),
-        50
-      );
+      setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 50);
     }
-
   };
+
 
   const handleManualSave = () => {
     if (!isSaving) {
       setIsSaving(true);
       if (state.data.lesson.type === 'lesson') {
         dispatch({type: 'INCREMENT_SAVE_COUNT'});
+        if (roomID) {
+          setTimeout(() => (window.location.href = `/dashboard/classroom/${roomID}`), 200);
+        } else {
+          history.push('/dashboard/home');
+        }
       } else {
         handleCreateQuestionData();
       }

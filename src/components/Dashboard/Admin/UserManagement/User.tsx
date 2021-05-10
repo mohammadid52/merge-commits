@@ -24,8 +24,9 @@ import {getImageFromS3} from '../../../../utilities/services';
 import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
-import {getUniqItems} from '../../../../utilities/strings';
+import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
 import {sortBy} from 'lodash';
+import SectionTitleV3 from '../../../Atoms/SectionTitleV3';
 
 export interface UserInfo {
   authId: string;
@@ -33,6 +34,7 @@ export interface UserInfo {
   createdAt: string;
   email: string;
   externalId?: string;
+  classes: any;
   firstName: string;
   grade?: string;
   id: string;
@@ -77,12 +79,14 @@ const User = () => {
     language: '',
     lastName: '',
     preferredName: null,
+    classes: null,
     role: '',
     status: '',
     phone: '',
     updatedAt: '',
     birthdate: null,
   });
+
   const [imageUrl, setImageUrl] = useState('');
   const location = useLocation();
   const pathName = location.pathname.replace(/\/$/, '');
@@ -134,8 +138,6 @@ const User = () => {
     //     graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
     //   );
     // });
-
-    console.log(questionData, 'questionData');
   };
 
   async function getUserById(id: string) {
@@ -179,6 +181,7 @@ const User = () => {
       const uniqCheckpoints: any = getUniqItems(sCheckpoints, 'id');
       const uniqCheckpointIDs: any = uniqCheckpoints.map((item: any) => item?.id);
       const personalInfo: any = {...userData};
+
       delete personalInfo.classes;
 
       setStdCheckpoints([...uniqCheckpoints]);
@@ -283,24 +286,6 @@ const User = () => {
     }
   }
 
-  // TODO: Make below functions global(initials, stringToHslColor)
-
-  const initials = (firstName: string, lastName: string) => {
-    let firstInitial = firstName.charAt(0).toUpperCase();
-    let lastInitial = lastName.charAt(0).toUpperCase();
-    return firstInitial + lastInitial;
-  };
-
-  const stringToHslColor = (str: string) => {
-    let hash = 0;
-    let i;
-    for (i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    let h = hash % 360;
-    return 'hsl(' + h + ', 70%, 72%)';
-  };
-
   useEffect(() => {
     if (typeof id === 'string') {
       getUserById(id);
@@ -317,6 +302,112 @@ const User = () => {
     setUrlState({t: value});
   };
 
+  const TeacherImage = ({teacher}: any) => {
+    const [teacherImgUrl, setTeacherImgUrl] = useState(null);
+    useEffect(() => {
+      async function getUrl() {
+        if (teacher.image) {
+          const imageUrl: any = await getImageFromS3(teacher.image);
+          setTeacherImgUrl(imageUrl);
+        }
+      }
+      getUrl();
+    }, [teacher.image]);
+    return teacher.image ? (
+      <img
+        className={`profile w-8 h-8 md:w-8 md:h-8 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mr-4`}
+        src={teacherImgUrl}
+      />
+    ) : (
+      <div
+        className={`w-8 h-8 md:w-8 md:h-8 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mr-4`}>
+        <div
+          className="h-full w-full flex justify-center items-center text-sm text-extrabold text-white rounded-full"
+          style={{
+            /* stylelint-disable */
+            background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`,
+            // textShadow: '0.2rem 0.2rem 3px #423939b3',
+          }}>
+          {initials(
+            user.preferredName ? user.preferredName : user.firstName,
+            user.lastName
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const AssociatedClasses = ({list}: any) => {
+    return (
+      <div className="flex flex-col">
+        <div className=" overflow-x-auto">
+          <div className="py-2 align-middle inline-block min-w-full mb-16">
+            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg inner_card">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Classname
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Institution
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Teacher
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Curriculum
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {list.map((item: any, idx: number) => {
+                    const rooms = item?.class?.rooms.items;
+
+                    const curriculum = rooms.length > 0 ? rooms[0].curricula : null;
+                    const teacher = rooms.length > 0 ? rooms[0].teacher : null;
+                    return (
+                      <tr
+                        key={item.email}
+                        className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {item?.class?.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {item?.class?.institution?.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {teacher
+                            ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
+                            : 'Not Available'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {curriculum
+                            ? `${curriculum?.items[0]?.curriculum?.name}${
+                                curriculum?.items[0]?.length > 1 ? '...' : ''
+                              }`
+                            : 'Not Available'}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   {
     return (
       <>
@@ -325,7 +416,7 @@ const User = () => {
           <div className="flex justify-between">
             <SectionTitle title={UserDict[userLanguage]['title']} />
 
-            <div className="flex justify-end py-4 mb-4 w-5/10">
+            <div className="flex justify-end py-4 mb-4 w-1/2">
               <Buttons
                 label="Go Back"
                 btnClass="mr-4"
@@ -344,7 +435,7 @@ const User = () => {
           </div>
           <div
             className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-            <div className="h-9/10 flex flex-col md:flex-row">
+            <div className="h-1/2 flex flex-col md:flex-row">
               <div className="w-1/3 p-4 flex flex-col text-center items-center">
                 <div className="cursor-pointer">
                   {user.image ? (
@@ -456,6 +547,12 @@ const User = () => {
               </Switch>
             </div>
           </div>
+          {user?.classes?.items.length > 0 && user.role === 'ST' && (
+            <div>
+              <SectionTitleV3 title={'Associated Classrooms'} />
+              <AssociatedClasses list={user?.classes?.items} />
+            </div>
+          )}
         </div>
         {showCropper && (
           <ProfileCropModal

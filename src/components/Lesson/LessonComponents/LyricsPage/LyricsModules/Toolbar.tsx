@@ -18,7 +18,7 @@ const ToolBar = (props: ToolbarProps) => {
   const [isSticky, setSticky] = useState(false);
   const ref = useRef(null);
 
-  const buttons = state.data.lesson.coreLesson.tools;
+  const buttons = state.data.lesson?.coreLesson?.tools;
 
   const handleClick = (e: any) => {
     setColor(e.target.id);
