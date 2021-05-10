@@ -48,7 +48,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
           }}
           className={`${
             !collapse ? 'not-collapse' : 'collapse'
-          } absolute flex items-center justify-end bg-gray-800 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-r-lg top-2 z-100`}>
+          } absolute flex items-center justify-end bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-r-lg top-2 z-100`}>
           <Tooltip placement="right" text="Show Sidebar">
             <div className="w-auto mr-1">
               <RiArrowRightSLine color="#fff" size={24} />
