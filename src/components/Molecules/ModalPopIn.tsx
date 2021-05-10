@@ -2,19 +2,14 @@ import React from 'react';
 import Modal from '../Atoms/Modal';
 import Buttons from '../Atoms/Buttons';
 import ModalInside from '../Atoms/ModalInside';
+import {
+  ModalProps,
+  ULBDialogComponent,
+} from '../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface ModalProps {
-  saveAction?: () => void;
-  closeAction?: () => void;
-  message?: string;
-  saveLabel?: string;
-  onlyInfo?: boolean;
-  deleteModal?: boolean;
-  deleteLabel?: string;
-  cancelLabel?: string;
-}
+interface ModalPopInProps extends ModalProps, ULBDialogComponent {}
 
-const ModalPopIn = (props: ModalProps) => {
+const ModalPopIn = (props: ModalPopInProps) => {
   const {
     saveAction,
     closeAction,
@@ -24,7 +19,11 @@ const ModalPopIn = (props: ModalProps) => {
     deleteModal,
     deleteLabel,
     cancelLabel,
+    inputJSX,
   } = props;
+
+  const InputJSX = () => inputJSX;
+
   return (
     <ModalInside
       inside={true}
@@ -32,8 +31,10 @@ const ModalPopIn = (props: ModalProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="w-168 text-center my-8">
-        <p className="my-4 px-6 text-gray-800 text-lg font-medium leading-8">{message}</p>
+      <div className="w-168 text-center my-8 z-100">
+        <div className="my-4 px-6 text-lg font-medium leading-8">
+          <InputJSX />
+        </div>
         <div className="flex justify-around mt-16 w-5/10 mx-auto">
           {!onlyInfo && (
             <Buttons
@@ -43,20 +44,12 @@ const ModalPopIn = (props: ModalProps) => {
               transparent
             />
           )}
-          {deleteModal ? (
-            <Buttons
-              label={deleteLabel ? deleteLabel : 'Delete'}
-              btnClass="px-10 py-3 ml-4 text-red-600 border-red-600 hover:bg-gray-100 hover:text-red-500"
-              onClick={saveAction}
-              transparent
-            />
-          ) : (
-            <Buttons
-              label={saveLabel ? saveLabel : 'Save'}
-              btnClass="px-10 py-3 ml-4"
-              onClick={saveAction}
-            />
-          )}
+
+          <Buttons
+            label={saveLabel ? saveLabel : 'Save'}
+            btnClass="px-10 py-3 ml-4"
+            onClick={saveAction}
+          />
         </div>
       </div>
     </ModalInside>

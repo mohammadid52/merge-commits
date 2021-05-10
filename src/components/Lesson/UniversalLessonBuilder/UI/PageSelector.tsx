@@ -10,6 +10,7 @@ interface PageSelectorProps {
   loading: boolean;
   selectedPageDetails?: UniversalLessonPage;
   setSelectedPageDetails?: React.Dispatch<React.SetStateAction<UniversalLessonPage>>;
+  handleModalPopToggle?: (dialogToToggle: string)=>void;
 }
 
 const PageSelector = (props: PageSelectorProps) => {
@@ -21,6 +22,7 @@ const PageSelector = (props: PageSelectorProps) => {
     userLanguage,
     galleryVisible,
     loading,
+    handleModalPopToggle
   } = props;
   const pages = universalLessonDetails?.universalLessonPages;
 
@@ -77,7 +79,7 @@ const PageSelector = (props: PageSelectorProps) => {
                   : null}
               </div>
 
-              <PageGalleryControls />
+              <PageGalleryControls handleModalPopToggle={handleModalPopToggle}/>
             </div>
           </div>
         </div>

@@ -1,21 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import useDictionary from '../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import PageSelector from '../UI/PageSelector';
-import { Toolbar } from '../UI/Toolbar';
+import {Toolbar} from '../UI/Toolbar';
 import {
   PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import { CoreBuilder } from './CoreBuilder';
-import { HierarchyPanel } from '../UI/HierarchyPanel';
-import { EditPanel } from '../UI/EditPanel';
-import { BuilderMenu } from '../UI/BuilderMenu';
-import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {CoreBuilder} from './CoreBuilder';
+import {HierarchyPanel} from '../UI/HierarchyPanel';
+import {BuilderMenu} from '../UI/BuilderMenu';
 import ModalPopIn from '../../../Molecules/ModalPopIn';
+import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
 
 interface ExistingLessonTemplateProps {
   mode?: 'building' | 'viewing';
@@ -48,9 +47,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setUniversalBuilderStep,
     universalBuilderTemplates,
   } = props;
-  const { userLanguage, clientKey } = useContext(GlobalContext);
+  const {userLanguage, clientKey} = useContext(GlobalContext);
   //@ts-ignore
-  const { UniversalBuilderDict } = useDictionary(clientKey);
+  const {UniversalBuilderDict} = useDictionary(clientKey);
 
   const [loading, setLoading] = useState(false);
 
@@ -60,7 +59,25 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-  const [modalComponentContent, setModalComponentContent] = useState<JSX.Element>(null);
+  const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
+
+  const handleModalPopToggle = (dialogToToggle: string) => {
+    if(modalPopVisible){
+      // setModalPopVisible(false)
+    } else {
+      setModalPopVisible(true);
+    }
+    if(currentModalDialog !== dialogToToggle){
+      setCurrentModalDialog(dialogToToggle);
+    }
+  }
+
+  const modalDialogSwitch = (dialogLabel: string) => {
+    switch (dialogLabel) {
+      default:
+        return <NewPageDialog />;
+    }
+  };
 
   return (
     <div className="relative bg-white shadow-5 overflow-hidden sm:rounded-lg">
@@ -74,7 +91,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setBuilderMenuVisible={setBuilderMenuVisible}
       />
 
-      <ModalPopIn message={`this is a popup, it should end up containing additional controls for the universal lesson builder`}/>
+      {modalPopVisible && (
+        <ModalPopIn
+          closeAction={()=>setModalPopVisible(false)}
+          inputJSX={modalDialogSwitch('')}
+        />
+      )}
 
       <HierarchyPanel
         hierarchyVisible={hierarchyVisible}
@@ -94,6 +116,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         loading={loading}
         selectedPageDetails={selectedPageDetails}
         setSelectedPageDetails={setSelectedPageDetails}
+        handleModalPopToggle={handleModalPopToggle}
       />
 
       <BuilderMenu

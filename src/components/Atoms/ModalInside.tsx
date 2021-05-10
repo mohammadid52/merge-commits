@@ -75,8 +75,8 @@ const ModalInside: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const {theme} = useContext(GlobalContext);
 
   return (
-    <>
       <div className={`
+      z-100
         absolute inset-0 flex
         justify-center items-center outline-none focus:outline-none`}>
         <div className={`mx-auto my-auto  max-w-256`}>
@@ -93,7 +93,6 @@ const ModalInside: React.FC<ModalProps> = (modalProps: ModalProps) => {
           </div>
         </div>
       </div>
-    </>
   );
 };
 

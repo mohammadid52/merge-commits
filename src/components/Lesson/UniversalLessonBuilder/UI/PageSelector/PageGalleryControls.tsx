@@ -1,9 +1,14 @@
 import Buttons from '../../../../Atoms/Buttons';
 import React from 'react';
-import { VscNewFile } from 'react-icons/vsc';
-import { ImInsertTemplate } from 'react-icons/im';
+import {VscNewFile} from 'react-icons/vsc';
+import {ImInsertTemplate} from 'react-icons/im';
 
-export const PageGalleryControls = () => {
+interface PageGalleryControls {
+  handleModalPopToggle?: (dialogToToggle: string) => void;
+}
+
+export const PageGalleryControls = (props: PageGalleryControls) => {
+  const {handleModalPopToggle} = props;
   return (
     <>
       {/* Header */}
@@ -18,8 +23,18 @@ export const PageGalleryControls = () => {
 
       {/* Buttons */}
       <div className={`flex flex-row justify-center`}>
-        <Buttons Icon={VscNewFile} label="New Page" btnClass="px-4 mx-4" />
-        <Buttons Icon={ImInsertTemplate} label="Page From Template" btnClass="px-4 mx-4" />
+        <Buttons
+          onClick={() => handleModalPopToggle('NEW_PAGE')}
+          Icon={VscNewFile}
+          label="New Page"
+          btnClass="px-4 mx-4"
+        />
+        <Buttons
+          onClick={() => handleModalPopToggle('USE_TEMPLATE')}
+          Icon={ImInsertTemplate}
+          label="Page From Template"
+          btnClass="px-4 mx-4"
+        />
       </div>
     </>
   );
