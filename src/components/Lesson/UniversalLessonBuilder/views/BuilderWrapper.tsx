@@ -58,6 +58,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
+  // Modal popIn
+  const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
+  const [modalComponentContent, setModalComponentContent] = useState<JSX.Element>(null);
 
   return (
     <div className="relative bg-white shadow-5 overflow-hidden sm:rounded-lg">

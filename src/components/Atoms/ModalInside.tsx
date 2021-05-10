@@ -39,7 +39,7 @@ const ModalHeader = (headerProps: {
 
 const ModalBody = (bodyProps: {children: React.ReactNode}) => {
   const {children} = bodyProps;
-  return <div className="relative p-4 flex-auto">{children}</div>;
+  return <div className="relative p-4 flex flex-auto justify-center">{children}</div>;
 };
 
 const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) => {
