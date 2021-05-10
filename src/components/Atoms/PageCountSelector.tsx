@@ -22,7 +22,7 @@ const PageCountSelector: React.FC<CountProps> = (countProps: CountProps) => {
   return (
     <div className={`w-1/4 flex items-center`}>
       <Selector
-        onChange={(val: number, name: string) => {
+        onChange={(val: any, name: string) => {
           setSelectedItem(name);
           setPageSize(Number(val));
         }}
