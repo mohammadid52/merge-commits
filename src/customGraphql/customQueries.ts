@@ -2061,11 +2061,18 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+      
+        
         classes {
           items {
             classID
             class {
+               
               id
+              type
+              name
+              createdAt
+              updatedAt
               institutionID
               institution {
                 name
@@ -2097,6 +2104,12 @@ export const userById = /* GraphQL */ `
               rooms {
                 items {
                   id
+                  teacher {
+                    firstName
+                    preferredName
+                    lastName
+                    image
+                  }
                   curricula {
                     items {
                       curriculumID
