@@ -142,10 +142,8 @@ const InstitutionLookup: React.FC = () => {
         throw new Error('fail!');
       } else {
         const instituteList = fetchInstitutionData.data?.listInstitutions?.items;
-        const filteredInstitution = getFilteredInstitution(
-          instituteList,
-          state.user.authId
-        );
+        const filteredInstitution =
+          isTeacher && getFilteredInstitution(instituteList, state.user.authId);
         const totalListPages = Math.floor(
           (isTeacher ? filteredInstitution.length : instituteList.length) / userCount
         );
