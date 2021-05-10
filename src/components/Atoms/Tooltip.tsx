@@ -5,9 +5,9 @@ interface TooltipProps {
   placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
 }
 
-const Tooltip = ({ text, placement = 'right', children }: TooltipProps) => {
+const Tooltip = ({text, placement = 'right', children}: TooltipProps) => {
   return (
-    <div data-tooltip={text} data-tooltip-location={placement}>
+    <div data-tooltip={text} className="w-auto" data-tooltip-location={placement}>
       {children}
     </div>
   );

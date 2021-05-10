@@ -582,9 +582,33 @@
   left: 33%;
 }
 
-.hide__select-appearance {
-  /* for Firefox */
-  -moz-appearance: none;
-  /* for Chrome */
-  -webkit-appearance: none;
+.animate__sidebar-btn {
+  transition: width 0.3s ease;
+  &:hover {
+    width: 3rem;
+  }
+  // opening sidemenu
+  &.not-collapse {
+    animation: sidebar-not-collapse 0.2s ease;
+  }
+  &.collapse {
+    animation: sidebar-collapse 1s ease;
+  }
+}
+
+@keyframes sidebar-collapse {
+  from {
+    transform: translateX(-64px);
+  }
+  to {
+    transform: translateX(0px);
+  }
+}
+@keyframes sidebar-not-collapse {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(-100px);
+  }
 }
