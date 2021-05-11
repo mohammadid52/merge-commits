@@ -15,6 +15,10 @@ import {HierarchyPanel} from '../UI/HierarchyPanel';
 import {BuilderMenu} from '../UI/BuilderMenu';
 import ModalPopIn from '../../../Molecules/ModalPopIn';
 import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
+import AddPagePartDialog from '../UI/ModalDialogs/AddPagePartDialog';
+import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
+import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
+import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 
 interface ExistingLessonTemplateProps {
   mode?: 'building' | 'viewing';
@@ -62,18 +66,26 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
   const handleModalPopToggle = (dialogToToggle: string) => {
-    if(modalPopVisible){
+    if (modalPopVisible) {
       // setModalPopVisible(false)
     } else {
       setModalPopVisible(true);
     }
-    if(currentModalDialog !== dialogToToggle){
+    if (currentModalDialog !== dialogToToggle) {
       setCurrentModalDialog(dialogToToggle);
     }
-  }
+  };
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
+      case 'NEW_PAGE':
+        return <NewPageDialog />;
+      case 'USE_TEMPLATE':
+        return <UseTemplateDialog />;
+      case 'ADD_PAGE_PART':
+        return <AddPagePartDialog/>;
+      case 'ADD_CONTENT':
+        return <AddContentDialog/>;
       default:
         return <NewPageDialog />;
     }
@@ -93,7 +105,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       {modalPopVisible && (
         <ModalPopIn
-          closeAction={()=>setModalPopVisible(false)}
+          closeAction={() => setModalPopVisible(false)}
           inputJSX={modalDialogSwitch('')}
         />
       )}

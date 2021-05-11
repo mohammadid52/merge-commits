@@ -39,7 +39,7 @@ const ModalHeader = (headerProps: {
 
 const ModalBody = (bodyProps: {children: React.ReactNode}) => {
   const {children} = bodyProps;
-  return <div className="relative p-4 flex flex-auto justify-center">{children}</div>;
+  return <div className="relative p-4 flex flex-auto justify-center bg-white rounded-b">{children}</div>;
 };
 
 const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) => {
@@ -79,8 +79,9 @@ const ModalInside: React.FC<ModalProps> = (modalProps: ModalProps) => {
       z-100
         absolute inset-0 flex
         justify-center items-center outline-none focus:outline-none`}>
-        <div className={`mx-auto my-auto  max-w-256`}>
-          <div className={`${theme.modals.content}`}>
+        <div className={`mx-auto my-auto w-auto max-w-256`}>
+          {/*<div className={`${theme.modals.content}`}>*/}
+          <div>
             {showHeader && (
               <ModalHeader
                 title={title}

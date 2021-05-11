@@ -31,8 +31,8 @@ const ModalPopIn = (props: ModalPopInProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="w-168 text-center my-8 z-100">
-        <div className="my-4 px-6 text-lg font-medium leading-8">
+      <div className="w-168 text-center z-100">
+        <div className="px-6 text-lg font-medium leading-8">
           <InputJSX />
         </div>
         <div className="flex justify-around mt-16 w-5/10 mx-auto">
