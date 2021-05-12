@@ -1,20 +1,21 @@
-import React, { useContext } from 'react';
-import { PagePart, PartContent, UniversalLessonPage } from '../../../interfaces/UniversalLessonInterfaces';
-import { StringifyBlock } from './Blocks/StringifyBlock';
-import { RowWrapper } from './RowWrapper';
-import { LessonPageWrapper } from './LessonPageWrapper';
-import { HeaderBlock } from './Blocks/HeaderBlock';
-import { ParagraphBlock } from './Blocks/ParagraphBlock';
-import { FormBlock } from './Blocks/FormBlock';
-import { AddNewBlock } from './UtilityBlocks/AddNewBlock';
-
-interface RowComposerProps {
-  mode: 'building' | 'viewing';
-  selectedPageDetails?: UniversalLessonPage;
-}
+import React, {useContext} from 'react';
+import {
+  PagePart,
+  PartContent,
+  UniversalLessonPage,
+} from '../../../interfaces/UniversalLessonInterfaces';
+import {StringifyBlock} from './Blocks/StringifyBlock';
+import {RowWrapper} from './RowWrapper';
+import {LessonPageWrapper} from './LessonPageWrapper';
+import {HeaderBlock} from './Blocks/HeaderBlock';
+import {ParagraphBlock} from './Blocks/ParagraphBlock';
+import {FormBlock} from './Blocks/FormBlock';
+import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
+import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 
 const RowComposer = (props: RowComposerProps) => {
-  const { mode, selectedPageDetails } = props;
+  const {mode, selectedPageDetails, handleModalPopToggle} = props;
 
   const composePartContent = (id: string, type: string, value: any, inputKey: string) => {
     if (type.includes('header')) {
@@ -29,20 +30,25 @@ const RowComposer = (props: RowComposerProps) => {
   };
 
   return (
-    <LessonPageWrapper selectedPageDetails={selectedPageDetails}>
-      {/* ONE PAGE */}
-
+    <>
       {selectedPageDetails && selectedPageDetails.pageContent.length > 0 ? (
-        selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number) => (
+        selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
           // ONE ROW
           <RowWrapper key={`pp_${idx}`} pagePart={pagePart} mode={mode}>
             {pagePart.partContent.length > 0 ? (
               pagePart.partContent.map((content: PartContent, idx2: number) => (
                 <div id={content.id} key={`pp_${idx}_pc_${idx2}`}>
                   {content.value.length > 0 ? (
-                    content.value.map((value: any, idx3: number) =>
-                      composePartContent(content.id, content.type, value, `pp_${idx}_pc_${idx2}_cv_${idx3}`)
-                    )
+                    content.value.map((value: any, idx3: number) => (
+                      <EditOverlayBlock mode={mode}>
+                        {composePartContent(
+                          content.id,
+                          content.type,
+                          value,
+                          `pp_${idx}_pc_${idx2}_cv_${idx3}`
+                        )}
+                      </EditOverlayBlock>
+                    ))
                   ) : (
                     <p>No content</p>
                   )}
@@ -56,14 +62,7 @@ const RowComposer = (props: RowComposerProps) => {
       ) : (
         <h1 className={`w-full text-center`}>This page has no layout information.</h1>
       )}
-
-      {/* SHOW ADD NEW BLOCK CONTROL */}
-      {mode === 'building' && (
-        <RowWrapper>
-          <AddNewBlock />
-        </RowWrapper>
-      )}
-    </LessonPageWrapper>
+    </>
   );
 };
 

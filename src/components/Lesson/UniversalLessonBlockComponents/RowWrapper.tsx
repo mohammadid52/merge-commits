@@ -1,11 +1,8 @@
 import React from 'react';
 import { PagePart } from '../../../interfaces/UniversalLessonInterfaces';
+import { RowWrapperProps } from '../../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface RowWrapperProps {
-  mode?: 'building' | 'viewing';
-  children?: React.ReactNode;
-  pagePart?: PagePart;
-}
+
 
 export const RowWrapper = (props: RowWrapperProps) => {
   const { mode, children, pagePart } = props;

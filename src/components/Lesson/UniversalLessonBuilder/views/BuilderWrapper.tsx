@@ -15,9 +15,8 @@ import {HierarchyPanel} from '../UI/HierarchyPanel';
 import {BuilderMenu} from '../UI/BuilderMenu';
 import ModalPopIn from '../../../Molecules/ModalPopIn';
 import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
-import AddPagePartDialog from '../UI/ModalDialogs/AddPagePartDialog';
-import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
+import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 
 interface ExistingLessonTemplateProps {
@@ -47,15 +46,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     selectedPartContentDetails,
     setSelectedPartContentDetails,
     initialUniversalLessonPagePartContent,
-    universalBuilderStep,
-    setUniversalBuilderStep,
-    universalBuilderTemplates,
+
+
+
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   // UI elements show/hide
   const [hierarchyVisible, setHierarchyVisible] = useState<boolean>(false);
@@ -65,12 +64,30 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
+  const hideAllUIMenus = () => {
+    if (hierarchyVisible) {
+      setHierarchyVisible(false);
+    }
+    if (galleryVisible) {
+      setGalleryVisible(false);
+    }
+    if (builderMenuVisible) {
+      setBuilderMenuVisible(false);
+    }
+  };
+
   const handleModalPopToggle = (dialogToToggle: string) => {
+    // Hide all UI Menus
+    hideAllUIMenus()
+
+    // Toggle Modal Pop Visibility
     if (modalPopVisible) {
       // setModalPopVisible(false)
     } else {
       setModalPopVisible(true);
     }
+
+    // Toggle Which Dialog is Shown
     if (currentModalDialog !== dialogToToggle) {
       setCurrentModalDialog(dialogToToggle);
     }
@@ -82,10 +99,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <NewPageDialog />;
       case 'USE_TEMPLATE':
         return <UseTemplateDialog />;
-      case 'ADD_PAGE_PART':
-        return <AddPagePartDialog/>;
       case 'ADD_CONTENT':
-        return <AddContentDialog/>;
+        return <AddContentDialog />;
       default:
         return <NewPageDialog />;
     }
@@ -106,7 +121,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       {modalPopVisible && (
         <ModalPopIn
           closeAction={() => setModalPopVisible(false)}
-          inputJSX={modalDialogSwitch('')}
+          inputJSX={modalDialogSwitch(currentModalDialog)}
         />
       )}
 
@@ -159,6 +174,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         selectedPartContentDetails={selectedPartContentDetails}
         setSelectedPartContentDetails={setSelectedPartContentDetails}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
+        handleModalPopToggle={handleModalPopToggle}
       />
     </div>
   );
