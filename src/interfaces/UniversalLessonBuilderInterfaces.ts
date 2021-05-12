@@ -1,4 +1,4 @@
-import { PagePart, UniversalLessonPage } from './UniversalLessonInterfaces';
+import {PagePart, UniversalLessonPage} from './UniversalLessonInterfaces';
 import React from 'react';
 
 export interface ModalProps {
@@ -12,7 +12,6 @@ export interface ModalProps {
   cancelLabel?: string;
 }
 
-
 export interface ULBDialogComponent {
   inputJSX?: JSX.Element;
 }
@@ -25,6 +24,9 @@ export interface RowComposerProps {
 
 export interface RowWrapperProps {
   mode?: 'building' | 'viewing';
+  contentID?: string;
+  hoveredID?: string;
   children?: React.ReactNode;
   pagePart?: PagePart;
+  handleMouseOverToggle?: (e:React.MouseEvent)=>void;
 }

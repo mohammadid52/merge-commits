@@ -1,11 +1,12 @@
 import React from 'react';
+import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface FormBlockProps {
-  value?: { id: string; type: string; label: string; value: string[] };
+interface FormBlockProps extends RowWrapperProps {
+  value?: {id: string; type: string; label: string; value: string[]};
 }
 
 export const FormBlock = (props: FormBlockProps) => {
-  const { value } = props;
+  const {value, handleMouseOverToggle} = props;
 
   const composeInput = (id: string, type: string, label: string, value: string[]) => {
     switch (type) {
