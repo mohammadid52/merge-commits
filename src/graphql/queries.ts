@@ -246,16 +246,6 @@ export const listInstitutions = /* GraphQL */ `
         }
         staff {
           nextToken
-           items {
-              id
-              institutionID
-              staffAuthID
-              staffEmail
-              status
-              statusChangeDate
-              createdAt
-              updatedAt
-        }
         }
         rooms {
           nextToken

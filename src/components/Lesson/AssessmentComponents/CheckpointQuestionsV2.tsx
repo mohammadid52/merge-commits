@@ -264,7 +264,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             return {
               qid: id,
               response: valueArray,
-              // Add this value to query
             };
           } else {
             return obj;
