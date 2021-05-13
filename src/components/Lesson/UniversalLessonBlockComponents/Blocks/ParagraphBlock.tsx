@@ -11,7 +11,7 @@ interface ParagraphBlockProps extends RowWrapperProps {
 }
 
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
-  const {mode, id, value, type, handleMouseOverToggle} = props;
+  const {mode, id, dataIdAttribute, value, type, handleMouseOverToggle} = props;
 
   const composeParagraph = (inputId: string, inputValue: string, inputType: string) => {
     switch (inputType) {
@@ -19,6 +19,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
         return (
           <p
             id={inputId}
+            data-id={dataIdAttribute}
             onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
             onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
             {inputValue}

@@ -2,17 +2,22 @@ import React from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface FormBlockProps extends RowWrapperProps {
+  id?: string;
   value?: {id: string; type: string; label: string; value: string[]};
 }
 
 export const FormBlock = (props: FormBlockProps) => {
-  const {value, handleMouseOverToggle} = props;
+  const {mode, dataIdAttribute, value, handleMouseOverToggle} = props;
 
   const composeInput = (id: string, type: string, label: string, value: string[]) => {
     switch (type) {
       case 'text-input':
         return (
-          <div className={`mb-4`}>
+          <div
+            data-id={dataIdAttribute}
+            className={`mb-4`}
+            onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
+            onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
@@ -28,7 +33,11 @@ export const FormBlock = (props: FormBlockProps) => {
         );
       case 'text-area':
         return (
-          <div className={`mb-4`}>
+          <div
+            data-id={dataIdAttribute}
+            className={`mb-4`}
+            onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
+            onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>

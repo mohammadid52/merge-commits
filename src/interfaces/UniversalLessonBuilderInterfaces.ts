@@ -25,6 +25,7 @@ export interface RowComposerProps {
 export interface RowWrapperProps {
   mode?: 'building' | 'viewing';
   contentID?: string;
+  dataIdAttribute?: string;
   hoveredID?: string;
   children?: React.ReactNode;
   pagePart?: PagePart;

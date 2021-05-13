@@ -3,7 +3,7 @@ import {PagePart} from '../../../interfaces/UniversalLessonInterfaces';
 import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export const RowWrapper = (props: RowWrapperProps) => {
-  const {contentID, mode, children, pagePart, handleMouseOverToggle} = props;
+  const {dataIdAttribute, contentID, mode, children, pagePart, handleMouseOverToggle} = props;
 
   const viewModeClass = ``;
   const buildModeClass = `ring-2 hover:ring-4`;
@@ -11,6 +11,7 @@ export const RowWrapper = (props: RowWrapperProps) => {
   return (
     <div
       id={contentID}
+      data-id={dataIdAttribute}
       className={`my-4`}
       onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
       onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>

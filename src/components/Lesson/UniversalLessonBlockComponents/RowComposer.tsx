@@ -21,11 +21,12 @@ const RowComposer = (props: RowComposerProps) => {
   const handleMouseOverToggle = (e: React.MouseEvent) => {
     e.preventDefault()
     const t = e.currentTarget as HTMLElement;
+    const ulbIdAttribute = t.getAttribute('data-id')
 
-    if (t.id) {
-      console.log('id under mouse -- ', t.id);
-      if (hoveredID !== t.id) {
-        setHoveredID(t.id);
+    if (ulbIdAttribute) {
+      console.log('id under mouse -- ', ulbIdAttribute);
+      if (hoveredID !== ulbIdAttribute) {
+        setHoveredID(ulbIdAttribute);
       } else {
         setHoveredID('');
       }
@@ -44,6 +45,7 @@ const RowComposer = (props: RowComposerProps) => {
         <HeaderBlock
           key={inputKey}
           id={id}
+          dataIdAttribute={id}
           type={type}
           value={value}
           mode={mode}
@@ -55,6 +57,7 @@ const RowComposer = (props: RowComposerProps) => {
         <ParagraphBlock
           key={inputKey}
           id={id}
+          dataIdAttribute={id}
           type={type}
           value={value}
           mode={mode}
@@ -65,6 +68,8 @@ const RowComposer = (props: RowComposerProps) => {
       return (
         <FormBlock
           key={inputKey}
+          id={id}
+          dataIdAttribute={id}
           value={value}
           mode={mode}
           handleMouseOverToggle={handleMouseOverToggle}
@@ -75,6 +80,7 @@ const RowComposer = (props: RowComposerProps) => {
         <StringifyBlock
           key={inputKey}
           id={id}
+          dataIdAttribute={id}
           anyObj={value}
           mode={mode}
           handleMouseOverToggle={handleMouseOverToggle}
@@ -95,6 +101,7 @@ const RowComposer = (props: RowComposerProps) => {
             hoveredID={hoveredID}>
             <RowWrapper
               contentID={`pp_${idx}`}
+              dataIdAttribute={`pp_${idx}`}
               pagePart={pagePart}
               mode={mode}
               handleMouseOverToggle={handleMouseOverToggle}>

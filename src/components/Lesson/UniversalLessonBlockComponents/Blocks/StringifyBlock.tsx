@@ -10,10 +10,11 @@ interface StringifyBlockProps extends RowWrapperProps {
 }
 
 export const StringifyBlock = (props: StringifyBlockProps) => {
-  const {mode, id, anyObj, handleMouseOverToggle} = props;
+  const {mode, id, dataIdAttribute, anyObj, handleMouseOverToggle} = props;
   return (
     <p
       id={id}
+      data-id={dataIdAttribute}
       className={`bg-white bg-opacity-20`}
       onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
       onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
