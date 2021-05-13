@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoBusinessSharp } from 'react-icons/io5';
-import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
+import React, {useState, useEffect, useContext, Fragment} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {IoBusinessSharp} from 'react-icons/io5';
+import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
 
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import InstitutionRow from './InstitutionRow';
@@ -16,7 +16,7 @@ import Pagination from '../../../Atoms/Pagination';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
-import { getAsset } from '../../../../assets';
+import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
 
 /**
@@ -27,8 +27,8 @@ import useDictionary from '../../../../customHooks/dictionary';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { InstitutionDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
+  const {InstitutionDict, BreadcrumsTitles} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -51,15 +51,23 @@ const InstitutionLookup: React.FC = () => {
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'], url: `${match.url}`, last: true },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
+      url: `${match.url}`,
+      last: true,
+    },
   ];
 
   const sortByList = [
-    { id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name' },
-    { id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type' },
-    { id: 3, name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`, value: 'website' },
-    { id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone' },
+    {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
+    {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
+    {
+      id: 3,
+      name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
+      value: 'website',
+    },
+    {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'},
   ];
 
   const goNextPage = () => {
@@ -106,21 +114,53 @@ const InstitutionLookup: React.FC = () => {
     history.push(`${match.url}/add`);
   };
 
+  // show institution where the teacher{current authId} is associated
+  const getFilteredInstitution = (
+    data: [{staff: {items: [{staffAuthID: string}]}}],
+    target: string
+  ) => {
+    const list: any[] = [];
+    data?.forEach((institution) => {
+      institution?.staff?.items?.forEach((staff) => {
+        if (staff?.staffAuthID === target) {
+          list.push(institution);
+        }
+      });
+    });
+
+    return list;
+  };
+
+  const isTeacher = state.user.role === 'TR';
+
   async function getInstitutionsData() {
     try {
-      const fetchInstitutionData: any = await API.graphql(graphqlOperation(queries.listInstitutions));
+      const fetchInstitutionData: any = await API.graphql(
+        graphqlOperation(queries.listInstitutions)
+      );
       if (!fetchInstitutionData) {
         throw new Error('fail!');
       } else {
         const instituteList = fetchInstitutionData.data?.listInstitutions?.items;
-        const totalListPages = Math.floor(instituteList.length / userCount);
-        if (totalListPages * userCount === instituteList.length) {
-          setTotalPages(totalListPages);
-        } else {
-          setTotalPages(totalListPages + 1);
-        }
-        setInstitutionsData(instituteList);
-        setTotalInstNum(instituteList.length);
+        const filteredInstitution =
+          isTeacher && getFilteredInstitution(instituteList, state.user.authId);
+        const totalListPages = Math.floor(
+          (isTeacher ? filteredInstitution.length : instituteList.length) / userCount
+        );
+
+        setTotalPages(
+          isTeacher
+            ? totalListPages * userCount === filteredInstitution.length
+              ? totalListPages
+              : totalListPages + 1
+            : totalListPages * userCount === instituteList.length
+            ? totalListPages
+            : totalListPages + 1
+        );
+
+        setTotalInstNum(isTeacher ? filteredInstitution.length : instituteList.length);
+        setInstitutionsData(isTeacher ? filteredInstitution : instituteList);
+
         setStatus('done');
       }
     } catch (error) {
@@ -161,12 +201,15 @@ const InstitutionLookup: React.FC = () => {
 
   const removeSearchAction = () => {
     backToInitials();
-    setSearchInput({ value: '', isActive: false });
+    setSearchInput({value: '', isActive: false});
   };
 
   const fetchSortedList = () => {
     const newInstList = [...institutionsData].sort((a, b) =>
-      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() && sortingType.asc ? 1 : -1
+      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
+      sortingType.asc
+        ? 1
+        : -1
     );
     setInstitutionsData(newInstList);
   };
@@ -250,7 +293,8 @@ const InstitutionLookup: React.FC = () => {
             <button
               className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
               onClick={toggleSortDimention}>
-              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+              <IconContext.Provider
+                value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
@@ -273,13 +317,19 @@ const InstitutionLookup: React.FC = () => {
                     <span>{InstitutionDict[userLanguage]['TABLE']['NAME']}</span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['TYPE']}</span>
+                    <span className="w-auto">
+                      {InstitutionDict[userLanguage]['TABLE']['TYPE']}
+                    </span>
                   </div>
                   <div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['WEBSITE']}</span>
+                    <span className="w-auto">
+                      {InstitutionDict[userLanguage]['TABLE']['WEBSITE']}
+                    </span>
                   </div>
                   <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{InstitutionDict[userLanguage]['TABLE']['CONTACT']}</span>
+                    <span className="w-auto">
+                      {InstitutionDict[userLanguage]['TABLE']['CONTACT']}
+                    </span>
                   </div>
                   <div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitutionDict[userLanguage]['TABLE']['ACTION']}
@@ -310,7 +360,8 @@ const InstitutionLookup: React.FC = () => {
                   <Fragment>
                     <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
                       {InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1}{' '}
-                      {InstitutionDict[userLanguage]['OF']} {totalPages} {InstitutionDict[userLanguage]['PAGES']}
+                      {InstitutionDict[userLanguage]['OF']} {totalPages}{' '}
+                      {InstitutionDict[userLanguage]['PAGES']}
                     </span>
                     <Pagination
                       currentPage={currentPage + 1}
@@ -319,7 +370,10 @@ const InstitutionLookup: React.FC = () => {
                       firstPage={firstPage}
                       lastPage={lastPage}
                     />
-                    <PageCountSelector pageSize={userCount} setPageSize={(c: number) => setUserCount(c)} />
+                    <PageCountSelector
+                      pageSize={userCount}
+                      setPageSize={(c: number) => setUserCount(c)}
+                    />
                   </Fragment>
                 )}
               </div>
