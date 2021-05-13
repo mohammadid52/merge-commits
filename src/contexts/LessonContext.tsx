@@ -188,12 +188,14 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         createPersonLocation();
       }
     }
+    return ()=>setLoaded(false)
   }, [loaded, state.syllabusLessonID, state.studentAuthID]);
 
   useEffect(() => {
     if (recentOp !== '') {
       updatePersonLocation();
     }
+    return ()=>setRecentOp('')
   }, [state.currentPage]);
 
   //  END OF LOCATION TRACKING SCRIPT

@@ -16,17 +16,6 @@ const SideMenu = (props: LessonHeaderBarProps) => {
   const {theme, state, dispatch} = useContext(LessonContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
 
-  useEffect(() => {
-    changeParams('state', state);
-  }, [
-    state.studentStatus,
-    state.currentPage,
-    state.currentLocation,
-    state.viewing,
-    state.saveCount,
-    state.subscription,
-  ]);
-
   /**
    * FUNCTION TO SAVE STUDENT DATA ON COMMAND
    * @param saveType
@@ -62,7 +51,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
     }
   };
 
-  const {changeParams} = useStudentTimer({
+  const {changeParams, resetParams} = useStudentTimer({
     dispatch: dispatch,
     subscription: state.subscription,
     subscribeFunc: state.subscribeFunc,
@@ -70,11 +59,26 @@ const SideMenu = (props: LessonHeaderBarProps) => {
     state: state,
   });
 
+  useEffect((): any => {
+    if (state) {
+      changeParams('state', state);
+    }
+
+    return () => resetParams();
+  }, [
+    state.studentStatus,
+    state.currentPage,
+    state.currentLocation,
+    state.viewing,
+    state.saveCount,
+    state.subscription,
+  ]);
+
   // @ts-ignore
   return (
     <>
       <div
-        className={`absolute w-16 mx-4 content-end ${
+        className={`absolute w-16 content-end ${
           state.data.lesson.type === 'survey' ? 'mt-20' : ''
         }`}>
         {/**

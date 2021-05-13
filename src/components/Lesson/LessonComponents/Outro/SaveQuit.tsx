@@ -13,6 +13,8 @@ import {AiOutlineSave} from 'react-icons/ai';
 import Tooltip from '../../../Atoms/Tooltip';
 import {BsArrowLeft} from 'react-icons/bs';
 import findIndex from 'lodash/findIndex';
+import useStudentTimer from '../../../../customHooks/timer';
+
 interface SaveQuitProps {
   id?: string;
   feedback?: {
@@ -105,6 +107,14 @@ const SaveQuit = (props: SaveQuitProps) => {
       setIsSaving(true);
       if (state.data.lesson.type === 'lesson') {
         dispatch({type: 'INCREMENT_SAVE_COUNT'});
+        if (roomID) {
+          setTimeout(
+            () => (window.location.href = `/dashboard/classroom/${roomID}`),
+            200
+          );
+        } else {
+          history.push('/dashboard/home');
+        }
       } else {
         handleCreateQuestionData();
       }
