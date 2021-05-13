@@ -9,6 +9,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {isNaN} from 'lodash';
+import Status from '../../../Atoms/Status';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -142,7 +143,7 @@ const UserInformation = (props: UserInfoProps) => {
                   {UserInformationDict[userLanguage]['status']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                  <UserStatus status={user.status} />
+                  <Status status={user.status} />
                 </dd>
               </div>
               {/* <div className="sm:col-span-1 p-2">

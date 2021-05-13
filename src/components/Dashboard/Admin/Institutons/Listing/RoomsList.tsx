@@ -50,7 +50,6 @@ const RoomsList = (props: RoomListProps) => {
         })
       );
       const newList = list.data.listRooms.items;
-      console.log(newList);
       setRoomList(newList);
       setLoading(false);
     } catch {
