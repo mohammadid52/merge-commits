@@ -5,6 +5,7 @@ import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 import {QuestionInterface} from '../CheckpointQuestions';
 import {QuestionProps} from '../Question';
 import LessonElementCard from '../../../Atoms/LessonElementCard';
+import find from 'lodash/find';
 
 interface SelectOneRowState {
   id: string;
@@ -25,15 +26,26 @@ const SelectOneQuestions = (props: QuestionProps) => {
     questionKey,
     value,
   } = props;
+
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch} = switchContext;
 
-  const [input, setInput] = useState<SelectOneRowState>({id: '', value: ''});
-  const [otherOptSel, setOtherOptSel] = useState(false);
+  const {state, theme, dispatch} = switchContext;
   const questionId = question.question.id;
-  const [other, setOther] = useState('');
+
+  const oneQuestInitAns =
+    find(
+      state.questionData[checkpointID],
+      (q) => q.qid === questionId
+    ).response.toString() || '';
+
+  const otherFieldValue =
+    find(state.questionData[checkpointID], (q) => q.qid === questionId).otherValue || '';
+
+  const [input, setInput] = useState<SelectOneRowState>({id: '', value: oneQuestInitAns});
+  const [otherOptSel, setOtherOptSel] = useState(false);
+  const [other, setOther] = useState(otherFieldValue);
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
@@ -47,10 +59,18 @@ const SelectOneQuestions = (props: QuestionProps) => {
     }
   };
 
-  const onOtherSave = () => {
-    setOtherOptSel(false);
-    handleInputChange(questionId, input.value, checkpointID, other);
+  const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {id, value} = e.target as HTMLInputElement;
+    setOther(value);
+    handleInputChange(questionId, 'other', checkpointID, value);
   };
+
+  useEffect(() => {
+    if (input.value === 'other' || otherFieldValue.length > 0) {
+      setOtherOptSel(true);
+    }
+  }, [input.value]);
+
   return (
     <>
       {visible && (
@@ -96,23 +116,22 @@ const SelectOneQuestions = (props: QuestionProps) => {
                 );
               }
             )}
-            {otherOptSel && (
-              <div>
-                <input
-                  value={other}
-                  onChange={(e) => setOther(e.target.value)}
-                  className="bg-transparent border-b-2 my-8 text-white border-sea-green pb-2"
-                  placeholder="Other"
-                  type="text"
-                />
-                <button
-                  onClick={onOtherSave}
-                  className="bg-sea-green w-auto py-2 px-4 rounded">
-                  save
-                </button>
-              </div>
-            )}
           </div>
+
+          {otherOptSel && (
+            <div key={`question_${questionId}`} className={`w-auto my-4`}>
+              <input
+                id={`${questionId}__other`}
+                className={`${theme.elem.textInput} w-full rounded-xl`}
+                type="text"
+                name={'Other'}
+                value={other}
+                onChange={(e) => {
+                  handleTextInputChange(e);
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
     </>

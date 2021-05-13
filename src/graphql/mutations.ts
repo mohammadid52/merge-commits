@@ -8171,6 +8171,8 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           name
           type
           bio
+          createdAt
+          updatedAt
         }
         language
         SELStructure
