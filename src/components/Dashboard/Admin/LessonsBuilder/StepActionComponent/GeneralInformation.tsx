@@ -237,7 +237,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         };
       });
       setLessonMeasurements([...lessonRubrics]);
-      console.log('aafter function', allMeasurement);
     } catch {
       setValidation({
         name: '',
