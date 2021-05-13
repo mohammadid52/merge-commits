@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {LessonContext} from '../../../contexts/LessonContext';
-import CheckpointQuestions from './CheckpointQuestions';
+import CheckpointQuestions from './CheckpointQuestionsV2';
 import Banner from '../LessonComponents/Banner';
 import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
@@ -24,11 +24,18 @@ const Checkpoint = (props: {
   checkpointsLoaded?: BodyProps['checkpointsLoaded'];
   setupComplete?: BodyProps['setupComplete'];
   checkpointsItems?: any[];
+  fromClosing?: boolean;
 }) => {
   /**
    * Teacher switch
    */
-  const {isTeacher, checkpointsLoaded, setupComplete, checkpointsItems} = props;
+  const {
+    isTeacher,
+    checkpointsLoaded,
+    setupComplete,
+    checkpointsItems,
+    fromClosing,
+  } = props;
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
@@ -86,6 +93,7 @@ const Checkpoint = (props: {
        */}
       {checkpointsItems && checkpointsItems.length > 0 && (
         <CheckpointQuestions
+          fromClosing={fromClosing}
           isTeacher={isTeacher}
           checkpointType={`checkpoint`}
           handleSetTitle={handleSetTitle}
@@ -97,12 +105,12 @@ const Checkpoint = (props: {
        *  3.
        *  SHOW OUTRO + SAVE, IF SURVEY
        */}
-      {!isTeacher && state.data.lesson.type !== 'lesson' && (
+      {/* {!isTeacher && state.data.lesson.type !== 'lesson' && (
         <>
           <SurveyOutro />
           <SaveQuit roomID={roomId} />
         </>
-      )}
+      )} */}
     </div>
   );
 };
