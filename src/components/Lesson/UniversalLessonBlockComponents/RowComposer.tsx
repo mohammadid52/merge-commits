@@ -1,17 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {
-  PagePart,
-  PartContent,
-  UniversalLessonPage,
-} from '../../../interfaces/UniversalLessonInterfaces';
-import {StringifyBlock} from './Blocks/StringifyBlock';
-import {RowWrapper} from './RowWrapper';
-import {LessonPageWrapper} from './LessonPageWrapper';
-import {HeaderBlock} from './Blocks/HeaderBlock';
-import {ParagraphBlock} from './Blocks/ParagraphBlock';
-import {FormBlock} from './Blocks/FormBlock';
-import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
-import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import React, { useState } from 'react';
+import { PagePart, PartContent } from '../../../interfaces/UniversalLessonInterfaces';
+import { StringifyBlock } from './Blocks/StringifyBlock';
+import { RowWrapper } from './RowWrapper';
+import { HeaderBlock } from './Blocks/HeaderBlock';
+import { ParagraphBlock } from './Blocks/ParagraphBlock';
+import { FormBlock } from './Blocks/FormBlock';
+import { RowComposerProps } from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 
 const RowComposer = (props: RowComposerProps) => {
@@ -19,9 +13,9 @@ const RowComposer = (props: RowComposerProps) => {
   const [hoveredID, setHoveredID] = useState<string>('');
 
   const handleMouseOverToggle = (e: React.MouseEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     const t = e.currentTarget as HTMLElement;
-    const ulbIdAttribute = t.getAttribute('data-id')
+    const ulbIdAttribute = t.getAttribute('data-id');
 
     if (ulbIdAttribute) {
       console.log('id under mouse -- ', ulbIdAttribute);
@@ -100,10 +94,11 @@ const RowComposer = (props: RowComposerProps) => {
             contentID={`pp_${idx}`}
             hoveredID={hoveredID}>
             <RowWrapper
+              mode={mode}
+              hasContent={pagePart.partContent.length > 0}
               contentID={`pp_${idx}`}
               dataIdAttribute={`pp_${idx}`}
               pagePart={pagePart}
-              mode={mode}
               handleMouseOverToggle={handleMouseOverToggle}>
               {pagePart.partContent.length > 0 ? (
                 pagePart.partContent.map((content: PartContent, idx2: number) => (

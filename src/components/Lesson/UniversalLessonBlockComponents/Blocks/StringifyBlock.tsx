@@ -15,7 +15,7 @@ export const StringifyBlock = (props: StringifyBlockProps) => {
     <p
       id={id}
       data-id={dataIdAttribute}
-      className={`bg-white bg-opacity-20`}
+      className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}
       onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
       onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
       {JSON.stringify(anyObj)}

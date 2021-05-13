@@ -19,6 +19,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
         return (
           <p
             id={inputId}
+            className={`px-4 py-5 sm:p-6`}
             data-id={dataIdAttribute}
             onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
             onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>

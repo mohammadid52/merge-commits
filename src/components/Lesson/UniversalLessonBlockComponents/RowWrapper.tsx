@@ -1,9 +1,16 @@
 import React from 'react';
-import {PagePart} from '../../../interfaces/UniversalLessonInterfaces';
-import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import { RowWrapperProps } from '../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export const RowWrapper = (props: RowWrapperProps) => {
-  const {dataIdAttribute, contentID, mode, children, pagePart, handleMouseOverToggle} = props;
+  const {
+    mode,
+    hasContent,
+    dataIdAttribute,
+    contentID,
+    children,
+    pagePart,
+    handleMouseOverToggle,
+  } = props;
 
   const viewModeClass = ``;
   const buildModeClass = `ring-2 hover:ring-4`;
@@ -12,14 +19,21 @@ export const RowWrapper = (props: RowWrapperProps) => {
     <div
       id={contentID}
       data-id={dataIdAttribute}
-      className={`my-4`}
-      onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
-      onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
+      className={`
+      my-4
+      ${hasContent ? 'cursor-pointer' : ''}
+      `}
+      onMouseEnter={
+        mode === 'building' && !hasContent ? handleMouseOverToggle : undefined
+      }
+      onMouseLeave={
+        mode === 'building' && !hasContent ? handleMouseOverToggle : undefined
+      }>
       <div
         className={`
         ${mode === 'building' ? buildModeClass : viewModeClass}
         overflow-hidden shadow rounded-lg divide-y divide-gray-200`}>
-        <div className="px-4 py-5 sm:p-6">{children}</div>
+        <div className="relative">{children}</div>
       </div>
     </div>
   );

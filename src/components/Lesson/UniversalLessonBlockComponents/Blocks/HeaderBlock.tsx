@@ -15,22 +15,20 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
       case 'header-default':
         return (
           <h2
-            id={inputId}
-            data-id={inputId}
-            onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
-            onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}
-            className={`w-full text-xl font-semibold pb-2 mb-2 relative font-open text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
+            className={`
+            relative
+            px-4 py-5 sm:p-6 
+            w-full text-xl font-semibold  font-open text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
             {inputValue}
           </h2>
         );
       case 'header-section':
         return (
           <h3
-            id={inputId}
-            data-id={inputId}
-            onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
-            onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}
-            className={`w-full flex text-xl border-b-4 border-sea-green pb-2 mb-2 relative font-open font-medium text-left flex flex-row items-center text-gray-100 mt-4`}>
+            className={`
+            relative
+            
+            w-full flex text-xl border-b-4 border-sea-green font-open font-medium text-left flex flex-row items-center text-gray-100 mt-4`}>
             {inputValue}
           </h3>
         );
@@ -39,5 +37,18 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     }
   };
 
-  return value && composeHeader(id, value, type);
+  return (
+    <>
+      {value ? (
+        <div
+          id={id}
+          data-id={dataIdAttribute}
+          className={`px-4 py-5 sm:p-6 `}
+          onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
+          onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
+          {composeHeader(id, value, type)}
+        </div>
+      ) : null}
+    </>
+  );
 };

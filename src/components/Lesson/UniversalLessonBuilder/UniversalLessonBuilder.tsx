@@ -139,7 +139,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">{currentStepComp(universalBuilderStep)}</div>
+    <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
+      {currentStepComp(universalBuilderStep)}
+    </div>
   );
 };
 

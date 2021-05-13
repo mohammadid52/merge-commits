@@ -24,10 +24,11 @@ export interface RowComposerProps {
 
 export interface RowWrapperProps {
   mode?: 'building' | 'viewing';
+  hasContent?: boolean;
   contentID?: string;
   dataIdAttribute?: string;
   hoveredID?: string;
   children?: React.ReactNode;
   pagePart?: PagePart;
-  handleMouseOverToggle?: (e:React.MouseEvent)=>void;
+  handleMouseOverToggle?: (e: React.MouseEvent) => void;
 }

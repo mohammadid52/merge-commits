@@ -15,13 +15,14 @@ export const FormBlock = (props: FormBlockProps) => {
         return (
           <div
             data-id={dataIdAttribute}
-            className={`mb-4`}
+            className={`mb-4 px-4 py-5 sm:p-6`}
             onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
             onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
             <input
+              disabled={mode === 'building'}
               id={id}
               className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray text-blue-100`}
               name="title"
@@ -35,13 +36,14 @@ export const FormBlock = (props: FormBlockProps) => {
         return (
           <div
             data-id={dataIdAttribute}
-            className={`mb-4`}
+            className={`mb-4 px-4 py-5 sm:p-6`}
             onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
             onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
             <textarea
+              disabled={mode === 'building'}
               id="story"
               className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl bg-darker-gray text-blue-100`}
               name="story"
