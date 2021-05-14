@@ -21,7 +21,7 @@ const Story = () => {
   const inputs = state.data.lesson.warmUp.inputs;
 
   useEffect(() => {
-    if (!cookies[`lesson-${state.syllabusLessonID}`].story && !state.componentState.story) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`].story && !state.componentState?.story) {
       let tempObj: StoryState = {
         story: [''],
       };

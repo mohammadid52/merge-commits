@@ -23,7 +23,6 @@ export interface QuestionProps {
     id: number | string,
     value: string | string[],
     checkpointID: string,
-    otherValue?: string
   ) => void;
   value?: ResponseState;
 }

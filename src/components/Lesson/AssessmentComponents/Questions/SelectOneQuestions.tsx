@@ -40,12 +40,11 @@ const SelectOneQuestions = (props: QuestionProps) => {
       (q) => q.qid === questionId
     ).response.toString() || '';
 
-  const otherFieldValue =
-    find(state.questionData[checkpointID], (q) => q.qid === questionId).otherValue || '';
+
 
   const [input, setInput] = useState<SelectOneRowState>({id: '', value: oneQuestInitAns});
   const [otherOptSel, setOtherOptSel] = useState(false);
-  const [other, setOther] = useState(otherFieldValue);
+  const [other, setOther] = useState('');
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleRadioSelect = (e: React.MouseEvent<HTMLElement>) => {
@@ -62,11 +61,12 @@ const SelectOneQuestions = (props: QuestionProps) => {
   const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {id, value} = e.target as HTMLInputElement;
     setOther(value);
-    handleInputChange(questionId, 'other', checkpointID, value);
+    handleInputChange(questionId, value, checkpointID);
   };
 
+
   useEffect(() => {
-    if (input.value === 'other' || otherFieldValue.length > 0) {
+    if (input.value === 'other') {
       setOtherOptSel(true);
     }
   }, [input.value]);

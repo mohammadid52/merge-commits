@@ -8,7 +8,7 @@ import ListOutput from './ListOutput';
 
 const SelfDisplay = () => {
     const { state, theme, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.story;
+    const displayProps = state.componentState?.story;
     const tempDisplayProps = state.data.lesson.warmUp.inputs.additionalInputs
 
     useEffect(() => {

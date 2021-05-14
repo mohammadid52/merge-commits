@@ -40,11 +40,11 @@ const Modules = (props: ModulesProps) => {
     }
 
     if (
-      state.componentState.story &&
-      state.componentState.story?.additional &&
-      state.componentState.story?.additional?.length > 0
+      state.componentState?.story &&
+      state.componentState?.story?.additional &&
+      state.componentState?.story?.additional?.length > 0
     ) {
-      state.componentState.story?.additional?.map((item: { name: string; input: string }) => {
+      state.componentState?.story?.additional?.map((item: { name: string; input: string }) => {
         setFormInputs((prev) => {
           return {
             ...prev,
@@ -58,7 +58,7 @@ const Modules = (props: ModulesProps) => {
   }, []);
 
   useEffect(() => {
-    if (formInputs && state.componentState.story?.additional && state.componentState.story?.additional?.length > 0) {
+    if (formInputs && state.componentState?.story?.additional && state.componentState?.story?.additional?.length > 0) {
       let tempArray: Array<{ name: string; input: string }> = [];
       inputs.forEach((input) => {
         let tempObj = {
