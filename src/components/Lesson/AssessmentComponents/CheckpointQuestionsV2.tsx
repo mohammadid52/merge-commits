@@ -205,6 +205,18 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     return collectQuestionGroups(questionSource());
   };
 
+  const [currentCheckpoint, setCurrentCheckpoint] = useState(checkpointId[0]);
+
+  const currentCheckpointIdx = findIndex(
+    questionSource(),
+    (item: any) => item.title === currentCheckpoint.name
+  );
+
+  const [allQuestionData, setAllQuestionData] = useState([]);
+  useEffect(() => {
+    const data = allQuestionGroups()[currentCheckpointIdx];
+    setAllQuestionData(data);
+  }, []);
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]): number[] => {
     const [head, ...tail] = inArr;
     if (typeof head === 'undefined') {
@@ -253,7 +265,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const handleInputChange = (
     id: number | string,
     value: string | string[],
-    checkpointID: string,
+    checkpointID: string
   ) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
@@ -287,18 +299,11 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     });
   };
 
-  const [currentCheckpoint, setCurrentCheckpoint] = useState(checkpointId[0]);
-
   useEffect(() => {
     if (fromClosing && checkpointId.length > 0) {
       setCurrentCheckpoint(last(checkpointId));
     }
   }, [fromClosing]);
-
-  const currentCheckpointIdx = findIndex(
-    questionSource(),
-    (item: any) => item.title === currentCheckpoint.name
-  );
 
   const onBack = () => {
     if (currentCheckpointIdx > 0) {
@@ -345,34 +350,32 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     }
                   />
                   <LessonElementCard key={`questiongroup_${currentCheckpointIdx}`}>
-                    {allQuestionGroups()[currentCheckpointIdx].map(
-                      (question: QuestionInterface, idx: number) => {
-                        const realIndex = indexInc[currentCheckpointIdx] + idx;
-                        return (
-                          <React.Fragment key={`questionFragment_${realIndex}`}>
-                            <div
-                              key={`questionParent_${realIndex}`}
-                              id={`questionParent_${realIndex}`}
-                              className={`mb-8`}>
-                              <Question
-                                checkpointID={
-                                  question.checkpointID
-                                    ? question.checkpointID
-                                    : 'undefined-checkpointID'
-                                }
-                                visible={true}
-                                isTeacher={isTeacher}
-                                question={question}
-                                questionIndex={realIndex}
-                                questionKey={`question_${realIndex}`}
-                                value={input}
-                                handleInputChange={handleInputChange}
-                              />
-                            </div>
-                          </React.Fragment>
-                        );
-                      }
-                    )}
+                    {allQuestionData.map((question: QuestionInterface, idx: number) => {
+                      const realIndex = indexInc[currentCheckpointIdx] + idx;
+                      return (
+                        <React.Fragment key={`questionFragment_${realIndex}`}>
+                          <div
+                            key={`questionParent_${realIndex}`}
+                            id={`questionParent_${realIndex}`}
+                            className={`mb-8`}>
+                            <Question
+                              checkpointID={
+                                question.checkpointID
+                                  ? question.checkpointID
+                                  : 'undefined-checkpointID'
+                              }
+                              visible={true}
+                              isTeacher={isTeacher}
+                              question={question}
+                              questionIndex={realIndex}
+                              questionKey={`question_${realIndex}`}
+                              value={input}
+                              handleInputChange={handleInputChange}
+                            />
+                          </div>
+                        </React.Fragment>
+                      );
+                    })}
                   </LessonElementCard>
                 </div>
               )

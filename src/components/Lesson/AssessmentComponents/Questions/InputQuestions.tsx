@@ -29,13 +29,24 @@ const InputQuestions = (props: QuestionProps) => {
   const {state, theme, dispatch} = switchContext;
 
   const questionId = question.question.id;
-  const textInitAns =
+
+  const getTextInitAns = () =>
     find(
       state.questionData[checkpointID],
       (q) => q.qid === questionId
-    ).response.toString() || '';
+    ).response.toString();
 
-  const [contents, setContents] = useState<TextInputState>({id: '', value: textInitAns});
+  useEffect(() => {
+    if (
+      state.questionData &&
+      state.questionData.length > 0 &&
+      getTextInitAns().length > 0
+    ) {
+      setContents({...contents, value: getTextInitAns() || ''});
+    }
+  }, []);
+
+  const [contents, setContents] = useState<TextInputState>({id: '', value: ''});
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

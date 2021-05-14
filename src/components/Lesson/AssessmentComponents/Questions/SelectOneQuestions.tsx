@@ -40,7 +40,7 @@ const SelectOneQuestions = (props: QuestionProps) => {
       (q) => q.qid === questionId
     ).response.toString() || '';
 
-
+  console.log(find(state.questionData[checkpointID], (q) => q.qid === questionId));
 
   const [input, setInput] = useState<SelectOneRowState>({id: '', value: oneQuestInitAns});
   const [otherOptSel, setOtherOptSel] = useState(false);
@@ -64,12 +64,12 @@ const SelectOneQuestions = (props: QuestionProps) => {
     handleInputChange(questionId, value, checkpointID);
   };
 
-
   useEffect(() => {
     if (input.value === 'other') {
       setOtherOptSel(true);
+      // setOther(value);
     }
-  }, [input.value]);
+  }, [input.value, oneQuestInitAns]);
 
   return (
     <>
