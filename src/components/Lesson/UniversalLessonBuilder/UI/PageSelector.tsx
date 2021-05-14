@@ -59,8 +59,8 @@ const PageSelector = (props: PageSelectorProps) => {
            }
            ${
              galleryVisible
-               ? 'transform opacity-100 scale-100'
-               : 'transform opacity-0 scale-95'
+               ? 'transform opacity-100'
+               : 'transform opacity-0 h-0 overflow-hidden'
            }
         `}>
       {/* Page Selection Buttons */}

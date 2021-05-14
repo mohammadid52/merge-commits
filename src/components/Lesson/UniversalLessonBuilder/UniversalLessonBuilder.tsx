@@ -139,7 +139,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
+    <div id={`universalLessonBuilder`} className="flex bg-white shadow-5 sm:rounded-lg mb-4">
       {currentStepComp(universalBuilderStep)}
     </div>
   );

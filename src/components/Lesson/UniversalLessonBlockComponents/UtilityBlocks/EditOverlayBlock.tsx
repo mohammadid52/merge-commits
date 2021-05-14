@@ -9,7 +9,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
     <>
       {mode === 'building' && contentID === hoveredID ? (
         <div className={`relative bg-red-400 bg-opacity-20 pointer-events-none`}>
-          <EditOverlayControls />
+          <EditOverlayControls mode={mode}/>
           {children}
         </div>
       ) : (

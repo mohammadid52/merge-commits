@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { PagePart, PartContent } from '../../../interfaces/UniversalLessonInterfaces';
-import { StringifyBlock } from './Blocks/StringifyBlock';
-import { RowWrapper } from './RowWrapper';
-import { HeaderBlock } from './Blocks/HeaderBlock';
-import { ParagraphBlock } from './Blocks/ParagraphBlock';
-import { FormBlock } from './Blocks/FormBlock';
-import { RowComposerProps } from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import React, {useState} from 'react';
+import {PagePart, PartContent} from '../../../interfaces/UniversalLessonInterfaces';
+import {StringifyBlock} from './Blocks/StringifyBlock';
+import {RowWrapper} from './RowWrapper';
+import {HeaderBlock} from './Blocks/HeaderBlock';
+import {ParagraphBlock} from './Blocks/ParagraphBlock';
+import {FormBlock} from './Blocks/FormBlock';
+import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
+import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {mode, selectedPageDetails, handleModalPopToggle} = props;
@@ -86,48 +87,59 @@ const RowComposer = (props: RowComposerProps) => {
   return (
     <>
       {selectedPageDetails && selectedPageDetails.pageContent.length > 0 ? (
-        selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
-          // ONE ROW
-          <EditOverlayBlock
-            mode={mode}
-            key={`pp_${idx}`}
-            contentID={`pp_${idx}`}
-            hoveredID={hoveredID}>
+        [
+          selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
+            // ONE ROW
+            <EditOverlayBlock
+              mode={mode}
+              key={`pp_${idx}`}
+              contentID={`pp_${idx}`}
+              hoveredID={hoveredID}>
+              <RowWrapper
+                mode={mode}
+                hasContent={pagePart.partContent.length > 0}
+                contentID={`pp_${idx}`}
+                dataIdAttribute={`pp_${idx}`}
+                pagePart={pagePart}
+                handleMouseOverToggle={handleMouseOverToggle}>
+                {pagePart.partContent.length > 0 ? (
+                  pagePart.partContent.map((content: PartContent, idx2: number) => (
+                    <EditOverlayBlock
+                      key={`pp_${idx}_pc_${idx2}`}
+                      mode={mode}
+                      contentID={content.id}
+                      hoveredID={hoveredID}>
+                      {content.value.length > 0 ? (
+                        content.value.map((value: any, idx3: number) =>
+                          composePartContent(
+                            content.id,
+                            content.type,
+                            value,
+                            `pp_${idx}_pc_${idx2}_cv_${idx3}`,
+                            handleMouseOverToggle
+                          )
+                        )
+                      ) : (
+                        <p>No content</p>
+                      )}
+                    </EditOverlayBlock>
+                  ))
+                ) : (
+                  <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
+                )}
+              </RowWrapper>
+            </EditOverlayBlock>
+          )),
+          <EditOverlayBlock mode={mode} contentID={`addNewRow`} hoveredID={hoveredID}>
             <RowWrapper
               mode={mode}
-              hasContent={pagePart.partContent.length > 0}
-              contentID={`pp_${idx}`}
-              dataIdAttribute={`pp_${idx}`}
-              pagePart={pagePart}
+              hasContent={false}
+              dataIdAttribute={`addNewRow`}
               handleMouseOverToggle={handleMouseOverToggle}>
-              {pagePart.partContent.length > 0 ? (
-                pagePart.partContent.map((content: PartContent, idx2: number) => (
-                  <EditOverlayBlock
-                    key={`pp_${idx}_pc_${idx2}`}
-                    mode={mode}
-                    contentID={content.id}
-                    hoveredID={hoveredID}>
-                    {content.value.length > 0 ? (
-                      content.value.map((value: any, idx3: number) =>
-                        composePartContent(
-                          content.id,
-                          content.type,
-                          value,
-                          `pp_${idx}_pc_${idx2}_cv_${idx3}`,
-                          handleMouseOverToggle
-                        )
-                      )
-                    ) : (
-                      <p>No content</p>
-                    )}
-                  </EditOverlayBlock>
-                ))
-              ) : (
-                <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
-              )}
+              <AddNewBlock mode={mode} />
             </RowWrapper>
-          </EditOverlayBlock>
-        ))
+          </EditOverlayBlock>,
+        ]
       ) : (
         <h1 className={`w-full text-center`}>This page has no layout information.</h1>
       )}

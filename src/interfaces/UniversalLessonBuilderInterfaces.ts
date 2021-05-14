@@ -18,12 +18,13 @@ export interface ULBDialogComponent {
 
 export interface RowComposerProps {
   mode: 'building' | 'viewing';
+  contentID?: string;
+  dataIdAttribute?: string;
   selectedPageDetails?: UniversalLessonPage;
   handleModalPopToggle?: (dialogToToggle: string) => void;
 }
 
-export interface RowWrapperProps {
-  mode?: 'building' | 'viewing';
+export interface RowWrapperProps extends RowComposerProps {
   hasContent?: boolean;
   contentID?: string;
   dataIdAttribute?: string;

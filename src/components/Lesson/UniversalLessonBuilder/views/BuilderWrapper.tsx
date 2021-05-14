@@ -107,7 +107,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   return (
-    <div className="relative bg-white shadow-5 overflow-hidden sm:rounded-lg">
+    <div id={`builderWrapper`} className="h-auto min-h-full relative bg-white shadow-5 sm:rounded-lg">
       <Toolbar
         selectedPageDetails={selectedPageDetails}
         hierarchyVisible={hierarchyVisible}

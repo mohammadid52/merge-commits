@@ -11,6 +11,7 @@ import {EditPanel} from '../UI/EditPanel';
 import {RowWrapper} from '../../UniversalLessonBlockComponents/RowWrapper';
 import {AddNewBlock} from '../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
+import EditOverlayBlock from '../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 
 interface CoreBuilderProps {
   mode: 'building' | 'viewing';
@@ -32,19 +33,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   return (
     <div className={`bg-dark-gray`}>
-      <div className={`relative w-full flex flex-row min-h-256 mx-auto`}>
+      <div className={`relative w-full flex flex-row mx-auto`}>
         <LessonPageWrapper selectedPageDetails={selectedPageDetails}>
           <RowComposer
             mode={mode}
             selectedPageDetails={selectedPageDetails}
             handleModalPopToggle={handleModalPopToggle}
           />
-          {/* SHOW ADD NEW BLOCK CONTROL */}
-          {mode === 'building' && (
-            <RowWrapper mode={mode} hasContent={false}>
-              <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
-            </RowWrapper>
-          )}
         </LessonPageWrapper>
       </div>
     </div>
