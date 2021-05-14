@@ -6,7 +6,7 @@ import Banner from '../../Banner';
 
 const SelfDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const displayProps = state.componentState.poem;
+  const displayProps = state.componentState?.poem;
   const [fullscreen, setFullscreen] = useState(false);
 
   useEffect(() => {

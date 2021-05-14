@@ -70,11 +70,11 @@ const Modules = (props: ModulesProps) => {
       }
 
       if (
-        state.componentState.poll &&
-        state.componentState.poll.additional &&
-        state.componentState.poll.additional.length > 0
+        state.componentState?.poll &&
+        state.componentState?.poll.additional &&
+        state.componentState?.poll.additional.length > 0
       ) {
-        state.componentState.poll.additional.map((item: { name: string; input: string }) => {
+        state.componentState?.poll.additional.map((item: { name: string; input: string }) => {
           setFormInputs((prev) => {
             return {
               ...prev,

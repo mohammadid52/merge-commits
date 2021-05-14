@@ -35,8 +35,8 @@ const Body = () => {
   const { state, dispatch } = useContext(LessonContext);
   const [color, setColor] = useState('');
   const [selected, setSelected] = useState<Array<SelectObject>>(
-    state.componentState.lyrics && state.componentState.lyrics.selected
-      ? state.componentState.lyrics.selected
+    state.componentState?.lyrics && state.componentState?.lyrics.selected
+      ? state.componentState?.lyrics.selected
       : []
   );
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
@@ -94,7 +94,7 @@ const Body = () => {
       setSelectGroup(parseInt(cookies[`lesson-${state.syllabusLessonID}`].lyrics.selectGroup));
     }
 
-    if (!cookies[`lesson-${state.syllabusLessonID}`].lyrics && !state.componentState.lyrics) {
+    if (!cookies[`lesson-${state.syllabusLessonID}`].lyrics && !state.componentState?.lyrics) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
@@ -119,7 +119,7 @@ const Body = () => {
   }, []);
 
   useEffect(() => {
-    if (state.componentState.lyrics) {
+    if (state.componentState?.lyrics) {
       dispatch({
         type: 'UPDATE_COMPONENT_STATE',
         payload: {

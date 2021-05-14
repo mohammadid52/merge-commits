@@ -22,7 +22,7 @@ interface teacherData {
 
 const CoopDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const displayProps = state.componentState.poem;
+  const displayProps = state.componentState?.poem;
   const [fullscreen, setFullscreen] = useState(false);
   const student = state.displayData.studentInfo;
 

@@ -126,8 +126,7 @@ const ProgressBar = (props: {barType: string}) => {
             open={page.open}
             disabled={page.disabled}
             counter={checkIfMultipleStages(page.type) ? getSpecificStage(page.type, key).multipleCounter : null}
-            // clickable={key < clickable}
-            clickable={true}
+            clickable={state.pages.length > 0 && state.pages[key].open}
           />
 
           {/* PROGRESS BAR */}
