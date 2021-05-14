@@ -237,7 +237,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     id: number | string,
     value: string | string[],
     checkpointID: string,
-    otherValue?: string
   ) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
@@ -248,8 +247,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             return {
               qid: id,
               response: valueArray,
-              // Add this value to query
-              // otherValue: value === 'other' ? otherValue : null,
             };
           } else {
             return obj;
