@@ -7,7 +7,7 @@ import Banner from '../../Banner';
 
 const SelfDisplay = () => {
   const { state, theme, dispatch } = useContext(LessonContext);
-  const displayProps = state.componentState.story;
+  const displayProps = state.componentState?.story;
   const showTitle = state.data.lesson?.warmUp?.inputs?.title;
 
   useEffect(() => {
@@ -19,11 +19,11 @@ const SelfDisplay = () => {
       <ReflectionQuestions questions={state.data.lesson.warmUp.breakdown.reflectionQuestions}  />
       {
         showTitle && (
-          <Banner title={displayProps.title && displayProps.title !== '' ? displayProps.title : 'Warm Up Breakdown'} iconName={`FaScroll`} />
+          <Banner title={displayProps && displayProps.title && displayProps.title !== '' ? displayProps.title : 'Warm Up Breakdown'} iconName={`FaScroll`} />
         )
       }
-      <StoryOutput story={displayProps.story} />
-      <Modules additional={displayProps.additional} displayMode='SELF' />
+      <StoryOutput story={displayProps && displayProps.story} />
+      <Modules additional={displayProps && displayProps.additional} displayMode='SELF' />
     </div>
   );
 };

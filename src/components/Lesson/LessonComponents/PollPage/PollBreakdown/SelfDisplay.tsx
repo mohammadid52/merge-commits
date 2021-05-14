@@ -20,10 +20,7 @@ const SelfDisplay = (props: PollBreakdownProps) => {
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
-  const displayProps = !isTeacher ? state.componentState.poll : null;
-  // const inputs = state.data.lesson.warmUp.inputs;
-
-  // const [fullscreen, setFullscreen] = useState(false);
+  const displayProps = !isTeacher ? state.componentState?.poll : null;
 
   useEffect(() => {
     dispatch({ type: 'ACTIVATE_LESSON', payload: 'warmup/breakdown' });

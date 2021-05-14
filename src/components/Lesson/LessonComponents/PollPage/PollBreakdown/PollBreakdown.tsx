@@ -23,7 +23,7 @@ const PollBreakdown = (props: PollBreakdownProps) => {
   const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
   const { state, theme, dispatch } = switchContext;
 
-  // const displayProps = state.componentState.warmUp.poll;
+  // const displayProps = state.componentState?.warmUp.poll;
   const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
   useEffect(() => {

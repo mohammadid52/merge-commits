@@ -30,7 +30,7 @@ const EditBlock = (props: EditBlockProps) => {
     }, [])
 
     useEffect(() => {
-        if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
+        if ( state.componentState?.poem && state.componentState?.poem.editMode === true ) {
             dispatch({
                 type: 'UPDATE_COMPONENT_STATE',
                 payload: {
@@ -51,7 +51,7 @@ const EditBlock = (props: EditBlockProps) => {
     }, [editInput.text])
 
     useEffect(() => {
-        if ( state.componentState.poem && state.componentState.poem.editMode === true ) {
+        if ( state.componentState?.poem && state.componentState?.poem.editMode === true ) {
             dispatch({
                 type: 'UPDATE_COMPONENT_STATE',
                 payload: {
