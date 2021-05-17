@@ -17,9 +17,10 @@ const EditOverlayControls = (props: RowWrapperProps) => {
   return (
     <div
       className={`
-          absolute h-full w-full 
-          bg-white z-50
+          absolute h-auto w-full 
+          bg-transparent z-50
           rounded-lg
+          pointer-events-none
           `}>
       <div
         className={`

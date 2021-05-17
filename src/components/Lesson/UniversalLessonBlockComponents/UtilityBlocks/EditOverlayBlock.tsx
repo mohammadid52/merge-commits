@@ -8,7 +8,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
   return (
     <>
       {mode === 'building' && contentID === hoveredID ? (
-        <div className={`relative bg-red-400 bg-opacity-20 pointer-events-none`}>
+        <div className={`relative pointer-events-none`}>
           <EditOverlayControls mode={mode}/>
           {children}
         </div>
