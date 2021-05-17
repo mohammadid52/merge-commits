@@ -250,7 +250,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     active:
                       room.id === state.activeRoom && state.currentPage === 'classroom',
                     path: room.id,
-                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i),
+                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i, 'classroom'),
                   };
                 }),
             },
