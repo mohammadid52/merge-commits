@@ -13,6 +13,7 @@ import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
 import * as customMutations from '../../customGraphql/customMutations';
 import NotesForm from './LessonComponents/Notes/NotesForm';
 import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
+import ErrorBoundary from '../Error/ErrorBoundary';
 
 const LessonApp = () => {
   const {state, theme, dispatch} = useContext(LessonContext);
@@ -397,7 +398,10 @@ const LessonApp = () => {
           <NotesForm overlay={overlay} setOverlay={setOverlay} />
         </div>
 
-        {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
+        <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
+          {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
+        </ErrorBoundary>
+
         {lessonDataLoaded && <Foot />}
       </div>
     </>

@@ -18,9 +18,9 @@ const ListForm = (props: ListFormProps) => {
   const { state, theme, dispatch } = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [input, setInput] = useState({
-    title: state.componentState.story && state.componentState.story.title ? state.componentState.story.title : '',
+    title: state.componentState?.story && state.componentState?.story.title ? state.componentState?.story.title : '',
     story:
-      state.componentState.story && state.componentState.story.story ? state.componentState.story.story : listArray,
+      state.componentState?.story && state.componentState?.story.story ? state.componentState?.story.story : listArray,
   });
 
 

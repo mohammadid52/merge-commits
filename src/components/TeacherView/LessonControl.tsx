@@ -1,20 +1,21 @@
-import React, { Suspense, useContext, useEffect, useState } from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { LessonControlContext } from '../../contexts/LessonControlContext';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
+import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {LessonControlContext} from '../../contexts/LessonControlContext';
 import * as customMutations from '../../customGraphql/customMutations';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import PositiveAlert from '../General/Popup';
-import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
+import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import Body from './Body';
 import TopMenu from './TopMenu';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
-import { awsFormatDate, dateString } from '../../utilities/time';
+import {awsFormatDate, dateString} from '../../utilities/time';
+import ErrorBoundary from '../Error/ErrorBoundary';
 
 const LessonControl = () => {
-  const { state, theme, dispatch, checkpointsItems } = useContext(LessonControlContext);
+  const {state, theme, dispatch, checkpointsItems} = useContext(LessonControlContext);
   const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
@@ -48,7 +49,7 @@ const LessonControl = () => {
       pageID: pageID,
       stage: lessonPlanStage,
     });
-    dispatch({ type: 'SET_CURRENT_PAGE', payload: pageID });
+    dispatch({type: 'SET_CURRENT_PAGE', payload: pageID});
   };
 
   const handleFullscreen = () => {
@@ -81,15 +82,22 @@ const LessonControl = () => {
 
   useEffect(() => {
     if (state.studentViewing.live) {
-      const hasCurrentLocation = typeof state.studentViewing.studentInfo.currentLocation === 'string';
+      const hasCurrentLocation =
+        typeof state.studentViewing.studentInfo.currentLocation === 'string';
       const currentLocationDefined =
-        typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !== 'undefined';
+        typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !==
+        'undefined';
       const lessonProgressDefined =
-        typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !== 'undefined';
+        typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !==
+        'undefined';
 
       if (hasCurrentLocation) {
         if (currentLocationDefined) {
-          history.push(`${match.url}/${state.pages[state.studentViewing.studentInfo.currentLocation]?.stage}`);
+          history.push(
+            `${match.url}/${
+              state.pages[state.studentViewing.studentInfo.currentLocation]?.stage
+            }`
+          );
         }
       } else if (!hasCurrentLocation) {
         if (lessonProgressDefined) {
@@ -115,16 +123,21 @@ const LessonControl = () => {
       state.studentViewing.studentInfo &&
       state.studentViewing.studentInfo.student
     ) {
-      if (state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id) {
+      if (
+        state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id
+      ) {
         setIsSameStudentShared(true);
       }
 
-      if (state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id) {
+      if (
+        state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id
+      ) {
         setIsSameStudentShared(false);
       }
 
       if (
-        state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id &&
+        state.displayData.studentInfo.id ===
+          state.studentViewing.studentInfo.student.id &&
         !state.studentViewing.live
       ) {
         setIsSameStudentShared(false);
@@ -157,7 +170,7 @@ const LessonControl = () => {
           input: updatedSyllabusLessonData,
         })
       );
-      dispatch({ type: 'SAVED_CHANGES' });
+      dispatch({type: 'SAVED_CHANGES'});
     } catch (err) {
       console.error('handleUpdateSyllabusLesson - ', err);
     }
@@ -177,7 +190,9 @@ const LessonControl = () => {
             : null,
           lastName: state.studentViewing.studentInfo.student.lastName,
         },
-        warmUpData: state.studentViewing.studentInfo.warmupData ? state.studentViewing.studentInfo.warmupData : null,
+        warmUpData: state.studentViewing.studentInfo.warmupData
+          ? state.studentViewing.studentInfo.warmupData
+          : null,
         corelessonData: state.studentViewing.studentInfo.corelessonData
           ? state.studentViewing.studentInfo.corelessonData
           : null,
@@ -192,7 +207,7 @@ const LessonControl = () => {
           ? state.studentViewing.studentInfo.currentLocation
           : state.studentViewing.studentInfo.lessonProgress,
       });
-      dispatch({ type: 'SET_DISPLAY_DATA', payload: displayData });
+      dispatch({type: 'SET_DISPLAY_DATA', payload: displayData});
     }
   };
 
@@ -201,12 +216,12 @@ const LessonControl = () => {
    * and then triggers the save mutation
    */
   const handleQuitShare = () => {
-    dispatch({ type: 'QUIT_SHARE_MODE' });
+    dispatch({type: 'QUIT_SHARE_MODE'});
     setIsSameStudentShared(false);
   };
 
   const handleQuitViewing = () => {
-    dispatch({ type: 'QUIT_STUDENT_VIEWING' });
+    dispatch({type: 'QUIT_STUDENT_VIEWING'});
     setIsSameStudentShared(false);
   };
 
@@ -228,7 +243,7 @@ const LessonControl = () => {
           input: completedSyllabusLessonData,
         })
       );
-      dispatch({ type: 'SAVED_CHANGES' });
+      dispatch({type: 'SAVED_CHANGES'});
     } catch (err) {
       console.error(err);
     }
@@ -256,13 +271,13 @@ const LessonControl = () => {
 
   const handleOpen = async () => {
     await handleOpenSyllabusLesson();
-    dispatch({ type: 'START_CLASSROOM', payload: '1989-11-02z' });
+    dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
     setOpen(true);
   };
 
   const handleComplete = async () => {
     await handleCompleteClassroom();
-    dispatch({ type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US') });
+    dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
     setOpen(true);
     handleHome();
   };
@@ -275,7 +290,7 @@ const LessonControl = () => {
     history.push('/dashboard/lesson-planner');
   };
 
-  const { visible, setVisible, ref } = useOutsideAlerter(false);
+  const {visible, setVisible, ref} = useOutsideAlerter(false);
 
   /*
    *
@@ -318,10 +333,14 @@ const LessonControl = () => {
 
         {/* QUICK REGISTER */}
 
-        {quickRegister && <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />}
+        {quickRegister && (
+          <QuickRegister active={quickRegister} setQuickRegister={setQuickRegister} />
+        )}
 
         {/* USER MANAGEMENT */}
-        <div className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleClick}>
+        <div
+          className={`${visible ? 'absolute z-100 h-full' : 'hidden'}`}
+          onClick={handleClick}>
           <PositiveAlert
             identifier={''}
             alert={visible}
@@ -337,7 +356,9 @@ const LessonControl = () => {
           />
         </div>
         {/* HANDLE GO  HOME */}
-        <div className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleHomePopup}>
+        <div
+          className={`${homePopup ? 'absolute z-100 h-full' : 'hidden'}`}
+          onClick={handleHomePopup}>
           <PositiveAlert
             identifier={''}
             alert={homePopup}
@@ -352,7 +373,9 @@ const LessonControl = () => {
             fill="screen"
           />
         </div>
-        <div className={`${lessonButton ? 'absolute z-100 h-full' : 'hidden'}`} onClick={handleLessonButton}>
+        <div
+          className={`${lessonButton ? 'absolute z-100 h-full' : 'hidden'}`}
+          onClick={handleLessonButton}>
           <PositiveAlert
             identifier={''}
             alert={lessonButton}
@@ -392,19 +415,21 @@ const LessonControl = () => {
         <div className={`w-full h-8.5/10 flex rounded-lg`}>
           {/* LEFT SECTION */}
           <div
-            className={`${fullscreen ? 'hidden' : ''} w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
+            className={`${
+              fullscreen ? 'hidden' : ''
+            } w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
-              {/* <ClassRosterTitleBar handleResetDoneCounter={handleResetDoneCounter} /> */}
-
               <div className={`h-full`}>
-                <ClassRoster
-                  handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
-                  handleShareStudentData={handleShareStudentData}
-                  isSameStudentShared={isSameStudentShared}
-                  handleQuitShare={handleQuitShare}
-                  handleQuitViewing={handleQuitViewing}
-                  handlePageChange={handlePageChange}
-                />
+                <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
+                  <ClassRoster
+                    handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
+                    handleShareStudentData={handleShareStudentData}
+                    isSameStudentShared={isSameStudentShared}
+                    handleQuitShare={handleQuitShare}
+                    handleQuitViewing={handleQuitViewing}
+                    handlePageChange={handlePageChange}
+                  />
+                </ErrorBoundary>
               </div>
             </div>
           </div>
@@ -445,7 +470,8 @@ const LessonControl = () => {
                             overflow-hidden bg-black bg-opacity-40 z-100`}>
                   <div
                     className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
-                    <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
+                    <div
+                      className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
                       {instructions.content}
                     </div>
                   </div>
@@ -472,11 +498,13 @@ const LessonControl = () => {
                    *
                    */}
                   {checkpointsItems && (
-                    <Body
-                      fullscreenInstructions={fullscreenInstructions}
-                      setInstructions={setInstructions}
-                      checkpointsItems={checkpointsItems}
-                    />
+                    <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                      <Body
+                        fullscreenInstructions={fullscreenInstructions}
+                        setInstructions={setInstructions}
+                        checkpointsItems={checkpointsItems}
+                      />
+                    </ErrorBoundary>
                   )}
                 </Suspense>
               </div>

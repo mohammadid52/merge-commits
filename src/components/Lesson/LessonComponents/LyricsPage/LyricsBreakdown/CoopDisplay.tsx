@@ -32,7 +32,7 @@ interface teacherData {
 const CoopDisplay = () => {
   const { dispatch, theme, state } = useContext(LessonContext);
   const [modules, setModules] = useState<Array<any>>();
-  const displayProps = state.componentState.lyrics.selected;
+  const displayProps = state.componentState?.lyrics?.selected;
   const moduleTypes = state.data.lesson.coreLesson.tools;
   const [fullscreen, setFullscreen] = useState(false);
   const student = state.displayData.studentInfo;

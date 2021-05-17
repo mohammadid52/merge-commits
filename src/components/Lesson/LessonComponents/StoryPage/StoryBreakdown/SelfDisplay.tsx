@@ -7,7 +7,7 @@ import Banner from '../../Banner';
 
 const SelfDisplay = () => {
   const {state, theme, dispatch} = useContext(LessonContext);
-  const displayProps = state.componentState.story;
+  const displayProps = state.componentState?.story;
   const showTitle = state.data.lesson?.warmUp?.inputs?.title;
 
   useEffect(() => {
