@@ -3,6 +3,7 @@ import {LessonContext} from '../../../../contexts/LessonContext';
 import {QuestionProps} from '../Question';
 import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 import find from 'lodash/find';
+import {get} from 'lodash';
 
 interface TextInputState {
   id: string;
@@ -29,13 +30,16 @@ const InputQuestions = (props: QuestionProps) => {
   const {state, theme, dispatch} = switchContext;
 
   const questionId = question.question.id;
-  const textInitAns =
-    find(
-      state.questionData[checkpointID],
-      (q) => q.qid === questionId
-    ).response.toString() || '';
 
-  const [contents, setContents] = useState<TextInputState>({id: '', value: textInitAns});
+  const checkpoint = get(state, `questionData[${checkpointID}]`, null);
+
+  const textInitAns =
+    checkpoint && find(checkpoint, (q) => q.qid === questionId).response.toString();
+
+  const [contents, setContents] = useState<TextInputState>({
+    id: '',
+    value: textInitAns || '',
+  });
 
   // TODO: change this code for doFirst / Assessment / Checkpoint
   const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
