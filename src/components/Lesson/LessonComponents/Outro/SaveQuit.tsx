@@ -150,7 +150,7 @@ const SaveQuit = (props: SaveQuitProps) => {
       ) : null}
 
       <div className="w-full items-center justify-center flex my-24">
-        {!visible && (
+        {!visible && state.data.lesson.type !== 'lesson' && (
           <div
             onClick={onBack}
             className="px-2 py-1 border-0 pageChange__btn mr-4 border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center ">
