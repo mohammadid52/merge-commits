@@ -16,12 +16,17 @@ import QuestionGroupInfo from './QuestionGroupInfo';
 import {checkIfFirstNewInSequence} from '../../../utilities/strings';
 import LessonElementCard from '../../Atoms/LessonElementCard';
 import {CheckpointInterface} from './Checkpoint';
+import findIndex from 'lodash/findIndex';
+import {BsArrowRight, BsArrowLeft} from 'react-icons/bs';
+import Tooltip from '../../Atoms/Tooltip';
+import last from 'lodash/last';
 
 interface CheckpointQuestionsProps {
   isTeacher?: boolean;
   handleSetTitle?: React.Dispatch<React.SetStateAction<string>>;
   checkpointType?: string;
   checkpointsItems?: any[];
+  fromClosing?: boolean;
 }
 
 export interface ResponseState {
@@ -31,6 +36,7 @@ export interface ResponseState {
 interface ResponseObject {
   qid: string;
   response: string[];
+  other?: string;
 }
 
 export interface QuestionInterface {
@@ -54,11 +60,22 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   /**
    * Teacher switch
    */
-  const {isTeacher, handleSetTitle, checkpointType} = props;
+  const {
+    isTeacher,
+    handleSetTitle,
+    checkpointType,
+    checkpointsItems,
+    fromClosing,
+  } = props;
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch} = switchContext;
+  const {state, theme, dispatch, pageList, currentPage, setCurrentPage} = switchContext;
+
+  const checkpointId = checkpointsItems.map((item: any, idx: number) => ({
+    id: idx,
+    name: item.title,
+  }));
 
   /**
    * State
@@ -111,6 +128,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
    * 2. SWITCH source of question depending on
    * type of checkpoint - this changes.
    */
+
   const questionSource = (): any[] => {
     switch (checkpointType) {
       case 'assessment':
@@ -187,6 +205,18 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     return collectQuestionGroups(questionSource());
   };
 
+  const [currentCheckpoint, setCurrentCheckpoint] = useState(checkpointId[0]);
+
+  const currentCheckpointIdx = findIndex(
+    questionSource(),
+    (item: any) => item.title === currentCheckpoint.name
+  );
+
+  const [allQuestionData, setAllQuestionData] = useState([]);
+  // useEffect(() => {
+  //   const data = allQuestionGroups()[currentCheckpointIdx];
+  //   setAllQuestionData(data);
+  // }, [currentCheckpointIdx]);
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]): number[] => {
     const [head, ...tail] = inArr;
     if (typeof head === 'undefined') {
@@ -240,7 +270,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
       if (checkpointIDgroup === checkpointID) {
-        //@ts-ignore
+        // @ts-ignore
         const mappedInput = input[checkpointIDgroup].map((obj: ResponseObject) => {
           if (obj.qid === id) {
             return {
@@ -269,59 +299,115 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     });
   };
 
+  useEffect(() => {
+    if (fromClosing && checkpointId.length > 0) {
+      setCurrentCheckpoint(last(checkpointId));
+    }
+  }, [fromClosing]);
+
+  const onBack = () => {
+    if (currentCheckpointIdx > 0) {
+      setCurrentCheckpoint(checkpointId[currentCheckpointIdx - 1]);
+    } else {
+      setCurrentPage(pageList[currentPageIdx - 1]);
+    }
+  };
+  const onNext = () => {
+    if (currentCheckpointIdx !== checkpointId.length - 1) {
+      setCurrentCheckpoint(checkpointId[currentCheckpointIdx + 1]);
+    } else {
+      setCurrentPage(pageList[currentPageIdx + 1]);
+    }
+  };
+
+  const currentPageIdx = findIndex(pageList, (item: any) => item.id === currentPage.id);
+
+  const tooltipTextForBackBtn =
+    currentCheckpointIdx === 0
+      ? `${pageList[currentPageIdx - 1].name} section`
+      : 'Previous Checkpoint';
+
+  const tooltipTextForNextBtn =
+    currentCheckpointIdx === questionSource().length - 1
+      ? `${pageList[currentPageIdx + 1].name} section`
+      : 'Next Checkpoint';
+
   if (status !== 'loaded') return null;
+
+  const allQuestionGroupsData = allQuestionGroups()[currentCheckpointIdx] || [];
 
   return (
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
         <div className="w-full h-full my-4 flex flex-col flex-wrap justify-around items-center">
           {questionSource()
-            ? questionSource().length > 0 &&
-              allQuestionGroups().map((questionGroup: any, idx0: number) => {
-                const part1 = (
+            ? questionSource().length > 0 && (
+                <div className="">
                   <QuestionGroupInfo
-                    key={`qgroup_${idx0}`}
+                    key={`qgroup_${currentCheckpointIdx}`}
                     isTeacher={isTeacher}
-                    checkpointID={questionGroup[0].checkpointID}
-                    checkpoint={questionSource() ? questionSource()[idx0] : null}
+                    checkpointID={allQuestionGroups()[0].checkpointID}
+                    checkpoint={
+                      questionSource() ? questionSource()[currentCheckpointIdx] : null
+                    }
                   />
-                );
-                const part2 = questionGroup.map(
-                  (question: QuestionInterface, idx: number) => {
-                    const realIndex = indexInc[idx0] + idx;
-                    return (
-                      <React.Fragment key={`questionFragment_${realIndex}`}>
-                        <div
-                          key={`questionParent_${realIndex}`}
-                          id={`questionParent_${realIndex}`}
-                          className={`mb-8`}>
-                          <Question
-                            checkpointID={
-                              question.checkpointID
-                                ? question.checkpointID
-                                : 'undefined-checkpointID'
-                            }
-                            visible={true}
-                            isTeacher={isTeacher}
-                            question={question}
-                            questionIndex={realIndex}
-                            questionKey={`question_${realIndex}`}
-                            value={input}
-                            handleInputChange={handleInputChange}
-                          />
-                        </div>
-                      </React.Fragment>
-                    );
-                  }
-                );
-                const part3 = (
-                  <LessonElementCard key={`questiongroup_${idx0}`}>
-                    {part2}
+                  <LessonElementCard key={`questiongroup_${currentCheckpointIdx}`}>
+                    {allQuestionGroupsData.map(
+                      (question: QuestionInterface, idx: number) => {
+                        const realIndex = indexInc[currentCheckpointIdx] + idx;
+                        return (
+                          <React.Fragment key={`questionFragment_${realIndex}`}>
+                            <div
+                              key={`questionParent_${realIndex}`}
+                              id={`questionParent_${realIndex}`}
+                              className={`mb-8`}>
+                              <Question
+                                checkpointID={
+                                  question.checkpointID
+                                    ? question.checkpointID
+                                    : 'undefined-checkpointID'
+                                }
+                                visible={true}
+                                isTeacher={isTeacher}
+                                question={question}
+                                questionIndex={realIndex}
+                                questionKey={`question_${realIndex}`}
+                                value={input}
+                                handleInputChange={handleInputChange}
+                              />
+                            </div>
+                          </React.Fragment>
+                        );
+                      }
+                    )}
                   </LessonElementCard>
-                );
-                return [part1, part3];
-              })
+                </div>
+              )
             : null}
+          {currentPage.name === 'checkpoints' && (
+            <div className="flex mt-4 items-center justify-between text-white">
+              <div
+                onClick={onBack}
+                className="pageChange__btn px-2 py-1 border-0 border-sea-green rounded hover:bg-sea-green transition-all cursor-pointer flex items-center">
+                <Tooltip text={tooltipTextForBackBtn} placement="bottom">
+                  <div className="flex items-center back-content">
+                    <BsArrowLeft color="#fff" />
+                    <p className="ml-2">Back</p>
+                  </div>
+                </Tooltip>
+              </div>
+              <div
+                onClick={onNext}
+                className="pageChange__btn px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green transition-all cursor-pointer flex items-center">
+                <Tooltip text={tooltipTextForNextBtn} placement="bottom">
+                  <div className="flex items-center next-content">
+                    <p className="mr-2">Next</p>
+                    <BsArrowRight color="#fff" />
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

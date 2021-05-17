@@ -9,7 +9,7 @@ import CoopDisplay from './CoopDisplay';
 
 const MultiListBreakdown = () => {
     const { state, dispatch } = useContext(LessonContext);
-    const displayProps = state.componentState.story;
+    const displayProps = state.componentState?.story;
     const [displayMode, setDisplayMode] = useState(state.data.lessonPlan[state.currentPage].displayMode);
 
 

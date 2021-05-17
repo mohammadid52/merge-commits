@@ -60,11 +60,11 @@ const SideMenu = (props: LessonHeaderBarProps) => {
   });
 
   useEffect((): any => {
-    if(state){
+    if (state) {
       changeParams('state', state);
     }
 
-    return () => resetParams()
+    return () => resetParams();
   }, [
     state.studentStatus,
     state.currentPage,

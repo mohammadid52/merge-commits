@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
-import { LessonContext } from '../../../contexts/LessonContext';
-import { QuestionInterface, ResponseState } from './CheckpointQuestions';
+import React, {useContext, useEffect} from 'react';
+import {LessonControlContext} from '../../../contexts/LessonControlContext';
+import {LessonContext} from '../../../contexts/LessonContext';
+import {QuestionInterface, ResponseState} from './CheckpointQuestions';
 
 /**
  * MAIN QUESTION COMPONENT IMPORTS
@@ -18,11 +18,11 @@ export interface QuestionProps {
   question?: QuestionInterface;
   questionIndex?: number;
   questionKey: any;
+  animate?: boolean;
   handleInputChange?: (
     id: number | string,
     value: string | string[],
     checkpointID: string,
-    otherValue?: string
   ) => void;
   value?: ResponseState;
 }
@@ -31,9 +31,21 @@ const Question = (props: QuestionProps) => {
   /**
    * Teacher switch
    */
-  const { checkpointID, visible, isTeacher, question, questionIndex, questionKey, handleInputChange, value } = props;
-  const switchContext = isTeacher ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme, dispatch } = switchContext;
+  const {
+    checkpointID,
+    visible,
+    isTeacher,
+    question,
+    questionIndex,
+    animate,
+    questionKey,
+    handleInputChange,
+    value,
+  } = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme, dispatch} = switchContext;
 
   /**
    * Function for returning different question-types e.g. selectOne, selectMany, etc.
@@ -99,7 +111,13 @@ const Question = (props: QuestionProps) => {
     }
   };
 
-  return <>{question && question.question.type ? questionSwitch(questionIndex, questionKey) : null}</>;
+  return (
+    <div className={animate && 'fade__animation2'}>
+      {question && question.question.type
+        ? questionSwitch(questionIndex, questionKey)
+        : null}
+    </div>
+  );
 };
 
 export default Question;

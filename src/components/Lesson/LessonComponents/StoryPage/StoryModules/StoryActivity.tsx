@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+import React, {useContext, useEffect} from 'react';
+import {LessonContext} from '../../../../../contexts/LessonContext';
+import {useCookies} from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
 import StoryForm from './StoryForm';
 import Modules from './Modules';
@@ -16,12 +16,15 @@ export interface StoryState {
 }
 
 const Story = () => {
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {state, theme, dispatch} = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const inputs = state.data.lesson.warmUp.inputs;
 
   useEffect(() => {
-    if (!cookies[`lesson-${state.syllabusLessonID}`].story && !state.componentState.story) {
+    if (
+      !cookies[`lesson-${state.syllabusLessonID}`]?.story &&
+      !state.componentState?.story
+    ) {
       let tempObj: StoryState = {
         story: [''],
       };
@@ -30,8 +33,8 @@ const Story = () => {
       }
 
       if (inputs.additionalInputs.length > 0) {
-        let additional: Array<{ name: string; text: string | [] }> = [];
-        inputs.additionalInputs.forEach((input: { name: string }) => {
+        let additional: Array<{name: string; text: string | []}> = [];
+        inputs.additionalInputs.forEach((input: {name: string}) => {
           let newInput = {
             name: input.name,
             text: '',
@@ -51,15 +54,18 @@ const Story = () => {
         },
       });
 
-      setCookie(`lesson-${state.syllabusLessonID}`, { ...cookies[`lesson-${state.syllabusLessonID}`], story: tempObj });
+      setCookie(`lesson-${state.syllabusLessonID}`, {
+        ...cookies[`lesson-${state.syllabusLessonID}`],
+        story: tempObj,
+      });
     }
 
-    if (cookies[`lesson-${state.syllabusLessonID}`].story) {
+    if (cookies[`lesson-${state.syllabusLessonID}`]?.story) {
       dispatch({
         type: 'SET_INITIAL_COMPONENT_STATE',
         payload: {
           name: 'story',
-          content: cookies[`lesson-${state.syllabusLessonID}`].story,
+          content: cookies[`lesson-${state.syllabusLessonID}`]?.story,
         },
       });
     }
@@ -70,8 +76,7 @@ const Story = () => {
   return (
     <>
       <div className={theme.section}>
-
-        <Banner title={title} iconName={`FaScroll`}/>
+        <Banner title={title} iconName={`FaScroll`} />
 
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock />
@@ -79,7 +84,9 @@ const Story = () => {
           <StoryForm />
 
           {/* FOCUS QUESTIONS */}
-          {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
+          {inputs.additionalInputs.length > 0 ? (
+            <Modules inputs={inputs.additionalInputs} />
+          ) : null}
         </div>
       </div>
     </>

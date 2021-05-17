@@ -1,21 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../contexts/LessonContext';
+import React, {useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../contexts/LessonContext';
 import Body from './Body/Body';
 // import Foot from './Foot/_Foot';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import Foot from './Foot/Foot';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
-import { useParams } from 'react-router-dom';
-import { Auth } from '@aws-amplify/auth';
+import {useParams} from 'react-router-dom';
+import {Auth} from '@aws-amplify/auth';
 import * as queries from '../../graphql/queries';
-import { createFilterToFetchSpecificItemsOnly } from '../../utilities/strings';
+import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
 import * as customMutations from '../../customGraphql/customMutations';
 import NotesForm from './LessonComponents/Notes/NotesForm';
 import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
+import ErrorBoundary from '../Error/ErrorBoundary';
 
 const LessonApp = () => {
-  const { state, theme, dispatch }  = useContext(LessonContext);
+  const {state, theme, dispatch} = useContext(LessonContext);
   const urlParams: any = useParams();
 
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
@@ -26,7 +27,9 @@ const LessonApp = () => {
   const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
   const [checkpointsItems, setCheckpointsItems] = useState<any[]>([]);
   const [checkpointsSequence, setCheckpointsSequence] = useState<string[]>(['']);
-  const [checkpointsQuestionsSequence, setCheckpointsQuestionsSequence] = useState<{ [key: string]: string[] }[]>([]);
+  const [checkpointsQuestionsSequence, setCheckpointsQuestionsSequence] = useState<
+    {[key: string]: string[]}[]
+  >([]);
   const [reordered, setReordered] = useState<boolean>(false);
 
   /**
@@ -47,7 +50,7 @@ const LessonApp = () => {
    */
 
   useEffect(() => {
-    if (Object.keys(state.data).length > 0 && state.data.lesson && state.pages) {
+    if (Object.keys(state.data)?.length > 0 && state.data.lesson && state.pages) {
       setLessonDataLoaded(true);
     }
   }, [state.data]);
@@ -59,29 +62,36 @@ const LessonApp = () => {
    */
 
   const getAllCheckpointQuestionsSequence = async (cpIdList: string[]) => {
-    const questionSequences = Promise.all(
-      cpIdList.map(async (cpId: string) => {
-        const questionSequences: any = await API.graphql(
-          graphqlOperation(queries.getCSequences, { id: `Ch_Ques_${cpId}` })
-        );
-        return { [`${cpId}`]: questionSequences.data.getCSequences.sequence };
-      })
-    );
-    return questionSequences;
+    if (cpIdList && cpIdList.length > 0) {
+      const questionSequences = Promise.all(
+        cpIdList.map(async (cpId: string) => {
+          const questionSequences: any = await API.graphql(
+            graphqlOperation(queries.getCSequences, {id: `Ch_Ques_${cpId}`})
+          );
+          return {[`${cpId}`]: questionSequences.data.getCSequences?.sequence};
+        })
+      );
+      return questionSequences;
+    }
   };
 
   const getAllCheckpointSequence = () => {
-    return state.data.lesson.lessonPlan.map((lessonPlanObj: any) => {
-      return { [`${lessonPlanObj.LessonComponentID}`]: lessonPlanObj.sequence };
-    });
+    const lessonPlan = state.data.lesson.lessonPlan;
+    return (
+      lessonPlan &&
+      lessonPlan.length > 0 &&
+      lessonPlan.map((lessonPlanObj: any) => {
+        return {[`${lessonPlanObj.LessonComponentID}`]: lessonPlanObj?.sequence};
+      })
+    );
   };
 
   const getAllCheckpoints = async (cpIdList: string[]) => {
-    if (cpIdList.length > 0) {
+    if (cpIdList && cpIdList.length > 0) {
       try {
         const checkpoints: any = await API.graphql(
           graphqlOperation(customQueries.listCheckpoints, {
-            filter: { ...createFilterToFetchSpecificItemsOnly(cpIdList, 'id') },
+            filter: {...createFilterToFetchSpecificItemsOnly(cpIdList, 'id')},
           })
         );
 
@@ -107,7 +117,10 @@ const LessonApp = () => {
     return ordered;
   };
 
-  const reorderCheckpointQuestions = (checkpointQuestions: any[], orderArray: string[]) => {
+  const reorderCheckpointQuestions = (
+    checkpointQuestions: any[],
+    orderArray: string[]
+  ) => {
     const ordered = orderArray.map((qStr: string) => {
       const findQ = checkpointQuestions.find((qObj: any) => qObj.question.id === qStr);
       return findQ;
@@ -123,7 +136,7 @@ const LessonApp = () => {
     const reorderProcess = async () => {
       if (checkpointsLoaded && checkpointsItems) {
         if (state.data.lesson.type !== 'lesson') {
-          if (checkpointsSequence.length === checkpointsItems.length) {
+          if (checkpointsSequence?.length === checkpointsItems?.length) {
             const ordered = reorderCheckpoints(checkpointsItems, checkpointsSequence);
             setCheckpointsToLessonData(ordered);
           }
@@ -132,24 +145,27 @@ const LessonApp = () => {
     };
 
     const reorderProcess2 = async () => {
-      if (checkpointsLoaded && checkpointsQuestionsSequence.length > 0) {
+      if (checkpointsLoaded && checkpointsQuestionsSequence?.length > 0) {
         const mapCheckpointQuestions = checkpointsItems.map((checkpoint: any) => {
           const questions = checkpoint.questions.items;
-          const questionsOrder = checkpointsQuestionsSequence.reduce((acc: any[], seqObj: any) => {
-            const key = Object.keys(seqObj);
-            const val: string[] = Object.values(seqObj);
-            if (key[0] === checkpoint.id) {
-              //@ts-ignore
-              return [...acc, ...val[0]];
-            } else {
-              return acc;
-            }
-          }, []);
+          const questionsOrder = checkpointsQuestionsSequence.reduce(
+            (acc: any[], seqObj: any) => {
+              const key = Object.keys(seqObj);
+              const val: string[] = Object.values(seqObj);
+              if (key[0] === checkpoint.id) {
+                //@ts-ignore
+                return [...acc, ...val[0]];
+              } else {
+                return acc;
+              }
+            },
+            []
+          );
 
           if (questionsOrder) {
             // @ts-ignore
             const ordered = reorderCheckpointQuestions(questions, questionsOrder);
-            return { ...checkpoint, questions: { ...checkpoint.questions, items: ordered } };
+            return {...checkpoint, questions: {...checkpoint.questions, items: ordered}};
           } else {
             return checkpoint;
           }
@@ -166,7 +182,7 @@ const LessonApp = () => {
       await reorderProcess2();
     };
 
-    if (checkpointsLoaded && checkpointsQuestionsSequence.length > 0) {
+    if (checkpointsLoaded && checkpointsQuestionsSequence?.length > 0) {
       process();
       setReordered(true);
     }
@@ -179,13 +195,19 @@ const LessonApp = () => {
    *
    */
   useEffect(() => {
-    if (checkpointsItems.length > 0) {
-      const initCheckpointsObj = checkpointsItems.reduce((acc: any, checkpointObj: any) => {
-        const initQuestionObj = checkpointObj.questions.items.reduce((acc: any[], questionObj: any) => {
-          return [...acc, { qid: questionObj.question.id, response: [] }];
-        }, []);
-        return { ...acc, [checkpointObj?.id]: initQuestionObj };
-      }, {});
+    if (checkpointsItems?.length > 0) {
+      const initCheckpointsObj = checkpointsItems?.reduce(
+        (acc: any, checkpointObj: any) => {
+          const initQuestionObj = checkpointObj?.questions?.items?.reduce(
+            (acc: any[], questionObj: any) => {
+              return [...acc, {qid: questionObj.question.id, response: []}];
+            },
+            []
+          );
+          return {...acc, [checkpointObj?.id]: initQuestionObj};
+        },
+        {}
+      );
 
       dispatch({
         type: 'UPDATE_CHECKPOINT_DATA',
@@ -211,29 +233,36 @@ const LessonApp = () => {
         setCheckpointsSequence(checkpointSequences);
       }
       if (lessonDataLoaded && state.data.lesson.type !== 'lesson') {
-        const questionSequences = await getAllCheckpointQuestionsSequence(checkpointIdList);
+        const questionSequences = await getAllCheckpointQuestionsSequence(
+          checkpointIdList
+        );
         setCheckpointsQuestionsSequence(questionSequences);
       }
     };
-    if (!checkpointsLoaded && checkpointIdList.length > 0) {
+    if (!checkpointsLoaded && checkpointIdList && checkpointIdList.length > 0) {
       getAdditionalLessonData();
     }
   }, [checkpointIdList]);
 
   const getAllCheckpointIds = () => {
-    return state.data.lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
-      const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
-      if (isCheckpoint) {
-        const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/) || [];
-        if (matchArray.length > 1) {
-          return [...acc, matchArray[1]];
+    const lessonPlan = state.data.lessonPlan;
+    return (
+      lessonPlan &&
+      lessonPlan.length > 0 &&
+      lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
+        const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
+        if (isCheckpoint) {
+          const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/) || [];
+          if (matchArray.length > 1) {
+            return [...acc, matchArray[1]];
+          } else {
+            return acc;
+          }
         } else {
           return acc;
         }
-      } else {
-        return acc;
-      }
-    }, []);
+      }, [])
+    );
   };
 
   useEffect(() => {
@@ -248,7 +277,7 @@ const LessonApp = () => {
   const createQuestionData = async (responseObj: any) => {
     try {
       const newQuestionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: responseObj })
+        graphqlOperation(customMutations.createQuestionData, {input: responseObj})
       );
     } catch (err) {
       console.error(err);
@@ -266,7 +295,7 @@ const LessonApp = () => {
 
     if (typeof state.questionData === 'object') {
       let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      await checkpointIdKeys.reduce((_: any, key: string) => {
+      await checkpointIdKeys?.reduce((_: any, key: string) => {
         let responseObject = {
           syllabusLessonID: state.syllabusLessonID,
           checkpointID: key,
@@ -284,7 +313,7 @@ const LessonApp = () => {
   };
 
   const getOrCreateQuestionData = async () => {
-    const { lessonID } = urlParams;
+    const {lessonID} = urlParams;
     let studentID: string;
     let studentAuthID: string;
 
@@ -299,34 +328,41 @@ const LessonApp = () => {
       const questionDatas: any = await API.graphql(
         graphqlOperation(queries.listQuestionDatas, {
           filter: {
-            syllabusLessonID: { eq: lessonID },
-            email: { eq: studentID },
+            syllabusLessonID: {eq: lessonID},
+            email: {eq: studentID},
           },
         })
       );
       const listQuestionDatasItems = questionDatas.data.listQuestionDatas.items;
 
-      console.log('listQUestionDatasItems --', listQuestionDatasItems)
+      const questionDataUpdateArray = questionDatas?.data?.listQuestionDatas?.items?.reduce(
+        (acc: any[], val: any) => {
+          return [
+            ...acc,
+            {
+              id: val.id,
+              checkpointID: val.checkpointID,
+            },
+          ];
+        },
+        []
+      );
 
-      const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce((acc: any[], val: any) => {
-        return [
-          ...acc,
-          {
-            id: val.id,
-            checkpointID: val.checkpointID,
-          },
-        ];
-      }, []);
-
-      const noQuestionDatas = questionDatas.data.listQuestionDatas.items.length === 0;
-      const existQuestionDatas = questionDatas.data.listQuestionDatas.items.length > 0;
+      const noQuestionDatas = questionDatas.data.listQuestionDatas.items?.length === 0;
+      const existQuestionDatas = questionDatas.data.listQuestionDatas.items?.length > 0;
 
       if (noQuestionDatas && recentQuestionOp === '') {
         await handleCreateQuestionData();
       }
 
-      if ((existQuestionDatas && recentQuestionOp === '') || (existQuestionDatas && recentQuestionOp === 'created')) {
-        dispatch({ type: 'SET_QUESTION_DATA_UPDATE', payload: { data: questionDataUpdateArray } });
+      if (
+        (existQuestionDatas && recentQuestionOp === '') ||
+        (existQuestionDatas && recentQuestionOp === 'created')
+      ) {
+        dispatch({
+          type: 'SET_QUESTION_DATA_UPDATE',
+          payload: {data: questionDataUpdateArray},
+        });
         setRecentQuestionOp('fetched');
       }
     } catch (e) {
@@ -345,7 +381,7 @@ const LessonApp = () => {
 
   return (
     <>
-      <FloatingSideMenu/>
+      <FloatingSideMenu />
       <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
@@ -362,7 +398,10 @@ const LessonApp = () => {
           <NotesForm overlay={overlay} setOverlay={setOverlay} />
         </div>
 
-        {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
+        <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
+          {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
+        </ErrorBoundary>
+
         {lessonDataLoaded && <Foot />}
       </div>
     </>
