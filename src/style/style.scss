@@ -647,3 +647,57 @@
     text-align: center;
   }
 }
+
+// == For Tabs ==
+
+.tabs .tabs-header {
+  background: #fff;
+  padding: 10px;
+  display: flex;
+  border-radius: 8px;
+  box-shadow: 0 2px 3px -10px rgba(0, 0, 0, 0.1);
+}
+
+.tabs .tabs-header > div {
+  position: relative;
+  width: 33%;
+  text-align: center;
+  padding: 12px;
+  z-index: 2;
+  font-weight: 500;
+  color: #787e8b;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+
+.tabs .tabs-header > div.active {
+  color: #453bcb;
+}
+
+.tabs .tab-indicator {
+  position: absolute;
+  width: calc(33% - 5px);
+  height: 45px;
+  background: #e0e7fd;
+  top: 10px;
+  left: 10px;
+  transition: all 300ms ease-in-out;
+
+  border-radius: 8px;
+}
+
+.tabs .content {
+  height: 400px;
+  width: 100%;
+  background: #34495e;
+  margin-top: 12px;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 3px -10px rgba(0, 0, 0, 0.1);
+}
+
+.tabs .content h3 {
+  color: #fff;
+  font-weight: 500;
+  font-size: 21px;
+}

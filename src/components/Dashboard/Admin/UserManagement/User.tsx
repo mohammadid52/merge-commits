@@ -7,6 +7,7 @@ import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
+import ReactHtmlParser from 'react-html-parser';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
@@ -25,7 +26,7 @@ import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
 import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
-import {sortBy} from 'lodash';
+import {slice, sortBy} from 'lodash';
 
 export interface UserInfo {
   authId: string;
@@ -84,7 +85,7 @@ const User = () => {
     {name: 'Notebook', current: false},
   ];
 
-  const [curTab, setCurTab] = useState<string>(tabs[0].name);
+  const [curTab, setCurTab] = useState<string>(tabs[2].name);
   const [questionData, setQuestionData] = useState([]);
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
   const [urlState, setUrlState] = useUrlState(
@@ -138,6 +139,65 @@ const User = () => {
       last: true,
     },
   ];
+
+  const tabs2 = [
+    {id: 0, label: 'User Information', tabName: 'user_info', isActive: true},
+    {id: 1, label: 'Associated Classrooms', tabName: 'assoc_class', isActive: false},
+    {id: 2, label: 'Notebook', tabName: 'notebook', isActive: false},
+  ];
+
+  let tabHeaderNodesRef: any = React.createRef();
+  let tabIndicatorRef: any = React.createRef();
+
+  useEffect(() => {
+    if (tabHeaderNodesRef.current !== null) {
+      for (let i = 0; i < tabHeaderNodesRef.current.childNodes.length; i++) {
+        const element = tabHeaderNodesRef.current.childNodes[i];
+        element.addEventListener('click', () => {
+          if (tabIndicatorRef.current !== null) {
+            tabIndicatorRef.current.style.left = `calc(calc(calc(33% - 5px) * ${i}) + 10px)`;
+          }
+
+          tabHeaderNodesRef.current.querySelector('.active').classList.remove('active');
+          element.classList.add('active');
+        });
+        element.addEventListener('click', () => {
+          const tabName = element.getAttribute('data-tabname');
+          setCurrTab(tabName);
+        });
+      }
+    }
+  }, [tabHeaderNodesRef]);
+
+  const [currTab, setCurrTab] = useState('user_info');
+
+  // useEffect(() => {
+  //   findCurrentTab();
+  // }, [currTab]);
+
+  const findCurrentTab = () => {
+    if (
+      tabHeaderNodesRef &&
+      tabHeaderNodesRef.current &&
+      tabHeaderNodesRef.current.childNodes
+    ) {
+      for (let i = 0; i < tabHeaderNodesRef?.current?.childNodes.length; i++) {
+        const element = tabHeaderNodesRef.current.childNodes[i];
+
+        const isActive = element.classList.contains('active');
+
+        if (isActive) {
+          const tabName = element.getAttribute('data-tabname');
+          console.log(
+            '🚀 ~ file: User.tsx ~ line 195 ~ findCurrentTab ~ tabName',
+            tabName
+          );
+
+          setCurrTab(tabName);
+        }
+      }
+    }
+  };
 
   const getQuestionData = async (checkpointIDs: any[], user: any) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
@@ -457,6 +517,8 @@ const User = () => {
   };
 
   const Tabs = () => {
+    const tabsData = !isTeacher ? slice(tabs, 0, 2) : tabs;
+
     return (
       <div className="w-8/10 bg-white rounded-lg p-2">
         <div className="sm:hidden">
@@ -468,7 +530,7 @@ const User = () => {
             name="tabs"
             className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
             defaultValue={curTab}>
-            {tabs.map((tab) => (
+            {tabsData.map((tab) => (
               <option className="transition-all" key={tab.name}>
                 {tab.name}
               </option>
@@ -477,7 +539,7 @@ const User = () => {
         </div>
         <div className="hidden sm:block">
           <nav className="flex user__profile-tabs space-x-4" aria-label="Tabs">
-            {tabs.map((tab) => (
+            {tabsData.map((tab) => (
               <div
                 key={tab.name}
                 onClick={() => {
@@ -496,6 +558,95 @@ const User = () => {
     );
   };
 
+  const AnimatedTabs = () => {
+    return (
+      <div className="tabs relative w-8/10 bg-white rounded-lg">
+        <div ref={tabHeaderNodesRef} className="tabs-header">
+          {tabs2.map((tab: any) => (
+            <div
+              key={tab.id}
+              className={tab.isActive ? 'active' : ''}
+              data-tabname={tab.tabName}>
+              {tab.label}
+            </div>
+          ))}
+        </div>
+        <div ref={tabIndicatorRef} className="tab-indicator"></div>
+      </div>
+    );
+  };
+
+  const StudentData = ({item}: any) => {
+    const [showComments, setShowComments] = useState(false);
+    const activity = [
+      {
+        id: 1,
+        type: 'comment',
+        person: {name: 'Eduardo Benz', href: '#'},
+        imageUrl:
+          'https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
+        comment:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tincidunt nunc ipsum tempor purus vitae id. Morbi in vestibulum nec varius. Et diam cursus quis sed purus nam. ',
+        date: '6d ago',
+      },
+
+      {
+        id: 4,
+        type: 'comment',
+        person: {name: 'Jason Meyers', href: '#'},
+        imageUrl:
+          'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
+        comment:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tincidunt nunc ipsum tempor purus vitae id. Morbi in vestibulum nec varius. Et diam cursus quis sed purus nam. Scelerisque amet elit non sit ut tincidunt condimentum. Nisl ultrices eu venenatis diam.',
+        date: '2h ago',
+      },
+    ];
+    return (
+      <div
+        className={`w-full white_back pb-2 py-8 px-6 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
+        <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
+        {item.content && ReactHtmlParser(item.content)}
+
+        {showComments &&
+          activity.map((comment: any, eventIdx: number) => (
+            <div className="relative">
+              {eventIdx !== activity.length - 1 ? (
+                <span
+                  style={{top: '-0.74rem', left: '1.25rem'}}
+                  className="absolute -ml-px h-4 w-0.5 bg-gray-400"
+                  aria-hidden="true"
+                />
+              ) : null}
+              <div className="text-sm text-gray-900 mt-4 flex items-center">
+                <img
+                  className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
+                  src={comment.imageUrl}
+                  alt=""
+                />
+                <div className="ml-2">
+                  <h5 className="font-semibold">
+                    {comment.person.name}{' '}
+                    <span className="text-xs text-gray-600 font-normal ml-1">
+                      {comment.date}
+                    </span>
+                  </h5>
+                  <p>{comment.comment}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        <div className="flex items-center justify-end">
+          <div
+            onClick={() => setShowComments(!showComments)}
+            className="hover:bg-blue-100 text-blue-500 w-auto px-2 py-0.5 rounded transition-all duration-300 text-sm cursor-pointer my-2">
+            <p>{showComments ? 'Hide' : 'Show'} Comments</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
   {
     return (
       <>
@@ -503,6 +654,7 @@ const User = () => {
           <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between items-center mb-4 py-4 w-auto">
             {/* <SectionTitle title={UserDict[userLanguage]['title']} /> */}
+
             <Tabs />
 
             <div className="flex justify-end w-auto">
@@ -526,7 +678,7 @@ const User = () => {
               ) : null}
             </div>
           </div>
-          {curTab === tabs[0].name && (
+          {currTab === 'user_info' && (
             <div
               className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <div className="h-1/2 flex flex-col md:flex-row">
@@ -642,7 +794,7 @@ const User = () => {
               </div>
             </div>
           )}
-          {curTab === tabs[1].name &&
+          {currTab === 'assoc_class' &&
             user?.classes?.items.length > 0 &&
             user.role === 'ST' && (
               <div
@@ -650,20 +802,14 @@ const User = () => {
                 <AssociatedClasses list={user?.classes?.items} />
               </div>
             )}
-          {curTab === tabs[2].name && (
-            <div
-              className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-              {studentData && studentData.length > 0 ? (
-                studentData.map((item: any) => {
-                  return <p>{item.studentID}</p>;
-                })
-              ) : (
-                <div>
-                  <p>Student has no </p>
-                </div>
-              )}
-            </div>
-          )}
+          {currTab === 'notebook' &&
+            (studentData && studentData.length > 0 ? (
+              studentData.map((item: any) => <StudentData item={item} />)
+            ) : (
+              <div>
+                <p>Student has no data </p>
+              </div>
+            ))}
         </div>
         {showCropper && (
           <ProfileCropModal
