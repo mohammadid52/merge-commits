@@ -26,7 +26,9 @@ import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
 import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
-import {slice, sortBy} from 'lodash';
+import slice from 'lodash/slice';
+import sortBy from 'lodash/sortBy';
+import {BiMessageRoundedDots, BiMessageRoundedX} from 'react-icons/bi';
 
 export interface UserInfo {
   authId: string;
@@ -123,9 +125,6 @@ const User = () => {
   const {id, t: tab} = urlState;
 
   const {UserDict, BreadcrumsTitles} = useDictionary(clientKey);
-  const [dynamicBreadCrumb, setDynamicBreadCrumb] = useState<string>(
-    BreadcrumsTitles[userLanguage]['UserInfo']
-  );
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
@@ -134,70 +133,11 @@ const User = () => {
       last: false,
     },
     {
-      title: dynamicBreadCrumb,
+      title: curTab,
       url: `${location.pathname}${location.search}`,
       last: true,
     },
   ];
-
-  const tabs2 = [
-    {id: 0, label: 'User Information', tabName: 'user_info', isActive: true},
-    {id: 1, label: 'Associated Classrooms', tabName: 'assoc_class', isActive: false},
-    {id: 2, label: 'Notebook', tabName: 'notebook', isActive: false},
-  ];
-
-  let tabHeaderNodesRef: any = React.createRef();
-  let tabIndicatorRef: any = React.createRef();
-
-  useEffect(() => {
-    if (tabHeaderNodesRef.current !== null) {
-      for (let i = 0; i < tabHeaderNodesRef.current.childNodes.length; i++) {
-        const element = tabHeaderNodesRef.current.childNodes[i];
-        element.addEventListener('click', () => {
-          if (tabIndicatorRef.current !== null) {
-            tabIndicatorRef.current.style.left = `calc(calc(calc(33% - 5px) * ${i}) + 10px)`;
-          }
-
-          tabHeaderNodesRef.current.querySelector('.active').classList.remove('active');
-          element.classList.add('active');
-        });
-        element.addEventListener('click', () => {
-          const tabName = element.getAttribute('data-tabname');
-          setCurrTab(tabName);
-        });
-      }
-    }
-  }, [tabHeaderNodesRef]);
-
-  const [currTab, setCurrTab] = useState('user_info');
-
-  // useEffect(() => {
-  //   findCurrentTab();
-  // }, [currTab]);
-
-  const findCurrentTab = () => {
-    if (
-      tabHeaderNodesRef &&
-      tabHeaderNodesRef.current &&
-      tabHeaderNodesRef.current.childNodes
-    ) {
-      for (let i = 0; i < tabHeaderNodesRef?.current?.childNodes.length; i++) {
-        const element = tabHeaderNodesRef.current.childNodes[i];
-
-        const isActive = element.classList.contains('active');
-
-        if (isActive) {
-          const tabName = element.getAttribute('data-tabname');
-          console.log(
-            '🚀 ~ file: User.tsx ~ line 195 ~ findCurrentTab ~ tabName',
-            tabName
-          );
-
-          setCurrTab(tabName);
-        }
-      }
-    }
-  };
 
   const getQuestionData = async (checkpointIDs: any[], user: any) => {
     const checkpointIDFilter: any = checkpointIDs.map((item: any) => {
@@ -543,10 +483,9 @@ const User = () => {
               <div
                 key={tab.name}
                 onClick={() => {
-                  setDynamicBreadCrumb(tab.name);
                   setCurTab(tab.name);
                 }}
-                className={`px-3 py-2 cursor-pointer font-medium tab text-sm rounded-md ${
+                className={`px-3 hover:bg-indigo-400 py-2 cursor-pointer font-medium tab text-sm rounded-md ${
                   tab.name === curTab ? 'active' : ''
                 }`}>
                 {tab.name}
@@ -554,24 +493,6 @@ const User = () => {
             ))}
           </nav>
         </div>
-      </div>
-    );
-  };
-
-  const AnimatedTabs = () => {
-    return (
-      <div className="tabs relative w-8/10 bg-white rounded-lg">
-        <div ref={tabHeaderNodesRef} className="tabs-header">
-          {tabs2.map((tab: any) => (
-            <div
-              key={tab.id}
-              className={tab.isActive ? 'active' : ''}
-              data-tabname={tab.tabName}>
-              {tab.label}
-            </div>
-          ))}
-        </div>
-        <div ref={tabIndicatorRef} className="tab-indicator"></div>
       </div>
     );
   };
@@ -585,9 +506,10 @@ const User = () => {
         person: {name: 'Eduardo Benz', href: '#'},
         imageUrl:
           'https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-        comment:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tincidunt nunc ipsum tempor purus vitae id. Morbi in vestibulum nec varius. Et diam cursus quis sed purus nam. ',
+        comment: 'This is a loooooooong comment',
         date: '6d ago',
+        commentId: '123',
+        syllabusLessonID: 'custom_9101f663-f819-4180-9d31-63afd81d7b56_1',
       },
 
       {
@@ -596,9 +518,21 @@ const User = () => {
         person: {name: 'Jason Meyers', href: '#'},
         imageUrl:
           'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-        comment:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tincidunt nunc ipsum tempor purus vitae id. Morbi in vestibulum nec varius. Et diam cursus quis sed purus nam. Scelerisque amet elit non sit ut tincidunt condimentum. Nisl ultrices eu venenatis diam.',
+        comment: 'Wow, cool',
         date: '2h ago',
+        commentId: '243',
+        syllabusLessonID: 'custom_9101f663-f819-4180-9d31-63afd81d7b56_0',
+      },
+      {
+        id: 5,
+        type: 'comment',
+        person: {name: 'Jason Meyers', href: '#'},
+        imageUrl:
+          'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
+        comment: 'Nice',
+        date: '2h ago',
+        commentId: '154',
+        syllabusLessonID: 'custom_9101f663-f819-4180-9d31-63afd81d7b56_2',
       },
     ];
     return (
@@ -606,40 +540,41 @@ const User = () => {
         className={`w-full white_back pb-2 py-8 px-6 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
         {item.content && ReactHtmlParser(item.content)}
-
         {showComments &&
-          activity.map((comment: any, eventIdx: number) => (
-            <div className="relative">
-              {eventIdx !== activity.length - 1 ? (
-                <span
-                  style={{top: '-0.74rem', left: '1.25rem'}}
-                  className="absolute -ml-px h-4 w-0.5 bg-gray-400"
-                  aria-hidden="true"
-                />
-              ) : null}
-              <div className="text-sm text-gray-900 mt-4 flex items-center">
-                <img
-                  className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
-                  src={comment.imageUrl}
-                  alt=""
-                />
-                <div className="ml-2">
-                  <h5 className="font-semibold">
-                    {comment.person.name}{' '}
-                    <span className="text-xs text-gray-600 font-normal ml-1">
-                      {comment.date}
-                    </span>
-                  </h5>
-                  <p>{comment.comment}</p>
+          activity
+            .filter((_item: any) => item.syllabusLessonID === _item.syllabusLessonID)
+            .map((comment: any, eventIdx: number) => (
+              <div className="relative">
+                {eventIdx !== activity.length - 1 ? (
+                  <span
+                    style={{top: '-1.0rem', left: '1.25rem'}}
+                    className="absolute -ml-px h-4 w-0.5 bg-gray-400"
+                    aria-hidden="true"
+                  />
+                ) : null}
+                <div className="text-sm text-gray-900 mt-4 flex items-center">
+                  <img
+                    className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
+                    src={comment.imageUrl}
+                    alt=""
+                  />
+                  <div className="ml-2">
+                    <h5 className="font-semibold">
+                      {comment.person.name}{' '}
+                      <span className="text-xs text-gray-600 font-normal ml-1">
+                        {comment.date}
+                      </span>
+                    </h5>
+                    <p>{comment.comment}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         <div className="flex items-center justify-end">
           <div
             onClick={() => setShowComments(!showComments)}
-            className="hover:bg-blue-100 text-blue-500 w-auto px-2 py-0.5 rounded transition-all duration-300 text-sm cursor-pointer my-2">
-            <p>{showComments ? 'Hide' : 'Show'} Comments</p>
+            className="hover:bg-blue-100 text-blue-500 w-auto p-2 rounded-md transition-all duration-500 text-sm cursor-pointer my-2">
+            <BiMessageRoundedDots size={20} />
           </div>
         </div>
       </div>
@@ -678,7 +613,7 @@ const User = () => {
               ) : null}
             </div>
           </div>
-          {currTab === 'user_info' && (
+          {curTab === 'User Information' && (
             <div
               className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <div className="h-1/2 flex flex-col md:flex-row">
@@ -794,7 +729,7 @@ const User = () => {
               </div>
             </div>
           )}
-          {currTab === 'assoc_class' &&
+          {curTab === 'Associated Classrooms' &&
             user?.classes?.items.length > 0 &&
             user.role === 'ST' && (
               <div
@@ -802,7 +737,7 @@ const User = () => {
                 <AssociatedClasses list={user?.classes?.items} />
               </div>
             )}
-          {currTab === 'notebook' &&
+          {curTab === 'Notebook' &&
             (studentData && studentData.length > 0 ? (
               studentData.map((item: any) => <StudentData item={item} />)
             ) : (
