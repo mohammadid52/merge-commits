@@ -212,11 +212,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     (item: any) => item.title === currentCheckpoint.name
   );
 
-  const [allQuestionData, setAllQuestionData] = useState([]);
-  // useEffect(() => {
-  //   const data = allQuestionGroups()[currentCheckpointIdx];
-  //   setAllQuestionData(data);
-  // }, [currentCheckpointIdx]);
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]): number[] => {
     const [head, ...tail] = inArr;
     if (typeof head === 'undefined') {

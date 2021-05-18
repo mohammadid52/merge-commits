@@ -98,7 +98,7 @@ const Intro = (props: LessonComponentsInterface) => {
         />
         <div
           style={{minHeight: '80vh'}}
-          className="flex items-center w-auto flex-col justify-center">
+          className="flex items-center w-auto flex-col justify-start">
           {currentPage.name === 'message' && (
             <>
               <Banner
