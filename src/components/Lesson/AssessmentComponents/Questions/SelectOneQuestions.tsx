@@ -6,6 +6,7 @@ import {QuestionInterface} from '../CheckpointQuestions';
 import {QuestionProps} from '../Question';
 import LessonElementCard from '../../../Atoms/LessonElementCard';
 import find from 'lodash/find';
+import {get} from 'lodash';
 
 interface SelectOneRowState {
   id: string;
@@ -33,16 +34,15 @@ const SelectOneQuestions = (props: QuestionProps) => {
 
   const {state, theme, dispatch} = switchContext;
   const questionId = question.question.id;
+  const checkpoint = get(state, `questionData[${checkpointID}]`, null);
 
   const oneQuestInitAns =
-    find(
-      state.questionData[checkpointID],
-      (q) => q.qid === questionId
-    ).response.toString() || '';
+    checkpoint && find(checkpoint, (q) => q.qid === questionId).response.toString();
 
-
-
-  const [input, setInput] = useState<SelectOneRowState>({id: '', value: oneQuestInitAns});
+  const [input, setInput] = useState<SelectOneRowState>({
+    id: '',
+    value: oneQuestInitAns || '',
+  });
   const [otherOptSel, setOtherOptSel] = useState(false);
   const [other, setOther] = useState('');
 
@@ -64,10 +64,10 @@ const SelectOneQuestions = (props: QuestionProps) => {
     handleInputChange(questionId, value, checkpointID);
   };
 
-
   useEffect(() => {
     if (input.value === 'other') {
       setOtherOptSel(true);
+      // setOther(value);
     }
   }, [input.value]);
 

@@ -50,7 +50,7 @@ const LessonApp = () => {
    */
 
   useEffect(() => {
-    if (Object.keys(state.data).length > 0 && state.data.lesson && state.pages) {
+    if (Object.keys(state.data)?.length > 0 && state.data.lesson && state.pages) {
       setLessonDataLoaded(true);
     }
   }, [state.data]);
@@ -62,25 +62,32 @@ const LessonApp = () => {
    */
 
   const getAllCheckpointQuestionsSequence = async (cpIdList: string[]) => {
-    const questionSequences = Promise.all(
-      cpIdList.map(async (cpId: string) => {
-        const questionSequences: any = await API.graphql(
-          graphqlOperation(queries.getCSequences, {id: `Ch_Ques_${cpId}`})
-        );
-        return {[`${cpId}`]: questionSequences.data.getCSequences.sequence};
-      })
-    );
-    return questionSequences;
+    if (cpIdList && cpIdList.length > 0) {
+      const questionSequences = Promise.all(
+        cpIdList.map(async (cpId: string) => {
+          const questionSequences: any = await API.graphql(
+            graphqlOperation(queries.getCSequences, {id: `Ch_Ques_${cpId}`})
+          );
+          return {[`${cpId}`]: questionSequences.data.getCSequences?.sequence};
+        })
+      );
+      return questionSequences;
+    }
   };
 
   const getAllCheckpointSequence = () => {
-    return state.data.lesson.lessonPlan.map((lessonPlanObj: any) => {
-      return {[`${lessonPlanObj.LessonComponentID}`]: lessonPlanObj.sequence};
-    });
+    const lessonPlan = state.data.lesson.lessonPlan;
+    return (
+      lessonPlan &&
+      lessonPlan.length > 0 &&
+      lessonPlan.map((lessonPlanObj: any) => {
+        return {[`${lessonPlanObj.LessonComponentID}`]: lessonPlanObj?.sequence};
+      })
+    );
   };
 
   const getAllCheckpoints = async (cpIdList: string[]) => {
-    if (cpIdList.length > 0) {
+    if (cpIdList && cpIdList.length > 0) {
       try {
         const checkpoints: any = await API.graphql(
           graphqlOperation(customQueries.listCheckpoints, {
@@ -129,7 +136,7 @@ const LessonApp = () => {
     const reorderProcess = async () => {
       if (checkpointsLoaded && checkpointsItems) {
         if (state.data.lesson.type !== 'lesson') {
-          if (checkpointsSequence.length === checkpointsItems.length) {
+          if (checkpointsSequence?.length === checkpointsItems?.length) {
             const ordered = reorderCheckpoints(checkpointsItems, checkpointsSequence);
             setCheckpointsToLessonData(ordered);
           }
@@ -138,7 +145,7 @@ const LessonApp = () => {
     };
 
     const reorderProcess2 = async () => {
-      if (checkpointsLoaded && checkpointsQuestionsSequence.length > 0) {
+      if (checkpointsLoaded && checkpointsQuestionsSequence?.length > 0) {
         const mapCheckpointQuestions = checkpointsItems.map((checkpoint: any) => {
           const questions = checkpoint.questions.items;
           const questionsOrder = checkpointsQuestionsSequence.reduce(
@@ -175,7 +182,7 @@ const LessonApp = () => {
       await reorderProcess2();
     };
 
-    if (checkpointsLoaded && checkpointsQuestionsSequence.length > 0) {
+    if (checkpointsLoaded && checkpointsQuestionsSequence?.length > 0) {
       process();
       setReordered(true);
     }
@@ -188,10 +195,10 @@ const LessonApp = () => {
    *
    */
   useEffect(() => {
-    if (checkpointsItems.length > 0) {
-      const initCheckpointsObj = checkpointsItems.reduce(
+    if (checkpointsItems?.length > 0) {
+      const initCheckpointsObj = checkpointsItems?.reduce(
         (acc: any, checkpointObj: any) => {
-          const initQuestionObj = checkpointObj.questions.items.reduce(
+          const initQuestionObj = checkpointObj?.questions?.items?.reduce(
             (acc: any[], questionObj: any) => {
               return [...acc, {qid: questionObj.question.id, response: []}];
             },
@@ -232,14 +239,17 @@ const LessonApp = () => {
         setCheckpointsQuestionsSequence(questionSequences);
       }
     };
-    if (!checkpointsLoaded && checkpointIdList.length > 0) {
+    if (!checkpointsLoaded && checkpointIdList && checkpointIdList.length > 0) {
       getAdditionalLessonData();
     }
   }, [checkpointIdList]);
 
   const getAllCheckpointIds = () => {
-    return state.data.lessonPlan.reduce(
-      (acc: string[], lessonPlanObj: any, i: number) => {
+    const lessonPlan = state.data.lessonPlan;
+    return (
+      lessonPlan &&
+      lessonPlan.length > 0 &&
+      lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
         const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
         if (isCheckpoint) {
           const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/) || [];
@@ -251,8 +261,7 @@ const LessonApp = () => {
         } else {
           return acc;
         }
-      },
-      []
+      }, [])
     );
   };
 
@@ -286,7 +295,7 @@ const LessonApp = () => {
 
     if (typeof state.questionData === 'object') {
       let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      await checkpointIdKeys.reduce((_: any, key: string) => {
+      await checkpointIdKeys?.reduce((_: any, key: string) => {
         let responseObject = {
           syllabusLessonID: state.syllabusLessonID,
           checkpointID: key,
@@ -326,9 +335,7 @@ const LessonApp = () => {
       );
       const listQuestionDatasItems = questionDatas.data.listQuestionDatas.items;
 
-      console.log('listQUestionDatasItems --', listQuestionDatasItems);
-
-      const questionDataUpdateArray = questionDatas.data.listQuestionDatas.items.reduce(
+      const questionDataUpdateArray = questionDatas?.data?.listQuestionDatas?.items?.reduce(
         (acc: any[], val: any) => {
           return [
             ...acc,
@@ -341,8 +348,8 @@ const LessonApp = () => {
         []
       );
 
-      const noQuestionDatas = questionDatas.data.listQuestionDatas.items.length === 0;
-      const existQuestionDatas = questionDatas.data.listQuestionDatas.items.length > 0;
+      const noQuestionDatas = questionDatas.data.listQuestionDatas.items?.length === 0;
+      const existQuestionDatas = questionDatas.data.listQuestionDatas.items?.length > 0;
 
       if (noQuestionDatas && recentQuestionOp === '') {
         await handleCreateQuestionData();

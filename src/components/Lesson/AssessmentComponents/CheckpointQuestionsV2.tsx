@@ -205,6 +205,18 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     return collectQuestionGroups(questionSource());
   };
 
+  const [currentCheckpoint, setCurrentCheckpoint] = useState(checkpointId[0]);
+
+  const currentCheckpointIdx = findIndex(
+    questionSource(),
+    (item: any) => item.title === currentCheckpoint.name
+  );
+
+  const [allQuestionData, setAllQuestionData] = useState([]);
+  // useEffect(() => {
+  //   const data = allQuestionGroups()[currentCheckpointIdx];
+  //   setAllQuestionData(data);
+  // }, [currentCheckpointIdx]);
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]): number[] => {
     const [head, ...tail] = inArr;
     if (typeof head === 'undefined') {
@@ -253,7 +265,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const handleInputChange = (
     id: number | string,
     value: string | string[],
-    checkpointID: string,
+    checkpointID: string
   ) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
@@ -287,18 +299,11 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     });
   };
 
-  const [currentCheckpoint, setCurrentCheckpoint] = useState(checkpointId[0]);
-
   useEffect(() => {
     if (fromClosing && checkpointId.length > 0) {
       setCurrentCheckpoint(last(checkpointId));
     }
   }, [fromClosing]);
-
-  const currentCheckpointIdx = findIndex(
-    questionSource(),
-    (item: any) => item.title === currentCheckpoint.name
-  );
 
   const onBack = () => {
     if (currentCheckpointIdx > 0) {
@@ -329,6 +334,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
   if (status !== 'loaded') return null;
 
+  const allQuestionGroupsData = allQuestionGroups()[currentCheckpointIdx] || [];
+
   return (
     <div className={theme.section}>
       <div className={`${theme.elem.text}`}>
@@ -345,7 +352,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     }
                   />
                   <LessonElementCard key={`questiongroup_${currentCheckpointIdx}`}>
-                    {allQuestionGroups()[currentCheckpointIdx].map(
+                    {allQuestionGroupsData.map(
                       (question: QuestionInterface, idx: number) => {
                         const realIndex = indexInc[currentCheckpointIdx] + idx;
                         return (

@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {LessonContext} from '../../../contexts/LessonContext';
-import CheckpointQuestions from './CheckpointQuestionsV2';
+import CheckpointQuestions from './CheckpointQuestions';
+import CheckpointQuestionsV2 from './CheckpointQuestionsV2';
 import Banner from '../LessonComponents/Banner';
 import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import SaveQuit from '../LessonComponents/Outro/SaveQuit';
@@ -24,6 +25,7 @@ const Checkpoint = (props: {
   checkpointsLoaded?: BodyProps['checkpointsLoaded'];
   setupComplete?: BodyProps['setupComplete'];
   checkpointsItems?: any[];
+  pageList?: any[];
   fromClosing?: boolean;
 }) => {
   /**
@@ -34,12 +36,13 @@ const Checkpoint = (props: {
     checkpointsLoaded,
     setupComplete,
     checkpointsItems,
+    pageList,
     fromClosing,
   } = props;
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch} = switchContext;
+  const {state, theme, dispatch, currentPage} = switchContext;
 
   const [urlState] = useUrlState({roomId: ''});
   const {roomId} = urlState;
@@ -91,26 +94,35 @@ const Checkpoint = (props: {
        *  2.
        *  LOAD CHECKPOINT QUESTIONS
        */}
-      {checkpointsItems && checkpointsItems.length > 0 && (
-        <CheckpointQuestions
-          fromClosing={fromClosing}
-          isTeacher={isTeacher}
-          checkpointType={`checkpoint`}
-          handleSetTitle={handleSetTitle}
-          checkpointsItems={checkpointsItems}
-        />
-      )}
+      {checkpointsItems &&
+        checkpointsItems.length > 0 &&
+        (lessonType !== 'lesson' ? (
+          <CheckpointQuestionsV2
+            fromClosing={fromClosing}
+            isTeacher={isTeacher}
+            checkpointType={`checkpoint`}
+            handleSetTitle={handleSetTitle}
+            checkpointsItems={checkpointsItems}
+          />
+        ) : (
+          <CheckpointQuestions
+            isTeacher={isTeacher}
+            checkpointType={`checkpoint`}
+            handleSetTitle={handleSetTitle}
+            checkpointsItems={checkpointsItems}
+          />
+        ))}
 
       {/**
        *  3.
        *  SHOW OUTRO + SAVE, IF SURVEY
        */}
-      {/* {!isTeacher && state.data.lesson.type !== 'lesson' && (
+      {!isTeacher && state.data.lesson.type !== 'lesson' && currentPage === 'undefined' && (
         <>
           <SurveyOutro />
           <SaveQuit roomID={roomId} />
         </>
-      )} */}
+      )}
     </div>
   );
 };
