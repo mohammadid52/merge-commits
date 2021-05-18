@@ -11,40 +11,28 @@ import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {mode, selectedPageDetails, handleModalPopToggle} = props;
-  const [hoveredID, setHoveredID] = useState<string>('');
+  const [editedID, setEditedID] = useState<string>('');
 
-  const handleMouseOverToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const t = e.currentTarget as HTMLElement;
-    const ulbIdAttribute = t.getAttribute('data-id');
-
-    if (ulbIdAttribute) {
-      console.log('id under mouse -- ', ulbIdAttribute);
-      if (hoveredID !== ulbIdAttribute) {
-        setHoveredID(ulbIdAttribute);
+  const handleEditBlockToggle = (dataID: string) => {
+    if (dataID) {
+      if (editedID !== dataID) {
+        setEditedID(dataID);
       } else {
-        setHoveredID('');
+        setEditedID('');
       }
     }
   };
 
-  const composePartContent = (
-    id: string,
-    type: string,
-    value: any,
-    inputKey: string,
-    handleMouseOverToggle?: any
-  ) => {
+  const composePartContent = (id: string, type: string, value: any, inputKey: string) => {
     if (type.includes('header')) {
       return (
         <HeaderBlock
           key={inputKey}
           id={id}
-          dataIdAttribute={id}
+          dataIdAttribute={inputKey}
           type={type}
           value={value}
           mode={mode}
-          handleMouseOverToggle={handleMouseOverToggle}
         />
       );
     } else if (type.includes('paragraph')) {
@@ -52,11 +40,10 @@ const RowComposer = (props: RowComposerProps) => {
         <ParagraphBlock
           key={inputKey}
           id={id}
-          dataIdAttribute={id}
+          dataIdAttribute={inputKey}
           type={type}
           value={value}
           mode={mode}
-          handleMouseOverToggle={handleMouseOverToggle}
         />
       );
     } else if (type.includes('form')) {
@@ -64,10 +51,9 @@ const RowComposer = (props: RowComposerProps) => {
         <FormBlock
           key={inputKey}
           id={id}
-          dataIdAttribute={id}
+          dataIdAttribute={inputKey}
           value={value}
           mode={mode}
-          handleMouseOverToggle={handleMouseOverToggle}
         />
       );
     } else {
@@ -75,10 +61,9 @@ const RowComposer = (props: RowComposerProps) => {
         <StringifyBlock
           key={inputKey}
           id={id}
-          dataIdAttribute={id}
+          dataIdAttribute={inputKey}
           anyObj={value}
           mode={mode}
-          handleMouseOverToggle={handleMouseOverToggle}
         />
       );
     }
@@ -94,29 +79,29 @@ const RowComposer = (props: RowComposerProps) => {
               mode={mode}
               key={`pp_${idx}`}
               contentID={`pp_${idx}`}
-              hoveredID={hoveredID}>
+              editedID={editedID}>
               <RowWrapper
                 mode={mode}
                 hasContent={pagePart.partContent.length > 0}
                 contentID={`pp_${idx}`}
                 dataIdAttribute={`pp_${idx}`}
-                pagePart={pagePart}
-                handleMouseOverToggle={handleMouseOverToggle}>
+                pagePart={pagePart}>
                 {pagePart.partContent.length > 0 ? (
                   pagePart.partContent.map((content: PartContent, idx2: number) => (
                     <EditOverlayBlock
                       key={`pp_${idx}_pc_${idx2}`}
                       mode={mode}
-                      contentID={content.id}
-                      hoveredID={hoveredID}>
+                      contentID={`pp_${idx}_pc_${idx2}`}
+                      editedID={editedID}
+                      isComponent={true}
+                      handleEditBlockToggle={handleEditBlockToggle}>
                       {content.value.length > 0 ? (
                         content.value.map((value: any, idx3: number) =>
                           composePartContent(
                             content.id,
                             content.type,
                             value,
-                            `pp_${idx}_pc_${idx2}_cv_${idx3}`,
-                            handleMouseOverToggle
+                            `pp_${idx}_pc_${idx2}_cv_${idx3}`
                           )
                         )
                       ) : (
@@ -130,18 +115,29 @@ const RowComposer = (props: RowComposerProps) => {
               </RowWrapper>
             </EditOverlayBlock>
           )),
-          <EditOverlayBlock mode={mode} contentID={`addNewRow`} hoveredID={hoveredID}>
-            <RowWrapper
-              mode={mode}
-              hasContent={false}
-              dataIdAttribute={`addNewRow`}
-              handleMouseOverToggle={handleMouseOverToggle}>
-              <AddNewBlock mode={mode} />
+          <EditOverlayBlock
+            mode={mode}
+            key={`pp_addNew`}
+            contentID={`addNewRow`}
+            editedID={editedID}>
+            <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+              <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>
           </EditOverlayBlock>,
         ]
       ) : (
-        <h1 className={`w-full text-center`}>This page has no layout information.</h1>
+        <>
+          <h1 className={`w-full text-center`}>This page has no layout information.</h1>
+          <EditOverlayBlock
+            mode={mode}
+            key={`pp_addNew`}
+            contentID={`addNewRow`}
+            editedID={editedID}>
+            <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+              <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
+            </RowWrapper>
+          </EditOverlayBlock>
+        </>
       )}
     </>
   );

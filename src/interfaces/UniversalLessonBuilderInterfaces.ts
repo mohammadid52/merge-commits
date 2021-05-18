@@ -27,9 +27,11 @@ export interface RowComposerProps {
 export interface RowWrapperProps extends RowComposerProps {
   hasContent?: boolean;
   contentID?: string;
+  editedID?: string;
   dataIdAttribute?: string;
   hoveredID?: string;
   children?: React.ReactNode;
   pagePart?: PagePart;
-  handleMouseOverToggle?: (e: React.MouseEvent) => void;
+  isComponent?: boolean;
+  handleEditBlockToggle?: (dataID: string) => void;
 }

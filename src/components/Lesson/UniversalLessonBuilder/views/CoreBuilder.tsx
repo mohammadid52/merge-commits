@@ -32,7 +32,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const {mode, selectedPageDetails, handleModalPopToggle} = props;
 
   return (
-    <div className={`bg-dark-gray`}>
+    <div className={`h-full max-h-128 bg-dark-gray overflow-hidden overflow-y-scroll`}>
       <div className={`relative w-full flex flex-row mx-auto`}>
         <LessonPageWrapper selectedPageDetails={selectedPageDetails}>
           <RowComposer

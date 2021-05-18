@@ -3,14 +3,20 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
 const EditOverlayBlock = (props: RowWrapperProps) => {
-  const {mode, children, contentID, hoveredID} = props;
+  const {mode, children, contentID, editedID, isComponent, handleEditBlockToggle} = props;
 
   return (
     <>
-      {mode === 'building' && contentID === hoveredID ? (
-        <div className={`relative pointer-events-none`}>
-          <EditOverlayControls mode={mode}/>
-          {children}
+      {mode === 'building' ? (
+        <div className={`h-auto flex items-center`}>
+          <EditOverlayControls
+            mode={mode}
+            contentID={contentID}
+            isActive={contentID === editedID}
+            isComponent={isComponent}
+            handleEditBlockToggle={handleEditBlockToggle}
+          />
+          <div>{children}</div>
         </div>
       ) : (
         children

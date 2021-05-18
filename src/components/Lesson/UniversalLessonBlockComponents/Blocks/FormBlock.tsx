@@ -7,7 +7,7 @@ interface FormBlockProps extends RowWrapperProps {
 }
 
 export const FormBlock = (props: FormBlockProps) => {
-  const {mode, dataIdAttribute, value, handleMouseOverToggle} = props;
+  const {mode, dataIdAttribute, value, handleEditBlockToggle} = props;
 
   const composeInput = (id: string, type: string, label: string, value: string[]) => {
     switch (type) {
@@ -15,9 +15,7 @@ export const FormBlock = (props: FormBlockProps) => {
         return (
           <div
             data-id={dataIdAttribute}
-            className={`mb-4 px-4 py-5 sm:p-6`}
-            onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
-            onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
+            className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
@@ -36,9 +34,7 @@ export const FormBlock = (props: FormBlockProps) => {
         return (
           <div
             data-id={dataIdAttribute}
-            className={`mb-4 px-4 py-5 sm:p-6`}
-            onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
-            onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
+            className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>

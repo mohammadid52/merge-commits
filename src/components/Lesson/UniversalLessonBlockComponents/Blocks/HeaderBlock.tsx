@@ -8,7 +8,7 @@ interface HeaderBlockProps extends RowWrapperProps {
 }
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
-  const {mode, id, dataIdAttribute, value, type, handleMouseOverToggle} = props;
+  const {mode, id, dataIdAttribute, value, type, handleEditBlockToggle} = props;
 
   const composeHeader = (inputId: string, inputValue: string, inputType: string) => {
     switch (inputType) {
@@ -17,7 +17,6 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
           <h2
             className={`
             relative
-            px-4 py-5 sm:p-6 
             w-full text-xl font-semibold  font-open text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
             {inputValue}
           </h2>
@@ -27,7 +26,6 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
           <h3
             className={`
             relative
-            
             w-full flex text-xl border-b-4 border-sea-green font-open font-medium text-left flex flex-row items-center text-gray-100 mt-4`}>
             {inputValue}
           </h3>
@@ -43,9 +41,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
         <div
           id={id}
           data-id={dataIdAttribute}
-          className={`px-4 py-5 sm:p-6 `}
-          onMouseEnter={mode === 'building' ? handleMouseOverToggle : undefined}
-          onMouseLeave={mode === 'building' ? handleMouseOverToggle : undefined}>
+          className={`p-4`}>
           {composeHeader(id, value, type)}
         </div>
       ) : null}

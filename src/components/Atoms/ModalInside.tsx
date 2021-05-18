@@ -76,9 +76,8 @@ const ModalInside: React.FC<ModalProps> = (modalProps: ModalProps) => {
 
   return (
       <div className={`
-      z-100
-        absolute inset-0 flex
-        justify-center items-center outline-none focus:outline-none`}>
+        z-100 w-full h-0
+        outline-none focus:outline-none`}>
         <div className={`mx-auto my-auto w-auto max-w-256`}>
           {/*<div className={`${theme.modals.content}`}>*/}
           <div>

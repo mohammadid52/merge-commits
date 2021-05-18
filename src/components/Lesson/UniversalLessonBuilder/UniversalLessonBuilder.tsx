@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { LessonPlansProps } from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
-import { InitialData } from '../../Dashboard/Admin/LessonsBuilder/StepActionComponent/CheckPointSteps/AddNewCheckPoint';
+import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
+import {InitialData} from '../../Dashboard/Admin/LessonsBuilder/StepActionComponent/CheckPointSteps/AddNewCheckPoint';
 import BuilderWrapper from './views/BuilderWrapper';
 import {
   PagePart,
@@ -9,10 +9,10 @@ import {
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import { exampleUniversalLesson } from './example_data/exampleUniversalLessonData';
+import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 
 interface UniversalLessonBuilderProps {
-  designersList?: { id: string; name: string; value: string }[];
+  designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
   lessonPlans?: LessonPlansProps[] | null;
   updateLessonPlan?: (plan: LessonPlansProps[]) => void;
@@ -60,7 +60,7 @@ const initialUniversalLessonPagePartContent: PartContent = {
  * THE BUILDER PARENT                      *
  *******************************************/
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
-  const { state, dispatch } = useContext(GlobalContext);
+  const {state, dispatch} = useContext(GlobalContext);
   const {
     designersList,
     lessonID,
@@ -76,7 +76,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
     if (state.user.role === 'TR' || state.user.role === 'FLW') {
-      dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'universal-lesson-builder' } });
+      dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'universal-lesson-builder'}});
     }
   }, [state.user.role]);
 
@@ -105,12 +105,19 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   };
 
   //  CORE DATA MANAGEMENT
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(initialUniversalLessonData);
-  const [selectedPageDetails, setSelectedPageDetails] = useState<UniversalLessonPage>(initialUniversalLessonPage);
-  const [selectedPagePartDetails, setSelectedPagePartDetails] = useState<PagePart>(initialUniversalLessonPagePart);
-  const [selectedPartContentDetails, setSelectedPartContentDetails] = useState<PartContent>(
-    initialUniversalLessonPagePartContent
+  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
+    initialUniversalLessonData
   );
+  const [selectedPageDetails, setSelectedPageDetails] = useState<UniversalLessonPage>(
+    initialUniversalLessonPage
+  );
+  const [selectedPagePartDetails, setSelectedPagePartDetails] = useState<PagePart>(
+    initialUniversalLessonPagePart
+  );
+  const [
+    selectedPartContentDetails,
+    setSelectedPartContentDetails,
+  ] = useState<PartContent>(initialUniversalLessonPagePartContent);
   /**********************************************
    * FUNCTIONALITY AND DATA FETCHES WILL
    * BE DONE BELOW THIS AREA
@@ -139,7 +146,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div id={`universalLessonBuilder`} className="flex bg-white shadow-5 sm:rounded-lg mb-4">
+    <div
+      id={`universalLessonBuilder`}
+      className="h-full flex bg-white shadow-5 sm:rounded-lg mb-4">
       {currentStepComp(universalBuilderStep)}
     </div>
   );

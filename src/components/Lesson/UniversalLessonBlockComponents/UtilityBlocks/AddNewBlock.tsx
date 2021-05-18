@@ -7,7 +7,6 @@ export const AddNewBlock = (props: RowWrapperProps) => {
   const {
     mode,
     hasContent,
-    handleMouseOverToggle,
     contentID,
     hoveredID,
     handleModalPopToggle,
@@ -20,8 +19,11 @@ export const AddNewBlock = (props: RowWrapperProps) => {
       flex justify-center items-center 
       bg-light-blue bg-opacity-0 
       hover:bg-light-blue hover:bg-opacity-20 
-      rounded-xl border-dashed border-4 border-light-blue-500`}>
-      <div className={`w-auto cursor-pointer`}>
+      rounded-xl border-dashed border-4 border-light-blue-500
+      z-50`}>
+      <div
+        onClick={() => handleModalPopToggle('ADD_CONTENT')}
+        className={`w-auto cursor-pointer z-50`}>
         <IconContext.Provider value={{size: '4rem', color: '#ffffff'}}>
           <IoMdAddCircleOutline />
         </IconContext.Provider>

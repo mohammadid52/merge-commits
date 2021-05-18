@@ -46,9 +46,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     selectedPartContentDetails,
     setSelectedPartContentDetails,
     initialUniversalLessonPagePartContent,
-
-
-
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
   //@ts-ignore
@@ -78,15 +75,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const handleModalPopToggle = (dialogToToggle: string) => {
     // Hide all UI Menus
-    hideAllUIMenus()
+    hideAllUIMenus();
 
     // Toggle Modal Pop Visibility
-    if (modalPopVisible) {
-      // setModalPopVisible(false)
-    } else {
-      setModalPopVisible(true);
+    if (!modalPopVisible) {
+      setModalPopVisible(true)
     }
-
     // Toggle Which Dialog is Shown
     if (currentModalDialog !== dialogToToggle) {
       setCurrentModalDialog(dialogToToggle);
@@ -107,7 +101,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   return (
-    <div id={`builderWrapper`} className="h-auto min-h-full relative bg-white shadow-5 sm:rounded-lg">
+    <div
+      id={`builderWrapper`}
+      className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
       <Toolbar
         selectedPageDetails={selectedPageDetails}
         hierarchyVisible={hierarchyVisible}
@@ -116,6 +112,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
         setBuilderMenuVisible={setBuilderMenuVisible}
+        modalPopVisible={modalPopVisible}
+        setModalPopVisible={setModalPopVisible}
+        currentModalDialog={currentModalDialog}
       />
 
       {modalPopVisible && (

@@ -377,7 +377,7 @@ const LessonEdit = (props: LessonEditProps) => {
                 <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
               ) : (
                 <Fragment>
-                  <div className="mx-6">{currentStepComp(activeStep)}</div>
+                  <div className="mx-6 h-full">{currentStepComp(activeStep)}</div>
                 </Fragment>
               )}
             </div>

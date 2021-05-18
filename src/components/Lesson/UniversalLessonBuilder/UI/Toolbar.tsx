@@ -1,8 +1,12 @@
 import React from 'react';
-import { HierarchyToggle } from './Toolbar/HierarchyToggle';
-import { PageGalleryToggle } from './Toolbar/PageGalleryToggle';
-import { UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
-import { BuilderMenuToggle } from './Toolbar/BuilderMenuToggle';
+import {HierarchyToggle} from './Toolbar/HierarchyToggle';
+import {PageGalleryToggle} from './Toolbar/PageGalleryToggle';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {BuilderMenuToggle} from './Toolbar/BuilderMenuToggle';
+import ModalPopIn from '../../../Molecules/ModalPopIn';
+import NewPageDialog from './ModalDialogs/NewPageDialog';
+import UseTemplateDialog from './ModalDialogs/UseTemplateDialog';
+import AddContentDialog from './ModalDialogs/AddContentDialog';
 
 interface ToolbarProps {
   selectedPageDetails?: UniversalLessonPage;
@@ -12,6 +16,9 @@ interface ToolbarProps {
   setGalleryVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   builderMenuVisible?: boolean;
   setBuilderMenuVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  modalPopVisible?: boolean;
+  setModalPopVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  currentModalDialog?: string;
 }
 
 export const Toolbar = (props: ToolbarProps) => {
@@ -23,6 +30,9 @@ export const Toolbar = (props: ToolbarProps) => {
     setHierarchyVisible,
     builderMenuVisible,
     setBuilderMenuVisible,
+    modalPopVisible,
+    setModalPopVisible,
+    currentModalDialog,
   } = props;
   const dropDownOptions = [
     {
@@ -47,15 +57,24 @@ export const Toolbar = (props: ToolbarProps) => {
     },
   ];
 
+  const handleModalVisibility = () => {
+    if (modalPopVisible) {
+      setModalPopVisible(false);
+    }
+  };
+
   const handleSetGalleryVisibility = () => {
+    handleModalVisibility();
     setGalleryVisible(!galleryVisible);
   };
 
   const handleSetHierarchyVisibility = () => {
+    handleModalVisibility();
     setHierarchyVisible(!hierarchyVisible);
   };
 
   const handleSetBuilderMenuVisibility = () => {
+    handleModalVisibility();
     setBuilderMenuVisible(!builderMenuVisible);
   };
 
@@ -67,7 +86,9 @@ export const Toolbar = (props: ToolbarProps) => {
           handleSetHierarchyVisibility={handleSetHierarchyVisibility}
         />
         <PageGalleryToggle handleSetGalleryVisibility={handleSetGalleryVisibility} />
-        <BuilderMenuToggle handleSetBuilderMenuVisibility={handleSetBuilderMenuVisibility} />
+        <BuilderMenuToggle
+          handleSetBuilderMenuVisibility={handleSetBuilderMenuVisibility}
+        />
       </div>
     </div>
   );
