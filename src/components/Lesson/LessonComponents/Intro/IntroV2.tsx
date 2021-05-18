@@ -96,9 +96,7 @@ const Intro = (props: LessonComponentsInterface) => {
           titleCenter
           title={state.data.lesson?.title && stripStyleFromHTML(state.data.lesson?.title)}
         />
-        <div
-          style={{minHeight: '80vh'}}
-          className="flex items-center w-auto flex-col justify-start">
+        <div className="flex items-center mt-12 w-auto flex-col justify-start">
           {currentPage.name === 'message' && (
             <>
               <Banner
