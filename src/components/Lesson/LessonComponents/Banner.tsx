@@ -77,10 +77,10 @@ const Banner = (props: BannerProps) => {
     <>
       {title && (
         <div
-          className={`text-4xl ${
+          className={`text-4xl w-auto ${
             titleCenter
-              ? 'text-center pb-2 mb-2 relative font-medium text-gray-100 w-3/10'
-              : 'w-auto pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100'
+              ? 'text-center pb-2 mb-2 relative font-semibold text-gray-100'
+              : 'pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100 '
           }`}>
           {iconName && (
             <IconContext.Provider value={{color: '#EDF2F7', size: '1.5rem'}}>
@@ -88,7 +88,7 @@ const Banner = (props: BannerProps) => {
             </IconContext.Provider>
           )}
           <h1
-            className={`${titleCenter ? 'w-auto animate__border ' : ''} ${
+            className={`${titleCenter ? 'w-auto ' : ''} ${
               animate && 'fade__animation2'
             } `}
             dangerouslySetInnerHTML={{__html: title}}

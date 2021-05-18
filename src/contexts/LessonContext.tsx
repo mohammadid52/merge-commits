@@ -75,7 +75,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     },
   ];
 
-  const initialPage = pageList[3];
+  const initialPage = pageList[0];
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   /**
