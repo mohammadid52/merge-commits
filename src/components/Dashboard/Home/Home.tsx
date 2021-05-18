@@ -12,6 +12,7 @@ import isEmpty from 'lodash/isEmpty';
 import {getAsset} from '../../../assets';
 import HeroBanner from '../../Header/HeroBanner';
 import times from 'lodash/times';
+import {difference} from 'lodash';
 
 export interface ModifiedListProps {
   id: any;
@@ -185,10 +186,10 @@ const Home = (props: ClassroomControlProps) => {
               roomIndex: index,
             };
 
-            if (!uniqIds.includes(curriculum?.id)) {
-              modifiedClassList.push(modifiedItem);
-              uniqIds.push(curriculum?.id);
-            }
+            // if (!uniqIds.includes(curriculum?.id)) {
+            //   uniqIds.push(curriculum?.id);
+            // }
+            modifiedClassList.push(modifiedItem);
           }
         });
       });
