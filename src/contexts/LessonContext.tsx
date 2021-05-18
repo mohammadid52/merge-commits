@@ -75,7 +75,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     },
   ];
 
-  const initialPage = pageList[0];
+  const initialPage = pageList[3];
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   /**
@@ -188,14 +188,14 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         createPersonLocation();
       }
     }
-    return ()=>setLoaded(false)
+    return () => setLoaded(false);
   }, [loaded, state.syllabusLessonID, state.studentAuthID]);
 
   useEffect(() => {
     if (recentOp !== '') {
       updatePersonLocation();
     }
-    return ()=>setRecentOp('')
+    return () => setRecentOp('');
   }, [state.currentPage]);
 
   //  END OF LOCATION TRACKING SCRIPT

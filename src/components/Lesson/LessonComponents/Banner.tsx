@@ -79,8 +79,8 @@ const Banner = (props: BannerProps) => {
         <div
           className={`text-4xl ${
             titleCenter
-              ? 'text-center pb-2 mb-2 relative font-medium text-gray-100 w-3/10 mt-4'
-              : theme.banner
+              ? 'text-center pb-2 mb-2 relative font-medium text-gray-100 w-3/10'
+              : 'w-auto pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100'
           }`}>
           {iconName && (
             <IconContext.Provider value={{color: '#EDF2F7', size: '1.5rem'}}>
@@ -98,7 +98,7 @@ const Banner = (props: BannerProps) => {
 
       {titleSection && (
         <h2
-          className={`w-full text-xl font-semibold  ${theme.banner} ${theme.underline}`}>
+          className={`text-xl w-auto pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100 ${theme.underline}`}>
           <span
             className={animate && 'fade__animation2'}
             dangerouslySetInnerHTML={{__html: titleSection}}
