@@ -95,7 +95,7 @@ const RoomTiles = (props: {
 
                     return (
                       <div
-                        onClick={() => handleRoomSelection(roomId, roomName, roomIndex)}
+                        onClick={() => handleRoomSelection(roomId, roomName, roomIndex, !isTeacher ? 'classroom' : 'lesson-planner')}
                         key={`homepage__classrooms-${idx}`}
                         className="flex shadow flex-col rounded-lg overflow-hidden ">
                         <div className="flex-shrink-0">

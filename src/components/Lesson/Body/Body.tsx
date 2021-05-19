@@ -44,6 +44,7 @@ export interface BodyProps {
 
 const Body = (props: BodyProps) => {
   const {setupComplete, checkpointsLoaded, lessonDataLoaded, checkpointsItems} = props;
+
   const {state, theme, dispatch} = useContext(LessonContext);
   const location = useLocation();
   const history = useHistory();

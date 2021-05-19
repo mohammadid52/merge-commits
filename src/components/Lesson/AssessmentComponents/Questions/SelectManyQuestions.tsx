@@ -7,6 +7,7 @@ import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 import {QuestionProps} from '../Question';
 import LessonElementCard from '../../../Atoms/LessonElementCard';
 import find from 'lodash/find';
+import {get} from 'lodash';
 
 interface SelectManyState {
   id: string;
@@ -33,11 +34,15 @@ const SelectManyQuestions = (props: QuestionProps) => {
   const {state, theme, dispatch} = switchContext;
 
   const questionId = question.question.id;
+  const checkpoint = get(state, `questionData[${checkpointID}]`, null);
 
   const manyQuestInitAns =
-    find(state.questionData[checkpointID], (q) => q.qid === questionId).response || [];
+    (checkpoint && find(checkpoint, (q) => q.qid === questionId).response) || [];
 
-  const [input, setInput] = useState<SelectManyState>({id: '', value: manyQuestInitAns});
+  const [input, setInput] = useState<SelectManyState>({
+    id: '',
+    value: manyQuestInitAns || '',
+  });
 
   /**
    * Function to add multi-select options to input.value array
