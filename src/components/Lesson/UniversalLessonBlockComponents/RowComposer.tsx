@@ -8,6 +8,7 @@ import {FormBlock} from './Blocks/FormBlock';
 import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
+import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 
 const RowComposer = (props: RowComposerProps) => {
   const {mode, selectedPageDetails, handleModalPopToggle} = props;
@@ -75,46 +76,61 @@ const RowComposer = (props: RowComposerProps) => {
         [
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <EditOverlayBlock
-              mode={mode}
-              key={`pp_${idx}`}
-              contentID={`pp_${idx}`}
-              editedID={editedID}>
-              <RowWrapper
+            <>
+              <EditOverlayBlock
+                key={`pp_${idx}`}
                 mode={mode}
-                hasContent={pagePart.partContent.length > 0}
                 contentID={`pp_${idx}`}
-                dataIdAttribute={`pp_${idx}`}
-                pagePart={pagePart}>
-                {pagePart.partContent.length > 0 ? (
-                  pagePart.partContent.map((content: PartContent, idx2: number) => (
-                    <EditOverlayBlock
-                      key={`pp_${idx}_pc_${idx2}`}
-                      mode={mode}
-                      contentID={`pp_${idx}_pc_${idx2}`}
-                      editedID={editedID}
-                      isComponent={true}
-                      handleEditBlockToggle={handleEditBlockToggle}>
-                      {content.value.length > 0 ? (
-                        content.value.map((value: any, idx3: number) =>
-                          composePartContent(
-                            content.id,
-                            content.type,
-                            value,
-                            `pp_${idx}_pc_${idx2}_cv_${idx3}`
+                editedID={editedID}
+                handleEditBlockToggle={handleEditBlockToggle}>
+                <RowWrapper
+                  mode={mode}
+                  hasContent={pagePart.partContent.length > 0}
+                  contentID={`pp_${idx}`}
+                  dataIdAttribute={`pp_${idx}`}
+                  pagePart={pagePart}>
+                  {pagePart.partContent.length > 0 ? (
+                    pagePart.partContent.map((content: PartContent, idx2: number) => (
+                      <EditOverlayBlock
+                        key={`pp_${idx}_pc_${idx2}`}
+                        mode={mode}
+                        contentID={`pp_${idx}_pc_${idx2}`}
+                        editedID={editedID}
+                        isComponent={true}
+                        isLast={idx2 === pagePart.partContent.length - 1}
+                        handleEditBlockToggle={handleEditBlockToggle}>
+                        {content.value.length > 0 ? (
+                          content.value.map((value: any, idx3: number) =>
+                            composePartContent(
+                              content.id,
+                              content.type,
+                              value,
+                              `pp_${idx}_pc_${idx2}_cv_${idx3}`
+                            )
                           )
-                        )
-                      ) : (
-                        <p>No content</p>
-                      )}
-                    </EditOverlayBlock>
-                  ))
-                ) : (
-                  <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
-                )}
-              </RowWrapper>
-            </EditOverlayBlock>
+                        ) : (
+                          <p>No content</p>
+                        )}
+                      </EditOverlayBlock>
+                    ))
+                  ) : (
+                    <h1 className={`w-full text-center`}>
+                      This pagepart has no content.
+                    </h1>
+                  )}
+                </RowWrapper>
+              </EditOverlayBlock>
+
+              {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
+              {idx < selectedPageDetails.pageContent.length - 1 && (
+                <AddNewBlockMini
+                  mode={mode}
+                  handleModalPopToggle={handleModalPopToggle}
+                />
+              )}
+            </>
           )),
+          // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
           <EditOverlayBlock
             mode={mode}
             key={`pp_addNew`}

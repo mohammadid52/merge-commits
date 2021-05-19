@@ -63,10 +63,10 @@ const NewPageDialog = () => {
           <p className={`text-left block text-xs font-medium text-gray-700`}>
             Activities
           </p>
-          <div className={`grid grid-cols-3 gap-2 h-auto w-full`}>
-            <div className={`w-full h-24 bg-gray-200 rounded`}></div>
-            <div className={`w-full h-24 bg-gray-200 rounded`}></div>
-            <div className={`w-full h-24 bg-gray-200 rounded`}></div>
+          <div className={`flex flex-wrap w-full`}>
+            <div className={`m-1 w-16 h-24 bg-gray-200 rounded`}></div>
+            <div className={`m-1 w-16 h-24 bg-gray-200 rounded`}></div>
+            <div className={`m-1 w-16 h-24 bg-gray-200 rounded`}></div>
           </div>
 
           <p className={`text-left block text-xs font-medium text-gray-700`}>

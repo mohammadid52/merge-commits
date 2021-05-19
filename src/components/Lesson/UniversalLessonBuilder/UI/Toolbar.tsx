@@ -8,7 +8,7 @@ import NewPageDialog from './ModalDialogs/NewPageDialog';
 import UseTemplateDialog from './ModalDialogs/UseTemplateDialog';
 import AddContentDialog from './ModalDialogs/AddContentDialog';
 
-interface ToolbarProps {
+export interface ToolbarProps {
   selectedPageDetails?: UniversalLessonPage;
   hierarchyVisible?: boolean;
   setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,6 +19,7 @@ interface ToolbarProps {
   modalPopVisible?: boolean;
   setModalPopVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   currentModalDialog?: string;
+  handleModalPopToggle?: (dialogToToggle: string) => void;
 }
 
 export const Toolbar = (props: ToolbarProps) => {
@@ -33,29 +34,8 @@ export const Toolbar = (props: ToolbarProps) => {
     modalPopVisible,
     setModalPopVisible,
     currentModalDialog,
+    handleModalPopToggle,
   } = props;
-  const dropDownOptions = [
-    {
-      value: 'Save Draft',
-      option: 'Save Draft',
-    },
-    {
-      value: 'Publish Lesson',
-      option: 'Publish Lesson',
-    },
-    {
-      value: 'Save Changes',
-      option: 'Save Changes',
-    },
-    {
-      value: 'Discard Changes',
-      option: 'Discard Changes',
-    },
-    {
-      value: 'Delete Lesson',
-      option: 'Delete Lesson',
-    },
-  ];
 
   const handleModalVisibility = () => {
     if (modalPopVisible) {
@@ -64,7 +44,8 @@ export const Toolbar = (props: ToolbarProps) => {
   };
 
   const handleSetGalleryVisibility = () => {
-    handleModalVisibility();
+    // handleModalVisibility();
+    handleModalPopToggle('VIEW_PAGES')
     setGalleryVisible(!galleryVisible);
   };
 
@@ -85,7 +66,10 @@ export const Toolbar = (props: ToolbarProps) => {
           selectedPageDetails={selectedPageDetails}
           handleSetHierarchyVisibility={handleSetHierarchyVisibility}
         />
-        <PageGalleryToggle handleSetGalleryVisibility={handleSetGalleryVisibility} />
+        <PageGalleryToggle
+          handleSetGalleryVisibility={handleSetGalleryVisibility}
+          handleModalPopToggle={handleModalPopToggle}
+        />
         <BuilderMenuToggle
           handleSetBuilderMenuVisibility={handleSetBuilderMenuVisibility}
         />

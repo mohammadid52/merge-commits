@@ -33,5 +33,6 @@ export interface RowWrapperProps extends RowComposerProps {
   children?: React.ReactNode;
   pagePart?: PagePart;
   isComponent?: boolean;
+  isLast?: boolean;
   handleEditBlockToggle?: (dataID: string) => void;
 }

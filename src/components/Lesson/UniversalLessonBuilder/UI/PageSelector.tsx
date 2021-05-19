@@ -52,7 +52,6 @@ const PageSelector = (props: PageSelectorProps) => {
     <div
       className={`
            z-50
-           h-0
              ${
                galleryVisible
                  ? 'transition ease-out duration-100'
@@ -64,52 +63,46 @@ const PageSelector = (props: PageSelectorProps) => {
                  : 'transform opacity-0 h-0 overflow-hidden'
              }
           `}>
-            {/* Page Selection Buttons */}
-            {!props.loading && (
-              <div className={`bg-white`}>
-                <div className="max-h-screen px-4 overflow-y-auto">
-                  <div className="py-2">
-                    {/* Header */}
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                        <div className="w-full border-t border-gray-300"></div>
-                      </div>
-                      <div className="relative flex justify-center">
-                        <span className="px-3 bg-white text-lg font-medium text-gray-900">
-                          Lesson Pages
-                        </span>
-                        <span>
-                          <Buttons
-                            onClick={() => handleModalPopToggle('NEW_PAGE')}
-                            Icon={VscNewFile}
-                            label="New Page"
-                            btnClass="px-4 mx-4"
-                          />
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-                      {pages && pages.length > 0
-                        ? pages.map((page: UniversalLessonPage, idx: number) => (
-                            <button
-                              key={`pageSelector_${idx}`}
-                              id={`pageThumb_${page.id}`}
-                              onClick={() => handleSelectPage(page.id)}
-                              className="inline-flex items-center px-2.5 py-1.5 border-0 border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                              <div className="flex-1 flex flex-col p-2 text-center">
-                                {page.id}
-                              </div>
-                            </button>
-                          ))
-                        : null}
-                    </div>
-
-                    {/*<PageGalleryControls handleModalPopToggle={handleModalPopToggle}/>*/}
-                  </div>
+      {/* Page Selection Buttons */}
+      {!props.loading && (
+        <div className={`bg-white`}>
+              {/* Header */}
+              <div className="relative p-4">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative mx-2 flex items-center justify-start">
+                  <p className="w-auto bg-white text-lg font-medium text-gray-900">
+                    Lesson Pages
+                  </p>
+                  <Buttons
+                    onClick={() => handleModalPopToggle('NEW_PAGE')}
+                    Icon={VscNewFile}
+                    label="New Page"
+                    overrideClass={true}
+                    btnClass="w-auto text-white bg-gray-400 mx-2 w-16"
+                  />
                 </div>
               </div>
-            )}
+
+              <div className="py-4 flex flex-wrap bg-gray-200">
+                {pages && pages.length > 0
+                  ? pages.map((page: UniversalLessonPage, idx: number) => (
+                      <div
+                        key={`pageSelector_${idx}`}
+                        id={`pageThumb_${page.id}`}
+                        onClick={() => handleSelectPage(page.id)}
+                        className={`w-auto ml-4 flex flex-col cursor-pointer`}>
+                        <div className="relative w-16 h-24 mb-2 bg-white rounded"/>
+                        <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
+                      </div>
+                    ))
+                  : null}
+              </div>
+
+              {/*<PageGalleryControls handleModalPopToggle={handleModalPopToggle}/>*/}
+            </div>
+      )}
     </div>
   );
 };

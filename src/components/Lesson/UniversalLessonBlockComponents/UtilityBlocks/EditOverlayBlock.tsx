@@ -3,12 +3,17 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
 const EditOverlayBlock = (props: RowWrapperProps) => {
-  const {mode, children, contentID, editedID, isComponent, handleEditBlockToggle} = props;
+  const {mode, children, contentID, editedID, isComponent, isLast, handleEditBlockToggle} = props;
 
   return (
     <>
       {mode === 'building' ? (
-        <div className={`h-auto flex items-center`}>
+        <div className={`
+        relative 
+        h-auto 
+        flex items-center
+        ${isComponent && !isLast ? 'border-b-0 border-dashed border-gray-400':''}
+        `}>
           <EditOverlayControls
             mode={mode}
             contentID={contentID}

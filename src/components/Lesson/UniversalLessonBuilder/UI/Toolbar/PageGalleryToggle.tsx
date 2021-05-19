@@ -1,9 +1,11 @@
 import Buttons from '../../../../Atoms/Buttons';
 import React from 'react';
 import { FiLayers } from 'react-icons/fi';
+import { ToolbarProps } from '../Toolbar';
 
-interface PageGalleryToggleProps {
-  handleSetGalleryVisibility: () => void;
+interface PageGalleryToggleProps extends ToolbarProps {
+  handleSetGalleryVisibility?: () => void;
+  handleModalPopToggle?: (dialogToToggle: string) => void;
 }
 
 export const PageGalleryToggle = (props: PageGalleryToggleProps) => {

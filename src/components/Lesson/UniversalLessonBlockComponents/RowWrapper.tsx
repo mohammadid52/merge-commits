@@ -5,13 +5,14 @@ export const RowWrapper = (props: RowWrapperProps) => {
   const {mode, hasContent, dataIdAttribute, contentID, children, pagePart} = props;
 
   const viewModeClass = ``;
-  const buildModeClass = `ring-2 hover:ring-4`;
+  const buildModeClass = `border-0 border-dashed border-gray-400`;
 
   return (
     <div
       id={contentID}
       data-id={dataIdAttribute}
       className={`
+        relative
         my-4
         z-50
       `}>

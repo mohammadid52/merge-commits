@@ -89,6 +89,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
+      case 'VIEW_PAGES':
+        return <PageSelector
+          universalLessonDetails={universalLessonDetails}
+          universalBuilderDict={UniversalBuilderDict}
+          userLanguage={userLanguage}
+          galleryVisible={galleryVisible}
+          loading={loading}
+          selectedPageDetails={selectedPageDetails}
+          setSelectedPageDetails={setSelectedPageDetails}
+          handleModalPopToggle={handleModalPopToggle}
+        />
       case 'NEW_PAGE':
         return <NewPageDialog />;
       case 'USE_TEMPLATE':
@@ -115,6 +126,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         modalPopVisible={modalPopVisible}
         setModalPopVisible={setModalPopVisible}
         currentModalDialog={currentModalDialog}
+        handleModalPopToggle={handleModalPopToggle}
       />
 
       {modalPopVisible && (
@@ -134,16 +146,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setSelectedPartContentDetails={setSelectedPartContentDetails}
       />
 
-      <PageSelector
-        universalLessonDetails={universalLessonDetails}
-        universalBuilderDict={UniversalBuilderDict}
-        userLanguage={userLanguage}
-        galleryVisible={galleryVisible}
-        loading={loading}
-        selectedPageDetails={selectedPageDetails}
-        setSelectedPageDetails={setSelectedPageDetails}
-        handleModalPopToggle={handleModalPopToggle}
-      />
+      {/*<PageSelector*/}
+      {/*  universalLessonDetails={universalLessonDetails}*/}
+      {/*  universalBuilderDict={UniversalBuilderDict}*/}
+      {/*  userLanguage={userLanguage}*/}
+      {/*  galleryVisible={galleryVisible}*/}
+      {/*  loading={loading}*/}
+      {/*  selectedPageDetails={selectedPageDetails}*/}
+      {/*  setSelectedPageDetails={setSelectedPageDetails}*/}
+      {/*  handleModalPopToggle={handleModalPopToggle}*/}
+      {/*/>*/}
 
       <BuilderMenu
         galleryVisible={galleryVisible}
