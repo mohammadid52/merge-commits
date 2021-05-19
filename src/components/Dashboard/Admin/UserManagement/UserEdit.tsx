@@ -105,7 +105,7 @@ const UserEdit = (props: UserInfoProps) => {
     }
   }, [questionData]);
 
-  const updateQuestionData = async (responseObj: any) => {
+  const updateQuestionData = async (responseObj: any, checkpointID: string) => {
     try {
       // Code for Other Field
 
@@ -113,7 +113,10 @@ const UserEdit = (props: UserInfoProps) => {
         if (hasOther(resp.response, 'Other')) {
           return {
             ...resp,
-            response: [`Other || ${otherField}`],
+            response: checkpointData[checkpointID][resp.qid],
+            otherResponse: checkpointData[checkpointID][resp.qid]
+              .toString()
+              .split(' || ')[1],
           };
         } else {
           return {...resp};
@@ -133,12 +136,16 @@ const UserEdit = (props: UserInfoProps) => {
     }
   };
 
-  const updatePersonCheckpointData = async (questionDataId: string, questions: any[]) => {
+  const updatePersonCheckpointData = async (
+    questionDataId: string,
+    questions: any[],
+    checkpointID: string
+  ) => {
     let responseObject = {
       id: questionDataId,
       responseObject: questions,
     };
-    updateQuestionData(responseObject);
+    updateQuestionData(responseObject, checkpointID);
   };
 
   const createQuestionData = async (responseObj: any) => {
@@ -193,7 +200,11 @@ const UserEdit = (props: UserInfoProps) => {
             (question: any) => question.checkpointID === item.checkpointId
           );
           if (currentItem) {
-            return updatePersonCheckpointData(currentItem.id, item.questions);
+            return updatePersonCheckpointData(
+              currentItem.id,
+              item.questions,
+              item.checkpointId
+            );
           } else {
             return savePersonCheckpointData(item.checkpointId, item.questions);
           }
@@ -229,6 +240,16 @@ const UserEdit = (props: UserInfoProps) => {
       [checkpointID]: {
         ...checkpointData[checkpointID],
         [questionID]: e.target.value,
+      },
+    });
+  };
+
+  const onOtherInputChange = (e: any, checkpointID: string, questionID: string) => {
+    setCheckpointData({
+      ...checkpointData,
+      [checkpointID]: {
+        ...checkpointData[checkpointID],
+        [questionID]: `Other || ${e.target.value}`,
       },
     });
   };
@@ -414,46 +435,12 @@ const UserEdit = (props: UserInfoProps) => {
 
   // Code for Other Field
 
-  const getOtherValue = (val: string) => {
-    const answers = val.split(' || ');
-    if (answers.length > 1) {
-      const otherFieldValue = answers[1];
-      return otherFieldValue;
-    } else {
-      return otherField;
-    }
-  };
-
-  const [localVal, setLocalVal] = useState('');
-  const [otherField, setOtherField] = useState('');
-
-  useEffect(() => {
-    if (localVal) {
-      const ans = getOtherValue(localVal);
-      setOtherField(ans);
-    }
-  }, [localVal]);
-
-  const hasOther = (val: string | string[], other: string) =>
-    val.toString().includes(other);
-
-  const getOtherPlaceholder = (val: any) => {
-    if (hasOther(val, 'Other')) {
-      if (val.split(' || ').length === 2) {
-        return val.split(' || ')[0];
-      } else {
-        return val;
-      }
-    } else {
-      return val;
-    }
+  const hasOther = (val: string | string[], other: string) => {
+    return val ? val.toString().includes(other) : false;
   };
 
   const isOther = (val: any) => {
     if (hasOther(val, 'Other')) {
-      if (!localVal) {
-        setLocalVal(val);
-      }
       return true;
     } else return false;
   };
@@ -670,9 +657,11 @@ const UserEdit = (props: UserInfoProps) => {
                               <Selector
                                 selectedItem={
                                   checkpointData[checkpointID]
-                                    ? getOtherPlaceholder(
+                                    ? isOther(
                                         checkpointData[checkpointID][item.question.id]
                                       )
+                                      ? 'Other'
+                                      : checkpointData[checkpointID][item.question.id]
                                     : ''
                                 }
                                 placeholder=""
@@ -693,11 +682,29 @@ const UserEdit = (props: UserInfoProps) => {
                                 ) && (
                                   <div className="col-span-2">
                                     <FormInput
-                                      value={otherField}
-                                      id={`${item.question.id}_other`}
-                                      placeHolder="Other"
+                                      value={
+                                        checkpointData[checkpointID]
+                                          ? checkpointData[checkpointID][
+                                              item.question.id
+                                            ].split(' || ').length === 2
+                                            ? checkpointData[checkpointID][
+                                                item.question.id
+                                              ].split(' || ')[1]
+                                            : checkpointData[checkpointID][
+                                                item.question.id
+                                              ].split(' || ')[0]
+                                          : ''
+                                      }
+                                      id={item.question.id}
+                                      placeHolder="Mention other"
                                       name="other"
-                                      onChange={(e) => setOtherField(e.target.value)}
+                                      onChange={(e) => {
+                                        onOtherInputChange(
+                                          e,
+                                          checkpointID,
+                                          item.question.id
+                                        );
+                                      }}
                                     />
                                   </div>
                                 )}

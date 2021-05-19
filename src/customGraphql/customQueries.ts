@@ -2373,6 +2373,7 @@ export const listQuestionDatas = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
