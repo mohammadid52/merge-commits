@@ -125,11 +125,13 @@ const ProfileEdit = (props: UserInfoProps) => {
   };
 
   const updateQuestionData = async (responseObj: any) => {
+    // Code for Other Field
+
     const val = responseObj.responseObject.map((resp: any) => {
       if (hasOther(resp.response, 'Other')) {
         return {
           ...resp,
-          response: [`Other || ${genderField}`],
+          response: [`Other || ${otherField}`],
         };
       } else {
         return {...resp};
@@ -137,6 +139,9 @@ const ProfileEdit = (props: UserInfoProps) => {
     });
 
     const modifiedResponseObj = {...responseObj, responseObject: val};
+    // Ends here
+
+    // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
 
     try {
       const questionData = await API.graphql(
@@ -368,17 +373,17 @@ const ProfileEdit = (props: UserInfoProps) => {
       const otherFieldValue = answers[1];
       return otherFieldValue;
     } else {
-      return genderField;
+      return otherField;
     }
   };
 
   const [localVal, setLocalVal] = useState('');
-  const [genderField, setGenderField] = useState('');
+  const [otherField, setOtherField] = useState('');
 
   useEffect(() => {
     if (localVal) {
       const ans = getOtherValue(localVal);
-      setGenderField(ans);
+      setOtherField(ans);
     }
   }, [localVal]);
 
@@ -577,12 +582,12 @@ const ProfileEdit = (props: UserInfoProps) => {
                                       ) && (
                                         <div className="col-span-2">
                                           <FormInput
-                                            value={genderField}
+                                            value={otherField}
                                             id={`${item.question.id}_other`}
                                             placeHolder="Other"
                                             name="other"
                                             onChange={(e) =>
-                                              setGenderField(e.target.value)
+                                              setOtherField(e.target.value)
                                             }
                                           />
                                         </div>
