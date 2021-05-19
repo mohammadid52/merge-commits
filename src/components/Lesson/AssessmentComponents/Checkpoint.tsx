@@ -117,12 +117,12 @@ const Checkpoint = (props: {
        *  3.
        *  SHOW OUTRO + SAVE, IF SURVEY
        */}
-      {!isTeacher && state.data.lesson.type !== 'lesson' && currentPage === 'undefined' && (
+      {/* {!isTeacher && state.data.lesson.type !== 'lesson' && currentPage === 'undefined' && (
         <>
           <SurveyOutro />
           <SaveQuit roomID={roomId} />
         </>
-      )}
+      )} */}
     </div>
   );
 };

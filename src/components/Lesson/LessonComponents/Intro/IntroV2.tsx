@@ -96,62 +96,75 @@ const Intro = (props: LessonComponentsInterface) => {
           titleCenter
           title={state.data.lesson?.title && stripStyleFromHTML(state.data.lesson?.title)}
         />
-        <div
-          style={{minHeight: '80vh'}}
-          className="flex items-center w-auto flex-col justify-center">
-          {currentPage.name === 'message' && (
-            <>
-              <Banner
-                animate
-                titleSection={
-                  state.data.lesson?.introductionTitle &&
-                  stripStyleFromHTML(state.data.lesson?.introductionTitle)
-                }
-              />
-              <div>
-                <p
-                  className={`mb-1 text-gray-100 fade__animation2 ${theme.elem.text}`}
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      state.data.lesson?.introduction &&
-                      stripStyleFromHTML(state.data.lesson?.introduction),
-                  }}
+        <div className="flex items-center mt-12 w-auto flex-col justify-start">
+          <div
+            style={{
+              boxShadow:
+                currentPage.name !== 'checkpoints' ? '0 0 17px rgba(0,0,0,0.06)' : 'none',
+            }}
+            className={`${
+              currentPage.name !== 'checkpoints'
+                ? 'bg-gray-700 min-w-156 z-10 bg-opacity-50 py-3 px-6 rounded-md'
+                : ''
+            } `}>
+            {currentPage.name === 'message' && (
+              <>
+                <Banner
+                  animate
+                  titleSection={
+                    state.data.lesson?.introductionTitle &&
+                    stripStyleFromHTML(state.data.lesson?.introductionTitle)
+                  }
                 />
-              </div>
-            </>
-          )}
-          {currentPage.name === 'instructions' && (
-            <>
-              <Banner
-                animate
-                titleSection={
-                  state.data.lesson?.instructionsTitle &&
-                  stripStyleFromHTML(state.data.lesson?.instructionsTitle)
-                }
+                <div>
+                  <p
+                    className={`mb-1 text-gray-100 fade__animation2 ${theme.elem.text}`}
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        state.data.lesson?.introduction &&
+                        stripStyleFromHTML(state.data.lesson?.introduction),
+                    }}
+                  />
+                </div>
+              </>
+            )}
+            {currentPage.name === 'instructions' && (
+              <>
+                <Banner
+                  animate
+                  titleSection={
+                    state.data.lesson?.instructionsTitle &&
+                    stripStyleFromHTML(state.data.lesson?.instructionsTitle)
+                  }
+                />
+                <InstructionBlock
+                  animate
+                  instructions={
+                    state.data.lesson.instructions &&
+                    stripStyleFromHTML(state.data.lesson.instructions)
+                  }
+                />
+              </>
+            )}
+            {currentPage.name === 'closing' && (
+              <>
+                <SurveyOutro animate />
+              </>
+            )}
+            {currentPage.name === 'checkpoints' && (
+              <Checkpoint
+                fromClosing={fromClosing}
+                isTeacher={false}
+                checkpointsItems={checkpointsItems}
               />
-              <InstructionBlock
-                animate
-                instructions={
-                  state.data.lesson.instructions &&
-                  stripStyleFromHTML(state.data.lesson.instructions)
-                }
-              />
-            </>
-          )}
+            )}
+          </div>
+
           {currentPage.name === 'closing' && (
             <>
-              <SurveyOutro animate />
               <SaveQuit roomID={roomId} />
             </>
           )}
-          {currentPage.name === 'checkpoints' && (
-            <Checkpoint
-              fromClosing={fromClosing}
-              isTeacher={false}
-              checkpointsItems={checkpointsItems}
-            />
-          )}
-
           {currentPage.name !== 'checkpoints' && (
             <div
               className={`flex mt-4 items-center  ${
