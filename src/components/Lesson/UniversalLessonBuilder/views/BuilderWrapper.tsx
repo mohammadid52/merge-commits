@@ -65,13 +65,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     if (hierarchyVisible) {
       setHierarchyVisible(false);
     }
-    if (galleryVisible) {
-      setGalleryVisible(false);
-    }
     if (builderMenuVisible) {
       setBuilderMenuVisible(false);
     }
   };
+
+  const hideAllModals = () => {
+    setModalPopVisible(false)
+    setCurrentModalDialog('');
+  }
 
   const handleModalPopToggle = (dialogToToggle: string) => {
     // Hide all UI Menus
@@ -125,13 +127,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setBuilderMenuVisible={setBuilderMenuVisible}
         modalPopVisible={modalPopVisible}
         setModalPopVisible={setModalPopVisible}
+        hideAllModals={hideAllModals}
         currentModalDialog={currentModalDialog}
         handleModalPopToggle={handleModalPopToggle}
       />
 
       {modalPopVisible && (
         <ModalPopIn
-          closeAction={() => setModalPopVisible(false)}
+          closeAction={() => hideAllModals()}
           inputJSX={modalDialogSwitch(currentModalDialog)}
         />
       )}

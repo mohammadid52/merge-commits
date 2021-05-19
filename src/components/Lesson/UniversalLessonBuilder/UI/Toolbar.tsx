@@ -18,6 +18,7 @@ export interface ToolbarProps {
   setBuilderMenuVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   modalPopVisible?: boolean;
   setModalPopVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  hideAllModals?: () => void;
   currentModalDialog?: string;
   handleModalPopToggle?: (dialogToToggle: string) => void;
 }
@@ -33,19 +34,30 @@ export const Toolbar = (props: ToolbarProps) => {
     setBuilderMenuVisible,
     modalPopVisible,
     setModalPopVisible,
+    hideAllModals,
     currentModalDialog,
     handleModalPopToggle,
   } = props;
 
-  const handleModalVisibility = () => {
-    if (modalPopVisible) {
-      setModalPopVisible(false);
+  const handleModalVisibility = (dialogToToggle?: string) => {
+    if (dialogToToggle) {
+      if (modalPopVisible) {
+        if (currentModalDialog === dialogToToggle) {
+          hideAllModals()
+        } else {
+          handleModalPopToggle(dialogToToggle);
+        }
+      } else {
+        setModalPopVisible(true);
+        handleModalPopToggle(dialogToToggle);
+      }
+    } else {
+      hideAllModals()
     }
   };
 
   const handleSetGalleryVisibility = () => {
-    // handleModalVisibility();
-    handleModalPopToggle('VIEW_PAGES')
+    handleModalVisibility('VIEW_PAGES');
     setGalleryVisible(!galleryVisible);
   };
 

@@ -31,7 +31,7 @@ const ModalPopIn = (props: ModalPopInProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="w-168 text-center z-100">
+      <div className="text-center z-100">
         <div className="px-6 text-lg font-medium leading-8">
           <InputJSX />
         </div>
