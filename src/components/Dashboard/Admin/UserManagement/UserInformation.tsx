@@ -182,7 +182,7 @@ const UserInformation = (props: UserInfoProps) => {
           <div style={{minHeight: 200}} className="px-4 py-5 sm:px-6">
             {getCurrentTabQuestions().map((item: any) => {
               return (
-                <div className="sm:col-span-1 p-2">
+                <div key={item.question.id} className="sm:col-span-1 p-2">
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {item.question.question}
                   </dt>

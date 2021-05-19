@@ -310,7 +310,6 @@ const Profile = (props: ProfilePageProps) => {
       const sCheckpoints: any[] = [];
 
       studentCheckpoints.forEach((item: any) => {
-        console.log(item);
         if (item && item.scope !== 'private') sCheckpoints.push(item);
       });
 

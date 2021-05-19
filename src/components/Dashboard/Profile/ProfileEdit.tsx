@@ -1,19 +1,19 @@
-import React, { useState, useContext, useEffect, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
+import React, {useState, useContext, useEffect, Fragment} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
 
 import DropdownForm from './DropdownForm';
-import { UserInfo } from './Profile';
+import {UserInfo} from './Profile';
 import * as customMutations from '../../../customGraphql/customMutations';
 import * as customQueries from '../../../customGraphql/customQueries';
 import LessonLoading from '../../Lesson/Loading/ComponentLoading';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import MultipleSelector from '../../Atoms/Form/MultipleSelector';
 import FormInput from '../../Atoms/Form/FormInput';
 import Selector from '../../Atoms/Form/Selector';
 import Buttons from '../../Atoms/Buttons';
-import { convertArrayIntoObj } from '../../../utilities/strings';
+import {convertArrayIntoObj} from '../../../utilities/strings';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -26,9 +26,9 @@ interface UserInfoProps {
 
 const ProfileEdit = (props: UserInfoProps) => {
   const history = useHistory();
-  const { state, userLanguage, clientKey, dispatch } = useContext(GlobalContext);
-  const { dashboardProfileDict } = useDictionary(clientKey);
-  const { user, getUser, status, setStatus, stdCheckpoints, questionData } = props;
+  const {state, userLanguage, clientKey, dispatch} = useContext(GlobalContext);
+  const {dashboardProfileDict} = useDictionary(clientKey);
+  const {user, getUser, status, setStatus, stdCheckpoints, questionData} = props;
   let [imagePreviewURL, setImagePreviewURL] = useState(user.image);
   const [editUser, setEditUser] = useState(user);
   const [loading, setLoading] = useState(false);
@@ -43,8 +43,16 @@ const ProfileEdit = (props: UserInfoProps) => {
       },
     });
   };
-  const onMultipleSelection = (id: string, name: string, value: string, checkpointID: string, questionID: string) => {
-    const selectedQuestion = checkpointData[checkpointID] ? checkpointData[checkpointID][questionID] : [];
+  const onMultipleSelection = (
+    id: string,
+    name: string,
+    value: string,
+    checkpointID: string,
+    questionID: string
+  ) => {
+    const selectedQuestion = checkpointData[checkpointID]
+      ? checkpointData[checkpointID][questionID]
+      : [];
 
     if (selectedQuestion?.length > 0) {
       if (typeof selectedQuestion === 'string') {
@@ -62,7 +70,7 @@ const ProfileEdit = (props: UserInfoProps) => {
         const newList = selectedQuestion.filter((item: any) => item.id !== id);
         updatedList = [...newList];
       } else {
-        updatedList = [...selectedQuestion, { id, name, value }];
+        updatedList = [...selectedQuestion, {id, name, value}];
       }
       setCheckpointData({
         ...checkpointData,
@@ -87,7 +95,13 @@ const ProfileEdit = (props: UserInfoProps) => {
       });
     }
   };
-  const onSingleSelect = (value: string, name: string, id: string, checkpointID: string, questionID: string) => {
+  const onSingleSelect = (
+    value: string,
+    name: string,
+    id: string,
+    checkpointID: string,
+    questionID: string
+  ) => {
     setCheckpointData({
       ...checkpointData,
       [checkpointID]: {
@@ -100,7 +114,10 @@ const ProfileEdit = (props: UserInfoProps) => {
     const keys: any = Object.keys(obj);
     return keys.map((item: any) => ({
       qid: item,
-      response: typeof obj[item] === 'string' ? [obj[item]] : [...obj[item].map((op: any) => op.name)],
+      response:
+        typeof obj[item] === 'string'
+          ? [obj[item]]
+          : [...obj[item].map((op: any) => op.name)],
     }));
   };
   const gobackToPreviousStep = () => {
@@ -108,9 +125,27 @@ const ProfileEdit = (props: UserInfoProps) => {
   };
 
   const updateQuestionData = async (responseObj: any) => {
+    // Code for Other Field
+
+    const val = responseObj.responseObject.map((resp: any) => {
+      if (hasOther(resp.response, 'Other')) {
+        return {
+          ...resp,
+          response: [`Other || ${otherField}`],
+        };
+      } else {
+        return {...resp};
+      }
+    });
+
+    const modifiedResponseObj = {...responseObj, responseObject: val};
+    // Ends here
+
+    // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
+
     try {
       const questionData = await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, { input: responseObj })
+        graphqlOperation(customMutations.updateQuestionData, {input: modifiedResponseObj})
       );
       console.log('Question data updated');
     } catch (err) {
@@ -129,7 +164,7 @@ const ProfileEdit = (props: UserInfoProps) => {
   const createQuestionData = async (responseObj: any) => {
     try {
       const questionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, { input: responseObj })
+        graphqlOperation(customMutations.createQuestionData, {input: responseObj})
       );
       console.log('Question data updated');
     } catch (err) {
@@ -157,12 +192,16 @@ const ProfileEdit = (props: UserInfoProps) => {
     }));
     if (questionData?.length === 0) {
       let checkpoints = Promise.all(
-        allCheckpoints.map(async (item: any) => savePersonCheckpointData(item.checkpointId, item.questions))
+        allCheckpoints.map(async (item: any) => {
+          return savePersonCheckpointData(item.checkpointId, item.questions);
+        })
       );
     } else {
       let checkpoints = Promise.all(
         allCheckpoints.map(async (item: any) => {
-          const currentItem: any = questionData?.find((question: any) => question.checkpointID === item.checkpointId);
+          const currentItem: any = questionData?.find(
+            (question: any) => question.checkpointID === item.checkpointId
+          );
           if (currentItem) {
             return updatePersonCheckpointData(currentItem.id, item.questions);
           } else {
@@ -191,7 +230,9 @@ const ProfileEdit = (props: UserInfoProps) => {
     };
 
     try {
-      const update: any = await API.graphql(graphqlOperation(customMutations.updatePerson, { input: input }));
+      const update: any = await API.graphql(
+        graphqlOperation(customMutations.updatePerson, {input: input})
+      );
       setEditUser(update.data.updatePerson);
       setStatus('loading');
       dispatch({
@@ -219,7 +260,7 @@ const ProfileEdit = (props: UserInfoProps) => {
   }
 
   const onChange = (e: any) => {
-    const { id, value } = e.target;
+    const {id, value} = e.target;
     setEditUser(() => {
       return {
         ...editUser,
@@ -228,7 +269,7 @@ const ProfileEdit = (props: UserInfoProps) => {
     });
   };
 
-  const handleChangeLanguage = (lang: { name: string; code: string }) => {
+  const handleChangeLanguage = (lang: {name: string; code: string}) => {
     setEditUser(() => {
       return {
         ...editUser,
@@ -254,6 +295,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       name: item.text,
       value: item.text,
     }));
+
     return newArr;
   };
   const convertToMultiSelectList = (options: any) => {
@@ -267,7 +309,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const selectedMultiOptions = (options: any[]) => {
     if (typeof options === 'string') {
-      return [{ id: '0', name: options, value: options }];
+      return [{id: '0', name: options, value: options}];
     }
     if (options && typeof options[0] === 'string') {
       const newArr: any = options?.map((option: any, index: number) => ({
@@ -286,14 +328,20 @@ const ProfileEdit = (props: UserInfoProps) => {
     imagePreview = <img src={`"${imagePreviewURL}"`} />;
   } else {
     imagePreview = (
-      <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="h-full w-full text-gray-300"
+        fill="currentColor"
+        viewBox="0 0 24 24">
         <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     );
   }
   const extractItemFromArray = (responceArray: any[]) => {
     const answerArray: any = responceArray.map((item: any) => ({
-      [item['qid']]: item?.response?.length > 1 ? [...selectedMultiOptions(item.response)] : item?.response?.join(''),
+      [item['qid']]:
+        item?.response?.length > 1
+          ? [...selectedMultiOptions(item.response)]
+          : item?.response?.join(''),
     }));
     return convertArrayIntoObj(answerArray);
   };
@@ -317,6 +365,54 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const path = '/dashboard/profile/password';
 
+  // Code for Other Field
+
+  const getOtherValue = (val: string) => {
+    const answers = val.split(' || ');
+    if (answers.length > 1) {
+      const otherFieldValue = answers[1];
+      return otherFieldValue;
+    } else {
+      return otherField;
+    }
+  };
+
+  const [localVal, setLocalVal] = useState('');
+  const [otherField, setOtherField] = useState('');
+
+  useEffect(() => {
+    if (localVal) {
+      const ans = getOtherValue(localVal);
+      setOtherField(ans);
+    }
+  }, [localVal]);
+
+  const hasOther = (val: string | string[], other: string) =>
+    val.toString().includes(other);
+
+  const getOtherPlaceholder = (val: any) => {
+    if (hasOther(val, 'Other')) {
+      if (val.split(' || ').length === 2) {
+        return val.split(' || ')[0];
+      } else {
+        return val;
+      }
+    } else {
+      return val;
+    }
+  };
+
+  const isOther = (val: any) => {
+    if (hasOther(val, 'Other')) {
+      if (!localVal) {
+        setLocalVal(val);
+      }
+      return true;
+    } else return false;
+  };
+
+  // ⬆️ Ends here ⬆️
+
   {
     return (
       <div className="h-full w-full md:px-4 pt-4">
@@ -326,7 +422,9 @@ const ProfileEdit = (props: UserInfoProps) => {
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
-                  <NavLink className="text-gray-500 lowercase text-right float-right w-auto" to={path}>
+                  <NavLink
+                    className="text-gray-500 lowercase text-right float-right w-auto"
+                    to={path}>
                     <p className="font-medium text-base">Click here to edit password</p>
                   </NavLink>
                 </h3>
@@ -336,7 +434,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <>
                     <div className="sm:col-span-3 p-2">
-                      <label htmlFor="firstName" className="block text-sm font-medium leading-5 text-gray-700">
+                      <label
+                        htmlFor="firstName"
+                        className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']}
                       </label>
                       <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
@@ -351,7 +451,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label htmlFor="lastName" className="block text-sm font-medium leading-5 text-gray-700">
+                      <label
+                        htmlFor="lastName"
+                        className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LAST_NAME']}
                       </label>
                       <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
@@ -366,7 +468,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                     </div>
 
                     <div className="sm:col-span-3 p-2">
-                      <label htmlFor="preferredName" className="block text-sm font-medium leading-5 text-gray-700">
+                      <label
+                        htmlFor="preferredName"
+                        className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['NICKNAME']}
                       </label>
                       <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm">
@@ -383,7 +487,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <DropdownForm
                         handleChangeLanguage={handleChangeLanguage}
                         userLanguage={user.language}
-                        label={dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LANGUAGE']}
+                        label={
+                          dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LANGUAGE']
+                        }
                         items={Language}
                       />
                     </div>
@@ -399,7 +505,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <Fragment key={checkpoint.id}>
                   <div className="h-auto bg-white shadow-5 sm:rounded-lg mb-4 text-gray-900">
                     <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                      <h3 className="text-lg leading-6 font-medium uppercase">{checkpoint.title}</h3>
+                      <h3 className="text-lg leading-6 font-medium uppercase">
+                        {checkpoint.title}
+                      </h3>
                     </div>
 
                     <div className="h-full px-4 py-5 sm:px-6">
@@ -418,7 +526,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     id={item.question.id}
                                     name=""
                                     label={item?.question?.question}
-                                    onChange={(e) => onInputChange(e, checkpoint.id, item.question.id)}
+                                    onChange={(e) =>
+                                      onInputChange(e, checkpoint.id, item.question.id)
+                                    }
                                   />
                                 ) : null}
                                 {/* Will change it to text box if required. */}
@@ -432,7 +542,9 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     id={item.question.id}
                                     name=""
                                     label={item?.question?.question}
-                                    onChange={(e) => onInputChange(e, checkpoint.id, item.question.id)}
+                                    onChange={(e) =>
+                                      onInputChange(e, checkpoint.id, item.question.id)
+                                    }
                                   />
                                 ) : null}
                                 {item.question.type === 'selectOne' ? (
@@ -443,15 +555,43 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     <Selector
                                       selectedItem={
                                         checkpointData[checkpoint.id]
-                                          ? checkpointData[checkpoint.id][item.question.id]
+                                          ? getOtherPlaceholder(
+                                              checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
+                                            )
                                           : ''
                                       }
                                       placeholder=""
-                                      list={convertToSelectorList(item?.question?.options)}
+                                      list={convertToSelectorList(
+                                        item?.question?.options
+                                      )}
                                       onChange={(value, name, id) =>
-                                        onSingleSelect(value, name, id, checkpoint.id, item.question.id)
+                                        onSingleSelect(
+                                          value,
+                                          name,
+                                          id,
+                                          checkpoint.id,
+                                          item.question.id
+                                        )
                                       }
                                     />
+                                    {checkpointData[checkpoint.id] &&
+                                      isOther(
+                                        checkpointData[checkpoint.id][item.question.id]
+                                      ) && (
+                                        <div className="col-span-2">
+                                          <FormInput
+                                            value={otherField}
+                                            id={`${item.question.id}_other`}
+                                            placeHolder="Other"
+                                            name="other"
+                                            onChange={(e) =>
+                                              setOtherField(e.target.value)
+                                            }
+                                          />
+                                        </div>
+                                      )}
                                   </Fragment>
                                 ) : null}
                                 {item.question.type === 'selectMany' ? (
@@ -460,15 +600,28 @@ const ProfileEdit = (props: UserInfoProps) => {
                                       {item?.question?.question}
                                     </label>
                                     <MultipleSelector
-                                      list={convertToMultiSelectList(item?.question?.options)}
+                                      list={convertToMultiSelectList(
+                                        item?.question?.options
+                                      )}
                                       selectedItems={
-                                        checkpointData[checkpoint.id] && checkpointData[checkpoint.id][item.question.id]
-                                          ? selectedMultiOptions(checkpointData[checkpoint.id][item.question.id])
+                                        checkpointData[checkpoint.id] &&
+                                        checkpointData[checkpoint.id][item.question.id]
+                                          ? selectedMultiOptions(
+                                              checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
+                                            )
                                           : []
                                       }
                                       placeholder=""
                                       onChange={(id, name, value) =>
-                                        onMultipleSelection(id, name, value, checkpoint.id, item.question.id)
+                                        onMultipleSelection(
+                                          id,
+                                          name,
+                                          value,
+                                          checkpoint.id,
+                                          item.question.id
+                                        )
                                       }
                                     />
                                   </Fragment>
@@ -495,7 +648,11 @@ const ProfileEdit = (props: UserInfoProps) => {
               />
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                label={loading ? 'Updating...' : dashboardProfileDict[userLanguage]['EDIT_PROFILE']['SAVE']}
+                label={
+                  loading
+                    ? 'Updating...'
+                    : dashboardProfileDict[userLanguage]['EDIT_PROFILE']['SAVE']
+                }
                 onClick={saveProfileInformation}
                 disabled={loading ? true : false}
               />

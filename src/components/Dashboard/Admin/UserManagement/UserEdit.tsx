@@ -107,8 +107,25 @@ const UserEdit = (props: UserInfoProps) => {
 
   const updateQuestionData = async (responseObj: any) => {
     try {
+      // Code for Other Field
+
+      const val = responseObj.responseObject.map((resp: any) => {
+        if (hasOther(resp.response, 'Other')) {
+          return {
+            ...resp,
+            response: [`Other || ${otherField}`],
+          };
+        } else {
+          return {...resp};
+        }
+      });
+
+      const modifiedResponseObj = {...responseObj, responseObject: val};
+      // Ends here
+
+      // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
       const questionData = await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {input: responseObj})
+        graphqlOperation(customMutations.updateQuestionData, {input: modifiedResponseObj})
       );
       console.log('Question data updated');
     } catch (err) {
@@ -395,6 +412,54 @@ const UserEdit = (props: UserInfoProps) => {
   const checkpointID =
     tab !== 'p' && stdCheckpoints.length > 0 && stdCheckpoints[parseInt(tab || '1')].id;
 
+  // Code for Other Field
+
+  const getOtherValue = (val: string) => {
+    const answers = val.split(' || ');
+    if (answers.length > 1) {
+      const otherFieldValue = answers[1];
+      return otherFieldValue;
+    } else {
+      return otherField;
+    }
+  };
+
+  const [localVal, setLocalVal] = useState('');
+  const [otherField, setOtherField] = useState('');
+
+  useEffect(() => {
+    if (localVal) {
+      const ans = getOtherValue(localVal);
+      setOtherField(ans);
+    }
+  }, [localVal]);
+
+  const hasOther = (val: string | string[], other: string) =>
+    val.toString().includes(other);
+
+  const getOtherPlaceholder = (val: any) => {
+    if (hasOther(val, 'Other')) {
+      if (val.split(' || ').length === 2) {
+        return val.split(' || ')[0];
+      } else {
+        return val;
+      }
+    } else {
+      return val;
+    }
+  };
+
+  const isOther = (val: any) => {
+    if (hasOther(val, 'Other')) {
+      if (!localVal) {
+        setLocalVal(val);
+      }
+      return true;
+    } else return false;
+  };
+
+  // ⬆️ Ends here ⬆️
+
   return (
     <div className="h-full w-full md:px-2 pt-2">
       <form>
@@ -605,7 +670,9 @@ const UserEdit = (props: UserInfoProps) => {
                               <Selector
                                 selectedItem={
                                   checkpointData[checkpointID]
-                                    ? checkpointData[checkpointID][item.question.id]
+                                    ? getOtherPlaceholder(
+                                        checkpointData[checkpointID][item.question.id]
+                                      )
                                     : ''
                                 }
                                 placeholder=""
@@ -620,6 +687,20 @@ const UserEdit = (props: UserInfoProps) => {
                                   )
                                 }
                               />
+                              {checkpointData[checkpointID] &&
+                                isOther(
+                                  checkpointData[checkpointID][item.question.id]
+                                ) && (
+                                  <div className="col-span-2">
+                                    <FormInput
+                                      value={otherField}
+                                      id={`${item.question.id}_other`}
+                                      placeHolder="Other"
+                                      name="other"
+                                      onChange={(e) => setOtherField(e.target.value)}
+                                    />
+                                  </div>
+                                )}
                             </>
                           ) : null}
                           {item.question.type === 'selectMany' ? (
