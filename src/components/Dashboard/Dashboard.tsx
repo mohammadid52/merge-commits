@@ -211,10 +211,7 @@ const Dashboard = (props: DashboardProps) => {
       };
       const dashboardDataFetch = await handleFetchAndCache(queryObj);
       const response = await dashboardDataFetch;
-      console.log(
-        '🚀 ~ file: Dashboard.tsx ~ line 214 ~ getDashboardData ~ response',
-        response
-      );
+
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(

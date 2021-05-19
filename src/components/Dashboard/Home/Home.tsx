@@ -90,14 +90,17 @@ const Home = (props: ClassroomControlProps) => {
 
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
-
+    let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
         if (item?.class?.rooms?.items.length > 0) {
           if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
             item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
-              coTeachersList.push(_item.teacher);
+              if (!uniqIds.includes(_item.teacher.authId)) {
+                uniqIds.push(_item.teacher.authId);
+                coTeachersList.push(_item.teacher);
+              }
             });
           }
         }
