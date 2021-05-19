@@ -126,7 +126,7 @@ const ProfileEdit = (props: UserInfoProps) => {
 
   const updateQuestionData = async (responseObj: any) => {
     const val = responseObj.responseObject.map((resp: any) => {
-      if (resp.response.toString().includes('Other')) {
+      if (hasOther(resp.response, 'Other')) {
         return {
           ...resp,
           response: [`Other || ${genderField}`],
@@ -382,8 +382,11 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   }, [localVal]);
 
+  const hasOther = (val: string | string[], other: string) =>
+    val.toString().includes(other);
+
   const getOtherPlaceholder = (val: any) => {
-    if (val.includes('Other')) {
+    if (hasOther(val, 'Other')) {
       if (val.split(' || ').length === 2) {
         return val.split(' || ')[0];
       } else {
@@ -395,7 +398,7 @@ const ProfileEdit = (props: UserInfoProps) => {
   };
 
   const isOther = (val: any) => {
-    if (val.includes('Other')) {
+    if (hasOther(val, 'Other')) {
       if (!localVal) {
         setLocalVal(val);
       }
