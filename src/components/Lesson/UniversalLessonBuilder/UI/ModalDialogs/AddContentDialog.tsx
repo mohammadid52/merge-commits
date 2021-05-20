@@ -12,13 +12,13 @@ import {MdTitle} from 'react-icons/md';
 const AddContentDialog = () => {
   return (
     <div className={` z-50 `}>
-      <div className="relative mx-2 flex items-center">
-        <p className="w-auto bg-white text-lg font-medium text-gray-900">Add Content</p>
+      <div className="relative flex items-center">
+        <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Add Content</h2>
       </div>
       <div className={`grid grid-cols-3 gap-2`}>
         {/* LEFT */}
         <div>
-          <h2 className={`my-2 text-center text-gray-600`}>Text-Content</h2>
+           <h2 className={`text-center text-sm text-gray-600`}>Text-Content</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div
@@ -42,7 +42,7 @@ const AddContentDialog = () => {
 
         {/* MIDDLE */}
         <div>
-          <h2 className={`my-2 text-center text-gray-600`}>Media</h2>
+           <h2 className={`text-center text-sm text-gray-600`}>Media</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div
@@ -66,7 +66,7 @@ const AddContentDialog = () => {
 
         {/* RIGHT */}
         <div>
-          <h2 className={`my-2 text-center text-gray-600`}>User Interaction</h2>
+           <h2 className={`text-center text-sm text-gray-600`}>User Interaction</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div

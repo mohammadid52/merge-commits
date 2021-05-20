@@ -2,10 +2,12 @@ import React, {useContext, useState} from 'react';
 
 const NewPageDialog = () => {
   return (
-    <div className={`grid grid-cols-3 gap-2`}>
+    <div className={`grid grid-cols-3 gap-2 z-50`}>
       {/* LEFT */}
       <div className={`flex flex-col`}>
-        <h2>Add New Page</h2>
+        <div className="relative flex items-center">
+          <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Add New Page</h2>
+        </div>
         <div>
           <label
             htmlFor="field1"
@@ -58,7 +60,9 @@ const NewPageDialog = () => {
 
       {/* MIDDLE */}
       <div>
-        <h2>Use Existing Page</h2>
+        <div className="relative flex items-center">
+          <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Use Existing Page</h2>
+        </div>
         <div className={`h-full w-full`}>
           <p className={`text-left block text-xs font-medium text-gray-700`}>
             Activities
@@ -82,7 +86,9 @@ const NewPageDialog = () => {
 
       {/* RIGHT */}
       <div>
-        <h2>Page From Template</h2>
+        <div className="relative flex items-center">
+          <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Page From Template</h2>
+        </div>
 
         <div className={`h-full w-full`}>
           <p className={`text-left block text-xs font-medium text-gray-700`}>Style 1</p>

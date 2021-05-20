@@ -75,11 +75,36 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                       h-auto
                       ${overlayVisible && isComponent ? 'w-auto' : 'w-full'} 
                       `}>
-                        <Buttons label="Split" overrideClass={true} btnClass="bg-gray-400 mx-2 w-16 rounded-full" Icon={BsLayoutSplit} />
-                        <Buttons label="Flip" overrideClass={true} btnClass="bg-gray-400 mx-2 w-16 rounded-full" Icon={CgEditFlipH} />
-                        <Buttons label="Edit" overrideClass={true} btnClass="bg-gray-400 mx-2 w-16 rounded-full" Icon={AiOutlineEdit} />
-                        <Buttons label="BG Color" overrideClass={true} btnClass="bg-gray-400 mx-2 w-16 rounded-full" Icon={AiOutlineBgColors} />
-                        <Buttons label="Delete" overrideClass={true} btnClass="bg-gray-400 mx-2 w-16 rounded-full" Icon={AiOutlineDelete} />
+                          <Buttons
+                            label="Split"
+                            overrideClass={true}
+                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+                            Icon={BsLayoutSplit}
+                          />
+                          <Buttons
+                            label="Flip"
+                            overrideClass={true}
+                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+                            Icon={CgEditFlipH}
+                          />
+                          <Buttons
+                            label="Edit"
+                            overrideClass={true}
+                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+                            Icon={AiOutlineEdit}
+                          />
+                          <Buttons
+                            label="BG Color"
+                            overrideClass={true}
+                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+                            Icon={AiOutlineBgColors}
+                          />
+                          <Buttons
+                            label="Delete"
+                            overrideClass={true}
+                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+                            Icon={AiOutlineDelete}
+                          />
         </div>
       ) : null}
 

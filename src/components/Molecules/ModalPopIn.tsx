@@ -31,7 +31,7 @@ const ModalPopIn = (props: ModalPopInProps) => {
       showHeaderBorder={false}
       showFooter={false}
       closeAction={closeAction}>
-      <div className="text-center z-100">
+      <div className="text-center z-50">
         <div className="px-6 text-lg font-medium leading-8">
           <InputJSX />
         </div>
@@ -47,7 +47,7 @@ const ModalPopIn = (props: ModalPopInProps) => {
 
           <Buttons
             label={saveLabel ? saveLabel : 'Save'}
-            btnClass="px-10 py-3 ml-4"
+            btnClass="px-10 py-3 ml-4 z-100"
             onClick={saveAction}
           />
         </div>

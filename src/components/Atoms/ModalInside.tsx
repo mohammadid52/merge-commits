@@ -39,7 +39,11 @@ const ModalHeader = (headerProps: {
 
 const ModalBody = (bodyProps: {children: React.ReactNode}) => {
   const {children} = bodyProps;
-  return <div className="relative p-4 flex flex-auto justify-center bg-white rounded-b">{children}</div>;
+  return (
+    <div className="relative p-4 flex flex-auto justify-center bg-white rounded-b">
+      {children}
+    </div>
+  );
 };
 
 const ModalFooter = (footerProps: {onSave?: () => void; onClose?: () => void}) => {
@@ -75,24 +79,22 @@ const ModalInside: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const {theme} = useContext(GlobalContext);
 
   return (
-      <div className={`
-        z-100 w-full h-0
+    <div
+      className={`
+        z-50 w-full h-0
         outline-none focus:outline-none`}>
-        <div className={`mx-auto my-auto w-auto max-w-256`}>
-          {/*<div className={`${theme.modals.content}`}>*/}
-          <div>
-            {showHeader && (
-              <ModalHeader
-                title={title}
-                onClick={closeAction}
-                showBorder={showHeaderBorder}
-              />
-            )}
-            <ModalBody>{children}</ModalBody>
-            {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
-          </div>
-        </div>
+      <div className={`relative mx-auto my-auto w-auto max-w-256 bg-white rounded`}>
+        <button
+          className="absolute right-0 w-6 m-4 flex z-100 cursor-pointer"
+          onClick={closeAction}>
+          <IconContext.Provider value={{size: '1.5rem', color: '#000000'}}>
+            <IoClose />
+          </IconContext.Provider>
+        </button>
+        <ModalBody>{children}</ModalBody>
+        {showFooter && <ModalFooter onSave={saveAction} onClose={closeAction} />}
       </div>
+    </div>
   );
 };
 

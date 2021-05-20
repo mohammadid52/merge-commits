@@ -657,7 +657,7 @@ const Dashboard = (props: DashboardProps) => {
       />
 
       <div className="h-full overflow-y-auto">
-        <FloatingSideMenu />
+        {/*<FloatingSideMenu />*/}
         <Noticebar inputContext={'global'} />
         <Suspense
           fallback={

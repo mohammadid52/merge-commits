@@ -16,6 +16,7 @@ interface PageSelectorProps {
   selectedPageDetails?: UniversalLessonPage;
   setSelectedPageDetails?: React.Dispatch<React.SetStateAction<UniversalLessonPage>>;
   handleModalPopToggle?: (dialogToToggle: string) => void;
+  hideAllModals?: () => void;
 }
 
 const PageSelector = (props: PageSelectorProps) => {
@@ -28,6 +29,7 @@ const PageSelector = (props: PageSelectorProps) => {
     galleryVisible,
     loading,
     handleModalPopToggle,
+    hideAllModals,
   } = props;
   const pages = universalLessonDetails?.universalLessonPages;
 
@@ -49,31 +51,28 @@ const PageSelector = (props: PageSelectorProps) => {
   };
 
   return (
-    <div
-      className={` z-50 `}>
+    <div className={` z-50 `}>
       {/* Page Selection Buttons */}
       {!props.loading && (
         <div className={`bg-white`}>
           {/* Header */}
-          <div className="relative p-4">
-            <div className="absolute inset-0 flex items-center" aria-hidden="true">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative mx-2 flex items-center justify-start">
-              <p className="w-auto bg-white text-lg font-medium text-gray-900">
-                Lesson Pages
-              </p>
-              <Buttons
-                onClick={() => handleModalPopToggle('NEW_PAGE')}
-                Icon={VscNewFile}
-                label="New Page"
-                overrideClass={true}
-                btnClass="w-auto text-white bg-gray-400 mx-2 w-16"
-              />
-            </div>
+          <div className="flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex items-center justify-start">
+            <p className="w-auto bg-white text-lg font-medium text-gray-900">
+              Lesson Pages
+            </p>
+            <Buttons
+              onClick={() => handleModalPopToggle('NEW_PAGE')}
+              Icon={VscNewFile}
+              label="New Page"
+              overrideClass={true}
+              btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            />
           </div>
 
-          <div className="py-4 flex flex-wrap bg-gray-200">
+          <div className="mt-4 py-4 flex flex-wrap bg-gray-200">
             {pages && pages.length > 0
               ? pages.map((page: UniversalLessonPage, idx: number) => (
                   <div

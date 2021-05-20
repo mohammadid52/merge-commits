@@ -101,6 +101,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           selectedPageDetails={selectedPageDetails}
           setSelectedPageDetails={setSelectedPageDetails}
           handleModalPopToggle={handleModalPopToggle}
+          hideAllModals={hideAllModals}
         />
       case 'NEW_PAGE':
         return <NewPageDialog />;

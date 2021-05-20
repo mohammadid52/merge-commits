@@ -39,7 +39,7 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
   }, [selectedPageDetails]);
 
   return (
-    <div className={`${hierarchyVisible ? 'absolute w-48 h-full bg-gray-600 z-50' : 'hidden'}`}>
+    <div className={`${hierarchyVisible ? 'relative w-48 h-0 bg-gray-400 z-50' : 'hidden'}`}>
       <Transition
         show={hierarchyVisible}
         enter="transition duration-200"
@@ -50,12 +50,12 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
         leaveTo="opacity-0 transform -translate-x-48">
         <>
           {/* Header */}
-          <div className="relative">
+          <div className="relative bg-white py-2 ">
             <div className="absolute inset-0 flex items-center" aria-hidden="true">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-gray-400"></div>
             </div>
-            <div className="relative flex justify-start">
-              <span className="pr-2 bg-white text-sm text-gray-500">Controls</span>
+            <div className="relative flex text-center">
+              <span className="text-sm text-gray-900">Layers</span>
             </div>
           </div>
 
