@@ -22,7 +22,7 @@ import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
-import { useParams } from 'react-router';
+import {useParams} from 'react-router';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -211,6 +211,7 @@ const Dashboard = (props: DashboardProps) => {
       };
       const dashboardDataFetch = await handleFetchAndCache(queryObj);
       const response = await dashboardDataFetch;
+
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
