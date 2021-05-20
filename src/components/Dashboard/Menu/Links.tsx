@@ -250,7 +250,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                     active:
                       room.id === state.activeRoom && state.currentPage === 'classroom',
                     path: room.id,
-                    onClick: (e: any) => handleRoomSelection(room.id, room.name, i, 'classroom'),
+                    onClick: (e: any) =>
+                      handleRoomSelection(room.id, room.name, i, 'classroom'),
                   };
                 }),
             },
@@ -508,31 +509,34 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                           ) !== -1 || d.active;
 
                         return (
-                          <a
-                            key={`${d.path}_key`}
-                            id={d.path}
-                            style={{paddingLeft: '3.5rem'}}
-                            onClick={(e) => {
-                              if (d.onClick) {
-                                d.onClick();
-                              } else handleLink(d.path, link.label);
-                            }}
-                            className={`${
-                              activeLink
-                                ? `sidenav_sub_item_active ${theme.borderColor[themeColor]}`
-                                : 'border-transparent'
-                            } group sidenav_sub_item block flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
-                            <span className="sidenav_sub_icon_wrapper">
-                              <IoMdDisc
-                                className={
-                                  activeLink
-                                    ? theme.textColor[themeColor]
-                                    : 'sidenav_sub_icon_color'
-                                }
-                              />
-                            </span>
-                            <span className="truncate">{d.title}</span>
-                          </a>
+                          <div className="custom_tooltip_container">
+                            <a
+                              key={`${d.path}_key`}
+                              id={d.path}
+                              style={{paddingLeft: '3.5rem'}}
+                              onClick={(e) => {
+                                if (d.onClick) {
+                                  d.onClick();
+                                } else handleLink(d.path, link.label);
+                              }}
+                              className={`${
+                                activeLink
+                                  ? `sidenav_sub_item_active ${theme.borderColor[themeColor]}`
+                                  : 'border-transparent'
+                              } group sidenav_sub_item block flex cursor-pointer my-1 border-l-4 w-full px-4 items-center pr-4 py-2 text-sm font-regular`}>
+                              <span className="sidenav_sub_icon_wrapper">
+                                <IoMdDisc
+                                  className={
+                                    activeLink
+                                      ? theme.textColor[themeColor]
+                                      : 'sidenav_sub_icon_color'
+                                  }
+                                />
+                              </span>
+                              <span className="truncate">{d.title}</span>
+                            </a>
+                            <span className="custom_tooltip">{d.title}</span>
+                          </div>
                         );
                       })}
                     </div>

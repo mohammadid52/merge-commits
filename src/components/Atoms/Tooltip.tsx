@@ -7,7 +7,10 @@ interface TooltipProps {
 
 const Tooltip = ({text, placement = 'right', children}: TooltipProps) => {
   return (
-    <div className="font-medium" data-tooltip={text} data-tooltip-location={placement}>
+    <div
+      className="font-medium absolute"
+      data-tooltip={text}
+      data-tooltip-location={placement}>
       {children}
     </div>
   );
