@@ -3,6 +3,9 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
 import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
+import {AiOutlineEdit} from 'react-icons/ai';
+import {BsCheckAll} from 'react-icons/bs';
+import {GiCancel} from 'react-icons/gi';
 
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -217,37 +220,77 @@ const PreviewForm = (props: PreviewFormProps) => {
     'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
   const QuestionList = ({checkpItem, index}: any) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [questionInput, setQuestionInput] = useState(checkpItem?.question?.question);
 
     const showListAndDropDown =
       checkpItem?.question?.type === 'selectMany' ||
       checkpItem?.question?.type === 'selectOne';
+
     return (
-      <div className="my-4 w-full question__container">
-        <div
-          onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
-          role="button"
-          className={`${
-            isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
-          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-full`}>
-          <p className="w-9.3/10" key={checkpItem.id}>
-            <span>
-              {index + 1}. {checkpItem?.question?.question}{' '}
-            </span>
-            <span
-              className={`py-0.5 px-1 ml-2 text-xs  rounded ${
-                showListAndDropDown
-                  ? 'bg-indigo-200  text-indigo-700'
-                  : 'bg-red-200 text-red-700'
-              }`}>
-              {getTypeString(checkpItem?.question?.type)}
-            </span>
-          </p>
-          {showListAndDropDown ? (
-            <BiChevronDown className="text-gray-900 w-.7/10 text-lg" />
+      <div className="my-4 w-full question__container" onBlur={() => setIsEditing(false)}>
+        <div className="w-full flex items-center">
+          {isEditing ? (
+            <div className="border-0 p-2 px-4 rounded-md cursor-text  flex items-center justify-between w-9.5/10 border-indigo-300">
+              <input
+                autoFocus={true}
+                onChange={(e: any) => setQuestionInput(e.target.value)}
+                value={questionInput}
+              />
+            </div>
           ) : (
-            <div className="w-.7/10" />
+            <div
+              onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
+              role="button"
+              className={`${
+                isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
+              } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-9.5/10`}>
+              <p className="w-9.3/10" key={checkpItem.id}>
+                <span>
+                  {index + 1}. {checkpItem?.question?.question}{' '}
+                </span>
+                <span
+                  className={`py-0.5 px-1 ml-2 text-xs  rounded ${
+                    showListAndDropDown
+                      ? 'bg-indigo-200  text-indigo-700'
+                      : 'bg-red-200 text-red-700'
+                  }`}>
+                  {getTypeString(checkpItem?.question?.type)}
+                </span>
+              </p>
+              {showListAndDropDown ? (
+                <BiChevronDown className="text-gray-900 w-.7/10 text-lg" />
+              ) : (
+                <div className="w-.7/10" />
+              )}
+            </div>
           )}
+          <div
+            style={{width: '5%'}}
+            onClick={() => setIsEditing(!isEditing)}
+            className={`mx-1 py-2 rounded-md cursor-pointer border-0  ${
+              isEditing
+                ? 'hover:bg-red-100 border-red-100 hover:border-red-100'
+                : 'hover:border-blue-100 hover:bg-blue-100 border-blue-100'
+            }`}>
+            {isEditing ? (
+              <GiCancel className="text-red-500" />
+            ) : (
+              <AiOutlineEdit className="text-blue-500" />
+            )}
+          </div>
+          <div
+            style={{width: '5%'}}
+            onClick={() => setIsEditing(!isEditing)}
+            className={`mx-1 py-2 rounded-md cursor-pointer border-0 border-green-100 ${
+              isEditing
+                ? 'block hover:bg-green-100 hover:border-green-100 border-green-100'
+                : 'hidden hover:border-green-100 hover:bg-green-100'
+            }`}>
+            <BsCheckAll className="text-green-500" />
+          </div>
         </div>
+
         <div
           id="option__list"
           className={`px-12 py-2 option__list ${
