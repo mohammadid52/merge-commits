@@ -212,11 +212,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     (item: any) => item.title === currentCheckpoint.name
   );
 
-  const [allQuestionData, setAllQuestionData] = useState([]);
-  // useEffect(() => {
-  //   const data = allQuestionGroups()[currentCheckpointIdx];
-  //   setAllQuestionData(data);
-  // }, [currentCheckpointIdx]);
   const startIndex = (inArr: any, inc: number = 0, idxArr: number[]): number[] => {
     const [head, ...tail] = inArr;
     if (typeof head === 'undefined') {
@@ -342,7 +337,14 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
         <div className="w-full h-full my-4 flex flex-col flex-wrap justify-around items-center">
           {questionSource()
             ? questionSource().length > 0 && (
-                <div className="">
+                <div
+                  style={{
+                    boxShadow:
+                      currentPage.name === 'checkpoints'
+                        ? '0 0 17px rgba(0,0,0,0.06)'
+                        : 'none',
+                  }}
+                  className="bg-gray-700 min-w-156 bg-opacity-50 py-3 px-6 rounded-md">
                   <QuestionGroupInfo
                     key={`qgroup_${currentCheckpointIdx}`}
                     isTeacher={isTeacher}
