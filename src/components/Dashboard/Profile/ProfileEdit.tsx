@@ -14,6 +14,7 @@ import FormInput from '../../Atoms/Form/FormInput';
 import Selector from '../../Atoms/Form/Selector';
 import Buttons from '../../Atoms/Buttons';
 import {convertArrayIntoObj} from '../../../utilities/strings';
+import {get} from 'lodash';
 
 interface UserInfoProps {
   user: UserInfo;
@@ -43,6 +44,17 @@ const ProfileEdit = (props: UserInfoProps) => {
       },
     });
   };
+
+  const onOtherInputChange = (e: any, checkpointID: string, questionID: string) => {
+    setCheckpointData({
+      ...checkpointData,
+      [checkpointID]: {
+        ...checkpointData[checkpointID],
+        [questionID]: `Other || ${e.target.value}`,
+      },
+    });
+  };
+
   const onMultipleSelection = (
     id: string,
     name: string,
@@ -124,14 +136,15 @@ const ProfileEdit = (props: UserInfoProps) => {
     history.push('/dashboard/profile');
   };
 
-  const updateQuestionData = async (responseObj: any) => {
-    // Code for Other Field
-
+  const updateQuestionData = async (responseObj: any, checkpointID: string) => {
     const val = responseObj.responseObject.map((resp: any) => {
       if (hasOther(resp.response, 'Other')) {
         return {
           ...resp,
-          response: [`Other || ${otherField}`],
+          response: checkpointData[checkpointID][resp.qid],
+          otherResponse: checkpointData[checkpointID][resp.qid]
+            .toString()
+            .split(' || ')[1],
         };
       } else {
         return {...resp};
@@ -139,9 +152,6 @@ const ProfileEdit = (props: UserInfoProps) => {
     });
 
     const modifiedResponseObj = {...responseObj, responseObject: val};
-    // Ends here
-
-    // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
 
     try {
       const questionData = await API.graphql(
@@ -153,12 +163,16 @@ const ProfileEdit = (props: UserInfoProps) => {
     }
   };
 
-  const updatePersonCheckpointData = async (questionDataId: string, questions: any[]) => {
+  const updatePersonCheckpointData = async (
+    questionDataId: string,
+    questions: any[],
+    checkpointID: string
+  ) => {
     let responseObject = {
       id: questionDataId,
       responseObject: questions,
     };
-    updateQuestionData(responseObject);
+    updateQuestionData(responseObject, checkpointID);
   };
 
   const createQuestionData = async (responseObj: any) => {
@@ -203,7 +217,11 @@ const ProfileEdit = (props: UserInfoProps) => {
             (question: any) => question.checkpointID === item.checkpointId
           );
           if (currentItem) {
-            return updatePersonCheckpointData(currentItem.id, item.questions);
+            return updatePersonCheckpointData(
+              currentItem.id,
+              item.questions,
+              item.checkpointId
+            );
           } else {
             return savePersonCheckpointData(item.checkpointId, item.questions);
           }
@@ -312,11 +330,14 @@ const ProfileEdit = (props: UserInfoProps) => {
       return [{id: '0', name: options, value: options}];
     }
     if (options && typeof options[0] === 'string') {
-      const newArr: any = options?.map((option: any, index: number) => ({
-        id: index.toString(),
-        name: option,
-        value: option,
-      }));
+      const newArr: any = options?.map((option: any, index: number) => {
+        return {
+          id: index.toString(),
+          name: option,
+          value: option,
+        };
+      });
+
       return [...newArr];
     } else {
       return [...options];
@@ -337,12 +358,22 @@ const ProfileEdit = (props: UserInfoProps) => {
     );
   }
   const extractItemFromArray = (responceArray: any[]) => {
-    const answerArray: any = responceArray.map((item: any) => ({
-      [item['qid']]:
-        item?.response?.length > 1
-          ? [...selectedMultiOptions(item.response)]
-          : item?.response?.join(''),
-    }));
+    const answerArray: any = responceArray.map((item: any) => {
+      // const getOtherRespValue = () => {
+      //   const response = item?.response.toString();
+      //   if (response.includes('Other')) {
+      //     return item.otherResponse;
+      //   } else {
+      //     return response;
+      //   }
+      // };
+      return {
+        [item['qid']]:
+          item?.response?.length > 1
+            ? [...selectedMultiOptions(item.response)]
+            : item?.response.toString(),
+      };
+    });
     return convertArrayIntoObj(answerArray);
   };
 
@@ -352,11 +383,13 @@ const ProfileEdit = (props: UserInfoProps) => {
         [item['checkpointID']]: extractItemFromArray(item.responseObject),
       }));
       const updatedListObj: any = convertArrayIntoObj(updatedListArray);
+
       setCheckpointData({
         ...updatedListObj,
       });
     }
   }, [questionData]);
+
   const match = useRouteMatch();
 
   if (status !== 'done') {
@@ -366,52 +399,26 @@ const ProfileEdit = (props: UserInfoProps) => {
   const path = '/dashboard/profile/password';
 
   // Code for Other Field
-
-  const getOtherValue = (val: string) => {
-    const answers = val.split(' || ');
-    if (answers.length > 1) {
-      const otherFieldValue = answers[1];
-      return otherFieldValue;
-    } else {
-      return otherField;
-    }
-  };
-
-  const [localVal, setLocalVal] = useState('');
-  const [otherField, setOtherField] = useState('');
-
-  useEffect(() => {
-    if (localVal) {
-      const ans = getOtherValue(localVal);
-      setOtherField(ans);
-    }
-  }, [localVal]);
-
   const hasOther = (val: string | string[], other: string) =>
     val.toString().includes(other);
 
-  const getOtherPlaceholder = (val: any) => {
-    if (hasOther(val, 'Other')) {
-      if (val.split(' || ').length === 2) {
-        return val.split(' || ')[0];
-      } else {
-        return val;
-      }
-    } else {
-      return val;
-    }
-  };
-
   const isOther = (val: any) => {
     if (hasOther(val, 'Other')) {
-      if (!localVal) {
-        setLocalVal(val);
-      }
       return true;
     } else return false;
   };
-
   // ⬆️ Ends here ⬆️
+
+  const getValue = (checkpointId: string, questionId: string) => {
+    if (checkpointData[checkpointId]) {
+      const currentQuestionResponse = checkpointData[checkpointId][questionId];
+      return currentQuestionResponse
+        ? currentQuestionResponse.split(' || ').length === 2
+          ? currentQuestionResponse.split(' || ')[1]
+          : currentQuestionResponse.split(' || ')[0]
+        : '';
+    }
+  };
 
   {
     return (
@@ -514,7 +521,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                         {checkpoint.questions?.items.map((item: any) => (
                           <Fragment key={item.question.id}>
-                            <div className="sm:col-span-3 p-2 flex items-end">
+                            <div className="sm:col-span-6 p-2 flex items-end">
                               <div className="flex flex-col justify-between">
                                 {item.question.type === 'text' ? (
                                   <FormInput
@@ -552,14 +559,19 @@ const ProfileEdit = (props: UserInfoProps) => {
                                     <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
                                       {item?.question?.question}
                                     </label>
+
                                     <Selector
                                       selectedItem={
                                         checkpointData[checkpoint.id]
-                                          ? getOtherPlaceholder(
+                                          ? isOther(
                                               checkpointData[checkpoint.id][
                                                 item.question.id
                                               ]
                                             )
+                                            ? 'Other'
+                                            : checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
                                           : ''
                                       }
                                       placeholder=""
@@ -582,13 +594,20 @@ const ProfileEdit = (props: UserInfoProps) => {
                                       ) && (
                                         <div className="col-span-2">
                                           <FormInput
-                                            value={otherField}
-                                            id={`${item.question.id}_other`}
-                                            placeHolder="Other"
+                                            value={getValue(
+                                              checkpoint.id,
+                                              item.question.id
+                                            )}
+                                            id={item.question.id}
+                                            placeHolder="Mention other"
                                             name="other"
-                                            onChange={(e) =>
-                                              setOtherField(e.target.value)
-                                            }
+                                            onChange={(e) => {
+                                              onOtherInputChange(
+                                                e,
+                                                checkpoint.id,
+                                                item.question.id
+                                              );
+                                            }}
                                           />
                                         </div>
                                       )}
