@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { FiLayers } from 'react-icons/fi';
-import ButtonsRound from '../../../Atoms/ButtonsRound';
+import React, { useEffect } from 'react';
 import { SlideOutTreeView } from './HierarchyPanel/SlideOutTreeView';
 import { Transition } from '@headlessui/react';
-import {
-  PagePart,
-  PartContent,
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
+import { PagePart, PartContent, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface HierarchyPanelProps {
   mode?: 'building' | 'viewing';
