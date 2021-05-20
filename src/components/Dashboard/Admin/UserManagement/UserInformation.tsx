@@ -42,7 +42,16 @@ const UserInformation = (props: UserInfoProps) => {
       const questionResponce: any = selectedCheckp.responseObject?.find(
         (item: any) => item.qid === questionID
       )?.response;
-      return questionResponce ? questionResponce.join(',') : '--';
+      const stringedResponse = questionResponce.toString();
+
+      if (stringedResponse.includes('Other')) {
+        const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
+        const answer = splitAnswer[1];
+        if (answer) return answer;
+        else return '--';
+      } else {
+        return questionResponce ? questionResponce.join(',') : '--';
+      }
     }
   };
 
