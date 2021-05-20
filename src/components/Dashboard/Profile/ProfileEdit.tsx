@@ -415,7 +415,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       return currentQuestionResponse
         ? currentQuestionResponse.split(' || ').length === 2
           ? currentQuestionResponse.split(' || ')[1]
-          : currentQuestionResponse.split(' || ')[0]
+          : ''
         : '';
     }
   };

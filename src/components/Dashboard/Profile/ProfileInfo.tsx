@@ -55,7 +55,7 @@ const ProfileInfo = (props: UserInfoProps) => {
         const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
         const answer = splitAnswer[1];
         if (answer) return answer;
-        else return '--';
+        else return 'Other';
       } else {
         return questionResponce ? questionResponce.join(',') : '--';
       }
