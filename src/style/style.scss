@@ -603,6 +603,7 @@
   from {
     width: 0%;
   }
+
   to {
     width: 100%;
   }
@@ -613,9 +614,11 @@
   // to show = 0px
   transform: translateY(-65px);
   transition: transform ease-in-out 0.5s;
+
   &.show {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
+
   &.hide {
     transform: translateY(-65px);
   }
@@ -624,8 +627,46 @@
 .pageChange__btn {
   width: 5rem;
   transition: width 0.1s;
+
   &:hover {
     width: 5.2rem;
   }
+
   color: #fff;
+}
+
+.animate__sidebar-btn {
+  transition: width 0.3s ease;
+
+  &:hover {
+    width: 3rem;
+  }
+  // opening sidemenu
+  &.not-collapse {
+    animation: sidebar-not-collapse 0.2s ease;
+  }
+
+  &.collapse {
+    animation: sidebar-collapse 1s ease;
+  }
+}
+
+@keyframes sidebar-collapse {
+  from {
+    transform: translateX(-64px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes sidebar-not-collapse {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100px);
+  }
 }
