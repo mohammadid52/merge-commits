@@ -34,7 +34,6 @@ const ProfileEdit = (props: UserInfoProps) => {
   const [editUser, setEditUser] = useState(user);
   const [loading, setLoading] = useState(false);
   const [checkpointData, setCheckpointData] = useState<any>({});
-  const [otherCheckpointData, setOtherCheckpointData] = useState<any>({});
 
   const onInputChange = (e: any, checkpointID: string, questionID: string) => {
     setCheckpointData({
@@ -388,9 +387,6 @@ const ProfileEdit = (props: UserInfoProps) => {
       setCheckpointData({
         ...updatedListObj,
       });
-      setOtherCheckpointData({
-        ...updatedListObj,
-      });
     }
   }, [questionData]);
 
@@ -412,6 +408,17 @@ const ProfileEdit = (props: UserInfoProps) => {
     } else return false;
   };
   // ⬆️ Ends here ⬆️
+
+  const getValue = (checkpointId: string, questionId: string) => {
+    if (checkpointData[checkpointId]) {
+      const currentQuestionResponse = checkpointData[checkpointId][questionId];
+      return currentQuestionResponse
+        ? currentQuestionResponse.split(' || ').length === 2
+          ? currentQuestionResponse.split(' || ')[1]
+          : currentQuestionResponse.split(' || ')[0]
+        : '';
+    }
+  };
 
   {
     return (
@@ -514,7 +521,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                         {checkpoint.questions?.items.map((item: any) => (
                           <Fragment key={item.question.id}>
-                            <div className="sm:col-span-3 p-2 flex items-end">
+                            <div className="sm:col-span-6 p-2 flex items-end">
                               <div className="flex flex-col justify-between">
                                 {item.question.type === 'text' ? (
                                   <FormInput
@@ -587,19 +594,10 @@ const ProfileEdit = (props: UserInfoProps) => {
                                       ) && (
                                         <div className="col-span-2">
                                           <FormInput
-                                            value={
-                                              checkpointData[checkpoint.id]
-                                                ? checkpointData[checkpoint.id][
-                                                    item.question.id
-                                                  ].split(' || ').length === 2
-                                                  ? checkpointData[checkpoint.id][
-                                                      item.question.id
-                                                    ].split(' || ')[1]
-                                                  : checkpointData[checkpoint.id][
-                                                      item.question.id
-                                                    ].split(' || ')[0]
-                                                : ''
-                                            }
+                                            value={getValue(
+                                              checkpoint.id,
+                                              item.question.id
+                                            )}
                                             id={item.question.id}
                                             placeHolder="Mention other"
                                             name="other"

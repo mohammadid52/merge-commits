@@ -447,6 +447,17 @@ const UserEdit = (props: UserInfoProps) => {
 
   // ⬆️ Ends here ⬆️
 
+  const getValue = (checkpointId: string, questionId: string) => {
+    if (checkpointData[checkpointId]) {
+      const currentQuestionResponse = checkpointData[checkpointId][questionId];
+      return currentQuestionResponse
+        ? currentQuestionResponse.split(' || ').length === 2
+          ? currentQuestionResponse.split(' || ')[1]
+          : currentQuestionResponse.split(' || ')[0]
+        : '';
+    }
+  };
+
   return (
     <div className="h-full w-full md:px-2 pt-2">
       <form>
@@ -682,19 +693,7 @@ const UserEdit = (props: UserInfoProps) => {
                                 ) && (
                                   <div className="col-span-2">
                                     <FormInput
-                                      value={
-                                        checkpointData[checkpointID]
-                                          ? checkpointData[checkpointID][
-                                              item.question.id
-                                            ].split(' || ').length === 2
-                                            ? checkpointData[checkpointID][
-                                                item.question.id
-                                              ].split(' || ')[1]
-                                            : checkpointData[checkpointID][
-                                                item.question.id
-                                              ].split(' || ')[0]
-                                          : ''
-                                      }
+                                      value={getValue(checkpointID, item.question.id)}
                                       id={item.question.id}
                                       placeHolder="Mention other"
                                       name="other"
