@@ -252,9 +252,7 @@ const User = () => {
     setImageUrl(imageUrl);
     setUser({...user, image: `user_profile_image_${user.id}`});
     updateImageParam(`user_profile_image_${user.id}`);
-
     toggleCropper();
-
     setImageLoading(false);
   };
 
@@ -302,41 +300,6 @@ const User = () => {
     setUrlState({t: value});
   };
 
-  const TeacherImage = ({teacher}: any) => {
-    const [teacherImgUrl, setTeacherImgUrl] = useState(null);
-    useEffect(() => {
-      async function getUrl() {
-        if (teacher.image) {
-          const imageUrl: any = await getImageFromS3(teacher.image);
-          setTeacherImgUrl(imageUrl);
-        }
-      }
-      getUrl();
-    }, [teacher.image]);
-    return teacher.image ? (
-      <img
-        className={`profile w-8 h-8 md:w-8 md:h-8 rounded-full  border-0 flex flex-shrink-0 border-gray-400 shadow-elem-light mr-4`}
-        src={teacherImgUrl}
-      />
-    ) : (
-      <div
-        className={`w-8 h-8 md:w-8 md:h-8 flex justify-center items-center rounded-full  border-0 border-gray-400 shadow-elem-light mr-4`}>
-        <div
-          className="h-full w-full flex justify-center items-center text-sm text-extrabold text-white rounded-full"
-          style={{
-            /* stylelint-disable */
-            background: `${stringToHslColor(user.firstName + ' ' + user.lastName)}`,
-            // textShadow: '0.2rem 0.2rem 3px #423939b3',
-          }}>
-          {initials(
-            user.preferredName ? user.preferredName : user.firstName,
-            user.lastName
-          )}
-        </div>
-      </div>
-    );
-  };
-
   const AssociatedClasses = ({list}: any) => {
     return (
       <div className="flex flex-col">
@@ -376,7 +339,7 @@ const User = () => {
                     const teacher = rooms.length > 0 ? rooms[0].teacher : null;
                     return (
                       <tr
-                        key={item.email}
+                        key={item.classID}
                         className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {item?.class?.name}
