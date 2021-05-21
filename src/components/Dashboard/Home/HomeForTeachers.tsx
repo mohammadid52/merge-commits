@@ -186,9 +186,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           };
 
           // if (!uniqIds.includes(curriculum?.id)) {
-          modifiedClassList.push(modifiedItem);
-          uniqIds.push(curriculum?.id);
+          //   uniqIds.push(curriculum?.id);
           // }
+          modifiedClassList.push(modifiedItem);
         }
       });
 

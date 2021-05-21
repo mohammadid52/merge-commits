@@ -42,7 +42,16 @@ const UserInformation = (props: UserInfoProps) => {
       const questionResponce: any = selectedCheckp.responseObject?.find(
         (item: any) => item.qid === questionID
       )?.response;
-      return questionResponce ? questionResponce.join(',') : '--';
+      const stringedResponse = questionResponce.toString();
+
+      if (stringedResponse.includes('Other')) {
+        const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
+        const answer = splitAnswer[1];
+        if (answer) return answer;
+        else return 'Other';
+      } else {
+        return questionResponce ? questionResponce.join(',') : '--';
+      }
     }
   };
 
@@ -182,7 +191,7 @@ const UserInformation = (props: UserInfoProps) => {
           <div style={{minHeight: 200}} className="px-4 py-5 sm:px-6">
             {getCurrentTabQuestions().map((item: any) => {
               return (
-                <div className="sm:col-span-1 p-2">
+                <div key={item.question.id} className="sm:col-span-1 p-2">
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {item.question.question}
                   </dt>

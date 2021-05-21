@@ -282,9 +282,7 @@ const User = () => {
     setImageUrl(imageUrl);
     setUser({...user, image: `user_profile_image_${user.id}`});
     updateImageParam(`user_profile_image_${user.id}`);
-
     toggleCropper();
-
     setImageLoading(false);
   };
 
