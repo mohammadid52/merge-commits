@@ -19,8 +19,9 @@ const NewPageDialog = () => {
   };
 
   return (
-    <div className={`
-      grid ${focussed === '' ? 'grid-cols-3' : 'grid-cols-1'} gap-2 z-50`}>
+    <div className={`flex flex-row z-50`}>
+
+
       {/* LEFT */}
       <div
         className={`
@@ -28,10 +29,11 @@ const NewPageDialog = () => {
           focussed === ''
             ? ''
             : focussed === 'new_page'
-            ? 'w-full'
-            : 'w-0 overflow-hidden'
+            ? 'w-full h-full'
+            : 'w-0 overflow-hidden opacity-0'
         }
-        h-full flex flex-col`}>
+        transition-all duration-400 ease-in-out
+        flex flex-col`}>
         <div className="relative flex items-center">
           <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
             Add New Page
@@ -94,6 +96,7 @@ const NewPageDialog = () => {
         </div>
       </div>
 
+
       {/* MIDDLE */}
       <div
         className={`
@@ -102,8 +105,9 @@ const NewPageDialog = () => {
             ? ''
             : focussed === 'existing_page'
             ? 'w-full'
-            : 'w-0 overflow-hidden'
+            : 'w-0 overflow-hidden opacity-0'
         }
+        transition-all duration-400 ease-in-out
       `}>
         <div className="relative flex items-center">
           <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
@@ -141,6 +145,7 @@ const NewPageDialog = () => {
         </div>
       </div>
 
+
       {/* RIGHT */}
       <div
         className={`
@@ -149,8 +154,9 @@ const NewPageDialog = () => {
             ? ''
             : focussed === 'template'
             ? 'w-full'
-            : 'w-0 overflow-hidden'
+            : 'w-0 overflow-hidden opacity-0'
         }
+        transition-all duration-400 ease-in-out
       `}>
         <div className="relative flex items-center">
           <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
@@ -185,6 +191,8 @@ const NewPageDialog = () => {
           </div>
         </div>
       </div>
+
+
     </div>
   );
 };
