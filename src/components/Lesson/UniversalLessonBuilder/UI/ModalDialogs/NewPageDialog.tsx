@@ -1,14 +1,50 @@
 import React, {useContext, useState} from 'react';
+import PageTile from '../common/PageTile';
+import {VscNewFile} from 'react-icons/vsc';
+import Buttons from '../../../../Atoms/Buttons';
 
 const NewPageDialog = () => {
+  const [focussed, setFocussed] = useState<
+    'new_page' | 'existing_page' | 'template' | ''
+  >('');
+
+  const handleToggleFocussed = (
+    sectionTag: 'new_page' | 'existing_page' | 'template' | ''
+  ) => {
+    if (focussed !== sectionTag) {
+      setFocussed(sectionTag);
+    } else {
+      setFocussed('');
+    }
+  };
+
   return (
-    <div className={`grid grid-cols-3 gap-2 z-50`}>
+    <div className={`
+      grid ${focussed === '' ? 'grid-cols-3' : 'grid-cols-1'} gap-2 z-50`}>
       {/* LEFT */}
-      <div className={`flex flex-col`}>
+      <div
+        className={`
+        ${
+          focussed === ''
+            ? ''
+            : focussed === 'new_page'
+            ? 'w-full'
+            : 'w-0 overflow-hidden'
+        }
+        h-full flex flex-col`}>
         <div className="relative flex items-center">
-          <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Add New Page</h2>
+          <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
+            Add New Page
+          </h2>
+          <Buttons
+            onClick={() => handleToggleFocussed('new_page')}
+            Icon={VscNewFile}
+            label="More"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+          />
         </div>
-        <div>
+        <div className={`bg-gray-200 p-2`}>
           <label
             htmlFor="field1"
             className="text-left block text-xs font-medium text-gray-700">
@@ -24,7 +60,7 @@ const NewPageDialog = () => {
             />
           </div>
         </div>
-        <div>
+        <div className={`bg-gray-200 p-2`}>
           <label
             htmlFor="field1"
             className="text-left block text-xs font-medium text-gray-700">
@@ -40,7 +76,7 @@ const NewPageDialog = () => {
             />
           </div>
         </div>
-        <div>
+        <div className={`bg-gray-200 p-2`}>
           <label
             htmlFor="field1"
             className="text-left block text-xs font-medium text-gray-700">
@@ -59,47 +95,93 @@ const NewPageDialog = () => {
       </div>
 
       {/* MIDDLE */}
-      <div>
+      <div
+        className={`
+        ${
+          focussed === ''
+            ? ''
+            : focussed === 'existing_page'
+            ? 'w-full'
+            : 'w-0 overflow-hidden'
+        }
+      `}>
         <div className="relative flex items-center">
-          <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Use Existing Page</h2>
+          <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
+            Use Existing Page
+          </h2>
+          <Buttons
+            onClick={() => handleToggleFocussed('existing_page')}
+            Icon={VscNewFile}
+            label="More"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+          />
         </div>
-        <div className={`h-full w-full`}>
-          <p className={`text-left block text-xs font-medium text-gray-700`}>
+
+        <div className={`h-full w-full bg-gray-200`}>
+          <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Activities
           </p>
-          <div className={`flex flex-wrap w-full`}>
-            <div className={`m-1 w-16 h-24 bg-gray-200 rounded`}></div>
-            <div className={`m-1 w-16 h-24 bg-gray-200 rounded`}></div>
-            <div className={`m-1 w-16 h-24 bg-gray-200 rounded`}></div>
+          <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
           </div>
 
-          <p className={`text-left block text-xs font-medium text-gray-700`}>
+          <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Checkpoints
           </p>
           <div>
-            <div className={`grid grid-cols-3 gap-2 h-auto w-full`}>
-              <div className={`w-full h-24 bg-gray-200 rounded`}></div>
+            <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+              <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+              <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+              <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             </div>
           </div>
         </div>
       </div>
 
       {/* RIGHT */}
-      <div>
+      <div
+        className={`
+        ${
+          focussed === ''
+            ? ''
+            : focussed === 'template'
+            ? 'w-full'
+            : 'w-0 overflow-hidden'
+        }
+      `}>
         <div className="relative flex items-center">
-          <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Page From Template</h2>
+          <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
+            Page From Template
+          </h2>
+          <Buttons
+            onClick={() => handleToggleFocussed('template')}
+            Icon={VscNewFile}
+            label="More"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+          />
         </div>
 
-        <div className={`h-full w-full`}>
-          <p className={`text-left block text-xs font-medium text-gray-700`}>Style 1</p>
-          <div className={`grid grid-cols-3 gap-2 h-auto w-full`}>
-            <div className={`w-full h-24 bg-gray-200 rounded`}></div>
+        <div className={`h-full w-full bg-gray-200`}>
+          <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
+            Style 1
+          </p>
+          <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
           </div>
 
-          <p className={`text-left block text-xs font-medium text-gray-700`}>Style 2</p>
-          <div className={`grid grid-cols-3 gap-2 h-auto w-full`}>
-            <div className={`w-full h-24 bg-gray-200 rounded`}></div>
-            <div className={`w-full h-24 bg-gray-200 rounded`}></div>
+          <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
+            Style 2
+          </p>
+          <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+            <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
           </div>
         </div>
       </div>

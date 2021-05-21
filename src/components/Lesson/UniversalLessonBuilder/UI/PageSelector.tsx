@@ -1,11 +1,9 @@
-import React, {Fragment} from 'react';
-import {
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
-import {PageGalleryControls} from './PageSelector/PageGalleryControls';
-import {VscNewFile} from 'react-icons/vsc';
+import React from 'react';
+import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
+import { VscFileMedia, VscNewFile } from 'react-icons/vsc';
 import Buttons from '../../../Atoms/Buttons';
+import { IconContext } from 'react-icons';
+import PageTile from './common/PageTile';
 
 interface PageSelectorProps {
   universalLessonDetails: UniversalLesson;
@@ -22,14 +20,9 @@ interface PageSelectorProps {
 const PageSelector = (props: PageSelectorProps) => {
   const {
     universalLessonDetails,
-    selectedPageDetails,
     setSelectedPageDetails,
-    universalBuilderDict,
-    userLanguage,
-    galleryVisible,
-    loading,
     handleModalPopToggle,
-    hideAllModals,
+
   } = props;
   const pages = universalLessonDetails?.universalLessonPages;
 
@@ -80,7 +73,7 @@ const PageSelector = (props: PageSelectorProps) => {
                     id={`pageThumb_${page.id}`}
                     onClick={() => handleSelectPage(page.id)}
                     className={`w-auto ml-4 flex flex-col cursor-pointer`}>
-                    <div className="relative w-16 h-24 mb-2 bg-white rounded" />
+                    <PageTile/>
                     <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
                   </div>
                 ))

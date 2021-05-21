@@ -15,6 +15,7 @@ const RowComposer = (props: RowComposerProps) => {
   const [editedID, setEditedID] = useState<string>('');
 
   const handleEditBlockToggle = (dataID: string) => {
+    console.log('handleEditBlockToggle - ', dataID)
     if (dataID) {
       if (editedID !== dataID) {
         setEditedID(dataID);
@@ -135,7 +136,8 @@ const RowComposer = (props: RowComposerProps) => {
             mode={mode}
             key={`pp_addNew`}
             contentID={`addNewRow`}
-            editedID={editedID}>
+            editedID={editedID}
+            handleEditBlockToggle={handleEditBlockToggle}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>
@@ -148,7 +150,8 @@ const RowComposer = (props: RowComposerProps) => {
             mode={mode}
             key={`pp_addNew`}
             contentID={`addNewRow`}
-            editedID={editedID}>
+            editedID={editedID}
+            handleEditBlockToggle={handleEditBlockToggle}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>

@@ -5,10 +5,6 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 
 export const AddNewBlock = (props: RowWrapperProps) => {
   const {
-    mode,
-    hasContent,
-    contentID,
-    hoveredID,
     handleModalPopToggle,
   } = props;
 
@@ -17,9 +13,8 @@ export const AddNewBlock = (props: RowWrapperProps) => {
       className={`
       w-full h-48 
       flex justify-center items-center 
-      bg-light-blue bg-opacity-0 
-      hover:bg-light-blue hover:bg-opacity-20 
-      rounded-xl border-dashed border-4 border-light-blue-500
+      bg-gray-400 bg-opacity-20 
+      rounded
       z-50`}>
       <div
         onClick={() => handleModalPopToggle('ADD_CONTENT')}
