@@ -40,10 +40,6 @@ interface InputValue {
 
 const EditQuestionModal = (props: EditQuestionModalProps) => {
   const {closeAction, saveAction, checkpItem} = props;
-  console.log(
-    '🚀 ~ file: EditQuestionModal.tsx ~ line 43 ~ EditQuestionModal ~ props',
-    props
-  );
 
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -370,7 +366,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
           <div className="p-6">
             <div className="p-6 border-gray-400  border-0 border-dashed">
               <p className="text-m font-medium leading-5 text-gray-700 mb-1">
-                {EditQuestionModalDict[userLanguage]['ADDOPTION']}:{' '}
+                {EditQuestionModalDict[userLanguage]['ADDOPTION']}
               </p>
 
               {/* Options input fields */}
@@ -385,7 +381,7 @@ const EditQuestionModal = (props: EditQuestionModalProps) => {
                         name={item.label}
                       />
                     </div>
-                    <div className="w-1/10 flex items-center">
+                    <div className="w-1/10 ml-2 flex items-center">
                       <span
                         className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
                         onClick={() => onOptionAdd(index)}>
