@@ -29,6 +29,10 @@ import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/st
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import {BiMessageRoundedDots, BiMessageRoundedX} from 'react-icons/bi';
+import {isEmpty} from 'lodash';
+import {GrSend} from 'react-icons/gr';
+import {MdAudiotrack} from 'react-icons/md';
+import {BsCameraVideo, BsCameraVideoFill} from 'react-icons/bs';
 
 export interface UserInfo {
   authId: string;
@@ -87,7 +91,7 @@ const User = () => {
     {name: 'Notebook', current: false},
   ];
 
-  const [curTab, setCurTab] = useState<string>(tabs[2].name);
+  const [curTab, setCurTab] = useState<string>(tabs[0].name);
   const [questionData, setQuestionData] = useState([]);
   const [stdCheckpoints, setStdCheckpoints] = useState([]);
   const [urlState, setUrlState] = useUrlState(
@@ -321,9 +325,11 @@ const User = () => {
   }, []);
 
   const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
+  const [loading, setLoading] = useState(false);
 
   // TOP Function to load student data
   const listStudentData = async () => {
+    setLoading(true);
     try {
       const studentDataFetch: any = await API.graphql(
         graphqlOperation(queries.listStudentDatas, {
@@ -361,6 +367,8 @@ const User = () => {
       );
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -497,82 +505,108 @@ const User = () => {
 
   const StudentData = ({item}: any) => {
     const [showComments, setShowComments] = useState(false);
-    const activity = [
-      {
-        id: 1,
-        type: 'comment',
-        person: {name: 'Eduardo Benz', href: '#'},
-        imageUrl:
-          'https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-        comment: 'This is a loooooooong comment',
-        date: '6d ago',
-        commentId: '123',
-        syllabusLessonID: 'custom_9101f663-f819-4180-9d31-63afd81d7b56_1',
-      },
+    const activity: {
+      comment: string;
+      id: string;
+      person: {
+        name: string;
+        image: string | null;
+      };
+      commentedAt: Date;
+    }[] = []; // dummy DB
+    const [commentDb, setCommentDb] = useState(activity);
+    const [comment, setComment] = useState('');
 
-      {
-        id: 4,
-        type: 'comment',
-        person: {name: 'Jason Meyers', href: '#'},
-        imageUrl:
-          'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-        comment: 'Wow, cool',
-        date: '2h ago',
-        commentId: '243',
-        syllabusLessonID: 'custom_9101f663-f819-4180-9d31-63afd81d7b56_0',
-      },
-      {
-        id: 5,
-        type: 'comment',
-        person: {name: 'Jason Meyers', href: '#'},
-        imageUrl:
-          'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80',
-        comment: 'Nice',
-        date: '2h ago',
-        commentId: '154',
-        syllabusLessonID: 'custom_9101f663-f819-4180-9d31-63afd81d7b56_2',
-      },
-    ];
+    const onCommentSubmit = (e: any) => {
+      // e.preventDefault();
+
+      const name = state.user.firstName;
+
+      const image = state.user.image;
+
+      setCommentDb([
+        ...commentDb,
+        {comment, id: '1', person: {name, image}, commentedAt: new Date()},
+      ]);
+    };
+
+    const actionStyles =
+      'flex items-center justify-center ml-2 border-2 h-8 w-8 rounded-md hover:text-white cursor-pointer transition-all duration-300';
     return (
       <div
         className={`w-full white_back pb-2 py-8 px-6 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
         {item.content && ReactHtmlParser(item.content)}
-        {showComments &&
-          activity
-            .filter((_item: any) => item.syllabusLessonID === _item.syllabusLessonID)
-            .map((comment: any, eventIdx: number) => (
-              <div className="relative">
-                {eventIdx !== activity.length - 1 ? (
-                  <span
-                    style={{top: '-1.0rem', left: '1.25rem'}}
-                    className="absolute -ml-px h-4 w-0.5 bg-gray-400"
-                    aria-hidden="true"
-                  />
-                ) : null}
-                <div className="text-sm text-gray-900 mt-4 flex items-center">
-                  <img
-                    className="h-10 w-10 rounded-full bg-gray-400 flex items-center justify-center ring-8 ring-white"
-                    src={comment.imageUrl}
-                    alt=""
-                  />
-                  <div className="ml-2">
-                    <h5 className="font-semibold">
-                      {comment.person.name}{' '}
-                      <span className="text-xs text-gray-600 font-normal ml-1">
-                        {comment.date}
-                      </span>
-                    </h5>
-                    <p>{comment.comment}</p>
+        {showComments && (
+          <div className="comment-container">
+            {commentDb &&
+              commentDb.map(({comment, person, commentedAt, id}, eventIdx: number) => (
+                <div key={id} className="relative">
+                  {/* {eventIdx !== activity.length - 1 ? (
+                    <span
+                      style={{top: '-1.0rem', left: '1.25rem'}}
+                      className="absolute -ml-px h-4 w-0.5 bg-gray-400"
+                      aria-hidden="true"
+                    />
+                  ) : null} */}
+                  <div className="text-sm text-gray-900 mt-4 flex items-center">
+                    {/* <img
+                      className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center ring-8 ring-white"
+                      src={person.image}
+                      alt=""
+                    /> */}
+                    <div className="ml-2">
+                      <h5 className="font-semibold">
+                        {person.name}{' '}
+                        <span className="text-xs text-gray-600 font-normal ml-1">
+                          {commentedAt}
+                        </span>
+                      </h5>
+                      <p>{comment}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            <div className="comment-box flex flex-col border-0 border-gray-400 h-24 rounded mt-4">
+              <div className="flex items-center h-10 border-b-0 border-gray-200">
+                <textarea
+                  style={{resize: 'none'}}
+                  placeholder="Add Feedback"
+                  className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
+                  rows={1}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+              </div>
+              <div className="comment-actions h-14 flex items-center justify-between">
+                <div className="left-action w-auto">
+                  <div className="flex items-center justify-center">
+                    <div
+                      className={`${actionStyles} text-blue-500 border-blue-200 hover:bg-blue-400`}>
+                      <MdAudiotrack className="" />
+                    </div>
+                    <div
+                      className={`${actionStyles} text-red-500 border-red-200 hover:bg-red-400`}>
+                      <BsCameraVideoFill className="" />
+                    </div>
+                  </div>
+                </div>
+                <div className="right-action w-1/5 p-2">
+                  <div
+                    onClick={onCommentSubmit}
+                    className="bg-indigo-500 text-white py-1 hover:bg-indigo-400 rounded-md transition-all duration-300 justify-self-end text-sm cursor-pointer flex items-center justify-center py-2">
+                    Send Feedback
                   </div>
                 </div>
               </div>
-            ))}
-        <div className="flex items-center justify-end">
+            </div>
+          </div>
+        )}
+        <div className="flex items-center justify-start">
           <div
             onClick={() => setShowComments(!showComments)}
-            className="hover:bg-blue-100 text-blue-500 w-auto p-2 rounded-md transition-all duration-500 text-sm cursor-pointer my-2">
-            <BiMessageRoundedDots size={20} />
+            className="bg-indigo-500 text-white hover:bg-indigo-400 w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2">
+            {showComments ? 'Hide' : 'Show'} Feedbacks
           </div>
         </div>
       </div>
@@ -735,12 +769,26 @@ const User = () => {
                 <AssociatedClasses list={user?.classes?.items} />
               </div>
             )}
+
           {curTab === 'Notebook' &&
-            (studentData && studentData.length > 0 ? (
+            (loading ? (
+              <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="">
+                  <Loader color="rgba(107, 114, 128, 1)" />
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    {'Loading Notebook Data'}
+                  </p>
+                </div>
+              </div>
+            ) : studentData && studentData.length > 0 ? (
               studentData.map((item: any) => <StudentData item={item} />)
             ) : (
-              <div>
-                <p>Student has no data </p>
+              <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
+                <div className="">
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    {'No Notebook Data Found'}
+                  </p>
+                </div>
               </div>
             ))}
         </div>

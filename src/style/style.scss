@@ -719,3 +719,9 @@
     transform: translateX(-100px);
   }
 }
+  .comment-input:focus {
+    .comment-box {
+      border:1px solid white
+    }
+  }
+
