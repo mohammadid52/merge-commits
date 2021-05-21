@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { getImageFromS3 } from '../../../utilities/services';
-import { getUserRoleString } from '../../../utilities/strings';
-import { stringToHslColor } from '../../../utilities/strings';
-import { LinkProps } from './Links';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {getImageFromS3} from '../../../utilities/services';
+import {getUserRoleString} from '../../../utilities/strings';
+import {stringToHslColor} from '../../../utilities/strings';
+import {LinkProps} from './Links';
 
 const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
-  const { state, theme, dispatch } = useContext(GlobalContext);
+  const {state, theme, dispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
   const [imageUrl, setImageUrl] = useState('');
@@ -22,7 +22,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
   const handleLink = (e: any) => {
     history.push(`${match.url}/profile`);
     linkProps.setCurrentPage('profile');
-    dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'profile' } });
+    dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'profile'}});
   };
 
   useEffect(() => {
@@ -32,19 +32,32 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
     }
     getUrl();
   }, [state.user]);
-  
+
   return (
     <div
       onClick={handleLink}
       className="flex-shrink-0 flex border-t sidenav_profile cursor-pointer border-gray-200 p-4">
       <a className="flex-shrink-0 w-full group block">
         <div className="flex items-center">
-          <div style={{ width: 48, height: 48, minWidth: 48, minHeight: 48 }} className="">
+          <div style={{width: 48, height: 48, minWidth: 48, minHeight: 48}} className="">
             {state.user.image ? (
-              imageUrl.length > 0 ? <img className="inline-block rounded" style={{ width: 48, height: 48 }} src={imageUrl} alt="" /> : <div className="inline-block rounded bg-gray-400" style={{ width: 48, height: 48 }}/>
+              imageUrl.length > 0 ? (
+                <img
+                  className="inline-block rounded"
+                  style={{width: 48, height: 48}}
+                  src={imageUrl}
+                  alt=""
+                />
+              ) : (
+                <div
+                  className="inline-block rounded bg-gray-400"
+                  style={{width: 48, height: 48}}
+                />
+              )
             ) : (
               <div
                 style={{
+                  /* stylelint-disable */
                   background: `${
                     state.user.firstName
                       ? stringToHslColor(state.user.firstName + ' ' + state.user.lastName)
@@ -52,7 +65,7 @@ const ProfileLink: React.FC<LinkProps> = (linkProps: LinkProps) => {
                   }`,
                   textShadow: '0.1rem 0.1rem 2px #423939b3',
                 }}
-                className="rounded flex justify-center items-center text-xs text-white font-sans">
+                className="rounded flex justify-center items-center text-xs text-white h-full font-sans">
                 {`${initials(state.user.firstName, state.user.lastName)}`}
               </div>
             )}

@@ -212,6 +212,7 @@ const Dashboard = (props: DashboardProps) => {
       };
       const dashboardDataFetch = await handleFetchAndCache(queryObj);
       const response = await dashboardDataFetch;
+
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(

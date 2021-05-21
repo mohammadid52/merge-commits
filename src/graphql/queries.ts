@@ -2059,6 +2059,7 @@ export const getAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -2100,6 +2101,7 @@ export const listAssessmentQuestionss = /* GraphQL */ `
           language
           sourceId
           note
+          published
           createdAt
           updatedAt
         }
@@ -2223,6 +2225,7 @@ export const getQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -2250,6 +2253,7 @@ export const listQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -3768,6 +3772,7 @@ export const getQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -3881,6 +3886,7 @@ export const listQuestionDatas = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id

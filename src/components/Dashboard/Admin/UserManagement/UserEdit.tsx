@@ -105,10 +105,30 @@ const UserEdit = (props: UserInfoProps) => {
     }
   }, [questionData]);
 
-  const updateQuestionData = async (responseObj: any) => {
+  const updateQuestionData = async (responseObj: any, checkpointID: string) => {
     try {
+      // Code for Other Field
+
+      const val = responseObj.responseObject.map((resp: any) => {
+        if (hasOther(resp.response, 'Other')) {
+          return {
+            ...resp,
+            response: checkpointData[checkpointID][resp.qid],
+            otherResponse: checkpointData[checkpointID][resp.qid]
+              .toString()
+              .split(' || ')[1],
+          };
+        } else {
+          return {...resp};
+        }
+      });
+
+      const modifiedResponseObj = {...responseObj, responseObject: val};
+      // Ends here
+
+      // if wants to quick revert - change {input:modifiedResponseObj} value to {input:responseObj}
       const questionData = await API.graphql(
-        graphqlOperation(customMutations.updateQuestionData, {input: responseObj})
+        graphqlOperation(customMutations.updateQuestionData, {input: modifiedResponseObj})
       );
       console.log('Question data updated');
     } catch (err) {
@@ -116,12 +136,16 @@ const UserEdit = (props: UserInfoProps) => {
     }
   };
 
-  const updatePersonCheckpointData = async (questionDataId: string, questions: any[]) => {
+  const updatePersonCheckpointData = async (
+    questionDataId: string,
+    questions: any[],
+    checkpointID: string
+  ) => {
     let responseObject = {
       id: questionDataId,
       responseObject: questions,
     };
-    updateQuestionData(responseObject);
+    updateQuestionData(responseObject, checkpointID);
   };
 
   const createQuestionData = async (responseObj: any) => {
@@ -176,7 +200,11 @@ const UserEdit = (props: UserInfoProps) => {
             (question: any) => question.checkpointID === item.checkpointId
           );
           if (currentItem) {
-            return updatePersonCheckpointData(currentItem.id, item.questions);
+            return updatePersonCheckpointData(
+              currentItem.id,
+              item.questions,
+              item.checkpointId
+            );
           } else {
             return savePersonCheckpointData(item.checkpointId, item.questions);
           }
@@ -212,6 +240,16 @@ const UserEdit = (props: UserInfoProps) => {
       [checkpointID]: {
         ...checkpointData[checkpointID],
         [questionID]: e.target.value,
+      },
+    });
+  };
+
+  const onOtherInputChange = (e: any, checkpointID: string, questionID: string) => {
+    setCheckpointData({
+      ...checkpointData,
+      [checkpointID]: {
+        ...checkpointData[checkpointID],
+        [questionID]: `Other || ${e.target.value}`,
       },
     });
   };
@@ -394,6 +432,31 @@ const UserEdit = (props: UserInfoProps) => {
 
   const checkpointID =
     tab !== 'p' && stdCheckpoints.length > 0 && stdCheckpoints[parseInt(tab || '1')].id;
+
+  // Code for Other Field
+
+  const hasOther = (val: string | string[], other: string) => {
+    return val ? val.toString().includes(other) : false;
+  };
+
+  const isOther = (val: any) => {
+    if (hasOther(val, 'Other')) {
+      return true;
+    } else return false;
+  };
+
+  // ⬆️ Ends here ⬆️
+
+  const getValue = (checkpointId: string, questionId: string) => {
+    if (checkpointData[checkpointId]) {
+      const currentQuestionResponse = checkpointData[checkpointId][questionId];
+      return currentQuestionResponse
+        ? currentQuestionResponse.split(' || ').length === 2
+          ? currentQuestionResponse.split(' || ')[1]
+          : ''
+        : '';
+    }
+  };
 
   return (
     <div className="h-full w-full md:px-2 pt-2">
@@ -605,7 +668,11 @@ const UserEdit = (props: UserInfoProps) => {
                               <Selector
                                 selectedItem={
                                   checkpointData[checkpointID]
-                                    ? checkpointData[checkpointID][item.question.id]
+                                    ? isOther(
+                                        checkpointData[checkpointID][item.question.id]
+                                      )
+                                      ? 'Other'
+                                      : checkpointData[checkpointID][item.question.id]
                                     : ''
                                 }
                                 placeholder=""
@@ -620,6 +687,26 @@ const UserEdit = (props: UserInfoProps) => {
                                   )
                                 }
                               />
+                              {checkpointData[checkpointID] &&
+                                isOther(
+                                  checkpointData[checkpointID][item.question.id]
+                                ) && (
+                                  <div className="col-span-2">
+                                    <FormInput
+                                      value={getValue(checkpointID, item.question.id)}
+                                      id={item.question.id}
+                                      placeHolder="Mention other"
+                                      name="other"
+                                      onChange={(e) => {
+                                        onOtherInputChange(
+                                          e,
+                                          checkpointID,
+                                          item.question.id
+                                        );
+                                      }}
+                                    />
+                                  </div>
+                                )}
                             </>
                           ) : null}
                           {item.question.type === 'selectMany' ? (

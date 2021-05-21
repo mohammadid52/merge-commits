@@ -22,10 +22,12 @@ export const getDashboardData = /* GraphQL */ `
                   email
                   role
                   phone
+                  authId
                 }
                 coTeachers {
                   items {
                     teacher {
+                      authId
                       firstName
                       lastName
                       image
@@ -2373,6 +2375,7 @@ export const listQuestionDatas = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
