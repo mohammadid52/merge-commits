@@ -28,6 +28,7 @@ import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import EditQuestionModal from '../../HelperComponents/EditQuestionModal';
 import {findIndex, get, update} from 'lodash';
+import {AiOutlineEdit} from 'react-icons/ai';
 
 interface EditCheckPointProps {
   changeStep: (step: string) => void;
@@ -415,40 +416,14 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     checkpItem: any,
     isRequired: boolean
   ) => {
-    console.log(checkPointData);
-    // const checkpointItems = get(lessonDetails, 'checkpoints.items');
-    // const indexOfCheckpoint = findIndex(
-    //   checkpointItems,
-    //   (d: any) => d.checkpointID === checkpItem.checkpointID
-    // );
+    const indexOfQuestion = findIndex(
+      checkpQuestions,
+      (d: any) => d.id === updatedQuestionData.id
+    );
 
-    // const questionsList = get(
-    //   lessonDetails,
-    //   `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items`
-    // );
+    checkpQuestions[indexOfQuestion] = {...updatedQuestionData, required: isRequired};
 
-    // const indexOfQuestion = findIndex(
-    //   questionsList,
-    //   (d: any) => d.questionID === updatedQuestionData.id
-    // );
-
-    // update(
-    //   lessonDetails,
-    //   `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].question`,
-    //   () => {
-    //     return updatedQuestionData;
-    //   }
-    // );
-
-    // update(
-    //   lessonDetails,
-    //   `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].required`,
-    //   () => {
-    //     return isRequired;
-    //   }
-    // );
-
-    // setCheckPointData({...lessonDetails});
+    setCheckpQuestions([...checkpQuestions]);
   };
 
   const QuestionList = ({provided, item, index}: any) => {
@@ -464,17 +439,13 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
           <EditQuestionModal
             saveAction={(updatedData, isRequired) => {
               setIsEditing(false);
-              updateExistingData(updatedData, checkpItem, isRequired);
+              updateExistingData(updatedData, null, isRequired);
             }}
             checkpItem={checkpItem}
             closeAction={() => setIsEditing(false)}
           />
         )}
         <div
-          onClick={() => {
-            setIsEditing(true);
-            // showOptions(item.id, item.options);
-          }}
           key={item.id}
           className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer ${
             questionOptions.quesId === item.id && 'bg-gray-200'
@@ -499,9 +470,18 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
               />
             </span>
           </div>
+          <div className="flex w-1/10 px-2 py-1 text-s leading-4 items-center justify-center">
+            <div
+              onClick={() => setIsEditing(true)}
+              className={`mx-1 py-3 rounded-md cursor-pointer`}>
+              <AiOutlineEdit className="text-blue-500" />
+            </div>
+          </div>
           <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
             {(item.type === 'selectMany' || item.type === 'selectOne') && (
-              <div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}>
+              <div
+                onClick={() => showOptions(item.id, item.options)}
+                className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}>
                 <IconContext.Provider
                   value={{
                     size: '1.5rem',
@@ -765,6 +745,10 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                   </div>
                   <div className="w-1.5/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{EditCheckPointDict[userLanguage]['REQUIRED']}</span>
+                  </div>
+                  <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>Edit</span>
+                    {/* TODO: Add this to dictionary */}
                   </div>
                   <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{EditCheckPointDict[userLanguage]['OPTION']}</span>
