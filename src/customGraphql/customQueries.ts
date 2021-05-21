@@ -72,6 +72,45 @@ export const getDashboardData = /* GraphQL */ `
   }
 `;
 
+export const getTeacherLookUp =  /* GraphQL */ `
+query ListRooms(
+  $filter: ModelRoomFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      teacherAuthID
+      teacher {
+        id
+        authId
+      }
+      class {
+        students {
+          items {
+            student {
+              id
+              authId
+            }
+          }
+        } 
+      }
+      coTeachers {
+        items {
+          teacher {
+            id
+            authId
+          }
+        }
+      }
+    
+    }
+    nextToken
+  }
+}
+`;
+
 export const getDashboardDataForTeachers = /* GraphQL */ `
   query ListRooms(
     $filter: ModelRoomFilterInput
@@ -1790,7 +1829,6 @@ export const listLessonsTitles = /* GraphQL */ `
         designers
         lessonPlan {
           type
-         
         }
         institutionID
         createdAt

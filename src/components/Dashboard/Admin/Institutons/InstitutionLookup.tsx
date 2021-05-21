@@ -131,7 +131,7 @@ const InstitutionLookup: React.FC = () => {
     return list;
   };
 
-  const isTeacher = state.user.role === 'TR';
+  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
 
   async function getInstitutionsData() {
     try {

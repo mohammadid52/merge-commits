@@ -1,12 +1,17 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { AiOutlineUsergroupAdd, AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import React, {useState, useEffect, useContext, Fragment} from 'react';
+import {useHistory} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {
+  AiOutlineUsergroupAdd,
+  AiOutlineArrowUp,
+  AiOutlineArrowDown,
+} from 'react-icons/ai';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
-import { getAsset } from '../../../../assets';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import {getAsset} from '../../../../assets';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import ListStudents from './ListStudents';
@@ -21,7 +26,7 @@ import Selector from '../../../Atoms/Form/Selector';
 import useDictionary from '../../../../customHooks/dictionary';
 
 const UserLookup = () => {
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [status, setStatus] = useState('');
@@ -30,7 +35,7 @@ const UserLookup = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
-  const { UserLookupDict, paginationPage, BreadcrumsTitles } = useDictionary(clientKey);
+  const {UserLookupDict, paginationPage, BreadcrumsTitles} = useDictionary(clientKey);
   const [searchInput, setSearchInput] = useState({
     value: '',
     isActive: false,
@@ -48,15 +53,19 @@ const UserLookup = () => {
   // ...End.
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['PEOPLE'], url: '/dashboard/manage-users', last: true },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['PEOPLE'],
+      url: '/dashboard/manage-users',
+      last: true,
+    },
   ];
 
   const sortByList = [
-    { id: 1, name: 'Name', value: 'lastName' },
-    { id: 2, name: 'Role', value: 'role' },
+    {id: 1, name: 'Name', value: 'lastName'},
+    {id: 2, name: 'Role', value: 'role'},
     // { id: 3, name: 'Institution', value: 'institution' },
-    { id: 4, name: 'Status', value: 'status' },
+    {id: 4, name: 'Status', value: 'status'},
   ];
 
   const goNextPage = () => {
@@ -142,12 +151,15 @@ const UserLookup = () => {
 
   const removeSearchAction = () => {
     backToInitials();
-    setSearchInput({ value: '', isActive: false });
+    setSearchInput({value: '', isActive: false});
   };
 
   const fetchSortedList = () => {
     const newUserList = [...totalUserList].sort((a, b) =>
-      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() && sortingType.asc ? 1 : -1
+      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
+      sortingType.asc
+        ? 1
+        : -1
     );
     setTotalUserList(newUserList);
   };
@@ -158,23 +170,128 @@ const UserLookup = () => {
     setUserList(updatedList);
   };
 
+  const getStudentsList = (data: any) => {
+    let list: any[] = [];
+    let uniqIds: string[] = [];
+    data &&
+      data.length > 0 &&
+      data[0]?.class?.rooms?.items.forEach((item: any) => {
+        item?.class?.students?.items.forEach((student: any) => {
+          if (!uniqIds.includes(student.student.authId)) {
+            list.push(student.student.authId);
+            uniqIds.push(student.student.authId);
+          }
+        });
+      });
+
+    return list;
+  };
+
+  const getCoTeacherList = (data: any) => {
+    let coTeachersList: any[] = [];
+    let uniqIds: string[] = [];
+    data &&
+      data.length > 0 &&
+      data.forEach((item: any) => {
+        if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
+          item?.class?.rooms?.items[0].coTeachers.items.forEach((_item: any) => {
+            if (!uniqIds.includes(_item.teacher.email)) {
+              coTeachersList.push(_item.teacher);
+              uniqIds.push(_item.teacher.email);
+            }
+          });
+        }
+      });
+
+    return coTeachersList;
+  };
+
+  const getTeacherList = (data: any) => {
+    return data && data.length > 0
+      ? data.reduce((acc: any[], dataObj: any) => {
+          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+          const teacherIsPresent = acc?.find(
+            (teacher: any) =>
+              teacher?.firstName === teacherObj?.firstName &&
+              teacher?.lastName === teacherObj?.lastName
+          );
+          if (teacherIsPresent) {
+            return acc;
+          } else {
+            return [...acc, teacherObj];
+          }
+        }, [])
+      : [];
+  };
+
   const fetchAllUsersList = async () => {
+    const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+    const teacherAuthID = state.user.authId;
+
+    let authIds: any[] = [];
     try {
-      const users: any = await API.graphql(graphqlOperation(queries.listPersons));
-      const response = users?.data?.listPersons?.items;
+      if (isTeacher) {
+        try {
+          const dashboardDataFetch: any = await API.graphql(
+            graphqlOperation(customQueries.getTeacherLookUp, {
+              filter: {teacherAuthID: {eq: teacherAuthID}},
+            })
+          );
 
-      const usersList =
-        state.user.role === 'FLW' ? response.filter((user: any) => user.role === 'ST' || user.role === 'TR') : response;
+          const response = await dashboardDataFetch;
+          let arrayOfResponseObjects = response?.data?.listRooms?.items;
+          arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
+            return {class: {rooms: {items: arrayOfResponseObjects}}};
+          });
 
-      const totalListPages = Math.floor(usersList.length / userCount);
-      if (totalListPages * userCount === usersList.length) {
-        setTotalPages(totalListPages);
-      } else {
-        setTotalPages(totalListPages + 1);
+          const students = getStudentsList(arrayOfResponseObjects);
+          const teachers = getTeacherList(arrayOfResponseObjects);
+          const coTeachers = getCoTeacherList(arrayOfResponseObjects);
+
+          authIds = authIds.concat(students);
+          authIds = authIds.concat(teachers.map((d: any) => d.authId));
+          authIds = authIds.concat(coTeachers.map((d: any) => d.authId));
+        } catch (e) {
+          console.error('getDashboardDataForTeachers -> ', e);
+        } finally {
+        }
       }
 
-      setTotalUserList(usersList);
-      setTotalUserNum(usersList.length);
+      const authIdFilter: any = authIds.map((item: any) => {
+        return {
+          authId: {
+            eq: item,
+          },
+        };
+      });
+
+      if ((isTeacher && authIdFilter.length > 0) || !isTeacher) {
+        const users: any = isTeacher
+          ? await API.graphql(
+              graphqlOperation(queries.listPersons, {
+                filter: {
+                  or: [...authIdFilter],
+                },
+              })
+            )
+          : await API.graphql(graphqlOperation(queries.listPersons));
+        const response = users?.data?.listPersons?.items;
+
+        const usersList =
+          state.user.role === 'FLW'
+            ? response.filter((user: any) => user.role === 'ST' || user.role === 'TR')
+            : response;
+
+        const totalListPages = Math.floor(usersList.length / userCount);
+        if (totalListPages * userCount === usersList.length) {
+          setTotalPages(totalListPages);
+        } else {
+          setTotalPages(totalListPages + 1);
+        }
+
+        setTotalUserList(usersList);
+        setTotalUserNum(usersList.length);
+      }
       setStatus('done');
     } catch (error) {
       console.error(error);
@@ -252,7 +369,8 @@ const UserLookup = () => {
           <button
             className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
             onClick={toggleSortDimention}>
-            <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+            <IconContext.Provider
+              value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
               {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
             </IconContext.Provider>
           </button>
@@ -268,7 +386,7 @@ const UserLookup = () => {
       {/* List / Table */}
       <div className="flex flex-col">
         <div className="-my-2 py-2">
-          <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
+          <div className="white_back py-4 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
             <div className="h-8/10 px-4">
               <div className="w-full flex justify-between border-b-0 border-gray-200 ">
                 <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -292,16 +410,22 @@ const UserLookup = () => {
               {userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
                   <div key={key}>
-                    {state.user.role === 'FLW' ? <ListStudents item={item} /> : <List item={item} key={key} />}
+                    {state.user.role === 'FLW' ? (
+                      <ListStudents item={item} />
+                    ) : (
+                      <List item={item} key={key} />
+                    )}
                   </div>
                 ))
               ) : (
-                <div className="flex p-12 mx-auto justify-center">{UserLookupDict[userLanguage]['noresult']}</div>
+                <div className="flex p-12 mx-auto justify-center">
+                  {UserLookupDict[userLanguage]['noresult']}
+                </div>
               )}
             </div>
 
             {/* Pagination And Counter */}
-            <div className="flex justify-center my-4">
+            <div className="flex justify-center px-8 my-4">
               {!searchInput.isActive && (
                 <Fragment>
                   <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
@@ -314,7 +438,10 @@ const UserLookup = () => {
                     firstPage={firstPage}
                     lastPage={lastPage}
                   />
-                  <PageCountSelector pageSize={userCount} setPageSize={(c: number) => setUserCount(c)} />
+                  <PageCountSelector
+                    pageSize={userCount}
+                    setPageSize={(c: number) => setUserCount(c)}
+                  />
                 </Fragment>
               )}
             </div>
