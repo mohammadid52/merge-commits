@@ -1,24 +1,16 @@
 import ContentCard from '../../Atoms/ContentCard';
 import React from 'react';
 import ImageAlternate from '../../Atoms/ImageAlternative';
-interface TeacherProps {
-  coTeachersList: {
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    image: string | null;
-  }[];
-  teachersList: {
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    image: string | null;
-  }[];
+
+interface Teacher {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  image: string | null;
 }
 
-const TeacherRows = (props: TeacherProps) => {
+const TeacherRows = (props: {coTeachersList: Teacher[]; teachersList: Teacher[]}) => {
   const {coTeachersList = [], teachersList = []} = props;
   const allTeachers = [...teachersList, ...coTeachersList];
   return (

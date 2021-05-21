@@ -66,14 +66,13 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
           minWidth: collapse ? '0rem' : '16rem',
           maxWidth: collapse ? '0rem' : '16rem',
         }}
-        className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav bg-charcoal overflow-x-hidden ${
+        className={`md:flex w-auto md:flex-shrink-0 w-60 sidenav bg-charcoal ${
           collapse && 'cursor-pointer'
         }`}>
         {!collapse && (
           <div
             style={{
               minWidth: '16rem',
-              overflow: 'hidden',
             }}
             className="flex flex-col">
             <div className="flex flex-col h-screen flex-1">
@@ -89,7 +88,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                   className="w-auto cursor-pointer sidenav_icon h-6 w-6 text-gray-400"
                 />
               </div>
-              <div className="flex-1 flex flex-col overflow-y-auto">
+              <div className="flex-1 flex flex-col">
                 <ProfileLink
                   handleRoomSelection={handleRoomSelection}
                   setActiveRoomSyllabus={setActiveRoomSyllabus}
