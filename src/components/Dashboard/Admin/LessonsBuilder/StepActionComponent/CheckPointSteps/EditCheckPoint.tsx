@@ -26,6 +26,8 @@ import {getTypeString, reorder} from '../../../../../../utilities/strings';
 import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import EditQuestionModal from '../../HelperComponents/EditQuestionModal';
+import {findIndex, get, update} from 'lodash';
 
 interface EditCheckPointProps {
   changeStep: (step: string) => void;
@@ -408,6 +410,125 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     estTime,
   } = checkPointData;
 
+  const updateExistingData = (
+    updatedQuestionData: any,
+    checkpItem: any,
+    isRequired: boolean
+  ) => {
+    console.log(checkPointData);
+    // const checkpointItems = get(lessonDetails, 'checkpoints.items');
+    // const indexOfCheckpoint = findIndex(
+    //   checkpointItems,
+    //   (d: any) => d.checkpointID === checkpItem.checkpointID
+    // );
+
+    // const questionsList = get(
+    //   lessonDetails,
+    //   `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items`
+    // );
+
+    // const indexOfQuestion = findIndex(
+    //   questionsList,
+    //   (d: any) => d.questionID === updatedQuestionData.id
+    // );
+
+    // update(
+    //   lessonDetails,
+    //   `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].question`,
+    //   () => {
+    //     return updatedQuestionData;
+    //   }
+    // );
+
+    // update(
+    //   lessonDetails,
+    //   `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].required`,
+    //   () => {
+    //     return isRequired;
+    //   }
+    // );
+
+    // setCheckPointData({...lessonDetails});
+  };
+
+  const QuestionList = ({provided, item, index}: any) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const checkpItem = {...checkPointData, question: item, required: item.required};
+
+    return (
+      <div
+        ref={provided.innerRef}
+        {...provided.draggableProps}
+        {...provided.dragHandleProps}>
+        {isEditing && (
+          <EditQuestionModal
+            saveAction={(updatedData, isRequired) => {
+              setIsEditing(false);
+              updateExistingData(updatedData, checkpItem, isRequired);
+            }}
+            checkpItem={checkpItem}
+            closeAction={() => setIsEditing(false)}
+          />
+        )}
+        <div
+          onClick={() => {
+            setIsEditing(true);
+            // showOptions(item.id, item.options);
+          }}
+          key={item.id}
+          className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer ${
+            questionOptions.quesId === item.id && 'bg-gray-200'
+          }`}>
+          <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
+            {' '}
+            {index + 1}.
+          </div>
+          <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
+            {' '}
+            {item.question}{' '}
+          </div>
+          <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
+            {item.type ? getTypeString(item.type) : '--'}
+          </div>
+          <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
+            <span className="cursor-pointer">
+              <CheckBox
+                value={item.required ? true : false}
+                onChange={() => makeQuestionRequired(item.id)}
+                name="isRequired"
+              />
+            </span>
+          </div>
+          <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
+            {(item.type === 'selectMany' || item.type === 'selectOne') && (
+              <div className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}>
+                <IconContext.Provider
+                  value={{
+                    size: '1.5rem',
+                    color: theme.iconColor[themeColor],
+                  }}>
+                  <IoOptionsOutline />
+                </IconContext.Provider>
+              </div>
+            )}
+          </div>
+        </div>
+        {questionOptions.quesId === item.id && (
+          <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
+            <p className="text-gray-900 px-2 py-2 text-base">
+              {EditCheckPointDict[userLanguage]['OPTION']}:
+            </p>
+            {questionOptions.options?.map((item, index) => (
+              <span className="px-12 py-2" key={item.label}>
+                {index + 1}. {item.text}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Fragment>
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
@@ -663,68 +784,11 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
                                 draggableId={item.id}
                                 index={index}>
                                 {(provided, snapshot) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}>
-                                    <div
-                                      key={item.id}
-                                      className={`flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer ${
-                                        questionOptions.quesId === item.id &&
-                                        'bg-gray-200'
-                                      }`}>
-                                      <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                                        {' '}
-                                        {index + 1}.
-                                      </div>
-                                      <div className="flex w-5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                                        {' '}
-                                        {item.question}{' '}
-                                      </div>
-                                      <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                                        {item.type ? getTypeString(item.type) : '--'}
-                                      </div>
-                                      <div className="flex w-1.5/10 px-6 py-3 text-s leading-4 items-center justify-center">
-                                        <span className="cursor-pointer">
-                                          <CheckBox
-                                            value={item.required ? true : false}
-                                            onChange={() => makeQuestionRequired(item.id)}
-                                            name="isRequired"
-                                          />
-                                        </span>
-                                      </div>
-                                      <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
-                                        {(item.type === 'selectMany' ||
-                                          item.type === 'selectOne') && (
-                                          <div
-                                            className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
-                                            onClick={() =>
-                                              showOptions(item.id, item.options)
-                                            }>
-                                            <IconContext.Provider
-                                              value={{
-                                                size: '1.5rem',
-                                                color: theme.iconColor[themeColor],
-                                              }}>
-                                              <IoOptionsOutline />
-                                            </IconContext.Provider>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </div>
-                                    {questionOptions.quesId === item.id && (
-                                      <div className="px-16 py-4 flex flex-col text-gray-700 font-medium text-sm border-b-0 border-gray-200">
-                                        <p className="text-gray-900 px-2 py-2 text-base">
-                                          {EditCheckPointDict[userLanguage]['OPTION']}:
-                                        </p>
-                                        {questionOptions.options?.map((item, index) => (
-                                          <span className="px-12 py-2" key={item.label}>
-                                            {index + 1}. {item.text}
-                                          </span>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
+                                  <QuestionList
+                                    provided={provided}
+                                    item={item}
+                                    index={index}
+                                  />
                                 )}
                               </Draggable>
                             ))}

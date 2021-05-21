@@ -18,6 +18,9 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 
 import {getTypeString} from '../../../../../utilities/strings';
 import Loader from '../../../../Atoms/Loader';
+import Tooltip from '../../../../Atoms/Tooltip';
+import EditQuestionModal from '../HelperComponents/EditQuestionModal';
+import {findIndex, findLastIndex, get, update} from 'lodash';
 
 interface PreviewFormProps {
   lessonName: string;
@@ -186,7 +189,6 @@ const PreviewForm = (props: PreviewFormProps) => {
       savedData.checkpoints = {
         items: checkpointSequence,
       };
-
       setLessonDetails({...savedData});
       setLoading(false);
     } catch {
@@ -216,79 +218,103 @@ const PreviewForm = (props: PreviewFormProps) => {
     }
   }, [message.msg]);
 
+  const updateExistingData = (
+    updatedQuestionData: any,
+    checkpItem: any,
+    isRequired: boolean
+  ) => {
+    const checkpointItems = get(lessonDetails, 'checkpoints.items');
+    const indexOfCheckpoint = findIndex(
+      checkpointItems,
+      (d: any) => d.checkpointID === checkpItem.checkpointID
+    );
+
+    const questionsList = get(
+      lessonDetails,
+      `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items`
+    );
+
+    const indexOfQuestion = findIndex(
+      questionsList,
+      (d: any) => d.questionID === updatedQuestionData.id
+    );
+
+    update(
+      lessonDetails,
+      `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].question`,
+      () => {
+        return updatedQuestionData;
+      }
+    );
+
+    update(
+      lessonDetails,
+      `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].required`,
+      () => {
+        return isRequired;
+      }
+    );
+
+    setLessonDetails({...lessonDetails});
+  };
+
   const fieldClass =
     'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
   const QuestionList = ({checkpItem, index}: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [questionInput, setQuestionInput] = useState(checkpItem?.question?.question);
 
     const showListAndDropDown =
       checkpItem?.question?.type === 'selectMany' ||
       checkpItem?.question?.type === 'selectOne';
-
     return (
-      <div className="my-4 w-full question__container" onBlur={() => setIsEditing(false)}>
+      <div className="my-4 w-full question__container">
+        {isEditing && (
+          <EditQuestionModal
+            checkpItem={checkpItem}
+            saveAction={(updatedData, isRequired) => {
+              setIsEditing(false);
+              updateExistingData(updatedData, checkpItem, isRequired);
+            }}
+            closeAction={() => {
+              setIsEditing(false);
+            }}
+          />
+        )}
         <div className="w-full flex items-center">
-          {isEditing ? (
-            <div className="border-0 p-2 px-4 rounded-md cursor-text  flex items-center justify-between w-9.5/10 border-indigo-300">
-              <input
-                autoFocus={true}
-                onChange={(e: any) => setQuestionInput(e.target.value)}
-                value={questionInput}
-              />
-            </div>
-          ) : (
-            <div
-              onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
-              role="button"
-              className={`${
-                isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
-              } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-9.5/10`}>
-              <p className="w-9.3/10" key={checkpItem.id}>
-                <span>
-                  {index + 1}. {checkpItem?.question?.question}{' '}
-                </span>
-                <span
-                  className={`py-0.5 px-1 ml-2 text-xs  rounded ${
-                    showListAndDropDown
-                      ? 'bg-indigo-200  text-indigo-700'
-                      : 'bg-red-200 text-red-700'
-                  }`}>
-                  {getTypeString(checkpItem?.question?.type)}
-                </span>
-              </p>
-              {showListAndDropDown ? (
-                <BiChevronDown className="text-gray-900 w-.7/10 text-lg" />
-              ) : (
-                <div className="w-.7/10" />
-              )}
-            </div>
-          )}
           <div
-            style={{width: '5%'}}
-            onClick={() => setIsEditing(!isEditing)}
-            className={`mx-1 py-2 rounded-md cursor-pointer border-0  ${
-              isEditing
-                ? 'hover:bg-red-100 border-red-100 hover:border-red-100'
-                : 'hover:border-blue-100 hover:bg-blue-100 border-blue-100'
-            }`}>
-            {isEditing ? (
-              <GiCancel className="text-red-500" />
+            onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
+            role="button"
+            className={`${
+              isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
+            } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between`}>
+            <p className="w-9.3/10" key={checkpItem.id}>
+              <span>
+                {index + 1}. {checkpItem?.question?.question}{' '}
+              </span>
+              <span
+                className={`py-0.5 px-1 ml-2 text-xs  rounded ${
+                  showListAndDropDown
+                    ? 'bg-indigo-200  text-indigo-700'
+                    : 'bg-red-200 text-red-700'
+                }`}>
+                {getTypeString(checkpItem?.question?.type)}
+              </span>
+            </p>
+            {showListAndDropDown ? (
+              <BiChevronDown className="text-gray-900 w-.5/10 text-lg" />
             ) : (
-              <AiOutlineEdit className="text-blue-500" />
+              <div className="w-.5/10" />
             )}
           </div>
-          <div
-            style={{width: '5%'}}
-            onClick={() => setIsEditing(!isEditing)}
-            className={`mx-1 py-2 rounded-md cursor-pointer border-0 border-green-100 ${
-              isEditing
-                ? 'block hover:bg-green-100 hover:border-green-100 border-green-100'
-                : 'hidden hover:border-green-100 hover:bg-green-100'
-            }`}>
-            <BsCheckAll className="text-green-500" />
-          </div>
+          {!checkpItem?.question?.published && (
+            <div
+              style={{width: '5%'}}
+              onClick={() => setIsEditing(true)}
+              className={`mx-1 py-3 rounded-md cursor-pointer border-0 hover:border-indigo-300 border-gray-200`}>
+              <AiOutlineEdit className="text-blue-500" />
+            </div>
+          )}
         </div>
 
         <div

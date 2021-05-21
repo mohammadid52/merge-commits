@@ -2435,6 +2435,7 @@ export const getCompleteLesson = /* GraphQL */ `
             instructions
             questions {
               items {
+                required
                 id
                 checkpointID
                 questionID
@@ -2448,6 +2449,7 @@ export const getCompleteLesson = /* GraphQL */ `
                   language
                   sourceId
                   note
+                  published
                   options {
                     text
                     label
