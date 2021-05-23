@@ -8532,7 +8532,6 @@ export const createStudentData = /* GraphQL */ `
         nextToken
       }
       anthologyContent {
-        id
         type
         subType
         title
@@ -8540,14 +8539,6 @@ export const createStudentData = /* GraphQL */ `
         description
         content
         classID
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
         feedbacks {
           id
           text
@@ -8556,8 +8547,6 @@ export const createStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8739,7 +8728,6 @@ export const updateStudentData = /* GraphQL */ `
         nextToken
       }
       anthologyContent {
-        id
         type
         subType
         title
@@ -8747,14 +8735,6 @@ export const updateStudentData = /* GraphQL */ `
         description
         content
         classID
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
         feedbacks {
           id
           text
@@ -8763,8 +8743,6 @@ export const updateStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8946,7 +8924,6 @@ export const deleteStudentData = /* GraphQL */ `
         nextToken
       }
       anthologyContent {
-        id
         type
         subType
         title
@@ -8954,14 +8931,6 @@ export const deleteStudentData = /* GraphQL */ `
         description
         content
         classID
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
         feedbacks {
           id
           text
@@ -8970,278 +8939,6 @@ export const deleteStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAnthologyContent = /* GraphQL */ `
-  mutation CreateAnthologyContent(
-    $input: CreateAnthologyContentInput!
-    $condition: ModelAnthologyContentConditionInput
-  ) {
-    createAnthologyContent(input: $input, condition: $condition) {
-      id
-      type
-      subType
-      title
-      subTitle
-      description
-      content
-      classID
-      class {
-        id
-        institutionID
-        type
-        name
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        rooms {
-          nextToken
-        }
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      feedbacks {
-        id
-        text
-        email
-        authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        attachments {
-          id
-          type
-          url
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAnthologyContent = /* GraphQL */ `
-  mutation UpdateAnthologyContent(
-    $input: UpdateAnthologyContentInput!
-    $condition: ModelAnthologyContentConditionInput
-  ) {
-    updateAnthologyContent(input: $input, condition: $condition) {
-      id
-      type
-      subType
-      title
-      subTitle
-      description
-      content
-      classID
-      class {
-        id
-        institutionID
-        type
-        name
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        rooms {
-          nextToken
-        }
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      feedbacks {
-        id
-        text
-        email
-        authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        attachments {
-          id
-          type
-          url
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAnthologyContent = /* GraphQL */ `
-  mutation DeleteAnthologyContent(
-    $input: DeleteAnthologyContentInput!
-    $condition: ModelAnthologyContentConditionInput
-  ) {
-    deleteAnthologyContent(input: $input, condition: $condition) {
-      id
-      type
-      subType
-      title
-      subTitle
-      description
-      content
-      classID
-      class {
-        id
-        institutionID
-        type
-        name
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        rooms {
-          nextToken
-        }
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      feedbacks {
-        id
-        text
-        email
-        authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        attachments {
-          id
-          type
-          url
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -9875,7 +9572,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           nextToken
         }
         anthologyContent {
-          id
           type
           subType
           title
@@ -9883,8 +9579,6 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -10026,7 +9720,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           nextToken
         }
         anthologyContent {
-          id
           type
           subType
           title
@@ -10034,8 +9727,6 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -10177,7 +9868,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           nextToken
         }
         anthologyContent {
-          id
           type
           subType
           title
@@ -10185,8 +9875,6 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt

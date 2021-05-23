@@ -358,7 +358,6 @@ export const onChangeStudentData = /* GraphQL */ `
         nextToken
       }
       anthologyContent {
-        id
         type
         subType
         title
@@ -366,14 +365,6 @@ export const onChangeStudentData = /* GraphQL */ `
         description
         content
         classID
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
         feedbacks {
           id
           text
@@ -382,8 +373,6 @@ export const onChangeStudentData = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8582,267 +8571,6 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
-export const onCreateAnthologyContent = /* GraphQL */ `
-  subscription OnCreateAnthologyContent {
-    onCreateAnthologyContent {
-      id
-      type
-      subType
-      title
-      subTitle
-      description
-      content
-      classID
-      class {
-        id
-        institutionID
-        type
-        name
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        rooms {
-          nextToken
-        }
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      feedbacks {
-        id
-        text
-        email
-        authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        attachments {
-          id
-          type
-          url
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAnthologyContent = /* GraphQL */ `
-  subscription OnUpdateAnthologyContent {
-    onUpdateAnthologyContent {
-      id
-      type
-      subType
-      title
-      subTitle
-      description
-      content
-      classID
-      class {
-        id
-        institutionID
-        type
-        name
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        rooms {
-          nextToken
-        }
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      feedbacks {
-        id
-        text
-        email
-        authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        attachments {
-          id
-          type
-          url
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAnthologyContent = /* GraphQL */ `
-  subscription OnDeleteAnthologyContent {
-    onDeleteAnthologyContent {
-      id
-      type
-      subType
-      title
-      subTitle
-      description
-      content
-      classID
-      class {
-        id
-        institutionID
-        type
-        name
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        rooms {
-          nextToken
-        }
-        students {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      feedbacks {
-        id
-        text
-        email
-        authID
-        person {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          createdAt
-          updatedAt
-        }
-        attachments {
-          id
-          type
-          url
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateAnthologyComment = /* GraphQL */ `
   subscription OnCreateAnthologyComment {
     onCreateAnthologyComment {
@@ -9440,7 +9168,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           nextToken
         }
         anthologyContent {
-          id
           type
           subType
           title
@@ -9448,8 +9175,6 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -9588,7 +9313,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           nextToken
         }
         anthologyContent {
-          id
           type
           subType
           title
@@ -9596,8 +9320,6 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
@@ -9736,7 +9458,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           nextToken
         }
         anthologyContent {
-          id
           type
           subType
           title
@@ -9744,8 +9465,6 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt
