@@ -5,7 +5,7 @@ import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfac
 
 const SurveyTopMenu = (props: LessonHeaderBarProps) => {
   const {lessonDataLoaded, checkpointsLoaded, overlay, setOverlay} = props;
-  const {state, theme, currentPage} = useContext(LessonContext);
+  const {state, theme, currentPage, pageList} = useContext(LessonContext);
   const [nrQuestions, setNrQuestions] = useState<number>(0);
   const [nrAnswers, setNrAnswers] = useState<number>(0);
 
@@ -58,20 +58,27 @@ const SurveyTopMenu = (props: LessonHeaderBarProps) => {
 
   return (
     <div
-      className={`fixed h-1.1/10 w-full z-50 py-4 px-6  flex flex-col justify-center items-center content-center ${
-        theme.toolbar.bg
-      } shadow-1 translate__animation ${
-        currentPage.name === 'checkpoints' || nrAnswers > 0 ? 'show' : 'hide'
-      }`}>
+      className={`fixed h-1.1/10 w-full z-50 py-4 px-6  flex flex-col justify-center items-center content-center ${theme.toolbar.bg} shadow-1 translate__animation show`}>
       <div className={`h-8 max-w-256 flex flex-col justify-between`}>
-        <div className={`h-2 ${theme.elem.text}`}>
-          <span className="font-medium">Survey Progress: </span>
-          {nrQuestions > 0 && (
-            <span className={`font-bold`}>
-              {nrAnswers}/{nrQuestions}
+        <div className={`h-2 ${theme.elem.text} flex justify-between items-center`}>
+          <div className="w-auto">
+            <span className="font-medium">Survey Progress: </span>
+            {nrQuestions > 0 && (
+              <span className={`font-bold`}>
+                {nrAnswers}/{nrQuestions}
+              </span>
+            )}
+            <span className="font-medium"> questions answered</span>
+          </div>
+          <div className="w-auto bg-gray-700 text-xs p-1 rounded px-2">
+            <span className="font-medium">
+              {' '}
+              Page Number:{' '}
+              <span className="font-bold">
+                {currentPage.id + 1}/{pageList.length}
+              </span>
             </span>
-          )}
-          <span className="font-medium"> questions answered</span>
+          </div>
         </div>
         <div className="overflow-hidden h-2 text-xs flex rounded-full bg-medium-gray">
           <div

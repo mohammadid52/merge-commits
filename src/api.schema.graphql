@@ -576,6 +576,7 @@ type Question @model {
   sourceId: String
   note: String
   options: [Option]
+  published: Boolean
 }
 
 type QuestionSource @model {
@@ -591,6 +592,7 @@ type QuestionType @model {
 type QuestionResponse {
   qid: String
   response: [String]
+  otherResponse: String
 }
 
 type Word @model @key(name: "byWord", fields: ["word"], queryField: "searchByWord") {
@@ -781,7 +783,27 @@ type AnthologyContent {
   subTitle: String
   description: String
   content: String
+  classID: ID
+  feedbacks: [AnthologyComment]
 }
+
+type AnthologyComment  @model {
+  id: ID!
+  text: String
+  email: String!
+  authID: String!
+  person: Person @connection(fields: ["email", "authID"])
+  attachments: [Attachment]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type Attachment @model {
+  id: ID!
+  type: String!
+  url: String
+}
+
 type QuestionData @model {
   id: ID!
   syllabusLessonID: ID!

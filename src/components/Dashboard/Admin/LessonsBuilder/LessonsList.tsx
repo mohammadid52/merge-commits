@@ -20,6 +20,7 @@ import LessonsListRow from './LessonsListRow';
 import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
+import {times} from 'lodash';
 
 const LessonsList = () => {
   const match = useRouteMatch();

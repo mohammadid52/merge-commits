@@ -6,7 +6,7 @@ import {IoBusinessSharp} from 'react-icons/io5';
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
 
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import * as queries from '../../../../graphql/queries';
+import * as customQueries from '../../../../customGraphql/customQueries';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import InstitutionRow from './InstitutionRow';
 import Buttons from '../../../Atoms/Buttons';
@@ -119,6 +119,7 @@ const InstitutionLookup: React.FC = () => {
     data: [{staff: {items: [{staffAuthID: string}]}}],
     target: string
   ) => {
+    console.log(data, target);
     const list: any[] = [];
     data?.forEach((institution) => {
       institution?.staff?.items?.forEach((staff) => {
@@ -131,12 +132,12 @@ const InstitutionLookup: React.FC = () => {
     return list;
   };
 
-  const isTeacher = state.user.role === 'TR';
+  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
 
   async function getInstitutionsData() {
     try {
       const fetchInstitutionData: any = await API.graphql(
-        graphqlOperation(queries.listInstitutions)
+        graphqlOperation(customQueries.listInstitutions)
       );
       if (!fetchInstitutionData) {
         throw new Error('fail!');

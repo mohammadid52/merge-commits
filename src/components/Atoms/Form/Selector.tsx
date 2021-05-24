@@ -5,7 +5,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
 
 interface SelectorProps {
-  list?: {id: number; name: string}[];
+  list?: {id: number; name: string | number}[];
   selectedItem?: string;
   btnClass?: string;
   arrowHidden?: boolean;
