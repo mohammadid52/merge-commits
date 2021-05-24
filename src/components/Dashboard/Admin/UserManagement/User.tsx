@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import API, {graphqlOperation} from '@aws-amplify/api';
@@ -33,7 +33,7 @@ import {isEmpty} from 'lodash';
 import {GrSend} from 'react-icons/gr';
 import {MdAudiotrack, MdImage} from 'react-icons/md';
 import {BsCameraVideo, BsCameraVideoFill} from 'react-icons/bs';
-import { getAsset } from '../../../../assets';
+import {getAsset} from '../../../../assets';
 
 export interface UserInfo {
   authId: string;
@@ -64,6 +64,7 @@ export interface AnthologyContentInterface {
   subTitle: string;
   description: string;
   content: string;
+  feedbacks?: string[];
 }
 
 export interface AnthologyMapItem extends AnthologyContentInterface {
@@ -171,9 +172,9 @@ const User = () => {
     setQuestionData(questionData);
 
     // questionData.forEach(async (item: any) => {
-    //   await API.graphql(
-    //     graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
-    //   );
+    // await API.graphql(
+    //   graphqlOperation(mutations.deleteQuestionData, {input: {id: item.id}})
+    // );
     // });
   };
 
@@ -506,51 +507,167 @@ const User = () => {
     );
   };
 
-  function do_resize(textbox:any) {
+  function do_resize(textbox: any) {
+    var maxrows = 5;
+    var txt = textbox.value;
+    var cols = textbox.cols;
 
-    var maxrows=5; 
-     var txt=textbox.value;
-     var cols=textbox.cols;
-   
-    var arraytxt:any=txt.split('\n');
-     var rows=arraytxt.length; 
-   
-    for (let i=0;i<arraytxt.length;i++) 
+    var arraytxt: any = txt.split('\n');
+    var rows = arraytxt.length;
+
+    for (let i = 0; i < arraytxt.length; i++)
       // @ts-ignore
-     rows+=parseInt(arraytxt[i].length/cols);
-   
-    if (rows>maxrows) textbox.rows=maxrows;
-     else textbox.rows=rows;
+      rows += parseInt(arraytxt[i].length / cols);
+
+    if (rows > maxrows) textbox.rows = maxrows;
+    else textbox.rows = rows;
+  }
+
+  const preview_image = (file: any) => {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var output: any = document.getElementById('output_image');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const preview_thumnbnail = (file: any) => {
+    var video: any = document.getElementById('video_preview').childNodes;
+
+    let blobURL = URL.createObjectURL(file);
+
+    // video.src = blobURL;
+  };
+
+  const pushCommentToDatabase = async (text: string, item: any) => {
+    try {
+      const input = {
+        email: state.user.email,
+        authID: state.user.authId,
+        text,
+      };
+      const results: any = await API.graphql(
+        graphqlOperation(mutations.createAnthologyComment, {input})
+      );
+
+      const commentData: any = results.data.createAnthologyComment;
+      let newFeedbacks = item.feedbacks || [];
+
+      if (!newFeedbacks.includes(commentData.id)) {
+        newFeedbacks.push(commentData.id);
+      }
+
+      const removeHelperProperties = {
+        type: item.type,
+        subType: item.subType,
+        title: item.title,
+        subTitle: item.subTitle,
+        description: item.description,
+        content: item.content,
+        feedbacks: newFeedbacks,
+      };
+
+      const studentDataUpdate: any = await API.graphql(
+        graphqlOperation(mutations.updateStudentData, {
+          input: {
+            id: item.studentDataID,
+            status: item.status,
+            syllabusLessonID: item.syllabusLessonID,
+            studentID: item.studentID,
+            studentAuthID: item.studentAuthID,
+            anthologyContent: removeHelperProperties,
+          },
+        })
+      );
+      const feedbackData: any = results.data.updateStudentData;
+    } catch (error) {
+      console.error('error @createAnthologyComment: ', error);
     }
+  };
+
+  const listComments = async (feedbacks: string[]) => {
+    const filter: any = feedbacks.map((id: string) => {
+      return {
+        id: {
+          eq: id,
+        },
+      };
+    });
+    try {
+      const listCommentData: any = await API.graphql(
+        graphqlOperation(queries.listAnthologyComments, {
+          filter: {
+            or: [...filter],
+          },
+        })
+      );
+      return listCommentData?.data?.listAnthologyComments?.items;
+    } catch (error) {
+      console.error('error @listComments: ', error);
+    }
+  };
 
   const StudentData = ({item}: any) => {
     const [showComments, setShowComments] = useState(false);
-    const activity: {
-      comment: string;
-      id: string;
-      person: {
-        name: string;
-        image: string | null;
-      };
-      commentedAt: Date;
-    }[] = [];
-    const [commentDb, setCommentDb] = useState(activity);
+    const feedbacks = item.feedbacks || [];
+    const [feedbackData, setFeedbackData] = useState([]);
+
     const [comment, setComment] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
+
+    const getFeedBackData = async () => {
+      if (feedbacks && feedbacks.length > 0) {
+        const feedbacksData: any = await listComments(feedbacks);
+        setFeedbackData(sortBy(feedbacksData, ['createdAt']));
+      }
+    };
+    useEffect(() => {
+      getFeedBackData();
+    }, [feedbacks]);
+
+    useEffect(() => {
+      async function getUrl() {
+        const imageUrl: any = await getImageFromS3(state.user.image);
+        setImageUrl(imageUrl);
+      }
+      if (!imageUrl) {
+        getUrl();
+      }
+    }, [state.user, imageUrl]);
 
     const onCommentSubmit = (e: any) => {
-      // e.preventDefault();
+      e.preventDefault();
 
-      const name = state.user.firstName;
-
-      const image = state.user.image;
-
-      setCommentDb([
-        ...commentDb,
-        {comment, id: '1', person: {name, image}, commentedAt: new Date()},
-      ]);
+      pushCommentToDatabase(comment, item).then(() => getFeedBackData());
+      setComment('');
     };
 
-    
+    const inputVideo = useRef(null);
+    const inputImage = useRef(null);
+    const inputAudio = useRef(null);
+
+    const [fileObject, setfileObject] = useState<any>({});
+
+    const handleVideo = () => inputVideo.current.click();
+    const handleImage = () => inputImage.current.click();
+    const handleAudio = () => inputAudio.current.click();
+
+    const handleSelection = (e: any) => {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const isImage = file.type.includes('image');
+        const isAudio = file.type.includes('audio');
+        const isVideo = file.type.includes('video');
+        setfileObject(file);
+        if (isImage) {
+          preview_image(file);
+        }
+      }
+    };
+
+    const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
+    const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
 
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
@@ -561,24 +678,31 @@ const User = () => {
         {item.content && ReactHtmlParser(item.content)}
         {showComments && (
           <div className="comment-container">
-            {commentDb &&
-              commentDb.map(({comment, person, commentedAt, id}, eventIdx: number) => (
+            {feedbackData &&
+              feedbackData.map((feedback, eventIdx: number) => (
                 <div key={id} className="relative">
-                  <div className="text-sm text-gray-900 mt-4 flex items-center">
+                  <div className="text-sm text-gray-900 mt-4 flex items-start">
+                    <img
+                      className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center ring-8 ring-white"
+                      src={feedback.person.image && imageUrl}
+                      alt=""
+                    />
                     <div className="ml-2">
                       <h5 className="font-semibold">
-                        {person.name}{' '}
+                        {feedback.person.firstName}{' '}
                         <span className="text-xs text-gray-600 font-normal ml-1">
-                          {commentedAt}
+                          {/* {commentedAt} */} 12:24 PM
                         </span>
                       </h5>
-                      <p>{comment}</p>
+                      <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
                     </div>
                   </div>
                 </div>
               ))}
             <div className="comment-box flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
-              <div style={{minHeight: '2.5rem'}} className="flex items-center border-b-0 border-gray-200">
+              <div
+                style={{minHeight: '2.5rem'}}
+                className="flex flex-col border-b-0 border-gray-200">
                 <textarea
                   onKeyUp={(e) => do_resize(e.target)}
                   style={{resize: 'none'}}
@@ -588,29 +712,61 @@ const User = () => {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                 />
+                {isImage && (
+                  <div className={`${fileObject.name ? 'block px-4 py-2 ' : 'hidden'}`}>
+                    <img
+                      style={{objectFit: 'cover'}}
+                      id="output_image"
+                      className="h-14 w-14 rounded"
+                    />
+                  </div>
+                )}
               </div>
               <div className="comment-actions h-10 flex items-center justify-between">
                 <div className="left-action w-auto">
                   <div className="flex items-center justify-center">
-                    <div
-                      className={`${actionStyles}`}>
+                    <button onClick={(e) => handleAudio()} className={`${actionStyles}`}>
                       <MdAudiotrack className="" />
-                    </div>
-                    <div
-                      className={`${actionStyles}`}>
+                      <input
+                        accept="audio/*"
+                        ref={inputAudio}
+                        onChange={handleSelection}
+                        type="file"
+                        className="hidden"
+                      />
+                    </button>
+                    <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
+                      <input
+                        accept="video/*"
+                        ref={inputVideo}
+                        onChange={handleSelection}
+                        type="file"
+                        className="hidden"
+                      />
                       <BsCameraVideoFill className="" />
-                    </div>
-                    <div
-                      className={`${actionStyles} `}>
+                    </button>
+                    <button onClick={(e) => handleImage()} className={`${actionStyles} `}>
+                      <input
+                        accept="image/*"
+                        ref={inputImage}
+                        onChange={handleSelection}
+                        type="file"
+                        className="hidden"
+                      />
                       <MdImage className="" />
-                    </div>
+                    </button>
                   </div>
                 </div>
                 <div className="right-action w-auto p-2">
-                <div
-                      className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-150 ${comment.length ? 'bg-indigo-400 text-white cursor-pointer hover:bg-indigo-300' : 'cursor-default text-indigo-300'}`}>
-                      <IoSendSharp className="" />
-                    </div>
+                  <div
+                    onClick={onCommentSubmit}
+                    className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-150 ${
+                      comment.length
+                        ? 'bg-indigo-400 text-white cursor-pointer hover:bg-indigo-300'
+                        : 'cursor-default text-indigo-300'
+                    }`}>
+                    <IoSendSharp className="" />
+                  </div>
                 </div>
               </div>
             </div>
