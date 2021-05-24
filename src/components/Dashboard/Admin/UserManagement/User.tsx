@@ -3,7 +3,7 @@ import {useLocation} from 'react-router-dom';
 import queryString from 'query-string';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {FaEdit} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
 import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
@@ -31,8 +31,9 @@ import sortBy from 'lodash/sortBy';
 import {BiMessageRoundedDots, BiMessageRoundedX} from 'react-icons/bi';
 import {isEmpty} from 'lodash';
 import {GrSend} from 'react-icons/gr';
-import {MdAudiotrack} from 'react-icons/md';
+import {MdAudiotrack, MdImage} from 'react-icons/md';
 import {BsCameraVideo, BsCameraVideoFill} from 'react-icons/bs';
+import { getAsset } from '../../../../assets';
 
 export interface UserInfo {
   authId: string;
@@ -80,6 +81,8 @@ const User = () => {
   const history = useHistory();
   const match = useRouteMatch();
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const [status, setStatus] = useState('');
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
@@ -503,6 +506,23 @@ const User = () => {
     );
   };
 
+  function do_resize(textbox:any) {
+
+    var maxrows=5; 
+     var txt=textbox.value;
+     var cols=textbox.cols;
+   
+    var arraytxt:any=txt.split('\n');
+     var rows=arraytxt.length; 
+   
+    for (let i=0;i<arraytxt.length;i++) 
+      // @ts-ignore
+     rows+=parseInt(arraytxt[i].length/cols);
+   
+    if (rows>maxrows) textbox.rows=maxrows;
+     else textbox.rows=rows;
+    }
+
   const StudentData = ({item}: any) => {
     const [showComments, setShowComments] = useState(false);
     const activity: {
@@ -530,8 +550,10 @@ const User = () => {
       ]);
     };
 
+    
+
     const actionStyles =
-      'flex items-center justify-center ml-2 border-2 h-8 w-8 rounded-md hover:text-white cursor-pointer transition-all duration-300';
+      'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
     return (
       <div
         className={`w-full white_back pb-2 py-8 px-6 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
@@ -542,19 +564,7 @@ const User = () => {
             {commentDb &&
               commentDb.map(({comment, person, commentedAt, id}, eventIdx: number) => (
                 <div key={id} className="relative">
-                  {/* {eventIdx !== activity.length - 1 ? (
-                    <span
-                      style={{top: '-1.0rem', left: '1.25rem'}}
-                      className="absolute -ml-px h-4 w-0.5 bg-gray-400"
-                      aria-hidden="true"
-                    />
-                  ) : null} */}
                   <div className="text-sm text-gray-900 mt-4 flex items-center">
-                    {/* <img
-                      className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center ring-8 ring-white"
-                      src={person.image}
-                      alt=""
-                    /> */}
                     <div className="ml-2">
                       <h5 className="font-semibold">
                         {person.name}{' '}
@@ -567,9 +577,10 @@ const User = () => {
                   </div>
                 </div>
               ))}
-            <div className="comment-box flex flex-col border-0 border-gray-400 h-24 rounded mt-4">
-              <div className="flex items-center h-10 border-b-0 border-gray-200">
+            <div className="comment-box flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
+              <div style={{minHeight: '2.5rem'}} className="flex items-center border-b-0 border-gray-200">
                 <textarea
+                  onKeyUp={(e) => do_resize(e.target)}
                   style={{resize: 'none'}}
                   placeholder="Add Feedback"
                   className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
@@ -578,25 +589,28 @@ const User = () => {
                   onChange={(e) => setComment(e.target.value)}
                 />
               </div>
-              <div className="comment-actions h-14 flex items-center justify-between">
+              <div className="comment-actions h-10 flex items-center justify-between">
                 <div className="left-action w-auto">
                   <div className="flex items-center justify-center">
                     <div
-                      className={`${actionStyles} text-blue-500 border-blue-200 hover:bg-blue-400`}>
+                      className={`${actionStyles}`}>
                       <MdAudiotrack className="" />
                     </div>
                     <div
-                      className={`${actionStyles} text-red-500 border-red-200 hover:bg-red-400`}>
+                      className={`${actionStyles}`}>
                       <BsCameraVideoFill className="" />
+                    </div>
+                    <div
+                      className={`${actionStyles} `}>
+                      <MdImage className="" />
                     </div>
                   </div>
                 </div>
-                <div className="right-action w-1/5 p-2">
-                  <div
-                    onClick={onCommentSubmit}
-                    className="bg-indigo-500 text-white py-1 hover:bg-indigo-400 rounded-md transition-all duration-300 justify-self-end text-sm cursor-pointer flex items-center justify-center py-2">
-                    Send Feedback
-                  </div>
+                <div className="right-action w-auto p-2">
+                <div
+                      className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-150 ${comment.length ? 'bg-indigo-400 text-white cursor-pointer hover:bg-indigo-300' : 'cursor-default text-indigo-300'}`}>
+                      <IoSendSharp className="" />
+                    </div>
                 </div>
               </div>
             </div>
@@ -605,7 +619,7 @@ const User = () => {
         <div className="flex items-center justify-start">
           <div
             onClick={() => setShowComments(!showComments)}
-            className="bg-indigo-500 text-white hover:bg-indigo-400 w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2">
+            className="bg-indigo-500 text-white hover:bg-indigo-600 w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2">
             {showComments ? 'Hide' : 'Show'} Feedbacks
           </div>
         </div>

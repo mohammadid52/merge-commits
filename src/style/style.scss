@@ -719,9 +719,9 @@
     transform: translateX(-100px);
   }
 }
-  .comment-input:focus {
-    .comment-box {
-      border:1px solid white
-    }
+.comment-box {
+  transition: all .15s ease-in-out;
+  &:focus-within{
+  border: 1px solid #D1D5DB;
   }
-
+}
