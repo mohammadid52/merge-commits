@@ -8539,14 +8539,7 @@ export const createStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -8735,14 +8728,7 @@ export const updateStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -8931,14 +8917,7 @@ export const deleteStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -8986,11 +8965,8 @@ export const createAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -9038,11 +9014,8 @@ export const updateAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -9090,54 +9063,9 @@ export const deleteAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAttachment = /* GraphQL */ `
-  mutation CreateAttachment(
-    $input: CreateAttachmentInput!
-    $condition: ModelAttachmentConditionInput
-  ) {
-    createAttachment(input: $input, condition: $condition) {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAttachment = /* GraphQL */ `
-  mutation UpdateAttachment(
-    $input: UpdateAttachmentInput!
-    $condition: ModelAttachmentConditionInput
-  ) {
-    updateAttachment(input: $input, condition: $condition) {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAttachment = /* GraphQL */ `
-  mutation DeleteAttachment(
-    $input: DeleteAttachmentInput!
-    $condition: ModelAttachmentConditionInput
-  ) {
-    deleteAttachment(input: $input, condition: $condition) {
-      id
-      type
-      url
       createdAt
       updatedAt
     }
@@ -9579,6 +9507,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9727,6 +9656,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9875,6 +9805,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
