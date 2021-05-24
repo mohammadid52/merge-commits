@@ -776,14 +776,36 @@ type StudentData
   anthologyContent: [AnthologyContent]
 }
 
-type AnthologyContent {
+type AnthologyContent  @model{
+  id: ID!
   type: String
   subType: String
   title: String
   subTitle: String
   description: String
   content: String
+  classID: ID
+  class: Class @connection(fields: ["classID"])
+  feedbacks: [AnthologyComment]
 }
+
+type AnthologyComment  @model {
+  id: ID!
+  text: String
+  email: String!
+  authID: String!
+  person: Person @connection(fields: ["email", "authID"])
+  attachments: [Attachment]
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+type Attachment @model {
+  id: ID!
+  type: String!
+  url: String
+}
+
 type QuestionData @model {
   id: ID!
   syllabusLessonID: ID!

@@ -8538,6 +8538,15 @@ export const createStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks {
+          id
+          text
+          email
+          authID
+          createdAt
+          updatedAt
+        }
       }
       createdAt
       updatedAt
@@ -8725,6 +8734,15 @@ export const updateStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks {
+          id
+          text
+          email
+          authID
+          createdAt
+          updatedAt
+        }
       }
       createdAt
       updatedAt
@@ -8912,7 +8930,214 @@ export const deleteStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks {
+          id
+          text
+          email
+          authID
+          createdAt
+          updatedAt
+        }
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAnthologyComment = /* GraphQL */ `
+  mutation CreateAnthologyComment(
+    $input: CreateAnthologyCommentInput!
+    $condition: ModelAnthologyCommentConditionInput
+  ) {
+    createAnthologyComment(input: $input, condition: $condition) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAnthologyComment = /* GraphQL */ `
+  mutation UpdateAnthologyComment(
+    $input: UpdateAnthologyCommentInput!
+    $condition: ModelAnthologyCommentConditionInput
+  ) {
+    updateAnthologyComment(input: $input, condition: $condition) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAnthologyComment = /* GraphQL */ `
+  mutation DeleteAnthologyComment(
+    $input: DeleteAnthologyCommentInput!
+    $condition: ModelAnthologyCommentConditionInput
+  ) {
+    deleteAnthologyComment(input: $input, condition: $condition) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAttachment = /* GraphQL */ `
+  mutation CreateAttachment(
+    $input: CreateAttachmentInput!
+    $condition: ModelAttachmentConditionInput
+  ) {
+    createAttachment(input: $input, condition: $condition) {
+      id
+      type
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAttachment = /* GraphQL */ `
+  mutation UpdateAttachment(
+    $input: UpdateAttachmentInput!
+    $condition: ModelAttachmentConditionInput
+  ) {
+    updateAttachment(input: $input, condition: $condition) {
+      id
+      type
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAttachment = /* GraphQL */ `
+  mutation DeleteAttachment(
+    $input: DeleteAttachmentInput!
+    $condition: ModelAttachmentConditionInput
+  ) {
+    deleteAttachment(input: $input, condition: $condition) {
+      id
+      type
+      url
       createdAt
       updatedAt
     }
@@ -9353,6 +9578,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
         createdAt
         updatedAt
@@ -9500,6 +9726,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
         createdAt
         updatedAt
@@ -9647,6 +9874,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
         createdAt
         updatedAt

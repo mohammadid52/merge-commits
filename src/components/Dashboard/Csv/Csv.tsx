@@ -351,6 +351,9 @@ const Csv = (props: Csv) => {
       qids.push(ques.question.id);
       return {label: `${ques.question.question}`, key: `${ques.question.id}`};
     });
+
+    /* Enable this code if demographics questions 
+
     // let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
     //   qids.push(ques.question.id);
     //   return {
@@ -360,6 +363,9 @@ const Csv = (props: Csv) => {
     // });
     // console.log('surveyQuestionHeaders', surveyQuestionHeaders);
     // console.log('demographicsQuestionHeaders', demographicsQuestionHeaders);
+
+    */
+
     setCSVHeaders([
       {label: 'AuthId', key: 'authId'},
       {label: 'Email', key: 'email'},
@@ -371,7 +377,7 @@ const Csv = (props: Csv) => {
       {label: 'Classroom', key: 'classroom'},
       {label: 'Survey name', key: 'surveyName'},
       ...surveyQuestionHeaders,
-      // ...demographicsQuestionHeaders,
+      //...demographicsQuestionHeaders, // Enable this line for demographics question
     ]);
 
     let data = students.map((stu: any) => {
@@ -392,18 +398,20 @@ const Csv = (props: Csv) => {
         }
       });
 
-      // DCQAnswers.map((ans: any) => {
-      //   if (ans.person.id === stu.id) {
-      //     ans.responseObject.map((resp: any) => {
-      //       if (qids.indexOf(resp.qid) >= 0) {
-      //         studentAnswers[resp.qid] =
-      //           Array.isArray(resp.response) && resp.response.length
-      //             ? resp.response[0]
-      //             : '';
-      //       }
-      //     });
-      //   }
-      // });
+      /* Enable this code if demographics questions 
+      DCQAnswers.map((ans: any) => {
+        if (ans.person.id === stu.id) {
+          ans.responseObject.map((resp: any) => {
+            if (qids.indexOf(resp.qid) >= 0) {
+              studentAnswers[resp.qid] =
+                Array.isArray(resp.response) && resp.response.length
+                  ? resp.response[0]
+                  : '';
+            }
+          });
+        }
+      });
+      */
 
       // @ts-ignore
       const sortedDates = dates.sort((a: any, b: any) => new Date(b) - new Date(a));

@@ -3624,6 +3624,15 @@ export const getStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks {
+          id
+          text
+          email
+          authID
+          createdAt
+          updatedAt
+        }
       }
       createdAt
       updatedAt
@@ -3720,7 +3729,140 @@ export const listStudentDatas = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAnthologyComment = /* GraphQL */ `
+  query GetAnthologyComment($id: ID!) {
+    getAnthologyComment(id: $id) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAnthologyComments = /* GraphQL */ `
+  query ListAnthologyComments(
+    $filter: ModelAnthologyCommentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAnthologyComments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        text
+        email
+        authID
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          createdAt
+          updatedAt
+        }
+        attachments {
+          id
+          type
+          url
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAttachment = /* GraphQL */ `
+  query GetAttachment($id: ID!) {
+    getAttachment(id: $id) {
+      id
+      type
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listAttachments = /* GraphQL */ `
+  query ListAttachments(
+    $filter: ModelAttachmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAttachments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        url
         createdAt
         updatedAt
       }

@@ -364,6 +364,15 @@ export const onChangeStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks {
+          id
+          text
+          email
+          authID
+          createdAt
+          updatedAt
+        }
       }
       createdAt
       updatedAt
@@ -8562,6 +8571,186 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+export const onCreateAnthologyComment = /* GraphQL */ `
+  subscription OnCreateAnthologyComment {
+    onCreateAnthologyComment {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAnthologyComment = /* GraphQL */ `
+  subscription OnUpdateAnthologyComment {
+    onUpdateAnthologyComment {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAnthologyComment = /* GraphQL */ `
+  subscription OnDeleteAnthologyComment {
+    onDeleteAnthologyComment {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        id
+        type
+        url
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateAttachment = /* GraphQL */ `
+  subscription OnCreateAttachment {
+    onCreateAttachment {
+      id
+      type
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAttachment = /* GraphQL */ `
+  subscription OnUpdateAttachment {
+    onUpdateAttachment {
+      id
+      type
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAttachment = /* GraphQL */ `
+  subscription OnDeleteAttachment {
+    onDeleteAttachment {
+      id
+      type
+      url
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreateQuestionData = /* GraphQL */ `
   subscription OnCreateQuestionData {
     onCreateQuestionData {
@@ -8985,6 +9174,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
         createdAt
         updatedAt
@@ -9129,6 +9319,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
         createdAt
         updatedAt
@@ -9273,6 +9464,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
         }
         createdAt
         updatedAt
