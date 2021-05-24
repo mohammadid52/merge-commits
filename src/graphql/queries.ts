@@ -3625,14 +3625,7 @@ export const getStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -3730,6 +3723,7 @@ export const listStudentDatas = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -3776,11 +3770,8 @@ export const getAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -3828,41 +3819,9 @@ export const listAnthologyComments = /* GraphQL */ `
           updatedAt
         }
         attachments {
-          id
           type
           url
-          createdAt
-          updatedAt
         }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getAttachment = /* GraphQL */ `
-  query GetAttachment($id: ID!) {
-    getAttachment(id: $id) {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listAttachments = /* GraphQL */ `
-  query ListAttachments(
-    $filter: ModelAttachmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAttachments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        url
         createdAt
         updatedAt
       }

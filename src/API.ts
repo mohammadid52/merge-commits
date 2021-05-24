@@ -995,28 +995,7 @@ export type AnthologyContent = {
   description?: string | null,
   content?: string | null,
   classID?: string | null,
-  feedbacks?:  Array<AnthologyComment | null > | null,
-};
-
-export type AnthologyComment = {
-  __typename: "AnthologyComment",
-  id?: string,
-  text?: string | null,
-  email?: string,
-  authID?: string,
-  person?: Person,
-  attachments?:  Array<Attachment | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-};
-
-export type Attachment = {
-  __typename: "Attachment",
-  id?: string,
-  type?: string,
-  url?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
+  feedbacks?: Array< string | null > | null,
 };
 
 export type ModelFeedbackConnection = {
@@ -2879,6 +2858,7 @@ export type AnthologyContentInput = {
   description?: string | null,
   content?: string | null,
   classID?: string | null,
+  feedbacks?: Array< string | null > | null,
 };
 
 export type ModelStudentDataConditionInput = {
@@ -2917,8 +2897,14 @@ export type CreateAnthologyCommentInput = {
   text?: string | null,
   email: string,
   authID: string,
+  attachments?: Array< AttachmentInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
+};
+
+export type AttachmentInput = {
+  type?: string | null,
+  url?: string | null,
 };
 
 export type ModelAnthologyCommentConditionInput = {
@@ -2932,40 +2918,35 @@ export type ModelAnthologyCommentConditionInput = {
   not?: ModelAnthologyCommentConditionInput | null,
 };
 
+export type AnthologyComment = {
+  __typename: "AnthologyComment",
+  id?: string,
+  text?: string | null,
+  email?: string,
+  authID?: string,
+  person?: Person,
+  attachments?:  Array<Attachment | null > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type Attachment = {
+  __typename: "Attachment",
+  type?: string | null,
+  url?: string | null,
+};
+
 export type UpdateAnthologyCommentInput = {
   id: string,
   text?: string | null,
   email?: string | null,
   authID?: string | null,
+  attachments?: Array< AttachmentInput | null > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
 };
 
 export type DeleteAnthologyCommentInput = {
-  id: string,
-};
-
-export type CreateAttachmentInput = {
-  id?: string | null,
-  type: string,
-  url?: string | null,
-};
-
-export type ModelAttachmentConditionInput = {
-  type?: ModelStringInput | null,
-  url?: ModelStringInput | null,
-  and?: Array< ModelAttachmentConditionInput | null > | null,
-  or?: Array< ModelAttachmentConditionInput | null > | null,
-  not?: ModelAttachmentConditionInput | null,
-};
-
-export type UpdateAttachmentInput = {
-  id: string,
-  type?: string | null,
-  url?: string | null,
-};
-
-export type DeleteAttachmentInput = {
   id: string,
 };
 
@@ -3966,21 +3947,6 @@ export type ModelAnthologyCommentFilterInput = {
 export type ModelAnthologyCommentConnection = {
   __typename: "ModelAnthologyCommentConnection",
   items?:  Array<AnthologyComment | null > | null,
-  nextToken?: string | null,
-};
-
-export type ModelAttachmentFilterInput = {
-  id?: ModelIDInput | null,
-  type?: ModelStringInput | null,
-  url?: ModelStringInput | null,
-  and?: Array< ModelAttachmentFilterInput | null > | null,
-  or?: Array< ModelAttachmentFilterInput | null > | null,
-  not?: ModelAttachmentFilterInput | null,
-};
-
-export type ModelAttachmentConnection = {
-  __typename: "ModelAttachmentConnection",
-  items?:  Array<Attachment | null > | null,
   nextToken?: string | null,
 };
 
@@ -13723,15 +13689,7 @@ export type CreateStudentDataMutation = {
       description?: string | null,
       content?: string | null,
       classID?: string | null,
-      feedbacks?:  Array< {
-        __typename: "AnthologyComment",
-        id: string,
-        text?: string | null,
-        email: string,
-        authID: string,
-        createdAt?: string | null,
-        updatedAt?: string | null,
-      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -13946,15 +13904,7 @@ export type UpdateStudentDataMutation = {
       description?: string | null,
       content?: string | null,
       classID?: string | null,
-      feedbacks?:  Array< {
-        __typename: "AnthologyComment",
-        id: string,
-        text?: string | null,
-        email: string,
-        authID: string,
-        createdAt?: string | null,
-        updatedAt?: string | null,
-      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -14169,15 +14119,7 @@ export type DeleteStudentDataMutation = {
       description?: string | null,
       content?: string | null,
       classID?: string | null,
-      feedbacks?:  Array< {
-        __typename: "AnthologyComment",
-        id: string,
-        text?: string | null,
-        email: string,
-        authID: string,
-        createdAt?: string | null,
-        updatedAt?: string | null,
-      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -14231,11 +14173,8 @@ export type CreateAnthologyCommentMutation = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
@@ -14289,11 +14228,8 @@ export type UpdateAnthologyCommentMutation = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
@@ -14347,62 +14283,11 @@ export type DeleteAnthologyCommentMutation = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
-  } | null,
-};
-
-export type CreateAttachmentMutationVariables = {
-  input?: CreateAttachmentInput,
-  condition?: ModelAttachmentConditionInput | null,
-};
-
-export type CreateAttachmentMutation = {
-  createAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateAttachmentMutationVariables = {
-  input?: UpdateAttachmentInput,
-  condition?: ModelAttachmentConditionInput | null,
-};
-
-export type UpdateAttachmentMutation = {
-  updateAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteAttachmentMutationVariables = {
-  input?: DeleteAttachmentInput,
-  condition?: ModelAttachmentConditionInput | null,
-};
-
-export type DeleteAttachmentMutation = {
-  deleteAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
   } | null,
 };
 
@@ -14889,6 +14774,7 @@ export type CreateQuestionDataStudentDataMutation = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -15052,6 +14938,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -15215,6 +15102,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -20781,15 +20669,7 @@ export type GetStudentDataQuery = {
       description?: string | null,
       content?: string | null,
       classID?: string | null,
-      feedbacks?:  Array< {
-        __typename: "AnthologyComment",
-        id: string,
-        text?: string | null,
-        email: string,
-        authID: string,
-        createdAt?: string | null,
-        updatedAt?: string | null,
-      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -20891,6 +20771,7 @@ export type ListStudentDatasQuery = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -20945,11 +20826,8 @@ export type GetAnthologyCommentQuery = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
@@ -20998,50 +20876,11 @@ export type ListAnthologyCommentsQuery = {
       } | null,
       attachments?:  Array< {
         __typename: "Attachment",
-        id: string,
-        type: string,
+        type?: string | null,
         url?: string | null,
-        createdAt: string,
-        updatedAt: string,
       } | null > | null,
       createdAt?: string | null,
       updatedAt?: string | null,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetAttachmentQueryVariables = {
-  id?: string,
-};
-
-export type GetAttachmentQuery = {
-  getAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListAttachmentsQueryVariables = {
-  filter?: ModelAttachmentFilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ListAttachmentsQuery = {
-  listAttachments?:  {
-    __typename: "ModelAttachmentConnection",
-    items?:  Array< {
-      __typename: "Attachment",
-      id: string,
-      type: string,
-      url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
   } | null,
@@ -22654,15 +22493,7 @@ export type OnChangeStudentDataSubscription = {
       description?: string | null,
       content?: string | null,
       classID?: string | null,
-      feedbacks?:  Array< {
-        __typename: "AnthologyComment",
-        id: string,
-        text?: string | null,
-        email: string,
-        authID: string,
-        createdAt?: string | null,
-        updatedAt?: string | null,
-      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -31743,11 +31574,8 @@ export type OnCreateAnthologyCommentSubscription = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
@@ -31796,11 +31624,8 @@ export type OnUpdateAnthologyCommentSubscription = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
@@ -31849,47 +31674,11 @@ export type OnDeleteAnthologyCommentSubscription = {
     } | null,
     attachments?:  Array< {
       __typename: "Attachment",
-      id: string,
-      type: string,
+      type?: string | null,
       url?: string | null,
-      createdAt: string,
-      updatedAt: string,
     } | null > | null,
     createdAt?: string | null,
     updatedAt?: string | null,
-  } | null,
-};
-
-export type OnCreateAttachmentSubscription = {
-  onCreateAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateAttachmentSubscription = {
-  onUpdateAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteAttachmentSubscription = {
-  onDeleteAttachment?:  {
-    __typename: "Attachment",
-    id: string,
-    type: string,
-    url?: string | null,
-    createdAt: string,
-    updatedAt: string,
   } | null,
 };
 
@@ -32356,6 +32145,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -32514,6 +32304,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -32672,6 +32463,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         description?: string | null,
         content?: string | null,
         classID?: string | null,
+        feedbacks?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,

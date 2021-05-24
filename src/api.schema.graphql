@@ -776,8 +776,7 @@ type StudentData
   anthologyContent: [AnthologyContent]
 }
 
-type AnthologyContent  @model{
-  id: ID!
+type AnthologyContent {
   type: String
   subType: String
   title: String
@@ -785,8 +784,7 @@ type AnthologyContent  @model{
   description: String
   content: String
   classID: ID
-  class: Class @connection(fields: ["classID"])
-  feedbacks: [AnthologyComment]
+  feedbacks: [String]
 }
 
 type AnthologyComment  @model {
@@ -800,9 +798,8 @@ type AnthologyComment  @model {
   updatedAt: AWSDateTime
 }
 
-type Attachment @model {
-  id: ID!
-  type: String!
+type Attachment {
+  type: String
   url: String
 }
 
