@@ -784,7 +784,7 @@ type AnthologyContent {
   description: String
   content: String
   classID: ID
-  feedbacks: [AnthologyComment]
+  feedbacks: [String]
 }
 
 type AnthologyComment  @model {
@@ -798,9 +798,8 @@ type AnthologyComment  @model {
   updatedAt: AWSDateTime
 }
 
-type Attachment @model {
-  id: ID!
-  type: String!
+type Attachment {
+  type: String
   url: String
 }
 

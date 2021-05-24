@@ -365,14 +365,7 @@ export const onChangeStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -8609,11 +8602,8 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8658,11 +8648,8 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
       createdAt
       updatedAt
@@ -8707,45 +8694,9 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAttachment = /* GraphQL */ `
-  subscription OnCreateAttachment {
-    onCreateAttachment {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAttachment = /* GraphQL */ `
-  subscription OnUpdateAttachment {
-    onUpdateAttachment {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAttachment = /* GraphQL */ `
-  subscription OnDeleteAttachment {
-    onDeleteAttachment {
-      id
-      type
-      url
       createdAt
       updatedAt
     }
@@ -9175,6 +9126,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9320,6 +9272,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9465,6 +9418,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
         }
         createdAt
         updatedAt
