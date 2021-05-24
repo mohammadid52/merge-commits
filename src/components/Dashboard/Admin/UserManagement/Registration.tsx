@@ -16,6 +16,7 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import useDictionary from '../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import axios from 'axios';
+import { createUserUrl } from '../../../../utilities/urls';
 interface newUserInput {
   key: number
   authId: string
@@ -38,10 +39,10 @@ interface newUserInput {
 const initialState: newUserInput = {
   key: 0,
   authId: '',
-  email: 'aman+16@sublimedatasys.com',
+  email: '',
   password: 'xIconoclast.5x',
-  firstName: 'fsf',
-  lastName: 'sdfs',
+  firstName: '',
+  lastName: '',
   phone: '',
   birthdate: '',
   grade: '',
@@ -170,10 +171,9 @@ const Registration = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: username })
       };
-      const response = await axios.post('https://9jk0le8cae.execute-api.us-east-1.amazonaws.com/create-user', {
+      const response = await axios.post(createUserUrl, {
         email: username
       })
-      console.log('response', response)
       const user = response.data.User;
       setNewUserInputs(() => {
         return {
