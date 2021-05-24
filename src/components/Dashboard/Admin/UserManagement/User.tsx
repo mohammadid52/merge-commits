@@ -533,7 +533,7 @@ const User = () => {
         image: string | null;
       };
       commentedAt: Date;
-    }[] = []; // dummy DB
+    }[] = [];
     const [commentDb, setCommentDb] = useState(activity);
     const [comment, setComment] = useState('');
 
