@@ -32,8 +32,9 @@ import {BiMessageRoundedDots, BiMessageRoundedX} from 'react-icons/bi';
 import {isEmpty} from 'lodash';
 import {GrSend} from 'react-icons/gr';
 import {MdAudiotrack, MdImage} from 'react-icons/md';
-import {BsCameraVideo, BsCameraVideoFill} from 'react-icons/bs';
+import {BsCameraVideo, BsCameraVideoFill, BsFillTrashFill} from 'react-icons/bs';
 import {getAsset} from '../../../../assets';
+import Modal from '../../../Atoms/Modal';
 
 export interface UserInfo {
   authId: string;
@@ -531,42 +532,44 @@ const User = () => {
     };
     reader.readAsDataURL(file);
   };
+  const preview_image2 = (file: any) => {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var output: any = document.getElementById('output_image2');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const preview_thumnbnail = (file: any) => {
-    var video: any = document.getElementById('video_preview').childNodes;
-
-    let blobURL = URL.createObjectURL(file);
-
-    // video.src = blobURL;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var output: any = document.getElementById('output_video');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(file);
   };
 
-  const uploadImageAttachment = async (file: any) => {
-    // Upload Attachments
-
-    return new Promise((resolve, reject) => {
-      Storage.put(`feedbacks/${Date.now().toString()}_${file.name}`, file, {
-        contentType: file.type,
-        ContentEncoding: 'base64',
-      })
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
-  const pushCommentToDatabase = async (text: string, item: any) => {
+  const pushCommentToDatabase = async (text: string, item: any, attachments?: any) => {
     try {
-      const input = {
+      let input = {
         email: state.user.email,
         authID: state.user.authId,
         text,
       };
+
+      const finalInput =
+        attachments && attachments.url
+          ? {
+              ...input,
+              attachments: {
+                type: attachments.type,
+                url: attachments.url,
+              },
+            }
+          : input;
       const results: any = await API.graphql(
-        graphqlOperation(mutations.createAnthologyComment, {input})
+        graphqlOperation(mutations.createAnthologyComment, {input: finalInput})
       );
 
       const commentData: any = results.data.createAnthologyComment;
@@ -605,6 +608,39 @@ const User = () => {
     }
   };
 
+  const deleteCommentFromDatabase = async (id: string, item: any) => {
+    try {
+      const results: any = await API.graphql(
+        graphqlOperation(mutations.deleteAnthologyComment, {input: {id}})
+      );
+
+      let newFeedbacks = item.feedbacks || [];
+
+      const removeHelperProperties = {
+        type: item.type,
+        subType: item.subType,
+        title: item.title,
+        subTitle: item.subTitle,
+        description: item.description,
+        content: item.content,
+        feedbacks: newFeedbacks.filter((feedbackId: string) => feedbackId !== id),
+      };
+
+      const studentDataUpdate: any = await API.graphql(
+        graphqlOperation(mutations.updateStudentData, {
+          input: {
+            id: item.studentDataID,
+            status: item.status,
+            syllabusLessonID: item.syllabusLessonID,
+            studentID: item.studentID,
+            studentAuthID: item.studentAuthID,
+            anthologyContent: removeHelperProperties,
+          },
+        })
+      );
+    } catch (error) {}
+  };
+
   const listComments = async (feedbacks: string[]) => {
     const filter: any = feedbacks.map((id: string) => {
       return {
@@ -633,10 +669,45 @@ const User = () => {
     return `${hours}:${min}`;
   }
 
+  const AttachmentsModalPopUp = (props: any) => {
+    const {children, closeAction} = props;
+    return (
+      <Modal
+        closeOnBackdrop
+        closeAction={closeAction}
+        showHeader={false}
+        showHeaderBorder={false}
+        showFooter={false}>
+        {children}
+      </Modal>
+    );
+  };
+
+  const uploadAttachment = async (file: any, id: string, type: string) => {
+    // Upload Attachments
+    return new Promise((resolve, reject) => {
+      Storage.put(id, file, {
+        contentType: type,
+        progressCallback: ({loaded, total}: any) => {
+          console.log((loaded * 100) / total);
+        },
+      })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
+
   const StudentData = ({item}: any) => {
     // booleans
     const [showComments, setShowComments] = useState(false);
     const [loadingComments, setLoadingComments] = useState(false);
+    const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
+    const [uploadingAttachment, setUploadingAttachment] = useState(false);
 
     // arrays
     const [feedbackData, setFeedbackData] = useState([]);
@@ -647,6 +718,12 @@ const User = () => {
 
     // objects
     const [fileObject, setfileObject] = useState<any>({});
+
+    const deleteComment = (id: string) => {
+      const filteredData: any = feedbackData.filter((data) => data.id !== id);
+      setFeedbackData(filteredData); // this is to update local state
+      deleteCommentFromDatabase(id, item);
+    };
 
     const onCommentShowHide = () => {
       if (!showComments && feedbackData.length === 0) {
@@ -670,19 +747,28 @@ const User = () => {
       }
     };
 
-    const pushCommentToLocalState = (comment: string, item: any) => {
-      const localObj = {
+    const pushCommentToLocalState = (comment: string, attachments?: any) => {
+      let localObj = {
         text: comment,
-        person: {image: state.user.image, firstName: state.user.firstName},
+        person: {
+          image: state.user.image,
+          firstName: state.user.firstName,
+          lastName: state.user.lastName,
+        },
         createdAt: new Date(),
         id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
       };
-      setFeedbackData([...feedbackData, localObj]);
+      const finalInput =
+        attachments && attachments.type
+          ? {...localObj, attachments: [{url: attachments.url, type: attachments.type}]}
+          : localObj;
+
+      setFeedbackData([...feedbackData, finalInput]);
     };
 
     useEffect(() => {
       async function getUrl() {
-        const imageUrl: any = await getImageFromS3(state.user.image);
+        const imageUrl: any = getImageFromS3(state.user.image);
         setImageUrl(imageUrl);
       }
       if (!imageUrl) {
@@ -690,16 +776,26 @@ const User = () => {
       }
     }, [state.user, imageUrl]);
 
-    const onCommentSubmit = (e: any) => {
-      e.preventDefault();
-      pushCommentToLocalState(comment, item);
-      pushCommentToDatabase(comment, item);
-      setComment('');
-      if (!isEmpty(fileObject)) {
-        uploadImageAttachment(fileObject).then((imgUrl) => {
-          console.log(imgUrl);
+    const onCommentSubmit = async (e: any) => {
+      if (fileObject.name) {
+        setUploadingAttachment(true);
+        // preview_image2(fileObject);
+
+        const id: string = `feedbacks/${Date.now().toString()}_${fileObject.name}`;
+        await uploadAttachment(fileObject, id, fileObject.type);
+        const imageUrl: any = await getImageFromS3(id);
+        pushCommentToDatabase(comment, item, {url: imageUrl, type: fileObject.type});
+        pushCommentToLocalState(comment, {
+          url: imageUrl,
+          type: fileObject.type,
         });
+        setUploadingAttachment(false);
+      } else {
+        pushCommentToLocalState(comment);
+        pushCommentToDatabase(comment, item);
       }
+      setfileObject({});
+      setComment('');
     };
 
     const inputVideo = useRef(null);
@@ -714,11 +810,13 @@ const User = () => {
       if (e.target.files && e.target.files.length > 0) {
         const file = e.target.files[0];
         const isImage = file.type.includes('image');
-        const isAudio = file.type.includes('audio');
         const isVideo = file.type.includes('video');
         setfileObject(file);
         if (isImage) {
           preview_image(file);
+        }
+        if (isVideo) {
+          preview_thumnbnail(file);
         }
       }
     };
@@ -735,121 +833,181 @@ const User = () => {
           <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
           {item.content && ReactHtmlParser(item.content)}
         </div>
-        {showComments &&
-          (loadingComments ? (
-            <div className="py-2 text-center mx-auto flex justify-center items-center w-full">
-              <div className="">
-                <Loader color="rgba(107, 114, 128, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">
-                  Loading Comments...
-                  {/* @Mohammad: Add this to dict */}
-                </p>
+
+        {showComments && (
+          <div className="comment-container">
+            {attModal.show && (
+              <AttachmentsModalPopUp
+                closeAction={() => setAttModal({show: false, url: '', type: ''})}>
+                {attModal.type.includes('image') && (
+                  <img
+                    style={{objectFit: 'cover'}}
+                    className="h-auto w-auto rounded"
+                    src={attModal.url}
+                  />
+                )}
+                {attModal.type.includes('video') && (
+                  <div className="h-auto w-auto">
+                    <video id="output_video" controls src={attModal.url}>
+                      <source type={attModal.type} />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                )}
+              </AttachmentsModalPopUp>
+            )}
+            {loadingComments ? (
+              <div className="py-2 text-center mx-auto flex justify-center items-center w-full">
+                <div className="">
+                  <Loader color="rgba(107, 114, 128, 1)" />
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    Loading Comments...
+                    {/* @Mohammad: Add this to dict */}
+                  </p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="comment-container">
-              {feedbackData &&
-                feedbackData.map((feedback, eventIdx: number) => (
-                  <div
-                    key={feedback.id}
-                    className="relative px-6 w-auto hover:bg-dark-gray hover:bg-opacity-10 py-1 my-2">
-                    <div className="text-sm text-gray-900 flex items-start">
-                      <img
-                        className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
-                        src={feedback.person.image && imageUrl}
-                        alt=""
-                      />
-                      <div className="ml-2">
-                        <h5 className="font-semibold hover:text-underline">
-                          {feedback.person.firstName + ' ' + feedback.person.lastName}
-                          <span className="text-xs text-gray-600 font-normal ml-3">
-                            {GetFormattedDate(feedback.createdAt)}
-                          </span>
-                        </h5>
-                        <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
-                      </div>
+            ) : (
+              feedbackData &&
+              feedbackData.map((feedback, eventIdx: number) => (
+                <div
+                  key={feedback.id}
+                  className="relative comment-main flex items-center justify-between px-6 w-auto hover:bg-dark-gray hover:bg-opacity-10 py-3 my-2">
+                  <div className="text-sm text-gray-900 flex items-start">
+                    <img
+                      className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
+                      src={feedback.person.image && imageUrl}
+                      alt=""
+                    />
+                    <div className="ml-2">
+                      <h5 className="font-semibold hover:text-underline">
+                        {feedback.person.firstName + ' ' + feedback.person.lastName}
+                        <span className="text-xs text-gray-600 font-normal ml-3">
+                          {GetFormattedDate(feedback.createdAt)}
+                        </span>
+                      </h5>
+                      <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
+                      {feedback.attachments &&
+                        feedback.attachments.length > 0 &&
+                        feedback.attachments.map(
+                          ({type, url}: {type: string; url: string}) => {
+                            return (
+                              <div
+                                className="mt-1"
+                                onClick={() => setAttModal({show: true, url, type})}>
+                                {type.includes('image') && (
+                                  <img
+                                    style={{objectFit: 'cover'}}
+                                    className="h-32 w-auto rounded-lg"
+                                    src={url !== 'none' && url}
+                                    id="output_image2"
+                                  />
+                                )}
+                                {type.includes('video') && (
+                                  <div className="h-auto w-72">
+                                    <video className="rounded-lg" src={url}>
+                                      <source type={fileObject.type} />
+                                      Your browser does not support the video tag.
+                                    </video>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        )}
                     </div>
                   </div>
-                ))}
-              <div className="comment-box w-auto mx-6 flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
-                <div
-                  style={{minHeight: '2.5rem'}}
-                  className="flex flex-col border-b-0 border-gray-200">
-                  <textarea
-                    onKeyUp={(e) => do_resize(e.target)}
-                    style={{resize: 'none'}}
-                    placeholder="Add Feedback"
-                    className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
-                    rows={1}
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                  {isImage && (
-                    <div className={`${fileObject.name ? 'block px-4 py-2 ' : 'hidden'}`}>
-                      <img
-                        style={{objectFit: 'cover'}}
-                        id="output_image"
-                        className="h-14 w-14 rounded"
-                      />
+                  {/* {feedback.person.authId === state.user.authId && (
+                    <div
+                      onClick={() => deleteComment(feedback.id)}
+                      className="delete-comment text-red-500 w-auto">
+                      <BsFillTrashFill />
                     </div>
+                  )} */}
+                </div>
+              ))
+            )}
+            <div className="comment-box w-auto mx-6 flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
+              <div
+                style={{minHeight: '2.5rem'}}
+                className="flex flex-col border-b-0 border-gray-200">
+                <textarea
+                  onKeyUp={(e) => do_resize(e.target)}
+                  style={{resize: 'none'}}
+                  placeholder="Add Feedback"
+                  className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
+                  rows={1}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+                <div
+                  className={`${
+                    fileObject.name ? 'block px-4 py-2 h-auto w-72' : 'hidden'
+                  }`}>
+                  {isImage && (
+                    <img
+                      style={{objectFit: 'cover'}}
+                      id="output_image"
+                      className="h-32 w-32 rounded-lg"
+                    />
+                  )}
+                  {isVideo && (
+                    <video id="output_video" controls className="rounded-lg">
+                      <source type={fileObject.type} />
+                      Your browser does not support the video tag.
+                    </video>
                   )}
                 </div>
-                <div className="comment-actions h-10 flex items-center justify-between">
-                  <div className="left-action w-auto">
-                    <div className="flex items-center justify-center">
-                      <button
-                        onClick={(e) => handleAudio()}
-                        className={`${actionStyles}`}>
-                        <MdAudiotrack className="" />
-                        <input
-                          accept="audio/*"
-                          ref={inputAudio}
-                          onChange={handleSelection}
-                          type="file"
-                          className="hidden"
-                        />
-                      </button>
-                      <button
-                        onClick={(e) => handleVideo()}
-                        className={`${actionStyles}`}>
-                        <input
-                          accept="video/*"
-                          ref={inputVideo}
-                          onChange={handleSelection}
-                          type="file"
-                          className="hidden"
-                        />
-                        <BsCameraVideoFill className="" />
-                      </button>
-                      <button
-                        onClick={(e) => handleImage()}
-                        className={`${actionStyles} `}>
-                        <input
-                          accept="image/*"
-                          ref={inputImage}
-                          onChange={handleSelection}
-                          type="file"
-                          className="hidden"
-                        />
-                        <MdImage className="" />
-                      </button>
-                    </div>
+              </div>
+              <div className="comment-actions h-10 flex items-center justify-between">
+                <div className="left-action w-auto">
+                  <div className="flex items-center justify-center">
+                    <button onClick={(e) => handleAudio()} className={`${actionStyles}`}>
+                      <MdAudiotrack className="" />
+                      <input
+                        accept="audio/*"
+                        ref={inputAudio}
+                        onChange={handleSelection}
+                        type="file"
+                        className="hidden"
+                      />
+                    </button>
+                    <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
+                      <input
+                        accept="video/*"
+                        ref={inputVideo}
+                        onChange={handleSelection}
+                        type="file"
+                        className="hidden"
+                      />
+                      <BsCameraVideoFill className="" />
+                    </button>
+                    <button onClick={(e) => handleImage()} className={`${actionStyles} `}>
+                      <input
+                        accept="image/*"
+                        ref={inputImage}
+                        onChange={handleSelection}
+                        type="file"
+                        className="hidden"
+                      />
+                      <MdImage className="" />
+                    </button>
                   </div>
-                  <div className="right-action w-auto p-2">
-                    <div
-                      onClick={onCommentSubmit}
-                      className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
-                        comment.length
-                          ? 'bg-indigo-400 text-white cursor-pointer hover:bg-indigo-500'
-                          : 'cursor-default text-indigo-300'
-                      }`}>
-                      <IoSendSharp className="" />
-                    </div>
+                </div>
+                <div className="right-action w-auto p-2">
+                  <div
+                    onClick={onCommentSubmit}
+                    className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
+                      comment.length || fileObject.name
+                        ? 'bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600'
+                        : 'cursor-default text-indigo-300'
+                    }`}>
+                    <IoSendSharp className="" />
                   </div>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+        )}
         <div className="flex items-center mx-6 justify-start">
           <div
             onClick={onCommentShowHide}

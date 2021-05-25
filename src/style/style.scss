@@ -750,8 +750,8 @@
   }
 }
 .comment-box {
-  transition: all .15s ease-in-out;
-  &:focus-within{
-  border: 1px solid #D1D5DB;
+  transition: all 0.15s ease-in-out;
+  &:focus-within {
+    border: 1px solid #d1d5db;
   }
 }
