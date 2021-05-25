@@ -91,8 +91,14 @@ const LessonEdit = (props: LessonEditProps) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
+
   const [warnModal, setWarnModal] = useState({
     show: false,
+    message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+  });
+  const [checkpointSaveModal, setCheckpointSaveModal] = useState({
+    show: false,
+    stepOnHold: '',
     message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
   });
 
@@ -163,6 +169,21 @@ const LessonEdit = (props: LessonEditProps) => {
     setWarnModal({
       ...warnModal,
       show: !warnModal.show,
+    });
+  };
+
+  const savedCheckpointModal = () => {
+    setActiveStep(checkpointSaveModal.stepOnHold);
+    setHistoryList([...historyList, checkpointSaveModal.stepOnHold]);
+    closeCheckpointModal();
+    setUnsavedChanges(false);
+  };
+  const closeCheckpointModal = () => {
+    setCheckpointSaveModal({
+      ...checkpointSaveModal,
+      stepOnHold: '',
+      message: '',
+      show: false,
     });
   };
 
@@ -376,7 +397,12 @@ const LessonEdit = (props: LessonEditProps) => {
                     setActiveStep(step);
                     setHistoryList([...historyList, step]);
                   } else {
-                    toggleModal();
+                    setCheckpointSaveModal({
+                      ...checkpointSaveModal,
+                      stepOnHold: step,
+                      message: 'Are you sure you want to continue?',
+                      show: !checkpointSaveModal.show,
+                    });
                   }
                 }}
               />
@@ -400,6 +426,14 @@ const LessonEdit = (props: LessonEditProps) => {
             saveAction={onModalSave}
             saveLabel="Yes"
             message={warnModal.message}
+          />
+        )}
+        {checkpointSaveModal.show && (
+          <ModalPopUp
+            closeAction={closeCheckpointModal}
+            saveAction={savedCheckpointModal}
+            saveLabel="Yes"
+            message={checkpointSaveModal.message}
           />
         )}
       </PageWrapper>

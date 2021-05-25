@@ -535,16 +535,16 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     setParentLessonPlans(lessonPlans);
   }, [lessonPlans]);
 
-  useEffect(() => {
-    if (
-      builderStep === 'AddNewCheckPoint' &&
-      (checkpointDetails?.title || checkpointDetails?.label)
-    ) {
-      return function cleanup() {
-        setUnsavedChanges(true);
-      };
-    }
-  }, [activeStep, checkpointDetails?.title]);
+  // useEffect(() => {
+  //   if (
+  //     builderStep === 'AddNewCheckPoint' &&
+  //     (checkpointDetails?.title || checkpointDetails?.label)
+  //   ) {
+  //     return function cleanup() {
+  //       setUnsavedChanges(true);
+  //     };
+  //   }
+  // }, [activeStep, checkpointDetails?.title]);
 
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">

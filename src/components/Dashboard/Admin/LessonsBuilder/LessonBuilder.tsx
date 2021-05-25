@@ -116,6 +116,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
   });
 
+  const [checkpointSaveModal, setCheckpointSaveModal] = useState({
+    show: false,
+    stepOnHold: '',
+    message: '',
+  });
+
+  const savedCheckpointModal = () => {
+    setActiveStep(checkpointSaveModal.stepOnHold);
+    closeCheckpointModal();
+    setUnsavedChanges(false);
+  };
+  const closeCheckpointModal = () => {
+    setCheckpointSaveModal({
+      ...checkpointSaveModal,
+      stepOnHold: '',
+      message: '',
+      show: false,
+    });
+  };
+
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
       setLessonBuilderSteps(lessonScrollerStep);
@@ -317,7 +337,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                   if (!unsavedChanges) {
                     setActiveStep(step);
                   } else {
-                    toggleModal();
+                    setCheckpointSaveModal({
+                      ...checkpointSaveModal,
+                      stepOnHold: step,
+                      message: 'Are you sure you want to continue?',
+                      show: !checkpointSaveModal.show,
+                    });
                   }
                 }}
               />
@@ -331,8 +356,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         </div>
         {warnModal.show && (
           <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={onModalSave}
+            closeAction={closeCheckpointModal}
+            saveAction={savedCheckpointModal}
             saveLabel="Yes"
             message={warnModal.message}
           />
