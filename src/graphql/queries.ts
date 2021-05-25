@@ -2712,6 +2712,7 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -2860,6 +2861,7 @@ export const listLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -3001,6 +3003,7 @@ export const getLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -3070,6 +3073,7 @@ export const listLessonRubricss = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -3302,6 +3306,7 @@ export const getSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -3413,6 +3418,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -3490,6 +3496,7 @@ export const getStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -3910,6 +3917,7 @@ export const getQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -4053,6 +4061,7 @@ export const getFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -4353,6 +4362,7 @@ export const getPersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }

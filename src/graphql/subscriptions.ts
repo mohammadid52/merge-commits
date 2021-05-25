@@ -77,6 +77,7 @@ export const onChangePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -230,6 +231,7 @@ export const onChangeStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -509,6 +511,7 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -5890,6 +5893,7 @@ export const onCreateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6143,6 +6147,7 @@ export const onUpdateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6396,6 +6401,7 @@ export const onDeleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6535,6 +6541,7 @@ export const onCreateLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6699,6 +6706,7 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6863,6 +6871,7 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7028,6 +7037,7 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7192,6 +7202,7 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7356,6 +7367,7 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7526,6 +7538,7 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7675,6 +7688,7 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7824,6 +7838,7 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8083,6 +8098,7 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8289,6 +8305,7 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8495,6 +8512,7 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8783,6 +8801,7 @@ export const onCreateQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8898,6 +8917,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9013,6 +9033,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9527,6 +9548,7 @@ export const onCreateFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9603,6 +9625,7 @@ export const onUpdateFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9679,6 +9702,7 @@ export const onDeleteFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10046,6 +10070,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10230,6 +10255,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10414,6 +10440,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
