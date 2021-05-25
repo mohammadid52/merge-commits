@@ -540,6 +540,24 @@ const User = () => {
     // video.src = blobURL;
   };
 
+  const uploadImageAttachment = async (file: any) => {
+    // Upload Attachments
+
+    return new Promise((resolve, reject) => {
+      Storage.put(`feedbacks/${Date.now().toString()}_${file.name}`, file, {
+        contentType: file.type,
+        ContentEncoding: 'base64',
+      })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
+
   const pushCommentToDatabase = async (text: string, item: any) => {
     try {
       const input = {
@@ -581,6 +599,7 @@ const User = () => {
         })
       );
       const feedbackData: any = results.data.updateStudentData;
+      // onSuccessCB(feedbackData?.anthologyContent?.feedbacks);
     } catch (error) {
       console.error('error @createAnthologyComment: ', error);
     }
@@ -607,24 +626,59 @@ const User = () => {
       console.error('error @listComments: ', error);
     }
   };
+  function GetFormattedDate(todayTime: any) {
+    const date = new Date(todayTime);
+    var hours = date.getHours();
+    var min = date.getMinutes();
+    return `${hours}:${min}`;
+  }
 
   const StudentData = ({item}: any) => {
+    // booleans
     const [showComments, setShowComments] = useState(false);
-    const feedbacks = item.feedbacks || [];
+    const [loadingComments, setLoadingComments] = useState(false);
+
+    // arrays
     const [feedbackData, setFeedbackData] = useState([]);
 
+    // strings
     const [comment, setComment] = useState('');
     const [imageUrl, setImageUrl] = useState('');
 
+    // objects
+    const [fileObject, setfileObject] = useState<any>({});
+
+    const onCommentShowHide = () => {
+      if (!showComments && feedbackData.length === 0) {
+        getFeedBackData();
+      }
+      if (showComments) {
+        setfileObject({});
+      }
+      setShowComments(!showComments);
+    };
+
     const getFeedBackData = async () => {
-      if (feedbacks && feedbacks.length > 0) {
-        const feedbacksData: any = await listComments(feedbacks);
+      setLoadingComments(true);
+      try {
+        const feedbacksData: any = await listComments(item.feedbacks);
         setFeedbackData(sortBy(feedbacksData, ['createdAt']));
+      } catch (error) {
+        console.error('error @getFeedBackData: ', error.message);
+      } finally {
+        setLoadingComments(false);
       }
     };
-    useEffect(() => {
-      getFeedBackData();
-    }, [feedbacks]);
+
+    const pushCommentToLocalState = (comment: string, item: any) => {
+      const localObj = {
+        text: comment,
+        person: {image: state.user.image, firstName: state.user.firstName},
+        createdAt: new Date(),
+        id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
+      };
+      setFeedbackData([...feedbackData, localObj]);
+    };
 
     useEffect(() => {
       async function getUrl() {
@@ -638,16 +692,19 @@ const User = () => {
 
     const onCommentSubmit = (e: any) => {
       e.preventDefault();
-
-      pushCommentToDatabase(comment, item).then(() => getFeedBackData());
+      pushCommentToLocalState(comment, item);
+      pushCommentToDatabase(comment, item);
       setComment('');
+      if (!isEmpty(fileObject)) {
+        uploadImageAttachment(fileObject).then((imgUrl) => {
+          console.log(imgUrl);
+        });
+      }
     };
 
     const inputVideo = useRef(null);
     const inputImage = useRef(null);
     const inputAudio = useRef(null);
-
-    const [fileObject, setfileObject] = useState<any>({});
 
     const handleVideo = () => inputVideo.current.click();
     const handleImage = () => inputImage.current.click();
@@ -673,108 +730,129 @@ const User = () => {
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
     return (
       <div
-        className={`w-full white_back pb-2 py-8 px-6 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
-        <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
-        {item.content && ReactHtmlParser(item.content)}
-        {showComments && (
-          <div className="comment-container">
-            {feedbackData &&
-              feedbackData.map((feedback, eventIdx: number) => (
-                <div key={id} className="relative">
-                  <div className="text-sm text-gray-900 mt-4 flex items-start">
-                    <img
-                      className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center ring-8 ring-white"
-                      src={feedback.person.image && imageUrl}
-                      alt=""
-                    />
-                    <div className="ml-2">
-                      <h5 className="font-semibold">
-                        {feedback.person.firstName}{' '}
-                        <span className="text-xs text-gray-600 font-normal ml-1">
-                          {/* {commentedAt} */} 12:24 PM
-                        </span>
-                      </h5>
-                      <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
+        className={`w-full white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
+        <div className="px-6">
+          <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
+          {item.content && ReactHtmlParser(item.content)}
+        </div>
+        {showComments &&
+          (loadingComments ? (
+            <div className="py-2 text-center mx-auto flex justify-center items-center w-full">
+              <div className="">
+                <Loader color="rgba(107, 114, 128, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">
+                  Loading Comments...
+                  {/* @Mohammad: Add this to dict */}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="comment-container">
+              {feedbackData &&
+                feedbackData.map((feedback, eventIdx: number) => (
+                  <div
+                    key={feedback.id}
+                    className="relative px-6 w-auto hover:bg-dark-gray hover:bg-opacity-10 py-1 my-2">
+                    <div className="text-sm text-gray-900 flex items-start">
+                      <img
+                        className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
+                        src={feedback.person.image && imageUrl}
+                        alt=""
+                      />
+                      <div className="ml-2">
+                        <h5 className="font-semibold hover:text-underline">
+                          {feedback.person.firstName + ' ' + feedback.person.lastName}
+                          <span className="text-xs text-gray-600 font-normal ml-3">
+                            {GetFormattedDate(feedback.createdAt)}
+                          </span>
+                        </h5>
+                        <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
+                      </div>
                     </div>
                   </div>
+                ))}
+              <div className="comment-box w-auto mx-6 flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
+                <div
+                  style={{minHeight: '2.5rem'}}
+                  className="flex flex-col border-b-0 border-gray-200">
+                  <textarea
+                    onKeyUp={(e) => do_resize(e.target)}
+                    style={{resize: 'none'}}
+                    placeholder="Add Feedback"
+                    className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
+                    rows={1}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                  {isImage && (
+                    <div className={`${fileObject.name ? 'block px-4 py-2 ' : 'hidden'}`}>
+                      <img
+                        style={{objectFit: 'cover'}}
+                        id="output_image"
+                        className="h-14 w-14 rounded"
+                      />
+                    </div>
+                  )}
                 </div>
-              ))}
-            <div className="comment-box flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
-              <div
-                style={{minHeight: '2.5rem'}}
-                className="flex flex-col border-b-0 border-gray-200">
-                <textarea
-                  onKeyUp={(e) => do_resize(e.target)}
-                  style={{resize: 'none'}}
-                  placeholder="Add Feedback"
-                  className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
-                  rows={1}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-                {isImage && (
-                  <div className={`${fileObject.name ? 'block px-4 py-2 ' : 'hidden'}`}>
-                    <img
-                      style={{objectFit: 'cover'}}
-                      id="output_image"
-                      className="h-14 w-14 rounded"
-                    />
+                <div className="comment-actions h-10 flex items-center justify-between">
+                  <div className="left-action w-auto">
+                    <div className="flex items-center justify-center">
+                      <button
+                        onClick={(e) => handleAudio()}
+                        className={`${actionStyles}`}>
+                        <MdAudiotrack className="" />
+                        <input
+                          accept="audio/*"
+                          ref={inputAudio}
+                          onChange={handleSelection}
+                          type="file"
+                          className="hidden"
+                        />
+                      </button>
+                      <button
+                        onClick={(e) => handleVideo()}
+                        className={`${actionStyles}`}>
+                        <input
+                          accept="video/*"
+                          ref={inputVideo}
+                          onChange={handleSelection}
+                          type="file"
+                          className="hidden"
+                        />
+                        <BsCameraVideoFill className="" />
+                      </button>
+                      <button
+                        onClick={(e) => handleImage()}
+                        className={`${actionStyles} `}>
+                        <input
+                          accept="image/*"
+                          ref={inputImage}
+                          onChange={handleSelection}
+                          type="file"
+                          className="hidden"
+                        />
+                        <MdImage className="" />
+                      </button>
+                    </div>
                   </div>
-                )}
-              </div>
-              <div className="comment-actions h-10 flex items-center justify-between">
-                <div className="left-action w-auto">
-                  <div className="flex items-center justify-center">
-                    <button onClick={(e) => handleAudio()} className={`${actionStyles}`}>
-                      <MdAudiotrack className="" />
-                      <input
-                        accept="audio/*"
-                        ref={inputAudio}
-                        onChange={handleSelection}
-                        type="file"
-                        className="hidden"
-                      />
-                    </button>
-                    <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
-                      <input
-                        accept="video/*"
-                        ref={inputVideo}
-                        onChange={handleSelection}
-                        type="file"
-                        className="hidden"
-                      />
-                      <BsCameraVideoFill className="" />
-                    </button>
-                    <button onClick={(e) => handleImage()} className={`${actionStyles} `}>
-                      <input
-                        accept="image/*"
-                        ref={inputImage}
-                        onChange={handleSelection}
-                        type="file"
-                        className="hidden"
-                      />
-                      <MdImage className="" />
-                    </button>
-                  </div>
-                </div>
-                <div className="right-action w-auto p-2">
-                  <div
-                    onClick={onCommentSubmit}
-                    className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-150 ${
-                      comment.length
-                        ? 'bg-indigo-400 text-white cursor-pointer hover:bg-indigo-300'
-                        : 'cursor-default text-indigo-300'
-                    }`}>
-                    <IoSendSharp className="" />
+                  <div className="right-action w-auto p-2">
+                    <div
+                      onClick={onCommentSubmit}
+                      className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
+                        comment.length
+                          ? 'bg-indigo-400 text-white cursor-pointer hover:bg-indigo-500'
+                          : 'cursor-default text-indigo-300'
+                      }`}>
+                      <IoSendSharp className="" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-        <div className="flex items-center justify-start">
+          ))}
+        <div className="flex items-center mx-6 justify-start">
           <div
-            onClick={() => setShowComments(!showComments)}
+            onClick={onCommentShowHide}
             className="bg-indigo-500 text-white hover:bg-indigo-600 w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2">
             {showComments ? 'Hide' : 'Show'} Feedbacks
           </div>
@@ -802,7 +880,7 @@ const User = () => {
                 onClick={history.goBack}
                 Icon={IoArrowUndoCircleOutline}
               /> */}
-              {currentPath !== 'edit' ? (
+              {currentPath !== 'edit' && curTab === 'User Information' && (
                 <Buttons
                   btnClass="mr-4 px-6"
                   label="Edit"
@@ -812,7 +890,7 @@ const User = () => {
                   }}
                   Icon={FaEdit}
                 />
-              ) : null}
+              )}
             </div>
           </div>
           {curTab === 'User Information' && (
