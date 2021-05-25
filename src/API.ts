@@ -391,6 +391,7 @@ export type Lesson = {
   measurements?: ModelLessonRubricsConnection,
   institutionID?: string,
   institution?: Institution,
+  duration?: number | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1132,7 +1133,7 @@ export type StudentWord = {
 };
 
 export type UpdatePersonInput = {
-  id?: string | null,
+  id: string,
   authId: string,
   status?: PersonStatus | null,
   email: string,
@@ -1256,7 +1257,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateStaffInput = {
@@ -1289,7 +1290,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomInput = {
@@ -1361,7 +1362,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1391,7 +1392,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateClassInput = {
@@ -1418,7 +1419,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateClassStudentInput = {
@@ -1451,7 +1452,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCurriculumInput = {
@@ -1655,7 +1656,7 @@ export type UpdateTeacherCurriculumInput = {
 };
 
 export type DeleteTeacherCurriculumInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomCurriculumInput = {
@@ -1679,7 +1680,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateArtistInput = {
@@ -1731,7 +1732,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateSELStructureInput = {
@@ -1764,7 +1765,7 @@ export type UpdateSELStructureInput = {
 };
 
 export type DeleteSELStructureInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateDoFirstInput = {
@@ -1788,7 +1789,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1812,7 +1813,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateWarmUpInput = {
@@ -1913,7 +1914,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCoreLessonInput = {
@@ -1972,7 +1973,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateActivityInput = {
@@ -2017,7 +2018,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCheckpointInput = {
@@ -2074,7 +2075,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2101,7 +2102,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2128,7 +2129,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateAssessmentInput = {
@@ -2158,7 +2159,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2182,7 +2183,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2206,7 +2207,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionInput = {
@@ -2257,7 +2258,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionSourceInput = {
@@ -2286,7 +2287,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionTypeInput = {
@@ -2315,7 +2316,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateWordInput = {
@@ -2339,7 +2340,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateStudentWordInput = {
@@ -2366,7 +2367,7 @@ export type UpdateStudentWordInput = {
 };
 
 export type DeleteStudentWordInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomMsgsInput = {
@@ -2411,7 +2412,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCourseInput = {
@@ -2452,7 +2453,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateLessonInput = {
@@ -2485,6 +2486,7 @@ export type CreateLessonInput = {
   connectionTitle?: string | null,
   lessonPlan?: Array< LessonComponentsInput | null > | null,
   institutionID: string,
+  duration?: number | null,
 };
 
 export type ThemeInput = {
@@ -2532,6 +2534,7 @@ export type ModelLessonConditionInput = {
   introduction?: ModelStringInput | null,
   connectionTitle?: ModelStringInput | null,
   institutionID?: ModelIDInput | null,
+  duration?: ModelIntInput | null,
   and?: Array< ModelLessonConditionInput | null > | null,
   or?: Array< ModelLessonConditionInput | null > | null,
   not?: ModelLessonConditionInput | null,
@@ -2567,6 +2570,7 @@ export type UpdateLessonInput = {
   connectionTitle?: string | null,
   lessonPlan?: Array< LessonComponentsInput | null > | null,
   institutionID?: string | null,
+  duration?: number | null,
 };
 
 export type DeleteLessonInput = {
@@ -2594,7 +2598,7 @@ export type UpdateLessonRubricsInput = {
 };
 
 export type DeleteLessonRubricsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateLessonCheckpointInput = {
@@ -2621,7 +2625,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2645,7 +2649,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateSyllabusInput = {
@@ -2832,7 +2836,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateStudentDataInput = {
@@ -2873,7 +2877,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id?: string | null,
+  id: string,
   lessonProgress?: string | null,
   currentLocation?: string | null,
   status?: string | null,
@@ -2947,7 +2951,7 @@ export type UpdateAnthologyCommentInput = {
 };
 
 export type DeleteAnthologyCommentInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionDataInput = {
@@ -2994,7 +2998,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -3018,7 +3022,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateFeedbackInput = {
@@ -3045,7 +3049,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateIntroInput = {
@@ -3117,7 +3121,7 @@ export type UpdateIntroInput = {
 };
 
 export type DeleteIntroInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateOutroInput = {
@@ -3183,7 +3187,7 @@ export type UpdateOutroInput = {
 };
 
 export type DeleteOutroInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreatePersonLocationInput = {
@@ -3223,7 +3227,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id?: string | null,
+  id: string,
   personAuthID: string,
   personEmail: string,
   syllabusLessonID?: string | null,
@@ -3334,7 +3338,7 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -3863,6 +3867,7 @@ export type ModelLessonFilterInput = {
   introduction?: ModelStringInput | null,
   connectionTitle?: ModelStringInput | null,
   institutionID?: ModelIDInput | null,
+  duration?: ModelIntInput | null,
   and?: Array< ModelLessonFilterInput | null > | null,
   or?: Array< ModelLessonFilterInput | null > | null,
   not?: ModelLessonFilterInput | null,
@@ -10439,6 +10444,7 @@ export type CreateLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -10735,6 +10741,7 @@ export type UpdateLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -11031,6 +11038,7 @@ export type DeleteLessonMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -11188,6 +11196,7 @@ export type CreateLessonRubricsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11372,6 +11381,7 @@ export type UpdateLessonRubricsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11556,6 +11566,7 @@ export type DeleteLessonRubricsMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11741,6 +11752,7 @@ export type CreateLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -11925,6 +11937,7 @@ export type UpdateLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12109,6 +12122,7 @@ export type DeleteLessonCheckpointMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12300,6 +12314,7 @@ export type CreateLessonKeyWordMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12468,6 +12483,7 @@ export type UpdateLessonKeyWordMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12636,6 +12652,7 @@ export type DeleteLessonKeyWordMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -12934,6 +12951,7 @@ export type CreateSyllabusLessonMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13168,6 +13186,7 @@ export type UpdateSyllabusLessonMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13402,6 +13421,7 @@ export type DeleteSyllabusLessonMutation = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -13532,6 +13552,7 @@ export type CreateStudentDataMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -13747,6 +13768,7 @@ export type UpdateStudentDataMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -13962,6 +13984,7 @@ export type DeleteStudentDataMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14383,6 +14406,7 @@ export type CreateQuestionDataMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14513,6 +14537,7 @@ export type UpdateQuestionDataMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -14643,6 +14668,7 @@ export type DeleteQuestionDataMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15222,6 +15248,7 @@ export type CreateFeedbackMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15309,6 +15336,7 @@ export type UpdateFeedbackMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15396,6 +15424,7 @@ export type DeleteFeedbackMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -15834,6 +15863,7 @@ export type CreatePersonLocationMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -16038,6 +16068,7 @@ export type UpdatePersonLocationMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -16242,6 +16273,7 @@ export type DeletePersonLocationMutation = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -19655,6 +19687,7 @@ export type GetLessonQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -19812,6 +19845,7 @@ export type ListLessonsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -19970,6 +20004,7 @@ export type GetLessonRubricsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20045,6 +20080,7 @@ export type ListLessonRubricssQuery = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20299,6 +20335,7 @@ export type GetSyllabusLessonQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -20424,6 +20461,7 @@ export type ListSyllabusLessonsQuery = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20512,6 +20550,7 @@ export type GetStudentDataQuery = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -20977,6 +21016,7 @@ export type GetQuestionDataQuery = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21136,6 +21176,7 @@ export type GetFeedbackQuery = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21481,6 +21522,7 @@ export type GetPersonLocationQuery = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -22167,6 +22209,7 @@ export type OnChangePersonLocationSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -22336,6 +22379,7 @@ export type OnChangeStudentDataSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -22654,6 +22698,7 @@ export type OnChangeSyllabusLessonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -28575,6 +28620,7 @@ export type OnCreateLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -28866,6 +28912,7 @@ export type OnUpdateLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -29157,6 +29204,7 @@ export type OnDeleteLessonSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    duration?: number | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -29309,6 +29357,7 @@ export type OnCreateLessonRubricsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -29488,6 +29537,7 @@ export type OnUpdateLessonRubricsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -29667,6 +29717,7 @@ export type OnDeleteLessonRubricsSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -29847,6 +29898,7 @@ export type OnCreateLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30026,6 +30078,7 @@ export type OnUpdateLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30205,6 +30258,7 @@ export type OnDeleteLessonCheckpointSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30391,6 +30445,7 @@ export type OnCreateLessonKeyWordSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30554,6 +30609,7 @@ export type OnUpdateLessonKeyWordSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30717,6 +30773,7 @@ export type OnDeleteLessonKeyWordSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -30995,6 +31052,7 @@ export type OnCreateSyllabusLessonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -31224,6 +31282,7 @@ export type OnUpdateSyllabusLessonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -31453,6 +31512,7 @@ export type OnDeleteSyllabusLessonSubscription = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      duration?: number | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -31769,6 +31829,7 @@ export type OnCreateQuestionDataSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -31894,6 +31955,7 @@ export type OnUpdateQuestionDataSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32019,6 +32081,7 @@ export type OnDeleteQuestionDataSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32578,6 +32641,7 @@ export type OnCreateFeedbackSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32660,6 +32724,7 @@ export type OnUpdateFeedbackSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -32742,6 +32807,7 @@ export type OnDeleteFeedbackSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33145,6 +33211,7 @@ export type OnCreatePersonLocationSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33344,6 +33411,7 @@ export type OnUpdatePersonLocationSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -33543,6 +33611,7 @@ export type OnDeletePersonLocationSubscription = {
         introduction?: string | null,
         connectionTitle?: string | null,
         institutionID: string,
+        duration?: number | null,
         createdAt: string,
         updatedAt: string,
       } | null,
