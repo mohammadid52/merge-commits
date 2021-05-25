@@ -148,7 +148,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      */
     <div
       id={`universalLessonBuilder`}
-      className="h-full flex bg-white shadow-5 sm:rounded-lg mb-4">
+      className="h-full flex bg-white shadow-5 sm:rounded-lg">
       {currentStepComp(universalBuilderStep)}
     </div>
   );

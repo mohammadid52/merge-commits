@@ -994,6 +994,29 @@ export type AnthologyContent = {
   subTitle?: string | null,
   description?: string | null,
   content?: string | null,
+  classID?: string | null,
+  feedbacks?:  Array<AnthologyComment | null > | null,
+};
+
+export type AnthologyComment = {
+  __typename: "AnthologyComment",
+  id?: string,
+  text?: string | null,
+  email?: string,
+  authID?: string,
+  person?: Person,
+  attachments?:  Array<Attachment | null > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type Attachment = {
+  __typename: "Attachment",
+  id?: string,
+  type?: string,
+  url?: string | null,
+  createdAt?: string,
+  updatedAt?: string,
 };
 
 export type ModelFeedbackConnection = {
@@ -1130,7 +1153,7 @@ export type StudentWord = {
 };
 
 export type UpdatePersonInput = {
-  id: string,
+  id?: string | null,
   authId: string,
   status?: PersonStatus | null,
   email: string,
@@ -1254,7 +1277,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStaffInput = {
@@ -1287,7 +1310,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomInput = {
@@ -1359,7 +1382,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1389,7 +1412,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateClassInput = {
@@ -1416,7 +1439,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateClassStudentInput = {
@@ -1449,7 +1472,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCurriculumInput = {
@@ -1653,7 +1676,7 @@ export type UpdateTeacherCurriculumInput = {
 };
 
 export type DeleteTeacherCurriculumInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomCurriculumInput = {
@@ -1677,7 +1700,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateArtistInput = {
@@ -1729,7 +1752,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateSELStructureInput = {
@@ -1762,7 +1785,7 @@ export type UpdateSELStructureInput = {
 };
 
 export type DeleteSELStructureInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateDoFirstInput = {
@@ -1786,7 +1809,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1810,7 +1833,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateWarmUpInput = {
@@ -1911,7 +1934,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCoreLessonInput = {
@@ -1970,7 +1993,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateActivityInput = {
@@ -2015,7 +2038,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCheckpointInput = {
@@ -2072,7 +2095,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2099,7 +2122,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2126,7 +2149,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentInput = {
@@ -2156,7 +2179,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2180,7 +2203,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2204,7 +2227,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionInput = {
@@ -2255,7 +2278,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionSourceInput = {
@@ -2284,7 +2307,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionTypeInput = {
@@ -2313,7 +2336,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateWordInput = {
@@ -2337,7 +2360,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStudentWordInput = {
@@ -2364,7 +2387,7 @@ export type UpdateStudentWordInput = {
 };
 
 export type DeleteStudentWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomMsgsInput = {
@@ -2409,7 +2432,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCourseInput = {
@@ -2450,7 +2473,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonInput = {
@@ -2592,7 +2615,7 @@ export type UpdateLessonRubricsInput = {
 };
 
 export type DeleteLessonRubricsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonCheckpointInput = {
@@ -2619,7 +2642,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2643,7 +2666,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateSyllabusInput = {
@@ -2830,7 +2853,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStudentDataInput = {
@@ -2855,6 +2878,7 @@ export type AnthologyContentInput = {
   subTitle?: string | null,
   description?: string | null,
   content?: string | null,
+  classID?: string | null,
 };
 
 export type ModelStudentDataConditionInput = {
@@ -2869,7 +2893,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id: string,
+  id?: string | null,
   lessonProgress?: string | null,
   currentLocation?: string | null,
   status?: string | null,
@@ -2886,6 +2910,63 @@ export type UpdateStudentDataInput = {
 export type DeleteStudentDataInput = {
   syllabusLessonID: string,
   studentID: string,
+};
+
+export type CreateAnthologyCommentInput = {
+  id?: string | null,
+  text?: string | null,
+  email: string,
+  authID: string,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type ModelAnthologyCommentConditionInput = {
+  text?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  authID?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelAnthologyCommentConditionInput | null > | null,
+  or?: Array< ModelAnthologyCommentConditionInput | null > | null,
+  not?: ModelAnthologyCommentConditionInput | null,
+};
+
+export type UpdateAnthologyCommentInput = {
+  id: string,
+  text?: string | null,
+  email?: string | null,
+  authID?: string | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+};
+
+export type DeleteAnthologyCommentInput = {
+  id: string,
+};
+
+export type CreateAttachmentInput = {
+  id?: string | null,
+  type: string,
+  url?: string | null,
+};
+
+export type ModelAttachmentConditionInput = {
+  type?: ModelStringInput | null,
+  url?: ModelStringInput | null,
+  and?: Array< ModelAttachmentConditionInput | null > | null,
+  or?: Array< ModelAttachmentConditionInput | null > | null,
+  not?: ModelAttachmentConditionInput | null,
+};
+
+export type UpdateAttachmentInput = {
+  id: string,
+  type?: string | null,
+  url?: string | null,
+};
+
+export type DeleteAttachmentInput = {
+  id: string,
 };
 
 export type CreateQuestionDataInput = {
@@ -2932,7 +3013,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -2956,7 +3037,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateFeedbackInput = {
@@ -2983,7 +3064,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateIntroInput = {
@@ -3055,7 +3136,7 @@ export type UpdateIntroInput = {
 };
 
 export type DeleteIntroInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateOutroInput = {
@@ -3121,7 +3202,7 @@ export type UpdateOutroInput = {
 };
 
 export type DeleteOutroInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreatePersonLocationInput = {
@@ -3161,7 +3242,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id: string,
+  id?: string | null,
   personAuthID: string,
   personEmail: string,
   syllabusLessonID?: string | null,
@@ -3272,7 +3353,7 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -3868,6 +3949,39 @@ export type ModelStudentDataFilterInput = {
   and?: Array< ModelStudentDataFilterInput | null > | null,
   or?: Array< ModelStudentDataFilterInput | null > | null,
   not?: ModelStudentDataFilterInput | null,
+};
+
+export type ModelAnthologyCommentFilterInput = {
+  id?: ModelIDInput | null,
+  text?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  authID?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  and?: Array< ModelAnthologyCommentFilterInput | null > | null,
+  or?: Array< ModelAnthologyCommentFilterInput | null > | null,
+  not?: ModelAnthologyCommentFilterInput | null,
+};
+
+export type ModelAnthologyCommentConnection = {
+  __typename: "ModelAnthologyCommentConnection",
+  items?:  Array<AnthologyComment | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelAttachmentFilterInput = {
+  id?: ModelIDInput | null,
+  type?: ModelStringInput | null,
+  url?: ModelStringInput | null,
+  and?: Array< ModelAttachmentFilterInput | null > | null,
+  or?: Array< ModelAttachmentFilterInput | null > | null,
+  not?: ModelAttachmentFilterInput | null,
+};
+
+export type ModelAttachmentConnection = {
+  __typename: "ModelAttachmentConnection",
+  items?:  Array<Attachment | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelQuestionDataFilterInput = {
@@ -13608,6 +13722,16 @@ export type CreateStudentDataMutation = {
       subTitle?: string | null,
       description?: string | null,
       content?: string | null,
+      classID?: string | null,
+      feedbacks?:  Array< {
+        __typename: "AnthologyComment",
+        id: string,
+        text?: string | null,
+        email: string,
+        authID: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
+      } | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -13821,6 +13945,16 @@ export type UpdateStudentDataMutation = {
       subTitle?: string | null,
       description?: string | null,
       content?: string | null,
+      classID?: string | null,
+      feedbacks?:  Array< {
+        __typename: "AnthologyComment",
+        id: string,
+        text?: string | null,
+        email: string,
+        authID: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
+      } | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -14034,7 +14168,239 @@ export type DeleteStudentDataMutation = {
       subTitle?: string | null,
       description?: string | null,
       content?: string | null,
+      classID?: string | null,
+      feedbacks?:  Array< {
+        __typename: "AnthologyComment",
+        id: string,
+        text?: string | null,
+        email: string,
+        authID: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
+      } | null > | null,
     } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateAnthologyCommentMutationVariables = {
+  input?: CreateAnthologyCommentInput,
+  condition?: ModelAnthologyCommentConditionInput | null,
+};
+
+export type CreateAnthologyCommentMutation = {
+  createAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type UpdateAnthologyCommentMutationVariables = {
+  input?: UpdateAnthologyCommentInput,
+  condition?: ModelAnthologyCommentConditionInput | null,
+};
+
+export type UpdateAnthologyCommentMutation = {
+  updateAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type DeleteAnthologyCommentMutationVariables = {
+  input?: DeleteAnthologyCommentInput,
+  condition?: ModelAnthologyCommentConditionInput | null,
+};
+
+export type DeleteAnthologyCommentMutation = {
+  deleteAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type CreateAttachmentMutationVariables = {
+  input?: CreateAttachmentInput,
+  condition?: ModelAttachmentConditionInput | null,
+};
+
+export type CreateAttachmentMutation = {
+  createAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateAttachmentMutationVariables = {
+  input?: UpdateAttachmentInput,
+  condition?: ModelAttachmentConditionInput | null,
+};
+
+export type UpdateAttachmentMutation = {
+  updateAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteAttachmentMutationVariables = {
+  input?: DeleteAttachmentInput,
+  condition?: ModelAttachmentConditionInput | null,
+};
+
+export type DeleteAttachmentMutation = {
+  deleteAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14522,6 +14888,7 @@ export type CreateQuestionDataStudentDataMutation = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -14684,6 +15051,7 @@ export type UpdateQuestionDataStudentDataMutation = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -14846,6 +15214,7 @@ export type DeleteQuestionDataStudentDataMutation = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -20411,6 +20780,16 @@ export type GetStudentDataQuery = {
       subTitle?: string | null,
       description?: string | null,
       content?: string | null,
+      classID?: string | null,
+      feedbacks?:  Array< {
+        __typename: "AnthologyComment",
+        id: string,
+        text?: string | null,
+        email: string,
+        authID: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
+      } | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -20511,7 +20890,156 @@ export type ListStudentDatasQuery = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetAnthologyCommentQueryVariables = {
+  id?: string,
+};
+
+export type GetAnthologyCommentQuery = {
+  getAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type ListAnthologyCommentsQueryVariables = {
+  filter?: ModelAnthologyCommentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAnthologyCommentsQuery = {
+  listAnthologyComments?:  {
+    __typename: "ModelAnthologyCommentConnection",
+    items?:  Array< {
+      __typename: "AnthologyComment",
+      id: string,
+      text?: string | null,
+      email: string,
+      authID: string,
+      person?:  {
+        __typename: "Person",
+        id: string,
+        authId: string,
+        status: PersonStatus,
+        email: string,
+        role: Role,
+        type?: string | null,
+        firstName: string,
+        preferredName?: string | null,
+        lastName: string,
+        externalId?: string | null,
+        grade?: string | null,
+        onBoardSurvey?: boolean | null,
+        offBoardSurvey?: boolean | null,
+        phone?: string | null,
+        birthdate?: string | null,
+        image?: string | null,
+        language: Language,
+        filters?: Array< string | null > | null,
+        lastLoggedIn?: string | null,
+        lastLoggedOut?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      attachments?:  Array< {
+        __typename: "Attachment",
+        id: string,
+        type: string,
+        url?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      createdAt?: string | null,
+      updatedAt?: string | null,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetAttachmentQueryVariables = {
+  id?: string,
+};
+
+export type GetAttachmentQuery = {
+  getAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListAttachmentsQueryVariables = {
+  filter?: ModelAttachmentFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListAttachmentsQuery = {
+  listAttachments?:  {
+    __typename: "ModelAttachmentConnection",
+    items?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -22125,6 +22653,16 @@ export type OnChangeStudentDataSubscription = {
       subTitle?: string | null,
       description?: string | null,
       content?: string | null,
+      classID?: string | null,
+      feedbacks?:  Array< {
+        __typename: "AnthologyComment",
+        id: string,
+        text?: string | null,
+        email: string,
+        authID: string,
+        createdAt?: string | null,
+        updatedAt?: string | null,
+      } | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -31163,6 +31701,198 @@ export type OnDeleteSyllabusLessonSubscription = {
   } | null,
 };
 
+export type OnCreateAnthologyCommentSubscription = {
+  onCreateAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type OnUpdateAnthologyCommentSubscription = {
+  onUpdateAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type OnDeleteAnthologyCommentSubscription = {
+  onDeleteAnthologyComment?:  {
+    __typename: "AnthologyComment",
+    id: string,
+    text?: string | null,
+    email: string,
+    authID: string,
+    person?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      wordbank?:  {
+        __typename: "ModelStudentWordConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    attachments?:  Array< {
+      __typename: "Attachment",
+      id: string,
+      type: string,
+      url?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    createdAt?: string | null,
+    updatedAt?: string | null,
+  } | null,
+};
+
+export type OnCreateAttachmentSubscription = {
+  onCreateAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateAttachmentSubscription = {
+  onUpdateAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteAttachmentSubscription = {
+  onDeleteAttachment?:  {
+    __typename: "Attachment",
+    id: string,
+    type: string,
+    url?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type OnCreateQuestionDataSubscription = {
   onCreateQuestionData?:  {
     __typename: "QuestionData",
@@ -31625,6 +32355,7 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -31782,6 +32513,7 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -31939,6 +32671,7 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         subTitle?: string | null,
         description?: string | null,
         content?: string | null,
+        classID?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,

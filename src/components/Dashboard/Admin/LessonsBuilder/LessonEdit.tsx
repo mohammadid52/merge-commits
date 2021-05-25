@@ -1,8 +1,8 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp } from 'react-icons/io5';
-import { FaRegEye, FaQuestionCircle, FaUnity } from 'react-icons/fa';
+import React, {useState, useEffect, Fragment, useContext} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
+import {FaRegEye, FaQuestionCircle, FaUnity} from 'react-icons/fa';
 import findIndex from 'lodash/findIndex';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
@@ -19,10 +19,10 @@ import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import UnitLookup from './StepActionComponent/UnitLookup';
 
-import { InitialData } from './LessonBuilder';
-import { languageList } from '../../../../utilities/staticData';
+import {InitialData} from './LessonBuilder';
+import {languageList} from '../../../../utilities/staticData';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 
@@ -54,7 +54,7 @@ export interface SavedLessonDetailsProps {
 }
 
 const LessonEdit = (props: LessonEditProps) => {
-  const { designersList } = props;
+  const {designersList} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const useQuery = () => {
@@ -67,13 +67,13 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const initialData = {
     name: '',
-    type: { id: '', name: '', value: '' },
+    type: {id: '', name: '', value: ''},
     purpose: '',
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
-    institution: { id: '', name: '', value: '' },
-    languages: [{ id: '1', name: 'English', value: 'EN' }],
+    institution: {id: '', name: '', value: ''},
+    languages: [{id: '1', name: 'English', value: 'EN'}],
     language: [''],
   };
   const instructionInitialState = {
@@ -96,40 +96,45 @@ const LessonEdit = (props: LessonEditProps) => {
   const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
-  const { BreadcrumsTitles, LessonEditDict } = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['LESSONS'], url: '/dashboard/lesson-builder', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: false,
+    },
     {
       title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`}`,
+      url: `${match.url}?${
+        lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`
+      }`,
       last: true,
     },
   ];
   const assessmentScrollerStep = [
-    { name: 'Overview', icon: <IoCardSharp /> },
-    { name: 'Instructions', icon: <IoDocumentText /> },
-    { name: 'Builder', icon: <FaQuestionCircle /> },
-    { name: 'Assign Unit', icon: <FaUnity /> },
-    { name: 'Preview Details', icon: <FaRegEye /> },
+    {name: 'Overview', icon: <IoCardSharp />},
+    {name: 'Instructions', icon: <IoDocumentText />},
+    {name: 'Builder', icon: <FaQuestionCircle />},
+    {name: 'Assign Unit', icon: <FaUnity />},
+    {name: 'Preview Details', icon: <FaRegEye />},
   ];
   const lessonScrollerStep = [
-    { name: 'Overview', icon: <IoCardSharp /> },
+    {name: 'Overview', icon: <IoCardSharp />},
     // { name: "Assign Unit", icon: <FaUnity /> },
-    { name: 'Preview Details', icon: <FaRegEye /> },
-    { name: 'Universal Builder', icon: <FaQuestionCircle /> },
+    {name: 'Preview Details', icon: <FaRegEye />},
   ];
 
   const typeList: any = [
-    { id: '1', name: 'Lesson', value: 'lesson' },
-    { id: '2', name: 'Assessment', value: 'assessment' },
-    { id: '3', name: 'Survey', value: 'survey' },
+    {id: '1', name: 'Lesson', value: 'lesson'},
+    {id: '2', name: 'Assessment', value: 'assessment'},
+    {id: '3', name: 'Survey', value: 'survey'},
   ];
 
   const [historyList, setHistoryList] = useState(['Overview']);
@@ -172,7 +177,9 @@ const LessonEdit = (props: LessonEditProps) => {
     try {
       let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
       list = list.data.listRubrics?.items || [];
-      const measuList = list.sort((a: any, b: any) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
+      const measuList = list.sort((a: any, b: any) =>
+        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+      );
       const filteredList = measuList.map((item: any) => {
         return {
           id: item.id,
@@ -198,10 +205,13 @@ const LessonEdit = (props: LessonEditProps) => {
       setFormData({
         ...formData,
         name: savedData.title,
-        type: savedData.type && typeList.find((item: any) => item.value === savedData.type),
+        type:
+          savedData.type && typeList.find((item: any) => item.value === savedData.type),
         purposeHtml: savedData?.purpose ? savedData.purpose : '<p></p>',
         objectiveHtml: savedData.objectives ? savedData.objectives[0] : '<p></p>',
-        languages: savedData.language.map((it: any) => languageList.find((it2: any) => it2.value === it)),
+        languages: savedData.language.map((it: any) =>
+          languageList.find((it2: any) => it2.value === it)
+        ),
         institution: {
           id: savedData?.institution?.id,
           name: savedData?.institution?.name,
@@ -210,7 +220,9 @@ const LessonEdit = (props: LessonEditProps) => {
       });
       setSavedLessonDetails({
         ...savedLessonDetails,
-        lessonPlans: savedData.lessonPlan?.sort((a: any, b: any) => a?.sequence - b?.sequence),
+        lessonPlans: savedData.lessonPlan?.sort(
+          (a: any, b: any) => a?.sequence - b?.sequence
+        ),
         lessonInstructions: {
           introductionTitle: savedData.introductionTitle,
           instructionsTitle: savedData.instructionsTitle,
@@ -220,7 +232,9 @@ const LessonEdit = (props: LessonEditProps) => {
           summary: savedData.summary,
         },
       });
-      const designers = designersList.filter((item: any) => savedData?.designers?.includes(item.id));
+      const designers = designersList.filter((item: any) =>
+        savedData?.designers?.includes(item.id)
+      );
       setSelectedDesigners(designers);
       setLoading(false);
     } catch {
@@ -345,14 +359,23 @@ const LessonEdit = (props: LessonEditProps) => {
   return (
     <div className="w-full h-full">
       {/* Section Header */}
-      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
+      <BreadCrums
+        unsavedChanges={unsavedChanges}
+        toggleModal={toggleModal}
+        items={breadCrumsList}
+      />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonEditDict[userLanguage]['TITLE']}
           subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
         />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons label="Go back" btnClass="mr-4" onClick={gobackToLessonsList} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            label="Go back"
+            btnClass="mr-4"
+            onClick={gobackToLessonsList}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
@@ -363,18 +386,25 @@ const LessonEdit = (props: LessonEditProps) => {
           <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
             <div className="sm:col-span-1">
               <WizardScroller
-                stepsList={lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep}
+                stepsList={
+                  lessonType === 'lesson' ? lessonScrollerStep : assessmentScrollerStep
+                }
                 activeStep={activeStep}
                 setActiveStep={(step) => {
-                  setActiveStep(step);
-
-                  setHistoryList([...historyList, step]);
+                  if (!unsavedChanges) {
+                    setActiveStep(step);
+                    setHistoryList([...historyList, step]);
+                  } else {
+                    toggleModal();
+                  }
                 }}
               />
             </div>
             <div className='sm:col-span-4'>
               {loading ? (
-                <p className="h-100 flex justify-center items-center">Fetching lesson details pleas wait...</p>
+                <p className="h-100 flex justify-center items-center">
+                  Fetching lesson details pleas wait...
+                </p>
               ) : (
                 <Fragment>
                   <div className="mx-6 h-full">{currentStepComp(activeStep)}</div>
@@ -384,7 +414,12 @@ const LessonEdit = (props: LessonEditProps) => {
           </div>
         </div>
         {warnModal.show && (
-          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
+          <ModalPopUp
+            closeAction={toggleModal}
+            saveAction={onModalSave}
+            saveLabel="Yes"
+            message={warnModal.message}
+          />
         )}
       </PageWrapper>
     </div>

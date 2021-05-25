@@ -515,9 +515,8 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                           ) !== -1 || d.active;
 
                         return (
-                          <div className="custom_tooltip_container">
+                          <div key={`${d.path}_key`} className="custom_tooltip_container">
                             <a
-                              key={`${d.path}_key`}
                               id={d.path}
                               style={{paddingLeft: '3.5rem'}}
                               onClick={(e) => {
