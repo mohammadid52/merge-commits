@@ -444,6 +444,15 @@ const Csv = (props: Csv) => {
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
   const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
 
+  const getTodayDate = () => {
+    let today: any = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    today = mm + '-' + dd + '-' + yyyy;
+    return today;
+  }
+
   const Table = () => {
     return (
       <div className="flex flex-col ">
@@ -575,7 +584,7 @@ const Csv = (props: Csv) => {
           }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
-            <CSVLink data={CSVData} headers={CSVHeaders} filename={'students_data.csv'}>
+            <CSVLink data={CSVData} headers={CSVHeaders} filename={`${selectedClassRoom.name}_${selectedSurvey.name}_${getTodayDate()}.csv`}>
               Download CSV
             </CSVLink>
           ) : (
