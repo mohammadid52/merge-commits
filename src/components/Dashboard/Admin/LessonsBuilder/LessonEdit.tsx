@@ -26,6 +26,7 @@ import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
 import {AddNewCheckPointDict} from '../../../../dictionary/dictionary.iconoclast';
+import {isEmpty} from 'lodash';
 
 interface LessonEditProps {
   designersList: any[];
@@ -272,10 +273,12 @@ const LessonEdit = (props: LessonEditProps) => {
   }, []);
 
   const [isCheckpUnsaved, setIsCheckpUnsaved] = useState<boolean>(false);
-  const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({});
+  const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({title: ''});
+
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
   const [selDesigners, setSelDesigners] = useState<any>([]);
   const [showModal, setShowModal] = useState(false);
+  const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
@@ -285,8 +288,12 @@ const LessonEdit = (props: LessonEditProps) => {
   ) => {
     if (val !== isCheckpUnsaved) {
       setIsCheckpUnsaved(val);
-      setShowModal(true);
       setUnsavedCheckPData(data);
+      if (data.title && val) {
+        setShowModal(true);
+      } else {
+        setShowModal(false);
+      }
       setCheckpQuestions(checkpQuestions);
       setSelDesigners(selDesigners);
     }
@@ -318,6 +325,7 @@ const LessonEdit = (props: LessonEditProps) => {
   };
 
   const saveNewCheckPoint = async () => {
+    setSavingUnsavedCP(true);
     try {
       const input = {
         stage: 'checkpoint',
@@ -393,25 +401,40 @@ const LessonEdit = (props: LessonEditProps) => {
       } else {
       }
 
-      onCheckpointModalClose();
+      onCheckpointModalClose(false);
       setShowModal(false);
     } catch (error) {
       console.error(error);
     } finally {
+      setSavingUnsavedCP(false);
     }
   };
 
-  const onCheckpointModalClose = () => {
-    setWarnModal2({
-      stepOnHold: '',
-      show: false,
-      message: '',
-    });
-    setActiveStep(warnModal2.stepOnHold);
-    setHistoryList([...historyList, warnModal2.stepOnHold]);
-    setUnsavedChanges(false);
-    setUnsavedCheckPData({});
-    setCheckpQuestions([]);
+  const onCheckpointModalClose = (cancel: boolean = true) => {
+    if (cancel) {
+      // clicked on cancel button
+      console.log('clicked on cancel button');
+
+      setWarnModal2({
+        ...warnModal2,
+        show: false,
+      });
+    } else {
+      // clicked on no button
+      console.log('clicked on no button');
+
+      setActiveStep(warnModal2.stepOnHold);
+      setHistoryList([...historyList, warnModal2.stepOnHold]);
+      setWarnModal2({
+        stepOnHold: '',
+        show: false,
+        message: '',
+      });
+      setShowModal(false);
+      setUnsavedChanges(false);
+      setUnsavedCheckPData({});
+      setCheckpQuestions([]);
+    }
   };
 
   const currentStepComp = (currentStep: string) => {
@@ -528,7 +551,7 @@ const LessonEdit = (props: LessonEditProps) => {
                 }
                 activeStep={activeStep}
                 setActiveStep={(step) => {
-                  if (isCheckpUnsaved && showModal) {
+                  if (isCheckpUnsaved && showModal && step !== 'Builder') {
                     setWarnModal2({
                       ...warnModal2,
                       stepOnHold: step,
@@ -563,13 +586,16 @@ const LessonEdit = (props: LessonEditProps) => {
             message={warnModal.message}
           />
         )}
-        {warnModal2.show && (
+        {warnModal2.show && showModal && (
           <ModalPopUp
+            noButton="No"
+            noButtonAction={() => onCheckpointModalClose(false)}
             closeAction={onCheckpointModalClose}
             saveAction={saveNewCheckPoint}
-            saveLabel="Yes. Save it"
-            cancelLabel="No. Don't want to save it"
+            saveLabel="Yes"
+            cancelLabel="Cancel"
             message={warnModal2.message}
+            loading={savingUnsavedCP}
           />
         )}
       </PageWrapper>

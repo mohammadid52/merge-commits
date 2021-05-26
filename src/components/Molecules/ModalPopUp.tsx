@@ -11,6 +11,9 @@ interface ModalProps {
   deleteModal?: boolean;
   deleteLabel?: string;
   cancelLabel?: string;
+  noButton?: string;
+  noButtonAction?: () => void;
+  loading?: boolean;
 }
 
 const ModalPopUp = (props: ModalProps) => {
@@ -23,6 +26,9 @@ const ModalPopUp = (props: ModalProps) => {
     deleteModal,
     deleteLabel,
     cancelLabel,
+    noButton,
+    noButtonAction,
+    loading,
   } = props;
   return (
     <Modal
@@ -41,6 +47,14 @@ const ModalPopUp = (props: ModalProps) => {
               transparent
             />
           )}
+          {noButton && (
+            <Buttons
+              label={noButton}
+              btnClass="px-8 py-3 mr-4"
+              onClick={noButtonAction}
+              transparent
+            />
+          )}
           {deleteModal ? (
             <Buttons
               label={deleteLabel ? deleteLabel : 'Delete'}
@@ -50,7 +64,10 @@ const ModalPopUp = (props: ModalProps) => {
             />
           ) : (
             <Buttons
-              label={saveLabel ? saveLabel : 'Save'}
+              disabled={loading}
+              label={
+                saveLabel ? (loading ? 'Saving' : saveLabel) : loading ? 'Saving' : 'Save'
+              }
               btnClass="px-10 py-3 ml-4"
               onClick={saveAction}
             />

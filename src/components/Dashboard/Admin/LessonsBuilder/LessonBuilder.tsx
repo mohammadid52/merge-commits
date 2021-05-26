@@ -135,6 +135,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
   const [selDesigners, setSelDesigners] = useState<any>([]);
   const [showModal, setShowModal] = useState(false);
+  const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
@@ -144,13 +145,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ) => {
     if (val !== isCheckpUnsaved) {
       setIsCheckpUnsaved(val);
-      setShowModal(true);
       setUnsavedCheckPData(data);
+      if (data.title && val) {
+        setShowModal(true);
+      } else {
+        setShowModal(false);
+      }
       setCheckpQuestions(checkpQuestions);
       setSelDesigners(selDesigners);
     }
   };
-
   const addCheckpointQuestions = async (
     quesId: string,
     checkpointID: string,
@@ -177,6 +181,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   };
 
   const saveNewCheckPoint = async () => {
+    setSavingUnsavedCP(true);
     try {
       const input = {
         stage: 'checkpoint',
@@ -251,26 +256,38 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         updateLessonPlan(newLessonPlans);
       } else {
       }
-
-      onCheckpointModalClose();
+      onCheckpointModalClose(false);
       setShowModal(false);
     } catch (error) {
       console.error(error);
     } finally {
+      setSavingUnsavedCP(false);
     }
   };
 
-  const onCheckpointModalClose = () => {
-    setWarnModal2({
-      stepOnHold: '',
-      show: false,
-      message: '',
-    });
-    setActiveStep(warnModal2.stepOnHold);
-    setHistoryList([...historyList, warnModal2.stepOnHold]);
-    setUnsavedChanges(false);
-    setUnsavedCheckPData({});
-    setCheckpQuestions([]);
+  const onCheckpointModalClose = (cancel: boolean = true) => {
+    if (cancel) {
+      // clicked on cancel button
+
+      setWarnModal2({
+        ...warnModal2,
+        show: false,
+      });
+    } else {
+      // clicked on no button
+
+      setActiveStep(warnModal2.stepOnHold);
+      setHistoryList([...historyList, warnModal2.stepOnHold]);
+      setWarnModal2({
+        stepOnHold: '',
+        show: false,
+        message: '',
+      });
+      setShowModal(false);
+      setUnsavedChanges(false);
+      setUnsavedCheckPData({});
+      setCheckpQuestions([]);
+    }
   };
 
   const currentStepComp = (currentStep: string) => {
@@ -469,7 +486,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 stepsList={lessonBuilderSteps}
                 activeStep={activeStep}
                 setActiveStep={(step) => {
-                  if (isCheckpUnsaved && showModal) {
+                  if (isCheckpUnsaved && showModal && step !== 'Builder') {
                     setWarnModal2({
                       ...warnModal2,
                       stepOnHold: step,
@@ -498,12 +515,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             message={warnModal.message}
           />
         )}
-        {warnModal2.show && (
+        {warnModal2.show && showModal && (
           <ModalPopUp
+            noButton="No"
+            noButtonAction={() => onCheckpointModalClose(false)}
             closeAction={onCheckpointModalClose}
             saveAction={saveNewCheckPoint}
-            saveLabel="Yes. Save it"
-            cancelLabel="No. Don't want to save it"
+            saveLabel="Yes"
+            cancelLabel="Cancel"
+            loading={savingUnsavedCP}
             message={warnModal2.message}
           />
         )}
