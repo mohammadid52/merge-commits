@@ -779,7 +779,6 @@ const User = () => {
     const onCommentSubmit = async (e: any) => {
       if (fileObject.name) {
         setUploadingAttachment(true);
-        // preview_image2(fileObject);
 
         const id: string = `feedbacks/${Date.now().toString()}_${fileObject.name}`;
         await uploadAttachment(fileObject, id, fileObject.type);
@@ -800,11 +799,11 @@ const User = () => {
 
     const inputVideo = useRef(null);
     const inputImage = useRef(null);
-    const inputAudio = useRef(null);
+    // const inputAudio = useRef(null);
 
     const handleVideo = () => inputVideo.current.click();
     const handleImage = () => inputImage.current.click();
-    const handleAudio = () => inputAudio.current.click();
+    // const handleAudio = () => inputAudio.current.click();
 
     const handleSelection = (e: any) => {
       if (e.target.files && e.target.files.length > 0) {
@@ -961,7 +960,7 @@ const User = () => {
               <div className="comment-actions h-10 flex items-center justify-between">
                 <div className="left-action w-auto">
                   <div className="flex items-center justify-center">
-                    <button onClick={(e) => handleAudio()} className={`${actionStyles}`}>
+                    {/* <button onClick={(e) => handleAudio()} className={`${actionStyles}`}>
                       <MdAudiotrack className="" />
                       <input
                         accept="audio/*"
@@ -970,7 +969,7 @@ const User = () => {
                         type="file"
                         className="hidden"
                       />
-                    </button>
+                    </button> */}
                     <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
                       <input
                         accept="video/*"
