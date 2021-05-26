@@ -4,15 +4,14 @@ import { VscFileMedia, VscNewFile } from 'react-icons/vsc';
 import Buttons from '../../../Atoms/Buttons';
 import { IconContext } from 'react-icons';
 import PageTile from './common/PageTile';
+import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface PageSelectorProps {
+interface PageSelectorProps extends ULBSelectionProps{
   universalLessonDetails: UniversalLesson;
   universalBuilderDict: any;
   userLanguage: any;
   galleryVisible: boolean;
   loading: boolean;
-  selectedPageDetails?: UniversalLessonPage;
-  setSelectedPageDetails?: React.Dispatch<React.SetStateAction<UniversalLessonPage>>;
   handleModalPopToggle?: (dialogToToggle: string) => void;
   hideAllModals?: () => void;
 }
@@ -20,7 +19,12 @@ interface PageSelectorProps {
 const PageSelector = (props: PageSelectorProps) => {
   const {
     universalLessonDetails,
-    setSelectedPageDetails,
+    selectedPageID,
+    setSelectedPageID,
+    selectedPagePartID,
+    setSelectedPagePartID,
+    selectedPartContentID,
+    setSelectedPartContentID,
     handleModalPopToggle,
 
   } = props;
@@ -29,7 +33,7 @@ const PageSelector = (props: PageSelectorProps) => {
   const selectPage = (pageID: string) => {
     const thePageObj = pages?.find((page: UniversalLessonPage) => page.id === pageID);
     if (thePageObj) {
-      setSelectedPageDetails(thePageObj);
+      setSelectedPageID(pageID);
     } else {
       throw 'No page object was found in UniversalLessonPages';
     }

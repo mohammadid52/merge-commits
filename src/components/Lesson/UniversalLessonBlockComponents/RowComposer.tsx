@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {PagePart, PartContent} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  PagePart,
+  PartContent,
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
@@ -11,16 +16,45 @@ import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 
 const RowComposer = (props: RowComposerProps) => {
-  const {mode, selectedPageDetails, handleModalPopToggle} = props;
+  const {
+    mode,
+    deleteULBHandler,
+    universalLessonDetails,
+    selectedPageID,
+    setSelectedPageID,
+    targetID,
+    setTargetID,
+    selectedPagePartID,
+    setSelectedPagePartID,
+    selectedPartContentID,
+    setSelectedPartContentID,
+    handleModalPopToggle,
+  } = props;
   const [editedID, setEditedID] = useState<string>('');
 
-  const handleEditBlockToggle = (dataID: string) => {
-    console.log('handleEditBlockToggle - ', dataID)
+  const handleEditBlockToggle = (
+    dataID: string,
+    toggleStage?: 'pagePart' | 'partContent'
+  ) => {
     if (dataID) {
       if (editedID !== dataID) {
         setEditedID(dataID);
+        setTargetID(dataID);
+        // if (toggleStage === 'pagePart') {
+        //   setSelectedPagePartID(dataID);
+        // }
+        // if (toggleStage === 'partContent') {
+        //   setSelectedPartContentID(dataID);
+        // }
       } else {
         setEditedID('');
+        setTargetID('')
+        // if (toggleStage === 'pagePart') {
+        //   setSelectedPagePartID('');
+        // }
+        // if (toggleStage === 'partContent') {
+        //   setSelectedPartContentID('');
+        // }
       }
     }
   };
@@ -71,35 +105,47 @@ const RowComposer = (props: RowComposerProps) => {
     }
   };
 
+  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+    (page: UniversalLessonPage) => page.id === selectedPageID
+  );
+
   return (
     <>
-      {selectedPageDetails && selectedPageDetails.pageContent.length > 0 ? (
+      {selectedPageID &&
+      selectedPageDetails &&
+      selectedPageDetails.pageContent.length > 0 ? (
         [
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <>
+            <React.Fragment key={`row_pagepart_${idx}`}>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
-                contentID={`pp_${idx}`}
+                deleteULBHandler={deleteULBHandler}
+                contentID={`${pagePart.id}`}
                 editedID={editedID}
-                handleEditBlockToggle={handleEditBlockToggle}>
+                handleEditBlockToggle={() =>
+                  handleEditBlockToggle(pagePart.id, 'pagePart')
+                }>
                 <RowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
-                  contentID={`pp_${idx}`}
-                  dataIdAttribute={`pp_${idx}`}
+                  contentID={`${pagePart.id}`}
+                  dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
                   {pagePart.partContent.length > 0 ? (
                     pagePart.partContent.map((content: PartContent, idx2: number) => (
                       <EditOverlayBlock
                         key={`pp_${idx}_pc_${idx2}`}
                         mode={mode}
-                        contentID={`pp_${idx}_pc_${idx2}`}
+                        deleteULBHandler={deleteULBHandler}
+                        contentID={`${content.id}`}
                         editedID={editedID}
                         isComponent={true}
                         isLast={idx2 === pagePart.partContent.length - 1}
-                        handleEditBlockToggle={handleEditBlockToggle}>
+                        handleEditBlockToggle={() =>
+                          handleEditBlockToggle(content.id, 'partContent')
+                        }>
                         {content.value.length > 0 ? (
                           content.value.map((value: any, idx3: number) =>
                             composePartContent(
@@ -129,7 +175,7 @@ const RowComposer = (props: RowComposerProps) => {
                   handleModalPopToggle={handleModalPopToggle}
                 />
               )}
-            </>
+            </React.Fragment>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
           <EditOverlayBlock
@@ -137,7 +183,7 @@ const RowComposer = (props: RowComposerProps) => {
             key={`pp_addNew`}
             contentID={`addNewRow`}
             editedID={editedID}
-            handleEditBlockToggle={handleEditBlockToggle}>
+            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`, 'pagePart')}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>
@@ -151,7 +197,7 @@ const RowComposer = (props: RowComposerProps) => {
             key={`pp_addNew`}
             contentID={`addNewRow`}
             editedID={editedID}
-            handleEditBlockToggle={handleEditBlockToggle}>
+            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`, 'pagePart')}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>

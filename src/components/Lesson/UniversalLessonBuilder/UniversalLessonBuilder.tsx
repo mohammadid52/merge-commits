@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
-import {InitialData} from '../../Dashboard/Admin/LessonsBuilder/StepActionComponent/CheckPointSteps/AddNewCheckPoint';
 import BuilderWrapper from './views/BuilderWrapper';
 import {
   PagePart,
@@ -10,8 +9,10 @@ import {
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
 import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
+import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import {filter} from 'rxjs/operators';
 
-interface UniversalLessonBuilderProps {
+interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
   lessonPlans?: LessonPlansProps[] | null;
@@ -61,16 +62,7 @@ const initialUniversalLessonPagePartContent: PartContent = {
  *******************************************/
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {state, dispatch} = useContext(GlobalContext);
-  const {
-    designersList,
-    lessonID,
-    lessonPlans,
-    updateLessonPlan,
-    setUnsavedChanges,
-    activeStep,
-    lessonName,
-    lessonType,
-  } = props;
+
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
 
   //  INITIALIZE CURRENT PAGE LOCATION
@@ -80,44 +72,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }
   }, [state.user.role]);
 
-  //  WHICH COMPONENT DO WE RETURN?
-  const currentStepComp = (currentStep: string) => {
-    switch (currentStep) {
-      case 'BuilderWrapper':
-        return (
-          <BuilderWrapper
-            mode={`building`}
-            universalLessonDetails={universalLessonDetails}
-            universalBuilderStep={universalBuilderStep}
-            setUniversalBuilderStep={setUniversalBuilderStep}
-            selectedPageDetails={selectedPageDetails}
-            setSelectedPageDetails={setSelectedPageDetails}
-            selectedPagePartDetails={selectedPagePartDetails}
-            setSelectedPagePartDetails={setSelectedPagePartDetails}
-            selectedPartContentDetails={selectedPartContentDetails}
-            setSelectedPartContentDetails={setSelectedPartContentDetails}
-            initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
-          />
-        );
-      default:
-        return <h1>Current Universal Builder step is invalid</h1>;
-    }
-  };
-
-  //  CORE DATA MANAGEMENT
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
-    initialUniversalLessonData
-  );
-  const [selectedPageDetails, setSelectedPageDetails] = useState<UniversalLessonPage>(
-    initialUniversalLessonPage
-  );
-  const [selectedPagePartDetails, setSelectedPagePartDetails] = useState<PagePart>(
-    initialUniversalLessonPagePart
-  );
-  const [
-    selectedPartContentDetails,
-    setSelectedPartContentDetails,
-  ] = useState<PartContent>(initialUniversalLessonPagePartContent);
   /**********************************************
    * FUNCTIONALITY AND DATA FETCHES WILL
    * BE DONE BELOW THIS AREA
@@ -131,9 +85,83 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(exampleUniversalLesson);
   }, []);
 
-  /**********************************************
+  //  WHICH COMPONENT DO WE RETURN?
+  const currentStepComp = (currentStep: string) => {
+    switch (currentStep) {
+      case 'BuilderWrapper':
+        return (
+          <BuilderWrapper
+            mode={`building`}
+            deleteULBHandler={deleteULBHandler}
+            universalLessonDetails={universalLessonDetails}
+            universalBuilderStep={universalBuilderStep}
+            setUniversalBuilderStep={setUniversalBuilderStep}
+            selectedPageID={selectedPageID}
+            setSelectedPageID={setSelectedPageID}
+            targetID={targetID}
+            setTargetID={setTargetID}
+            initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
+          />
+        );
+      default:
+        return <h1>Current Universal Builder step is invalid</h1>;
+    }
+  };
+
+  //  CORE DATA MANAGEMENT
+  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
+    initialUniversalLessonData
+  );
+  const [targetID, setTargetID] = useState<string>('');
+  const [selectedPageID, setSelectedPageID] = useState<string>('');
+  const getPage = universalLessonDetails.universalLessonPages.find((thePage: UniversalLessonPage) => thePage.id === selectedPageID)
+
+  /**
    *
-   **********************************************/
+   *
+   * C(not R)UD
+   *
+   *
+   * */
+
+  const loopThroughPartContent = (
+    partContentArray: PartContent[],
+    idForDelete: string
+  ) => {
+    return partContentArray.reduce((acc: PartContent[], val: PartContent) => {
+      if (val.id === idForDelete) {
+        return acc;
+      } else {
+        return [...acc, val];
+      }
+    }, []);
+  };
+
+  const loopThroughPageContent = (pageContentArray: PagePart[], idForDelete: string) => {
+    return pageContentArray.reduce((acc: PagePart[], val: PagePart) => {
+      if (val.id === idForDelete) {
+        return acc;
+      } else {
+        return [...acc, { ...val, partContent: loopThroughPartContent(val.partContent, idForDelete) }];
+      }
+    }, []);
+  };
+
+
+
+  const deleteULBHandler = () => {
+    const updatedPageContent = loopThroughPageContent(getPage.pageContent, targetID);
+    const updatedLessonDetails = {
+      ...universalLessonDetails,
+      universalLessonPages: universalLessonDetails.universalLessonPages.map((thePage: UniversalLessonPage)=>{
+      if(thePage.id === selectedPageID){
+        return { ...thePage, pageContent: updatedPageContent }
+      } else {
+        return thePage;
+      }
+      })}
+    setUniversalLessonDetails(updatedLessonDetails);
+  }
 
   return (
     /**

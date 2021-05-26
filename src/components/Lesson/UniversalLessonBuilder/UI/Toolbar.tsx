@@ -1,15 +1,15 @@
 import React from 'react';
 import {HierarchyToggle} from './Toolbar/HierarchyToggle';
 import {PageGalleryToggle} from './Toolbar/PageGalleryToggle';
-import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
 import {BuilderMenuToggle} from './Toolbar/BuilderMenuToggle';
 import ModalPopIn from '../../../Molecules/ModalPopIn';
 import NewPageDialog from './ModalDialogs/NewPageDialog';
 import UseTemplateDialog from './ModalDialogs/UseTemplateDialog';
 import AddContentDialog from './ModalDialogs/AddContentDialog';
+import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-export interface ToolbarProps {
-  selectedPageDetails?: UniversalLessonPage;
+export interface ToolbarProps extends ULBSelectionProps {
   hierarchyVisible?: boolean;
   setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
   galleryVisible?: boolean;
@@ -25,7 +25,8 @@ export interface ToolbarProps {
 
 export const Toolbar = (props: ToolbarProps) => {
   const {
-    selectedPageDetails,
+    universalLessonDetails,
+    selectedPageID,
     galleryVisible,
     setGalleryVisible,
     hierarchyVisible,
@@ -70,6 +71,10 @@ export const Toolbar = (props: ToolbarProps) => {
     handleModalVisibility();
     setBuilderMenuVisible(!builderMenuVisible);
   };
+
+  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+    (page: UniversalLessonPage) => page.id === selectedPageID
+  );
 
   return (
     <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">

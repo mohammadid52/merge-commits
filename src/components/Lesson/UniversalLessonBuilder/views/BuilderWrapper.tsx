@@ -18,19 +18,13 @@ import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
 import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
 import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
+import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface ExistingLessonTemplateProps {
+interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
-  universalLessonDetails?: UniversalLesson;
   universalBuilderStep?: string;
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
-  selectedPageDetails?: UniversalLessonPage;
-  setSelectedPageDetails?: React.Dispatch<React.SetStateAction<UniversalLessonPage>>;
-  selectedPagePartDetails: PagePart;
-  setSelectedPagePartDetails: React.Dispatch<React.SetStateAction<PagePart>>;
-  selectedPartContentDetails: PartContent;
-  setSelectedPartContentDetails: React.Dispatch<React.SetStateAction<PartContent>>;
   initialUniversalLessonPagePartContent: PartContent;
 }
 
@@ -38,13 +32,12 @@ interface ExistingLessonTemplateProps {
 const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     mode,
+    deleteULBHandler,
     universalLessonDetails,
-    selectedPageDetails,
-    setSelectedPageDetails,
-    selectedPagePartDetails,
-    setSelectedPagePartDetails,
-    selectedPartContentDetails,
-    setSelectedPartContentDetails,
+    selectedPageID,
+    setSelectedPageID,
+    targetID,
+    setTargetID,
     initialUniversalLessonPagePartContent,
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
@@ -61,6 +54,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
+  /**
+   *
+   *
+   * MODAL CONTROLS
+   *
+   *
+   * */
+
   const hideAllUIMenus = () => {
     if (hierarchyVisible) {
       setHierarchyVisible(false);
@@ -71,9 +72,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const hideAllModals = () => {
-    setModalPopVisible(false)
+    setModalPopVisible(false);
     setCurrentModalDialog('');
-  }
+  };
 
   const handleModalPopToggle = (dialogToToggle: string) => {
     // Hide all UI Menus
@@ -81,7 +82,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
-      setModalPopVisible(true)
+      setModalPopVisible(true);
     }
     // Toggle Which Dialog is Shown
     if (currentModalDialog !== dialogToToggle) {
@@ -92,17 +93,19 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
       case 'VIEW_PAGES':
-        return <PageSelector
-          universalLessonDetails={universalLessonDetails}
-          universalBuilderDict={UniversalBuilderDict}
-          userLanguage={userLanguage}
-          galleryVisible={galleryVisible}
-          loading={loading}
-          selectedPageDetails={selectedPageDetails}
-          setSelectedPageDetails={setSelectedPageDetails}
-          handleModalPopToggle={handleModalPopToggle}
-          hideAllModals={hideAllModals}
-        />
+        return (
+          <PageSelector
+            universalLessonDetails={universalLessonDetails}
+            universalBuilderDict={UniversalBuilderDict}
+            userLanguage={userLanguage}
+            galleryVisible={galleryVisible}
+            loading={loading}
+            selectedPageID={selectedPageID}
+            setSelectedPageID={setSelectedPageID}
+            handleModalPopToggle={handleModalPopToggle}
+            hideAllModals={hideAllModals}
+          />
+        );
       case 'NEW_PAGE':
         return <NewPageDialog />;
       case 'USE_TEMPLATE':
@@ -119,7 +122,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       id={`builderWrapper`}
       className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
       <Toolbar
-        selectedPageDetails={selectedPageDetails}
+        universalLessonDetails={universalLessonDetails}
+        selectedPageID={selectedPageID}
+        setSelectedPageID={setSelectedPageID}
         hierarchyVisible={hierarchyVisible}
         setHierarchyVisible={setHierarchyVisible}
         galleryVisible={galleryVisible}
@@ -141,13 +146,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       )}
 
       <HierarchyPanel
+        universalLessonDetails={universalLessonDetails}
+        selectedPageID={selectedPageID}
+        setSelectedPageID={setSelectedPageID}
         hierarchyVisible={hierarchyVisible}
         setHierarchyVisible={setHierarchyVisible}
-        selectedPageDetails={selectedPageDetails}
-        selectedPagePartDetails={selectedPagePartDetails}
-        setSelectedPagePartDetails={setSelectedPagePartDetails}
-        selectedPartContentDetails={selectedPartContentDetails}
-        setSelectedPartContentDetails={setSelectedPartContentDetails}
       />
 
       {/*<PageSelector*/}
@@ -179,15 +182,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
+        deleteULBHandler={deleteULBHandler}
         universalLessonDetails={universalLessonDetails}
         galleryVisible={galleryVisible}
         hierarchyVisible={hierarchyVisible}
-        selectedPageDetails={selectedPageDetails}
-        setSelectedPageDetails={setSelectedPageDetails}
-        selectedPagePartDetails={selectedPagePartDetails}
-        setSelectedPagePartDetails={setSelectedPagePartDetails}
-        selectedPartContentDetails={selectedPartContentDetails}
-        setSelectedPartContentDetails={setSelectedPartContentDetails}
+        selectedPageID={selectedPageID}
+        setSelectedPageID={setSelectedPageID}
+        targetID={targetID}
+        setTargetID={setTargetID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleModalPopToggle={handleModalPopToggle}
       />

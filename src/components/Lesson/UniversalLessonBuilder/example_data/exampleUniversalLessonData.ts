@@ -39,9 +39,9 @@ export const exampleUniversalLesson: UniversalLesson = {
           partType: 'default',
           class: '',
           partContent: [
-            { id: 'header-0', type: 'header-default', value: ['Instructions'] },
+            { id: 'page_2_part_0_header-0', type: 'header-default', value: ['Instructions'] },
             {
-              id: 'text-0',
+              id: 'page_2_part_0_text-0',
               type: 'paragraph',
               value: [
                 "Try to think of a story, supersition, or urban myth you've been told by a family member, friend, or loved one. Think about who told it to you, where the story comes from, and why the story is told.\n" +
@@ -57,12 +57,12 @@ export const exampleUniversalLesson: UniversalLesson = {
           class: '',
           partContent: [
             {
-              id: 'header-1',
+              id: 'page_2_part_1_header-1',
               type: 'header-section',
               value: ['Myths Story Warmup'],
             },
             {
-              id: 'questionGroup-1',
+              id: 'page_2_part_1_questionGroup-1',
               type: 'form-default',
               value: [
                 { id: 'title', type: 'text-input', label: 'Title', value: ['This is the placeholder'] },
@@ -77,12 +77,12 @@ export const exampleUniversalLesson: UniversalLesson = {
           class: '',
           partContent: [
             {
-              id: 'header-2',
+              id: 'page_2_part_2_header-2',
               type: 'header-section',
               value: ['Focus Questions'],
             },
             {
-              id: 'questionGroup-2',
+              id: 'page_2_part_2_questionGroup-2',
               type: 'form-numbered',
               value: [
                 {

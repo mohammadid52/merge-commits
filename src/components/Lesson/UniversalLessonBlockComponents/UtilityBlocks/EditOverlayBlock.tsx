@@ -3,7 +3,7 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
 const EditOverlayBlock = (props: RowWrapperProps) => {
-  const {mode, children, contentID, editedID, isComponent, isLast, handleEditBlockToggle} = props;
+  const {mode, deleteULBHandler, children, contentID, editedID, isComponent, isLast, handleEditBlockToggle} = props;
 
   return (
     <>
@@ -16,6 +16,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
         `}>
           <EditOverlayControls
             mode={mode}
+            deleteULBHandler={deleteULBHandler}
             contentID={contentID}
             isActive={contentID === editedID}
             isComponent={isComponent}

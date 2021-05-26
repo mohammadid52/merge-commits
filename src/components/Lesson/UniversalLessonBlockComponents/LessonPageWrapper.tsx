@@ -3,11 +3,11 @@ import { UniversalLessonPage } from '../../../interfaces/UniversalLessonInterfac
 
 interface PageWrapperProps {
   children?: React.ReactNode;
-  selectedPageDetails?: UniversalLessonPage;
+  // selectedPageDetails?: UniversalLessonPage;
 }
 
 export const LessonPageWrapper = (props: PageWrapperProps) => {
-  const { children, selectedPageDetails } = props;
+  const { children} = props;
 
   return (
     <div className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-30`}>

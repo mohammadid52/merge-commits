@@ -1,4 +1,4 @@
-import {PagePart, UniversalLessonPage} from './UniversalLessonInterfaces';
+import { PagePart, UniversalLesson, UniversalLessonPage } from './UniversalLessonInterfaces';
 import React from 'react';
 
 export interface ModalProps {
@@ -16,15 +16,27 @@ export interface ULBDialogComponent {
   inputJSX?: JSX.Element;
 }
 
-export interface RowComposerProps {
+export interface ULBSelectionProps {
+  universalLessonDetails?: UniversalLesson;
+  deleteULBHandler?: () => void;
+  selectedPageID?: string;
+  setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
+  targetID?: string;
+  setTargetID?: React.Dispatch<React.SetStateAction<string>>;
+  selectedPagePartID?: string;
+  setSelectedPagePartID?: React.Dispatch<React.SetStateAction<string>>;
+  selectedPartContentID?: string;
+  setSelectedPartContentID?: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
-  selectedPageDetails?: UniversalLessonPage;
   handleModalPopToggle?: (dialogToToggle: string) => void;
 }
 
-export interface RowWrapperProps extends RowComposerProps {
+export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   hasContent?: boolean;
   contentID?: string;
   editedID?: string;
@@ -34,5 +46,5 @@ export interface RowWrapperProps extends RowComposerProps {
   pagePart?: PagePart;
   isComponent?: boolean;
   isLast?: boolean;
-  handleEditBlockToggle?: (dataID: string) => void;
+  handleEditBlockToggle?: () => void;
 }

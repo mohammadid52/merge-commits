@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {RowWrapperProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { RowWrapperProps, ULBSelectionProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import Buttons from '../../../../Atoms/Buttons';
 import {
   AiOutlineBgColors,
@@ -12,13 +12,13 @@ import {CgEditFlipH} from 'react-icons/cg';
 import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 
-interface EditOverlayControlsProps extends RowWrapperProps {
+interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
-  const {contentID, editedID, isActive, isComponent, handleEditBlockToggle} = props;
+  const {contentID, editedID, isActive, isComponent, handleEditBlockToggle, deleteULBHandler} = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,9 +34,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     }
   }, [isActive]);
 
-  const handleOverlayToggle = (inputID: string) => {
-    handleEditBlockToggle(inputID);
-  };
+  // const handleOverlayToggle = (inputID: string) => {
+  //   handleEditBlockToggle(inputID);
+  // };
 
   /**
    * Here is where I should add buttons
@@ -100,6 +100,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                             Icon={AiOutlineBgColors}
                           />
                           <Buttons
+                            onClick={()=>deleteULBHandler()}
                             label="Delete"
                             overrideClass={true}
                             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
@@ -110,7 +111,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
       <ButtonsRound
         Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
-        onClick={() => handleOverlayToggle(contentID)}
+        onClick={()=>handleEditBlockToggle()}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
         containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}

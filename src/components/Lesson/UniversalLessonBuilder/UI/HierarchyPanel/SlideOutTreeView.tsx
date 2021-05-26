@@ -12,34 +12,22 @@ interface SlideOutTreeViewProps {
   open?: boolean;
   toggleOpen?: (openOrClosed: boolean) => void;
   selectedPageDetails?: UniversalLessonPage;
-  selectedPagePartDetails: PagePart;
-  setSelectedPagePartDetails: React.Dispatch<React.SetStateAction<PagePart>>;
-  selectedPartContentDetails: PartContent;
-  setSelectedPartContentDetails: React.Dispatch<React.SetStateAction<PartContent>>;
 }
 
 export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
   const {
     selectedPageDetails,
-    selectedPagePartDetails,
-    setSelectedPagePartDetails,
-    selectedPartContentDetails,
-    setSelectedPartContentDetails,
   } = props;
 
-  // useEffect(() => {
-  //   console.log('slideOutTreeView -> ', selectedPageDetails);
-  // }, []);
-
-  const handleSelectionProcess = (
-    pagePartDetails: PagePart,
-    partContentDetails: PartContent
-  ) => {
-    //set page part
-    setSelectedPagePartDetails(pagePartDetails);
-    // set part content state
-    setSelectedPartContentDetails(partContentDetails);
-  };
+  // const handleSelectionProcess = (
+  //   pagePartDetails: PagePart,
+  //   partContentDetails: PartContent
+  // ) => {
+  //   //set page part
+  //   setSelectedPagePartDetails(pagePartDetails);
+  //   // set part content state
+  //   setSelectedPartContentDetails(partContentDetails);
+  // };
 
   const getTreeIcon = (partType: string) => {
     switch (partType) {
@@ -82,7 +70,6 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                 <a
                   key={`pagePart_tree_${idx}_${idx2}`}
                   href="#"
-                  onClick={() => handleSelectionProcess(pagePart, partContent)}
                   className={`group w-full flex
                   items-center p-2 text-sm font-medium
                   text-gray-700 hover:text-gray-900

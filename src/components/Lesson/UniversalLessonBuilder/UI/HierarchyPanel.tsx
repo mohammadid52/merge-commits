@@ -1,38 +1,51 @@
-import React, { useEffect } from 'react';
-import { SlideOutTreeView } from './HierarchyPanel/SlideOutTreeView';
-import { Transition } from '@headlessui/react';
-import { PagePart, PartContent, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
+import React, {useEffect} from 'react';
+import {SlideOutTreeView} from './HierarchyPanel/SlideOutTreeView';
+import {Transition} from '@headlessui/react';
+import {
+  PagePart,
+  PartContent,
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
+import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface HierarchyPanelProps {
+interface HierarchyPanelProps extends ULBSelectionProps{
   mode?: 'building' | 'viewing';
-  selectedPageDetails?: UniversalLessonPage;
-  selectedPagePartDetails: PagePart;
-  setSelectedPagePartDetails: React.Dispatch<React.SetStateAction<PagePart>>;
-  selectedPartContentDetails: PartContent;
-  setSelectedPartContentDetails: React.Dispatch<React.SetStateAction<PartContent>>;
+  universalLessonDetails: UniversalLesson;
   hierarchyVisible?: boolean;
   setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const HierarchyPanel = (props: HierarchyPanelProps) => {
   const {
-    selectedPageDetails,
-    selectedPagePartDetails,
-    setSelectedPagePartDetails,
-    selectedPartContentDetails,
-    setSelectedPartContentDetails,
+    universalLessonDetails,
     hierarchyVisible,
     setHierarchyVisible,
+    selectedPageID,
+    setSelectedPageID,
+    selectedPagePartID,
+    setSelectedPagePartID,
+    selectedPartContentID,
+    setSelectedPartContentID,
   } = props;
 
+  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+    (page: UniversalLessonPage) => page.id === selectedPageID
+  );
+
   useEffect(() => {
-    if (selectedPageDetails && !(selectedPageDetails.pageContent.length > 0)) {
+    if (
+      selectedPageID &&
+      selectedPageDetails &&
+      selectedPageDetails.pageContent.length > 0
+    ) {
       setHierarchyVisible(false);
     }
-  }, [selectedPageDetails]);
+  }, [selectedPageID]);
 
   return (
-    <div className={`${hierarchyVisible ? 'relative w-48 h-0 bg-gray-400 z-50' : 'hidden'}`}>
+    <div
+      className={`${hierarchyVisible ? 'relative w-48 h-0 bg-gray-400 z-50' : 'hidden'}`}>
       <Transition
         show={hierarchyVisible}
         enter="transition duration-200"
@@ -55,10 +68,6 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
           {/* The Tree View */}
           <SlideOutTreeView
             selectedPageDetails={selectedPageDetails}
-            selectedPagePartDetails={selectedPagePartDetails}
-            setSelectedPagePartDetails={setSelectedPagePartDetails}
-            selectedPartContentDetails={selectedPartContentDetails}
-            setSelectedPartContentDetails={setSelectedPartContentDetails}
           />
         </>
       </Transition>
