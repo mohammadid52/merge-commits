@@ -786,6 +786,7 @@ type AnthologyContent {
   content: String
   classID: ID
   feedbacks: [String]
+  edited: Boolean,
 }
 
 type AnthologyComment  @model {
@@ -795,6 +796,7 @@ type AnthologyComment  @model {
   authID: String!
   person: Person @connection(fields: ["email", "authID"])
   attachments: [Attachment]
+  edited: Boolean,
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
@@ -802,6 +804,8 @@ type AnthologyComment  @model {
 type Attachment {
   type: String
   url: String
+  filename:String,
+  size: Int,
 }
 
 type QuestionData @model {
