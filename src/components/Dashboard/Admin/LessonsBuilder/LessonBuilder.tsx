@@ -3,7 +3,6 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
-import findIndex from 'lodash/findIndex';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
