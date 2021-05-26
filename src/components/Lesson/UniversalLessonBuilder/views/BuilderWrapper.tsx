@@ -32,7 +32,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
 const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     mode,
-    deleteULBHandler,
+    deleteFromULBHandler,
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
@@ -96,12 +96,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return (
           <PageSelector
             universalLessonDetails={universalLessonDetails}
+            deleteFromULBHandler={deleteFromULBHandler}
             universalBuilderDict={UniversalBuilderDict}
             userLanguage={userLanguage}
             galleryVisible={galleryVisible}
             loading={loading}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}
+            targetID={targetID}
+            setTargetID={setTargetID}
             handleModalPopToggle={handleModalPopToggle}
             hideAllModals={hideAllModals}
           />
@@ -123,6 +126,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
       <Toolbar
         universalLessonDetails={universalLessonDetails}
+        deleteFromULBHandler={deleteFromULBHandler}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
         hierarchyVisible={hierarchyVisible}
@@ -153,17 +157,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setHierarchyVisible={setHierarchyVisible}
       />
 
-      {/*<PageSelector*/}
-      {/*  universalLessonDetails={universalLessonDetails}*/}
-      {/*  universalBuilderDict={UniversalBuilderDict}*/}
-      {/*  userLanguage={userLanguage}*/}
-      {/*  galleryVisible={galleryVisible}*/}
-      {/*  loading={loading}*/}
-      {/*  selectedPageDetails={selectedPageDetails}*/}
-      {/*  setSelectedPageDetails={setSelectedPageDetails}*/}
-      {/*  handleModalPopToggle={handleModalPopToggle}*/}
-      {/*/>*/}
-
       <BuilderMenu
         galleryVisible={galleryVisible}
         setGalleryVisible={setGalleryVisible}
@@ -182,7 +175,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
-        deleteULBHandler={deleteULBHandler}
+        deleteFromULBHandler={deleteFromULBHandler}
         universalLessonDetails={universalLessonDetails}
         galleryVisible={galleryVisible}
         hierarchyVisible={hierarchyVisible}

@@ -92,7 +92,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         return (
           <BuilderWrapper
             mode={`building`}
-            deleteULBHandler={deleteULBHandler}
+            deleteFromULBHandler={deleteULBHandler}
             universalLessonDetails={universalLessonDetails}
             universalBuilderStep={universalBuilderStep}
             setUniversalBuilderStep={setUniversalBuilderStep}
@@ -114,7 +114,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   );
   const [targetID, setTargetID] = useState<string>('');
   const [selectedPageID, setSelectedPageID] = useState<string>('');
-  const getPage = universalLessonDetails.universalLessonPages.find((thePage: UniversalLessonPage) => thePage.id === selectedPageID)
+  const getPage = universalLessonDetails.universalLessonPages.find(
+    (thePage: UniversalLessonPage) => thePage.id === selectedPageID
+  );
 
   /**
    *
@@ -126,10 +128,11 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   const loopThroughPartContent = (
     partContentArray: PartContent[],
-    idForDelete: string
+    operation: 'create' | 'update' | 'delete',
+    idForTargeting: string
   ) => {
     return partContentArray.reduce((acc: PartContent[], val: PartContent) => {
-      if (val.id === idForDelete) {
+      if (val.id === idForTargeting) {
         return acc;
       } else {
         return [...acc, val];
@@ -137,31 +140,72 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }, []);
   };
 
-  const loopThroughPageContent = (pageContentArray: PagePart[], idForDelete: string) => {
+  const loopThroughPageContent = (
+    pageContentArray: PagePart[],
+    operation: 'create' | 'updated' | 'delete',
+    idForTargeting: string
+  ) => {
     return pageContentArray.reduce((acc: PagePart[], val: PagePart) => {
-      if (val.id === idForDelete) {
+      if (val.id === idForTargeting) {
         return acc;
       } else {
-        return [...acc, { ...val, partContent: loopThroughPartContent(val.partContent, idForDelete) }];
+        return [
+          ...acc,
+          {
+            ...val,
+            partContent: loopThroughPartContent(
+              val.partContent,
+              'delete',
+              idForTargeting
+            ),
+          },
+        ];
       }
     }, []);
   };
 
-
-
-  const deleteULBHandler = () => {
-    const updatedPageContent = loopThroughPageContent(getPage.pageContent, targetID);
-    const updatedLessonDetails = {
-      ...universalLessonDetails,
-      universalLessonPages: universalLessonDetails.universalLessonPages.map((thePage: UniversalLessonPage)=>{
-      if(thePage.id === selectedPageID){
-        return { ...thePage, pageContent: updatedPageContent }
+  const loopThroughPages = (
+    pagesArray: UniversalLessonPage[],
+    operation: 'create' | 'updated' | 'delete',
+    idForTargeting: string
+  ) => {
+    return pagesArray.reduce((acc: UniversalLessonPage[], val: UniversalLessonPage) => {
+      if (val.id === idForTargeting) {
+        return acc;
       } else {
-        return thePage;
+        return [...acc, val];
       }
-      })}
-    setUniversalLessonDetails(updatedLessonDetails);
-  }
+    }, []);
+  };
+
+  const deleteULBHandler = (targetSpec?: 'page' | 'part' | 'content') => {
+    switch (targetSpec) {
+      case 'page':
+      case 'part':
+        const updatedPageContent = loopThroughPageContent(
+          getPage.pageContent,
+          'delete',
+          targetID
+        );
+        const updatedLessonDetails = {
+          ...universalLessonDetails,
+          universalLessonPages: universalLessonDetails.universalLessonPages.map(
+            (thePage: UniversalLessonPage) => {
+              if (thePage.id === selectedPageID) {
+                return {...thePage, pageContent: updatedPageContent};
+              } else {
+                return thePage;
+              }
+            }
+          ),
+        };
+        setUniversalLessonDetails(updatedLessonDetails);
+        break;
+      case 'content':
+      default:
+        break;
+    }
+  };
 
   return (
     /**

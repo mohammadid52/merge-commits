@@ -28,7 +28,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const {
     mode,
-    deleteULBHandler,
+    deleteFromULBHandler,
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
@@ -47,7 +47,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonPageWrapper>
           <RowComposer
             mode={mode}
-            deleteULBHandler={deleteULBHandler}
+            deleteFromULBHandler={deleteFromULBHandler}
             universalLessonDetails={universalLessonDetails}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}

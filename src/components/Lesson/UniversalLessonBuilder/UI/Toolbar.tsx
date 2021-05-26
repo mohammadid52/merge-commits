@@ -26,6 +26,7 @@ export interface ToolbarProps extends ULBSelectionProps {
 export const Toolbar = (props: ToolbarProps) => {
   const {
     universalLessonDetails,
+    deleteFromULBHandler,
     selectedPageID,
     galleryVisible,
     setGalleryVisible,
@@ -86,6 +87,7 @@ export const Toolbar = (props: ToolbarProps) => {
         <PageGalleryToggle
           handleSetGalleryVisibility={handleSetGalleryVisibility}
           handleModalPopToggle={handleModalPopToggle}
+          deleteFromULBHandler={deleteFromULBHandler}
         />
         <BuilderMenuToggle
           handleSetBuilderMenuVisibility={handleSetBuilderMenuVisibility}

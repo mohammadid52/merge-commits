@@ -18,7 +18,7 @@ interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
-  const {contentID, editedID, isActive, isComponent, handleEditBlockToggle, deleteULBHandler} = props;
+  const {contentID, editedID, isActive, isComponent, handleEditBlockToggle, deleteFromULBHandler} = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                             Icon={AiOutlineBgColors}
                           />
                           <Buttons
-                            onClick={()=>deleteULBHandler()}
+                            onClick={()=>deleteFromULBHandler()}
                             label="Delete"
                             overrideClass={true}
                             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"

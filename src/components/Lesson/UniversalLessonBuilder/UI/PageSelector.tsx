@@ -19,14 +19,11 @@ interface PageSelectorProps extends ULBSelectionProps{
 const PageSelector = (props: PageSelectorProps) => {
   const {
     universalLessonDetails,
-    selectedPageID,
     setSelectedPageID,
-    selectedPagePartID,
-    setSelectedPagePartID,
-    selectedPartContentID,
-    setSelectedPartContentID,
+    targetID,
+    setTargetID,
+    deleteFromULBHandler,
     handleModalPopToggle,
-
   } = props;
   const pages = universalLessonDetails?.universalLessonPages;
 
@@ -46,6 +43,11 @@ const PageSelector = (props: PageSelectorProps) => {
       console.error('handleSelectPage: ', e);
     }
   };
+
+  const handleDeletePage = (pageID: string) => {
+    setTargetID(pageID)
+    deleteFromULBHandler();
+  }
 
   return (
     <div className={` z-50 `}>
@@ -79,6 +81,7 @@ const PageSelector = (props: PageSelectorProps) => {
                     className={`w-auto ml-4 flex flex-col cursor-pointer`}>
                     <PageTile/>
                     <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
+                    <p onClick={()=>handleDeletePage(page.id)} className={`text-center text-xs font-semibold text-red-600 cursor-pointer`}>Delete?</p>
                   </div>
                 ))
               : null}

@@ -18,7 +18,7 @@ import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 const RowComposer = (props: RowComposerProps) => {
   const {
     mode,
-    deleteULBHandler,
+    deleteFromULBHandler,
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
@@ -40,21 +40,9 @@ const RowComposer = (props: RowComposerProps) => {
       if (editedID !== dataID) {
         setEditedID(dataID);
         setTargetID(dataID);
-        // if (toggleStage === 'pagePart') {
-        //   setSelectedPagePartID(dataID);
-        // }
-        // if (toggleStage === 'partContent') {
-        //   setSelectedPartContentID(dataID);
-        // }
       } else {
         setEditedID('');
         setTargetID('')
-        // if (toggleStage === 'pagePart') {
-        //   setSelectedPagePartID('');
-        // }
-        // if (toggleStage === 'partContent') {
-        //   setSelectedPartContentID('');
-        // }
       }
     }
   };
@@ -121,7 +109,7 @@ const RowComposer = (props: RowComposerProps) => {
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
-                deleteULBHandler={deleteULBHandler}
+                deleteFromULBHandler={()=>deleteFromULBHandler('part')}
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
                 handleEditBlockToggle={() =>
@@ -138,14 +126,14 @@ const RowComposer = (props: RowComposerProps) => {
                       <EditOverlayBlock
                         key={`pp_${idx}_pc_${idx2}`}
                         mode={mode}
-                        deleteULBHandler={deleteULBHandler}
                         contentID={`${content.id}`}
                         editedID={editedID}
                         isComponent={true}
                         isLast={idx2 === pagePart.partContent.length - 1}
                         handleEditBlockToggle={() =>
                           handleEditBlockToggle(content.id, 'partContent')
-                        }>
+                        }
+                        deleteFromULBHandler={()=>deleteFromULBHandler('part')}>
                         {content.value.length > 0 ? (
                           content.value.map((value: any, idx3: number) =>
                             composePartContent(
