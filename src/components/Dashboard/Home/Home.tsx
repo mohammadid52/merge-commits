@@ -189,10 +189,10 @@ const Home = (props: ClassroomControlProps) => {
               roomIndex: index,
             };
 
-            // if (!uniqIds.includes(curriculum?.id)) {
-            //   uniqIds.push(curriculum?.id);
-            // }
-            modifiedClassList.push(modifiedItem);
+            if (!uniqIds.includes(curriculum?.id)) {
+              uniqIds.push(curriculum?.id);
+              modifiedClassList.push(modifiedItem);
+            }
           }
         });
       });

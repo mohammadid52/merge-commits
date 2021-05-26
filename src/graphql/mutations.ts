@@ -5632,6 +5632,7 @@ export const createLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -5888,6 +5889,7 @@ export const updateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6144,6 +6146,7 @@ export const deleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6286,6 +6289,7 @@ export const createLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6453,6 +6457,7 @@ export const updateLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6620,6 +6625,7 @@ export const deleteLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6788,6 +6794,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6955,6 +6962,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7122,6 +7130,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7295,6 +7304,7 @@ export const createLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7447,6 +7457,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7599,6 +7610,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7870,6 +7882,7 @@ export const createSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8079,6 +8092,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8288,6 +8302,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8404,6 +8419,7 @@ export const createStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8538,6 +8554,8 @@ export const createStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks
       }
       createdAt
       updatedAt
@@ -8591,6 +8609,7 @@ export const updateStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8725,6 +8744,8 @@ export const updateStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks
       }
       createdAt
       updatedAt
@@ -8778,6 +8799,7 @@ export const deleteStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8912,6 +8934,155 @@ export const deleteStudentData = /* GraphQL */ `
         subTitle
         description
         content
+        classID
+        feedbacks
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAnthologyComment = /* GraphQL */ `
+  mutation CreateAnthologyComment(
+    $input: CreateAnthologyCommentInput!
+    $condition: ModelAnthologyCommentConditionInput
+  ) {
+    createAnthologyComment(input: $input, condition: $condition) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        type
+        url
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAnthologyComment = /* GraphQL */ `
+  mutation UpdateAnthologyComment(
+    $input: UpdateAnthologyCommentInput!
+    $condition: ModelAnthologyCommentConditionInput
+  ) {
+    updateAnthologyComment(input: $input, condition: $condition) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        type
+        url
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAnthologyComment = /* GraphQL */ `
+  mutation DeleteAnthologyComment(
+    $input: DeleteAnthologyCommentInput!
+    $condition: ModelAnthologyCommentConditionInput
+  ) {
+    deleteAnthologyComment(input: $input, condition: $condition) {
+      id
+      text
+      email
+      authID
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        wordbank {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      attachments {
+        type
+        url
       }
       createdAt
       updatedAt
@@ -9002,6 +9173,7 @@ export const createQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9120,6 +9292,7 @@ export const updateQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9238,6 +9411,7 @@ export const deleteQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9353,6 +9527,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9500,6 +9676,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9647,6 +9825,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           subTitle
           description
           content
+          classID
+          feedbacks
         }
         createdAt
         updatedAt
@@ -9758,6 +9938,7 @@ export const createFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9837,6 +10018,7 @@ export const updateFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9916,6 +10098,7 @@ export const deleteFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10304,6 +10487,7 @@ export const createPersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10491,6 +10675,7 @@ export const updatePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10678,6 +10863,7 @@ export const deletePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }

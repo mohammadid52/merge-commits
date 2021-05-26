@@ -118,6 +118,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
   });
 
+  const [checkpointSaveModal, setCheckpointSaveModal] = useState({
+    show: false,
+    stepOnHold: '',
+    message: '',
+  });
+
+  const savedCheckpointModal = () => {
+    setActiveStep(checkpointSaveModal.stepOnHold);
+    closeCheckpointModal();
+    setUnsavedChanges(false);
+  };
+  const closeCheckpointModal = () => {
+    setCheckpointSaveModal({
+      ...checkpointSaveModal,
+      stepOnHold: '',
+      message: '',
+      show: false,
+    });
+  };
+
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {
       setLessonBuilderSteps(lessonScrollerStep);
