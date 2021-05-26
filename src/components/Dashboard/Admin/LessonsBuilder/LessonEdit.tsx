@@ -4,7 +4,8 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle, FaUnity} from 'react-icons/fa';
 import findIndex from 'lodash/findIndex';
-
+import * as customMutations from '../../../../customGraphql/customMutations';
+import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
 
 import Buttons from '../../../Atoms/Buttons';
@@ -24,6 +25,8 @@ import {languageList} from '../../../../utilities/staticData';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import {AddNewCheckPointDict} from '../../../../dictionary/dictionary.iconoclast';
+import {isEmpty} from 'lodash';
 
 interface LessonEditProps {
   designersList: any[];
@@ -94,6 +97,11 @@ const LessonEdit = (props: LessonEditProps) => {
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: LessonEditDict[userLanguage]['MESSAGES']['UNSAVE'],
+  });
+  const [warnModal2, setWarnModal2] = useState({
+    stepOnHold: '',
+    show: false,
+    message: '',
   });
 
   const breadCrumsList = [
@@ -264,6 +272,171 @@ const LessonEdit = (props: LessonEditProps) => {
     checkValidUrl();
   }, []);
 
+  const [isCheckpUnsaved, setIsCheckpUnsaved] = useState<boolean>(false);
+  const [unSavedCheckPData, setUnsavedCheckPData] = useState<any>({title: ''});
+
+  const [checkpQuestions, setCheckpQuestions] = useState<any>([]);
+  const [selDesigners, setSelDesigners] = useState<any>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
+
+  const hasUnsavedCheckpoint = (
+    val: boolean,
+    data: any,
+    checkpQuestions: any,
+    selDesigners: any[]
+  ) => {
+    if (val !== isCheckpUnsaved) {
+      setIsCheckpUnsaved(val);
+      setUnsavedCheckPData(data);
+      if (data.title && val) {
+        setShowModal(true);
+      } else {
+        setShowModal(false);
+      }
+      setCheckpQuestions(checkpQuestions);
+      setSelDesigners(selDesigners);
+    }
+  };
+
+  const addCheckpointQuestions = async (
+    quesId: string,
+    checkpointID: string,
+    required: boolean
+  ) => {
+    try {
+      const input = {
+        checkpointID: checkpointID,
+        questionID: quesId,
+        required: required ? required : false,
+      };
+      const questions: any = await API.graphql(
+        graphqlOperation(customMutations.createCheckpointQuestions, {input: input})
+      );
+    } catch {
+      // setValidation({
+      //   title: '',
+      //   label: '',
+      //   estTime: '',
+      //   message: AddNewCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
+      //   isError: true,
+      // });
+    }
+  };
+
+  const saveNewCheckPoint = async () => {
+    setSavingUnsavedCP(true);
+    try {
+      const input = {
+        stage: 'checkpoint',
+        type: 'checkpoint',
+        label: unSavedCheckPData.label,
+        title: unSavedCheckPData.title,
+        subtitle: unSavedCheckPData.subtitle,
+        instructionsTitle: unSavedCheckPData.instructionsTitle,
+        instructions: unSavedCheckPData.instructionHtml,
+        purpose: unSavedCheckPData.purposeHtml,
+        objectives: unSavedCheckPData.objectiveHtml,
+        designers: selDesigners.map((item: any) => item.id),
+        language: unSavedCheckPData.language.value,
+        estTime: unSavedCheckPData.estTime ? parseInt(unSavedCheckPData.estTime) : 0,
+      };
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.createCheckpoint, {input: input})
+      );
+      const newCheckpoint = results?.data?.createCheckpoint;
+      if (newCheckpoint) {
+        let lessonCheckpointInput = {
+          lessonID: lessonId || assessmentId,
+          checkpointID: newCheckpoint.id,
+          position: 0,
+        };
+        let lessonPlansInput = !savedLessonDetails.lessonPlans?.length
+          ? [
+              {
+                type: 'checkpoint',
+                LessonComponentID: newCheckpoint.id,
+                sequence: 0,
+                stage: 'checkpoint',
+              },
+            ]
+          : [
+              ...savedLessonDetails.lessonPlans,
+              {
+                type: 'checkpoint',
+                LessonComponentID: newCheckpoint.id,
+                sequence: savedLessonDetails.lessonPlans.length,
+                stage: 'checkpoint',
+              },
+            ];
+        let [lessonCheckpoint, lesson]: any = await Promise.all([
+          await API.graphql(
+            graphqlOperation(customMutations.createLessonCheckpoint, {
+              input: lessonCheckpointInput,
+            })
+          ),
+          await API.graphql(
+            graphqlOperation(customMutations.updateLesson, {
+              input: {
+                id: lessonId || assessmentId,
+                lessonPlan: lessonPlansInput,
+              },
+            })
+          ),
+        ]);
+        let questions = Promise.all(
+          checkpQuestions.map(async (item: any) =>
+            addCheckpointQuestions(item.id, newCheckpoint.id, item.required)
+          )
+        );
+        let checkpQuestionsIds = checkpQuestions.map((item: any) => item.id);
+        let seqItem: any = await API.graphql(
+          graphqlOperation(mutations.createCSequences, {
+            input: {id: `Ch_Ques_${newCheckpoint.id}`, sequence: checkpQuestionsIds},
+          })
+        );
+
+        const newLessonPlans = lesson?.data?.updateLesson?.lessonPlan;
+        updateLessonPlan(newLessonPlans);
+      } else {
+      }
+
+      onCheckpointModalClose(false);
+      setShowModal(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSavingUnsavedCP(false);
+    }
+  };
+
+  const onCheckpointModalClose = (cancel: boolean = true) => {
+    if (cancel) {
+      // clicked on cancel button
+      console.log('clicked on cancel button');
+
+      setWarnModal2({
+        ...warnModal2,
+        show: false,
+      });
+    } else {
+      // clicked on no button
+      console.log('clicked on no button');
+
+      setActiveStep(warnModal2.stepOnHold);
+      setHistoryList([...historyList, warnModal2.stepOnHold]);
+      setWarnModal2({
+        stepOnHold: '',
+        show: false,
+        message: '',
+      });
+      setShowModal(false);
+      setUnsavedChanges(false);
+      setUnsavedCheckPData({});
+      setCheckpQuestions([]);
+    }
+  };
+
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'Overview':
@@ -303,6 +476,12 @@ const LessonEdit = (props: LessonEditProps) => {
             activeStep={activeStep}
             lessonName={formData.name}
             lessonType={formData.type?.value}
+            hasUnsavedCheckpoint={(
+              val: boolean,
+              data: any,
+              data2: any,
+              selectedDesigners: any[]
+            ) => hasUnsavedCheckpoint(val, data, data2, selectedDesigners)}
           />
         );
       case 'Preview Details':
@@ -372,11 +551,16 @@ const LessonEdit = (props: LessonEditProps) => {
                 }
                 activeStep={activeStep}
                 setActiveStep={(step) => {
-                  if (!unsavedChanges) {
+                  if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                    setWarnModal2({
+                      ...warnModal2,
+                      stepOnHold: step,
+                      show: true,
+                      message: 'You have unsaved checkpoint. Do you want to save it?',
+                    });
+                  } else {
                     setActiveStep(step);
                     setHistoryList([...historyList, step]);
-                  } else {
-                    toggleModal();
                   }
                 }}
               />
@@ -400,6 +584,18 @@ const LessonEdit = (props: LessonEditProps) => {
             saveAction={onModalSave}
             saveLabel="Yes"
             message={warnModal.message}
+          />
+        )}
+        {warnModal2.show && showModal && (
+          <ModalPopUp
+            noButton="No"
+            noButtonAction={() => onCheckpointModalClose(false)}
+            closeAction={onCheckpointModalClose}
+            saveAction={saveNewCheckPoint}
+            saveLabel="Yes"
+            cancelLabel="Cancel"
+            message={warnModal2.message}
+            loading={savingUnsavedCP}
           />
         )}
       </PageWrapper>
