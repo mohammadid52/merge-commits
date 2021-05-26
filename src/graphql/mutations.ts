@@ -8556,6 +8556,7 @@ export const createStudentData = /* GraphQL */ `
         content
         classID
         feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -8746,6 +8747,7 @@ export const updateStudentData = /* GraphQL */ `
         content
         classID
         feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -8936,6 +8938,7 @@ export const deleteStudentData = /* GraphQL */ `
         content
         classID
         feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -8985,7 +8988,10 @@ export const createAnthologyComment = /* GraphQL */ `
       attachments {
         type
         url
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -9034,7 +9040,10 @@ export const updateAnthologyComment = /* GraphQL */ `
       attachments {
         type
         url
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -9083,7 +9092,10 @@ export const deleteAnthologyComment = /* GraphQL */ `
       attachments {
         type
         url
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -9529,6 +9541,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           content
           classID
           feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -9678,6 +9691,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           content
           classID
           feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -9827,6 +9841,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           content
           classID
           feedbacks
+          edited
         }
         createdAt
         updatedAt

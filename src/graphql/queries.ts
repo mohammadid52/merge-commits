@@ -3633,6 +3633,7 @@ export const getStudentData = /* GraphQL */ `
         content
         classID
         feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -3731,6 +3732,7 @@ export const listStudentDatas = /* GraphQL */ `
           content
           classID
           feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -3779,7 +3781,10 @@ export const getAnthologyComment = /* GraphQL */ `
       attachments {
         type
         url
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -3828,7 +3833,10 @@ export const listAnthologyComments = /* GraphQL */ `
         attachments {
           type
           url
+          filename
+          size
         }
+        edited
         createdAt
         updatedAt
       }
