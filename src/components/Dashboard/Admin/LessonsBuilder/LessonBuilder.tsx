@@ -3,7 +3,6 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
-import findIndex from 'lodash/findIndex';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
@@ -117,6 +116,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     show: false,
     message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
   });
+
+  const [checkpointSaveModal, setCheckpointSaveModal] = useState({
+    show: false,
+    stepOnHold: '',
+    message: '',
+  });
+
+  const savedCheckpointModal = () => {
+    setActiveStep(checkpointSaveModal.stepOnHold);
+    closeCheckpointModal();
+    setUnsavedChanges(false);
+  };
+  const closeCheckpointModal = () => {
+    setCheckpointSaveModal({
+      ...checkpointSaveModal,
+      stepOnHold: '',
+      message: '',
+      show: false,
+    });
+  };
 
   const changeLessonType = (type: string) => {
     if (type === 'lesson') {

@@ -12,6 +12,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
+import * as mutations from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -56,6 +57,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       id: syllabusLessonId,
       lessonPlan: updatedLessonPlan,
     };
+
     const result: any = await API.graphql(
       graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
     );
@@ -87,7 +89,31 @@ const PreviewForm = (props: PreviewFormProps) => {
           msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
         })
       );
+    publishQuestions();
     toggleModal();
+    fetchLessonPreview();
+    fetchSyllabusLessonData();
+  };
+
+  const onlyUnique = (value: any, index: any, self: any) => {
+    return self.indexOf(value) === index;
+  };
+
+  const publishQuestions = async () => {
+    const questionIds: any[] = [];
+    lessonDetails?.checkpoints?.items?.forEach((checkpoint: any) => {
+      checkpoint?.checkpoint?.questions?.items?.forEach((question: any) => {
+        questionIds.push(question.question.id);
+      });
+    });
+    const ids = questionIds.filter(onlyUnique);
+    ids.forEach(async (id: any) => {
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.updateQuestion, {
+          input: {id: id, published: true},
+        })
+      );
+    });
   };
 
   const toggleModal = () => {
