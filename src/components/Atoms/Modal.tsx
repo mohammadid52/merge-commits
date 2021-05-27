@@ -13,7 +13,7 @@ interface ModalProps {
   saveAction?: () => void;
   closeAction?: () => void;
   isImage?: boolean;
-  closeOnBackdrop: boolean;
+  closeOnBackdrop?: boolean;
 }
 
 const ModalHeader = (headerProps: {

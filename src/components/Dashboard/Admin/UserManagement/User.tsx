@@ -252,6 +252,8 @@ const User = () => {
     }
   }
 
+  const isAdmin = state.user.role === 'ADM';
+
   useEffect(() => {
     async function getUrl() {
       const imageUrl: any = await getImageFromS3(user.image);
@@ -419,22 +421,22 @@ const User = () => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Classname
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Institution
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Teacher
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                       Curriculum
                     </th>
                   </tr>
@@ -448,18 +450,18 @@ const User = () => {
                       <tr
                         key={`${item.class?.name}_${idx}`}
                         className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900">
                           {item?.class?.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {item?.class?.institution?.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {teacher
                             ? `${teacher?.firstName || ''} ${teacher?.lastName || ''}`
                             : 'Not Available'}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {curriculum
                             ? `${curriculum?.items[0]?.curriculum?.name}${
                                 curriculum?.items[0]?.length > 1 ? '...' : ''
@@ -1023,7 +1025,7 @@ const User = () => {
           style={{
             bottom: '0rem',
             fontSize: '0.65rem',
-            right: '-3rem',
+            right: '-3.5rem',
           }}
           className="absolute size-stamp w-auto text-gray-500">
           {getSizeInBytes(size)}
@@ -1159,7 +1161,7 @@ const User = () => {
               />
             )}
             {loadingComments ? (
-              <div className="py-2 text-center mx-auto flex justify-center items-center w-full">
+              <div className="py-2 text-center my-4 mx-auto flex justify-center items-center w-full">
                 <div className="">
                   <Loader color="rgba(107, 114, 128, 1)" />
                   <p className="mt-2 text-center text-lg text-gray-500">
@@ -1168,13 +1170,24 @@ const User = () => {
                   </p>
                 </div>
               </div>
-            ) : (
-              feedbackData &&
+            ) : feedbackData && feedbackData.length > 0 ? (
               feedbackData.map((feedback, eventIdx: number) => (
                 <Feedback feedback={feedback} />
               ))
+            ) : (
+              <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
+                <div className="">
+                  <p className="mt-2 text-center text-lg text-gray-500">
+                    No Feedbacks
+                    {/* @Mohammad: Add this to dict */}
+                  </p>
+                </div>
+              </div>
             )}
-            <div className="comment-box w-auto mx-6 flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
+            <div
+              className={`${
+                isAdmin ? 'hidden' : ''
+              } comment-box w-auto mx-6 flex flex-col border-0 border-gray-200 h-auto rounded mt-4`}>
               <div
                 style={{minHeight: '2.5rem'}}
                 className="flex flex-col border-b-0 border-gray-200">
@@ -1190,20 +1203,40 @@ const User = () => {
                 {/* ------------------------- Preview Section Start -------------------------------- */}
                 <div className={`${fileObject.name ? 'block px-4 py-2' : 'hidden'}`}>
                   {isImage && (
-                    <div className="h-auto w-72">
+                    <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
                       <img
                         style={{objectFit: 'cover'}}
                         id="output_image"
-                        className="h-32 w-32 rounded-lg"
+                        className="h-16 w-16 mr-2 rounded-lg"
                       />
+                      <p className="truncate w-auto font-light text-gray-600">
+                        {fileObject?.name}
+                      </p>
+                      <span
+                        onClick={() => setfileObject({})}
+                        className={
+                          'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        }>
+                        <MdCancel />
+                      </span>
                     </div>
                   )}
                   {isVideo && (
-                    <div className="h-auto w-72">
-                      <video id="output_video" controls className="rounded-lg">
+                    <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+                      <video id="output_video" className="h-20 mr-2 w-20 rounded-lg">
                         <source type={fileObject.type} />
                         Your browser does not support the video tag.
                       </video>
+                      <p className="truncate w-auto font-light text-gray-600">
+                        {fileObject?.name}
+                      </p>
+                      <span
+                        onClick={() => setfileObject({})}
+                        className={
+                          'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
+                        }>
+                        <MdCancel />
+                      </span>
                     </div>
                   )}
                   {!isVideo && !isImage && (
