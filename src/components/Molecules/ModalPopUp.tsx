@@ -32,6 +32,7 @@ const ModalPopUp = (props: ModalProps) => {
   } = props;
   return (
     <Modal
+      closeOnBackdrop
       showHeader={true}
       showHeaderBorder={false}
       showFooter={false}

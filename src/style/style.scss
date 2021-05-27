@@ -707,13 +707,15 @@
       color: #4338ca;
     }
     &:not(.active):hover {
-      color: #374151;
+      background-color: #eef2ff;
+      color: #4338ca;
     }
     background: transparent;
     color: #6b7280;
     text-align: center;
   }
 }
+
 .animate__sidebar-btn {
   transition: width 0.3s ease;
 
@@ -754,4 +756,19 @@
   &:focus-within {
     border: 1px solid #d1d5db;
   }
+}
+
+.size-stamp,
+.delete-comment {
+  display: none;
+}
+.comment-main:hover .size-stamp {
+  display: block;
+}
+.comment-main:hover .delete-comment {
+  display: block;
+}
+
+.feedback-name:hover {
+  text-decoration: underline;
 }

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons';
 import {IoClose} from 'react-icons/io5';
 
@@ -78,7 +78,15 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     closeOnBackdrop = false,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
-
+  useEffect(() => {
+    const close = (e: any) => {
+      if (e.keyCode === 27) {
+        closeAction();
+      }
+    };
+    document.addEventListener('keydown', close);
+    return () => document.removeEventListener('keydown', close);
+  });
   return (
     <>
       <div className="backdrop fade-in fixed inset-0 z-40 bg-black"></div>
