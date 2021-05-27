@@ -831,6 +831,7 @@ const User = () => {
           preferredName: state?.user?.firstName,
           lastName: state.user.lastName,
           role: state.user.role,
+          size: attachments.size,
         },
         createdAt: new Date(),
         id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
@@ -924,7 +925,7 @@ const User = () => {
       document.body.removeChild(a);
     };
 
-    const LoadingMedia = ({filename}: any) => {
+    const LoadingMedia = ({filename, size}: any) => {
       return (
         <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-48 flex items-center justify-center">
           <div className="h-2/10 min-w-auto p-2 pt-0 text-gray-500 truncate">
@@ -933,13 +934,14 @@ const User = () => {
           <div className="h-8/10 flex items-center min-w-48 bg-gray-100 rounded-lg">
             <Loader color="#6366F1" />
           </div>
+          <Size size={size} />
         </div>
       );
     };
 
     const ImageMedia = ({attachment}: any) => {
       return attachment.url === 'loading' ? (
-        <LoadingMedia filename={attachment.filename} />
+        <LoadingMedia size={attachment.size} filename={attachment.filename} />
       ) : (
         <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-32 flex items-center justify-center">
           <p className="truncate min-w-auto text-center p-2 pt-0 text-gray-500">
@@ -987,13 +989,16 @@ const User = () => {
     };
 
     const VideoMedia = ({attachment}: any) => {
+      console.log('called');
+
       return attachment.url === 'loading' ? (
-        <LoadingMedia filename={attachment.filename} />
+        <LoadingMedia size={attachment.size} filename={attachment.filename} />
       ) : (
-        <div className="h-auto w-72 border-0 p-4 border-gray-300">
+        <div className="h-auto relative w-72 border-0 p-4 border-gray-300">
           <p className="truncate text-center min-w-auto p-2 pt-0 text-gray-500">
             {attachment.filename}
           </p>
+          <Size size={attachment.size} />
           <video controls className="rounded-lg" src={attachment.url}>
             <source type={fileObject.type} />
             Your browser does not support the video tag.
@@ -1005,8 +1010,10 @@ const User = () => {
       return attachment.url === 'loading' ? (
         <div
           style={{width: '30rem'}}
-          className="h-12 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+          className="h-12 relative p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
           <p className="truncate w-auto">{attachment.filename}</p>
+          <Size size={attachment.size} />
+
           <span className={'flex items-center justify-center h-8 w-8'}>
             <Loader color="#6366F1" />
           </span>
@@ -1016,6 +1023,8 @@ const User = () => {
           <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
             {attachment.filename}
           </p>
+          <Size size={attachment.size} />
+
           <div className="flex items-center justify-center">
             <audio controls className="mr-2 rounded-lg">
               <source type={fileObject.type} src={attachment.url} />
@@ -1119,7 +1128,7 @@ const User = () => {
                 </p>
               </h5>
               <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
-              {/* ------------------------- Attachments Section Start -------------------------------- */}
+              {/* ------------------------- @key:A1 Attachments Section Start -------------------------------- */}
 
               {feedback.attachments &&
                 feedback.attachments.length > 0 &&
@@ -1233,7 +1242,6 @@ const User = () => {
                 className="flex comment-box__inner flex-col">
                 <textarea
                   onKeyUp={(e) => do_resize(e.target)}
-                  autoFocus={true}
                   style={{resize: 'none'}}
                   cols={125}
                   rows={1}
@@ -1242,7 +1250,7 @@ const User = () => {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                 />
-                {/* ------------------------- Preview Section Start -------------------------------- */}
+                {/* ------------------------- @key:B2 Preview Section Start -------------------------------- */}
                 <div className={`${fileObject.name ? 'block px-4 py-2' : 'hidden'}`}>
                   {isImage && (
                     <div className="h-auto w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
@@ -1289,6 +1297,7 @@ const User = () => {
                       <p className="truncate w-auto font-light text-gray-600">
                         {fileObject?.name}
                       </p>
+
                       <span
                         className={
                           'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '

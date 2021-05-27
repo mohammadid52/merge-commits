@@ -317,6 +317,7 @@ const AnthologyContent = (props: ContentCardProps) => {
           firstName: state?.user?.preferredName,
           preferredName: state?.user?.firstName,
           lastName: state.user.lastName,
+          size: attachments.size,
           role: state.user.role,
         },
         createdAt: new Date(),
@@ -426,7 +427,7 @@ const AnthologyContent = (props: ContentCardProps) => {
 
     const ImageMedia = ({attachment}: any) => {
       return attachment.url === 'loading' ? (
-        <LoadingMedia filename={attachment.filename} />
+        <LoadingMedia size={attachment.size} filename={attachment.filename} />
       ) : (
         <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-32 flex items-center justify-center">
           <p className="truncate min-w-auto text-center p-2 pt-0 text-gray-500">
@@ -448,8 +449,10 @@ const AnthologyContent = (props: ContentCardProps) => {
       return attachment.url === 'loading' ? (
         <div
           style={{width: '30rem'}}
-          className="h-12 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+          className="h-12 relative p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
           <p className="truncate w-auto">{attachment.filename}</p>
+          <Size size={attachment.size} />
+
           <span className={'flex items-center justify-center h-8 w-8'}>
             <Loader color="#6366F1" />
           </span>
@@ -459,6 +462,7 @@ const AnthologyContent = (props: ContentCardProps) => {
           <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
             {attachment.filename}
           </p>
+          <Size size={attachment.size} />
           <div className="flex items-center justify-center">
             <audio controls className="mr-2 rounded-lg">
               <source type={fileObject.type} src={attachment.url} />
@@ -510,7 +514,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         </div>
       );
     };
-    const LoadingMedia = ({filename}: any) => {
+    const LoadingMedia = ({filename, size}: any) => {
       return (
         <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-48 flex items-center justify-center">
           <div className="h-2/10 min-w-auto p-2 pt-0 text-gray-500 truncate">
@@ -519,13 +523,14 @@ const AnthologyContent = (props: ContentCardProps) => {
           <div className="h-8/10 flex items-center min-w-48 bg-gray-100 rounded-lg">
             <Loader color="#6366F1" />
           </div>
+          <Size size={size} />
         </div>
       );
     };
 
     const VideoMedia = ({attachment}: any) => {
       return attachment.url === 'loading' ? (
-        <LoadingMedia filename={attachment.filename} />
+        <LoadingMedia size={attachment.size} filename={attachment.filename} />
       ) : (
         <div className="h-auto w-72 border-0 p-4 border-gray-300">
           <p className="truncate text-center min-w-auto p-2 pt-0 text-gray-500">
@@ -804,6 +809,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                       <p className="truncate w-auto font-light text-gray-600">
                         {fileObject?.name}
                       </p>
+
                       <span
                         onClick={() => setfileObject({})}
                         className={
