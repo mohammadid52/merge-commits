@@ -18,7 +18,7 @@ export interface ULBDialogComponent {
 
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
-  deleteFromULBHandler?: (targetSpec?:string) => void;
+  deleteFromULBHandler?: (targetID:string, targetSpec?:string) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
   targetID?: string;

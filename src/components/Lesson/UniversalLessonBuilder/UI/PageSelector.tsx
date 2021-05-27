@@ -1,12 +1,15 @@
 import React from 'react';
-import { UniversalLesson, UniversalLessonPage } from '../../../../interfaces/UniversalLessonInterfaces';
-import { VscFileMedia, VscNewFile } from 'react-icons/vsc';
+import {
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
+import {VscFileMedia, VscNewFile} from 'react-icons/vsc';
 import Buttons from '../../../Atoms/Buttons';
-import { IconContext } from 'react-icons';
+import {IconContext} from 'react-icons';
 import PageTile from './common/PageTile';
-import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-interface PageSelectorProps extends ULBSelectionProps{
+interface PageSelectorProps extends ULBSelectionProps {
   universalLessonDetails: UniversalLesson;
   universalBuilderDict: any;
   userLanguage: any;
@@ -20,8 +23,6 @@ const PageSelector = (props: PageSelectorProps) => {
   const {
     universalLessonDetails,
     setSelectedPageID,
-    targetID,
-    setTargetID,
     deleteFromULBHandler,
     handleModalPopToggle,
   } = props;
@@ -43,11 +44,6 @@ const PageSelector = (props: PageSelectorProps) => {
       console.error('handleSelectPage: ', e);
     }
   };
-
-  const handleDeletePage = (pageID: string) => {
-    setTargetID(pageID)
-    deleteFromULBHandler();
-  }
 
   return (
     <div className={` z-50 `}>
@@ -79,9 +75,13 @@ const PageSelector = (props: PageSelectorProps) => {
                     id={`pageThumb_${page.id}`}
                     onClick={() => handleSelectPage(page.id)}
                     className={`w-auto ml-4 flex flex-col cursor-pointer`}>
-                    <PageTile/>
+                    <PageTile />
                     <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
-                    <p onClick={()=>handleDeletePage(page.id)} className={`text-center text-xs font-semibold text-red-600 cursor-pointer`}>Delete?</p>
+                    <p
+                      onClick={() => deleteFromULBHandler(page.id, 'page')}
+                      className={`text-center text-xs font-semibold text-red-600 cursor-pointer`}>
+                      Delete?
+                    </p>
                   </div>
                 ))
               : null}

@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import { RowWrapperProps, ULBSelectionProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {
+  RowWrapperProps,
+  ULBSelectionProps,
+} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import Buttons from '../../../../Atoms/Buttons';
 import {
   AiOutlineBgColors,
@@ -18,7 +21,14 @@ interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
-  const {contentID, editedID, isActive, isComponent, handleEditBlockToggle, deleteFromULBHandler} = props;
+  const {
+    contentID,
+    editedID,
+    isActive,
+    isComponent,
+    handleEditBlockToggle,
+    deleteFromULBHandler,
+  } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -33,10 +43,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       }
     }
   }, [isActive]);
-
-  // const handleOverlayToggle = (inputID: string) => {
-  //   handleEditBlockToggle(inputID);
-  // };
 
   /**
    * Here is where I should add buttons
@@ -75,43 +81,43 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                       h-auto
                       ${overlayVisible && isComponent ? 'w-auto' : 'w-full'} 
                       `}>
-                          <Buttons
-                            label="Split"
-                            overrideClass={true}
-                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-                            Icon={BsLayoutSplit}
-                          />
-                          <Buttons
-                            label="Flip"
-                            overrideClass={true}
-                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-                            Icon={CgEditFlipH}
-                          />
-                          <Buttons
-                            label="Edit"
-                            overrideClass={true}
-                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-                            Icon={AiOutlineEdit}
-                          />
-                          <Buttons
-                            label="BG Color"
-                            overrideClass={true}
-                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-                            Icon={AiOutlineBgColors}
-                          />
-                          <Buttons
-                            onClick={()=>deleteFromULBHandler()}
-                            label="Delete"
-                            overrideClass={true}
-                            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-                            Icon={AiOutlineDelete}
-                          />
+          <Buttons
+            label="Split"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            Icon={BsLayoutSplit}
+          />
+          <Buttons
+            label="Flip"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            Icon={CgEditFlipH}
+          />
+          <Buttons
+            label="Edit"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            Icon={AiOutlineEdit}
+          />
+          <Buttons
+            label="BG Color"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            Icon={AiOutlineBgColors}
+          />
+          <Buttons
+            onClick={() => deleteFromULBHandler(contentID, isComponent ? 'part' : 'page')}
+            label="Delete"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            Icon={AiOutlineDelete}
+          />
         </div>
       ) : null}
 
       <ButtonsRound
         Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
-        onClick={()=>handleEditBlockToggle()}
+        onClick={() => handleEditBlockToggle()}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
         containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}

@@ -36,8 +36,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
-    targetID,
-    setTargetID,
     initialUniversalLessonPagePartContent,
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
@@ -103,8 +101,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             loading={loading}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}
-            targetID={targetID}
-            setTargetID={setTargetID}
             handleModalPopToggle={handleModalPopToggle}
             hideAllModals={hideAllModals}
           />
@@ -181,8 +177,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         hierarchyVisible={hierarchyVisible}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
-        targetID={targetID}
-        setTargetID={setTargetID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleModalPopToggle={handleModalPopToggle}
       />

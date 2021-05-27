@@ -42,7 +42,7 @@ const RowComposer = (props: RowComposerProps) => {
         setTargetID(dataID);
       } else {
         setEditedID('');
-        setTargetID('')
+        setTargetID('');
       }
     }
   };
@@ -109,7 +109,7 @@ const RowComposer = (props: RowComposerProps) => {
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
-                deleteFromULBHandler={()=>deleteFromULBHandler('part')}
+                deleteFromULBHandler={() => deleteFromULBHandler(pagePart.id, 'part')}
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
                 handleEditBlockToggle={() =>
@@ -133,7 +133,9 @@ const RowComposer = (props: RowComposerProps) => {
                         handleEditBlockToggle={() =>
                           handleEditBlockToggle(content.id, 'partContent')
                         }
-                        deleteFromULBHandler={()=>deleteFromULBHandler('part')}>
+                        deleteFromULBHandler={() =>
+                          deleteFromULBHandler(content.id, 'part')
+                        }>
                         {content.value.length > 0 ? (
                           content.value.map((value: any, idx3: number) =>
                             composePartContent(

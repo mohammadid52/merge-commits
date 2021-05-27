@@ -98,8 +98,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
             setUniversalBuilderStep={setUniversalBuilderStep}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}
-            targetID={targetID}
-            setTargetID={setTargetID}
             initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
           />
         );
@@ -112,8 +110,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
   );
-  const [targetID, setTargetID] = useState<string>('');
   const [selectedPageID, setSelectedPageID] = useState<string>('');
+
+
+  const listPages = universalLessonDetails.universalLessonPages;
   const getPage = universalLessonDetails.universalLessonPages.find(
     (thePage: UniversalLessonPage) => thePage.id === selectedPageID
   );
@@ -178,33 +178,36 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }, []);
   };
 
-  const deleteULBHandler = (targetSpec?: 'page' | 'part' | 'content') => {
-    switch (targetSpec) {
-      case 'page':
-      case 'part':
-        const updatedPageContent = loopThroughPageContent(
-          getPage.pageContent,
-          'delete',
-          targetID
-        );
-        const updatedLessonDetails = {
-          ...universalLessonDetails,
-          universalLessonPages: universalLessonDetails.universalLessonPages.map(
-            (thePage: UniversalLessonPage) => {
-              if (thePage.id === selectedPageID) {
-                return {...thePage, pageContent: updatedPageContent};
-              } else {
-                return thePage;
+  const deleteULBHandler = (targetID:string, targetSpec?: 'page' | 'part' | 'content') => {
+    const updatedLessonDetails = () => {
+      switch (targetSpec) {
+        case 'page':
+          const updatedPages = loopThroughPages(listPages, 'delete', targetID);
+          return {...universalLessonDetails, universalLessonPages: updatedPages}
+        case 'part':
+          const updatedPageContent = loopThroughPageContent(
+            getPage.pageContent,
+            'delete',
+            targetID
+          );
+          return {
+            ...universalLessonDetails,
+            universalLessonPages: universalLessonDetails.universalLessonPages.map(
+              (thePage: UniversalLessonPage) => {
+                if (thePage.id === selectedPageID) {
+                  return {...thePage, pageContent: updatedPageContent};
+                } else {
+                  return thePage;
+                }
               }
-            }
-          ),
-        };
-        setUniversalLessonDetails(updatedLessonDetails);
-        break;
-      case 'content':
-      default:
-        break;
+            ),
+          };
+        case 'content':
+        default:
+          break;
+      }
     }
+    setUniversalLessonDetails(updatedLessonDetails());
   };
 
   return (
