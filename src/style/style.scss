@@ -107,10 +107,13 @@
     z-index: 9999;
     border-radius: 3px;
     transition: opacity 0.5s;
+    transform: translateX(-10px);
+    transition: all 0.15s ease-in-out;
   }
 
   &:hover {
     .custom_tooltip {
+      transform: translateX(0px);
       opacity: 1;
       visibility: visible;
     }
@@ -755,6 +758,14 @@
   transition: all 0.15s ease-in-out;
   &:focus-within {
     border: 1px solid #d1d5db;
+  }
+}
+.comment-box__inner {
+  transition: all 0.15s ease-in-out;
+  border-bottom: 1px solid transparent;
+
+  &:focus-within {
+    border-bottom: 1px solid #f3f4f6;
   }
 }
 
