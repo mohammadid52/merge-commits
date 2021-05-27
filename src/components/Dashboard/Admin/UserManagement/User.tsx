@@ -21,7 +21,7 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {getImageFromS3} from '../../../../utilities/services';
+import {getImageFromS3, getImageFromS3Static} from '../../../../utilities/services';
 import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
@@ -1034,18 +1034,7 @@ const User = () => {
     const Feedback = ({feedback}: any) => {
       const {person} = feedback;
       const {firstName, lastName, preferredName} = person;
-      const [profileUrl, setProfileUrl] = useState('');
-      useEffect(() => {
-        async function getUrl() {
-          if (!profileUrl) {
-            const url: any = getImageFromS3(person.image);
-            setProfileUrl(url);
-          }
-        }
-        if (!profileUrl) {
-          getUrl();
-        }
-      }, [person.image, profileUrl]);
+
       return (
         <div
           key={feedback.id}
@@ -1054,7 +1043,7 @@ const User = () => {
             {person.image ? (
               <img
                 className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
-                src={profileUrl}
+                src={getImageFromS3Static(person.image)}
                 alt=""
               />
             ) : (
