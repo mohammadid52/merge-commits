@@ -1001,6 +1001,43 @@ const User = () => {
         </div>
       );
     };
+    const AudioMedia = ({attachment}: any) => {
+      return attachment.url === 'loading' ? (
+        <div
+          style={{width: '30rem'}}
+          className="h-12 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
+          <p className="truncate w-auto">{attachment.filename}</p>
+          <span className={'flex items-center justify-center h-8 w-8'}>
+            <Loader color="#6366F1" />
+          </span>
+        </div>
+      ) : (
+        <div style={{width: '30rem'}} className="h-auto border-0 p-4 border-gray-300">
+          <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
+            {attachment.filename}
+          </p>
+          <div className="flex items-center justify-center">
+            <audio controls className="mr-2 rounded-lg">
+              <source type={fileObject.type} src={attachment.url} />
+              Your browser does not support the video tag.
+            </audio>
+            <span
+              onClick={() => {
+                downloadFile(
+                  attachment.url,
+                  attachment.filename.replace(/\.[^/.]+$/, ''),
+                  attachment.type.includes('audio')
+                );
+              }}
+              className={
+                'flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 text-lg'
+              }>
+              <BiCloudDownload />
+            </span>
+          </div>
+        </div>
+      );
+    };
 
     const handleSelection = (e: any) => {
       if (e.target.files && e.target.files.length > 0) {
@@ -1096,7 +1133,8 @@ const User = () => {
                     const {type, url} = attachment;
                     const isImage = type.includes('image');
                     const isVideo = type.includes('video');
-                    const isOther = !isImage && !isVideo;
+                    const isAudio = type.includes('audio');
+                    const isOther = !isImage && !isVideo && !isAudio;
                     return (
                       <div
                         className="mt-2"
@@ -1105,6 +1143,7 @@ const User = () => {
                         }}>
                         {isImage && <ImageMedia attachment={attachment} />}
                         {isVideo && <VideoMedia attachment={attachment} />}
+                        {isAudio && <AudioMedia attachment={attachment} />}
                         {isOther && <OtherMedia attachment={attachment} />}
                       </div>
                     );
@@ -1142,7 +1181,7 @@ const User = () => {
                 closeAction={() => setAttModal({show: false, url: '', type: ''})}>
                 {attModal.type.includes('image') && (
                   <img
-                    style={{objectFit: 'cover'}}
+                    style={{objectFit: 'cover', maxHeight: '90vh', maxWidth: '90vw'}}
                     className="h-auto w-auto rounded"
                     src={attModal.url}
                   />
@@ -1242,6 +1281,7 @@ const User = () => {
                       </span>
                     </div>
                   )}
+
                   {!isVideo && !isImage && (
                     <div
                       onClick={() => setfileObject({})}
