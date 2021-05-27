@@ -63,7 +63,7 @@ const AnthologyContent = (props: ContentCardProps) => {
   };
 
   const do_resize = (textbox: any) => {
-    var maxrows = 5;
+    var maxrows = 50;
     var txt = textbox.value;
     var cols = textbox.cols;
 
@@ -709,13 +709,14 @@ const AnthologyContent = (props: ContentCardProps) => {
             <div className="comment-box w-auto flex flex-col border-0 border-gray-200 h-auto rounded mt-4">
               <div
                 style={{minHeight: '2.5rem'}}
-                className="flex flex-col border-b-0 border-gray-200">
+                className="flex comment-box__inner flex-col border-b-0 border-gray-200">
                 <textarea
                   onKeyUp={(e) => do_resize(e.target)}
                   style={{resize: 'none'}}
                   placeholder="Add Feedback"
                   className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
                   rows={1}
+                  cols={125}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                 />

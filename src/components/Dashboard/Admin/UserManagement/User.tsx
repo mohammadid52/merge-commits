@@ -522,7 +522,7 @@ const User = () => {
   };
 
   const do_resize = (textbox: any) => {
-    var maxrows = 10;
+    var maxrows = 50;
     var txt = textbox.value;
     var cols = textbox.cols;
 
@@ -830,6 +830,7 @@ const User = () => {
           firstName: state?.user?.preferredName,
           preferredName: state?.user?.firstName,
           lastName: state.user.lastName,
+          role: state.user.role,
         },
         createdAt: new Date(),
         id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
@@ -1190,7 +1191,7 @@ const User = () => {
               } comment-box w-auto mx-6 flex flex-col border-0 border-gray-200 h-auto rounded mt-4`}>
               <div
                 style={{minHeight: '2.5rem'}}
-                className="flex flex-col border-b-0 border-gray-200">
+                className="flex comment-box__inner flex-col">
                 <textarea
                   onKeyUp={(e) => do_resize(e.target)}
                   autoFocus={true}
