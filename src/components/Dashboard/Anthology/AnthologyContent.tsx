@@ -973,6 +973,12 @@ const AnthologyContent = (props: ContentCardProps) => {
       setShowComments(!showComments);
     };
 
+    const isEditMode =
+      viewEditMode &&
+      viewEditMode.mode === 'edit' &&
+      viewEditMode.studentDataID === contentObj.studentDataID &&
+      viewEditMode.idx === getContentObjIndex(contentObj);
+
     return (
       <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
         <div
@@ -980,28 +986,33 @@ const AnthologyContent = (props: ContentCardProps) => {
           className={`flex flex-col ${
             idx !== content.length - 1 && 'border-b-0'
           } border-gray-200 px-6 py-6 p-2`}>
-          {viewEditMode &&
-          viewEditMode.mode === 'edit' &&
-          viewEditMode.studentDataID === contentObj.studentDataID &&
-          viewEditMode.idx === getContentObjIndex(contentObj)
-            ? editModeView(contentObj)
-            : viewModeView(contentObj)}
+          {isEditMode ? editModeView(contentObj) : viewModeView(contentObj)}
           {/**
            *  section:  VIEW/EDIT BUTTON
            */}
           <div className={`flex pt-2 flex-col mt-2`}>
-            {viewEditMode.mode === 'edit' &&
-            viewEditMode.studentDataID === contentObj.studentDataID &&
-            viewEditMode.idx === getContentObjIndex(contentObj) ? (
-              <Buttons
-                onClick={() => {
-                  handleEditToggle('', '', 0);
-                  // onCancel(contentObj.type);
-                }}
-                label={anthologyDict[userLanguage].ACTIONS.CANCEL}
-                transparent
-                btnClass="mr-2"
-              />
+            {isEditMode ? (
+              <div className="flex ">
+                <Buttons
+                  onClick={() => {
+                    handleEditToggle('', '', 0);
+                    // onCancel(contentObj.type);
+                  }}
+                  label={anthologyDict[userLanguage].ACTIONS.CANCEL}
+                  transparent
+                  btnClass="mr-2"
+                />
+                <Buttons
+                  onClick={() =>
+                    handleEditToggle(
+                      'save',
+                      contentObj.studentDataID,
+                      getContentObjIndex(contentObj)
+                    )
+                  }
+                  label={anthologyDict[userLanguage].ACTIONS.SAVE}
+                />
+              </div>
             ) : (
               <div className="flex items-center justify-between">
                 <Buttons
@@ -1020,6 +1031,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                 />
               </div>
             )}
+
             {showComments && (
               <div className="border-t-0 border-gray-200 mt-4">
                 <Feedbacks
@@ -1032,21 +1044,6 @@ const AnthologyContent = (props: ContentCardProps) => {
                 />
               </div>
             )}
-
-            {viewEditMode.mode === 'edit' &&
-            viewEditMode.studentDataID === contentObj.studentDataID &&
-            viewEditMode.idx === getContentObjIndex(contentObj) ? (
-              <Buttons
-                onClick={() =>
-                  handleEditToggle(
-                    'save',
-                    contentObj.studentDataID,
-                    getContentObjIndex(contentObj)
-                  )
-                }
-                label={anthologyDict[userLanguage].ACTIONS.SAVE}
-              />
-            ) : null}
           </div>
         </div>
       </ContentCard>
