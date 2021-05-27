@@ -1031,19 +1031,21 @@ const User = () => {
       );
     };
 
-    const [profileUrl, setProfileUrl] = useState('');
-    useEffect(() => {
-      async function getUrl() {
-        const profileUrl: any = getImageFromS3(state.user.image);
-        setProfileUrl(profileUrl);
-      }
-      if (!profileUrl) {
-        getUrl();
-      }
-    }, [state.user, profileUrl]);
     const Feedback = ({feedback}: any) => {
       const {person} = feedback;
       const {firstName, lastName, preferredName} = person;
+      const [profileUrl, setProfileUrl] = useState('');
+      useEffect(() => {
+        async function getUrl() {
+          if (!profileUrl) {
+            const url: any = getImageFromS3(person.image);
+            setProfileUrl(url);
+          }
+        }
+        if (!profileUrl) {
+          getUrl();
+        }
+      }, [person.image, profileUrl]);
       return (
         <div
           key={feedback.id}
