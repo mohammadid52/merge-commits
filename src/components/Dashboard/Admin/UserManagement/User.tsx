@@ -522,7 +522,7 @@ const User = () => {
   };
 
   const do_resize = (textbox: any) => {
-    var maxrows = 5;
+    var maxrows = 10;
     var txt = textbox.value;
     var cols = textbox.cols;
 
@@ -1193,10 +1193,12 @@ const User = () => {
                 className="flex flex-col border-b-0 border-gray-200">
                 <textarea
                   onKeyUp={(e) => do_resize(e.target)}
+                  autoFocus={true}
                   style={{resize: 'none'}}
+                  cols={125}
+                  rows={1}
                   placeholder="Add Feedback"
                   className="comment-input text-sm w-9/10 m-2 mx-4 mt-3 text-gray-700"
-                  rows={1}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                 />
