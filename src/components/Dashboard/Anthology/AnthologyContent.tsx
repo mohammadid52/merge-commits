@@ -802,7 +802,8 @@ const AnthologyContent = (props: ContentCardProps) => {
                 />
                 <Buttons
                   onClick={onCommentShowHide}
-                  label={`${showComments ? 'Hide' : 'Show'} Feedbacks`}
+
+                  label={`${showComments ? 'Hide' : 'Show'} Feedback`}
                 />
               </div>
             )}

@@ -1086,7 +1086,8 @@ const User = () => {
     );
   };
 
-  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+  const isTeacher =
+    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM';
   {
     return (
       <>
