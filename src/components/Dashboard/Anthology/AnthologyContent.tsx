@@ -76,23 +76,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     else textbox.rows = rows;
   };
 
-  const getRole = (role: string) => {
-    switch (role) {
-      case 'CRD':
-        return 'Coordinator';
-      case 'TR':
-        return 'Teacher';
-      case 'FLW':
-        return 'Fellow';
-      case 'BLD':
-        return 'Builder';
-      case 'ADM':
-        return 'Admin';
-      case 'ST':
-        return 'Student';
-    }
-  };
-
   const preview_image = (file: any) => {
     var reader = new FileReader();
     reader.onload = function () {
@@ -322,7 +305,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       setFeedbackData([...feedbackData, finalInput]);
     };
 
-    const onCommentSubmit = async (e: any) => {
+    const onCommentSubmit = async () => {
       if (fileObject.name) {
         let _comment: any = comment;
         setUploadingAttachment(true);
@@ -367,8 +350,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     const inputVideo = useRef(null);
     const inputImage = useRef(null);
     const inputOther = useRef(null);
-
-    const commentRef = useRef(null);
 
     const handleVideo = () => inputVideo.current.click();
     const handleImage = () => inputImage.current.click();
@@ -435,8 +416,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
-
-    const sendDisabled = commentRef?.current?.value?.length === 0;
 
     return (
       <div key={item.id} className={`w-full pb-2 mb-2`}>
@@ -573,7 +552,7 @@ const AnthologyContent = (props: ContentCardProps) => {
               <div className="comment-actions h-10 flex items-center justify-between">
                 <div className="left-action w-auto">
                   <div className="flex items-center justify-center">
-                    <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
+                    <button onClick={handleVideo} className={`${actionStyles}`}>
                       <input
                         accept="video/*"
                         ref={inputVideo}
@@ -584,7 +563,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                       />
                       <BsCameraVideoFill className="" />
                     </button>
-                    <button onClick={(e) => handleImage()} className={`${actionStyles} `}>
+                    <button onClick={handleImage} className={`${actionStyles} `}>
                       <input
                         accept="image/*"
                         ref={inputImage}
@@ -595,7 +574,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                       />
                       <MdImage className="" />
                     </button>
-                    <button onClick={(e) => handleOther()} className={`${actionStyles}`}>
+                    <button onClick={handleOther} className={`${actionStyles}`}>
                       <BiLinkAlt className="" />
                       <input
                         ref={inputOther}
@@ -611,7 +590,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                   <div
                     onClick={onCommentSubmit}
                     className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
-                      !sendDisabled || fileObject.name
+                      comment.length || fileObject.name
                         ? 'bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600'
                         : 'cursor-default text-indigo-300'
                     }`}>

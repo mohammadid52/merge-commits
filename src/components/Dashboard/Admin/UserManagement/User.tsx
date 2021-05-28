@@ -809,7 +809,7 @@ const User = () => {
       setFeedbackData([...feedbackData, finalInput]);
     };
 
-    const onCommentSubmit = async (e: any) => {
+    const onCommentSubmit = async () => {
       if (fileObject.name) {
         setUploadingAttachment(true);
         let _fileObject: any = fileObject;
