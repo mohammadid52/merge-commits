@@ -193,7 +193,6 @@ const Login = ({ updateAuthState }: LoginProps) => {
     let password = input.password;
     try {
       await Auth.completeNewPassword(newUser, password)
-      toggleLoading(false);
       const user = await Auth.signIn(username, password);
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
       setCookie(
@@ -228,6 +227,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
         graphqlOperation(customMutations.updatePersonLoginTime, { input })
       );
       updateAuthState(true);
+      toggleLoading(false);
     } catch (error) {
       setMessage(() => {
         switch (error.code) {
@@ -436,6 +436,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
                         name="password"
                         value={input.password}
                         onChange={handleChange}
+                        onKeyDown={handleEnterSetPassword}
                       />
                     </div>
                     <div className="relative h-4.5/10 flex flex-col justify-center items-center">
