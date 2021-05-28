@@ -1,14 +1,14 @@
 {
-  "data" : {
-    "__schema" : {
-      "queryType" : {
-        "name" : "Query"
+  "data": {
+    "__schema": {
+      "queryType": {
+        "name": "Query"
       },
-      "mutationType" : {
-        "name" : "Mutation"
+      "mutationType": {
+        "name": "Mutation"
       },
-      "subscriptionType" : {
-        "name" : "Subscription"
+      "subscriptionType": {
+        "name": "Subscription"
       },
       "types" : [ {
         "kind" : "OBJECT",

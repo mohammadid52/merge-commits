@@ -111,6 +111,8 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
+    STUDENTS: 'Students',
+    STUDENTS_NOTEBOOK: 'Students Notebook',
   },
   ES: {
     HOME: 'CASA',
@@ -141,6 +143,8 @@ const BreadcrumsTitles: any = {
     UserInfo: 'TBD',
     LESSONS: 'TBD',
     LESSONPLANBUILDER: 'TBD',
+    STUDENTS: 'Students',
+    STUDENTS_NOTEBOOK: 'Students Notebook',
   },
 };
 // Profile Display and edit section

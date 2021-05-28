@@ -317,22 +317,22 @@ const InstitutionLookup: React.FC = () => {
                   <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span>{InstitutionDict[userLanguage]['TABLE']['NAME']}</span>
                   </div>
-                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {InstitutionDict[userLanguage]['TABLE']['TYPE']}
                     </span>
                   </div>
-                  <div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-3.5/10 flex justify-left px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {InstitutionDict[userLanguage]['TABLE']['WEBSITE']}
                     </span>
                   </div>
-                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">
                       {InstitutionDict[userLanguage]['TABLE']['CONTACT']}
                     </span>
                   </div>
-                  <div className="w-1/10 px-8 justify-center py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  <div className="w-1/10 px-8 flex justify-left py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     {InstitutionDict[userLanguage]['TABLE']['ACTION']}
                   </div>
                 </div>
