@@ -28,6 +28,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     isComponent,
     handleEditBlockToggle,
     deleteFromULBHandler,
+    updateFromULBHandler,
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
 
@@ -100,13 +101,14 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             Icon={AiOutlineEdit}
           />
           <Buttons
+            onClick={() => updateFromULBHandler(contentID,'class','')}
             label="BG Color"
             overrideClass={true}
             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
             Icon={AiOutlineBgColors}
           />
           <Buttons
-            onClick={() => deleteFromULBHandler(contentID, isComponent ? 'part' : 'page')}
+            onClick={() => deleteFromULBHandler(contentID)}
             label="Delete"
             overrideClass={true}
             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"

@@ -19,22 +19,16 @@ const RowComposer = (props: RowComposerProps) => {
   const {
     mode,
     deleteFromULBHandler,
+    updateFromULBHandler,
     universalLessonDetails,
     selectedPageID,
-    setSelectedPageID,
-    targetID,
     setTargetID,
-    selectedPagePartID,
-    setSelectedPagePartID,
-    selectedPartContentID,
-    setSelectedPartContentID,
     handleModalPopToggle,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
 
   const handleEditBlockToggle = (
-    dataID: string,
-    toggleStage?: 'pagePart' | 'partContent'
+    dataID: string
   ) => {
     if (dataID) {
       if (editedID !== dataID) {
@@ -109,16 +103,18 @@ const RowComposer = (props: RowComposerProps) => {
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
-                deleteFromULBHandler={() => deleteFromULBHandler(pagePart.id, 'part')}
+                deleteFromULBHandler={deleteFromULBHandler}
+                updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
                 handleEditBlockToggle={() =>
-                  handleEditBlockToggle(pagePart.id, 'pagePart')
+                  handleEditBlockToggle(pagePart.id)
                 }>
                 <RowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
-                  contentID={`${pagePart.id}`}
+                  contentID={pagePart.id}
+                  classString={pagePart.class}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
                   {pagePart.partContent.length > 0 ? (
@@ -126,15 +122,14 @@ const RowComposer = (props: RowComposerProps) => {
                       <EditOverlayBlock
                         key={`pp_${idx}_pc_${idx2}`}
                         mode={mode}
-                        contentID={`${content.id}`}
+                        contentID={content.id}
                         editedID={editedID}
                         isComponent={true}
                         isLast={idx2 === pagePart.partContent.length - 1}
                         handleEditBlockToggle={() =>
-                          handleEditBlockToggle(content.id, 'partContent')
+                          handleEditBlockToggle(content.id)
                         }
-                        deleteFromULBHandler={() =>
-                          deleteFromULBHandler(content.id, 'part')
+                        deleteFromULBHandler={deleteFromULBHandler
                         }>
                         {content.value.length > 0 ? (
                           content.value.map((value: any, idx3: number) =>
@@ -173,7 +168,7 @@ const RowComposer = (props: RowComposerProps) => {
             key={`pp_addNew`}
             contentID={`addNewRow`}
             editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`, 'pagePart')}>
+            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>
@@ -187,7 +182,7 @@ const RowComposer = (props: RowComposerProps) => {
             key={`pp_addNew`}
             contentID={`addNewRow`}
             editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`, 'pagePart')}>
+            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
             </RowWrapper>

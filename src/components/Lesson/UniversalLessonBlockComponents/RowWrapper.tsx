@@ -2,7 +2,7 @@ import React from 'react';
 import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export const RowWrapper = (props: RowWrapperProps) => {
-  const {mode, hasContent, dataIdAttribute, contentID, children, pagePart} = props;
+  const {mode, hasContent, dataIdAttribute, contentID, classString, children, pagePart} = props;
 
   const viewModeClass = ``;
   const buildModeClass = `border-0 border-dashed border-gray-400`;
@@ -12,6 +12,7 @@ export const RowWrapper = (props: RowWrapperProps) => {
       id={contentID}
       data-id={dataIdAttribute}
       className={`
+        ${classString ? classString : ''}
         relative
         my-4
         z-50

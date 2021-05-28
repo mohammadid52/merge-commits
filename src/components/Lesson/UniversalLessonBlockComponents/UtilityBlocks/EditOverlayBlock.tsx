@@ -6,6 +6,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
   const {
     mode,
     deleteFromULBHandler,
+    updateFromULBHandler,
     children,
     contentID,
     editedID,
@@ -31,6 +32,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
             isComponent={isComponent}
             handleEditBlockToggle={handleEditBlockToggle}
             deleteFromULBHandler={deleteFromULBHandler}
+            updateFromULBHandler={updateFromULBHandler}
           />
           <div>{children}</div>
         </div>

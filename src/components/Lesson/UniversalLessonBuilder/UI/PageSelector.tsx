@@ -78,7 +78,7 @@ const PageSelector = (props: PageSelectorProps) => {
                     <PageTile />
                     <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
                     <p
-                      onClick={() => deleteFromULBHandler(page.id, 'page')}
+                      onClick={() => deleteFromULBHandler(page.id)}
                       className={`text-center text-xs font-semibold text-red-600 cursor-pointer`}>
                       Delete?
                     </p>

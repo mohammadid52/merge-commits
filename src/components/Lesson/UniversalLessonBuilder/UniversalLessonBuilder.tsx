@@ -62,7 +62,6 @@ const initialUniversalLessonPagePartContent: PartContent = {
  *******************************************/
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {state, dispatch} = useContext(GlobalContext);
-
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
 
   //  INITIALIZE CURRENT PAGE LOCATION
@@ -93,6 +92,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           <BuilderWrapper
             mode={`building`}
             deleteFromULBHandler={deleteULBHandler}
+            updateFromULBHandler={updateULBHandler}
             universalLessonDetails={universalLessonDetails}
             universalBuilderStep={universalBuilderStep}
             setUniversalBuilderStep={setUniversalBuilderStep}
@@ -107,108 +107,73 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   };
 
   //  CORE DATA MANAGEMENT
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
-    initialUniversalLessonData
-  );
+  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>( initialUniversalLessonData );
   const [selectedPageID, setSelectedPageID] = useState<string>('');
-
 
   const listPages = universalLessonDetails.universalLessonPages;
   const getPage = universalLessonDetails.universalLessonPages.find(
     (thePage: UniversalLessonPage) => thePage.id === selectedPageID
   );
 
+
   /**
    *
    *
-   * C(not R)UD
+   * CRUD -  UPDATE
+   *  - Recursive
+   *  - Supports create, update, delete operation
+   *  - If target ID is found, does specified operation
+   *  - If target ID is not found, continues loop but does nothing
+   *
+   * */
+  const crudULBHandler = (inputObj: any, operation: 'create' | 'update' | 'delete', idToTarget: string, payload?: any) => {
+    const reduced = Object.keys(inputObj).reduce((acc: any, inputObjKey: string) => {
+      if (
+        inputObjKey === 'universalLessonPages' ||
+        inputObjKey === 'pageContent' ||
+        inputObjKey === 'partContent'
+      ) {
+        return { ...acc,
+          [`${inputObjKey}`]: inputObj[inputObjKey].reduce(
+            (acc2: any, targetArrayObj: UniversalLessonPage | PagePart | PartContent) => {
+              if(targetArrayObj.id === idToTarget){
+                switch(operation){
+                  case 'delete':
+                    return acc2;
+                  case 'update':
+                    return [...acc2, {...targetArrayObj, class: ''}]
+                  default:
+                    return [...acc2, crudULBHandler(targetArrayObj, operation, idToTarget)];
+                }
+              } else {
+                return [...acc2, crudULBHandler(targetArrayObj, operation, idToTarget)];
+              }
+            },[]
+          ),
+        };
+      } else {
+        return {...acc, [`${inputObjKey}`]: inputObj[inputObjKey]};
+      }
+    },{});
+    return reduced;
+  };
+
+  /**
+   *
+   *
+   * CRUD -  DELETE
    *
    *
    * */
-
-  const loopThroughPartContent = (
-    partContentArray: PartContent[],
-    operation: 'create' | 'update' | 'delete',
-    idForTargeting: string
-  ) => {
-    return partContentArray.reduce((acc: PartContent[], val: PartContent) => {
-      if (val.id === idForTargeting) {
-        return acc;
-      } else {
-        return [...acc, val];
-      }
-    }, []);
+  const deleteULBHandler = (targetID: string) => {
+    const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID)
+    setUniversalLessonDetails(deleted);
   };
-
-  const loopThroughPageContent = (
-    pageContentArray: PagePart[],
-    operation: 'create' | 'updated' | 'delete',
-    idForTargeting: string
-  ) => {
-    return pageContentArray.reduce((acc: PagePart[], val: PagePart) => {
-      if (val.id === idForTargeting) {
-        return acc;
-      } else {
-        return [
-          ...acc,
-          {
-            ...val,
-            partContent: loopThroughPartContent(
-              val.partContent,
-              'delete',
-              idForTargeting
-            ),
-          },
-        ];
-      }
-    }, []);
-  };
-
-  const loopThroughPages = (
-    pagesArray: UniversalLessonPage[],
-    operation: 'create' | 'updated' | 'delete',
-    idForTargeting: string
-  ) => {
-    return pagesArray.reduce((acc: UniversalLessonPage[], val: UniversalLessonPage) => {
-      if (val.id === idForTargeting) {
-        return acc;
-      } else {
-        return [...acc, val];
-      }
-    }, []);
-  };
-
-  const deleteULBHandler = (targetID:string, targetSpec?: 'page' | 'part' | 'content') => {
-    const updatedLessonDetails = () => {
-      switch (targetSpec) {
-        case 'page':
-          const updatedPages = loopThroughPages(listPages, 'delete', targetID);
-          return {...universalLessonDetails, universalLessonPages: updatedPages}
-        case 'part':
-          const updatedPageContent = loopThroughPageContent(
-            getPage.pageContent,
-            'delete',
-            targetID
-          );
-          return {
-            ...universalLessonDetails,
-            universalLessonPages: universalLessonDetails.universalLessonPages.map(
-              (thePage: UniversalLessonPage) => {
-                if (thePage.id === selectedPageID) {
-                  return {...thePage, pageContent: updatedPageContent};
-                } else {
-                  return thePage;
-                }
-              }
-            ),
-          };
-        case 'content':
-        default:
-          break;
-      }
-    }
-    setUniversalLessonDetails(updatedLessonDetails());
-  };
+  
+  const updateULBHandler = (targetID: string, propertyToTarget: string, replacementValue?: string) => {
+    const updated = crudULBHandler(universalLessonDetails, 'update', targetID);
+    setUniversalLessonDetails(updated);
+  }
 
   return (
     /**

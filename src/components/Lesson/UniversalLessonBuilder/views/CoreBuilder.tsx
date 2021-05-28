@@ -16,7 +16,6 @@ import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilder
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
-  deleteULBHandler?: () => void;
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -29,6 +28,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const {
     mode,
     deleteFromULBHandler,
+    updateFromULBHandler,
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
@@ -48,6 +48,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           <RowComposer
             mode={mode}
             deleteFromULBHandler={deleteFromULBHandler}
+            updateFromULBHandler={updateFromULBHandler}
             universalLessonDetails={universalLessonDetails}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}

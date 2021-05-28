@@ -18,7 +18,8 @@ export interface ULBDialogComponent {
 
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
-  deleteFromULBHandler?: (targetID:string, targetSpec?:string) => void;
+  deleteFromULBHandler?: (targetID:string) => void;
+  updateFromULBHandler?: (targetID:string, propertyToTarget: string, replacementValue?: string) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
   targetID?: string;
@@ -39,6 +40,7 @@ export interface RowComposerProps extends ULBSelectionProps {
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   hasContent?: boolean;
   contentID?: string;
+  classString?: string;
   editedID?: string;
   dataIdAttribute?: string;
   hoveredID?: string;

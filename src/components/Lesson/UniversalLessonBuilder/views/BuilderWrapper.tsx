@@ -33,6 +33,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     mode,
     deleteFromULBHandler,
+    updateFromULBHandler,
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
@@ -172,6 +173,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       <CoreBuilder
         mode={mode}
         deleteFromULBHandler={deleteFromULBHandler}
+        updateFromULBHandler={updateFromULBHandler}
         universalLessonDetails={universalLessonDetails}
         galleryVisible={galleryVisible}
         hierarchyVisible={hierarchyVisible}
