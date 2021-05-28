@@ -7,7 +7,6 @@ import EditCheckPoint from './CheckPointSteps/EditCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';
 import QuestionLookup from './CheckPointSteps/QuestionLookup';
 import SelectedCheckPointsList from './CheckPointSteps/SelectedCheckPointsList';
-import EditQuestion from './CheckPointSteps/EditQuestion';
 import {LessonPlansProps} from '../LessonEdit';
 import {InitialData} from './CheckPointSteps/AddNewCheckPoint';
 
@@ -18,10 +17,7 @@ import {
   reorder,
   createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
-import Buttons from '../../../../Atoms/Buttons';
-import {EditCheckPointDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {find} from 'lodash';
 
 interface CheckpointBuilderProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -33,7 +29,8 @@ interface CheckpointBuilderProps {
   lessonName: string;
   lessonType: string;
   hasUnsavedCheckpoint: (
-    val: any,
+    val: boolean,
+    isIndividualEmpty: boolean,
     data: any,
     checkpointQuestions: any,
     selectedDesigners: any[]
@@ -104,9 +101,51 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     return isUnsaved;
   };
 
+  const checkIndividualFields = () => {
+    const title = checkpointDetails.title;
+    const label = checkpointDetails.label;
+    const estTime = checkpointDetails.estTime;
+    const fields: string[] = [
+      title,
+      label,
+      estTime,
+      checkpQuestions.length <= 0 ? '' : 'questions',
+    ];
+    let len: any[] = [];
+    fields.forEach((field) => {
+      if (field.trim().length > 0) {
+        len.push(true);
+      } else {
+        len.push(false);
+      }
+    });
+
+    const fieldsPopulated = len.filter((field) => Boolean(field)).length;
+
+    if (fieldsPopulated === 0) {
+      return false;
+    } else if (fieldsPopulated === 4) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   useEffect(() => {
-    const val: boolean = hasCheckpointUnsaved();
-    hasUnsavedCheckpoint(val, checkpointDetails, checkpQuestions, selectedDesigners);
+    const isUnsaved: boolean = hasCheckpointUnsaved();
+    const isIndividualEmpty: boolean = checkIndividualFields();
+    console.log(
+      '🚀 ~ file: CheckpointBuilder.tsx ~ line 135 ~ useEffect ~ isIndividualEmpty',
+      isIndividualEmpty
+    );
+
+    hasUnsavedCheckpoint(
+      isUnsaved,
+      isIndividualEmpty,
+      checkpointDetails,
+      checkpQuestions,
+      selectedDesigners
+    );
   }, [
     checkpointDetails.title,
     checkpointDetails.label,
