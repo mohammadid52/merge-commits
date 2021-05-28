@@ -51,11 +51,8 @@ const Csv = (props: Csv) => {
   const [unitsLoading, setUnitsLoading] = useState(false);
   const [surveysLoading, setSurveysLoading] = useState(false);
   const [csvGettingReady, setCsvGettingReady] = useState(false);
-  const [surveyDates, setSurveyDates] = useState({start: '', last: ''});
-  const [studentsWithNoSurveyAnswers, setStudentsWithNoSurveyAnswers] = useState([]);
 
   // methods to clear state data
-
   const resetInstitution = () => {
     setInstClassRooms([]);
 
@@ -348,12 +345,10 @@ const Csv = (props: Csv) => {
     setCsvGettingReady(true);
     let students = classStudents;
     let qids: any = [];
-    let stdsWithNoSurveyAnswers: any = [];
     let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
       qids.push(ques.question.id);
       return {label: `${ques.question.question}`, key: `${ques.question.id}`};
     });
-    let surveyAnswerDates: any = [];
 
     /* Enable this code if demographics questions */
 
@@ -380,6 +375,7 @@ const Csv = (props: Csv) => {
     ]);
 
     let data = students.map((stu: any) => {
+      let surveyAnswerDates: any = [];
       let studentAnswers: any = {};
       let hasTakenSurvey = false;
 
@@ -397,9 +393,6 @@ const Csv = (props: Csv) => {
           });
         }
       });
-      if (!hasTakenSurvey) {
-        stdsWithNoSurveyAnswers.push(stu);
-      }
 
       /* Enable this code if demographics questions */
       DCQAnswers.map((ans: any) => {
@@ -419,6 +412,7 @@ const Csv = (props: Csv) => {
         // @ts-ignore
         (a: any, b: any) => new Date(b) - new Date(a)
       );
+
       return {
         ...stu,
         institute: selectedInst.name,
@@ -427,6 +421,7 @@ const Csv = (props: Csv) => {
         classroom: selectedClassRoom.name,
         surveyName: selectedSurvey.name,
         ...studentAnswers,
+        hasTakenSurvey,
         first:
           (surveyAnswerDates[surveyAnswerDates.length - 1] &&
             new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
@@ -439,11 +434,6 @@ const Csv = (props: Csv) => {
           '-',
       };
     });
-    setSurveyDates({
-      last: surveyAnswerDates[0] || '',
-      start: surveyAnswerDates[surveyAnswerDates.length - 1] || '',
-    });
-    setStudentsWithNoSurveyAnswers(stdsWithNoSurveyAnswers);
     setCSVData(data);
     setIsCSVDownloadReady(true);
     setCsvGettingReady(false);
@@ -456,7 +446,6 @@ const Csv = (props: Csv) => {
   }, [isCSVReady]);
 
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const listArr: any[] = [];
 
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
@@ -490,16 +479,13 @@ const Csv = (props: Csv) => {
                       last Name
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Classroom
+                      Email
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      email
+                      Taken Survey
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Start
-                    </th>
-                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      End
+                      Completed Date
                     </th>
                   </tr>
                 </thead>
@@ -507,23 +493,19 @@ const Csv = (props: Csv) => {
                   {CSVData.map((listItem, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.institute}
+                        {listItem.id}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.curriculum}
+                        {listItem.firstName}
                       </td>
                       <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.unit}
+                        {listItem.lastName}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.classroom}
+                        {listItem.email}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.surveyName}
-                      </td>
-
-                      <td style={{width: '10%'}} className={tdataStyles}>
-                        {listItem.first}
+                        {listItem.hasTakenSurvey ? 'Yes': 'No' }
                       </td>
                       <td style={{width: '10%'}} className={tdataStyles}>
                         {listItem.last}
@@ -617,12 +599,11 @@ const Csv = (props: Csv) => {
           )}
         </button>
       </div>
-      {/* <div>
+      <div>
         <SectionTitleV3
           fontSize="2xl"
           fontStyle="bold"
-          // title={CsvDict[userLanguage]['SELECT_FILTERS']}
-          title={'List Table'}
+          title={'Survey results'}
         />
         {CSVData.length > 0 ? (
           <Table />
@@ -633,105 +614,7 @@ const Csv = (props: Csv) => {
               : 'Select filters options to populate data'}
           </div>
         )}
-      </div> */}
-      {isCSVDownloadReady && (
-        <div className="white_back grid grid-cols-1 p-4 my-4">
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Institution name:{' '}
-            </h3>
-            <p className="w-3/4">{selectedInst.name}</p>
-          </div>
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Class room name:{' '}
-            </h3>
-            <p className="w-3/4">{selectedClassRoom.name}</p>
-          </div>
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Curriculum Name:{' '}
-            </h3>
-            <p className="w-3/4">{selectedCurriculum.name}</p>
-          </div>
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Unit name:{' '}
-            </h3>
-            <p className="w-3/4">{selectedUnit.name}</p>
-          </div>
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Survey name:{' '}
-            </h3>
-            <p className="w-3/4">{selectedSurvey ? selectedSurvey.name : ''}</p>
-          </div>
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Survey first:{' '}
-            </h3>
-            <p className="w-3/4">{surveyDates.start || 'Not Available'}</p>
-          </div>
-          <div className={fieldClass}>
-            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
-              Survey last:{' '}
-            </h3>
-            <p className="w-3/4">{surveyDates.last || 'Not Available'}</p>
-          </div>
-          <div className="p-3 pt-0 border-t-0 border-gray-200">
-            <SectionTitleV3
-              extraContainerClass="pt-2"
-              title={`Total students: ${classStudents.length}`}
-            />
-
-            <div>
-              {studentsWithNoSurveyAnswers.map((item) => {
-                return <p>{item.email}</p>;
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* <span> ====**===========**======= ====**===========**======= </span>
-      {selectedUnit ? (
-        <div>
-          <span>survey questions</span>
-          {surveyQuestions.map((sq, index) => {
-            return (
-              <div key={index}>
-                <span>Question: {sq.question.question}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      <span> ====**===========**======= ====**===========**======= </span>
-      {selectedCurriculum ? (
-        <div>
-          <span>Demographics questions</span>
-          {demographicsQuestions.map((dq, index) => {
-            return (
-              <div key={index}>
-                <span>Question: {dq.question.question}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      <span> ====**===========**======= ====**===========**======= </span>
-      {selectedClass ? (
-        <div>
-          <span>Class Students</span>
-          {classStudents.map((stu, index) => {
-            return (
-              <div key={index}>
-                <span>student: email: {stu.email}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : null} */}
+      </div>
     </div>
   );
 };
