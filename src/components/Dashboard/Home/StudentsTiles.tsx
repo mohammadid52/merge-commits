@@ -28,7 +28,7 @@ const StudentsTiles = (props: {
 
   useEffect(() => {
     if (studentsList && studentsList.length > 0) {
-      setList(studentsList);
+      setList(studentsList.filter(({student}: any) => student.id !== state.user.id));
     }
   }, [studentsList]);
 

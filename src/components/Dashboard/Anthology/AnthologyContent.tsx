@@ -732,14 +732,14 @@ const AnthologyContent = (props: ContentCardProps) => {
     }, []);
 
     const getFeedBackData = async () => {
-      // setLoadingComments(true);
+      setLoadingComments(true);
       try {
         const feedbacksData: any = await listComments(contentObj.feedbacks);
         setFeedbackData(sortBy(feedbacksData, ['createdAt']));
       } catch (error) {
         console.error('error @getFeedBackData: ', error.message);
       } finally {
-        // setLoadingComments(false);
+        setLoadingComments(false);
       }
     };
     const onCommentShowHide = () => {
@@ -794,16 +794,17 @@ const AnthologyContent = (props: ContentCardProps) => {
               </div>
             ) : (
               <div className="flex items-center justify-between">
-                <Buttons
+                <div
+                  className={`bg-indigo-500 hover:bg-indigo-600 text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
                   onClick={() =>
                     handleEditToggle(
                       'edit',
                       contentObj.studentDataID,
                       getContentObjIndex(contentObj)
                     )
-                  }
-                  label={anthologyDict[userLanguage].ACTIONS.EDIT}
-                />
+                  }>
+                  {anthologyDict[userLanguage].ACTIONS.EDIT}
+                </div>
                 <div
                   onClick={onCommentShowHide}
                   className={`${
@@ -811,7 +812,9 @@ const AnthologyContent = (props: ContentCardProps) => {
                       ? 'bg-indigo-500 hover:bg-indigo-600'
                       : 'bg-gray-500'
                   }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                  {feedbackData.length > 0
+                  {loadingComments
+                    ? 'Loading Comments'
+                    : feedbackData.length > 0
                     ? `${showComments ? 'Hide' : 'Show'} Feedback`
                     : 'Leave Feedback'}
                 </div>

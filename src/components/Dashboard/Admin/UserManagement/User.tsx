@@ -369,9 +369,7 @@ const User = () => {
         },
         []
       );
-      setStudentData(
-        reducedAnthologyContent.filter((item: any) => item.type === 'journal')
-      );
+      setStudentData(reducedAnthologyContent);
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
     } finally {
@@ -769,7 +767,7 @@ const User = () => {
     }, []);
 
     const getFeedBackData = async () => {
-      // setLoadingComments(true);
+      setLoadingComments(true);
 
       try {
         const feedbacksData: any = await listComments(item.feedbacks);
@@ -777,7 +775,7 @@ const User = () => {
       } catch (error) {
         console.error('error @getFeedBackData: ', error.message);
       } finally {
-        // setLoadingComments(false);
+        setLoadingComments(false);
       }
     };
 
@@ -1087,7 +1085,9 @@ const User = () => {
                 ? 'bg-indigo-500 hover:bg-indigo-600'
                 : 'bg-gray-500'
             }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-            {feedbackData.length > 0
+            {loadingComments
+              ? 'Loading Comments'
+              : feedbackData.length > 0
               ? `${showComments ? 'Hide' : 'Show'} Feedback`
               : 'Leave Feedback'}
           </div>
