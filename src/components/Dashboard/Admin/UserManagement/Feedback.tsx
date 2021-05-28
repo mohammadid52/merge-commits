@@ -36,6 +36,7 @@ interface FeedbackProps {
     id: string;
     createdAt: string;
     text: string;
+    edited: boolean;
 
     person: {
       image: string;
@@ -118,8 +119,12 @@ const Feedback = ({
               } ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium w-auto`}>
               {getRole(person.role)}
             </p>
+            {feedback.edited && (
+              <span className="italic text-gray-600 font-light">(edited)</span>
+            )}
           </h5>
           <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
+
           {/* ------------------------- @key:A1 Attachments Section Start -------------------------------- */}
 
           {feedback.attachments &&

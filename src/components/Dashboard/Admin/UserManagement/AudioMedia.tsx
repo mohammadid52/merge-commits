@@ -38,7 +38,9 @@ const AudioMedia = ({attachment, type}: any) => {
       </span>
     </div>
   ) : (
-    <div style={{width: '30rem'}} className="h-auto border-0 p-4 border-gray-300">
+    <div
+      style={{width: '30rem'}}
+      className="relative h-auto border-0 p-4 border-gray-300">
       <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
         {attachment.filename}
       </p>
