@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useEffect, useState, useContext} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../../customGraphql/customQueries';
 import Selector from '../../Atoms/Form/Selector';
-import { createFilterToFetchSpecificItemsOnly } from '../../../utilities/strings';
-import { CSVLink } from 'react-csv';
+import {createFilterToFetchSpecificItemsOnly} from '../../../utilities/strings';
+import {CSVLink} from 'react-csv';
 import DateAndTime from '../DateAndTime/DateAndTime';
-import { getAsset } from '../../../assets';
+import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
-import { uniqBy } from 'lodash';
+import {uniqBy} from 'lodash';
 
-interface Csv { }
+interface Csv {}
 
 const Csv = (props: Csv) => {
-  const { state, theme, dispatch, clientKey, userLanguage } = useContext(GlobalContext);
-  const { CsvDict } = useDictionary(clientKey);
+  const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
+  const {CsvDict} = useDictionary(clientKey);
   const [institutions, setInstitutions] = useState([]);
   const [selectedInst, setSelectedInst] = useState(null);
 
@@ -51,7 +51,7 @@ const Csv = (props: Csv) => {
   const [unitsLoading, setUnitsLoading] = useState(false);
   const [surveysLoading, setSurveysLoading] = useState(false);
   const [csvGettingReady, setCsvGettingReady] = useState(false);
-  const [surveyDates, setSurveyDates] = useState({ start: '', last: '' });
+  const [surveyDates, setSurveyDates] = useState({start: '', last: ''});
   const [studentsWithNoSurveyAnswers, setStudentsWithNoSurveyAnswers] = useState([]);
 
   // methods to clear state data
@@ -116,7 +116,7 @@ const Csv = (props: Csv) => {
     setClassRoomLoading(true);
     try {
       let sInst = selectedInst;
-      let inst = { id, name, value };
+      let inst = {id, name, value};
       setSelectedInst(inst);
       if (!sInst || sInst.id !== inst.id) {
         resetInstitution();
@@ -133,12 +133,12 @@ const Csv = (props: Csv) => {
             cr.curricula?.items && Array.isArray(cr.curricula?.items)
               ? cr.curricula?.items[0].curriculum
               : null;
-          instCRs.push({ id: cr.id, name: cr.name, value: cr.name });
+          instCRs.push({id: cr.id, name: cr.name, value: cr.name});
           return {
             id: cr.id,
             name: cr.name,
             value: cr.name,
-            class: { ...cr.class },
+            class: {...cr.class},
             curriculum,
           };
         });
@@ -156,7 +156,7 @@ const Csv = (props: Csv) => {
   const onClassRoomSelect = async (id: string, name: string, value: string) => {
     try {
       let sCR = selectedClassRoom;
-      let cr = { id, name, value };
+      let cr = {id, name, value};
       setSelectedClassRoom(cr);
       if (!sCR || sCR.id !== cr.id) {
         let classroom = classRoomsList.filter((c) => c.id === cr.id)[0];
@@ -185,7 +185,7 @@ const Csv = (props: Csv) => {
       );
       let units = curriculumData?.data.getCurriculum?.syllabi?.items || [];
       units = units.map((syl: any) => {
-        return { id: syl.id, name: syl.name, value: syl.name };
+        return {id: syl.id, name: syl.name, value: syl.name};
       });
       setUnits(units);
       let curricularCheckpoints =
@@ -196,7 +196,7 @@ const Csv = (props: Csv) => {
         cCheckpoints.push(cc.checkpoint.id);
         let questions = cc.checkpoint?.questions?.items || [];
         questions.map((q: any) => {
-          demographicsQues.push({ question: q.question, checkpointID: cc.checkpoint.id });
+          demographicsQues.push({question: q.question, checkpointID: cc.checkpoint.id});
         });
       });
       setUnitsLoading(false);
@@ -217,7 +217,7 @@ const Csv = (props: Csv) => {
       graphqlOperation(customQueries.getStudentResponse, {
         filter: {
           ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
-          syllabusLessonID: { eq: syllabusLessonID },
+          syllabusLessonID: {eq: syllabusLessonID},
           ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email'),
         },
       })
@@ -228,7 +228,7 @@ const Csv = (props: Csv) => {
   };
 
   const onUnitSelect = (id: string, name: string, value: string) => {
-    let unit = { id, name, value };
+    let unit = {id, name, value};
     setSelectedUnit(unit);
     fetchSurveys(unit.id);
   };
@@ -285,7 +285,7 @@ const Csv = (props: Csv) => {
   };
 
   const onSurveySelect = async (id: string, name: string, value: string) => {
-    let survey = { id, name, value };
+    let survey = {id, name, value};
     setSelectedsurvey(survey);
     await listQuestions(survey.id);
   };
@@ -304,7 +304,7 @@ const Csv = (props: Csv) => {
         cCheckpoints.push(cp.checkpointID);
         let ques = cp?.checkpoint?.questions?.items;
         ques.map((q: any) => {
-          questions.push({ question: q.question, checkpointID: cp.checkpointID });
+          questions.push({question: q.question, checkpointID: cp.checkpointID});
         });
       });
       setSurveyQuestions(questions);
@@ -330,7 +330,7 @@ const Csv = (props: Csv) => {
         graphqlOperation(customQueries.getStudentResponse, {
           filter: {
             ...createFilterToFetchSpecificItemsOnly(checkpointIds, 'checkpointID'),
-            syllabusLessonID: { eq: syllabusLessonID },
+            syllabusLessonID: {eq: syllabusLessonID},
             ...createFilterToFetchSpecificItemsOnly(studsEmails, 'email'),
           },
         })
@@ -351,7 +351,7 @@ const Csv = (props: Csv) => {
     let stdsWithNoSurveyAnswers: any = [];
     let surveyQuestionHeaders = surveyQuestions.map((ques: any) => {
       qids.push(ques.question.id);
-      return { label: `${ques.question.question}`, key: `${ques.question.id}` };
+      return {label: `${ques.question.question}`, key: `${ques.question.id}`};
     });
     let surveyAnswerDates: any = [];
 
@@ -366,15 +366,15 @@ const Csv = (props: Csv) => {
     });
 
     setCSVHeaders([
-      { label: 'AuthId', key: 'authId' },
-      { label: 'Email', key: 'email' },
-      { label: 'First Name', key: 'firstName' },
-      { label: 'Last Name', key: 'lastName' },
-      { label: 'Institute', key: 'institute' },
-      { label: 'Curriculum', key: 'curriculum' },
-      { label: 'Unit', key: 'unit' },
-      { label: 'Classroom', key: 'classroom' },
-      { label: 'Survey name', key: 'surveyName' },
+      {label: 'AuthId', key: 'authId'},
+      {label: 'Email', key: 'email'},
+      {label: 'First Name', key: 'firstName'},
+      {label: 'Last Name', key: 'lastName'},
+      {label: 'Institute', key: 'institute'},
+      {label: 'Curriculum', key: 'curriculum'},
+      {label: 'Unit', key: 'unit'},
+      {label: 'Classroom', key: 'classroom'},
+      {label: 'Survey name', key: 'surveyName'},
       ...demographicsQuestionHeaders, // Enable this line for demographics question
       ...surveyQuestionHeaders,
     ]);
@@ -398,7 +398,7 @@ const Csv = (props: Csv) => {
         }
       });
       if (!hasTakenSurvey) {
-        stdsWithNoSurveyAnswers.push(stu)
+        stdsWithNoSurveyAnswers.push(stu);
       }
 
       /* Enable this code if demographics questions */
@@ -415,8 +415,10 @@ const Csv = (props: Csv) => {
         }
       });
 
-      // @ts-ignore
-      surveyAnswerDates = surveyAnswerDates.sort((a: any, b: any) => new Date(b) - new Date(a));
+      surveyAnswerDates = surveyAnswerDates.sort(
+        // @ts-ignore
+        (a: any, b: any) => new Date(b) - new Date(a)
+      );
       return {
         ...stu,
         institute: selectedInst.name,
@@ -427,12 +429,20 @@ const Csv = (props: Csv) => {
         ...studentAnswers,
         first:
           (surveyAnswerDates[surveyAnswerDates.length - 1] &&
-            new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString('en-US')) ||
+            new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
+              'en-US'
+            )) ||
           '-',
-        last: (surveyAnswerDates[0] && new Date(surveyAnswerDates[0]).toLocaleString('en-US')) || '-',
+        last:
+          (surveyAnswerDates[0] &&
+            new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
+          '-',
       };
     });
-    setSurveyDates({ last: surveyAnswerDates[0] || '', start: surveyAnswerDates[surveyAnswerDates.length - 1] || '' })
+    setSurveyDates({
+      last: surveyAnswerDates[0] || '',
+      start: surveyAnswerDates[surveyAnswerDates.length - 1] || '',
+    });
     setStudentsWithNoSurveyAnswers(stdsWithNoSurveyAnswers);
     setCSVData(data);
     setIsCSVDownloadReady(true);
@@ -459,7 +469,7 @@ const Csv = (props: Csv) => {
     let yyyy = today.getFullYear();
     today = mm + '-' + dd + '-' + yyyy;
     return today;
-  }
+  };
 
   const Table = () => {
     return (
@@ -470,25 +480,25 @@ const Csv = (props: Csv) => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" style={{ width: '15%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       Id
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       first name
                     </th>
-                    <th scope="col" style={{ width: '15%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '15%'}} className={theadStyles}>
                       last Name
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Classroom
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       email
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       Start
                     </th>
-                    <th scope="col" style={{ width: '20%' }} className={theadStyles}>
+                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
                       End
                     </th>
                   </tr>
@@ -496,26 +506,26 @@ const Csv = (props: Csv) => {
                 <tbody>
                   {CSVData.map((listItem, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                      <td style={{ width: '15%' }} className={tdataStyles}>
+                      <td style={{width: '15%'}} className={tdataStyles}>
                         {listItem.institute}
                       </td>
-                      <td style={{ width: '20%' }} className={tdataStyles}>
+                      <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.curriculum}
                       </td>
-                      <td style={{ width: '15%' }} className={tdataStyles}>
+                      <td style={{width: '15%'}} className={tdataStyles}>
                         {listItem.unit}
                       </td>
-                      <td style={{ width: '20%' }} className={tdataStyles}>
+                      <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.classroom}
                       </td>
-                      <td style={{ width: '20%' }} className={tdataStyles}>
+                      <td style={{width: '20%'}} className={tdataStyles}>
                         {listItem.surveyName}
                       </td>
 
-                      <td style={{ width: '10%' }} className={tdataStyles}>
+                      <td style={{width: '10%'}} className={tdataStyles}>
                         {listItem.first}
                       </td>
-                      <td style={{ width: '10%' }} className={tdataStyles}>
+                      <td style={{width: '10%'}} className={tdataStyles}>
                         {listItem.last}
                       </td>
                     </tr>
@@ -528,6 +538,8 @@ const Csv = (props: Csv) => {
       </div>
     );
   };
+
+  const fieldClass = 'p-3 flex justify-center items-center w-full';
 
   return (
     <div className="p-8 w-full h-full">
@@ -592,7 +604,12 @@ const Csv = (props: Csv) => {
           }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
-            <CSVLink data={CSVData} headers={CSVHeaders} filename={`${selectedClassRoom.name}_${selectedSurvey.name}_${getTodayDate()}.csv`}>
+            <CSVLink
+              data={CSVData}
+              headers={CSVHeaders}
+              filename={`${selectedClassRoom.name}_${
+                selectedSurvey.name
+              }_${getTodayDate()}.csv`}>
               Download CSV
             </CSVLink>
           ) : (
@@ -600,7 +617,7 @@ const Csv = (props: Csv) => {
           )}
         </button>
       </div>
-      <div>
+      {/* <div>
         <SectionTitleV3
           fontSize="2xl"
           fontStyle="bold"
@@ -616,31 +633,65 @@ const Csv = (props: Csv) => {
               : 'Select filters options to populate data'}
           </div>
         )}
-      </div>
-      {
-        isCSVDownloadReady &&
-        <div>
-          <p>Institution name {selectedInst.name} </p>
-          <p>Class room name {selectedClassRoom.name} </p>
-          <p>Curriculum {selectedCurriculum.name} </p>
-          <p>Unit name {selectedUnit.name} </p>
-          <p>Survey name: {selectedSurvey ? selectedSurvey.name : ''} </p>
-          <p>Survey first: {surveyDates.start} </p>
-          <p>Survey last: {surveyDates.last} </p>
-          <p>Total students: {classStudents.length} </p>
-          <p>Students who havent participated in the survey: {studentsWithNoSurveyAnswers.length} </p>
-          <>
-            <div>
-              {
-                studentsWithNoSurveyAnswers.map(item => {
-                  return <p>{item.email}</p>
-                })
-              }
-            </div>
-          </>
+      </div> */}
+      {isCSVDownloadReady && (
+        <div className="white_back grid grid-cols-1 p-4 my-4">
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Institution name:{' '}
+            </h3>
+            <p className="w-3/4">{selectedInst.name}</p>
+          </div>
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Class room name:{' '}
+            </h3>
+            <p className="w-3/4">{selectedClassRoom.name}</p>
+          </div>
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Curriculum Name:{' '}
+            </h3>
+            <p className="w-3/4">{selectedCurriculum.name}</p>
+          </div>
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Unit name:{' '}
+            </h3>
+            <p className="w-3/4">{selectedUnit.name}</p>
+          </div>
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Survey name:{' '}
+            </h3>
+            <p className="w-3/4">{selectedSurvey ? selectedSurvey.name : ''}</p>
+          </div>
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Survey first:{' '}
+            </h3>
+            <p className="w-3/4">{surveyDates.start || 'Not Available'}</p>
+          </div>
+          <div className={fieldClass}>
+            <h3 className="w-1/4 font-medium text-gray-500 text-base self-start">
+              Survey last:{' '}
+            </h3>
+            <p className="w-3/4">{surveyDates.last || 'Not Available'}</p>
+          </div>
+          <div className="p-3 pt-0 border-t-0 border-gray-200">
+            <SectionTitleV3
+              extraContainerClass="pt-2"
+              title={`Total students: ${classStudents.length}`}
+            />
 
+            <div>
+              {studentsWithNoSurveyAnswers.map((item) => {
+                return <p>{item.email}</p>;
+              })}
+            </div>
+          </div>
         </div>
-      }
+      )}
 
       {/* <span> ====**===========**======= ====**===========**======= </span>
       {selectedUnit ? (
