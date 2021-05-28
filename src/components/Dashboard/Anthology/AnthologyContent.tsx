@@ -8,22 +8,20 @@ import {AnthologyMapItem, ViewEditMode} from './Anthology';
 import FormInput from '../../Atoms/Form/FormInput';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import TextArea from '../../Atoms/Form/TextArea';
-import {dateFromServer} from '../../../utilities/time';
 import useDictionary from '../../../customHooks/dictionary';
 import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
-import {getImageFromS3, getImageFromS3Static} from '../../../utilities/services';
-import {BiCloudDownload, BiLinkAlt} from 'react-icons/bi';
-import {initials, stringToHslColor} from '../../../utilities/strings';
+import {getImageFromS3} from '../../../utilities/services';
+import {BiLinkAlt} from 'react-icons/bi';
 import Modal from '../../Atoms/Modal';
 
 import Loader from '../../Atoms/Loader';
 import {find, sortBy} from 'lodash';
-import {BsCameraVideoFill, BsFillTrashFill} from 'react-icons/bs';
+import {BsCameraVideoFill} from 'react-icons/bs';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {IoSendSharp} from 'react-icons/io5';
 import ModalPopUp from '../../Molecules/ModalPopUp';
+import Feedback from '../Admin/UserManagement/Feedback';
 
 interface ContentCardProps {
   viewEditMode: ViewEditMode;
@@ -76,23 +74,6 @@ const AnthologyContent = (props: ContentCardProps) => {
 
     if (rows > maxrows) textbox.rows = maxrows;
     else textbox.rows = rows;
-  };
-
-  const getRole = (role: string) => {
-    switch (role) {
-      case 'CRD':
-        return 'Coordinator';
-      case 'TR':
-        return 'Teacher';
-      case 'FLW':
-        return 'Fellow';
-      case 'BLD':
-        return 'Builder';
-      case 'ADM':
-        return 'Admin';
-      case 'ST':
-        return 'Student';
-    }
   };
 
   const preview_image = (file: any) => {
@@ -268,6 +249,8 @@ const AnthologyContent = (props: ContentCardProps) => {
     loadingComments,
     feedbackData,
     setFeedbackData,
+    fileObject,
+    setFileObject,
   }: any) => {
     const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
 
@@ -275,7 +258,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     const [comment, setComment] = useState('');
 
     // objects
-    const [fileObject, setfileObject] = useState<any>({});
 
     const [uploadingAttachment, setUploadingAttachment] = useState(false);
     const [deleteModal, setDeleteModal] = useState({show: false, id: ''});
@@ -291,23 +273,6 @@ const AnthologyContent = (props: ContentCardProps) => {
       }
     }, [state.user, profileUrl]);
 
-    function GetFormattedDate(todayTime: any) {
-      const date = new Date(todayTime);
-      var hours = date.getHours();
-      var min = date.getMinutes();
-      return `${hours > 9 ? hours : `0${hours}`}:${min > 9 ? min : `0${min}`}`;
-    }
-
-    const getSizeInBytes = (size: number) => {
-      const inKB = size / 1024;
-      const inMB = inKB / 1024;
-      if (inMB < 1) {
-        return `${inKB.toFixed(2)} KB`;
-      } else {
-        return `${inMB.toFixed(2)} MB`;
-      }
-    };
-
     const pushCommentToLocalState = (comment: string, attachments?: any) => {
       let localObj = {
         text: comment,
@@ -317,7 +282,6 @@ const AnthologyContent = (props: ContentCardProps) => {
           firstName: state?.user?.preferredName,
           preferredName: state?.user?.firstName,
           lastName: state.user.lastName,
-          size: attachments.size,
           role: state.user.role,
         },
         createdAt: new Date(),
@@ -341,15 +305,15 @@ const AnthologyContent = (props: ContentCardProps) => {
       setFeedbackData([...feedbackData, finalInput]);
     };
 
-    const onCommentSubmit = async (e: any) => {
+    const onCommentSubmit = async () => {
       if (fileObject.name) {
+        let _comment: any = comment;
         setUploadingAttachment(true);
         let _fileObject: any = fileObject;
-        let _comment: any = comment;
         const id: string = `feedbacks/${Date.now().toString()}_${fileObject.name}`;
 
         const type = _fileObject.type;
-        setfileObject({});
+        setFileObject({});
         setComment('');
         pushCommentToLocalState(_comment, {
           url: 'loading',
@@ -379,7 +343,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         pushCommentToLocalState(comment);
         pushCommentToDatabase(comment, item);
       }
-      setfileObject({});
+      setFileObject({});
       setComment('');
     };
 
@@ -390,253 +354,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     const handleVideo = () => inputVideo.current.click();
     const handleImage = () => inputImage.current.click();
     const handleOther = () => inputOther.current.click();
-
-    const Size = ({size}: {size: number}) => {
-      return (
-        <span
-          style={{
-            bottom: '0rem',
-            fontSize: '0.65rem',
-            right: '-3.5rem',
-          }}
-          className="absolute size-stamp w-auto text-gray-500">
-          {getSizeInBytes(size)}
-        </span>
-      );
-    };
-    const downloadFile = (uri: string, name: string, isAudio: boolean) => {
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      document.body.appendChild(a);
-
-      // Set the HREF to a Blob representation of the data to be downloaded
-      a.href = uri;
-      if (isAudio) {
-        a.setAttribute('target', '_blank');
-      }
-      // Use download attribute to set set desired file name
-      a.setAttribute('download', name);
-
-      // Trigger the download by simulating click
-      a.click();
-
-      // Cleanup
-      window.URL.revokeObjectURL(a.href);
-      document.body.removeChild(a);
-    };
-
-    const ImageMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <LoadingMedia size={attachment.size} filename={attachment.filename} />
-      ) : (
-        <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-32 flex items-center justify-center">
-          <p className="truncate min-w-auto text-center p-2 pt-0 text-gray-500">
-            {attachment.filename}
-          </p>
-
-          <Size size={attachment.size} />
-          <img
-            style={{objectFit: 'cover'}}
-            className="h-32 w-auto rounded-lg"
-            src={attachment.url}
-            id="output_image2"
-          />
-        </div>
-      );
-    };
-
-    const AudioMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <div
-          style={{width: '30rem'}}
-          className="h-12 relative p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-          <p className="truncate w-auto">{attachment.filename}</p>
-          <Size size={attachment.size} />
-
-          <span className={'flex items-center justify-center h-8 w-8'}>
-            <Loader color="#6366F1" />
-          </span>
-        </div>
-      ) : (
-        <div style={{width: '30rem'}} className="h-auto border-0 p-4 border-gray-300">
-          <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
-            {attachment.filename}
-          </p>
-          <Size size={attachment.size} />
-          <div className="flex items-center justify-center">
-            <audio controls className="mr-2 rounded-lg">
-              <source type={fileObject.type} src={attachment.url} />
-              Your browser does not support the video tag.
-            </audio>
-            <span
-              onClick={() => {
-                downloadFile(
-                  attachment.url,
-                  attachment.filename.replace(/\.[^/.]+$/, ''),
-                  attachment.type.includes('audio')
-                );
-              }}
-              className={
-                'flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 text-lg'
-              }>
-              <BiCloudDownload />
-            </span>
-          </div>
-        </div>
-      );
-    };
-
-    const OtherMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <div className="h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-          <p className="truncate w-auto">{attachment.filename}</p>
-          <span className={'flex items-center justify-center h-8 w-8'}>
-            <Loader color="#6366F1" />
-          </span>
-        </div>
-      ) : (
-        <div className="relative h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-          <Size size={attachment.size} />
-          <p className="truncate w-auto">{attachment.filename}</p>
-          <span
-            onClick={() => {
-              downloadFile(
-                attachment.url,
-                attachment.filename.replace(/\.[^/.]+$/, ''),
-                attachment.type.includes('audio')
-              );
-            }}
-            className={
-              'flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 text-lg'
-            }>
-            <BiCloudDownload />
-          </span>
-        </div>
-      );
-    };
-    const LoadingMedia = ({filename, size}: any) => {
-      return (
-        <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-48 flex items-center justify-center">
-          <div className="h-2/10 min-w-auto p-2 pt-0 text-gray-500 truncate">
-            {filename}
-          </div>
-          <div className="h-8/10 flex items-center min-w-48 bg-gray-100 rounded-lg">
-            <Loader color="#6366F1" />
-          </div>
-          <Size size={size} />
-        </div>
-      );
-    };
-
-    const VideoMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <LoadingMedia size={attachment.size} filename={attachment.filename} />
-      ) : (
-        <div className="h-auto w-72 border-0 p-4 border-gray-300">
-          <p className="truncate text-center min-w-auto p-2 pt-0 text-gray-500">
-            {attachment.filename}
-          </p>
-          <video controls className="rounded-lg" src={attachment.url}>
-            <source type={fileObject.type} />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      );
-    };
-
-    const Feedback = ({feedback}: any) => {
-      const {person} = feedback;
-      const {firstName, lastName, preferredName} = person;
-
-      return (
-        <div
-          key={feedback.id}
-          className="relative comment-main flex items-center justify-between w-auto py-3 my-2">
-          <div className="text-sm text-gray-900 flex items-start">
-            {person.image ? (
-              <img
-                className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
-                src={getImageFromS3Static(person.image)}
-                alt=""
-              />
-            ) : (
-              <div
-                className={`h-10 w-10 flex justify-center items-center rounded-md  bg-gray-400`}>
-                <div
-                  className="h-full w-full flex justify-center items-center text-sm text-semibold text-white rounded-md"
-                  style={{
-                    /* stylelint-disable */
-                    background: `${stringToHslColor(
-                      preferredName ? preferredName : firstName + ' ' + lastName
-                    )}`,
-                    textShadow: '0.2rem 0.2rem 3px #423939b3',
-                  }}>
-                  {initials(preferredName ? preferredName : firstName, lastName)}
-                </div>
-              </div>
-            )}
-            <div className="ml-2 w-auto">
-              <h5 className="font-semibold hover:text-underline">
-                {(preferredName ? preferredName : firstName) + ' ' + lastName}
-
-                <span className="text-xs text-gray-600 font-normal ml-2">
-                  {GetFormattedDate(feedback.createdAt)}
-                </span>
-                <p
-                  className={`${
-                    person.role === state.user.role
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  } ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium w-auto`}>
-                  {getRole(person.role || 'FLW')}
-                </p>
-              </h5>
-              <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
-              {/* ------------------------- Attachments Section Start -------------------------------- */}
-
-              {feedback.attachments &&
-                feedback.attachments.length > 0 &&
-                feedback.attachments.map(
-                  (attachment: {
-                    type: string;
-                    url: string;
-                    filename: string;
-                    size: number;
-                  }) => {
-                    const {type, url} = attachment;
-                    const isImage = type.includes('image');
-                    const isVideo = type.includes('video');
-                    const isAudio = type.includes('audio');
-                    const isOther = !isImage && !isVideo && !isAudio;
-                    return (
-                      <div
-                        className="mt-2"
-                        onClick={() => {
-                          isImage && setAttModal({show: true, url, type});
-                        }}>
-                        {isImage && <ImageMedia attachment={attachment} />}
-                        {isVideo && <VideoMedia attachment={attachment} />}
-                        {isOther && <OtherMedia attachment={attachment} />}
-                        {isAudio && <AudioMedia attachment={attachment} />}
-                      </div>
-                    );
-                  }
-                )}
-              {/* ------------------------- Attachments Section End -------------------------------- */}
-            </div>
-          </div>
-          {feedback.person.authId === state.user.authId && !uploadingAttachment && (
-            <div
-              onClick={() => {
-                setDeleteModal({show: !deleteModal.show, id: feedback.id});
-              }}
-              className="delete-comment hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto self-start p-1 cursor-pointer">
-              <BsFillTrashFill />
-            </div>
-          )}
-        </div>
-      );
-    };
 
     const AttachmentsModalPopUp = (props: any) => {
       const {children, closeAction} = props;
@@ -686,7 +403,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         const file = e.target.files[0];
         const isImage = file.type.includes('image');
         const isVideo = file.type.includes('video');
-        setfileObject(file);
+        setFileObject(file);
         if (isImage) {
           preview_image(file);
         }
@@ -699,8 +416,9 @@ const AnthologyContent = (props: ContentCardProps) => {
     const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
+
     return (
-      <div className={`w-full pb-2 pb-4 mb-2`}>
+      <div key={item.id} className={`w-full pb-2 mb-2`}>
         {showComments && (
           <div className="comment-container">
             {attModal.show && (
@@ -738,8 +456,17 @@ const AnthologyContent = (props: ContentCardProps) => {
                 </div>
               </div>
             ) : feedbackData && feedbackData.length > 0 ? (
-              feedbackData.map((feedback: any, eventIdx: number) => (
-                <Feedback feedback={feedback} />
+              feedbackData.map((feedback: any) => (
+                <Feedback
+                  setAttModal={setAttModal}
+                  deleteModal={deleteModal}
+                  uploadingAttachment={uploadingAttachment}
+                  role={state.user.role}
+                  fileObject={fileObject}
+                  authId={state.user.authId}
+                  setDeleteModal={setDeleteModal}
+                  feedback={feedback}
+                />
               ))
             ) : (
               <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
@@ -778,7 +505,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                         {fileObject?.name}
                       </p>
                       <span
-                        onClick={() => setfileObject({})}
+                        onClick={() => setFileObject({})}
                         className={
                           'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
                         }>
@@ -796,7 +523,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                         {fileObject?.name}
                       </p>
                       <span
-                        onClick={() => setfileObject({})}
+                        onClick={() => setFileObject({})}
                         className={
                           'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
                         }>
@@ -811,7 +538,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                       </p>
 
                       <span
-                        onClick={() => setfileObject({})}
+                        onClick={() => setFileObject({})}
                         className={
                           'flex items-center justify-center h-8 w-8 rounded cursor-pointer transition-all duration-150 hover:text-indigo-400 text-gray-500 '
                         }>
@@ -825,7 +552,7 @@ const AnthologyContent = (props: ContentCardProps) => {
               <div className="comment-actions h-10 flex items-center justify-between">
                 <div className="left-action w-auto">
                   <div className="flex items-center justify-center">
-                    <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
+                    <button onClick={handleVideo} className={`${actionStyles}`}>
                       <input
                         accept="video/*"
                         ref={inputVideo}
@@ -836,7 +563,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                       />
                       <BsCameraVideoFill className="" />
                     </button>
-                    <button onClick={(e) => handleImage()} className={`${actionStyles} `}>
+                    <button onClick={handleImage} className={`${actionStyles} `}>
                       <input
                         accept="image/*"
                         ref={inputImage}
@@ -847,7 +574,7 @@ const AnthologyContent = (props: ContentCardProps) => {
                       />
                       <MdImage className="" />
                     </button>
-                    <button onClick={(e) => handleOther()} className={`${actionStyles}`}>
+                    <button onClick={handleOther} className={`${actionStyles}`}>
                       <BiLinkAlt className="" />
                       <input
                         ref={inputOther}
@@ -998,6 +725,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     const [showComments, setShowComments] = useState(false);
     const [feedbackData, setFeedbackData] = useState([]);
     const [loadingComments, setLoadingComments] = useState(false);
+    const [fileObject, setFileObject] = useState({});
 
     const getFeedBackData = async () => {
       setLoadingComments(true);
@@ -1015,7 +743,7 @@ const AnthologyContent = (props: ContentCardProps) => {
         getFeedBackData();
       }
       if (showComments) {
-        // setfileObject({});
+        setFileObject({});
       }
       setShowComments(!showComments);
     };
@@ -1087,6 +815,8 @@ const AnthologyContent = (props: ContentCardProps) => {
                   item={contentObj}
                   showComments={showComments}
                   setShowComments={setShowComments}
+                  fileObject={fileObject}
+                  setFileObject={setFileObject}
                   setFeedbackData={setFeedbackData}
                 />
               </div>
