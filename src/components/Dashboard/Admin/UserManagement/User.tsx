@@ -755,17 +755,21 @@ const User = () => {
     };
 
     const onCommentShowHide = () => {
-      if (!showComments && feedbackData.length === 0) {
-        getFeedBackData();
-      }
+      // if (!showComments && feedbackData.length === 0) {
+      //   getFeedBackData();
+      // }
       if (showComments) {
         setfileObject({});
       }
       setShowComments(!showComments);
     };
 
+    useEffect(() => {
+      getFeedBackData();
+    }, []);
+
     const getFeedBackData = async () => {
-      setLoadingComments(true);
+      // setLoadingComments(true);
 
       try {
         const feedbacksData: any = await listComments(item.feedbacks);
@@ -773,7 +777,7 @@ const User = () => {
       } catch (error) {
         console.error('error @getFeedBackData: ', error.message);
       } finally {
-        setLoadingComments(false);
+        // setLoadingComments(false);
       }
     };
 
@@ -1078,8 +1082,14 @@ const User = () => {
         <div className="flex items-center mx-6 justify-start">
           <div
             onClick={onCommentShowHide}
-            className="bg-indigo-500 text-white hover:bg-indigo-600 w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2">
-            {showComments ? 'Hide' : 'Show'} Feedbacks
+            className={`${
+              feedbackData.length > 0
+                ? 'bg-indigo-500 hover:bg-indigo-600'
+                : 'bg-gray-500'
+            }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+            {feedbackData.length > 0
+              ? `${showComments ? 'Hide' : 'Show'} Feedback`
+              : 'Leave Feedback'}
           </div>
         </div>
       </div>
