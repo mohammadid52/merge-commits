@@ -369,7 +369,9 @@ const User = () => {
         },
         []
       );
-      setStudentData(reducedAnthologyContent);
+      setStudentData(
+        reducedAnthologyContent.filter((item: any) => item.type === 'journal')
+      );
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
     } finally {
