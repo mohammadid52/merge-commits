@@ -86,37 +86,24 @@ const Login = ({ updateAuthState }: LoginProps) => {
         );
         updateAuthState(true);
       } catch (error) {
-        console.error('error signing in', error);
-        setMessage(() => {
-          if (!username) {
-            return {
-              show: true,
-              type: 'error',
-              message: 'Please enter your email',
-            };
-          }
-          if (!username.includes('@')) {
-            return {
-              show: true,
-              type: 'error',
-              message: 'Your email is not in the expected email address format',
-            };
-          }
-          if (!password) {
-            return {
-              show: true,
-              type: 'error',
-              message: 'Please enter your password',
-            };
-          }
+        const errMsg = { show: true, type: 'error' };
+        if (!username) {
+          setMessage({ ...errMsg, message: 'Please enter your email' });
+        }
+        else if (!username.includes('@')) {
+          setMessage({ ...errMsg, message: 'Your email is not in the expected email address format' });
+        }
+        else if (!password) {
+          setMessage({ ...errMsg, message: 'Please enter your password' });
+        }
+        else {
           manageSignInError(error, false);
-        });
+        }
         toggleLoading(false);
       }
     } else {
       try {
         const user = await Auth.signIn(username, 'xIconoclast.5x');
-        console.log('user', user)
         if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
           setNewUser(user);
           setCreatePassword(true);
@@ -202,7 +189,6 @@ const Login = ({ updateAuthState }: LoginProps) => {
 
   const handleSetPassword = async () => {
     toggleLoading(true);
-    console.log('input', input);
     let username = input.email
     let password = input.password;
     try {
@@ -210,7 +196,6 @@ const Login = ({ updateAuthState }: LoginProps) => {
       toggleLoading(false);
       const user = await Auth.signIn(username, password);
       dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
-      console.log('useruseruseruseruseruser', user)
       setCookie(
         'auth',
         { email: username, authId: user.username },
@@ -338,6 +323,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
                         name="email"
                         value={input.email}
                         onChange={handleChange}
+                        onKeyDown={handleEnter}
                       />
                     </div>
                     {
@@ -362,7 +348,7 @@ const Login = ({ updateAuthState }: LoginProps) => {
 
                           <label className="hidden" htmlFor="password">
                             Password
-                </label>
+                          </label>
                           <input
                             className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                             placeholder="Password"
