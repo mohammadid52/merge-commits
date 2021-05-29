@@ -474,7 +474,7 @@ const AnthologyContent = (props: ContentCardProps) => {
               <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
                 <div className="">
                   <p className="mt-2 text-center text-lg text-gray-500">
-                    No Feedbacks
+                    Be the first to give feedback
                     {/* @Mohammad: Add this to dict */}
                   </p>
                 </div>
