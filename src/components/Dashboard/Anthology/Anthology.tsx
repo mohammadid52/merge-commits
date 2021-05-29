@@ -80,9 +80,11 @@ const Anthology = () => {
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
   }, []);
+  const [loadingContent, setLoadingContent] = useState(false);
 
   // TOP Function to load student data
   const listStudentData = async () => {
+    setLoadingContent(true);
     try {
       const studentDataFetch: any = await API.graphql(
         graphqlOperation(queries.listStudentDatas, {
@@ -117,6 +119,8 @@ const Anthology = () => {
       setStudentData(reducedAnthologyContent);
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
+    } finally {
+      setLoadingContent(false);
     }
   };
 
@@ -338,6 +342,7 @@ const Anthology = () => {
 
   const Content = (
     <AnthologyContent
+      loadingContent={loadingContent}
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
       handleEditUpdate={handleEditUpdate}

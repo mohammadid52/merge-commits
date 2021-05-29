@@ -31,6 +31,7 @@ interface ContentCardProps {
   subSection: string;
   createTemplate: any;
   content?: any;
+  loadingContent?: boolean;
   getContentObjIndex?: (contentObj: AnthologyMapItem) => number;
 }
 
@@ -44,6 +45,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     createTemplate,
     content,
     getContentObjIndex,
+    loadingContent,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
@@ -243,6 +245,26 @@ const AnthologyContent = (props: ContentCardProps) => {
     });
   };
 
+  const getKeyForAttachments = (url: string) => {
+    let splitUrl = url.split('/');
+    return splitUrl[splitUrl.length - 1].split('?')[0];
+  };
+  const getFullNameString = (obj: any) =>
+    obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
+
+  const AttachmentsModalPopUp = (props: any) => {
+    const {children, closeAction} = props;
+    return (
+      <Modal
+        closeOnBackdrop
+        closeAction={closeAction}
+        showHeader={false}
+        showHeaderBorder={false}
+        showFooter={false}>
+        {children}
+      </Modal>
+    );
+  };
   const Feedbacks = ({
     showComments,
     item,
@@ -251,6 +273,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     setFeedbackData,
     fileObject,
     setFileObject,
+    idx,
   }: any) => {
     const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
 
@@ -355,26 +378,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     const handleImage = () => inputImage.current.click();
     const handleOther = () => inputOther.current.click();
 
-    const AttachmentsModalPopUp = (props: any) => {
-      const {children, closeAction} = props;
-      return (
-        <Modal
-          closeOnBackdrop
-          closeAction={closeAction}
-          showHeader={false}
-          showHeaderBorder={false}
-          showFooter={false}>
-          {children}
-        </Modal>
-      );
-    };
-    const getKeyForAttachments = (url: string) => {
-      let splitUrl = url.split('/');
-      return splitUrl[splitUrl.length - 1].split('?')[0];
-    };
-    const getFullNameString = (obj: any) =>
-      obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
-
     const deleteComment = (id: string) => {
       const currentComment: any = find(feedbackData, (comment: any) => comment.id === id);
 
@@ -416,9 +419,8 @@ const AnthologyContent = (props: ContentCardProps) => {
     const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
-
     return (
-      <div key={item.id} className={`w-full pb-2 mb-2`}>
+      <div key={idx} className={`w-full pb-2 mb-2`}>
         {showComments && (
           <div className="comment-container">
             {attModal.show && (
@@ -808,15 +810,24 @@ const AnthologyContent = (props: ContentCardProps) => {
                 <div
                   onClick={onCommentShowHide}
                   className={`${
+                    loadingComments ? 'flex items-center justify-between' : ''
+                  } ${
                     feedbackData.length > 0
                       ? 'bg-indigo-500 hover:bg-indigo-600'
                       : 'bg-gray-500'
                   }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                  {loadingComments
-                    ? 'Loading Comments'
-                    : feedbackData.length > 0
-                    ? `${showComments ? 'Hide' : 'Show'} Feedback`
-                    : 'Leave Feedback'}
+                  <p>
+                    {loadingComments
+                      ? 'Loading Comments'
+                      : feedbackData.length > 0
+                      ? `${showComments ? 'Hide' : 'Show'} Feedback`
+                      : 'Leave Feedback'}
+                  </p>
+                  {loadingComments && (
+                    <span className="ml-4 w-auto">
+                      <Loader color="#fff" />
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -824,6 +835,7 @@ const AnthologyContent = (props: ContentCardProps) => {
             {showComments && (
               <div className="border-t-0 border-gray-200 mt-4">
                 <Feedbacks
+                  idx={idx}
                   feedbackData={feedbackData}
                   loadingComments={loadingComments}
                   item={contentObj}
@@ -874,7 +886,17 @@ const AnthologyContent = (props: ContentCardProps) => {
             </div>
           </ContentCard>
         )}
-      {content.length > 0 ? (
+      {!loadingContent ? (
+        <div className="py-2 my-8 text-center mx-auto flex justify-center items-center w-full">
+          <div className="">
+            <Loader color="rgba(107, 114, 128, 1)" />
+            <p className="mt-2 text-center text-lg text-gray-500">
+              Loading Content
+              {/* @Mohammad: Add this to dict */}
+            </p>
+          </div>
+        </div>
+      ) : content.length > 0 ? (
         content.map((contentObj: AnthologyMapItem, idx: number) => (
           <Content idx={idx} contentObj={contentObj} />
         ))

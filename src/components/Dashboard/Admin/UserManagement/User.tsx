@@ -715,7 +715,10 @@ const User = () => {
     return splitUrl[splitUrl.length - 1].split('?')[0];
   };
 
-  const StudentData = ({item}: any) => {
+  const getFullNameString = (obj: any) =>
+    obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
+
+  const StudentData = ({item, idx}: any) => {
     // booleans
     const [showComments, setShowComments] = useState(false);
     const [loadingComments, setLoadingComments] = useState(false);
@@ -730,9 +733,6 @@ const User = () => {
 
     // objects
     const [fileObject, setfileObject] = useState<any>({});
-
-    const getFullNameString = (obj: any) =>
-      obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
 
     const deleteComment = (id: string) => {
       const currentComment: any = find(feedbackData, (comment: any) => comment.id === id);
@@ -886,9 +886,10 @@ const User = () => {
 
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
+
     return (
       <div
-        key={item.id}
+        key={idx}
         className={`w-full white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <div className="px-6">
           <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
@@ -1089,12 +1090,21 @@ const User = () => {
               feedbackData.length > 0
                 ? 'bg-indigo-500 hover:bg-indigo-600'
                 : 'bg-gray-500'
-            }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-            {loadingComments
-              ? 'Loading Comments'
-              : feedbackData.length > 0
-              ? `${showComments ? 'Hide' : 'Show'} Feedback`
-              : 'Leave Feedback'}
+            } ${
+              loadingComments ? 'flex items-center justify-between' : ''
+            } text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+            <p>
+              {loadingComments
+                ? 'Loading Comments'
+                : feedbackData.length > 0
+                ? `${showComments ? 'Hide' : 'Show'} Feedback`
+                : 'Leave Feedback'}
+            </p>
+            {loadingComments && (
+              <span className="ml-4 w-auto">
+                <Loader color="#fff" />
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -1272,7 +1282,9 @@ const User = () => {
                 </div>
               </div>
             ) : studentData && studentData.length > 0 ? (
-              studentData.map((item: any) => <StudentData item={item} />)
+              studentData.map((item: any, idx: number) => (
+                <StudentData idx={idx} item={item} />
+              ))
             ) : (
               <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
                 <div className="">
