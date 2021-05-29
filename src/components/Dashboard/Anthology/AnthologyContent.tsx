@@ -886,7 +886,7 @@ const AnthologyContent = (props: ContentCardProps) => {
             </div>
           </ContentCard>
         )}
-      {!loadingContent ? (
+      {loadingContent ? (
         <div className="py-2 my-8 text-center mx-auto flex justify-center items-center w-full">
           <div className="">
             <Loader color="rgba(107, 114, 128, 1)" />
