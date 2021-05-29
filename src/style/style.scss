@@ -783,3 +783,15 @@
 .feedback-name:hover {
   text-decoration: underline;
 }
+
+.notebook-type {
+  animation: show-notebook-type 0.4s ease-in-out;
+}
+@keyframes show-notebook-type {
+  from {
+    transform: translateX(65px);
+  }
+  to {
+    transform: translateX(0px);
+  }
+}

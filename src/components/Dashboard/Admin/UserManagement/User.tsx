@@ -513,6 +513,13 @@ const User = () => {
     );
   };
 
+  function capitalizeFirstLetter(str: string = '') {
+    if (str.length > 0) {
+      const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+      return capitalized;
+    }
+  }
+
   const do_resize = (textbox: any) => {
     var maxrows = 50;
     var txt = textbox.value;
@@ -640,7 +647,7 @@ const User = () => {
     } catch (error) {}
   };
 
-  const listComments = async (feedbacks: string[]) => {
+  const listComments = async (feedbacks: string[] = []) => {
     const filter: any = feedbacks.map((id: string) => {
       return {
         id: {
@@ -890,8 +897,11 @@ const User = () => {
     return (
       <div
         key={idx}
-        className={`w-full white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
+        className={`w-full relative overflow-x-hidden white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <div className="px-6">
+          <span className="notebook-type absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium bg-green-100 text-green-600">
+            {capitalizeFirstLetter(item.type)}
+          </span>
           <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
           {item.content && ReactHtmlParser(item.content)}
         </div>
@@ -1083,7 +1093,7 @@ const User = () => {
             </div>
           </div>
         )}
-        <div className="flex items-center mx-6 justify-start">
+        <div className="flex items-center px-6 justify-end">
           <div
             onClick={onCommentShowHide}
             className={`${

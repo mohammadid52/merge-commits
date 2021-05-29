@@ -55,6 +55,8 @@ const AnthologyContent = (props: ContentCardProps) => {
   });
 
   const setEditorContent = (html: string, text: string, idKey: string) => {
+    console.log(html, text);
+
     setNotesData({
       key: idKey,
       value: html,
@@ -189,7 +191,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     } catch (error) {}
   };
 
-  const listComments = async (feedbacks: string[]) => {
+  const listComments = async (feedbacks: string[] = []) => {
     const filter: any = feedbacks.map((id: string) => {
       return {
         id: {
@@ -729,9 +731,9 @@ const AnthologyContent = (props: ContentCardProps) => {
     const [loadingComments, setLoadingComments] = useState(false);
     const [fileObject, setFileObject] = useState({});
 
-    useEffect(() => {
-      getFeedBackData();
-    }, []);
+    // useEffect(() => {
+    //   getFeedBackData();
+    // }, []);
 
     const getFeedBackData = async () => {
       setLoadingComments(true);
