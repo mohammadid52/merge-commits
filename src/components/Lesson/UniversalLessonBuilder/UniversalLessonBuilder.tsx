@@ -10,7 +10,7 @@ import {
 } from '../../../interfaces/UniversalLessonInterfaces';
 import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
-import {filter} from 'rxjs/operators';
+import {replaceTailwindClass} from './crudFunctions/replaceInString';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -85,36 +85,32 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
-  const currentStepComp = (currentStep: string) => {
-    switch (currentStep) {
-      case 'BuilderWrapper':
-        return (
-          <BuilderWrapper
-            mode={`building`}
-            deleteFromULBHandler={deleteULBHandler}
-            updateFromULBHandler={updateULBHandler}
-            universalLessonDetails={universalLessonDetails}
-            universalBuilderStep={universalBuilderStep}
-            setUniversalBuilderStep={setUniversalBuilderStep}
-            selectedPageID={selectedPageID}
-            setSelectedPageID={setSelectedPageID}
-            initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
-          />
-        );
-      default:
-        return <h1>Current Universal Builder step is invalid</h1>;
-    }
-  };
+  // const currentStepComp = (currentStep: string) => {
+  //   switch (currentStep) {
+  //     case 'BuilderWrapper':
+  //       return (
+  //         <BuilderWrapper
+  //           mode={`building`}
+  //           deleteFromULBHandler={deleteULBHandler}
+  //           updateFromULBHandler={updateULBHandler}
+  //           universalLessonDetails={universalLessonDetails}
+  //           universalBuilderStep={universalBuilderStep}
+  //           setUniversalBuilderStep={setUniversalBuilderStep}
+  //           selectedPageID={selectedPageID}
+  //           setSelectedPageID={setSelectedPageID}
+  //           initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
+  //         />
+  //       );
+  //     default:
+  //       return <h1>Current Universal Builder step is invalid</h1>;
+  //   }
+  // };
 
   //  CORE DATA MANAGEMENT
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>( initialUniversalLessonData );
-  const [selectedPageID, setSelectedPageID] = useState<string>('');
-
-  const listPages = universalLessonDetails.universalLessonPages;
-  const getPage = universalLessonDetails.universalLessonPages.find(
-    (thePage: UniversalLessonPage) => thePage.id === selectedPageID
+  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
+    initialUniversalLessonData
   );
-
+  const [selectedPageID, setSelectedPageID] = useState<string>('');
 
   /**
    *
@@ -126,35 +122,77 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    *  - If target ID is not found, continues loop but does nothing
    *
    * */
-  const crudULBHandler = (inputObj: any, operation: 'create' | 'update' | 'delete', idToTarget: string, payload?: any) => {
+  const crudULBHandler = (
+    inputObj: any,
+    operation: 'create' | 'update' | 'delete',
+    idToTarget: string,
+    propertyToTarget?: string,
+    replacementValue?: string
+  ) => {
     const reduced = Object.keys(inputObj).reduce((acc: any, inputObjKey: string) => {
       if (
         inputObjKey === 'universalLessonPages' ||
         inputObjKey === 'pageContent' ||
         inputObjKey === 'partContent'
       ) {
-        return { ...acc,
+        return {
+          ...acc,
           [`${inputObjKey}`]: inputObj[inputObjKey].reduce(
             (acc2: any, targetArrayObj: UniversalLessonPage | PagePart | PartContent) => {
-              if(targetArrayObj.id === idToTarget){
-                switch(operation){
+              if (targetArrayObj.id === idToTarget) {
+                switch (operation) {
                   case 'delete':
                     return acc2;
                   case 'update':
-                    return [...acc2, {...targetArrayObj, class: ''}]
+                    // return [...acc2, {...targetArrayObj, class: ''}];
+                    console.log({
+                      [propertyToTarget]: replaceTailwindClass(
+                        targetArrayObj[propertyToTarget],
+                        replacementValue
+                      ),
+                    });
+                    return [
+                      ...acc2,
+                      {
+                        ...targetArrayObj,
+                        [propertyToTarget]: replaceTailwindClass(
+                          targetArrayObj[propertyToTarget],
+                          replacementValue
+                        ),
+                      },
+                    ];
                   default:
-                    return [...acc2, crudULBHandler(targetArrayObj, operation, idToTarget)];
+                    return [
+                      ...acc2,
+                      crudULBHandler(
+                        targetArrayObj,
+                        operation,
+                        idToTarget,
+                        propertyToTarget,
+                        replacementValue
+                      ),
+                    ];
                 }
               } else {
-                return [...acc2, crudULBHandler(targetArrayObj, operation, idToTarget)];
+                return [
+                  ...acc2,
+                  crudULBHandler(
+                    targetArrayObj,
+                    operation,
+                    idToTarget,
+                    propertyToTarget,
+                    replacementValue
+                  ),
+                ];
               }
-            },[]
+            },
+            []
           ),
         };
       } else {
         return {...acc, [`${inputObjKey}`]: inputObj[inputObjKey]};
       }
-    },{});
+    }, {});
     return reduced;
   };
 
@@ -166,14 +204,25 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    *
    * */
   const deleteULBHandler = (targetID: string) => {
-    const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID)
+    const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
   };
-  
-  const updateULBHandler = (targetID: string, propertyToTarget: string, replacementValue?: string) => {
-    const updated = crudULBHandler(universalLessonDetails, 'update', targetID);
+
+  const updateULBHandler = (
+    targetID: string,
+    propertyToTarget: string,
+    replacementValue?: string
+  ) => {
+    const updated = crudULBHandler(
+      universalLessonDetails,
+      'update',
+      targetID,
+      propertyToTarget,
+      replacementValue
+    );
+
     setUniversalLessonDetails(updated);
-  }
+  };
 
   return (
     /**
@@ -189,7 +238,18 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     <div
       id={`universalLessonBuilder`}
       className="h-full flex bg-white shadow-5 sm:rounded-lg">
-      {currentStepComp(universalBuilderStep)}
+      {/*{currentStepComp(universalBuilderStep)}*/}
+      <BuilderWrapper
+        mode={`building`}
+        deleteFromULBHandler={deleteULBHandler}
+        updateFromULBHandler={updateULBHandler}
+        universalLessonDetails={universalLessonDetails}
+        universalBuilderStep={universalBuilderStep}
+        setUniversalBuilderStep={setUniversalBuilderStep}
+        selectedPageID={selectedPageID}
+        setSelectedPageID={setSelectedPageID}
+        initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
+      />
     </div>
   );
 };

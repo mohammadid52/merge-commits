@@ -2712,6 +2712,7 @@ export const getLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -2860,6 +2861,7 @@ export const listLessons = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -3001,6 +3003,7 @@ export const getLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -3070,6 +3073,7 @@ export const listLessonRubricss = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -3302,6 +3306,7 @@ export const getSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -3413,6 +3418,7 @@ export const listSyllabusLessons = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -3490,6 +3496,7 @@ export const getStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -3625,14 +3632,8 @@ export const getStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -3730,6 +3731,8 @@ export const listStudentDatas = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -3776,12 +3779,12 @@ export const getAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -3828,41 +3831,12 @@ export const listAnthologyComments = /* GraphQL */ `
           updatedAt
         }
         attachments {
-          id
           type
           url
-          createdAt
-          updatedAt
+          filename
+          size
         }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getAttachment = /* GraphQL */ `
-  query GetAttachment($id: ID!) {
-    getAttachment(id: $id) {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listAttachments = /* GraphQL */ `
-  query ListAttachments(
-    $filter: ModelAttachmentFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAttachments(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        url
+        edited
         createdAt
         updatedAt
       }
@@ -3951,6 +3925,7 @@ export const getQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -4094,6 +4069,7 @@ export const getFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -4394,6 +4370,7 @@ export const getPersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }

@@ -37,7 +37,7 @@ export const exampleUniversalLesson: UniversalLesson = {
         {
           id: 'page_2_part_0',
           partType: 'default',
-          class: 'bg-red-500 bg-opacity-10',
+          class: 'bg-red-500 bg-opacity-40',
           partContent: [
             { id: 'page_2_part_0_header-0', type: 'header-default', value: ['Instructions'] },
             {

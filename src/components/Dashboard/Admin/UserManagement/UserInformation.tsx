@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './User';
@@ -81,7 +81,7 @@ const UserInformation = (props: UserInfoProps) => {
                 tab === 'p'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent  cursor-pointer text-gray-500 hover:text-gray-700 hover:border-gray-200',
-                'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm'
+                'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
               )}>
               {UserInformationDict[userLanguage]['heading']}
             </a>

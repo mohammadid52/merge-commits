@@ -675,6 +675,7 @@ type Lesson @model @key(fields: ["id"]) {
   measurements: [LessonRubrics]! @connection(keyName: "byLesson", fields: ["id"])
   institutionID: ID!
   institution: Institution @connection(fields: ["institutionID"])
+  duration: Int
 }
 
 type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {
@@ -784,7 +785,8 @@ type AnthologyContent {
   description: String
   content: String
   classID: ID
-  feedbacks: [AnthologyComment]
+  feedbacks: [String]
+  edited: Boolean,
 }
 
 type AnthologyComment  @model {
@@ -794,14 +796,16 @@ type AnthologyComment  @model {
   authID: String!
   person: Person @connection(fields: ["email", "authID"])
   attachments: [Attachment]
+  edited: Boolean,
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
 
-type Attachment @model {
-  id: ID!
-  type: String!
+type Attachment {
+  type: String
   url: String
+  filename:String,
+  size: Int,
 }
 
 type QuestionData @model {

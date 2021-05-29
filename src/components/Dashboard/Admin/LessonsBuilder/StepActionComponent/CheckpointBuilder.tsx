@@ -21,6 +21,7 @@ import {
 import Buttons from '../../../../Atoms/Buttons';
 import {EditCheckPointDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {find} from 'lodash';
 
 interface CheckpointBuilderProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -31,6 +32,12 @@ interface CheckpointBuilderProps {
   activeStep?: string;
   lessonName: string;
   lessonType: string;
+  hasUnsavedCheckpoint: (
+    val: any,
+    data: any,
+    checkpointQuestions: any,
+    selectedDesigners: any[]
+  ) => void;
 }
 
 // TODO: Replace type any with actual type wherever required.
@@ -50,6 +57,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     activeStep,
     lessonName,
     lessonType,
+    hasUnsavedCheckpoint,
   } = props;
 
   const {userLanguage} = useContext(GlobalContext);
@@ -70,14 +78,43 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   // const [builderStep, setBuilderStep] = useState('AddNewCheckPoint');
 
   const [allCheckPointsList, setAllCheckPointsList] = useState([]);
+
   const [fileredCheckpointList, setFilteredCheckpointList] = useState([]);
   const [savedCheckPoints, setSavedCheckpoints] = useState([]);
+
   const [parentLessonPlans, setParentLessonPlans] = useState(lessonPlans);
   const [checkpointDetails, setCheckpointDetails] = useState<InitialData>(
     initialCheckpData
   );
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState([]);
+
+  const hasCheckpointUnsaved = () => {
+    let isUnsaved = false;
+
+    const title = checkpointDetails.title.trim().length;
+    const label = checkpointDetails.label.trim().length;
+    const estTime = checkpointDetails.estTime.trim().length;
+
+    if (!title || !label || !estTime || checkpQuestions.length <= 0) {
+      isUnsaved = false;
+    } else {
+      isUnsaved = true;
+    }
+
+    return isUnsaved;
+  };
+
+  useEffect(() => {
+    const val: boolean = hasCheckpointUnsaved();
+    hasUnsavedCheckpoint(val, checkpointDetails, checkpQuestions, selectedDesigners);
+  }, [
+    checkpointDetails.title,
+    checkpointDetails.label,
+    checkpQuestions.length,
+    checkpointDetails.estTime,
+  ]);
+
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [previouslySelectedId, setPreviouslySelectedId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -535,16 +572,16 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     setParentLessonPlans(lessonPlans);
   }, [lessonPlans]);
 
-  useEffect(() => {
-    if (
-      builderStep === 'AddNewCheckPoint' &&
-      (checkpointDetails?.title || checkpointDetails?.label)
-    ) {
-      return function cleanup() {
-        setUnsavedChanges(true);
-      };
-    }
-  }, [activeStep, checkpointDetails?.title]);
+  // useEffect(() => {
+  //   if (
+  //     builderStep === 'AddNewCheckPoint' &&
+  //     (checkpointDetails?.title || checkpointDetails?.label)
+  //   ) {
+  //     return function cleanup() {
+  //       setUnsavedChanges(true);
+  //     };
+  //   }
+  // }, [activeStep, checkpointDetails?.title]);
 
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">

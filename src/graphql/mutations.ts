@@ -5632,6 +5632,7 @@ export const createLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -5888,6 +5889,7 @@ export const updateLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6144,6 +6146,7 @@ export const deleteLesson = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      duration
       createdAt
       updatedAt
     }
@@ -6286,6 +6289,7 @@ export const createLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6453,6 +6457,7 @@ export const updateLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6620,6 +6625,7 @@ export const deleteLessonRubrics = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6788,6 +6794,7 @@ export const createLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -6955,6 +6962,7 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7122,6 +7130,7 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7295,6 +7304,7 @@ export const createLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7447,6 +7457,7 @@ export const updateLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7599,6 +7610,7 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -7870,6 +7882,7 @@ export const createSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8079,6 +8092,7 @@ export const updateSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8288,6 +8302,7 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        duration
         createdAt
         updatedAt
       }
@@ -8404,6 +8419,7 @@ export const createStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8539,14 +8555,8 @@ export const createStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -8600,6 +8610,7 @@ export const updateStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8735,14 +8746,8 @@ export const updateStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -8796,6 +8801,7 @@ export const deleteStudentData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -8931,14 +8937,8 @@ export const deleteStudentData = /* GraphQL */ `
         description
         content
         classID
-        feedbacks {
-          id
-          text
-          email
-          authID
-          createdAt
-          updatedAt
-        }
+        feedbacks
+        edited
       }
       createdAt
       updatedAt
@@ -8986,12 +8986,12 @@ export const createAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -9038,12 +9038,12 @@ export const updateAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
+        filename
+        size
       }
+      edited
       createdAt
       updatedAt
     }
@@ -9090,54 +9090,12 @@ export const deleteAnthologyComment = /* GraphQL */ `
         updatedAt
       }
       attachments {
-        id
         type
         url
-        createdAt
-        updatedAt
+        filename
+        size
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createAttachment = /* GraphQL */ `
-  mutation CreateAttachment(
-    $input: CreateAttachmentInput!
-    $condition: ModelAttachmentConditionInput
-  ) {
-    createAttachment(input: $input, condition: $condition) {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateAttachment = /* GraphQL */ `
-  mutation UpdateAttachment(
-    $input: UpdateAttachmentInput!
-    $condition: ModelAttachmentConditionInput
-  ) {
-    updateAttachment(input: $input, condition: $condition) {
-      id
-      type
-      url
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteAttachment = /* GraphQL */ `
-  mutation DeleteAttachment(
-    $input: DeleteAttachmentInput!
-    $condition: ModelAttachmentConditionInput
-  ) {
-    deleteAttachment(input: $input, condition: $condition) {
-      id
-      type
-      url
+      edited
       createdAt
       updatedAt
     }
@@ -9227,6 +9185,7 @@ export const createQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9345,6 +9304,7 @@ export const updateQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9463,6 +9423,7 @@ export const deleteQuestionData = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -9579,6 +9540,8 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -9727,6 +9690,8 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -9875,6 +9840,8 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           description
           content
           classID
+          feedbacks
+          edited
         }
         createdAt
         updatedAt
@@ -9986,6 +9953,7 @@ export const createFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10065,6 +10033,7 @@ export const updateFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10144,6 +10113,7 @@ export const deleteFeedback = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10532,6 +10502,7 @@ export const createPersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10719,6 +10690,7 @@ export const updatePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }
@@ -10906,6 +10878,7 @@ export const deletePersonLocation = /* GraphQL */ `
           introduction
           connectionTitle
           institutionID
+          duration
           createdAt
           updatedAt
         }

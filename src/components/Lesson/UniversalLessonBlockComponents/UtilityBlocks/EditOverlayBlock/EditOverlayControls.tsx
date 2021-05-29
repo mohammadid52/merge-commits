@@ -14,6 +14,7 @@ import {BsLayoutSplit} from 'react-icons/bs';
 import {CgEditFlipH} from 'react-icons/cg';
 import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
+import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -31,6 +32,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     updateFromULBHandler,
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
+  const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (isActive) {
@@ -44,6 +46,14 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       }
     }
   }, [isActive]);
+
+  /**
+   * FUNCTIONALITY
+   */
+
+  const handleColorPickerSelect = (pickedColor: string) => {
+    updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
+  };
 
   /**
    * Here is where I should add buttons
@@ -100,13 +110,18 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
             Icon={AiOutlineEdit}
           />
-          <Buttons
-            onClick={() => updateFromULBHandler(contentID,'class','')}
-            label="BG Color"
-            overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-            Icon={AiOutlineBgColors}
-          />
+          <div className={`relative`}>
+            <Buttons
+              onClick={()=>setColorPickerActive(!colorPickerActive)}
+              label="BG Color"
+              overrideClass={true}
+              btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+              Icon={AiOutlineBgColors}
+            />
+            {colorPickerActive && (
+              <ColorPicker callbackColor={handleColorPickerSelect} />
+            )}
+          </div>
           <Buttons
             onClick={() => deleteFromULBHandler(contentID)}
             label="Delete"

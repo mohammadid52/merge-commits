@@ -103,14 +103,17 @@
     width: 200px;
     opacity: 0;
     left: 280px;
-    top:0;
+    top: 0;
     z-index: 9999;
     border-radius: 3px;
     transition: opacity 0.5s;
+    transform: translateX(-10px);
+    transition: all 0.15s ease-in-out;
   }
 
   &:hover {
     .custom_tooltip {
+      transform: translateX(0px);
       opacity: 1;
       visibility: visible;
     }
@@ -697,6 +700,25 @@
   color: #fff;
 }
 
+// User Profile Tabs
+
+.user__profile-tabs {
+  & .tab {
+    transition: all 0.3s ease;
+    &.active {
+      background: #e0e7ff;
+      color: #4338ca;
+    }
+    &:not(.active):hover {
+      background-color: #eef2ff;
+      color: #4338ca;
+    }
+    background: transparent;
+    color: #6b7280;
+    text-align: center;
+  }
+}
+
 .animate__sidebar-btn {
   transition: width 0.3s ease;
 
@@ -732,4 +754,32 @@
     transform: translateX(-100px);
   }
 }
+.comment-box {
+  transition: all 0.15s ease-in-out;
+  &:focus-within {
+    border: 1px solid #d1d5db;
+  }
+}
+.comment-box__inner {
+  transition: all 0.15s ease-in-out;
+  border-bottom: 1px solid transparent;
 
+  &:focus-within {
+    border-bottom: 1px solid #f3f4f6;
+  }
+}
+
+.size-stamp,
+.delete-comment {
+  display: none;
+}
+.comment-main:hover .size-stamp {
+  display: block;
+}
+.comment-main:hover .delete-comment {
+  display: block;
+}
+
+.feedback-name:hover {
+  text-decoration: underline;
+}

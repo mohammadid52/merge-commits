@@ -33,10 +33,8 @@ const RowComposer = (props: RowComposerProps) => {
     if (dataID) {
       if (editedID !== dataID) {
         setEditedID(dataID);
-        setTargetID(dataID);
       } else {
         setEditedID('');
-        setTargetID('');
       }
     }
   };

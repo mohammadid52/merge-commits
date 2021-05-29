@@ -51,6 +51,8 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
+    STUDENTS: 'Students',
+    STUDENTS_NOTEBOOK: 'Students Notebook',
   },
   ES: {
     HOME: 'CASA',
@@ -81,6 +83,8 @@ const BreadcrumsTitles: any = {
     UserInfo: 'TBD',
     LESSONS: 'TBD',
     LESSONPLANBUILDER: 'TBD',
+    STUDENTS: 'TBD',
+    STUDENTS_NOTEBOOK: 'TBD',
   },
 };
 // Profile Display and edit section
@@ -273,6 +277,7 @@ const sideBarLinksDict: any = {
     UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
+    NOTEBOOK: 'Notebook',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',
   },
@@ -282,11 +287,12 @@ const sideBarLinksDict: any = {
     PEOPLE: 'Personas',
     LESSON_PLANNER: 'Pasillo',
     CLASSROOM: 'Aula',
+    NOTEBOOK: 'Computadora portátil',
     LESSON_BUILDER: 'Constructor de lecciones',
     UNIVERSAL_LESSON_BUILDER: 'Constructor Universal',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
-    RESEARCHANALYTICS: 'TBD',
+    RESEARCHANALYTICS: 'Investigación y Análisis',
   },
 };
 

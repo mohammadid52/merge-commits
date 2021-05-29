@@ -15,6 +15,11 @@ import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
 import {FaEdit} from 'react-icons/fa';
+import {initials, stringToHslColor} from '../../../utilities/strings';
+import {getImageFromS3} from '../../../utilities/services';
+import {BiCloudDownload} from 'react-icons/bi';
+import Modal from '../../Atoms/Modal';
+import Loader from '../../Atoms/Loader';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -330,6 +335,7 @@ const Anthology = () => {
     return anthologyDict[userLanguage].TABS[key];
   });
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
+
   const Content = (
     <AnthologyContent
       viewEditMode={viewEditMode}

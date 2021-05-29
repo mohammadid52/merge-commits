@@ -223,7 +223,6 @@ const Csv = (props: Csv) => {
     let studentsAnswersDemographicsCheckpointsQuestions =
       curriculumData?.data?.listQuestionDatas?.items || [];
     setDCQAnswers(studentsAnswersDemographicsCheckpointsQuestions);
-    // console.log('studentsAnswersDemographicsCheckpointsQuestions', studentsAnswersDemographicsCheckpointsQuestions)
   };
 
   const onUnitSelect = (id: string, name: string, value: string) => {
@@ -352,19 +351,15 @@ const Csv = (props: Csv) => {
       return {label: `${ques.question.question}`, key: `${ques.question.id}`};
     });
 
-    /* Enable this code if demographics questions 
+    /* Enable this code if demographics questions */
 
-    // let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
-    //   qids.push(ques.question.id);
-    //   return {
-    //     label: `${ques.question.question} (demographic)`,
-    //     key: `${ques.question.id}`,
-    //   };
-    // });
-    // console.log('surveyQuestionHeaders', surveyQuestionHeaders);
-    // console.log('demographicsQuestionHeaders', demographicsQuestionHeaders);
-
-    */
+    let demographicsQuestionHeaders = demographicsQuestions.map((ques: any) => {
+      qids.push(ques.question.id);
+      return {
+        label: `${ques.question.question} (demographic)`,
+        key: `${ques.question.id}`,
+      };
+    });
 
     setCSVHeaders([
       {label: 'AuthId', key: 'authId'},
@@ -376,8 +371,8 @@ const Csv = (props: Csv) => {
       {label: 'Unit', key: 'unit'},
       {label: 'Classroom', key: 'classroom'},
       {label: 'Survey name', key: 'surveyName'},
+      ...demographicsQuestionHeaders, // Enable this line for demographics question
       ...surveyQuestionHeaders,
-      //...demographicsQuestionHeaders, // Enable this line for demographics question
     ]);
 
     let data = students.map((stu: any) => {
@@ -398,7 +393,7 @@ const Csv = (props: Csv) => {
         }
       });
 
-      /* Enable this code if demographics questions 
+      /* Enable this code if demographics questions */
       DCQAnswers.map((ans: any) => {
         if (ans.person.id === stu.id) {
           ans.responseObject.map((resp: any) => {
@@ -411,7 +406,6 @@ const Csv = (props: Csv) => {
           });
         }
       });
-      */
 
       // @ts-ignore
       const sortedDates = dates.sort((a: any, b: any) => new Date(b) - new Date(a));
@@ -449,6 +443,15 @@ const Csv = (props: Csv) => {
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
   const tdataStyles = 'px-6 py-4 whitespace-nowrap text-sm text-gray-800';
+
+  const getTodayDate = () => {
+    let today: any = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    today = mm + '-' + dd + '-' + yyyy;
+    return today;
+  }
 
   const Table = () => {
     return (
@@ -581,7 +584,7 @@ const Csv = (props: Csv) => {
           }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
-            <CSVLink data={CSVData} headers={CSVHeaders} filename={'students_data.csv'}>
+            <CSVLink data={CSVData} headers={CSVHeaders} filename={`${selectedClassRoom.name}_${selectedSurvey.name}_${getTodayDate()}.csv`}>
               Download CSV
             </CSVLink>
           ) : (
