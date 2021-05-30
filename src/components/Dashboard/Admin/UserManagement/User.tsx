@@ -1,9 +1,8 @@
 import React, {useEffect, useState, useContext, useRef} from 'react';
 import {useLocation} from 'react-router-dom';
-import queryString from 'query-string';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {FaEdit} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
+import {IoSendSharp} from 'react-icons/io5';
 import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
@@ -370,6 +369,8 @@ const User = () => {
         []
       );
 
+      console.log(reducedAnthologyContent);
+
       setStudentData(
         reducedAnthologyContent.filter(
           (item: any) => item.content !== '' && item.title !== ''
@@ -647,6 +648,14 @@ const User = () => {
     } catch (error) {}
   };
 
+  const formatLastEdit = (editDate: string) => {
+    const date = new Date(editDate);
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+    return `${d}/${m + 1}/${y}`;
+  };
+
   const listComments = async (feedbacks: string[] = []) => {
     const filter: any = feedbacks.map((id: string) => {
       return {
@@ -724,7 +733,19 @@ const User = () => {
 
   const getFullNameString = (obj: any) =>
     obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
-
+  const subSectionKey: any = {
+    Journal: ['journal'],
+    Work: ['poem', 'story'],
+    Notes: ['notes'],
+  };
+  const getSection = (key: string) => {
+    let journal = subSectionKey.Journal.includes(key);
+    let work = subSectionKey.Work.includes(key);
+    let notes = subSectionKey.Notes.includes(key);
+    if (journal) return 'Journal';
+    if (work) return 'Work';
+    if (notes) return 'Notes';
+  };
   const StudentData = ({item, idx}: any) => {
     // booleans
     const [showComments, setShowComments] = useState(false);
@@ -897,11 +918,17 @@ const User = () => {
     return (
       <div
         key={idx}
-        className={`w-full relative overflow-x-hidden white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
+        className={`w-full note-container relative overflow-x-hidden white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <div className="px-6">
+          <span className="notebook-lastedit absolute left-1 w-auto px-2.5 py-0.5 bottom-0 mb-2 text-xs text-gray-500">
+            Last Edited: {formatLastEdit(item.updatedAt)}
+          </span>
+
           <span className="notebook-type absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium bg-green-100 text-green-600">
+            {getSection(item.type) !== 'Journal' && `${getSection(item.type)} - `}
             {capitalizeFirstLetter(item.type)}
           </span>
+
           <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
           {item.content && ReactHtmlParser(item.content)}
         </div>

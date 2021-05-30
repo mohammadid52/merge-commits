@@ -1,12 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import SectionTitle from '../../Atoms/SectionTitleV2';
-import SubSectionTabs from './SubSectionTabs';
 import AnthologyContent from './AnthologyContent';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {API, graphqlOperation} from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import HeroBanner from '../../Header/HeroBanner';
 import {getAsset} from '../../../assets';
@@ -15,11 +12,6 @@ import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
 import {FaEdit} from 'react-icons/fa';
-import {initials, stringToHslColor} from '../../../utilities/strings';
-import {getImageFromS3} from '../../../utilities/services';
-import {BiCloudDownload} from 'react-icons/bi';
-import Modal from '../../Atoms/Modal';
-import Loader from '../../Atoms/Loader';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -204,8 +196,6 @@ const Anthology = () => {
     studentDataID: string,
     idx: number
   ) => {
-    console.log('sdsd');
-
     setViewEditMode({mode: editMode, studentDataID: studentDataID, idx: idx});
   };
 
