@@ -1,27 +1,31 @@
 import React, {useState, useContext, useEffect, useRef} from 'react';
-import Storage from '@aws-amplify/storage';
-import API, {graphqlOperation} from '@aws-amplify/api';
-
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import ContentCard from '../../Atoms/ContentCard';
 import {AnthologyMapItem, ViewEditMode} from './Anthology';
 import FormInput from '../../Atoms/Form/FormInput';
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
+import TextArea from '../../Atoms/Form/TextArea';
+import {dateFromServer} from '../../../utilities/time';
 import useDictionary from '../../../customHooks/dictionary';
 import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
+import Storage from '@aws-amplify/storage';
+import API, {graphqlOperation} from '@aws-amplify/api';
+
+import * as queries from '../../../graphql/queries';
+import * as mutations from '../../../graphql/mutations';
 import {getImageFromS3} from '../../../utilities/services';
 import {BiLinkAlt} from 'react-icons/bi';
+import {BiCloudDownload} from 'react-icons/bi';
+import {initials, stringToHslColor} from '../../../utilities/strings';
 import Modal from '../../Atoms/Modal';
-
 import Loader from '../../Atoms/Loader';
+import Feedback from '../Admin/UserManagement/Feedback';
+import ModalPopUp from '../../Molecules/ModalPopUp';
 import {find, sortBy} from 'lodash';
 import {BsCameraVideoFill} from 'react-icons/bs';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {IoSendSharp} from 'react-icons/io5';
-import ModalPopUp from '../../Molecules/ModalPopUp';
-import Feedback from '../Admin/UserManagement/Feedback';
+import SingleNote from './AnthologyContentNote';
 
 interface ContentCardProps {
   viewEditMode: ViewEditMode;
@@ -31,7 +35,7 @@ interface ContentCardProps {
   subSection: string;
   createTemplate: any;
   content?: any;
-  loadingContent?: boolean;
+  onCancel?: any;
   getContentObjIndex?: (contentObj: AnthologyMapItem) => number;
 }
 
@@ -41,11 +45,11 @@ const AnthologyContent = (props: ContentCardProps) => {
     handleEditToggle,
     handleEditUpdate,
     handleWYSIWYGupdate,
+    onCancel,
     subSection,
     createTemplate,
     content,
     getContentObjIndex,
-    loadingContent,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
@@ -55,14 +59,46 @@ const AnthologyContent = (props: ContentCardProps) => {
   });
 
   const setEditorContent = (html: string, text: string, idKey: string) => {
-    console.log(html, text);
-
     setNotesData({
       key: idKey,
       value: html,
     });
     handleWYSIWYGupdate(idKey, html);
   };
+
+  const viewModeView = (contentObj: AnthologyMapItem) => (
+    <>
+      {/* <div className={`flex px-4`}>
+        <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
+          Updated: {dateFromServer(contentObj.updatedAt)}
+        </p>
+      </div> */}
+      <>
+        {viewEditMode.mode === 'create' &&
+          viewEditMode.studentDataID === createTemplate.syllabusLessonID && (
+            <div
+              style={{height: '0.05rem'}}
+              className={'mx-auto px-8 border-t-0 my-2 border-gray-200'}
+            />
+          )}
+        <div className="border-gray-200">
+          <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
+            {contentObj.title ? contentObj.title : `No title`}
+          </h4>
+          <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
+            {contentObj.content.length > 0 ? (
+              <p
+                className="font-normal"
+                dangerouslySetInnerHTML={{__html: contentObj.content}}
+              />
+            ) : (
+              `No content`
+            )}
+          </div>
+        </div>
+      </>
+    </>
+  );
 
   const do_resize = (textbox: any) => {
     var maxrows = 50;
@@ -267,18 +303,18 @@ const AnthologyContent = (props: ContentCardProps) => {
       </Modal>
     );
   };
+
   const Feedbacks = ({
     showComments,
     item,
-    loadingComments,
     feedbackData,
     setFeedbackData,
+    loadingComments,
+    idx,
     fileObject,
     setFileObject,
-    idx,
   }: any) => {
     const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
-
     // strings
     const [comment, setComment] = useState('');
 
@@ -423,7 +459,7 @@ const AnthologyContent = (props: ContentCardProps) => {
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
     return (
       <div key={idx} className={`w-full pb-2 mb-2`}>
-        {showComments && (
+        {showComments === idx && (
           <div className="comment-container">
             {attModal.show && (
               <AttachmentsModalPopUp
@@ -609,37 +645,45 @@ const AnthologyContent = (props: ContentCardProps) => {
     );
   };
 
-  const viewModeView = (contentObj: AnthologyMapItem) => (
+  const createModeView = (contentObj: AnthologyMapItem) => (
     <>
-      {/* <div className={`flex px-4`}>
-        <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
-          Updated: {dateFromServer(contentObj.updatedAt)}
+      {/**
+       *  section: TOP INFO
+       */}
+      <div className={`flex pb-2 mb-2`}>
+        <p
+          style={{letterSpacing: '0.015em'}}
+          className={`text-left font-semibold text-lg text-dark`}>
+          Create new
         </p>
-      </div> */}
-      <>
-        {viewEditMode.mode === 'create' &&
-          viewEditMode.studentDataID === createTemplate.syllabusLessonID && (
-            <div
-              style={{height: '0.05rem'}}
-              className={'mx-auto px-8 border-t-0 my-2 border-gray-200'}
-            />
-          )}
-        <div className="border-gray-200">
-          <h4 className={`mb-2 w-auto font-medium ${theme.lessonCard.title}`}>
-            {contentObj.title ? contentObj.title : `No title`}
-          </h4>
-          <div className={`overflow-ellipsis overflow-hidden ellipsis`}>
-            {contentObj.content.length > 0 ? (
-              <p
-                className="font-normal"
-                dangerouslySetInnerHTML={{__html: contentObj.content}}
-              />
-            ) : (
-              `No content`
-            )}
-          </div>
-        </div>
-      </>
+      </div>
+      {/**
+       *  section: TITLE
+       */}
+      <div className={`pb-2 mb-2`}>
+        <FormInput
+          id={`title_${contentObj.type}_${contentObj.studentDataID}`}
+          label={`Title`}
+          onChange={handleEditUpdate}
+          value={contentObj.title}
+          placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
+        />
+      </div>
+      {/**
+       *  section:  CONTENT
+       */}
+      <div className={`mt-2 mb-2`}>
+        <RichTextEditor
+          initialValue={contentObj.content}
+          onChange={(htmlContent, plainText) =>
+            setEditorContent(
+              htmlContent,
+              plainText,
+              `content_${contentObj.type}_${contentObj.studentDataID}`
+            )
+          }
+        />
+      </div>
     </>
   );
 
@@ -683,176 +727,50 @@ const AnthologyContent = (props: ContentCardProps) => {
     </>
   );
 
-  const createModeView = (contentObj: AnthologyMapItem) => (
-    <>
-      {/**
-       *  section: TOP INFO
-       */}
-      <div className={`flex pb-2 mb-2`}>
-        <p
-          style={{letterSpacing: '0.015em'}}
-          className={`text-left font-semibold text-lg text-dark`}>
-          Create new
-        </p>
-      </div>
-      {/**
-       *  section: TITLE
-       */}
-      <div className={`pb-2 mb-2`}>
-        <FormInput
-          id={`title_${contentObj.type}_${contentObj.studentDataID}`}
-          label={`Title`}
-          onChange={handleEditUpdate}
-          value={contentObj.title}
-          placeHolder={contentObj.title ? contentObj.title : `Please add title...`}
-        />
-      </div>
-      {/**
-       *  section:  CONTENT
-       */}
-      <div className={`mt-2 mb-2`}>
-        <RichTextEditor
-          initialValue={contentObj.content}
-          onChange={(htmlContent, plainText) =>
-            setEditorContent(
-              htmlContent,
-              plainText,
-              `content_${contentObj.type}_${contentObj.studentDataID}`
-            )
-          }
-        />
-      </div>
-    </>
-  );
+  const [showComments, setShowComments] = useState<number>(null);
+  const [lenList, setlenList] = useState([]);
 
-  const Content = ({idx, contentObj}: any) => {
-    const [showComments, setShowComments] = useState(false);
+  const Note = ({contentObj, showComments, idx, setLen}: any) => {
     const [feedbackData, setFeedbackData] = useState([]);
+
     const [loadingComments, setLoadingComments] = useState(false);
     const [fileObject, setFileObject] = useState({});
 
-    // useEffect(() => {
-    //   getFeedBackData();
-    // }, []);
+    useEffect(() => {
+      getFeedBackData();
+    }, []);
 
     const getFeedBackData = async () => {
       setLoadingComments(true);
       try {
         const feedbacksData: any = await listComments(contentObj.feedbacks);
         setFeedbackData(sortBy(feedbacksData, ['createdAt']));
+
+        setLen(feedbacksData.length, idx);
       } catch (error) {
         console.error('error @getFeedBackData: ', error.message);
       } finally {
         setLoadingComments(false);
       }
     };
-    const onCommentShowHide = () => {
-      if (!showComments && feedbackData.length === 0) {
-        getFeedBackData();
-      }
-      if (showComments) {
-        setFileObject({});
-      }
-      setShowComments(!showComments);
-    };
-
-    const isEditMode =
-      viewEditMode &&
-      viewEditMode.mode === 'edit' &&
-      viewEditMode.studentDataID === contentObj.studentDataID &&
-      viewEditMode.idx === getContentObjIndex(contentObj);
-
-    return (
-      <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
-        <div
-          id={`anthology_${subSection}${idx}`}
-          className={`flex flex-col ${
-            idx !== content.length - 1 && 'border-b-0'
-          } border-gray-200 px-6 py-6 p-2`}>
-          {isEditMode ? editModeView(contentObj) : viewModeView(contentObj)}
-          {/**
-           *  section:  VIEW/EDIT BUTTON
-           */}
-          <div className={`flex pt-2 flex-col mt-2`}>
-            {isEditMode ? (
-              <div className="flex ">
-                <Buttons
-                  onClick={() => {
-                    handleEditToggle('', '', 0);
-                    // onCancel(contentObj.type);
-                  }}
-                  label={anthologyDict[userLanguage].ACTIONS.CANCEL}
-                  transparent
-                  btnClass="mr-2"
-                />
-                <Buttons
-                  onClick={() =>
-                    handleEditToggle(
-                      'save',
-                      contentObj.studentDataID,
-                      getContentObjIndex(contentObj)
-                    )
-                  }
-                  label={anthologyDict[userLanguage].ACTIONS.SAVE}
-                />
-              </div>
-            ) : (
-              <div className="flex items-center justify-between">
-                <div
-                  className={`bg-indigo-500 hover:bg-indigo-600 text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                  onClick={() =>
-                    handleEditToggle(
-                      'edit',
-                      contentObj.studentDataID,
-                      getContentObjIndex(contentObj)
-                    )
-                  }>
-                  {anthologyDict[userLanguage].ACTIONS.EDIT}
-                </div>
-                <div
-                  onClick={onCommentShowHide}
-                  className={`${
-                    loadingComments ? 'flex items-center justify-between' : ''
-                  } ${
-                    feedbackData.length > 0
-                      ? 'bg-indigo-500 hover:bg-indigo-600'
-                      : 'bg-gray-500'
-                  }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
-                  <p>
-                    {loadingComments
-                      ? 'Loading Comments'
-                      : feedbackData.length > 0
-                      ? `${showComments ? 'Hide' : 'Show'} Feedback`
-                      : 'Leave Feedback'}
-                  </p>
-                  {loadingComments && (
-                    <span className="ml-4 w-auto">
-                      <Loader color="#fff" />
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {showComments && (
-              <div className="border-t-0 border-gray-200 mt-4">
-                <Feedbacks
-                  idx={idx}
-                  feedbackData={feedbackData}
-                  loadingComments={loadingComments}
-                  item={contentObj}
-                  showComments={showComments}
-                  setShowComments={setShowComments}
-                  fileObject={fileObject}
-                  setFileObject={setFileObject}
-                  setFeedbackData={setFeedbackData}
-                />
-              </div>
-            )}
-          </div>
+    if (showComments) {
+      return (
+        <div className="border-t-0 border-gray-200 mt-4">
+          <Feedbacks
+            idx={idx}
+            feedbackData={feedbackData}
+            loadingComments={loadingComments}
+            item={contentObj}
+            showComments={showComments}
+            setShowComments={setShowComments}
+            fileObject={fileObject}
+            setFileObject={setFileObject}
+            setFeedbackData={setFeedbackData}
+          />
         </div>
-      </ContentCard>
-    );
+      );
+    }
+    return null;
   };
 
   return (
@@ -888,19 +806,20 @@ const AnthologyContent = (props: ContentCardProps) => {
             </div>
           </ContentCard>
         )}
-      {loadingContent ? (
-        <div className="py-2 my-8 text-center mx-auto flex justify-center items-center w-full">
-          <div className="">
-            <Loader color="rgba(107, 114, 128, 1)" />
-            <p className="mt-2 text-center text-lg text-gray-500">
-              Loading Content
-              {/* @Mohammad: Add this to dict */}
-            </p>
-          </div>
-        </div>
-      ) : content.length > 0 ? (
+      {content.length > 0 ? (
         content.map((contentObj: AnthologyMapItem, idx: number) => (
-          <Content idx={idx} contentObj={contentObj} />
+          <SingleNote
+            onCancel={onCancel}
+            viewModeView={viewModeView}
+            editModeView={editModeView}
+            viewEditMode={viewEditMode}
+            handleEditToggle={handleEditToggle}
+            getContentObjIndex={getContentObjIndex}
+            contentLen={content.length}
+            idx={idx}
+            contentObj={contentObj}
+            subSection={subSection}
+          />
         ))
       ) : (
         <div className="p-12 flex flex-center items-center">
@@ -914,3 +833,87 @@ const AnthologyContent = (props: ContentCardProps) => {
 };
 
 export default AnthologyContent;
+
+// {
+//   return (
+//     <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
+//       <div
+//         id={`anthology_${subSection}${idx}`}
+//         className={`flex flex-col ${
+//           idx !== content.length - 1 && 'border-b-0'
+//         } border-gray-200 px-6 py-6 p-2`}>
+//         {viewEditMode &&
+//         viewEditMode.mode === 'edit' &&
+//         viewEditMode.studentDataID === contentObj.studentDataID &&
+//         viewEditMode.idx === getContentObjIndex(contentObj)
+//           ? editModeView(contentObj)
+//           : viewModeView(contentObj)}
+//         {/**
+//          *  section:  VIEW/EDIT BUTTON
+//          */}
+//         <div className={`flex pt-2 flex-col  mt-2`}>
+//           {viewEditMode.mode === 'edit' &&
+//           viewEditMode.studentDataID === contentObj.studentDataID &&
+//           viewEditMode.idx === getContentObjIndex(contentObj) ? (
+//             <div className="flex items-center">
+//               <Buttons
+//                 onClick={() => {
+//                   handleEditToggle('', '', 0);
+//                   // onCancel(contentObj.type);
+//                 }}
+//                 label={anthologyDict[userLanguage].ACTIONS.CANCEL}
+//                 transparent
+//                 btnClass="mr-2"
+//               />
+
+//               <Buttons
+//                 onClick={() =>
+//                   handleEditToggle(
+//                     'save',
+//                     contentObj.studentDataID,
+//                     getContentObjIndex(contentObj)
+//                   )
+//                 }
+//                 label={anthologyDict[userLanguage].ACTIONS.SAVE}
+//               />
+//             </div>
+//           ) : (
+//             <div className="flex items-center justify-between">
+//               <div
+//                 className={`bg-indigo-500 hover:bg-indigo-600 text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+//                 onClick={() =>
+//                   handleEditToggle(
+//                     'edit',
+//                     contentObj.studentDataID,
+//                     getContentObjIndex(contentObj)
+//                   )
+//                 }>
+//                 {anthologyDict[userLanguage].ACTIONS.EDIT}
+//               </div>
+//               <div
+//                 onClick={() => {
+//                   if (showComments === idx) {
+//                     setShowComments(null);
+//                   } else {
+//                     setShowComments(idx);
+//                   }
+//                 }}
+//                 className={`${false ? 'flex items-center justify-between' : ''} ${
+//                   false ? 'bg-indigo-500 hover:bg-indigo-600' : 'bg-gray-500'
+//                 }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+//                 <p>{showComments === idx ? 'Hide' : 'Show'} Feedback</p>
+//               </div>
+//             </div>
+//           )}
+//           {/* {showComments === idx && ( */}
+//           <Note
+//             showComments={showComments === idx}
+//             contentObj={contentObj}
+//             idx={idx}
+//           />
+//           {/* )} */}
+//         </div>
+//       </div>
+//     </ContentCard>
+//   );
+// }

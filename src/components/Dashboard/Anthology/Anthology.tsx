@@ -204,6 +204,8 @@ const Anthology = () => {
     studentDataID: string,
     idx: number
   ) => {
+    console.log('sdsd');
+
     setViewEditMode({mode: editMode, studentDataID: studentDataID, idx: idx});
   };
 
@@ -342,7 +344,8 @@ const Anthology = () => {
 
   const Content = (
     <AnthologyContent
-      loadingContent={loadingContent}
+      // loadingContent={loadingContent}
+      onCancel={onCancel}
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
       handleEditUpdate={handleEditUpdate}
