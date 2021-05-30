@@ -914,7 +914,18 @@ const User = () => {
 
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
-
+    const getColorForTag = (tagName: string) => {
+      switch (tagName) {
+        case 'Journal':
+          return 'bg-green-100 text-green-600';
+        case 'Notes':
+          return 'bg-yellow-100 text-yellow-600';
+        case 'Work':
+          return 'bg-blue-100 text-blue-600';
+        default:
+          break;
+      }
+    };
     return (
       <div
         key={idx}
@@ -924,7 +935,10 @@ const User = () => {
             Last Edited: {formatLastEdit(item.updatedAt)}
           </span>
 
-          <span className="notebook-type absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium bg-green-100 text-green-600">
+          <span
+            className={`notebook-type absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium ${getColorForTag(
+              getSection(item.type)
+            )}`}>
             {getSection(item.type) !== 'Journal' && `${getSection(item.type)} - `}
             {capitalizeFirstLetter(item.type)}
           </span>
