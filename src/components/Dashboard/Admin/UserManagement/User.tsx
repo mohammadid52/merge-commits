@@ -936,7 +936,7 @@ const User = () => {
           </span>
 
           <span
-            className={`notebook-type absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium ${getColorForTag(
+            className={`notebook-lastedit absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium ${getColorForTag(
               getSection(item.type)
             )}`}>
             {getSection(item.type) !== 'Journal' && `${getSection(item.type)} - `}
