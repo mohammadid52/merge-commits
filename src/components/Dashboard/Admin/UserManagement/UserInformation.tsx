@@ -38,19 +38,23 @@ const UserInformation = (props: UserInfoProps) => {
     const selectedCheckp: any = questionData.find(
       (item: any) => item.checkpointID === checkpointID
     );
+
     if (selectedCheckp) {
       const questionResponce: any = selectedCheckp.responseObject?.find(
         (item: any) => item.qid === questionID
       )?.response;
-      const stringedResponse = questionResponce.toString();
 
-      if (stringedResponse.includes('Other')) {
-        const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
-        const answer = splitAnswer[1];
-        if (answer) return answer;
-        else return 'Other';
-      } else {
-        return questionResponce ? questionResponce.join(',') : '--';
+      if (questionResponce) {
+        const stringedResponse = questionResponce.toString();
+
+        if (stringedResponse.includes('Other')) {
+          const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
+          const answer = splitAnswer[1];
+          if (answer) return answer;
+          else return 'Other';
+        } else {
+          return questionResponce ? questionResponce.join(',') : '--';
+        }
       }
     }
   };

@@ -369,8 +369,6 @@ const User = () => {
         []
       );
 
-      console.log(reducedAnthologyContent);
-
       setStudentData(
         reducedAnthologyContent.filter(
           (item: any) => item.content !== '' && item.title !== ''
