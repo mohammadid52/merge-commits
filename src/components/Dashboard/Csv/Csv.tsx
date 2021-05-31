@@ -629,16 +629,19 @@ const Csv = (props: Csv) => {
           </div>
         )}
       </div>
-      <div>
-        <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Statistics'} />
-        <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
-          {/* @Aman change the value:{value} */}
-          <Card keyItem="Survey First" value={'31/5/21'} />
-          <Card keyItem="Survey Last" value={'31/5/21'} />
-          <Card keyItem="Taken Survey" value={'x'} />
-          <Card keyItem="Not Taken Survey" value={'x'} />
+      {
+        // add condition to render statistics section
+        <div>
+          <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Statistics'} />
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
+            {/* @Aman change the value:{value} */}
+            <Card keyItem="Survey First" value={'31/5/21'} />
+            <Card keyItem="Survey Last" value={'31/5/21'} />
+            <Card keyItem="Taken Survey" value={'x'} />
+            <Card keyItem="Not Taken Survey" value={'x'} />
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 };
