@@ -9,7 +9,7 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
-import {uniqBy} from 'lodash';
+import {orderBy, uniqBy} from 'lodash';
 
 interface Csv {}
 
@@ -434,7 +434,7 @@ const Csv = (props: Csv) => {
           '-',
       };
     });
-    setCSVData(data);
+    setCSVData(orderBy(data, ['firstName'], ['asc']));
     setIsCSVDownloadReady(true);
     setCsvGettingReady(false);
   };
@@ -458,6 +458,14 @@ const Csv = (props: Csv) => {
     let yyyy = today.getFullYear();
     today = mm + '-' + dd + '-' + yyyy;
     return today;
+  };
+
+  const getFormatedDate = (date: string) => {
+    if (date !== '-') {
+      return date.split(',')[0];
+    } else {
+      return '-';
+    }
   };
 
   const Table = () => {
@@ -505,10 +513,10 @@ const Csv = (props: Csv) => {
                         {listItem.email}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.hasTakenSurvey ? 'Yes': 'No' }
+                        {listItem.hasTakenSurvey ? 'Yes' : 'No'}
                       </td>
                       <td style={{width: '10%'}} className={tdataStyles}>
-                        {listItem.last}
+                        {getFormatedDate(listItem.last)}
                       </td>
                     </tr>
                   ))}
@@ -578,11 +586,10 @@ const Csv = (props: Csv) => {
         />
         <button
           type="button"
-          className="col-end-5 disabled:opacity-50 mt-5 inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
+          className="col-end-5 mt-5 inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
           style={{
             /* stylelint-disable */
             opacity: isCSVDownloadReady ? 1 : 0.5,
-            cursor: isCSVDownloadReady ? 'cursor-pointer' : 'not-allowed',
           }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
@@ -600,11 +607,7 @@ const Csv = (props: Csv) => {
         </button>
       </div>
       <div>
-        <SectionTitleV3
-          fontSize="2xl"
-          fontStyle="bold"
-          title={'Survey results'}
-        />
+        <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Survey results'} />
         {CSVData.length > 0 ? (
           <Table />
         ) : (
