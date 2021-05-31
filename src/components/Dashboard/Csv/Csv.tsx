@@ -531,6 +531,17 @@ const Csv = (props: Csv) => {
 
   const fieldClass = 'p-3 flex justify-center items-center w-full';
 
+  const Card = ({keyItem, value}: any) => {
+    return (
+      <div className="flex relative bg-white rounded-lg shadow justify-center items-center h-20 shadow inner_card">
+        <p className={`text-sm text-semibold text-gray-500 w-auto mr-2 text-md`}>
+          {keyItem}:
+        </p>
+        <p className={`text-dark-gray font-medium text-center w-auto text-md`}>{value}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="p-8 w-full h-full">
       <div className="mx-auto w-full">
@@ -617,6 +628,16 @@ const Csv = (props: Csv) => {
               : 'Select filters options to populate data'}
           </div>
         )}
+      </div>
+      <div>
+        <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Statistics'} />
+        <div className={`grid grid-cols-2 md:grid-cols-4 gap-6`}>
+          {/* @Aman change the value:{value} */}
+          <Card keyItem="Survey First" value={'31/5/21'} />
+          <Card keyItem="Survey Last" value={'31/5/21'} />
+          <Card keyItem="Taken Survey" value={'x'} />
+          <Card keyItem="Not Taken Survey" value={'x'} />
+        </div>
       </div>
     </div>
   );
