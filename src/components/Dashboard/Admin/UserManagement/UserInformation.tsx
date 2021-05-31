@@ -200,7 +200,15 @@ const UserInformation = (props: UserInfoProps) => {
                     {item.question.question}
                   </dt>
                   <dd className="mt-2 text-base leading-5 text-gray-900">
-                    {getQuestionResponse(checkpointID, item.question.id) || '--'}
+                    {item.question.type !== 'link' ? (
+                      getQuestionResponse(checkpointID, item.question.id) || '--'
+                    ) : (
+                      <a
+                        className="text-blue-400 hover:text-blue-600 transition-all"
+                        href={getQuestionResponse(checkpointID, item.question.id)}>
+                        {getQuestionResponse(checkpointID, item.question.id)}
+                      </a>
+                    )}
                   </dd>
                 </div>
               );

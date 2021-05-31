@@ -184,7 +184,18 @@ const ProfileInfo = (props: UserInfoProps) => {
                             {item.question.question}
                           </dt>
                           <dd className="mt-1 text-sm leading-5 text-gray-900">
-                            {getQuestionResponse(checkpoint.id, item.question.id) || '--'}
+                            {item.question.type !== 'link' ? (
+                              getQuestionResponse(checkpoint.id, item.question.id) || '--'
+                            ) : (
+                              <a
+                                className="text-blue-400 hover:text-blue-600 transition-all"
+                                href={getQuestionResponse(
+                                  checkpoint.id,
+                                  item.question.id
+                                )}>
+                                {getQuestionResponse(checkpoint.id, item.question.id)}
+                              </a>
+                            )}
                             {/* {`${user.institution ? user.institution : 'Rose M. Avalos P-TECH Early College'}`} */}
                           </dd>
                         </div>

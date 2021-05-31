@@ -23,6 +23,7 @@ const InputQuestions = (props: QuestionProps) => {
     handleInputChange,
     questionKey,
     value,
+    type = 'text',
   } = props;
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
@@ -64,7 +65,7 @@ const InputQuestions = (props: QuestionProps) => {
         <input
           id={questionId}
           className={`${theme.elem.textInput} w-full rounded-xl`}
-          type="text"
+          type={type}
           name={question.question.label}
           value={contents.value}
           onChange={(e) => (!isTeacher ? handleTextInputChange(e) : null)}
