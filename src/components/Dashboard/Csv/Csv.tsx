@@ -289,6 +289,9 @@ const Csv = (props: Csv) => {
 
   const onSurveySelect = async (id: string, name: string, value: string) => {
     let survey = { id, name, value };
+    if (selectedSurvey) {
+      clearCSVData();
+    }
     setSelectedsurvey(survey);
     await listQuestions(survey.id);
   };
@@ -474,6 +477,7 @@ const Csv = (props: Csv) => {
   };
 
   useEffect(() => {
+    console.log('isCSVReady', isCSVReady)
     if (isCSVReady) {
       getCSVReady();
     }
