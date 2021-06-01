@@ -25,7 +25,7 @@ const BreadcrumsTitles: any = {
     HOME: 'HOME',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
-    INSTITUTION_MANAGEMENT: 'Institution Management',
+    INSTITUTION_MANAGEMENT: 'Organiation Management',
     ADD_INSTITUTION: 'Add New Organization',
     INSTITUTION_INFO: 'Organization Info',
     Class_Creation: 'Cohort Creation',
@@ -50,7 +50,7 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Session Plan Builder',
-    STUDENTS: 'Students',
+    STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
   },
   ES: {
@@ -82,7 +82,7 @@ const BreadcrumsTitles: any = {
     UserInfo: 'TBD',
     LESSONS: 'TBD',
     LESSONPLANBUILDER: 'TBD',
-    STUDENTS: 'Students',
+    STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
   },
 };
@@ -711,8 +711,8 @@ const PreviewFormDict: any = {
 
 const InstitutionDict: any = {
   EN: {
-    TITLE: 'INSTITUTIONS MANAGEMENT',
-    SUBTITLE: 'Institutions List',
+    TITLE: 'ORGANIZATION MANAGEMENT',
+    SUBTITLE: 'Organizations List',
     TABLE: {
       NAME: 'Organization Name',
       TYPE: 'Type',
@@ -727,7 +727,7 @@ const InstitutionDict: any = {
     SORTBY: 'Sort By',
 
     BUTTON: {
-      Add: 'Add New Institution',
+      Add: 'Add New Organization',
     },
   },
   ES: {
@@ -756,7 +756,7 @@ const Institute_info: any = {
     TITLE: 'General Information',
     ADDRESS: 'Address',
     CONTACT: 'Contact No',
-    INSTITUTION_TYPE: 'Institution Type',
+    INSTITUTION_TYPE: 'Organization Type',
     WEBSITE: 'Website',
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
@@ -786,12 +786,12 @@ const Institute_info: any = {
 
 const InstitutionEditDict: any = {
   EN: {
-    INFO: 'Click the circle above to update institution image.',
+    INFO: 'Click the circle above to update organization image.',
 
     FORM: {
       TITLE: 'Edit Information',
-      INSTITUTION_TYPE: 'Institution Type',
-      NAME_INPUT_LABEL: 'Institution Name',
+      INSTITUTION_TYPE: 'Organization Type',
+      NAME_INPUT_LABEL: 'Organization Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
       WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
       WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://iconoclastartists.org/',
@@ -863,13 +863,13 @@ const InstitutionEditDict: any = {
 const InstitutionAddDict: any = {
   EN: {
     INFOA: 'Click circle to manage your avatar.',
-    INFO: 'Click the circle above to update institution image.',
-    TITLE: 'Add Institution',
-    SUBTITLE: 'Add new institution to the list',
+    INFO: 'Click the circle above to update organization image.',
+    TITLE: 'Add Organization',
+    SUBTITLE: 'Add new organization to the list',
     FORM: {
       TITLE: 'Organization Information',
-      INSTITUTION_TYPE: 'Institution Type',
-      NAME_INPUT_LABEL: 'Institution Name',
+      INSTITUTION_TYPE: 'Organization Type',
+      NAME_INPUT_LABEL: 'Organization Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
       WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
       WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://iconoclastartists.org/',
@@ -1048,13 +1048,13 @@ const classBuilderdict: any = {
         FETCHSTUDENT:
           'Error while fetching participant list, Please try again or you can add them later.',
         FETCHINSTITUTION:
-          'Error while fetching institution list, Please try again later.',
+          'Error while fetching organization list, Please try again later.',
         STUDENTADDERROR:
           'Error while adding participants data, you can add them saperately from cohort.',
         SAVECLASSERROR: 'Unable to save new cohort. Please try again later.',
         PROCESSINGERROR: 'Error while processing please Try again later.',
         INVALIDPATH:
-          'Invalid path please go back to institution selection page to select your organization.',
+          'Invalid path please go back to organization selection page to select your organization.',
       },
       VALIDATION: {
         NAME: 'Cohort name is required please enter.',
@@ -1113,11 +1113,11 @@ const CurricularBuilderdict: any = {
     messages: {
       error: {
         save: 'Unable to save new curriculum please try again later.',
-        fetch: 'Unable to fetch institution list pleas try later.',
+        fetch: 'Unable to fetch organization list pleas try later.',
         designerlist: 'Error while fetching Developers list Please try again later.',
         process: 'Error while processing please Try again later.',
         invalid:
-          'Invalid path please go back to institution selection page to select your organization.',
+          'Invalid path please go back to organization selection page to select your organization.',
       },
       validation: {
         name: 'Curricular name is required please enter name.',
@@ -1188,7 +1188,7 @@ const RoomBuilderdict: any = {
     messages: {
       error: {
         organizationbefor: 'Please create an organization before creating Class.',
-        institutelist: 'Unable to fetch institution list. Please try again later.',
+        institutelist: 'Unable to fetch organization list. Please try again later.',
         staffmember: 'Please create staff member first for your organization.',
         teacherlist: 'Unable to fetch teachers list. Please try again later.',
         createclass: 'Please create cohort first for your organization.',
@@ -1198,7 +1198,7 @@ const RoomBuilderdict: any = {
         classroomadd: 'Error while adding Class curricular. Please try again later.',
         ecreateclass: 'Error while creating Class. Please try again later.',
         invalid:
-          'Invalid path please go back to institution selection page to select your organization.',
+          'Invalid path please go back to organization selection page to select your organization.',
       },
       validation: {
         classroomname: 'Class name is required please enter name.',
@@ -1277,7 +1277,7 @@ const EditCurriculardict: any = {
       fetcherr: 'Error while fetching Developers list Please try again later.',
       curricularchange: 'Curricular changes has been saved.',
       updateerror: 'Error while updating curricular data please try later.',
-      unablefetch: 'Unable to fetch institution list pleas try later.',
+      unablefetch: 'Unable to fetch organization list pleas try later.',
       processerr: 'Error while processing please Try again later.',
       namerequired: 'Curricular name is required please enter name.',
       selectinstitute: 'Please select an organization to add curricular.',
@@ -1333,7 +1333,7 @@ const RoomEDITdict: any = {
     MAXSTUDENT_PLACHOLDER: 'Max participants',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
-      unabletofetch: 'Unable to fetch institution list. Please try again later.',
+      unabletofetch: 'Unable to fetch organization list. Please try again later.',
       addstaffirst:
         'Please add staff member first for the selected organization or select another organization.',
       unableteacher: 'Unable to fetch teachers list. Please try again later.',
@@ -1411,7 +1411,7 @@ const curricularviewdict: any = {
     SUBTITLE: 'Build curriculum, modules and lesson plans here',
     HEADING: 'GENERAL INFORMATION',
     NAME: 'Curriculum Name',
-    OWNER: 'Institution Owner',
+    OWNER: 'Organization Owner',
     DESCRIPTION: 'Description',
     DESIGNER: 'Developers',
     LANGUAGE: 'Languages',
@@ -2288,7 +2288,7 @@ const UserLookupWithTokenDict: any = {
     sortby: 'Sort By',
     name: 'Name',
     role: 'Role',
-    institution: 'Institution',
+    institution: 'Organization',
     status: 'Status',
     action: 'Actions',
     noresult: 'No Results',
@@ -2732,8 +2732,8 @@ const AddNewLessonFormDict: any = {
     NAME: 'Name',
     SELECTTYPE: 'Select Type',
     TYPE: 'Type',
-    INSTITUTION: 'Institution',
-    SELECTINSTITUTION: 'Select Institution',
+    INSTITUTION: 'Organization',
+    SELECTINSTITUTION: 'Select Organization',
     SELECTLANG: 'Select Language',
     LANGUAGE: 'Language',
     SELECTDESIGNER: 'Select Developers',
