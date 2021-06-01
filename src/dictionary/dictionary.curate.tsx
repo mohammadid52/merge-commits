@@ -762,7 +762,7 @@ const Institute_info: any = {
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
-      CLASSES: 'Classes',
+      CLASSES: 'Cohorts',
       CURRICULAR: 'Curricular',
       CLASSROOMS: 'Classes',
     },
@@ -942,7 +942,7 @@ const InstitutionAddDict: any = {
 
 const Institute_class: any = {
   EN: {
-    TITLE: 'Organization CLASSES',
+    TITLE: 'ORGANIZATION COHORTS',
     NO: 'No.',
     CLASSNAME: 'Cohort Name',
     ACTION: 'Actions',
@@ -992,7 +992,7 @@ const InstitueCurriculam: any = {
 
 const InstitueRomms: any = {
   EN: {
-    TITLE: 'CLASSES',
+    TITLE: 'COHORTS',
     NO: 'No.',
     CLASSROOMS_NAME: 'Class Name',
     CLASS_NAME: 'Cohort Name',
