@@ -2899,18 +2899,11 @@ export const getStudentResponse = /* GraphQL */ `
     listQuestionDatas(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        syllabusLessonID
-        checkpointID
-        email
-        authID
         person {
           id
           email
           authId
         }
-        componentType
-        scheduleID
-        lessonID
         responseObject {
           qid
           response

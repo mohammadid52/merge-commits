@@ -350,8 +350,8 @@ const PreviewForm = (props: PreviewFormProps) => {
           }`}>
           {showListAndDropDown && (
             <ul className="list-disc">
-              {checkpItem?.question?.options?.map((opt: any) => (
-                <li key={opt?.text}>{opt?.text}</li>
+              {checkpItem?.question?.options?.map((opt: any, id: number) => (
+                <li key={`${opt?.tex}_${id}`}>{opt?.text}</li>
               ))}
             </ul>
           )}

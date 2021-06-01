@@ -1,9 +1,8 @@
 import React, {useEffect, useState, useContext, useRef} from 'react';
 import {useLocation} from 'react-router-dom';
-import queryString from 'query-string';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {FaEdit} from 'react-icons/fa';
-import {IoArrowUndoCircleOutline, IoSendSharp} from 'react-icons/io5';
+import {IoSendSharp} from 'react-icons/io5';
 import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
@@ -18,34 +17,23 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import UserInformation from './UserInformation';
 import UserEdit from './UserEdit';
 import BreadCrums from '../../../Atoms/BreadCrums';
-import SectionTitle from '../../../Atoms/SectionTitle';
 import Buttons from '../../../Atoms/Buttons';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {getImageFromS3, getImageFromS3Static} from '../../../../utilities/services';
+import {getImageFromS3} from '../../../../utilities/services';
 import useDictionary from '../../../../customHooks/dictionary';
 import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
 import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
-import {
-  BiCloudDownload,
-  BiLinkAlt,
-  BiMessageRoundedDots,
-  BiMessageRoundedX,
-} from 'react-icons/bi';
-import {find, findIndex, isEmpty} from 'lodash';
-import {GrSend} from 'react-icons/gr';
-import {MdAudiotrack, MdCancel, MdImage} from 'react-icons/md';
-import {
-  BsCameraVideo,
-  BsCameraVideoFill,
-  BsFillTrashFill,
-  BsLink45Deg,
-} from 'react-icons/bs';
+import {BiLinkAlt} from 'react-icons/bi';
+import {find} from 'lodash';
+import {MdCancel, MdImage} from 'react-icons/md';
+import {BsCameraVideoFill} from 'react-icons/bs';
 import {getAsset} from '../../../../assets';
 import Modal from '../../../Atoms/Modal';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+import Feedback from './Feedback';
 
 export interface UserInfo {
   authId: string;
@@ -380,8 +368,13 @@ const User = () => {
         },
         []
       );
+
+      console.log(reducedAnthologyContent);
+
       setStudentData(
-        reducedAnthologyContent.filter((item: any) => item.type === 'journal')
+        reducedAnthologyContent.filter(
+          (item: any) => item.content !== '' && item.title !== ''
+        )
       );
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
@@ -521,6 +514,13 @@ const User = () => {
     );
   };
 
+  function capitalizeFirstLetter(str: string = '') {
+    if (str.length > 0) {
+      const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+      return capitalized;
+    }
+  }
+
   const do_resize = (textbox: any) => {
     var maxrows = 50;
     var txt = textbox.value;
@@ -535,23 +535,6 @@ const User = () => {
 
     if (rows > maxrows) textbox.rows = maxrows;
     else textbox.rows = rows;
-  };
-
-  const getRole = (role: string) => {
-    switch (role) {
-      case 'CRD':
-        return 'Coordinator';
-      case 'TR':
-        return 'Teacher';
-      case 'FLW':
-        return 'Fellow';
-      case 'BLD':
-        return 'Builder';
-      case 'ADM':
-        return 'Admin';
-      case 'ST':
-        return 'Student';
-    }
   };
 
   const preview_image = (file: any) => {
@@ -665,7 +648,15 @@ const User = () => {
     } catch (error) {}
   };
 
-  const listComments = async (feedbacks: string[]) => {
+  const formatLastEdit = (editDate: string) => {
+    const date = new Date(editDate);
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+    return `${d}/${m + 1}/${y}`;
+  };
+
+  const listComments = async (feedbacks: string[] = []) => {
     const filter: any = feedbacks.map((id: string) => {
       return {
         id: {
@@ -686,12 +677,6 @@ const User = () => {
       console.error('error @listComments: ', error);
     }
   };
-  function GetFormattedDate(todayTime: any) {
-    const date = new Date(todayTime);
-    var hours = date.getHours();
-    var min = date.getMinutes();
-    return `${hours > 9 ? hours : `0${hours}`}:${min > 9 ? min : `0${min}`}`;
-  }
 
   const AttachmentsModalPopUp = (props: any) => {
     const {children, closeAction} = props;
@@ -746,17 +731,22 @@ const User = () => {
     return splitUrl[splitUrl.length - 1].split('?')[0];
   };
 
-  const getSizeInBytes = (size: number) => {
-    const inKB = size / 1024;
-    const inMB = inKB / 1024;
-    if (inMB < 1) {
-      return `${inKB.toFixed(2)} KB`;
-    } else {
-      return `${inMB.toFixed(2)} MB`;
-    }
+  const getFullNameString = (obj: any) =>
+    obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
+  const subSectionKey: any = {
+    Journal: ['journal'],
+    Work: ['poem', 'story'],
+    Notes: ['notes'],
   };
-
-  const StudentData = ({item}: any) => {
+  const getSection = (key: string) => {
+    let journal = subSectionKey.Journal.includes(key);
+    let work = subSectionKey.Work.includes(key);
+    let notes = subSectionKey.Notes.includes(key);
+    if (journal) return 'Journal';
+    if (work) return 'Work';
+    if (notes) return 'Notes';
+  };
+  const StudentData = ({item, idx}: any) => {
     // booleans
     const [showComments, setShowComments] = useState(false);
     const [loadingComments, setLoadingComments] = useState(false);
@@ -764,16 +754,13 @@ const User = () => {
     const [uploadingAttachment, setUploadingAttachment] = useState(false);
     const [deleteModal, setDeleteModal] = useState({show: false, id: ''});
     // arrays
-    const [feedbackData, setFeedbackData] = useState([]);
+    const [feedbackData, setFeedbackData] = useState<any>([]);
 
     // strings
     const [comment, setComment] = useState('');
 
     // objects
     const [fileObject, setfileObject] = useState<any>({});
-
-    const getFullNameString = (obj: any) =>
-      obj.preferredName ? obj.preferredName : obj.firstName + ' ' + obj.lastName;
 
     const deleteComment = (id: string) => {
       const currentComment: any = find(feedbackData, (comment: any) => comment.id === id);
@@ -792,21 +779,25 @@ const User = () => {
           deletImageFromS3(key);
         }
 
-        const filteredData: any = feedbackData.filter((data) => data.id !== id);
+        const filteredData: any = feedbackData.filter((data: any) => data.id !== id);
         setFeedbackData(filteredData); // this is to update local state
         deleteCommentFromDatabase(id, item);
       }
     };
 
     const onCommentShowHide = () => {
-      if (!showComments && feedbackData.length === 0) {
-        getFeedBackData();
-      }
+      // if (!showComments && feedbackData.length === 0) {
+      //   getFeedBackData();
+      // }
       if (showComments) {
         setfileObject({});
       }
       setShowComments(!showComments);
     };
+
+    useEffect(() => {
+      getFeedBackData();
+    }, []);
 
     const getFeedBackData = async () => {
       setLoadingComments(true);
@@ -831,7 +822,6 @@ const User = () => {
           preferredName: state?.user?.firstName,
           lastName: state.user.lastName,
           role: state.user.role,
-          size: attachments.size,
         },
         createdAt: new Date(),
         id: Date.now().toString(), // this is just for local state, After refreshing it will be replaced with real ID
@@ -854,7 +844,7 @@ const User = () => {
       setFeedbackData([...feedbackData, finalInput]);
     };
 
-    const onCommentSubmit = async (e: any) => {
+    const onCommentSubmit = async () => {
       if (fileObject.name) {
         setUploadingAttachment(true);
         let _fileObject: any = fileObject;
@@ -904,150 +894,6 @@ const User = () => {
     const handleImage = () => inputImage.current.click();
     const handleOther = () => inputOther.current.click();
 
-    const downloadFile = (uri: string, name: string, isAudio: boolean) => {
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      document.body.appendChild(a);
-
-      // Set the HREF to a Blob representation of the data to be downloaded
-      a.href = uri;
-      if (isAudio) {
-        a.setAttribute('target', '_blank');
-      }
-      // Use download attribute to set set desired file name
-      a.setAttribute('download', name);
-
-      // Trigger the download by simulating click
-      a.click();
-
-      // Cleanup
-      window.URL.revokeObjectURL(a.href);
-      document.body.removeChild(a);
-    };
-
-    const LoadingMedia = ({filename, size}: any) => {
-      return (
-        <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-48 flex items-center justify-center">
-          <div className="h-2/10 min-w-auto p-2 pt-0 text-gray-500 truncate">
-            {filename}
-          </div>
-          <div className="h-8/10 flex items-center min-w-48 bg-gray-100 rounded-lg">
-            <Loader color="#6366F1" />
-          </div>
-          <Size size={size} />
-        </div>
-      );
-    };
-
-    const ImageMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <LoadingMedia size={attachment.size} filename={attachment.filename} />
-      ) : (
-        <div className="relative h-40 w-auto max-w-56 flex-col border-0 border-gray-300 hover:border-gray-400 rounded-lg p-2 min-h-48 min-w-32 flex items-center justify-center">
-          <p className="truncate min-w-auto text-center p-2 pt-0 text-gray-500">
-            {attachment.filename}
-          </p>
-
-          <Size size={attachment.size} />
-          <img
-            style={{objectFit: 'cover'}}
-            className="h-32 w-auto rounded-lg"
-            src={attachment.url}
-            id="output_image2"
-          />
-        </div>
-      );
-    };
-
-    const OtherMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <div className="h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-          <p className="truncate w-auto">{attachment.filename}</p>
-          <span className={'flex items-center justify-center h-8 w-8'}>
-            <Loader color="#6366F1" />
-          </span>
-        </div>
-      ) : (
-        <div className="relative h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-          <Size size={attachment.size} />
-          <p className="truncate w-auto">{attachment.filename}</p>
-          <span
-            onClick={() => {
-              downloadFile(
-                attachment.url,
-                attachment.filename.replace(/\.[^/.]+$/, ''),
-                attachment.type.includes('audio')
-              );
-            }}
-            className={
-              'flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 text-lg'
-            }>
-            <BiCloudDownload />
-          </span>
-        </div>
-      );
-    };
-
-    const VideoMedia = ({attachment}: any) => {
-      console.log('called');
-
-      return attachment.url === 'loading' ? (
-        <LoadingMedia size={attachment.size} filename={attachment.filename} />
-      ) : (
-        <div className="h-auto relative w-72 border-0 p-4 border-gray-300">
-          <p className="truncate text-center min-w-auto p-2 pt-0 text-gray-500">
-            {attachment.filename}
-          </p>
-          <Size size={attachment.size} />
-          <video controls className="rounded-lg" src={attachment.url}>
-            <source type={fileObject.type} />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      );
-    };
-    const AudioMedia = ({attachment}: any) => {
-      return attachment.url === 'loading' ? (
-        <div
-          style={{width: '30rem'}}
-          className="h-12 relative p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
-          <p className="truncate w-auto">{attachment.filename}</p>
-          <Size size={attachment.size} />
-
-          <span className={'flex items-center justify-center h-8 w-8'}>
-            <Loader color="#6366F1" />
-          </span>
-        </div>
-      ) : (
-        <div style={{width: '30rem'}} className="h-auto border-0 p-4 border-gray-300">
-          <p className="truncate text-left min-w-auto p-2 pt-0 text-gray-500">
-            {attachment.filename}
-          </p>
-          <Size size={attachment.size} />
-
-          <div className="flex items-center justify-center">
-            <audio controls className="mr-2 rounded-lg">
-              <source type={fileObject.type} src={attachment.url} />
-              Your browser does not support the video tag.
-            </audio>
-            <span
-              onClick={() => {
-                downloadFile(
-                  attachment.url,
-                  attachment.filename.replace(/\.[^/.]+$/, ''),
-                  attachment.type.includes('audio')
-                );
-              }}
-              className={
-                'flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 text-lg'
-              }>
-              <BiCloudDownload />
-            </span>
-          </div>
-        </div>
-      );
-    };
-
     const handleSelection = (e: any) => {
       if (e.target.files && e.target.files.length > 0) {
         const file = e.target.files[0];
@@ -1066,119 +912,37 @@ const User = () => {
     const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
     const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
 
-    const Size = ({size}: {size: number}) => {
-      return (
-        <span
-          style={{
-            bottom: '0rem',
-            fontSize: '0.65rem',
-            right: '-3.5rem',
-          }}
-          className="absolute size-stamp w-auto text-gray-500">
-          {getSizeInBytes(size)}
-        </span>
-      );
-    };
-
-    const Feedback = ({feedback}: any) => {
-      const {person} = feedback;
-      const {firstName, lastName, preferredName} = person;
-
-      return (
-        <div
-          key={feedback.id}
-          className="relative comment-main flex items-center justify-between px-6 w-auto py-3 my-2">
-          <div className="text-sm text-gray-900 flex items-start">
-            {person.image ? (
-              <img
-                className="h-10 w-10 rounded-md bg-gray-400 flex items-center justify-center"
-                src={getImageFromS3Static(person.image)}
-                alt=""
-              />
-            ) : (
-              <div
-                className={`h-10 w-10 flex justify-center items-center rounded-md  bg-gray-400`}>
-                <div
-                  className="h-full w-full flex justify-center items-center text-sm text-semibold text-white rounded-md"
-                  style={{
-                    /* stylelint-disable */
-                    background: `${stringToHslColor(
-                      preferredName ? preferredName : firstName + ' ' + lastName
-                    )}`,
-                    textShadow: '0.2rem 0.2rem 3px #423939b3',
-                  }}>
-                  {initials(preferredName ? preferredName : firstName, lastName)}
-                </div>
-              </div>
-            )}
-            <div className="ml-2 w-auto">
-              <h5 className="font-semibold hover:text-underline">
-                {(preferredName ? preferredName : firstName) + ' ' + lastName}
-
-                <span className="text-xs text-gray-600 font-normal ml-2">
-                  {GetFormattedDate(feedback.createdAt)}
-                </span>
-                <p
-                  className={`${
-                    person.role === user.role
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  } ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium w-auto`}>
-                  {getRole(person.role)}
-                </p>
-              </h5>
-              <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
-              {/* ------------------------- @key:A1 Attachments Section Start -------------------------------- */}
-
-              {feedback.attachments &&
-                feedback.attachments.length > 0 &&
-                feedback.attachments.map(
-                  (attachment: {
-                    type: string;
-                    url: string;
-                    filename: string;
-                    size: number;
-                  }) => {
-                    const {type, url} = attachment;
-                    const isImage = type.includes('image');
-                    const isVideo = type.includes('video');
-                    const isAudio = type.includes('audio');
-                    const isOther = !isImage && !isVideo && !isAudio;
-                    return (
-                      <div
-                        className="mt-2"
-                        onClick={() => {
-                          isImage && setAttModal({show: true, url, type});
-                        }}>
-                        {isImage && <ImageMedia attachment={attachment} />}
-                        {isVideo && <VideoMedia attachment={attachment} />}
-                        {isAudio && <AudioMedia attachment={attachment} />}
-                        {isOther && <OtherMedia attachment={attachment} />}
-                      </div>
-                    );
-                  }
-                )}
-              {/* ------------------------- Attachments Section End -------------------------------- */}
-            </div>
-          </div>
-          {feedback.person.authId === state.user.authId && !uploadingAttachment && (
-            <div
-              onClick={() => {
-                setDeleteModal({show: !deleteModal.show, id: feedback.id});
-              }}
-              className="delete-comment hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto self-start p-1 cursor-pointer">
-              <BsFillTrashFill />
-            </div>
-          )}
-        </div>
-      );
-    };
     const actionStyles =
       'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
+    const getColorForTag = (tagName: string) => {
+      switch (tagName) {
+        case 'Journal':
+          return 'bg-green-100 text-green-600';
+        case 'Notes':
+          return 'bg-yellow-100 text-yellow-600';
+        case 'Work':
+          return 'bg-blue-100 text-blue-600';
+        default:
+          break;
+      }
+    };
     return (
       <div
-        className={`w-full white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
+        key={idx}
+        className={`w-full note-container relative overflow-x-hidden white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <div className="px-6">
+          <span className="notebook-lastedit absolute left-1 w-auto px-2.5 py-0.5 bottom-0 mb-2 text-xs text-gray-500">
+            Last Edited: {formatLastEdit(item.updatedAt)}
+          </span>
+
+          <span
+            className={`notebook-lastedit absolute right-0 w-auto px-2.5 py-0.5 top-0 text-xs font-medium ${getColorForTag(
+              getSection(item.type)
+            )}`}>
+            {getSection(item.type) !== 'Journal' && `${getSection(item.type)} - `}
+            {capitalizeFirstLetter(item.type)}
+          </span>
+
           <h3 className="text-dark text-2xl font-medium mb-3">{item.title}</h3>
           {item.content && ReactHtmlParser(item.content)}
         </div>
@@ -1220,14 +984,23 @@ const User = () => {
                 </div>
               </div>
             ) : feedbackData && feedbackData.length > 0 ? (
-              feedbackData.map((feedback, eventIdx: number) => (
-                <Feedback feedback={feedback} />
+              feedbackData.map((feedback: any) => (
+                <Feedback
+                  setAttModal={setAttModal}
+                  deleteModal={deleteModal}
+                  uploadingAttachment={uploadingAttachment}
+                  role={user.role}
+                  fileObject={fileObject}
+                  authId={state.user.authId}
+                  setDeleteModal={setDeleteModal}
+                  feedback={feedback}
+                />
               ))
             ) : (
               <div className="py-2 my-4 text-center mx-auto flex justify-center items-center w-full">
                 <div className="">
                   <p className="mt-2 text-center text-lg text-gray-500">
-                    No Feedbacks
+                    Be the first to give feedback
                     {/* @Mohammad: Add this to dict */}
                   </p>
                 </div>
@@ -1361,18 +1134,36 @@ const User = () => {
             </div>
           </div>
         )}
-        <div className="flex items-center mx-6 justify-start">
+        <div className="flex items-center px-6 justify-end">
           <div
             onClick={onCommentShowHide}
-            className="bg-indigo-500 text-white hover:bg-indigo-600 w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2">
-            {showComments ? 'Hide' : 'Show'} Feedbacks
+            className={`${
+              feedbackData.length > 0
+                ? 'bg-indigo-500 hover:bg-indigo-600'
+                : 'bg-gray-500'
+            } ${
+              loadingComments ? 'flex items-center justify-between' : ''
+            } text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
+            <p>
+              {loadingComments
+                ? 'Loading Comments'
+                : feedbackData.length > 0
+                ? `${showComments ? 'Hide' : 'Show'} Feedback`
+                : 'Leave Feedback'}
+            </p>
+            {loadingComments && (
+              <span className="ml-4 w-auto">
+                <Loader color="#fff" />
+              </span>
+            )}
           </div>
         </div>
       </div>
     );
   };
 
-  const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+  const isTeacher =
+    state.user.role === 'TR' || state.user.role === 'FLW' || state.user.role === 'ADM';
   {
     return (
       <>
@@ -1542,7 +1333,9 @@ const User = () => {
                 </div>
               </div>
             ) : studentData && studentData.length > 0 ? (
-              studentData.map((item: any) => <StudentData item={item} />)
+              studentData.map((item: any, idx: number) => (
+                <StudentData idx={idx} item={item} />
+              ))
             ) : (
               <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
                 <div className="">

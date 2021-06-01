@@ -3,7 +3,6 @@ import {useHistory, useRouteMatch} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle, FaUnity} from 'react-icons/fa';
-import findIndex from 'lodash/findIndex';
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
@@ -99,7 +98,7 @@ const LessonEdit = (props: LessonEditProps) => {
   const [activeStep, setActiveStep] = useState('Overview');
   const [loading, setLoading] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -286,16 +285,24 @@ const LessonEdit = (props: LessonEditProps) => {
   const [selDesigners, setSelDesigners] = useState<any>([]);
   const [showModal, setShowModal] = useState(false);
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
+  const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
+    isIndividualEmpty: boolean,
     data: any,
     checkpQuestions: any,
     selDesigners: any[]
   ) => {
+    if (isIndividualEmpty) {
+      setIndividualFieldEmpty(true);
+    } else {
+      setIndividualFieldEmpty(false);
+    }
     if (val !== isCheckpUnsaved) {
       setIsCheckpUnsaved(val);
       setUnsavedCheckPData(data);
+
       if (data.title && val) {
         setShowModal(true);
       } else {
@@ -485,10 +492,13 @@ const LessonEdit = (props: LessonEditProps) => {
             lessonType={formData.type?.value}
             hasUnsavedCheckpoint={(
               val: boolean,
+              isIndividualEmpty: boolean,
               data: any,
               data2: any,
               selectedDesigners: any[]
-            ) => hasUnsavedCheckpoint(val, data, data2, selectedDesigners)}
+            ) =>
+              hasUnsavedCheckpoint(val, isIndividualEmpty, data, data2, selectedDesigners)
+            }
           />
         );
       case 'Universal Builder':
@@ -570,7 +580,14 @@ const LessonEdit = (props: LessonEditProps) => {
                 }
                 activeStep={activeStep}
                 setActiveStep={(step) => {
-                  if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                  if (individualFieldEmpty) {
+                    setWarnModal2({
+                      stepOnHold: step,
+                      show: true,
+                      message: 'Please fill all required fields to save this checkpoint',
+                    });
+                  } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                    setIndividualFieldEmpty(false);
                     setWarnModal2({
                       ...warnModal2,
                       stepOnHold: step,
@@ -578,6 +595,8 @@ const LessonEdit = (props: LessonEditProps) => {
                       message: 'You have unsaved checkpoint. Do you want to save it?',
                     });
                   } else {
+                    setIndividualFieldEmpty(false);
+
                     setActiveStep(step);
                     setHistoryList([...historyList, step]);
                   }
@@ -605,7 +624,7 @@ const LessonEdit = (props: LessonEditProps) => {
             message={warnModal.message}
           />
         )}
-        {warnModal2.show && showModal && (
+        {warnModal2.show && (
           <ModalPopUp
             noButton="No"
             noButtonAction={() => onCheckpointModalClose(false)}
@@ -615,6 +634,25 @@ const LessonEdit = (props: LessonEditProps) => {
             cancelLabel="Cancel"
             message={warnModal2.message}
             loading={savingUnsavedCP}
+            saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
+            noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
+            cancelTooltip={'Continue Editing'}
+          />
+        )}
+        {warnModal2.show && warnModal2.message.includes('required fields') && (
+          <ModalPopUp
+            closeAction={() => {
+              setActiveStep(warnModal2.stepOnHold);
+              setHistoryList([...historyList, warnModal2.stepOnHold]);
+              setWarnModal2({show: false, message: '', stepOnHold: ''});
+              setIndividualFieldEmpty(false);
+            }}
+            saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
+            saveLabel="Sure"
+            saveTooltip="Fill up required fields"
+            cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
+            cancelLabel="Discard"
+            message={warnModal2.message}
           />
         )}
       </PageWrapper>

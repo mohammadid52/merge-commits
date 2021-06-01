@@ -155,13 +155,20 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selDesigners, setSelDesigners] = useState<any>([]);
   const [showModal, setShowModal] = useState(false);
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
+  const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
+    isIndividualEmpty: boolean,
     data: any,
     checkpQuestions: any,
     selDesigners: any[]
   ) => {
+    if (isIndividualEmpty) {
+      setIndividualFieldEmpty(true);
+    } else {
+      setIndividualFieldEmpty(false);
+    }
     if (val !== isCheckpUnsaved) {
       setIsCheckpUnsaved(val);
       setUnsavedCheckPData(data);
@@ -353,10 +360,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             lessonType={formData.type?.value}
             hasUnsavedCheckpoint={(
               val: boolean,
+              isIndividualEmpty: boolean,
               data: any,
               data2: any,
               selectedDesigners: any[]
-            ) => hasUnsavedCheckpoint(val, data, data2, selectedDesigners)}
+            ) =>
+              hasUnsavedCheckpoint(val, isIndividualEmpty, data, data2, selectedDesigners)
+            }
           />
         );
       case 'Preview Details':
@@ -505,7 +515,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 stepsList={lessonBuilderSteps}
                 activeStep={activeStep}
                 setActiveStep={(step) => {
-                  if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                  if (individualFieldEmpty) {
+                    setWarnModal2({
+                      stepOnHold: step,
+                      show: true,
+                      message: 'Please fill all required fields to save this checkpoint',
+                    });
+                  } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                    setIndividualFieldEmpty(false);
                     setWarnModal2({
                       ...warnModal2,
                       stepOnHold: step,
@@ -513,6 +530,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                       message: 'You have unsaved checkpoint. Do you want to save it?',
                     });
                   } else {
+                    setIndividualFieldEmpty(false);
+
                     setActiveStep(step);
                     setHistoryList([...historyList, step]);
                   }
@@ -534,7 +553,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             message={warnModal.message}
           />
         )}
-        {warnModal2.show && showModal && (
+        {warnModal2.show && (
           <ModalPopUp
             noButton="No"
             noButtonAction={() => onCheckpointModalClose(false)}
@@ -542,7 +561,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             saveAction={saveNewCheckPoint}
             saveLabel="Yes"
             cancelLabel="Cancel"
+            message={warnModal2.message}
             loading={savingUnsavedCP}
+            saveTooltip={`Save this checkpoint go to ${warnModal2.stepOnHold}`}
+            noTooltip={`Just go to ${warnModal2.stepOnHold} and don't save anything`}
+            cancelTooltip={'Continue Editing'}
+          />
+        )}
+        {warnModal2.show && warnModal2.message.includes('required fields') && (
+          <ModalPopUp
+            closeAction={() => {
+              setActiveStep(warnModal2.stepOnHold);
+              setHistoryList([...historyList, warnModal2.stepOnHold]);
+              setWarnModal2({show: false, message: '', stepOnHold: ''});
+              setIndividualFieldEmpty(false);
+            }}
+            saveAction={() => setWarnModal2({show: false, message: '', stepOnHold: ''})}
+            saveLabel="Sure"
+            saveTooltip="Fill up required fields"
+            cancelTooltip={`Just go to ${warnModal2.stepOnHold}`}
+            cancelLabel="Discard"
             message={warnModal2.message}
           />
         )}

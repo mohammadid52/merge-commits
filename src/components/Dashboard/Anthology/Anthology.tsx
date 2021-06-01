@@ -1,12 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import SectionTitle from '../../Atoms/SectionTitleV2';
-import SubSectionTabs from './SubSectionTabs';
 import AnthologyContent from './AnthologyContent';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {API, graphqlOperation} from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import HeroBanner from '../../Header/HeroBanner';
 import {getAsset} from '../../../assets';
@@ -15,11 +12,6 @@ import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
 import {FaEdit} from 'react-icons/fa';
-import {initials, stringToHslColor} from '../../../utilities/strings';
-import {getImageFromS3} from '../../../utilities/services';
-import {BiCloudDownload} from 'react-icons/bi';
-import Modal from '../../Atoms/Modal';
-import Loader from '../../Atoms/Loader';
 
 export interface AnthologyContentInterface {
   type: string;
@@ -80,9 +72,11 @@ const Anthology = () => {
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
   }, []);
+  const [loadingContent, setLoadingContent] = useState(false);
 
   // TOP Function to load student data
   const listStudentData = async () => {
+    setLoadingContent(true);
     try {
       const studentDataFetch: any = await API.graphql(
         graphqlOperation(queries.listStudentDatas, {
@@ -117,6 +111,8 @@ const Anthology = () => {
       setStudentData(reducedAnthologyContent);
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
+    } finally {
+      setLoadingContent(false);
     }
   };
 
@@ -338,6 +334,8 @@ const Anthology = () => {
 
   const Content = (
     <AnthologyContent
+      // loadingContent={loadingContent}
+      onCancel={onCancel}
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
       handleEditUpdate={handleEditUpdate}

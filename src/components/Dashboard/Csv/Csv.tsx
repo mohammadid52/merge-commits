@@ -9,7 +9,7 @@ import DateAndTime from '../DateAndTime/DateAndTime';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import useDictionary from '../../../customHooks/dictionary';
-import {uniqBy} from 'lodash';
+import {orderBy, uniqBy} from 'lodash';
 
 interface Csv {}
 
@@ -53,7 +53,6 @@ const Csv = (props: Csv) => {
   const [csvGettingReady, setCsvGettingReady] = useState(false);
 
   // methods to clear state data
-
   const resetInstitution = () => {
     setInstClassRooms([]);
 
@@ -376,14 +375,16 @@ const Csv = (props: Csv) => {
     ]);
 
     let data = students.map((stu: any) => {
+      let surveyAnswerDates: any = [];
       let studentAnswers: any = {};
-      const dates: any[] = [];
+      let hasTakenSurvey = false;
 
       SCQAnswers.map((ans: any) => {
         if (ans.person.id === stu.id) {
+          hasTakenSurvey = true;
           ans.responseObject.map((resp: any) => {
             if (qids.indexOf(resp.qid) >= 0) {
-              dates.push(ans.updatedAt);
+              surveyAnswerDates.push(ans.updatedAt);
               studentAnswers[resp.qid] =
                 Array.isArray(resp.response) && resp.response.length
                   ? resp.response[0]
@@ -407,8 +408,10 @@ const Csv = (props: Csv) => {
         }
       });
 
-      // @ts-ignore
-      const sortedDates = dates.sort((a: any, b: any) => new Date(b) - new Date(a));
+      surveyAnswerDates = surveyAnswerDates.sort(
+        // @ts-ignore
+        (a: any, b: any) => new Date(b) - new Date(a)
+      );
 
       return {
         ...stu,
@@ -418,15 +421,20 @@ const Csv = (props: Csv) => {
         classroom: selectedClassRoom.name,
         surveyName: selectedSurvey.name,
         ...studentAnswers,
+        hasTakenSurvey,
         first:
-          (sortedDates[sortedDates.length - 1] &&
-            new Date(sortedDates[sortedDates.length - 1]).toLocaleString('en-US')) ||
+          (surveyAnswerDates[surveyAnswerDates.length - 1] &&
+            new Date(surveyAnswerDates[surveyAnswerDates.length - 1]).toLocaleString(
+              'en-US'
+            )) ||
           '-',
-        last: (sortedDates[0] && new Date(sortedDates[0]).toLocaleString('en-US')) || '-',
+        last:
+          (surveyAnswerDates[0] &&
+            new Date(surveyAnswerDates[0]).toLocaleString('en-US')) ||
+          '-',
       };
     });
-
-    setCSVData(data);
+    setCSVData(orderBy(data, ['firstName'], ['asc']));
     setIsCSVDownloadReady(true);
     setCsvGettingReady(false);
   };
@@ -438,7 +446,6 @@ const Csv = (props: Csv) => {
   }, [isCSVReady]);
 
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const listArr: any[] = [];
 
   const theadStyles =
     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
@@ -451,7 +458,15 @@ const Csv = (props: Csv) => {
     let yyyy = today.getFullYear();
     today = mm + '-' + dd + '-' + yyyy;
     return today;
-  }
+  };
+
+  const getFormatedDate = (date: string) => {
+    if (date !== '-') {
+      return date.split(',')[0];
+    } else {
+      return '-';
+    }
+  };
 
   const Table = () => {
     return (
@@ -463,25 +478,22 @@ const Csv = (props: Csv) => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                      Institute Name
+                      Id
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Curriculum
+                      first name
                     </th>
                     <th scope="col" style={{width: '15%'}} className={theadStyles}>
-                      Unit Name
+                      last Name
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Classroom
+                      Email
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Survey Name
+                      Taken Survey
                     </th>
                     <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      Start
-                    </th>
-                    <th scope="col" style={{width: '20%'}} className={theadStyles}>
-                      End
+                      Completed Date
                     </th>
                   </tr>
                 </thead>
@@ -489,26 +501,22 @@ const Csv = (props: Csv) => {
                   {CSVData.map((listItem, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.institute}
+                        {listItem.id}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.curriculum}
+                        {listItem.firstName}
                       </td>
                       <td style={{width: '15%'}} className={tdataStyles}>
-                        {listItem.unit}
+                        {listItem.lastName}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.classroom}
+                        {listItem.email}
                       </td>
                       <td style={{width: '20%'}} className={tdataStyles}>
-                        {listItem.surveyName}
-                      </td>
-
-                      <td style={{width: '10%'}} className={tdataStyles}>
-                        {listItem.first}
+                        {listItem.hasTakenSurvey ? 'Yes' : 'No'}
                       </td>
                       <td style={{width: '10%'}} className={tdataStyles}>
-                        {listItem.last}
+                        {getFormatedDate(listItem.last)}
                       </td>
                     </tr>
                   ))}
@@ -520,6 +528,8 @@ const Csv = (props: Csv) => {
       </div>
     );
   };
+
+  const fieldClass = 'p-3 flex justify-center items-center w-full';
 
   return (
     <div className="p-8 w-full h-full">
@@ -576,15 +586,19 @@ const Csv = (props: Csv) => {
         />
         <button
           type="button"
-          className="col-end-5 disabled:opacity-50 mt-5 inline-flex justify-center py-2 px-4  border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
+          className="col-end-5 mt-5 inline-flex justify-center h-9 border-0 border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo transition duration-150 ease-in-out items-center"
           style={{
             /* stylelint-disable */
             opacity: isCSVDownloadReady ? 1 : 0.5,
-            cursor: isCSVDownloadReady ? 'cursor-pointer' : 'not-allowed',
           }}
           disabled={!isCSVDownloadReady}>
           {isCSVDownloadReady ? (
-            <CSVLink data={CSVData} headers={CSVHeaders} filename={`${selectedClassRoom.name}_${selectedSurvey.name}_${getTodayDate()}.csv`}>
+            <CSVLink
+              data={CSVData}
+              headers={CSVHeaders}
+              filename={`${selectedClassRoom.name}_${
+                selectedSurvey.name
+              }_${getTodayDate()}.csv`}>
               Download CSV
             </CSVLink>
           ) : (
@@ -593,12 +607,7 @@ const Csv = (props: Csv) => {
         </button>
       </div>
       <div>
-        <SectionTitleV3
-          fontSize="2xl"
-          fontStyle="bold"
-          // title={CsvDict[userLanguage]['SELECT_FILTERS']}
-          title={'List Table'}
-        />
+        <SectionTitleV3 fontSize="2xl" fontStyle="bold" title={'Survey results'} />
         {CSVData.length > 0 ? (
           <Table />
         ) : (
@@ -609,46 +618,6 @@ const Csv = (props: Csv) => {
           </div>
         )}
       </div>
-
-      {/* <span> ====**===========**======= ====**===========**======= </span>
-      {selectedUnit ? (
-        <div>
-          <span>survey questions</span>
-          {surveyQuestions.map((sq, index) => {
-            return (
-              <div key={index}>
-                <span>Question: {sq.question.question}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      <span> ====**===========**======= ====**===========**======= </span>
-      {selectedCurriculum ? (
-        <div>
-          <span>Demographics questions</span>
-          {demographicsQuestions.map((dq, index) => {
-            return (
-              <div key={index}>
-                <span>Question: {dq.question.question}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
-      <span> ====**===========**======= ====**===========**======= </span>
-      {selectedClass ? (
-        <div>
-          <span>Class Students</span>
-          {classStudents.map((stu, index) => {
-            return (
-              <div key={index}>
-                <span>student: email: {stu.email}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : null} */}
     </div>
   );
 };

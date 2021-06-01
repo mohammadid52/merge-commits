@@ -15,7 +15,8 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import useDictionary from '../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
-
+import axios from 'axios';
+import { createUserUrl } from '../../../../utilities/urls';
 interface newUserInput {
   key: number
   authId: string
@@ -93,8 +94,8 @@ const Registration = () => {
     },
   ];
 
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
-  const { RegistrationDict,BreadcrumsTitles  } = useDictionary(clientKey);
+  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const { RegistrationDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const breadCrumsList = [
     { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
@@ -161,21 +162,31 @@ const Registration = () => {
     let username = newUserInputs.email;
     let password = newUserInputs.password
     try {
-      const user = await Auth.signUp({
-        username,
-        password
-      });
+      // const user = await Auth.signUp({
+      //   username,
+      //   password
+      // });
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username })
+      };
+      const response = await axios.post(createUserUrl, {
+        email: username
+      })
+      const user = response.data.User;
       setNewUserInputs(() => {
         return {
           ...newUserInputs,
-          authId: user.userSub
+          authId: user.Username
         }
       })
-      registerUser(user.userSub)
+      registerUser(user.Username)
     } catch (error) {
       console.log('error signing up:', error);
       setMessage(() => {
-        switch (error.code) {
+        const er = error.response.data
+        switch (er.code) {
           case "InvalidParameterException":
             return {
               show: true,
@@ -192,7 +203,7 @@ const Registration = () => {
             return {
               show: true,
               type: 'error',
-              message: error.message,
+              message: er.message,
             };
         }
       })

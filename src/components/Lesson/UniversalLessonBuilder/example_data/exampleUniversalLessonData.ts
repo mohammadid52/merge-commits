@@ -37,7 +37,7 @@ export const exampleUniversalLesson: UniversalLesson = {
         {
           id: 'page_2_part_0',
           partType: 'default',
-          class: 'bg-red-500 bg-opacity-40',
+          class: 'bg-red-500 bg-opacity-40 rounded-lg',
           partContent: [
             { id: 'page_2_part_0_header-0', type: 'header-default', value: ['Instructions'] },
             {
@@ -54,7 +54,7 @@ export const exampleUniversalLesson: UniversalLesson = {
         {
           id: 'page_2_part_1',
           partType: 'default',
-          class: '',
+          class: 'rounded-lg',
           partContent: [
             {
               id: 'page_2_part_1_header-1',
@@ -74,7 +74,7 @@ export const exampleUniversalLesson: UniversalLesson = {
         {
           id: 'page_2_part_2',
           partType: 'default',
-          class: '',
+          class: 'rounded-lg',
           partContent: [
             {
               id: 'page_2_part_2_header-2',
