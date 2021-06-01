@@ -1417,7 +1417,7 @@ const curricularviewdict: any = {
     LANGUAGE: 'Languages',
     OBJECTIVE: 'Objective',
     TAB: {
-      UNIT: 'Units',
+      UNIT: 'Modules',
       LEARINGOBJECTIVE: 'Objectives',
       INFORMATION: 'Demographics & Information',
     },
@@ -1757,7 +1757,7 @@ const AddSyllabusDict: any = {
   EN: {
     title: 'Module Builder',
     subtitle: 'Create curriculum modules here.',
-    heading: 'UNIT INFORMATION',
+    heading: 'MODULE INFORMATION',
     unitname: 'Module Name',
     designer: 'Select Developers',
     placeholder: 'Developers',
