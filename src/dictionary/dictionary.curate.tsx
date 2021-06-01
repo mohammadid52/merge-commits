@@ -2825,13 +2825,19 @@ const AssessmentInstuctionsDict: any = {
 };
 const GeneralInformationDict: any = {
   EN: {
-    HEADING: 'Session Overview',
+    HEADING: 'Lesson Overview',
     NAME: 'Name',
-    SELECTDESIGNER: 'Select Developers',
-    DESIGNER: 'Developers',
+    SELECTDESIGNER: 'Select Designers',
+    DESIGNER: 'Designers',
+    LANGUAGE: 'Language',
     PURPOSE: 'Purpose',
     OBJECTIVE: 'Objective',
-    LESSONMEASUREMENT: 'Session Measurements',
+    SELECTTYPE: 'Select Type',
+    TYPE: 'Type',
+    INSTITUTION: 'Institution',
+    SELECTINSTITUTION: 'Select Institution',
+    SELECTLANG: 'Select Language',
+    LESSONMEASUREMENT: 'Lesson Measurements',
     SELECTMEASUREMENT: 'Select Measurement',
     NO: 'No.',
     MEASUREMENT: 'Measurement',
