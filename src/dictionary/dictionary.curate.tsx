@@ -681,7 +681,8 @@ const PreviewFormDict: any = {
       UPDATEERR:
         'Error while updating lesson plans for modules, please try again after some time.',
       CONNECTERR: 'This lesson is not connected to any modules.',
-      FETCHERR: 'Error while fetching modules for this lesson.Please try after some time.',
+      FETCHERR:
+        'Error while fetching modules for this lesson.Please try after some time.',
     },
     PREVIEW_DETAILS: {
       WARN_MESSAGE:
@@ -975,7 +976,8 @@ const InstitueCurriculam: any = {
     NAME: 'Curricular Name',
     ACTION: 'Actions',
     VIEW: 'View',
-    INFO: 'This organization does not have any curriculum. Please create a new curriculum.',
+    INFO:
+      'This organization does not have any curriculum. Please create a new curriculum.',
   },
   ES: {
     TITLE: 'TBD',
@@ -1464,8 +1466,7 @@ const CHECKPOINTSDICT: any = {
 const LEARINGOBJECTIVEDICT: any = {
   EN: {
     TITLE: 'OBJECTIVES',
-    INFO:
-      'This curricular does not have any objectives yet. Please create a new one.',
+    INFO: 'This curricular does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
       ADD: 'Add New Objective',
@@ -3117,6 +3118,25 @@ const EditQuestionModalDict: any = {
   },
 };
 
+const DashboardDict: any = {
+  EN: {
+    YOUR_TEACHERS: 'Your Teachers',
+    YOUR_CLASSROOMS: 'Your Classrooms',
+    YOUR_STUDENTS: 'Your Students',
+    YOUR_CLASSMATES: 'Your Classmates',
+    GREETINGS_TEACHER: 'What do you want to teach today?',
+    GREETINGS_STUDENT: 'What do you want to learn today?',
+  },
+  ES: {
+    YOUR_TEACHERS: 'TBD',
+    YOUR_CLASSROOMS: 'TBD',
+    YOUR_STUDENTS: 'TBD',
+    YOUR_CLASSMATES: 'TBD',
+    GREETINGS_TEACHER: 'TBD',
+    GREETINGS_STUDENT: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3125,6 +3145,7 @@ function paginationPage(lang: string, page: number, total: number) {
 
 export {
   CsvDict,
+  DashboardDict,
   paginationPage,
   BUTTONS,
   BreadcrumsTitles,

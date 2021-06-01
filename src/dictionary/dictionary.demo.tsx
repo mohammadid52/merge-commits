@@ -3118,6 +3118,25 @@ const CsvDict: any = {
   },
 };
 
+const DashboardDict: any = {
+  EN: {
+    YOUR_TEACHERS: 'Your Teachers',
+    YOUR_CLASSROOMS: 'Your Classrooms',
+    YOUR_STUDENTS: 'Your Students',
+    YOUR_CLASSMATES: 'Your Classmates',
+    GREETINGS_TEACHER: 'What do you want to teach today?',
+    GREETINGS_STUDENT: 'What do you want to learn today?',
+  },
+  ES: {
+    YOUR_TEACHERS: 'TBD',
+    YOUR_CLASSROOMS: 'TBD',
+    YOUR_STUDENTS: 'TBD',
+    YOUR_CLASSMATES: 'TBD',
+    GREETINGS_TEACHER: 'TBD',
+    GREETINGS_STUDENT: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3129,6 +3148,7 @@ export {
   paginationPage,
   BUTTONS,
   BreadcrumsTitles,
+  DashboardDict,
   appDict,
   anthologyDict,
   sideBarLinksDict,
