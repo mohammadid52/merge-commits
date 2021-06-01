@@ -998,7 +998,7 @@ const InstitueRomms: any = {
     CLASS_NAME: 'Cohort Name',
     TEACHER: 'Facilitator',
     CURRICULAM: 'Curriculam',
-    MXSTUDENTS: 'Max. Students',
+    MXSTUDENTS: 'Max. Participants',
     ACTION: 'Actions',
     EDIT: 'edit',
     messages: {
