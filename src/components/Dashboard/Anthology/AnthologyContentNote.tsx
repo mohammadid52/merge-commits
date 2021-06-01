@@ -17,6 +17,7 @@ import Loader from '../../Atoms/Loader';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import Feedback from '../Admin/UserManagement/Feedback';
 import Modal from '../../Atoms/Modal';
+import {getAsset} from '../../../assets';
 
 const Feedbacks = ({
   showComments,
@@ -28,10 +29,9 @@ const Feedbacks = ({
   fileObject,
   setFileObject,
 }: any) => {
-  const {state} = useContext(GlobalContext);
-
   const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
   // strings
+  const {state, clientKey} = useContext(GlobalContext);
   const [comment, setComment] = useState('');
 
   // objects
@@ -351,10 +351,17 @@ const Feedbacks = ({
       }
     }
   };
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
+  const getColor = (theme = 'indigo') => {
+    return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500`;
+  };
+
   const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
   const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
-  const actionStyles =
-    'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
+  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 ${
+    themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
+  }`;
   return (
     <div key={idx} className={`w-full pb-2 mb-2`}>
       {showComments && (
@@ -559,6 +566,9 @@ const SingleNote = ({
   const [showComments, setShowComments] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
 
+  const {theme, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const [loadingComments, setLoadingComments] = useState(false);
   const [fileObject, setFileObject] = useState({});
 
@@ -644,7 +654,7 @@ const SingleNote = ({
           ) : (
             <div className="flex items-center justify-between">
               <div
-                className={`bg-indigo-500 hover:bg-indigo-600 text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
                 onClick={() =>
                   handleEditToggle(
                     'edit',
@@ -657,9 +667,7 @@ const SingleNote = ({
               <div
                 onClick={() => setShowComments(!showComments)}
                 className={`${
-                  feedbackData.length > 0
-                    ? 'bg-indigo-500 hover:bg-indigo-600'
-                    : 'bg-gray-500'
+                  feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
                 } ${
                   loadingComments ? 'flex items-center justify-between' : ''
                 }  text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
