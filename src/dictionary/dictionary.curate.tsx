@@ -656,7 +656,7 @@ const lessonBuilderDict: any = {
   EN: {
     PREVIEW_DETAILS: {
       WARN_MESSAGE:
-        'Publishing your changes will update lesson plans in all the connected modules, Do you want to continue?',
+        'Publishing your changes will update session plans in all the connected modules, Do you want to continue?',
       TITLE: 'Preview Details',
     },
   },
@@ -677,15 +677,15 @@ const PreviewFormDict: any = {
     NOCHECKPOINT: 'No Checkpoint added.',
 
     MESSAGES: {
-      UPDATESUCCESS: 'Successfully updated lesson plans in all modules.',
+      UPDATESUCCESS: 'Successfully updated session plans in all modules.',
       UPDATEERR:
-        'Error while updating lesson plans for modules, please try again after some time.',
-      CONNECTERR: 'This lesson is not connected to any modules.',
-      FETCHERR: 'Error while fetching modules for this lesson.Please try after some time.',
+        'Error while updating session plans for modules, please try again after some time.',
+      CONNECTERR: 'This session is not connected to any modules.',
+      FETCHERR: 'Error while fetching modules for this session. Please try after some time.',
     },
     PREVIEW_DETAILS: {
       WARN_MESSAGE:
-        'Changes will applay to all assigned lesson plans. Do you want to continue?',
+        'Changes will applay to all assigned session plans. Do you want to continue?',
       TITLE: 'Preview Details',
     },
   },
@@ -1408,7 +1408,7 @@ const RoomEDITdict: any = {
 const curricularviewdict: any = {
   EN: {
     TITLE: 'Curriculum Builder',
-    SUBTITLE: 'Build curriculum, modules and lesson plans here',
+    SUBTITLE: 'Build curriculum, modules and session plans here',
     HEADING: 'GENERAL INFORMATION',
     NAME: 'Curriculum Name',
     OWNER: 'Organization Owner',
@@ -2011,7 +2011,7 @@ const EditSyllabusDict: any = {
       unitupdate: 'Module details has been updated.',
       unableupdate: 'Unable to update module details please try again later.',
       namerequired: 'Module name is required please enter name.',
-      updateerr: 'Error while updating lesson status please try later.',
+      updateerr: 'Error while updating session status please try later.',
       fetcher: 'Error while fetching module data.',
       fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Developers list Please try again later.',
@@ -2758,7 +2758,7 @@ const AddNewLessonFormDict: any = {
       ADDERR: 'Error while adding measurement,please try later.',
       SAVE: 'Session details saved successfully.',
       SAVEERR: 'Unable to save Session details, Please try again later.',
-      LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
+      LESSONNOTHAVE: 'This session does not have any measurements, please add new one.',
     },
     SAVE: 'Save',
     SAVING: 'Saving...',
@@ -2850,7 +2850,7 @@ const GeneralInformationDict: any = {
       FETCHERR: 'Unable to fetch measurement details, Please try again later.',
       UPDATESUCCESS: 'Session details updated successfully.',
       UPDATEERR: 'Unable to update Session details, Please try again later.',
-      LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
+      LESSONNOTHAVE: 'This session does not have any measurements, please add new one.',
     },
   },
   ES: {
@@ -2944,17 +2944,17 @@ const UnitLookupDict: any = {
   EN: {
     HEADING: 'Assign Module',
     NOTE:
-      'NOTE: Please select Curricular and then modules to add current lesson to that module.',
+      'NOTE: Please select Curricular and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Curriculum Name',
     UNITNAME: 'Module Name',
     STATUS: 'Status',
     ACTION: 'Action',
-    NOTADDED: ' This lesson is not added to any curricular or modules.',
+    NOTADDED: ' This session is not added to any curricular or modules.',
 
     MESSAGES: {
       ADDED: 'Session added successfully.',
-      ADDERR: 'Error while adding lesson to module, please try later.',
+      ADDERR: 'Error while adding session to module, please try later.',
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
   },
