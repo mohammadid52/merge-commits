@@ -883,11 +883,11 @@ const InstitutionAddDict: any = {
       SERVICEPROVIDER_LABEL: 'Service Provider',
     },
     INSTITUTION_TYPE: {
-      SCHOOL: 'School',
-      AFTERSCHOOL: 'After School',
-      DAYCAMP: 'Day Camp',
-      SUMMERCAMP: 'Summer Camp',
-      C3: '501C3',
+      SCHOOL: 'Congregations',
+      AFTERSCHOOL: 'Foundations',
+      DAYCAMP: 'Academia',
+      SUMMERCAMP: 'Organizations',
+      C3: 'Endowments',
     },
     BUTTON: {
       CANCEL: 'Cancel',
