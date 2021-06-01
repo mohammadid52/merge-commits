@@ -48,7 +48,7 @@ const BreadcrumsTitles: any = {
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
     UserInfo: 'User Information',
-    LESSONS: 'Lessons',
+    LESSONS: 'Sessions',
     LESSONPLANBUILDER: 'Session Plan Builder',
     STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
@@ -2004,7 +2004,7 @@ const EditSyllabusDict: any = {
     status: 'Status',
     action: 'Actions',
     edit: 'edit',
-    nolesson: 'No Lessons Selected',
+    nolesson: 'No Session Selected',
     createnew: 'Create New Session',
     messages: {
       wantsave: 'Do you want to save changes before moving forward?',
@@ -2978,7 +2978,7 @@ const UnitLookupDict: any = {
 
 const LessonBuilderDict: any = {
   EN: {
-    TITLE: 'LESSON PLAN BUILDER',
+    TITLE: 'SESSION PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
 
     MESSAGES: {
@@ -2996,7 +2996,7 @@ const LessonBuilderDict: any = {
 };
 const LessonEditDict: any = {
   EN: {
-    TITLE: 'LESSON PLAN BUILDER',
+    TITLE: 'SESSION PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
@@ -3012,8 +3012,8 @@ const LessonEditDict: any = {
 };
 const LessonsListDict: any = {
   EN: {
-    TITLE: 'LESSONS LIST',
-    SUBTITLE: 'All Lessons List',
+    TITLE: 'SESSIONS LIST',
+    SUBTITLE: 'All Sessions List',
     SORTBY: 'Sort By',
     NO: 'No.',
     LESSONTITLE: 'Session Title',
