@@ -376,7 +376,7 @@ const editClassDict: any = {
     NOSTUDENT: 'No participants added in the cohort.',
     LOADING: 'Loading cohort participants list...',
     EDIT: 'Edit',
-    heading: 'CLASS INFORMATION',
+    heading: 'COHORT INFORMATION',
     heading2: 'PARTICIPANTS',
     messages: {
       errorfetch: 'Error while fetching cohort data,please try again later.',
@@ -1034,7 +1034,7 @@ const classBuilderdict: any = {
     TITLE: 'Create New Cohort',
     SUBTITLE: 'Add new cohort to the list',
     NAME_LABEL: 'Cohort Name',
-    HEADING: 'CLASS INFORMATION',
+    HEADING: 'COHORT INFORMATION',
     HEADING2: 'PARTICIPANTS',
     MEMBER_PLACEHOLDER: 'Add new participant',
 
@@ -1170,7 +1170,7 @@ const RoomBuilderdict: any = {
   EN: {
     TITLE: 'Create New Class',
     SUBTITLE: 'Add new Class to the list',
-    HEADING: 'CLASS INFORMATION',
+    HEADING: 'COHORT INFORMATION',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
@@ -1320,7 +1320,7 @@ const RoomEDITdict: any = {
   EN: {
     TITLE: 'Edit Class',
     SUBTITLE: 'Edit Class information',
-    HEADING: 'CLASS INFORMATION',
+    HEADING: 'COHORT INFORMATION',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
