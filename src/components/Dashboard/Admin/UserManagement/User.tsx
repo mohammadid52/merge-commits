@@ -369,8 +369,6 @@ const User = () => {
         []
       );
 
-      console.log(reducedAnthologyContent);
-
       setStudentData(
         reducedAnthologyContent.filter(
           (item: any) => item.content !== '' && item.title !== ''
@@ -502,7 +500,9 @@ const User = () => {
                 onClick={() => {
                   setCurTab(tab.name);
                 }}
-                className={`px-3 hover:bg-indigo-400 py-2 cursor-pointer font-medium tab text-sm rounded-md ${
+                className={`px-3 ${
+                  theme === 'iconoclastIndigo' ? 'iconoclastIndigo' : 'curateBlue'
+                } py-2 cursor-pointer font-medium tab text-sm rounded-md ${
                   tab.name === curTab ? 'active' : ''
                 }`}>
                 {tab.name}
@@ -911,9 +911,12 @@ const User = () => {
 
     const isImage = fileObject && fileObject.type && fileObject.type.includes('image');
     const isVideo = fileObject && fileObject.type && fileObject.type.includes('video');
-
-    const actionStyles =
-      'flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 ';
+    const getColor = (theme = 'indigo') => {
+      return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500`;
+    };
+    const actionStyles = `flex ${
+      themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
+    } items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500`;
     const getColorForTag = (tagName: string) => {
       switch (tagName) {
         case 'Journal':
@@ -1138,9 +1141,7 @@ const User = () => {
           <div
             onClick={onCommentShowHide}
             className={`${
-              feedbackData.length > 0
-                ? 'bg-indigo-500 hover:bg-indigo-600'
-                : 'bg-gray-500'
+              feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
             } ${
               loadingComments ? 'flex items-center justify-between' : ''
             } text-white  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}>
