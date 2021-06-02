@@ -3129,11 +3129,11 @@ const EditQuestionModalDict: any = {
 
 const DashboardDict: any = {
   EN: {
-    YOUR_TEACHERS: 'Your Teachers',
-    YOUR_CLASSROOMS: 'Your Classrooms',
-    YOUR_STUDENTS: 'Your Students',
-    YOUR_CLASSMATES: 'Your Classmates',
-    GREETINGS_TEACHER: 'What do you want to teach today?',
+    YOUR_TEACHERS: 'Your Facilitators',
+    YOUR_CLASSROOMS: 'Your Classes',
+    YOUR_STUDENTS: 'Your Fellow Participants',
+    YOUR_CLASSMATES: 'Your Cohorts',
+    GREETINGS_TEACHER: 'What do you want to facilitate today?',
     GREETINGS_STUDENT: 'What do you want to learn today?',
   },
   ES: {

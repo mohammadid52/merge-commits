@@ -477,7 +477,6 @@ const Csv = (props: Csv) => {
   };
 
   useEffect(() => {
-    console.log('isCSVReady', isCSVReady)
     if (isCSVReady) {
       getCSVReady();
     }
