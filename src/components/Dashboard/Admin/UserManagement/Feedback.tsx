@@ -1,5 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {AiOutlineEdit} from 'react-icons/ai';
 import {BsFillTrashFill} from 'react-icons/bs';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import {getImageFromS3Static} from '../../../../utilities/services';
 import {initials, stringToHslColor} from '../../../../utilities/strings';
@@ -57,6 +60,11 @@ interface FeedbackProps {
     React.SetStateAction<{show: boolean; url: string; type: string}>
   >;
   setDeleteModal: React.Dispatch<React.SetStateAction<{show: boolean; id: string}>>;
+
+  setEditModal?: React.Dispatch<
+    React.SetStateAction<{show: boolean; id: string; content: string}>
+  >;
+  setEditCommentInput?: React.Dispatch<React.SetStateAction<string>>;
   deleteModal: {show: boolean; id: string};
   uploadingAttachment: boolean;
   authId: string;
@@ -71,11 +79,28 @@ const Feedback = ({
   deleteModal,
   uploadingAttachment,
   authId,
+  setEditCommentInput,
+  setEditModal,
   role,
   fileObject,
 }: FeedbackProps) => {
   const {person} = feedback;
   const {firstName, lastName, preferredName} = person;
+  const {clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
+  const getColorBG = (theme = 'indigo') => {
+    return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500 text-${theme}-400`;
+  };
+
+  const handleEdit = () => {
+    setEditCommentInput(feedback.text);
+    setEditModal((prevState: any) => ({
+      show: !prevState.show,
+      id: feedback.id,
+      content: feedback.text,
+    }));
+  };
 
   return (
     <div
@@ -120,7 +145,7 @@ const Feedback = ({
               {getRole(person.role)}
             </p>
             {feedback.edited && (
-              <span className="italic text-gray-600 font-light">(edited)</span>
+              <span className="text-gray-600 font-light text-xs ml-2">(edited)</span>
             )}
           </h5>
           <p style={{whiteSpace: 'break-spaces'}}>{feedback.text}</p>
@@ -137,6 +162,7 @@ const Feedback = ({
               const isOther = !isImage && !isVideo && !isAudio;
               return (
                 <div
+                  key={url}
                   className="mt-2"
                   onClick={() => {
                     isImage && setAttModal({show: true, url, type});
@@ -154,12 +180,23 @@ const Feedback = ({
         </div>
       </div>
       {feedback.person.authId === authId && !uploadingAttachment && (
-        <div
-          onClick={() => {
-            setDeleteModal({show: !deleteModal.show, id: feedback.id});
-          }}
-          className="delete-comment hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto self-start p-1 cursor-pointer">
-          <BsFillTrashFill />
+        <div className="flex items-center justify-center w-auto">
+          {feedback.text && (
+            <div
+              onClick={handleEdit}
+              className={`mr-2 delete-comment ${getColorBG(
+                themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+              )} hover:text-white transition-all duration-150 rounded  w-auto self-start p-1 cursor-pointer`}>
+              <AiOutlineEdit />
+            </div>
+          )}
+          <div
+            onClick={() => {
+              setDeleteModal({show: !deleteModal.show, id: feedback.id});
+            }}
+            className="delete-comment hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto self-start p-1 cursor-pointer">
+            <BsFillTrashFill />
+          </div>
         </div>
       )}
     </div>
