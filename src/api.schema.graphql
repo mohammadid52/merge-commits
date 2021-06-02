@@ -786,10 +786,10 @@ type AnthologyContent {
   content: String
   classID: ID
   feedbacks: [String]
-  edited: Boolean,
+  edited: Boolean
 }
 
-type AnthologyComment  @model {
+type AnthologyComment @model {
   id: ID!
   text: String
   email: String!
@@ -804,8 +804,8 @@ type AnthologyComment  @model {
 type Attachment {
   type: String
   url: String
-  filename:String,
-  size: Int,
+  filename:String
+  size: Int
 }
 
 type QuestionData @model {

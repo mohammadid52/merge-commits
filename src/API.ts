@@ -536,7 +536,6 @@ export type Question = {
   sourceId?: string | null,
   note?: string | null,
   options?:  Array<Option | null > | null,
-  published?: boolean | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -984,7 +983,6 @@ export type QuestionResponse = {
   __typename: "QuestionResponse",
   qid?: string | null,
   response?: Array< string | null > | null,
-  otherResponse?: string | null,
 };
 
 export type AnthologyContent = {
@@ -1134,7 +1132,7 @@ export type StudentWord = {
 };
 
 export type UpdatePersonInput = {
-  id?: string | null,
+  id: string,
   authId: string,
   status?: PersonStatus | null,
   email: string,
@@ -1258,7 +1256,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateStaffInput = {
@@ -1291,7 +1289,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomInput = {
@@ -1363,7 +1361,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1393,7 +1391,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateClassInput = {
@@ -1420,7 +1418,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateClassStudentInput = {
@@ -1453,7 +1451,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCurriculumInput = {
@@ -1657,7 +1655,7 @@ export type UpdateTeacherCurriculumInput = {
 };
 
 export type DeleteTeacherCurriculumInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomCurriculumInput = {
@@ -1681,7 +1679,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateArtistInput = {
@@ -1733,7 +1731,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateSELStructureInput = {
@@ -1766,7 +1764,7 @@ export type UpdateSELStructureInput = {
 };
 
 export type DeleteSELStructureInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateDoFirstInput = {
@@ -1790,7 +1788,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1814,7 +1812,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateWarmUpInput = {
@@ -1915,7 +1913,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCoreLessonInput = {
@@ -1974,7 +1972,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateActivityInput = {
@@ -2019,7 +2017,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCheckpointInput = {
@@ -2076,7 +2074,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2103,7 +2101,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2130,7 +2128,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateAssessmentInput = {
@@ -2160,7 +2158,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2184,7 +2182,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2208,7 +2206,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionInput = {
@@ -2221,7 +2219,6 @@ export type CreateQuestionInput = {
   sourceId?: string | null,
   note?: string | null,
   options?: Array< OptionInput | null > | null,
-  published?: boolean | null,
 };
 
 export type OptionInput = {
@@ -2239,7 +2236,6 @@ export type ModelQuestionConditionInput = {
   language?: ModelStringInput | null,
   sourceId?: ModelStringInput | null,
   note?: ModelStringInput | null,
-  published?: ModelBooleanInput | null,
   and?: Array< ModelQuestionConditionInput | null > | null,
   or?: Array< ModelQuestionConditionInput | null > | null,
   not?: ModelQuestionConditionInput | null,
@@ -2255,11 +2251,10 @@ export type UpdateQuestionInput = {
   sourceId?: string | null,
   note?: string | null,
   options?: Array< OptionInput | null > | null,
-  published?: boolean | null,
 };
 
 export type DeleteQuestionInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionSourceInput = {
@@ -2288,7 +2283,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionTypeInput = {
@@ -2317,7 +2312,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateWordInput = {
@@ -2341,7 +2336,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateStudentWordInput = {
@@ -2368,7 +2363,7 @@ export type UpdateStudentWordInput = {
 };
 
 export type DeleteStudentWordInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateRoomMsgsInput = {
@@ -2413,7 +2408,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateCourseInput = {
@@ -2454,7 +2449,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateLessonInput = {
@@ -2599,7 +2594,7 @@ export type UpdateLessonRubricsInput = {
 };
 
 export type DeleteLessonRubricsInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateLessonCheckpointInput = {
@@ -2626,7 +2621,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2650,7 +2645,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateSyllabusInput = {
@@ -2837,7 +2832,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateStudentDataInput = {
@@ -2879,7 +2874,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id?: string | null,
+  id: string,
   lessonProgress?: string | null,
   currentLocation?: string | null,
   status?: string | null,
@@ -2961,7 +2956,7 @@ export type UpdateAnthologyCommentInput = {
 };
 
 export type DeleteAnthologyCommentInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionDataInput = {
@@ -2979,7 +2974,6 @@ export type CreateQuestionDataInput = {
 export type QuestionResponseInput = {
   qid?: string | null,
   response?: Array< string | null > | null,
-  otherResponse?: string | null,
 };
 
 export type ModelQuestionDataConditionInput = {
@@ -3008,7 +3002,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -3032,7 +3026,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateFeedbackInput = {
@@ -3059,7 +3053,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateIntroInput = {
@@ -3131,7 +3125,7 @@ export type UpdateIntroInput = {
 };
 
 export type DeleteIntroInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreateOutroInput = {
@@ -3197,7 +3191,7 @@ export type UpdateOutroInput = {
 };
 
 export type DeleteOutroInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type CreatePersonLocationInput = {
@@ -3237,7 +3231,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id?: string | null,
+  id: string,
   personAuthID: string,
   personEmail: string,
   syllabusLessonID?: string | null,
@@ -3348,7 +3342,7 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id: string,
+  id?: string | null,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -3759,7 +3753,6 @@ export type ModelQuestionFilterInput = {
   language?: ModelStringInput | null,
   sourceId?: ModelStringInput | null,
   note?: ModelStringInput | null,
-  published?: ModelBooleanInput | null,
   and?: Array< ModelQuestionFilterInput | null > | null,
   or?: Array< ModelQuestionFilterInput | null > | null,
   not?: ModelQuestionFilterInput | null,
@@ -7873,7 +7866,6 @@ export type CreateDoFirstQuestionMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7922,7 +7914,6 @@ export type UpdateDoFirstQuestionMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -7971,7 +7962,6 @@ export type DeleteDoFirstQuestionMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -8965,7 +8955,6 @@ export type CreateCheckpointQuestionsMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9026,7 +9015,6 @@ export type UpdateCheckpointQuestionsMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9087,7 +9075,6 @@ export type DeleteCheckpointQuestionsMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9268,7 +9255,6 @@ export type CreateAssessmentQuestionsMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9323,7 +9309,6 @@ export type UpdateAssessmentQuestionsMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9378,7 +9363,6 @@ export type DeleteAssessmentQuestionsMutation = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -9581,7 +9565,6 @@ export type CreateQuestionMutation = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9610,7 +9593,6 @@ export type UpdateQuestionMutation = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -9639,7 +9621,6 @@ export type DeleteQuestionMutation = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -14390,7 +14371,6 @@ export type CreateQuestionDataMutation = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -14521,7 +14501,6 @@ export type UpdateQuestionDataMutation = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -14652,7 +14631,6 @@ export type DeleteQuestionDataMutation = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -14869,7 +14847,6 @@ export type CreateQuestionDataStudentDataMutation = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
@@ -15034,7 +15011,6 @@ export type UpdateQuestionDataStudentDataMutation = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
@@ -15199,7 +15175,6 @@ export type DeleteQuestionDataStudentDataMutation = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
@@ -18959,7 +18934,6 @@ export type GetAssessmentQuestionsQuery = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19002,7 +18976,6 @@ export type ListAssessmentQuestionssQuery = {
         language?: string | null,
         sourceId?: string | null,
         note?: string | null,
-        published?: boolean | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -19141,7 +19114,6 @@ export type GetQuestionQuery = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -19173,7 +19145,6 @@ export type ListQuestionsQuery = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -21011,7 +20982,6 @@ export type GetQuestionDataQuery = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -21137,7 +21107,6 @@ export type ListQuestionDatasQuery = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
@@ -26328,7 +26297,6 @@ export type OnCreateDoFirstQuestionSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26372,7 +26340,6 @@ export type OnUpdateDoFirstQuestionSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -26416,7 +26383,6 @@ export type OnDeleteDoFirstQuestionSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27330,7 +27296,6 @@ export type OnCreateCheckpointQuestionsSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27386,7 +27351,6 @@ export type OnUpdateCheckpointQuestionsSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27442,7 +27406,6 @@ export type OnDeleteCheckpointQuestionsSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27603,7 +27566,6 @@ export type OnCreateAssessmentQuestionsSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27653,7 +27615,6 @@ export type OnUpdateAssessmentQuestionsSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27703,7 +27664,6 @@ export type OnDeleteAssessmentQuestionsSubscription = {
         icon?: string | null,
         color?: string | null,
       } | null > | null,
-      published?: boolean | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -27886,7 +27846,6 @@ export type OnCreateQuestionSubscription = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -27910,7 +27869,6 @@ export type OnUpdateQuestionSubscription = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -27934,7 +27892,6 @@ export type OnDeleteQuestionSubscription = {
       icon?: string | null,
       color?: string | null,
     } | null > | null,
-    published?: boolean | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -31834,7 +31791,6 @@ export type OnCreateQuestionDataSubscription = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -31960,7 +31916,6 @@ export type OnUpdateQuestionDataSubscription = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -32086,7 +32041,6 @@ export type OnDeleteQuestionDataSubscription = {
       __typename: "QuestionResponse",
       qid?: string | null,
       response?: Array< string | null > | null,
-      otherResponse?: string | null,
     } | null > | null,
     syllabusLesson?:  {
       __typename: "SyllabusLesson",
@@ -32298,7 +32252,6 @@ export type OnCreateQuestionDataStudentDataSubscription = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
@@ -32458,7 +32411,6 @@ export type OnUpdateQuestionDataStudentDataSubscription = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
@@ -32618,7 +32570,6 @@ export type OnDeleteQuestionDataStudentDataSubscription = {
         __typename: "QuestionResponse",
         qid?: string | null,
         response?: Array< string | null > | null,
-        otherResponse?: string | null,
       } | null > | null,
       syllabusLesson?:  {
         __typename: "SyllabusLesson",
