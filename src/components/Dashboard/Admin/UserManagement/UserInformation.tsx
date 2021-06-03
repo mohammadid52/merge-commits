@@ -9,6 +9,7 @@ import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import Status from '../../../Atoms/Status';
 import {getAsset} from '../../../../assets';
+import LinkPreview from '../../../Atoms/LinkPreview';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -203,12 +204,12 @@ const UserInformation = (props: UserInfoProps) => {
                   <dd className="mt-2 text-base leading-5 text-gray-900">
                     {item.question.type !== 'link' ? (
                       getQuestionResponse(checkpointID, item.question.id) || '--'
+                    ) : getQuestionResponse(checkpointID, item.question.id) ? (
+                      <LinkPreview
+                        url={getQuestionResponse(checkpointID, item.question.id)}
+                      />
                     ) : (
-                      <a
-                        className="text-blue-400 hover:text-blue-600 transition-all"
-                        href={getQuestionResponse(checkpointID, item.question.id)}>
-                        {getQuestionResponse(checkpointID, item.question.id)}
-                      </a>
+                      <p>Loading preview</p>
                     )}
                   </dd>
                 </div>

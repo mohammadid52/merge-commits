@@ -433,11 +433,6 @@ const UserEdit = (props: UserInfoProps) => {
   const checkpointID =
     tab !== 'p' && stdCheckpoints.length > 0 && stdCheckpoints[parseInt(tab || '1')].id;
 
-  console.log(
-    '🚀 ~ file: UserEdit.tsx ~ line 436 ~ UserEdit ~ checkpointID',
-    questionData[checkpointID]
-  );
-
   // Code for Other Field
 
   const hasOther = (val: string | string[], other: string) => {
@@ -634,7 +629,6 @@ const UserEdit = (props: UserInfoProps) => {
                 <div className="text-gray-900">
                   {getCurrentTabQuestions().map((item: any) => (
                     <Fragment key={item.question.id}>
-                      {console.log(item.question)}
                       <div className="p-2 flex mb-4 items-end">
                         <div className="flex flex-col justify-between">
                           {item.question.type === 'text' ||
