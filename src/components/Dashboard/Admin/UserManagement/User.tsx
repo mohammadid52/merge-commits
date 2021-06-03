@@ -27,13 +27,18 @@ import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/st
 import slice from 'lodash/slice';
 import sortBy from 'lodash/sortBy';
 import {BiLinkAlt} from 'react-icons/bi';
-import {find} from 'lodash';
+import {find, findIndex} from 'lodash';
 import {MdCancel, MdImage} from 'react-icons/md';
 import {BsCameraVideoFill} from 'react-icons/bs';
 import {getAsset} from '../../../../assets';
 import Modal from '../../../Atoms/Modal';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import Feedback from './Feedback';
+import FormInput from '../../../Atoms/Form/FormInput';
+import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
+import {HiEmojiHappy} from 'react-icons/hi';
+import EmojiPicker from 'emoji-picker-react';
+import ClickAwayListener from 'react-click-away-listener';
 
 export interface UserInfo {
   authId: string;
@@ -746,23 +751,70 @@ const User = () => {
     if (work) return 'Work';
     if (notes) return 'Notes';
   };
-  const StudentData = ({item, idx}: any) => {
+
+  const getColorForTag = (tagName: string) => {
+    switch (tagName) {
+      case 'Journal':
+        return 'bg-green-100 text-green-600';
+      case 'Notes':
+        return 'bg-yellow-100 text-yellow-600';
+      case 'Work':
+        return 'bg-blue-100 text-blue-600';
+      default:
+        break;
+    }
+  };
+
+  const updateCommentFromDB = async (commentObj: any) => {
+    try {
+      const commentUpdate: any = await API.graphql(
+        graphqlOperation(mutations.updateAnthologyComment, {
+          input: {
+            id: commentObj.id,
+            text: commentObj.comment,
+            edited: true,
+          },
+        })
+      );
+    } catch (error) {
+      console.error('error @commentUpdate: ', error);
+    }
+  };
+
+  const StudentData = ({item}: any) => {
     // booleans
     const [showComments, setShowComments] = useState(false);
     const [loadingComments, setLoadingComments] = useState(false);
     const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
     const [uploadingAttachment, setUploadingAttachment] = useState(false);
     const [deleteModal, setDeleteModal] = useState({show: false, id: ''});
+    const [editModal, setEditModal] = useState({show: false, id: '', content: ''});
     // arrays
     const [feedbackData, setFeedbackData] = useState<any>([]);
 
     // strings
     const [comment, setComment] = useState('');
+    const [editCommentInput, setEditCommentInput] = useState('');
 
     // objects
     const [fileObject, setfileObject] = useState<any>({});
 
-    const deleteComment = (id: string) => {
+    const [showEmoji, setShowEmoji] = useState(false);
+    const [showEmojiForEdit, setShowEmojiForEdit] = useState(false);
+
+    const onEmojiSelect = (e: any, forEdit: boolean = false) => {
+      if (forEdit) {
+        let commentWithEmoji = editCommentInput.concat(e.emoji);
+        setEditCommentInput(commentWithEmoji);
+        setShowEmojiForEdit(false);
+      } else {
+        let commentWithEmoji = comment.concat(e.emoji);
+        setComment(commentWithEmoji);
+        setShowEmoji(false);
+      }
+    };
+
+    const getCurrentComment = (id: string) => {
       const currentComment: any = find(feedbackData, (comment: any) => comment.id === id);
 
       const currentCommentWithoutId: any = find(
@@ -772,7 +824,11 @@ const User = () => {
       );
 
       const comment: any = currentComment.id ? currentComment : currentCommentWithoutId;
+      return comment;
+    };
 
+    const deleteComment = (id: string) => {
+      const comment: any = getCurrentComment(id);
       if (comment) {
         if (comment.attachments && comment.attachments.length > 0) {
           const key: string = getKeyForAttachments(comment.attachments[0].url);
@@ -785,10 +841,21 @@ const User = () => {
       }
     };
 
+    const closeEditModal = () => {
+      setEditModal({show: false, id: '', content: ''});
+    };
+
+    const editComment = async (id: string) => {
+      const commentObject: any = getCurrentComment(id);
+
+      if (commentObject) {
+        updateCommentLocalState({comment: editCommentInput, id: commentObject.id});
+        closeEditModal();
+        await updateCommentFromDB({comment: editCommentInput, id: commentObject.id});
+      }
+    };
+
     const onCommentShowHide = () => {
-      // if (!showComments && feedbackData.length === 0) {
-      //   getFeedBackData();
-      // }
       if (showComments) {
         setfileObject({});
       }
@@ -809,6 +876,19 @@ const User = () => {
         console.error('error @getFeedBackData: ', error.message);
       } finally {
         setLoadingComments(false);
+      }
+    };
+
+    const updateCommentLocalState = (commentObject: any) => {
+      const {comment, id} = commentObject;
+
+      const idx = findIndex(feedbackData, (fdbck: any) => fdbck.id === id);
+
+      if (idx >= 0) {
+        feedbackData[idx].text = comment;
+        feedbackData[idx].edited = true;
+
+        setFeedbackData([...feedbackData]);
       }
     };
 
@@ -917,21 +997,9 @@ const User = () => {
     const actionStyles = `flex ${
       themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
     } items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500`;
-    const getColorForTag = (tagName: string) => {
-      switch (tagName) {
-        case 'Journal':
-          return 'bg-green-100 text-green-600';
-        case 'Notes':
-          return 'bg-yellow-100 text-yellow-600';
-        case 'Work':
-          return 'bg-blue-100 text-blue-600';
-        default:
-          break;
-      }
-    };
+
     return (
       <div
-        key={idx}
         className={`w-full note-container relative overflow-x-hidden white_back pb-2 py-8 ${theme.elem.bg} ${theme.elem.shadow} mb-8`}>
         <div className="px-6">
           <span className="notebook-lastedit absolute left-1 w-auto px-2.5 py-0.5 bottom-0 mb-2 text-xs text-gray-500">
@@ -976,6 +1044,67 @@ const User = () => {
                 closeAction={() => setDeleteModal({show: false, id: ''})}
               />
             )}
+            {editModal.show && (
+              <Modal
+                showHeader={true}
+                title={`Edit`}
+                showHeaderBorder={true}
+                showFooter={false}
+                closeAction={closeEditModal}>
+                <div>
+                  <textarea
+                    onKeyUp={(e) => do_resize(e.target)}
+                    style={{resize: 'none'}}
+                    cols={125}
+                    rows={1}
+                    placeholder="Edit Feedback"
+                    className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded"
+                    value={editCommentInput}
+                    onChange={(e) => setEditCommentInput(e.target.value)}
+                  />
+                  <div className="mt-8 px-6 pb-4">
+                    <div className="flex justify-center items-center">
+                      <Buttons
+                        btnClass="py-1 px-4 text-xs mr-2"
+                        label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                        onClick={closeEditModal}
+                        transparent
+                      />
+                      <Buttons
+                        btnClass="py-1 px-8 text-xs ml-2"
+                        label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                        onClick={() => editComment(editModal.id)}
+                      />
+                      {showEmojiForEdit && (
+                        <div
+                          onClick={(e: any) => {
+                            const {id} = e.target;
+                            if (id === 'picker-wrapper') {
+                              setShowEmojiForEdit(false);
+                            }
+                          }}
+                          id="picker-wrapper"
+                          className="picker-wrapper absolute bottom-1 left-5">
+                          <EmojiPicker
+                            groupVisibility={{
+                              recently_used: false,
+                            }}
+                            onEmojiClick={(e: any, emoji: any) =>
+                              onEmojiSelect(emoji, true)
+                            }
+                          />
+                        </div>
+                      )}
+                      <button
+                        onClick={() => setShowEmojiForEdit(!showEmojiForEdit)}
+                        className={`${actionStyles}`}>
+                        <HiEmojiHappy className="" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            )}
             {loadingComments ? (
               <div className="py-2 text-center my-4 mx-auto flex justify-center items-center w-full">
                 <div className="">
@@ -989,6 +1118,8 @@ const User = () => {
             ) : feedbackData && feedbackData.length > 0 ? (
               feedbackData.map((feedback: any) => (
                 <Feedback
+                  setEditModal={setEditModal}
+                  setEditCommentInput={setEditCommentInput}
                   setAttModal={setAttModal}
                   deleteModal={deleteModal}
                   uploadingAttachment={uploadingAttachment}
@@ -1086,7 +1217,7 @@ const User = () => {
                 {/* ------------------------- Preview Section End -------------------------------- */}
               </div>
               <div className="comment-actions h-10 flex items-center justify-between">
-                <div className="left-action w-auto">
+                <div className="left-action w-auto relative">
                   <div className="flex items-center justify-center">
                     <button onClick={(e) => handleVideo()} className={`${actionStyles}`}>
                       <input
@@ -1120,6 +1251,31 @@ const User = () => {
                         multiple={false}
                       />
                     </button>
+                    {showEmoji && (
+                      <div
+                        onClick={(e: any) => {
+                          const {id} = e.target;
+                          if (id === 'picker-wrapper') {
+                            setShowEmoji(false);
+                          }
+                        }}
+                        id="picker-wrapper"
+                        className="picker-wrapper absolute bottom-5 left-5">
+                        <EmojiPicker
+                          groupVisibility={{
+                            recently_used: false,
+                          }}
+                          onEmojiClick={(e: any, emoji: any) =>
+                            onEmojiSelect(emoji, false)
+                          }
+                        />
+                      </div>
+                    )}
+                    <button
+                      onClick={() => setShowEmoji(true)}
+                      className={`${actionStyles}`}>
+                      <HiEmojiHappy className="" />
+                    </button>
                   </div>
                 </div>
                 <div className="right-action w-auto p-2">
@@ -1127,8 +1283,12 @@ const User = () => {
                     onClick={onCommentSubmit}
                     className={`flex items-center justify-center ml-2 h-7 w-7 rounded transition-all duration-300 ${
                       comment.length || fileObject.name
-                        ? 'bg-indigo-500 text-white cursor-pointer hover:bg-indigo-600'
-                        : 'cursor-default text-indigo-300'
+                        ? `text-white cursor-pointer ${getColorForSendBtn(
+                            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                          )}`
+                        : `cursor-default text-${
+                            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                          }-300`
                     }`}>
                     <IoSendSharp className="" />
                   </div>
@@ -1161,6 +1321,10 @@ const User = () => {
         </div>
       </div>
     );
+  };
+
+  const getColorForSendBtn = (theme = 'indigo') => {
+    return `hover:bg-${theme}-600 bg-${theme}-500`;
   };
 
   const isTeacher =
@@ -1334,9 +1498,7 @@ const User = () => {
                 </div>
               </div>
             ) : studentData && studentData.length > 0 ? (
-              studentData.map((item: any, idx: number) => (
-                <StudentData idx={idx} item={item} />
-              ))
+              studentData.map((item: any) => <StudentData item={item} />)
             ) : (
               <div className="py-20 white_back text-center mx-auto flex justify-center items-center w-full h-48">
                 <div className="">

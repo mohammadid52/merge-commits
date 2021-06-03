@@ -1,4 +1,4 @@
-import {find, sortBy} from 'lodash';
+import {find, findIndex, sortBy} from 'lodash';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {BiLinkAlt} from 'react-icons/bi';
 import {BsCameraVideoFill} from 'react-icons/bs';
@@ -9,15 +9,21 @@ import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {anthologyDict} from '../../../dictionary/dictionary.iconoclast';
+import {
+  AddQuestionModalDict,
+  anthologyDict,
+} from '../../../dictionary/dictionary.iconoclast';
 import {getImageFromS3} from '../../../utilities/services';
 import Buttons from '../../Atoms/Buttons';
 import ContentCard from '../../Atoms/ContentCard';
 import Loader from '../../Atoms/Loader';
+import ClickAwayListener from 'react-click-away-listener';
 import ModalPopUp from '../../Molecules/ModalPopUp';
 import Feedback from '../Admin/UserManagement/Feedback';
 import Modal from '../../Atoms/Modal';
 import {getAsset} from '../../../assets';
+import {HiEmojiHappy} from 'react-icons/hi';
+import EmojiPicker from 'emoji-picker-react';
 
 const Feedbacks = ({
   showComments,
@@ -29,10 +35,15 @@ const Feedbacks = ({
   fileObject,
   setFileObject,
 }: any) => {
+  const {state, clientKey, userLanguage} = useContext(GlobalContext);
+
+  //modals
   const [attModal, setAttModal] = useState({show: false, type: '', url: ''});
+  const [editModal, setEditModal] = useState({show: false, id: '', content: ''});
+
   // strings
-  const {state, clientKey} = useContext(GlobalContext);
   const [comment, setComment] = useState('');
+  const [editCommentInput, setEditCommentInput] = useState('');
 
   // objects
 
@@ -114,6 +125,62 @@ const Feedbacks = ({
       output.src = reader.result;
     };
     reader.readAsDataURL(file);
+  };
+
+  const updateCommentFromDB = async (commentObj: any) => {
+    try {
+      const commentUpdate: any = await API.graphql(
+        graphqlOperation(mutations.updateAnthologyComment, {
+          input: {
+            id: commentObj.id,
+            text: commentObj.comment,
+            edited: true,
+          },
+        })
+      );
+    } catch (error) {
+      console.error('error @commentUpdate: ', error);
+    }
+  };
+
+  const updateCommentLocalState = (commentObject: any) => {
+    const {comment, id} = commentObject;
+
+    const idx = findIndex(feedbackData, (fdbck: any) => fdbck.id === id);
+
+    if (idx >= 0) {
+      feedbackData[idx].text = comment;
+      feedbackData[idx].edited = true;
+
+      setFeedbackData([...feedbackData]);
+    }
+  };
+
+  const getCurrentComment = (id: string) => {
+    const currentComment: any = find(feedbackData, (comment: any) => comment.id === id);
+
+    const currentCommentWithoutId: any = find(
+      feedbackData,
+      (comment: any) =>
+        getFullNameString(comment.person) === getFullNameString(state.user)
+    );
+
+    const comment: any = currentComment.id ? currentComment : currentCommentWithoutId;
+    return comment;
+  };
+
+  const closeEditModal = () => {
+    setEditModal({show: false, id: '', content: ''});
+  };
+
+  const editComment = async (id: string) => {
+    const commentObject: any = getCurrentComment(id);
+
+    if (commentObject) {
+      updateCommentLocalState({comment: editCommentInput, id: commentObject.id});
+      closeEditModal();
+      await updateCommentFromDB({comment: editCommentInput, id: commentObject.id});
+    }
   };
 
   const pushCommentToDatabase = async (text: string, item: any, attachments?: any) => {
@@ -315,25 +382,32 @@ const Feedbacks = ({
   const handleOther = () => inputOther.current.click();
 
   const deleteComment = (id: string) => {
-    const currentComment: any = find(feedbackData, (comment: any) => comment.id === id);
-
-    const currentCommentWithoutId: any = find(
-      feedbackData,
-      (comment: any) =>
-        getFullNameString(comment.person) === getFullNameString(state.user)
-    );
-
-    const comment: any = currentComment.id ? currentComment : currentCommentWithoutId;
+    const commentObject: any = getCurrentComment(id);
 
     if (comment) {
-      if (comment.attachments && comment.attachments.length > 0) {
-        const key: string = getKeyForAttachments(comment.attachments[0].url);
+      if (commentObject.attachments && commentObject.attachments.length > 0) {
+        const key: string = getKeyForAttachments(commentObject.attachments[0].url);
         deletImageFromS3(key);
       }
 
       const filteredData: any = feedbackData.filter((data: any) => data.id !== id);
       setFeedbackData(filteredData); // this is to update local state
       deleteCommentFromDatabase(id, item);
+    }
+  };
+
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [showEmojiForEdit, setShowEmojiForEdit] = useState(false);
+
+  const onEmojiSelect = (e: any, forEdit: boolean = false) => {
+    if (forEdit) {
+      let commentWithEmoji = editCommentInput.concat(e.emoji);
+      setEditCommentInput(commentWithEmoji);
+      setShowEmojiForEdit(false);
+    } else {
+      let commentWithEmoji = comment.concat(e.emoji);
+      setComment(commentWithEmoji);
+      setShowEmoji(false);
     }
   };
 
@@ -378,6 +452,67 @@ const Feedbacks = ({
               )}
             </AttachmentsModalPopUp>
           )}
+          {editModal.show && (
+            <Modal
+              showHeader={true}
+              title={`Edit`}
+              showHeaderBorder={true}
+              showFooter={false}
+              closeAction={closeEditModal}>
+              <div>
+                <textarea
+                  onKeyUp={(e) => do_resize(e.target)}
+                  style={{resize: 'none'}}
+                  cols={125}
+                  rows={1}
+                  placeholder="Edit Feedback"
+                  className="text-sm w-96 p-2 px-4 pt-3 text-gray-700 border-0 border-gray-200 rounded"
+                  value={editCommentInput}
+                  onChange={(e) => setEditCommentInput(e.target.value)}
+                />
+                <div className="mt-8 px-6 pb-4">
+                  <div className="flex justify-center items-center">
+                    <Buttons
+                      btnClass="py-1 px-4 text-xs mr-2"
+                      label={AddQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                      onClick={closeEditModal}
+                      transparent
+                    />
+                    <Buttons
+                      btnClass="py-1 px-8 text-xs ml-2"
+                      label={AddQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                      onClick={() => editComment(editModal.id)}
+                    />
+                    {showEmojiForEdit && (
+                      <div
+                        onClick={(e: any) => {
+                          const {id} = e.target;
+                          if (id === 'picker-wrapper') {
+                            setShowEmojiForEdit(false);
+                          }
+                        }}
+                        id="picker-wrapper"
+                        className="picker-wrapper absolute bottom-1 left-5">
+                        <EmojiPicker
+                          groupVisibility={{
+                            recently_used: false,
+                          }}
+                          onEmojiClick={(e: any, emoji: any) =>
+                            onEmojiSelect(emoji, true)
+                          }
+                        />
+                      </div>
+                    )}
+                    <button
+                      onClick={() => setShowEmojiForEdit(!showEmojiForEdit)}
+                      className={`${actionStyles}`}>
+                      <HiEmojiHappy className="" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Modal>
+          )}
           {deleteModal.show && (
             <ModalPopUp
               message="Are you sure you want to delete it?"
@@ -411,6 +546,8 @@ const Feedbacks = ({
                 authId={state.user.authId}
                 setDeleteModal={setDeleteModal}
                 feedback={feedback}
+                setEditModal={setEditModal}
+                setEditCommentInput={setEditCommentInput}
               />
             ))
           ) : (
@@ -495,7 +632,7 @@ const Feedbacks = ({
               {/* ------------------------- Preview Section End -------------------------------- */}
             </div>
             <div className="comment-actions h-10 flex items-center justify-between">
-              <div className="left-action w-auto">
+              <div className="left-action w-auto relative">
                 <div className="flex items-center justify-center">
                   <button onClick={handleVideo} className={`${actionStyles}`}>
                     <input
@@ -528,6 +665,30 @@ const Feedbacks = ({
                       className="hidden"
                       multiple={false}
                     />
+                  </button>
+                  {showEmoji && (
+                    <div
+                      onClick={(e: any) => {
+                        const {id} = e.target;
+
+                        if (id === 'picker-wrapper') {
+                          setShowEmoji(false);
+                        }
+                      }}
+                      id="picker-wrapper"
+                      className="picker-wrapper absolute bottom-5 left-5">
+                      <EmojiPicker
+                        groupVisibility={{
+                          recently_used: false,
+                        }}
+                        onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji, false)}
+                      />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setShowEmoji(!showEmoji)}
+                    className={`${actionStyles}`}>
+                    <HiEmojiHappy className="" />
                   </button>
                 </div>
               </div>
@@ -562,11 +723,10 @@ const SingleNote = ({
   viewModeView,
   contentObj,
 }: any) => {
-  const {userLanguage} = useContext(GlobalContext);
   const [showComments, setShowComments] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
 
-  const {theme, clientKey} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [loadingComments, setLoadingComments] = useState(false);
@@ -689,7 +849,7 @@ const SingleNote = ({
           {showComments && (
             <div className="border-t-0 border-gray-200 mt-4">
               <Feedbacks
-                idx={idx}
+                key={contentObj.id}
                 feedbackData={feedbackData}
                 loadingComments={loadingComments}
                 item={contentObj}
