@@ -153,7 +153,7 @@ const RoomsList = (props: RoomListProps) => {
                 />
               </div>
               <p
-                className={`text-center text-lg text-gray-500 ${
+                className={`text-center text-lg mt-4 text-gray-500 ${
                   messages.isError ? 'text-red-600' : ''
                 }`}>
                 {messages.message}
