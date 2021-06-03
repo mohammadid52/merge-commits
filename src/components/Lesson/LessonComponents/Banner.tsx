@@ -1,15 +1,23 @@
-import React, { useContext } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { LessonContext } from '../../../contexts/LessonContext';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
+import React, {useContext} from 'react';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {LessonContext} from '../../../contexts/LessonContext';
+import {LessonControlContext} from '../../../contexts/LessonControlContext';
 
 /**
  * ICON IMPORTS FROM react-icons
  */
-import { FaPoll, FaCheck, FaQuestion, FaHourglassStart, FaHeadphonesAlt, FaScroll, FaPenFancy } from 'react-icons/fa';
+import {
+  FaPoll,
+  FaCheck,
+  FaQuestion,
+  FaHourglassStart,
+  FaHeadphonesAlt,
+  FaScroll,
+  FaPenFancy,
+} from 'react-icons/fa';
 
 interface BannerProps {
-  isTeacher?: boolean
+  isTeacher?: boolean;
   title?: string;
   titleSection?: string;
   subtitleSection?: string;
@@ -17,15 +25,30 @@ interface BannerProps {
   subtitle?: string;
   titleParagraph?: string;
   iconName?: string;
+  titleCenter?: boolean;
+  animate?: boolean;
 }
 
 const Banner = (props: BannerProps) => {
   /**
    * Teacher switch
    */
-  const { isTeacher, title, titleSection, subtitleSection, subtitleSection2, subtitle, titleParagraph, iconName } = props;
-  const switchContext = (isTeacher) ? useContext(LessonControlContext) : useContext(LessonContext);
-  const { state, theme } = switchContext;
+  const {
+    isTeacher,
+    titleCenter = false,
+    title,
+    titleSection,
+    subtitleSection,
+    subtitleSection2,
+    subtitle,
+    titleParagraph,
+    iconName,
+    animate,
+  } = props;
+  const switchContext = isTeacher
+    ? useContext(LessonControlContext)
+    : useContext(LessonContext);
+  const {state, theme} = switchContext;
 
   /**
    * Icon Switch
@@ -35,72 +58,81 @@ const Banner = (props: BannerProps) => {
     switch (nameString) {
       case 'FaHourglassStart':
         return <FaHourglassStart />;
-        case 'FaHeadphonesAlt':
+      case 'FaHeadphonesAlt':
         return <FaHeadphonesAlt />;
       case 'FaPoll':
-        return <FaPoll/>;
-        case 'FaScroll':
-        return <FaScroll/>;
+        return <FaPoll />;
+      case 'FaScroll':
+        return <FaScroll />;
       case 'FaCheck':
-        return <FaCheck/>
-        case 'FaPenFancy':
-        return <FaPenFancy/>
+        return <FaCheck />;
+      case 'FaPenFancy':
+        return <FaPenFancy />;
       default:
-        return <FaQuestion/>
+        return <FaQuestion />;
     }
-  }
+  };
 
   return (
     <>
-      {
-        title && (
-          <div className={`w-full text-4xl ${theme.banner}`}>
-            {
-              iconName && (
-                <IconContext.Provider value={{ color: '#EDF2F7', size: '1.5rem' }}>
-                  <div className='w-8 h-auto ml-0 mr-2'>
-                    {switchIcon(iconName)}
-                  </div>
-                </IconContext.Provider>
-              )
-            }
-            <h1 dangerouslySetInnerHTML={{ __html: title }} />
-          </div>
-        )
-      }
+      {title && (
+        <div
+          className={`text-4xl w-auto ${
+            titleCenter
+              ? 'text-center pb-2 mb-2 relative font-semibold text-gray-100'
+              : 'pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100 '
+          }`}>
+          {iconName && (
+            <IconContext.Provider value={{color: '#EDF2F7', size: '1.5rem'}}>
+              <div className="w-8 h-auto ml-0 mr-2">{switchIcon(iconName)}</div>
+            </IconContext.Provider>
+          )}
+          <h1
+            className={`${titleCenter ? 'w-auto ' : ''} ${
+              animate && 'fade__animation2'
+            } `}
+            dangerouslySetInnerHTML={{__html: title}}
+          />
+        </div>
+      )}
 
-      {
-        titleSection && (
-          <h2 className={`w-full text-xl font-semibold ${theme.banner} ${theme.underline}`}>
-            <span dangerouslySetInnerHTML={{ __html: titleSection }} />
-          </h2>
-        )
-      }
+      {titleSection && (
+        <h2
+          className={`text-xl w-auto pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100 ${theme.underline}`}>
+          <span
+            className={animate && 'fade__animation2'}
+            dangerouslySetInnerHTML={{__html: titleSection}}
+          />
+        </h2>
+      )}
 
-      {
-        subtitleSection && !subtitleSection2 && (
-          <h3 className={`w-full text-xl border-b-4 border-sea-green ${theme.banner} ${theme.underline}`}>
-            <span dangerouslySetInnerHTML={{ __html: subtitleSection }}/>
-          </h3>
-        )
-      }
+      {subtitleSection && !subtitleSection2 && (
+        <h3
+          className={`w-full text-xl border-b-4 ${
+            animate && 'fade__animation2'
+          } border-sea-green ${theme.banner} ${theme.underline}`}>
+          <span dangerouslySetInnerHTML={{__html: subtitleSection}} />
+        </h3>
+      )}
 
-      {
-        subtitleSection && subtitleSection2 && (
-          <h3 className={`w-full flex text-xl border-b-4 border-sea-green ${theme.banner}`}>
-            <span className={`w-auto font-semibold`}>{subtitleSection}</span>
-            <span className={`w-auto ml-2`} >{subtitleSection2}</span>
-          </h3>
-        )
-      }
+      {subtitleSection && subtitleSection2 && (
+        <h3
+          className={`w-full flex text-xl ${
+            animate && 'fade__animation2'
+          } border-b-4 border-sea-green ${theme.banner}`}>
+          <span className={`w-auto font-semibold`}>{subtitleSection}</span>
+          <span className={`w-auto ml-2`}>{subtitleSection2}</span>
+        </h3>
+      )}
 
-      {
-        subtitle && (
-          <h4 className={`w-full text-xl ${theme.banner} ${theme.underline}`}>
-            <span dangerouslySetInnerHTML={{ __html: subtitle }} />
-          </h4>
-        )
-      }
+      {subtitle && (
+        <h4
+          className={`w-full text-xl ${animate && 'fade__animation2'} ${theme.banner} ${
+            theme.underline
+          }`}>
+          <span dangerouslySetInnerHTML={{__html: subtitle}} />
+        </h4>
+      )}
     </>
   );
 };

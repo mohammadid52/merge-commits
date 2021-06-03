@@ -1,30 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useRouteMatch} from 'react-router';
 import isEmpty from 'lodash/isEmpty';
-
 import {GlobalContext} from '../../../contexts/GlobalContext';
-
 import SurveyCard from './SurveyCard';
 import Today from './TodayLesson';
 import UpcomingLessons from './UpcomingLessons';
 import CompletedLessons from './CompletedLessons';
 import {DashboardProps} from '../Dashboard';
-import TopWidgetBar from '../Noticebooard/TopWidgetBar';
 import DateAndTime from '../DateAndTime/DateAndTime';
 import SyllabusSwitch from './SyllabusSwitch';
 import useDictionary from '../../../customHooks/dictionary';
-import {initRosterSyllabusLessons} from '../../../uniqueScripts/InitRoster_in_SyllabusLessons';
-import BreadCrums from '../../Atoms/BreadCrums';
-import {BreadcrumsTitles} from '../../../dictionary/dictionary.iconoclast';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
-import Buttons from '../../Atoms/Buttons';
-import Selector from '../../Atoms/Form/Selector';
-import HeroBanner from '../../Header/HeroBanner';
 import DashboardContainer from '../DashboardContainer';
-import Chat from '../../RoomChat/Chat';
-import FloatingSideMenu from '../FloatingSideMenu/FloatingSideMenu';
 
 interface Artist {
   id: string;
@@ -244,7 +233,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const Counter: React.FC<{count: number}> = ({count}) => {
     return (
-      <div className="w-5 h-5 p-1  bg-indigo-500 rounded-full flex justify-center align-center items-center content-center">
+      <div
+        className={`w-5 h-5 p-1 ${theme.btn[themeColor]} rounded-full flex justify-center align-center items-center content-center`}>
         <span className="w-auto h-auto text-xs text-white font-bold">{count}</span>
       </div>
     );

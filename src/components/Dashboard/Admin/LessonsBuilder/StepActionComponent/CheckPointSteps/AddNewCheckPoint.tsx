@@ -406,6 +406,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
   // }, [checkpQuestions]);
 
   useEffect(() => {
+    console.log('Data updated');
     if (!isEqual(initialData, checkPointData)) {
       setUnsavedChanges(true);
     }

@@ -51,6 +51,8 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
+    STUDENTS: 'Students',
+    STUDENTS_NOTEBOOK: 'Students Notebook',
   },
   ES: {
     HOME: 'CASA',
@@ -81,6 +83,8 @@ const BreadcrumsTitles: any = {
     UserInfo: 'TBD',
     LESSONS: 'TBD',
     LESSONPLANBUILDER: 'TBD',
+    STUDENTS: 'TBD',
+    STUDENTS_NOTEBOOK: 'TBD',
   },
 };
 // Profile Display and edit section
@@ -272,6 +276,7 @@ const sideBarLinksDict: any = {
     LESSON_BUILDER: 'Lesson Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
+    NOTEBOOK: 'Notebook',
     DASHBOARD: 'Dashboard',
     RESEARCHANALYTICS: 'Research & Analytics',
   },
@@ -281,10 +286,11 @@ const sideBarLinksDict: any = {
     PEOPLE: 'Personas',
     LESSON_PLANNER: 'Pasillo',
     CLASSROOM: 'Aula',
+    NOTEBOOK: 'Computadora portátil',
     LESSON_BUILDER: 'Constructor de lecciones',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
-    RESEARCHANALYTICS: 'TBD',
+    RESEARCHANALYTICS: 'Investigación y Análisis',
   },
 };
 
@@ -2353,6 +2359,77 @@ const AddQuestionModalDict: any = {
       CANCEL: 'TBD',
       SAVE: 'TBD',
     },
+    VALIDATION: {
+      TITLE: 'Checkpoint title is required',
+      LABEL: 'Checkpoint label is required',
+      ESTIMATE: 'Checkpoint estimated time is required',
+      ENTERVALIDNUMBER: 'Please enter valid number i.e. 30.',
+      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.',
+    },
+    MESSAGES: {
+      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.',
+    },
+  },
+};
+
+const EditQuestionModalDict: any = {
+  EN: {
+    TITLE: 'Edit QUESTION',
+    HEADING: '*Click here to add Question, directly from previously created questions.',
+    QUESTION: 'Question',
+    NOTELABEL: 'Notes',
+    QUESTIONLABEL: 'Question Label',
+    LANGUAGE: 'Language',
+    TYPE: 'Type',
+    MAKEQUESTIONREQUIRED: 'Make this question required',
+    ADDOPTION: 'Add Options:',
+    ADDOTHEROPTION: 'Add an "Other" Answer Option or Comment Field',
+    ADDNOTEABOVE: 'Add a "None of the above" Answer Option',
+    BUTTON: {
+      NEXT: 'Next Question',
+      CANCEL: 'Cancel',
+      SAVE: 'Save',
+      SAVING: 'Saving',
+    },
+    VALIDATION: {
+      TITLE: 'Checkpoint title is required',
+      LABEL: 'Checkpoint label is required',
+      ESTIMATE: 'Checkpoint estimated time is required',
+      ENTERVALIDNUMBER: 'Please enter valid number i.e. 30.',
+      MINIMUMONE: 'You need to add minimum one question to create a checkpoint.',
+    },
+    MESSAGES: {
+      UNABLESAVE: 'Unable to save Checkpoint details, Please try again later.',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    HEADING: 'TBD',
+    QUESTION: 'TBD',
+    NOTELABEL: 'TBD',
+    QUESTIONLABEL: 'TBD',
+    LANGUAGE: 'TBD',
+    TYPE: 'TBD',
+    MAKEQUESTIONREQUIRED: 'TBD',
+    ADDOPTION: 'TBD',
+    ADDOTHEROPTION: 'TBD',
+    ADDNOTEABOVE: 'TBD',
+    BUTTON: {
+      NEXT: 'TBD',
+      CANCEL: 'TBD',
+      SAVING: 'TBD',
+      SAVE: 'TBD',
+    },
+    VALIDATION: {
+      TITLE: 'TBD',
+      LABEL: 'TBD',
+      ESTIMATE: 'TBD',
+      ENTERVALIDNUMBER: 'TBD',
+      MINIMUMONE: 'TBD',
+    },
+    MESSAGES: {
+      UNABLESAVE: 'TBD',
+    },
   },
 };
 
@@ -2832,6 +2909,7 @@ const GeneralInformationDict: any = {
     NAME: 'Name',
     SELECTDESIGNER: 'Select Designers',
     DESIGNER: 'Designers',
+    LANGUAGE: 'Language',
     PURPOSE: 'Purpose',
     OBJECTIVE: 'Objective',
     SELECTTYPE: 'Select Type',
@@ -2839,7 +2917,6 @@ const GeneralInformationDict: any = {
     INSTITUTION: 'Institution',
     SELECTINSTITUTION: 'Select Institution',
     SELECTLANG: 'Select Language',
-    LANGUAGE: 'Language',
     LESSONMEASUREMENT: 'Lesson Measurements',
     SELECTMEASUREMENT: 'Select Measurement',
     NO: 'No.',
@@ -2869,7 +2946,10 @@ const GeneralInformationDict: any = {
     SELECTDESIGNER: 'TBD',
     DESIGNER: 'TBD',
     PURPOSE: 'TBD',
+    SELECTTYPE: 'TBD',
     OBJECTIVE: 'TBD',
+    LANGUAGE: 'Language',
+    INSTITUTION: 'TBD',
     LESSONMEASUREMENT: 'TBD',
     SELECTMEASUREMENT: 'TBD',
     NO: 'TBD',
@@ -3068,6 +3148,25 @@ const CsvDict: any = {
   },
 };
 
+const DashboardDict: any = {
+  EN: {
+    YOUR_TEACHERS: 'Your Teachers',
+    YOUR_CLASSROOMS: 'Your Classrooms',
+    YOUR_STUDENTS: 'Your Students',
+    YOUR_CLASSMATES: 'Your Classmates',
+    GREETINGS_TEACHER: 'What do you want to teach today?',
+    GREETINGS_STUDENT: 'What do you want to learn today?',
+  },
+  ES: {
+    YOUR_TEACHERS: 'TBD',
+    YOUR_CLASSROOMS: 'TBD',
+    YOUR_STUDENTS: 'TBD',
+    YOUR_CLASSMATES: 'TBD',
+    GREETINGS_TEACHER: 'TBD',
+    GREETINGS_STUDENT: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3082,6 +3181,7 @@ export {
   appDict,
   anthologyDict,
   sideBarLinksDict,
+  DashboardDict,
   noticeboardDict,
   dashboardProfileDict,
   staffBuilderDict,
@@ -3147,4 +3247,5 @@ export {
   LessonBuilderDict,
   LessonEditDict,
   LessonsListDict,
+  EditQuestionModalDict,
 };

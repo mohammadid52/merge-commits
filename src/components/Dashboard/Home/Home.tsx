@@ -11,7 +11,7 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import isEmpty from 'lodash/isEmpty';
 import {getAsset} from '../../../assets';
 import HeroBanner from '../../Header/HeroBanner';
-import times from 'lodash/times';
+import useDictionary from '../../../customHooks/dictionary';
 
 export interface ModifiedListProps {
   id: any;
@@ -34,9 +34,10 @@ export interface ModifiedListProps {
 
 const Home = (props: ClassroomControlProps) => {
   const {homeData, classList, handleRoomSelection, isTeacher} = props;
-  const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
+  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
   const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const {DashboardDict} = useDictionary(clientKey);
 
   const user = !isEmpty(state)
     ? {firstName: state.user.firstName, preferredName: state.user.firstName}
@@ -89,14 +90,17 @@ const Home = (props: ClassroomControlProps) => {
 
   const getCoTeacherList = () => {
     let coTeachersList: any[] = [];
-
+    let uniqIds: string[] = [];
     homeData &&
       homeData.length > 0 &&
       homeData.forEach((item: any) => {
         if (item?.class?.rooms?.items.length > 0) {
           if (item?.class?.rooms?.items[0].coTeachers.items.length > 0) {
             item?.class?.rooms?.items[0].coTeachers.items.map((_item: any) => {
-              coTeachersList.push(_item.teacher);
+              if (!uniqIds.includes(_item.teacher.authId)) {
+                uniqIds.push(_item.teacher.authId);
+                coTeachersList.push(_item.teacher);
+              }
             });
           }
         }
@@ -186,8 +190,8 @@ const Home = (props: ClassroomControlProps) => {
             };
 
             if (!uniqIds.includes(curriculum?.id)) {
-              modifiedClassList.push(modifiedItem);
               uniqIds.push(curriculum?.id);
+              modifiedClassList.push(modifiedItem);
             }
           }
         });
@@ -223,7 +227,12 @@ const Home = (props: ClassroomControlProps) => {
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
                 </span>
-                . What do you want to {isTeacher ? 'teach' : 'learn'} today?
+                .{' '}
+                {
+                  DashboardDict[userLanguage][
+                    isTeacher ? 'GREETINGS_TEACHER' : 'GREETINGS_STUDENT'
+                  ]
+                }
               </h2>
             </div>
           )}
@@ -239,7 +248,7 @@ const Home = (props: ClassroomControlProps) => {
           {teacherList && teacherList.length > 0 && (
             <div className="my-8">
               <SectionTitleV3
-                title={'Your Teachers'}
+                title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
                 fontSize="xl"
                 fontStyle="semibold"
                 extraContainerClass="max-w-256 px-6"
@@ -252,7 +261,11 @@ const Home = (props: ClassroomControlProps) => {
           {/* Classmates Section */}
           <div className="my-6">
             <StudentsTiles
-              title={`Your ${isTeacher ? 'Students' : 'Classmates'}`}
+              title={
+                DashboardDict[userLanguage][
+                  isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
+                ]
+              }
               state={state}
               studentsList={studentsList}
             />

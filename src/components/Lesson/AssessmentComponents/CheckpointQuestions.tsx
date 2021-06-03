@@ -31,7 +31,6 @@ export interface ResponseState {
 interface ResponseObject {
   qid: string;
   response: string[];
-  // other?: string;
 }
 
 export interface QuestionInterface {
@@ -236,8 +235,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const handleInputChange = (
     id: number | string,
     value: string | string[],
-    checkpointID: string,
-    otherValue?: string
+    checkpointID: string
   ) => {
     const valueArray = typeof value === 'string' ? [value] : value;
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
@@ -248,8 +246,6 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
             return {
               qid: id,
               response: valueArray,
-              // Add this value to query
-              // otherValue: value === 'other' ? otherValue : null,
             };
           } else {
             return obj;

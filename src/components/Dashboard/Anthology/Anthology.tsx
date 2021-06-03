@@ -1,12 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import SectionTitle from '../../Atoms/SectionTitleV2';
-import SubSectionTabs from './SubSectionTabs';
 import AnthologyContent from './AnthologyContent';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {API, graphqlOperation} from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import * as customMutations from '../../../customGraphql/customMutations';
 import useDictionary from '../../../customHooks/dictionary';
 import HeroBanner from '../../Header/HeroBanner';
 import {getAsset} from '../../../assets';
@@ -75,9 +72,11 @@ const Anthology = () => {
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
   }, []);
+  const [loadingContent, setLoadingContent] = useState(false);
 
   // TOP Function to load student data
   const listStudentData = async () => {
+    setLoadingContent(true);
     try {
       const studentDataFetch: any = await API.graphql(
         graphqlOperation(queries.listStudentDatas, {
@@ -112,6 +111,8 @@ const Anthology = () => {
       setStudentData(reducedAnthologyContent);
     } catch (e) {
       console.error('Anthology student data fetch error: ', e);
+    } finally {
+      setLoadingContent(false);
     }
   };
 
@@ -330,8 +331,11 @@ const Anthology = () => {
     return anthologyDict[userLanguage].TABS[key];
   });
   const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
+
   const Content = (
     <AnthologyContent
+      // loadingContent={loadingContent}
+      onCancel={onCancel}
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
       handleEditUpdate={handleEditUpdate}

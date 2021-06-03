@@ -1,14 +1,14 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import {UserInfo} from './User';
-import UserStatus from './UserStatus';
 import UserRole from './UserRole';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {isNaN} from 'lodash';
+import Status from '../../../Atoms/Status';
+import {getAsset} from '../../../../assets';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -26,7 +26,7 @@ interface UserInfoProps {
 const UserInformation = (props: UserInfoProps) => {
   const {user, status, stdCheckpoints, questionData, tab, setTab} = props;
   const {theme, userLanguage, clientKey, state} = useContext(GlobalContext);
-  const {UserInformationDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {UserInformationDict} = useDictionary(clientKey);
 
   let created = () => {
     let date = new Date(user.createdAt);
@@ -41,7 +41,18 @@ const UserInformation = (props: UserInfoProps) => {
       const questionResponce: any = selectedCheckp.responseObject?.find(
         (item: any) => item.qid === questionID
       )?.response;
-      return questionResponce ? questionResponce.join(',') : '--';
+      if (questionResponce) {
+        const stringedResponse = questionResponce.toString();
+
+        if (stringedResponse.includes('Other')) {
+          const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
+          const answer = splitAnswer[1];
+          if (answer) return answer;
+          else return 'Other';
+        } else {
+          return questionResponce ? questionResponce.join(',') : '--';
+        }
+      }
     }
   };
 
@@ -59,6 +70,12 @@ const UserInformation = (props: UserInfoProps) => {
     } else return [];
   };
 
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const getColor = (condition: boolean) => ({
+    borderColor: condition ? `${theme.iconColor[themeColor]}` : 'transparent',
+    color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280',
+  });
+
   return (
     <div className="w-full md:px-2 pt-2">
       <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
@@ -67,11 +84,10 @@ const UserInformation = (props: UserInfoProps) => {
             <a
               onClick={() => setTab('p')}
               key="personal_information"
+              style={{...getColor(tab === 'p')}}
               className={classNames(
-                tab === 'p'
-                  ? 'border-indigo-500 text-indigo-600'
-                  : 'border-transparent  cursor-pointer text-gray-500 hover:text-gray-700 hover:border-gray-200',
-                'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm'
+                'cursor-pointer text-gray-500  hover:text-gray-700 hover:border-gray-200',
+                'whitespace-nowrap justify-center flex py-4 px-1 border-b-2 font-medium text-sm ml-2'
               )}>
               {UserInformationDict[userLanguage]['heading']}
             </a>
@@ -84,10 +100,9 @@ const UserInformation = (props: UserInfoProps) => {
                   <a
                     onClick={() => setTab(index)}
                     key={checkpoint.id}
+                    style={{...getColor(parseInt(tab, 10) === index)}}
                     className={classNames(
-                      parseInt(tab, 10) === index
-                        ? 'border-indigo-500 text-indigo-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200',
+                      'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-200',
                       'whitespace-nowrap flex justify-center cursor-pointer py-4 px-1 border-b-2 font-medium text-sm'
                     )}>
                     {checkpoint.title}
@@ -96,11 +111,10 @@ const UserInformation = (props: UserInfoProps) => {
                         value={{
                           size: '0.8rem',
                           className: classNames(
-                            parseInt(tab, 10) === index
-                              ? 'text-indigo-500'
-                              : 'text-gray-400 group-hover:text-gray-500',
+                            'group-hover:text-gray-500',
                             'ml-2 h-5 w-5'
                           ),
+                          color: getColor(parseInt(tab, 10) === index).color,
                         }}>
                         <IoLockClosed />
                       </IconContext.Provider>
@@ -142,7 +156,7 @@ const UserInformation = (props: UserInfoProps) => {
                   {UserInformationDict[userLanguage]['status']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">
-                  <UserStatus status={user.status} />
+                  <Status status={user.status} />
                 </dd>
               </div>
               {/* <div className="sm:col-span-1 p-2">
@@ -181,7 +195,7 @@ const UserInformation = (props: UserInfoProps) => {
           <div style={{minHeight: 200}} className="px-4 py-5 sm:px-6">
             {getCurrentTabQuestions().map((item: any) => {
               return (
-                <div className="sm:col-span-1 p-2">
+                <div key={item.question.id} className="sm:col-span-1 p-2">
                   <dt className="text-sm leading-5 font-regular text-gray-600">
                     {item.question.question}
                   </dt>

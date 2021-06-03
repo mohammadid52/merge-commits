@@ -50,7 +50,6 @@ const RoomsList = (props: RoomListProps) => {
         })
       );
       const newList = list.data.listRooms.items;
-      console.log(newList);
       setRoomList(newList);
       setLoading(false);
     } catch {
@@ -114,16 +113,16 @@ const RoomsList = (props: RoomListProps) => {
                   <div
                     key={i}
                     className="flex justify-between items-center w-full px-4 py-2 border-b-0 border-gray-200">
-                    <div className="flex w-1/10 items-center px-4 py-2 text-left text-s leading-4">
+                    <div className="flex w-1/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                       {i + 1}.
                     </div>
-                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
+                    <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4 font-medium whitespace-normal">
                       {item.name}
                     </div>
-                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
+                    <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                       {item.class?.name}
                     </div>
-                    <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
+                    <div className="flex w-2/10 items-center justify-left px-4 py-2 text-left text-s leading-4">
                       {item.teacher?.firstName || ''} {item.teacher?.lastName || ''}
                     </div>
                     <div className="flex w-2/10 items-center px-4 py-2 text-left text-s leading-4">
@@ -134,7 +133,7 @@ const RoomsList = (props: RoomListProps) => {
                         .join(',')}
                     </div>
                     <span
-                      className={`w-1/10 h-6 flex items-center cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
+                      className={`w-1/10 h-6 flex px-4 items-center justify-left cursor-pointer text-left py-2 ${theme.textColor[themeColor]}`}
                       onClick={() => editCurrentRoom(item.id)}>
                       <Tooltip text="Click to edit class" placement="left">
                         {InstitueRomms[userLanguage]['EDIT']}

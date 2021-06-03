@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
-import { IoMdAddCircleOutline } from 'react-icons/io';
+import React, {useState, useEffect, useContext, Fragment} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
+import {IoMdAddCircleOutline} from 'react-icons/io';
 
 import Buttons from '../../../Atoms/Buttons';
 import Selector from '../../../Atoms/Form/Selector';
@@ -13,21 +13,22 @@ import SearchInput from '../../../Atoms/Form/SearchInput';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
 
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import LessonsListRow from './LessonsListRow';
-import { getLanguageString } from '../../../../utilities/strings';
-import { getAsset } from '../../../../assets';
+import {getLanguageString} from '../../../../utilities/strings';
+import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
+import {times} from 'lodash';
 
 const LessonsList = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, state, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { BreadcrumsTitles, LessonsListDict, paginationPage } = useDictionary(clientKey);
+  const {BreadcrumsTitles, LessonsListDict, paginationPage} = useDictionary(clientKey);
 
   const [status, setStatus] = useState('');
   const [totalPages, setTotalPages] = useState(0);
@@ -49,13 +50,17 @@ const LessonsList = () => {
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: BreadcrumsTitles[userLanguage]['LESSONS'], url: '/dashboard/lesson-builder', last: true },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: true,
+    },
   ];
 
   const sortByList = [
-    { id: 1, name: 'Title', value: 'title' },
-    { id: 2, name: 'Type', value: 'type' },
+    {id: 1, name: 'Title', value: 'title'},
+    {id: 2, name: 'Type', value: 'type'},
   ];
 
   const getType = (type: string) => {
@@ -113,21 +118,48 @@ const LessonsList = () => {
     history.push(`${match.url}/lesson/add`);
   };
 
+  const getFilteredList = (data: [{designers: string[]}], target: string) => {
+    const list: any[] = [];
+    data.forEach((lesson) => {
+      lesson.designers.forEach((designerId) => {
+        if (designerId === target) {
+          list.push(lesson);
+        }
+      });
+    });
+    return list;
+  };
+
+  const isTeacher = state.user.role === 'TR';
+
   const getLessonsList = async () => {
     try {
-      const fetchLessonsData: any = await API.graphql(graphqlOperation(customQueries.listLessonsTitles));
+      const fetchLessonsData: any = await API.graphql(
+        graphqlOperation(customQueries.listLessonsTitles)
+      );
       if (!fetchLessonsData) {
         throw new Error('fail!');
       } else {
         const LessonsListData = fetchLessonsData.data?.listLessons?.items;
-        const totalListPages = Math.floor(LessonsListData.length / pageCount);
-        if (totalListPages * pageCount === LessonsListData.length) {
-          setTotalPages(totalListPages);
-        } else {
-          setTotalPages(totalListPages + 1);
-        }
-        setLessonsData(LessonsListData);
-        setTotalLessonNum(LessonsListData.length);
+        const filteredList = getFilteredList(LessonsListData, state.user.id);
+
+        setLessonsData(isTeacher ? filteredList : LessonsListData);
+        const totalListPages = Math.floor(
+          (isTeacher ? filteredList.length : LessonsListData.length) / pageCount
+        );
+
+        setTotalPages(
+          isTeacher
+            ? totalListPages * pageCount === filteredList.length
+              ? totalListPages
+              : totalListPages + 1
+            : totalListPages * pageCount === LessonsListData.length
+            ? totalListPages
+            : totalListPages + 1
+        );
+
+        setTotalLessonNum(isTeacher ? filteredList.length : LessonsListData.length);
+
         setStatus('done');
       }
     } catch (error) {
@@ -166,12 +198,15 @@ const LessonsList = () => {
   };
   const removeSearchAction = () => {
     backToInitials();
-    setSearchInput({ value: '', isActive: false });
+    setSearchInput({value: '', isActive: false});
   };
 
   const fetchSortedList = () => {
     const newLessonsList = [...lessonsData].sort((a, b) =>
-      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() && sortingType.asc ? 1 : -1
+      a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
+      sortingType.asc
+        ? 1
+        : -1
     );
     setLessonsData(newLessonsList);
   };
@@ -254,7 +289,8 @@ const LessonsList = () => {
             <button
               className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
               onClick={toggleSortDimention}>
-              <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+              <IconContext.Provider
+                value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
@@ -272,33 +308,38 @@ const LessonsList = () => {
           <div className="-my-2 py-2">
             <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
               <div className="h-8/10 px-4">
-                <div className="w-full flex justify-between border-b-0 border-gray-200 ">
-                  <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{LessonsListDict[userLanguage]['NO']}</span>
-                  </div>
-                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
-                  </div>
-                  {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                {totalLessonNum > 0 && (
+                  <div className="w-full flex justify-between border-b-0 border-gray-200 ">
+                    <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>{LessonsListDict[userLanguage]['NO']}</span>
+                    </div>
+                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
+                    </div>
+                    {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Label</span>
                   </div> */}
-                  <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{LessonsListDict[userLanguage]['TYPE']}</span>
+                    <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span className="w-auto">
+                        {LessonsListDict[userLanguage]['TYPE']}
+                      </span>
+                    </div>
+                    <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span className="w-auto">Created Date</span>
+                    </div>
+                    <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span className="w-auto">Last Edit Date</span>
+                    </div>
+                    <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      <span className="w-auto">
+                        {LessonsListDict[userLanguage]['LANGUAGE']}
+                      </span>
+                    </div>
+                    <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      {LessonsListDict[userLanguage]['ACTION']}
+                    </div>
                   </div>
-                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Created Date</span>
-                  </div>
-                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">Last Edit Date</span>
-                  </div>
-                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    <span className="w-auto">{LessonsListDict[userLanguage]['LANGUAGE']}</span>
-                  </div>
-                  <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                    {LessonsListDict[userLanguage]['ACTION']}
-                  </div>
-                </div>
-
+                )}
                 {currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
@@ -309,20 +350,24 @@ const LessonsList = () => {
                       type={lessonsObject.type && getType(lessonsObject.type)}
                       languages={
                         lessonsObject?.language &&
-                        lessonsObject?.language.map((item: string) => getLanguageString(item))
+                        lessonsObject?.language.map((item: string) =>
+                          getLanguageString(item)
+                        )
                       }
                       createdAt={lessonsObject.createdAt}
                       updatedAt={lessonsObject.updatedAt}
                     />
                   ))
                 ) : (
-                  <div className="flex p-12 mx-auto justify-center">{LessonsListDict[userLanguage]['NORESULT']}</div>
+                  <div className="flex p-12 mx-auto text-gray-400 justify-center">
+                    {LessonsListDict[userLanguage]['NORESULT']}
+                  </div>
                 )}
               </div>
 
               {/* Pagination And Counter */}
-              <div className="flex justify-center my-4">
-                {!searchInput.isActive && (
+              {!searchInput.isActive && totalLessonNum > 0 && (
+                <div className="flex justify-center my-4">
                   <Fragment>
                     <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
                       {' '}
@@ -335,10 +380,13 @@ const LessonsList = () => {
                       firstPage={firstPage}
                       lastPage={lastPage}
                     />
-                    <PageCountSelector pageSize={pageCount} setPageSize={(c: number) => setPageCount(c)} />
+                    <PageCountSelector
+                      pageSize={pageCount}
+                      setPageSize={(c: number) => setPageCount(c)}
+                    />
                   </Fragment>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

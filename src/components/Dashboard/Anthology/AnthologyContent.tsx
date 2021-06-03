@@ -3,11 +3,12 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import ContentCard from '../../Atoms/ContentCard';
 import {AnthologyMapItem, ViewEditMode} from './Anthology';
 import FormInput from '../../Atoms/Form/FormInput';
-import TextArea from '../../Atoms/Form/TextArea';
-import {dateFromServer} from '../../../utilities/time';
+
 import useDictionary from '../../../customHooks/dictionary';
 import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
+
+import SingleNote from './AnthologyContentNote';
 
 interface ContentCardProps {
   viewEditMode: ViewEditMode;
@@ -17,6 +18,7 @@ interface ContentCardProps {
   subSection: string;
   createTemplate: any;
   content?: any;
+  onCancel?: any;
   getContentObjIndex?: (contentObj: AnthologyMapItem) => number;
 }
 
@@ -26,6 +28,7 @@ const AnthologyContent = (props: ContentCardProps) => {
     handleEditToggle,
     handleEditUpdate,
     handleWYSIWYGupdate,
+    onCancel,
     subSection,
     createTemplate,
     content,
@@ -80,20 +83,22 @@ const AnthologyContent = (props: ContentCardProps) => {
     </>
   );
 
-  const editModeView = (contentObj: AnthologyMapItem) => (
+  const createModeView = (contentObj: AnthologyMapItem) => (
     <>
       {/**
        *  section: TOP INFO
        */}
-      {/* <div className={`flex px-4`}>
-        <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
-          Updated: {dateFromServer(contentObj.updatedAt)}
+      <div className={`flex pb-2 mb-2`}>
+        <p
+          style={{letterSpacing: '0.015em'}}
+          className={`text-left font-semibold text-lg text-dark`}>
+          Create new
         </p>
-      </div> */}
+      </div>
       {/**
        *  section: TITLE
        */}
-      <div className={`mb-2`}>
+      <div className={`pb-2 mb-2`}>
         <FormInput
           id={`title_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Title`}
@@ -120,22 +125,20 @@ const AnthologyContent = (props: ContentCardProps) => {
     </>
   );
 
-  const createModeView = (contentObj: AnthologyMapItem) => (
+  const editModeView = (contentObj: AnthologyMapItem) => (
     <>
       {/**
        *  section: TOP INFO
        */}
-      <div className={`flex pb-2 mb-2`}>
-        <p
-          style={{letterSpacing: '0.015em'}}
-          className={`text-left font-semibold text-lg text-dark`}>
-          Create new
+      {/* <div className={`flex px-4`}>
+        <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
+          Updated: {dateFromServer(contentObj.updatedAt)}
         </p>
-      </div>
+      </div> */}
       {/**
        *  section: TITLE
        */}
-      <div className={`pb-2 mb-2`}>
+      <div className={`mb-2`}>
         <FormInput
           id={`title_${contentObj.type}_${contentObj.studentDataID}`}
           label={`Title`}
@@ -196,67 +199,20 @@ const AnthologyContent = (props: ContentCardProps) => {
           </ContentCard>
         )}
       {content.length > 0 ? (
-        content.map((contentObj: AnthologyMapItem, idx: number) => {
-          return (
-            <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
-              <div
-                id={`anthology_${subSection}${idx}`}
-                className={`flex flex-col ${
-                  idx !== content.length - 1 && 'border-b-0'
-                } border-gray-200 px-6 py-6 p-2`}>
-                {viewEditMode &&
-                viewEditMode.mode === 'edit' &&
-                viewEditMode.studentDataID === contentObj.studentDataID &&
-                viewEditMode.idx === getContentObjIndex(contentObj)
-                  ? editModeView(contentObj)
-                  : viewModeView(contentObj)}
-                {/**
-                 *  section:  VIEW/EDIT BUTTON
-                 */}
-                <div className={`flex pt-2 pb-6  mt-2`}>
-                  {viewEditMode.mode === 'edit' &&
-                  viewEditMode.studentDataID === contentObj.studentDataID &&
-                  viewEditMode.idx === getContentObjIndex(contentObj) ? (
-                    <Buttons
-                      onClick={() => {
-                        handleEditToggle('', '', 0);
-                        // onCancel(contentObj.type);
-                      }}
-                      label={anthologyDict[userLanguage].ACTIONS.CANCEL}
-                      transparent
-                      btnClass="mr-2"
-                    />
-                  ) : (
-                    <Buttons
-                      onClick={() =>
-                        handleEditToggle(
-                          'edit',
-                          contentObj.studentDataID,
-                          getContentObjIndex(contentObj)
-                        )
-                      }
-                      label={anthologyDict[userLanguage].ACTIONS.EDIT}
-                    />
-                  )}
-                  {viewEditMode.mode === 'edit' &&
-                  viewEditMode.studentDataID === contentObj.studentDataID &&
-                  viewEditMode.idx === getContentObjIndex(contentObj) ? (
-                    <Buttons
-                      onClick={() =>
-                        handleEditToggle(
-                          'save',
-                          contentObj.studentDataID,
-                          getContentObjIndex(contentObj)
-                        )
-                      }
-                      label={anthologyDict[userLanguage].ACTIONS.SAVE}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            </ContentCard>
-          );
-        })
+        content.map((contentObj: AnthologyMapItem, idx: number) => (
+          <SingleNote
+            onCancel={onCancel}
+            viewModeView={viewModeView}
+            editModeView={editModeView}
+            viewEditMode={viewEditMode}
+            handleEditToggle={handleEditToggle}
+            getContentObjIndex={getContentObjIndex}
+            contentLen={content.length}
+            idx={idx}
+            contentObj={contentObj}
+            subSection={subSection}
+          />
+        ))
       ) : (
         <div className="p-12 flex flex-center items-center">
           <p className="text-center text-lg text-gray-500">

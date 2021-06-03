@@ -1,19 +1,13 @@
 import ContentCard from '../../Atoms/ContentCard';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import slice from 'lodash/slice';
-import debounce from 'lodash/debounce';
-
-import {useHistory} from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
 import {IoImage} from 'react-icons/io5';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
-
-import {getImageFromS3} from '../../../utilities/services';
 import ImageAlternate from '../../Atoms/ImageAlternative';
 import Buttons from '../../Atoms/Buttons';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import {ModifiedListProps} from './Home';
-import Tooltip from '../../Atoms/Tooltip';
+import useDictionary from '../../../customHooks/dictionary';
 
 const RoomTiles = (props: {
   isTeacher?: boolean;
@@ -21,8 +15,9 @@ const RoomTiles = (props: {
   classList: ModifiedListProps[];
 }) => {
   const {classList: classes, isTeacher, handleRoomSelection} = props;
-  const {state, dispatch} = useContext(GlobalContext);
-  const history = useHistory();
+  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {DashboardDict} = useDictionary(clientKey);
+
   const [showMore, setShowMore] = useState(false);
 
   const [classList, setClassList] = useState([]);
@@ -49,7 +44,7 @@ const RoomTiles = (props: {
     <>
       <SectionTitleV3
         extraContainerClass="max-w-256 my-8 px-6"
-        title={'Your Classrooms'}
+        title={DashboardDict[userLanguage]['YOUR_CLASSROOMS']}
         withButton={
           classList &&
           classList.length > 3 && (
@@ -95,7 +90,14 @@ const RoomTiles = (props: {
 
                     return (
                       <div
-                        onClick={() => handleRoomSelection(roomId, roomName, roomIndex)}
+                        onClick={() =>
+                          handleRoomSelection(
+                            roomId,
+                            roomName,
+                            roomIndex,
+                            !isTeacher ? 'classroom' : 'lesson-planner'
+                          )
+                        }
                         key={`homepage__classrooms-${idx}`}
                         className="flex shadow flex-col rounded-lg overflow-hidden ">
                         <div className="flex-shrink-0">

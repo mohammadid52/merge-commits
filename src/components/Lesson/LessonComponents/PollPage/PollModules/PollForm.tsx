@@ -49,8 +49,8 @@ const PollForm = (props: PollBreakdownProps) => {
       //     return cookies[`lesson-${state.syllabusLessonID}`].poll;
       //   });
       // } else {
-      //   console.log('setInput -- ', state.componentState.poll)
-      //   setInput(state.componentState.poll);
+      //   console.log('setInput -- ', state.componentState?.poll)
+      //   setInput(state.componentState?.poll);
       // }
       let inputsArray = pollInputs.map((item: { id: string; question: string; option: any }) => {
         return {
@@ -84,7 +84,7 @@ const PollForm = (props: PollBreakdownProps) => {
      *
      */
     if (!isTeacher) {
-      if (state.componentState.poll && input && input.pollInputs.length > 0) {
+      if (state.componentState?.poll && input && input.pollInputs.length > 0) {
         dispatch({
           type: 'UPDATE_COMPONENT_STATE',
           payload: {

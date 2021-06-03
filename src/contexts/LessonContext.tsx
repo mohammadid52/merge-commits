@@ -1,17 +1,17 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { lessonState } from '../state/LessonState';
-import { lessonReducer } from '../reducers/LessonReducer';
+import React, {useEffect, useReducer, useState} from 'react';
+import {useHistory, useParams} from 'react-router-dom';
+import {lessonState} from '../state/LessonState';
+import {lessonReducer} from '../reducers/LessonReducer';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
-import { Auth } from '@aws-amplify/auth';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { standardTheme } from './GlobalContext';
-import { getClientKey } from '../utilities/strings';
-import { handleFetchAndCache } from '../utilities/sessionData';
+import {Auth} from '@aws-amplify/auth';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {standardTheme} from './GlobalContext';
+import {getClientKey} from '../utilities/strings';
+import {handleFetchAndCache} from '../utilities/sessionData';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -27,7 +27,7 @@ interface DataObject {
 
 export const LessonContext = React.createContext(null);
 
-export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
+export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
   const [state, dispatch] = useReducer(lessonReducer, lessonState);
   const theme = standardTheme;
   // const location = useLocation();
@@ -49,6 +49,35 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
 
+  const pageList = [
+    {
+      id: 0,
+      name: 'message',
+      tooltipText: 'Message',
+    },
+
+    {
+      id: 1,
+      name: 'instructions',
+      tooltipText: 'Instruction',
+    },
+
+    {
+      id: 2,
+      name: 'checkpoints',
+      tooltipText: 'Checkpoints',
+    },
+
+    {
+      id: 3,
+      name: 'closing',
+      tooltipText: 'Closing',
+    },
+  ];
+
+  const initialPage = pageList[0];
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
   /**
    *
    *
@@ -78,9 +107,12 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       if (user) {
-        const { email, sub } = user.attributes;
+        const {email, sub} = user.attributes;
         let userInfo: any = await API.graphql(
-          graphqlOperation(customQueries.getPersonLocation, { personEmail: email, personAuthID: sub })
+          graphqlOperation(customQueries.getPersonLocation, {
+            personEmail: email,
+            personAuthID: sub,
+          })
         );
         userInfo = userInfo.data.getPersonLocation;
         if (userInfo !== null) setRecentOp('updated');
@@ -109,7 +141,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     };
     try {
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, { input: newLocation })
+        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
       );
     } catch (e) {
       console.error('create PersonLocation : ', e);
@@ -134,7 +166,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       }
       // console.log('updated', personLocationObj);
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, { input: updatedLocation })
+        graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
       );
       setPersonLocationObj(updatedLocation);
       // console.log('updated person location...');
@@ -156,14 +188,14 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         createPersonLocation();
       }
     }
-    return ()=>setLoaded(false)
+    return () => setLoaded(false);
   }, [loaded, state.syllabusLessonID, state.studentAuthID]);
 
   useEffect(() => {
     if (recentOp !== '') {
       updatePersonLocation();
     }
-    return ()=>setRecentOp('')
+    return () => setRecentOp('');
   }, [state.currentPage]);
 
   //  END OF LOCATION TRACKING SCRIPT
@@ -172,7 +204,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
    * GET or CREATE STUDENT DATA
    */
   async function getOrCreateStudentData() {
-    const { lessonID } = urlParams;
+    const {lessonID} = urlParams;
     let studentID: string;
     let studentAuthID: string;
 
@@ -229,13 +261,13 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
 
   function setInitialComponentState(data: any) {
     let initialComponentState: any = {};
-    let initialComponentStateSecondary: any = { notes: '' };
-    lesson?.lessonPlan.forEach((item: { type: string; stage: string }) => {
+    let initialComponentStateSecondary: any = {notes: ''};
+    lesson?.lessonPlan.forEach((item: {type: string; stage: string}) => {
       initialComponentState[item.type] = data[item.stage];
     });
     dispatch({
       type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB',
-      payload: { ...initialComponentState, ...initialComponentStateSecondary },
+      payload: {...initialComponentState, ...initialComponentStateSecondary},
     });
   }
 
@@ -249,10 +281,10 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
    * GET SYLLABUS LESSON
    */
   async function getSyllabusLesson() {
-    const { lessonID } = urlParams;
+    const {lessonID} = urlParams;
     const queryObj = {
       name: 'customQueries.getSyllabusLesson',
-      valueObj: { id: lessonID },
+      valueObj: {id: lessonID},
     };
     if (lessonID) {
       try {
@@ -275,7 +307,7 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
       if (subscription) {
         subscription.unsubscribe();
       }
-      dispatch({ type: 'CLEANUP' });
+      dispatch({type: 'CLEANUP'});
     };
   }, []);
 
@@ -286,9 +318,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
         payload: {
           syllabusLessonID: lesson.id,
           data: lesson,
-          pages: lesson.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
-            return !item.disabled;
-          }),
+          pages: lesson.lessonPlan.filter(
+            (item: {disabled: boolean; [key: string]: any}) => {
+              return !item.disabled;
+            }
+          ),
           displayData: lesson.displayData,
           word_bank: [''],
           subscribeFunc: subscribeToSyllabusLesson,
@@ -301,16 +335,19 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
    * SUBSCRIBE TO SYLLABUS LESSON
    */
   const subscribeToSyllabusLesson = () => {
-    const { lessonID } = urlParams;
+    const {lessonID} = urlParams;
 
     const syllabusLessonSubscription = API.graphql(
-      graphqlOperation(customSubscriptions.onChangeSyllabusLesson, { id: lessonID })
+      graphqlOperation(customSubscriptions.onChangeSyllabusLesson, {id: lessonID})
       // @ts-ignore
     ).subscribe({
       next: (syllabusLessonData: any) => {
         const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
         // @ts-ignore
-        API.graphql(graphqlOperation(customQueries.getSyllabusLesson, { id: lessonID })).then((sLessonData: any) => {
+        API.graphql(
+          graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
+          // @ts-ignore
+        ).then((sLessonData: any) => {
           const sLessonDataData = sLessonData.data.getSyllabusLesson;
           setSubscriptionData(sLessonDataData);
         });
@@ -331,14 +368,17 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
     dispatch({
       type: 'UPDATE_LESSON_PLAN',
       payload: {
-        pages: subscriptionData.lessonPlan.filter((item: { disabled: boolean; [key: string]: any }) => {
-          return !item.disabled;
-        }),
+        pages: subscriptionData.lessonPlan.filter(
+          (item: {disabled: boolean; [key: string]: any}) => {
+            return !item.disabled;
+          }
+        ),
 
         displayData: {
           ...subscriptionData.displayData,
-          //@ts-ignore
-          breakdownComponent: state.pages[subscriptionData.displayData.breakdownComponent]?.stage,
+          breakdownComponent:
+            // @ts-ignore
+            state.pages[subscriptionData.displayData.breakdownComponent]?.stage,
         },
         viewing: subscriptionData.viewing,
       },
@@ -354,8 +394,11 @@ export const LessonContextProvider: React.FC = ({ children }: LessonProps) => {
   return (
     <LessonContext.Provider
       value={{
+        currentPage,
+        setCurrentPage,
         state,
         dispatch,
+        pageList,
         theme,
         lesson,
         setLesson,

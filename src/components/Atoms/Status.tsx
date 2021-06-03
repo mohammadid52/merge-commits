@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface StatusProps {
-  status: 'Active' | 'Inactive' | 'Dropped';
+  status: 'Active' | 'Inactive' | 'Dropped' | string;
 }
 
 const Status = ({status}: StatusProps) => {

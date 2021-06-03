@@ -1,17 +1,17 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoIosKeypad } from 'react-icons/io';
-import { RiArrowRightLine } from 'react-icons/ri';
-import { IoCaretDownCircleOutline, IoCaretUpCircleOutline } from 'react-icons/io5';
+import React, {Fragment, useState, useEffect, useContext} from 'react';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {IoIosKeypad} from 'react-icons/io';
+import {RiArrowRightLine} from 'react-icons/ri';
+import {IoCaretDownCircleOutline, IoCaretUpCircleOutline} from 'react-icons/io5';
 
-import { getLanguageString } from '../../../../../../utilities/strings';
+import {getLanguageString} from '../../../../../../utilities/strings';
 
 import SearchInput from '../../../../../Atoms/Form/SearchInput';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Buttons from '../../../../../Atoms/Buttons';
 import CheckpointQueTable from './CheckpointQueTable';
-import { getAsset } from '../../../../../../assets';
-import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import {getAsset} from '../../../../../../assets';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 interface CheckpointLookupProps {
   changeStep: (step: string) => void;
@@ -23,13 +23,24 @@ interface CheckpointLookupProps {
 }
 
 const CheckpointLookup = (props: CheckpointLookupProps) => {
-  const { changeStep, onSave, checkpointList, lessonName, setUnsavedChanges, lessonType } = props;
+  const {
+    changeStep,
+    onSave,
+    checkpointList,
+    lessonName,
+    setUnsavedChanges,
+    lessonType,
+  } = props;
 
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { CheckpointLookupDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {CheckpointLookupDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const [selectedCheckpointIds, setSelectedCheckpointIds] = useState([]);
+  console.log(
+    '🚀 ~ file: CheckpointLookup.tsx ~ line 41 ~ CheckpointLookup ~ selectedCheckpointIds',
+    selectedCheckpointIds
+  );
   const [expandId, setExpandedId] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [filteredList, setFilteredList] = useState(checkpointList);
@@ -77,19 +88,21 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
     <Fragment>
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
-          <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+          <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
             <IoIosKeypad />
           </IconContext.Provider>
         </span>
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>
-            {lessonType === 'survey' ? 'Survey' : 'Assessment'} {CheckpointLookupDict[userLanguage]['BUILDER']} -{' '}
-            {lessonName}
+          <span
+            className="w-auto flex-shrink-0 cursor-pointer"
+            onClick={() => changeStep('SelectedCheckPointsList')}>
+            {lessonType === 'survey' ? 'Survey' : 'Assessment'}{' '}
+            {CheckpointLookupDict[userLanguage]['BUILDER']} - {lessonName}
           </span>
           <span className="w-6 h-6 flex items-center mx-4">
-            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
@@ -103,7 +116,8 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
         <div className="flex justify-between my-4">
           <p className="text-sm font-medium text-gray-600 flex items-center w-2/4 px-14">
             {' '}
-            {selectedCheckpointIds?.length} {CheckpointLookupDict[userLanguage]['CHECKPOINTSELECTED']}
+            {selectedCheckpointIds?.length}{' '}
+            {CheckpointLookupDict[userLanguage]['CHECKPOINTSELECTED']}
           </p>
           <SearchInput
             value={searchInput}
@@ -138,7 +152,9 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                     <div
                       key={item.id}
                       className={`flex justify-between w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 ${
-                        expandId === item.id ? 'border-0 border-indigo-400 rounded-lg' : ''
+                        expandId === item.id
+                          ? 'border-0 border-indigo-400 rounded-lg'
+                          : ''
                       }`}>
                       <div className="flex w-1.5/10 items-center px-8 py-3 text-left text-s leading-4">
                         <span>
@@ -153,7 +169,9 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                         <div>
                           <span>{item.title}</span>
                           <br />
-                          <span className="text-sm leading-6 text-gray-500">{item.subtitle ? item.subtitle : ''}</span>
+                          <span className="text-sm leading-6 text-gray-500">
+                            {item.subtitle ? item.subtitle : ''}
+                          </span>
                         </div>
                       </div>
                       <div className="flex w-2/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
@@ -163,8 +181,13 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                         <span
                           className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
                           onClick={() => viewCheckpoint(item.id)}>
-                          <IconContext.Provider value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
-                            {expandId === item.id ? <IoCaretUpCircleOutline /> : <IoCaretDownCircleOutline />}
+                          <IconContext.Provider
+                            value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                            {expandId === item.id ? (
+                              <IoCaretUpCircleOutline />
+                            ) : (
+                              <IoCaretDownCircleOutline />
+                            )}
                           </IconContext.Provider>
                         </span>
                       </div>
@@ -173,7 +196,10 @@ const CheckpointLookup = (props: CheckpointLookupProps) => {
                     {/* Details for selected row */}
                     {expandId === item.id && (
                       <div className="my-6">
-                        <CheckpointQueTable changeStep={changeStep} checkpointId={item.id} />
+                        <CheckpointQueTable
+                          changeStep={changeStep}
+                          checkpointId={item.id}
+                        />
                       </div>
                     )}
                   </Fragment>

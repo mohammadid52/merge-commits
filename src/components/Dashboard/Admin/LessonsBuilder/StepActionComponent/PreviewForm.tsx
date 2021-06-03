@@ -3,18 +3,25 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import ReactHtmlParser from 'react-html-parser';
 import isEmpty from 'lodash/isEmpty';
 import {BiChevronDown, BiChevronUp} from 'react-icons/bi';
+import {AiOutlineEdit} from 'react-icons/ai';
+import {BsCheckAll} from 'react-icons/bs';
+import {GiCancel} from 'react-icons/gi';
 
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
+import * as mutations from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 
 import {getTypeString} from '../../../../../utilities/strings';
 import Loader from '../../../../Atoms/Loader';
+import Tooltip from '../../../../Atoms/Tooltip';
+import EditQuestionModal from '../HelperComponents/EditQuestionModal';
+import {findIndex, findLastIndex, get, update} from 'lodash';
 
 interface PreviewFormProps {
   lessonName: string;
@@ -50,6 +57,7 @@ const PreviewForm = (props: PreviewFormProps) => {
       id: syllabusLessonId,
       lessonPlan: updatedLessonPlan,
     };
+
     const result: any = await API.graphql(
       graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
     );
@@ -81,7 +89,31 @@ const PreviewForm = (props: PreviewFormProps) => {
           msg: PreviewFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
         })
       );
+    publishQuestions();
     toggleModal();
+    fetchLessonPreview();
+    fetchSyllabusLessonData();
+  };
+
+  const onlyUnique = (value: any, index: any, self: any) => {
+    return self.indexOf(value) === index;
+  };
+
+  const publishQuestions = async () => {
+    const questionIds: any[] = [];
+    lessonDetails?.checkpoints?.items?.forEach((checkpoint: any) => {
+      checkpoint?.checkpoint?.questions?.items?.forEach((question: any) => {
+        questionIds.push(question.question.id);
+      });
+    });
+    const ids = questionIds.filter(onlyUnique);
+    ids.forEach(async (id: any) => {
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.updateQuestion, {
+          input: {id: id, published: true},
+        })
+      );
+    });
   };
 
   const toggleModal = () => {
@@ -183,7 +215,6 @@ const PreviewForm = (props: PreviewFormProps) => {
       savedData.checkpoints = {
         items: checkpointSequence,
       };
-
       setLessonDetails({...savedData});
       setLoading(false);
     } catch {
@@ -213,41 +244,105 @@ const PreviewForm = (props: PreviewFormProps) => {
     }
   }, [message.msg]);
 
+  const updateExistingData = (
+    updatedQuestionData: any,
+    checkpItem: any,
+    isRequired: boolean
+  ) => {
+    const checkpointItems = get(lessonDetails, 'checkpoints.items');
+    const indexOfCheckpoint = findIndex(
+      checkpointItems,
+      (d: any) => d.checkpointID === checkpItem.checkpointID
+    );
+
+    const questionsList = get(
+      lessonDetails,
+      `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items`
+    );
+
+    const indexOfQuestion = findIndex(
+      questionsList,
+      (d: any) => d.questionID === updatedQuestionData.id
+    );
+
+    update(
+      lessonDetails,
+      `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].question`,
+      () => {
+        return updatedQuestionData;
+      }
+    );
+
+    update(
+      lessonDetails,
+      `checkpoints.items[${indexOfCheckpoint}].checkpoint.questions.items[${indexOfQuestion}].required`,
+      () => {
+        return isRequired;
+      }
+    );
+
+    setLessonDetails({...lessonDetails});
+  };
+
   const fieldClass =
     'p-3 flex justify-center items-center w-full border-b-0 border-gray-300';
   const QuestionList = ({checkpItem, index}: any) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const showListAndDropDown =
       checkpItem?.question?.type === 'selectMany' ||
       checkpItem?.question?.type === 'selectOne';
     return (
       <div className="my-4 w-full question__container">
-        <div
-          onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
-          role="button"
-          className={`${
-            isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
-          } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between w-full`}>
-          <p className="w-9.3/10" key={checkpItem.id}>
-            <span>
-              {index + 1}. {checkpItem?.question?.question}{' '}
-            </span>
-            <span
-              className={`py-0.5 px-1 ml-2 text-xs  rounded ${
-                showListAndDropDown
-                  ? 'bg-indigo-200  text-indigo-700'
-                  : 'bg-red-200 text-red-700'
-              }`}>
-              {getTypeString(checkpItem?.question?.type)}
-            </span>
-          </p>
-          {showListAndDropDown ? (
-            <BiChevronDown className="text-gray-900 w-.7/10 text-lg" />
-          ) : (
-            <div className="w-.7/10" />
+        {isEditing && (
+          <EditQuestionModal
+            checkpItem={checkpItem}
+            saveAction={(updatedData, isRequired) => {
+              setIsEditing(false);
+              updateExistingData(updatedData, checkpItem, isRequired);
+            }}
+            closeAction={() => {
+              setIsEditing(false);
+            }}
+          />
+        )}
+        <div className="w-full flex items-center">
+          <div
+            onClick={() => showListAndDropDown && setIsOpen(!isOpen)}
+            role="button"
+            className={`${
+              isOpen || isAllOpen ? 'border-indigo-300' : 'border-gray-200'
+            } question__title border-0  p-2 px-4 rounded-md cursor-pointer hover:border-indigo-300 flex items-center justify-between`}>
+            <p className="w-9.3/10" key={checkpItem.id}>
+              <span>
+                {index + 1}. {checkpItem?.question?.question}{' '}
+              </span>
+              <span
+                className={`py-0.5 px-1 ml-2 text-xs  rounded ${
+                  showListAndDropDown
+                    ? 'bg-indigo-200  text-indigo-700'
+                    : 'bg-red-200 text-red-700'
+                }`}>
+                {getTypeString(checkpItem?.question?.type)}
+              </span>
+            </p>
+            {showListAndDropDown ? (
+              <BiChevronDown className="text-gray-900 w-.5/10 text-lg" />
+            ) : (
+              <div className="w-.5/10" />
+            )}
+          </div>
+          {!checkpItem?.question?.published && (
+            <div
+              style={{width: '5%'}}
+              onClick={() => setIsEditing(true)}
+              className={`mx-1 py-3 rounded-md cursor-pointer border-0 hover:border-indigo-300 border-gray-200`}>
+              <AiOutlineEdit className="text-blue-500" />
+            </div>
           )}
         </div>
+
         <div
           id="option__list"
           className={`px-12 py-2 option__list ${
@@ -255,8 +350,8 @@ const PreviewForm = (props: PreviewFormProps) => {
           }`}>
           {showListAndDropDown && (
             <ul className="list-disc">
-              {checkpItem?.question?.options?.map((opt: any) => (
-                <li key={opt?.text}>{opt?.text}</li>
+              {checkpItem?.question?.options?.map((opt: any, id: number) => (
+                <li key={`${opt?.tex}_${id}`}>{opt?.text}</li>
               ))}
             </ul>
           )}

@@ -237,7 +237,6 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         };
       });
       setLessonMeasurements([...lessonRubrics]);
-      console.log('aafter function', allMeasurement);
     } catch {
       setValidation({
         name: '',
@@ -319,6 +318,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
     }
   }, [lessonMeasurements, allMeasurement]);
   const {name, type, languages, purposeHtml, objectiveHtml, institution} = formData;
+  console.log(GeneralInformationDict[userLanguage]);
 
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">

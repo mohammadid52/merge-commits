@@ -33,7 +33,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
   const {homeData, handleRoomSelection, isTeacher} = props;
 
   const {state, dispatch, theme, clientKey} = useContext(GlobalContext);
-  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner1');
+  const dashboardBanner1 = getAsset(clientKey, 'dashboardBanner2');
   const [loading, setLoading] = useState(false);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -186,9 +186,9 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           };
 
           // if (!uniqIds.includes(curriculum?.id)) {
-          modifiedClassList.push(modifiedItem);
-          uniqIds.push(curriculum?.id);
+          //   uniqIds.push(curriculum?.id);
           // }
+          modifiedClassList.push(modifiedItem);
         }
       });
 

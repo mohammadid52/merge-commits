@@ -7,7 +7,6 @@ import EditCheckPoint from './CheckPointSteps/EditCheckPoint';
 import AddNewQuestion from './CheckPointSteps/AddNewQuestion';
 import QuestionLookup from './CheckPointSteps/QuestionLookup';
 import SelectedCheckPointsList from './CheckPointSteps/SelectedCheckPointsList';
-import EditQuestion from './CheckPointSteps/EditQuestion';
 import {LessonPlansProps} from '../LessonEdit';
 import {InitialData} from './CheckPointSteps/AddNewCheckPoint';
 
@@ -18,8 +17,6 @@ import {
   reorder,
   createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
-import Buttons from '../../../../Atoms/Buttons';
-import {EditCheckPointDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 interface CheckpointBuilderProps {
@@ -31,6 +28,13 @@ interface CheckpointBuilderProps {
   activeStep?: string;
   lessonName: string;
   lessonType: string;
+  hasUnsavedCheckpoint: (
+    val: boolean,
+    isIndividualEmpty: boolean,
+    data: any,
+    checkpointQuestions: any,
+    selectedDesigners: any[]
+  ) => void;
 }
 
 // TODO: Replace type any with actual type wherever required.
@@ -50,6 +54,7 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     activeStep,
     lessonName,
     lessonType,
+    hasUnsavedCheckpoint,
   } = props;
 
   const {userLanguage} = useContext(GlobalContext);
@@ -70,14 +75,85 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   // const [builderStep, setBuilderStep] = useState('AddNewCheckPoint');
 
   const [allCheckPointsList, setAllCheckPointsList] = useState([]);
+
   const [fileredCheckpointList, setFilteredCheckpointList] = useState([]);
   const [savedCheckPoints, setSavedCheckpoints] = useState([]);
+
   const [parentLessonPlans, setParentLessonPlans] = useState(lessonPlans);
   const [checkpointDetails, setCheckpointDetails] = useState<InitialData>(
     initialCheckpData
   );
-  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [checkpQuestions, setCheckpQuestions] = useState([]);
+
+  const hasCheckpointUnsaved = () => {
+    let isUnsaved = false;
+
+    const title = checkpointDetails.title.trim().length;
+    const label = checkpointDetails.label.trim().length;
+    const estTime = checkpointDetails.estTime.trim().length;
+
+    if (!title || !label || !estTime || checkpQuestions.length <= 0) {
+      isUnsaved = false;
+    } else {
+      isUnsaved = true;
+    }
+
+    return isUnsaved;
+  };
+
+  const checkIndividualFields = () => {
+    const title = checkpointDetails.title;
+    const label = checkpointDetails.label;
+    const estTime = checkpointDetails.estTime;
+    const fields: string[] = [
+      title,
+      label,
+      estTime,
+      checkpQuestions.length <= 0 ? '' : 'questions',
+    ];
+    let len: any[] = [];
+    fields.forEach((field) => {
+      if (field.trim().length > 0) {
+        len.push(true);
+      } else {
+        len.push(false);
+      }
+    });
+
+    const fieldsPopulated = len.filter((field) => Boolean(field)).length;
+
+    if (fieldsPopulated === 0) {
+      return false;
+    } else if (fieldsPopulated === 4) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  useEffect(() => {
+    const isUnsaved: boolean = hasCheckpointUnsaved();
+    const isIndividualEmpty: boolean = checkIndividualFields();
+    console.log(
+      '🚀 ~ file: CheckpointBuilder.tsx ~ line 135 ~ useEffect ~ isIndividualEmpty',
+      isIndividualEmpty
+    );
+
+    hasUnsavedCheckpoint(
+      isUnsaved,
+      isIndividualEmpty,
+      checkpointDetails,
+      checkpQuestions,
+      selectedDesigners
+    );
+  }, [
+    checkpointDetails.title,
+    checkpointDetails.label,
+    checkpQuestions.length,
+    checkpointDetails.estTime,
+  ]);
+
+  const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [previouslySelectedId, setPreviouslySelectedId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -535,16 +611,16 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
     setParentLessonPlans(lessonPlans);
   }, [lessonPlans]);
 
-  useEffect(() => {
-    if (
-      builderStep === 'AddNewCheckPoint' &&
-      (checkpointDetails?.title || checkpointDetails?.label)
-    ) {
-      return function cleanup() {
-        setUnsavedChanges(true);
-      };
-    }
-  }, [activeStep, checkpointDetails?.title]);
+  // useEffect(() => {
+  //   if (
+  //     builderStep === 'AddNewCheckPoint' &&
+  //     (checkpointDetails?.title || checkpointDetails?.label)
+  //   ) {
+  //     return function cleanup() {
+  //       setUnsavedChanges(true);
+  //     };
+  //   }
+  // }, [activeStep, checkpointDetails?.title]);
 
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
