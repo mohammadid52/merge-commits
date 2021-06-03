@@ -143,7 +143,7 @@ const RoomsList = (props: RoomListProps) => {
                 ))}
               </div>
             </Fragment>
-          ) : roomList.length < 0 ? (
+          ) : roomList.length <= 0 ? (
             <Fragment>
               <div className="flex justify-center mt-8">
                 <Buttons
