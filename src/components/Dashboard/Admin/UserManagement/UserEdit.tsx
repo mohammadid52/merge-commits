@@ -469,11 +469,22 @@ const UserEdit = (props: UserInfoProps) => {
         : '';
     }
   };
-  const [showEmoji, setShowEmoji] = useState(false);
-  const onEmojiSelect = (e: any) => {
-    console.log(e.emoji);
+  const [showEmoji, setShowEmoji] = useState({show: false, cId: '', qId: ''});
 
-    setShowEmoji(false);
+  const onEmojiSelect = (e: any) => {
+    const questionID = showEmoji.qId;
+    const checkpointID = showEmoji.cId;
+    let value = checkpointData[checkpointID][questionID] || '';
+
+    let responseWithEmoji = value.concat(e.emoji);
+    setCheckpointData({
+      ...checkpointData,
+      [checkpointID]: {
+        ...checkpointData[checkpointID],
+        [questionID]: responseWithEmoji,
+      },
+    });
+    setShowEmoji({show: false, cId: '', qId: ''});
   };
 
   return (
@@ -700,7 +711,7 @@ const UserEdit = (props: UserInfoProps) => {
                               </div>
                             </div>
                           ) : null}
-                          {/* {item.question.type === 'link' ? (
+                          {item.question.type === 'link' ? (
                             <div className="sm:col-span-3">
                               <label
                                 htmlFor="date picker"
@@ -710,10 +721,10 @@ const UserEdit = (props: UserInfoProps) => {
                               <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                                 <input
                                   id={item.question.id}
-                                  type="url"
+                                  // type="url"
                                   name="url"
                                   placeholder="https://example.com"
-                                  pattern="https://.*"
+                                  // pattern="https://.*"
                                   size={30}
                                   value={
                                     checkpointData[checkpointID]
@@ -727,15 +738,15 @@ const UserEdit = (props: UserInfoProps) => {
                                 />
                               </div>
                             </div>
-                          ) : null} */}
-                          {/* {item.question.type === 'emoji' ? (
+                          ) : null}
+                          {item.question.type === 'emoji' ? (
                             <div className="sm:col-span-3">
                               <label
                                 htmlFor="date picker"
                                 className="block text-m font-medium leading-5 text-gray-700">
                                 {item?.question?.question}
                               </label>
-                              <div className="flex items-center justify-center">
+                              <div className="flex items-center justify-center relative">
                                 <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                                   <input
                                     id={item.question.id}
@@ -753,18 +764,22 @@ const UserEdit = (props: UserInfoProps) => {
                                   />
                                 </div>
 
-                                <button
-                                  onClick={() => {
-                                    console.log('test');
-                                  }}
+                                <span
+                                  onClick={() =>
+                                    setShowEmoji({
+                                      show: true,
+                                      cId: checkpointID,
+                                      qId: item.question.id,
+                                    })
+                                  }
                                   className={`${actionStyles}`}>
                                   <BiSmile className="text-xl" />
-                                </button>
+                                </span>
 
-                                {showEmoji && (
+                                {showEmoji.show && (
                                   <div
                                     id="picker-wrapper"
-                                    className="picker-wrapper absolute bottom-5 left-5">
+                                    className="picker-wrapper absolute top-2 right-2 w-auto">
                                     <EmojiPicker
                                       groupVisibility={{
                                         recently_used: false,
@@ -777,7 +792,7 @@ const UserEdit = (props: UserInfoProps) => {
                                 )}
                               </div>
                             </div>
-                          ) : null} */}
+                          ) : null}
                           {/* Will change it to text box if required. */}
 
                           {item.question.type === 'selectOne' ? (
