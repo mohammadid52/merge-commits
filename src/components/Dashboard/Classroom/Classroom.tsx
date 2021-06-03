@@ -233,7 +233,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
 
   const Counter: React.FC<{count: number}> = ({count}) => {
     return (
-      <div className="w-5 h-5 p-1  bg-indigo-500 rounded-full flex justify-center align-center items-center content-center">
+      <div
+        className={`w-5 h-5 p-1 ${theme.btn[themeColor]} rounded-full flex justify-center align-center items-center content-center`}>
         <span className="w-auto h-auto text-xs text-white font-bold">{count}</span>
       </div>
     );

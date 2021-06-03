@@ -705,14 +705,23 @@
 .user__profile-tabs {
   & .tab {
     transition: all 0.3s ease;
-    &.active {
+
+    &.active.iconoclastIndigo {
       background: #e0e7ff;
       color: #4338ca;
     }
-    &:not(.active):hover {
-      background-color: #eef2ff;
-      color: #4338ca;
+    &.active.curateBlue {
+      background: #e0e7ff;
+      color: #0081cb;
     }
+    // &:not(.active.iconoclastIndigo):hover {
+    //   background-color: #eef2ff;
+    //   color: #4338ca;
+    // }
+    // &:not(.active.curateBlue):hover {
+    //   background-color: #eef2ff;
+    //   color: #0081cb;
+    // }
     background: transparent;
     color: #6b7280;
     text-align: center;
@@ -806,5 +815,11 @@
   }
   to {
     transform: translateX(0px);
+  }
+}
+
+.picker-wrapper {
+  * {
+    width: auto;
   }
 }
