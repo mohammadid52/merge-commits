@@ -25,7 +25,7 @@ const BreadcrumsTitles: any = {
     HOME: 'HOME',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
-    INSTITUTION_MANAGEMENT: 'Institution Management',
+    INSTITUTION_MANAGEMENT: 'Organiation Management',
     ADD_INSTITUTION: 'Add New Organization',
     INSTITUTION_INFO: 'Organization Info',
     Class_Creation: 'Cohort Creation',
@@ -48,9 +48,9 @@ const BreadcrumsTitles: any = {
     PeopleManagment: 'People Management',
     AddNewUser: 'Add New User',
     UserInfo: 'User Information',
-    LESSONS: 'Lessons',
+    LESSONS: 'Sessions',
     LESSONPLANBUILDER: 'Session Plan Builder',
-    STUDENTS: 'Students',
+    STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
   },
   ES: {
@@ -82,7 +82,7 @@ const BreadcrumsTitles: any = {
     UserInfo: 'TBD',
     LESSONS: 'TBD',
     LESSONPLANBUILDER: 'TBD',
-    STUDENTS: 'Students',
+    STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
   },
 };
@@ -377,7 +377,7 @@ const editClassDict: any = {
     NOSTUDENT: 'No participants added in the cohort.',
     LOADING: 'Loading cohort participants list...',
     EDIT: 'Edit',
-    heading: 'CLASS INFORMATION',
+    heading: 'COHORT INFORMATION',
     heading2: 'PARTICIPANTS',
     messages: {
       errorfetch: 'Error while fetching cohort data,please try again later.',
@@ -657,7 +657,7 @@ const lessonBuilderDict: any = {
   EN: {
     PREVIEW_DETAILS: {
       WARN_MESSAGE:
-        'Publishing your changes will update lesson plans in all the connected modules, Do you want to continue?',
+        'Publishing your changes will update session plans in all the connected modules, Do you want to continue?',
       TITLE: 'Preview Details',
     },
   },
@@ -678,15 +678,16 @@ const PreviewFormDict: any = {
     NOCHECKPOINT: 'No Checkpoint added.',
 
     MESSAGES: {
-      UPDATESUCCESS: 'Successfully updated lesson plans in all modules.',
+      UPDATESUCCESS: 'Successfully updated session plans in all modules.',
       UPDATEERR:
-        'Error while updating lesson plans for modules, please try again after some time.',
-      CONNECTERR: 'This lesson is not connected to any modules.',
-      FETCHERR: 'Error while fetching modules for this lesson.Please try after some time.',
+        'Error while updating session plans for modules, please try again after some time.',
+      CONNECTERR: 'This session is not connected to any modules.',
+      FETCHERR:
+        'Error while fetching modules for this session. Please try after some time.',
     },
     PREVIEW_DETAILS: {
       WARN_MESSAGE:
-        'Changes will applay to all assigned lesson plans. Do you want to continue?',
+        'Changes will applay to all assigned session plans. Do you want to continue?',
       TITLE: 'Preview Details',
     },
   },
@@ -712,8 +713,8 @@ const PreviewFormDict: any = {
 
 const InstitutionDict: any = {
   EN: {
-    TITLE: 'INSTITUTIONS MANAGEMENT',
-    SUBTITLE: 'Institutions List',
+    TITLE: 'ORGANIZATION MANAGEMENT',
+    SUBTITLE: 'Organizations List',
     TABLE: {
       NAME: 'Organization Name',
       TYPE: 'Type',
@@ -728,7 +729,7 @@ const InstitutionDict: any = {
     SORTBY: 'Sort By',
 
     BUTTON: {
-      Add: 'Add New Institution',
+      Add: 'Add New Organization',
     },
   },
   ES: {
@@ -757,13 +758,13 @@ const Institute_info: any = {
     TITLE: 'General Information',
     ADDRESS: 'Address',
     CONTACT: 'Contact No',
-    INSTITUTION_TYPE: 'Institution Type',
+    INSTITUTION_TYPE: 'Organization Type',
     WEBSITE: 'Website',
     SERVICE_PROVIDER: 'Service Provider',
     TABS: {
       SERVICE_PROVIDER: 'Service Providers',
       STAFF: 'Staff',
-      CLASSES: 'Classes',
+      CLASSES: 'Cohorts',
       CURRICULAR: 'Curricular',
       CLASSROOMS: 'Classes',
     },
@@ -787,12 +788,12 @@ const Institute_info: any = {
 
 const InstitutionEditDict: any = {
   EN: {
-    INFO: 'Click the circle above to update institution image.',
+    INFO: 'Click the circle above to update organization image.',
 
     FORM: {
       TITLE: 'Edit Information',
-      INSTITUTION_TYPE: 'Institution Type',
-      NAME_INPUT_LABEL: 'Institution Name',
+      INSTITUTION_TYPE: 'Organization Type',
+      NAME_INPUT_LABEL: 'Organization Name',
       NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
       WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
       WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://iconoclastartists.org/',
@@ -864,16 +865,16 @@ const InstitutionEditDict: any = {
 const InstitutionAddDict: any = {
   EN: {
     INFOA: 'Click circle to manage your avatar.',
-    INFO: 'Click the circle above to update institution image.',
-    TITLE: 'Add Institution',
-    SUBTITLE: 'Add new institution to the list',
+    INFO: 'Click the circle above to update organization image.',
+    TITLE: 'Add Organization',
+    SUBTITLE: 'Add new organization to the list',
     FORM: {
       TITLE: 'Organization Information',
-      INSTITUTION_TYPE: 'Institution Type',
-      NAME_INPUT_LABEL: 'Institution Name',
-      NAME_INPUT_PLACEHOLDER: 'i.e. Iconoclast Artist',
+      INSTITUTION_TYPE: 'Organization Type',
+      NAME_INPUT_LABEL: 'Organization Name',
+      NAME_INPUT_PLACEHOLDER: 'i.e. Project Curate',
       WEBSITE_INPUT_LABEL: 'Website(*please enter complete url.) ',
-      WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://iconoclastartists.org/',
+      WEBSITE_INPUT_PLACEHOLDER: 'i.e. https://projectcurate.org/',
       ADDRESS_INPUT_LABEL: 'Address line 1',
       ADDRESS2_INPUT_LABEL: 'Address line 2',
       CITY_LABEL: 'City',
@@ -884,11 +885,11 @@ const InstitutionAddDict: any = {
       SERVICEPROVIDER_LABEL: 'Service Provider',
     },
     INSTITUTION_TYPE: {
-      SCHOOL: 'School',
-      AFTERSCHOOL: 'After School',
-      DAYCAMP: 'Day Camp',
-      SUMMERCAMP: 'Summer Camp',
-      C3: '501C3',
+      SCHOOL: 'Congregations',
+      AFTERSCHOOL: 'Foundations',
+      DAYCAMP: 'Academia',
+      SUMMERCAMP: 'Organizations',
+      C3: 'Endowments',
     },
     BUTTON: {
       CANCEL: 'Cancel',
@@ -943,7 +944,7 @@ const InstitutionAddDict: any = {
 
 const Institute_class: any = {
   EN: {
-    TITLE: 'Organization CLASSES',
+    TITLE: 'ORGANIZATION COHORTS',
     NO: 'No.',
     CLASSNAME: 'Cohort Name',
     ACTION: 'Actions',
@@ -976,7 +977,8 @@ const InstitueCurriculam: any = {
     NAME: 'Curricular Name',
     ACTION: 'Actions',
     VIEW: 'View',
-    INFO: 'This organization does not have any curriculum. Please create a new curriculum.',
+    INFO:
+      'This organization does not have any curriculum. Please create a new curriculum.',
   },
   ES: {
     TITLE: 'TBD',
@@ -993,13 +995,13 @@ const InstitueCurriculam: any = {
 
 const InstitueRomms: any = {
   EN: {
-    TITLE: 'CLASSES',
+    TITLE: 'COHORTS',
     NO: 'No.',
     CLASSROOMS_NAME: 'Class Name',
     CLASS_NAME: 'Cohort Name',
     TEACHER: 'Facilitator',
     CURRICULAM: 'Curriculam',
-    MXSTUDENTS: 'Max. Students',
+    MXSTUDENTS: 'Max. Participants',
     ACTION: 'Actions',
     EDIT: 'edit',
     messages: {
@@ -1035,7 +1037,7 @@ const classBuilderdict: any = {
     TITLE: 'Create New Cohort',
     SUBTITLE: 'Add new cohort to the list',
     NAME_LABEL: 'Cohort Name',
-    HEADING: 'CLASS INFORMATION',
+    HEADING: 'COHORT INFORMATION',
     HEADING2: 'PARTICIPANTS',
     MEMBER_PLACEHOLDER: 'Add new participant',
 
@@ -1049,13 +1051,13 @@ const classBuilderdict: any = {
         FETCHSTUDENT:
           'Error while fetching participant list, Please try again or you can add them later.',
         FETCHINSTITUTION:
-          'Error while fetching institution list, Please try again later.',
+          'Error while fetching organization list, Please try again later.',
         STUDENTADDERROR:
           'Error while adding participants data, you can add them saperately from cohort.',
         SAVECLASSERROR: 'Unable to save new cohort. Please try again later.',
         PROCESSINGERROR: 'Error while processing please Try again later.',
         INVALIDPATH:
-          'Invalid path please go back to institution selection page to select your organization.',
+          'Invalid path please go back to organization selection page to select your organization.',
       },
       VALIDATION: {
         NAME: 'Cohort name is required please enter.',
@@ -1114,11 +1116,11 @@ const CurricularBuilderdict: any = {
     messages: {
       error: {
         save: 'Unable to save new curriculum please try again later.',
-        fetch: 'Unable to fetch institution list pleas try later.',
+        fetch: 'Unable to fetch organization list pleas try later.',
         designerlist: 'Error while fetching Developers list Please try again later.',
         process: 'Error while processing please Try again later.',
         invalid:
-          'Invalid path please go back to institution selection page to select your organization.',
+          'Invalid path please go back to organization selection page to select your organization.',
       },
       validation: {
         name: 'Curricular name is required please enter name.',
@@ -1171,7 +1173,7 @@ const RoomBuilderdict: any = {
   EN: {
     TITLE: 'Create New Class',
     SUBTITLE: 'Add new Class to the list',
-    HEADING: 'CLASS INFORMATION',
+    HEADING: 'COHORT INFORMATION',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
@@ -1189,7 +1191,7 @@ const RoomBuilderdict: any = {
     messages: {
       error: {
         organizationbefor: 'Please create an organization before creating Class.',
-        institutelist: 'Unable to fetch institution list. Please try again later.',
+        institutelist: 'Unable to fetch organization list. Please try again later.',
         staffmember: 'Please create staff member first for your organization.',
         teacherlist: 'Unable to fetch teachers list. Please try again later.',
         createclass: 'Please create cohort first for your organization.',
@@ -1199,7 +1201,7 @@ const RoomBuilderdict: any = {
         classroomadd: 'Error while adding Class curricular. Please try again later.',
         ecreateclass: 'Error while creating Class. Please try again later.',
         invalid:
-          'Invalid path please go back to institution selection page to select your organization.',
+          'Invalid path please go back to organization selection page to select your organization.',
       },
       validation: {
         classroomname: 'Class name is required please enter name.',
@@ -1278,7 +1280,7 @@ const EditCurriculardict: any = {
       fetcherr: 'Error while fetching Developers list Please try again later.',
       curricularchange: 'Curricular changes has been saved.',
       updateerror: 'Error while updating curricular data please try later.',
-      unablefetch: 'Unable to fetch institution list pleas try later.',
+      unablefetch: 'Unable to fetch organization list pleas try later.',
       processerr: 'Error while processing please Try again later.',
       namerequired: 'Curricular name is required please enter name.',
       selectinstitute: 'Please select an organization to add curricular.',
@@ -1321,7 +1323,7 @@ const RoomEDITdict: any = {
   EN: {
     TITLE: 'Edit Class',
     SUBTITLE: 'Edit Class information',
-    HEADING: 'CLASS INFORMATION',
+    HEADING: 'COHORT INFORMATION',
     NAME_LABEL: 'Class Name',
     NAME_PLACEHOLDER: 'Add Class name',
     TEACHER_LABEL: 'Facilitator',
@@ -1334,7 +1336,7 @@ const RoomEDITdict: any = {
     MAXSTUDENT_PLACHOLDER: 'Max participants',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
-      unabletofetch: 'Unable to fetch institution list. Please try again later.',
+      unabletofetch: 'Unable to fetch organization list. Please try again later.',
       addstaffirst:
         'Please add staff member first for the selected organization or select another organization.',
       unableteacher: 'Unable to fetch teachers list. Please try again later.',
@@ -1409,16 +1411,16 @@ const RoomEDITdict: any = {
 const curricularviewdict: any = {
   EN: {
     TITLE: 'Curriculum Builder',
-    SUBTITLE: 'Build curriculum, modules and lesson plans here',
+    SUBTITLE: 'Build curriculum, modules and session plans here',
     HEADING: 'GENERAL INFORMATION',
     NAME: 'Curriculum Name',
-    OWNER: 'Institution Owner',
+    OWNER: 'Organization Owner',
     DESCRIPTION: 'Description',
     DESIGNER: 'Developers',
     LANGUAGE: 'Languages',
     OBJECTIVE: 'Objective',
     TAB: {
-      UNIT: 'Units',
+      UNIT: 'Modules',
       LEARINGOBJECTIVE: 'Objectives',
       INFORMATION: 'Demographics & Information',
     },
@@ -1465,8 +1467,7 @@ const CHECKPOINTSDICT: any = {
 const LEARINGOBJECTIVEDICT: any = {
   EN: {
     TITLE: 'OBJECTIVES',
-    INFO:
-      'This curricular does not have any objectives yet. Please create a new one.',
+    INFO: 'This curricular does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
       ADD: 'Add New Objective',
@@ -1758,7 +1759,7 @@ const AddSyllabusDict: any = {
   EN: {
     title: 'Module Builder',
     subtitle: 'Create curriculum modules here.',
-    heading: 'UNIT INFORMATION',
+    heading: 'MODULE INFORMATION',
     unitname: 'Module Name',
     designer: 'Select Developers',
     placeholder: 'Developers',
@@ -2005,14 +2006,14 @@ const EditSyllabusDict: any = {
     status: 'Status',
     action: 'Actions',
     edit: 'edit',
-    nolesson: 'No Lessons Selected',
+    nolesson: 'No Session Selected',
     createnew: 'Create New Session',
     messages: {
       wantsave: 'Do you want to save changes before moving forward?',
       unitupdate: 'Module details has been updated.',
       unableupdate: 'Unable to update module details please try again later.',
       namerequired: 'Module name is required please enter name.',
-      updateerr: 'Error while updating lesson status please try later.',
+      updateerr: 'Error while updating session status please try later.',
       fetcher: 'Error while fetching module data.',
       fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Developers list Please try again later.',
@@ -2289,7 +2290,7 @@ const UserLookupWithTokenDict: any = {
     sortby: 'Sort By',
     name: 'Name',
     role: 'Role',
-    institution: 'Institution',
+    institution: 'Organization',
     status: 'Status',
     action: 'Actions',
     noresult: 'No Results',
@@ -2733,8 +2734,8 @@ const AddNewLessonFormDict: any = {
     NAME: 'Name',
     SELECTTYPE: 'Select Type',
     TYPE: 'Type',
-    INSTITUTION: 'Institution',
-    SELECTINSTITUTION: 'Select Institution',
+    INSTITUTION: 'Organization',
+    SELECTINSTITUTION: 'Select Organization',
     SELECTLANG: 'Select Language',
     LANGUAGE: 'Language',
     SELECTDESIGNER: 'Select Developers',
@@ -2759,7 +2760,7 @@ const AddNewLessonFormDict: any = {
       ADDERR: 'Error while adding measurement,please try later.',
       SAVE: 'Session details saved successfully.',
       SAVEERR: 'Unable to save Session details, Please try again later.',
-      LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
+      LESSONNOTHAVE: 'This session does not have any measurements, please add new one.',
     },
     SAVE: 'Save',
     SAVING: 'Saving...',
@@ -2825,13 +2826,19 @@ const AssessmentInstuctionsDict: any = {
 };
 const GeneralInformationDict: any = {
   EN: {
-    HEADING: 'Session Overview',
+    HEADING: 'Lesson Overview',
     NAME: 'Name',
-    SELECTDESIGNER: 'Select Developers',
-    DESIGNER: 'Developers',
+    SELECTDESIGNER: 'Select Designers',
+    DESIGNER: 'Designers',
+    LANGUAGE: 'Language',
     PURPOSE: 'Purpose',
     OBJECTIVE: 'Objective',
-    LESSONMEASUREMENT: 'Session Measurements',
+    SELECTTYPE: 'Select Type',
+    TYPE: 'Type',
+    INSTITUTION: 'Institution',
+    SELECTINSTITUTION: 'Select Institution',
+    SELECTLANG: 'Select Language',
+    LESSONMEASUREMENT: 'Lesson Measurements',
     SELECTMEASUREMENT: 'Select Measurement',
     NO: 'No.',
     MEASUREMENT: 'Measurement',
@@ -2851,7 +2858,7 @@ const GeneralInformationDict: any = {
       FETCHERR: 'Unable to fetch measurement details, Please try again later.',
       UPDATESUCCESS: 'Session details updated successfully.',
       UPDATEERR: 'Unable to update Session details, Please try again later.',
-      LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
+      LESSONNOTHAVE: 'This session does not have any measurements, please add new one.',
     },
   },
   ES: {
@@ -2860,7 +2867,10 @@ const GeneralInformationDict: any = {
     SELECTDESIGNER: 'TBD',
     DESIGNER: 'TBD',
     PURPOSE: 'TBD',
+    SELECTTYPE: 'TBD',
     OBJECTIVE: 'TBD',
+    LANGUAGE: 'Language',
+    INSTITUTION: 'TBD',
     LESSONMEASUREMENT: 'TBD',
     SELECTMEASUREMENT: 'TBD',
     NO: 'TBD',
@@ -2945,17 +2955,17 @@ const UnitLookupDict: any = {
   EN: {
     HEADING: 'Assign Module',
     NOTE:
-      'NOTE: Please select Curricular and then modules to add current lesson to that module.',
+      'NOTE: Please select Curricular and then modules to add current session to that module.',
     NO: 'No.',
     CURRICULUMNAME: 'Curriculum Name',
     UNITNAME: 'Module Name',
     STATUS: 'Status',
     ACTION: 'Action',
-    NOTADDED: ' This lesson is not added to any curricular or modules.',
+    NOTADDED: ' This session is not added to any curricular or modules.',
 
     MESSAGES: {
       ADDED: 'Session added successfully.',
-      ADDERR: 'Error while adding lesson to module, please try later.',
+      ADDERR: 'Error while adding session to module, please try later.',
       FETCHERR: 'Error while fetching modules Data, Please try again later.',
     },
   },
@@ -3000,7 +3010,7 @@ const UniversalBuilderDict: any = {
 
 const LessonBuilderDict: any = {
   EN: {
-    TITLE: 'LESSON PLAN BUILDER',
+    TITLE: 'SESSION PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
 
     MESSAGES: {
@@ -3018,7 +3028,7 @@ const LessonBuilderDict: any = {
 };
 const LessonEditDict: any = {
   EN: {
-    TITLE: 'LESSON PLAN BUILDER',
+    TITLE: 'SESSION PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
@@ -3034,8 +3044,8 @@ const LessonEditDict: any = {
 };
 const LessonsListDict: any = {
   EN: {
-    TITLE: 'LESSONS LIST',
-    SUBTITLE: 'All Lessons List',
+    TITLE: 'SESSIONS LIST',
+    SUBTITLE: 'All Sessions List',
     SORTBY: 'Sort By',
     NO: 'No.',
     LESSONTITLE: 'Session Title',
@@ -3139,6 +3149,25 @@ const EditQuestionModalDict: any = {
   },
 };
 
+const DashboardDict: any = {
+  EN: {
+    YOUR_TEACHERS: 'Your Facilitators',
+    YOUR_CLASSROOMS: 'Your Classes',
+    YOUR_STUDENTS: 'Your Fellow Participants',
+    YOUR_CLASSMATES: 'Your Cohorts',
+    GREETINGS_TEACHER: 'What do you want to facilitate today?',
+    GREETINGS_STUDENT: 'What do you want to learn today?',
+  },
+  ES: {
+    YOUR_TEACHERS: 'TBD',
+    YOUR_CLASSROOMS: 'TBD',
+    YOUR_STUDENTS: 'TBD',
+    YOUR_CLASSMATES: 'TBD',
+    GREETINGS_TEACHER: 'TBD',
+    GREETINGS_STUDENT: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3147,6 +3176,7 @@ function paginationPage(lang: string, page: number, total: number) {
 
 export {
   CsvDict,
+  DashboardDict,
   paginationPage,
   BUTTONS,
   BreadcrumsTitles,
