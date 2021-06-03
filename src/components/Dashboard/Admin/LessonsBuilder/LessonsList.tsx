@@ -121,11 +121,17 @@ const LessonsList = () => {
   const getFilteredList = (data: [{designers: string[]}], target: string) => {
     const list: any[] = [];
     data.forEach((lesson) => {
-      lesson.designers.forEach((designerId) => {
-        if (designerId === target) {
-          list.push(lesson);
-        }
-      });
+      if (
+        lesson.designers &&
+        Array.isArray(lesson.designers) &&
+        lesson.designers.length > 0
+      ) {
+        lesson?.designers?.forEach((designerId) => {
+          if (designerId === target) {
+            list.push(lesson);
+          }
+        });
+      }
     });
     return list;
   };
