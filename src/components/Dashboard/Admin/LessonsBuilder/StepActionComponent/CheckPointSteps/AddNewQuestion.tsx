@@ -86,8 +86,9 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     {id: '3', name: 'Select Many', value: 'selectMany'},
     {id: '4', name: 'Select One', value: 'selectOne'},
     {id: '5', name: 'Date Picker', value: 'datePicker'},
-    {id: '6', name: 'Link', value: 'link'},
+    {id: '6', name: 'Emoji', value: 'emoji'},
     {id: '7', name: 'Link', value: 'link'},
+    {id: '8', name: 'Link', value: 'link'},
   ];
 
   const languageList = [

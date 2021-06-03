@@ -147,6 +147,7 @@ const User = () => {
     },
     {
       title: curTab,
+
       url: `${location.pathname}${location.search}`,
       last: true,
     },

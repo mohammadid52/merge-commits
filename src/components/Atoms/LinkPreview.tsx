@@ -18,8 +18,6 @@ const LinkPreview = ({url, showGraphic = true}: LinkPreviewProps) => {
         url={url}
       />
     );
-  } else {
-    <a href={url}>{url}</a>;
   }
 };
 
