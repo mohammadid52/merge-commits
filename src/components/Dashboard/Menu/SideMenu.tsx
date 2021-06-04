@@ -75,7 +75,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
               minWidth: '16rem',
             }}
             className="flex flex-col">
-            <div className="flex flex-col hide-scrollbar h-screen overflow-x-hidden overflow-y-scroll flex-1">
+            <div className="flex flex-col hide-scrollbar h-screen flex-1">
               <div className="flex justify-between sidenav_logo items-center h-16 flex-shrink-0 px-4">
                 <img
                   onClick={handleLink}
