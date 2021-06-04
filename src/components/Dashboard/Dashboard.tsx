@@ -145,7 +145,7 @@ const Dashboard = (props: DashboardProps) => {
     ) {
       setActiveRoomName(name);
       dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: id}});
-      setSyllabusLoading(true); // Trigger loading ui element
+      setSyllabusLoading(true);
       setLessonLoading(true);
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
       history.push(`/dashboard/${route}/${id}`);
@@ -389,9 +389,10 @@ const Dashboard = (props: DashboardProps) => {
           const queryObj = {
             name: 'customQueries.listRoomCurriculums',
             valueObj: {
-              roomID: {contains: state.activeRoom},
+              roomID: {eq: state.activeRoom},
             },
           };
+
 
           /***************************************************
            *                                                 *
@@ -402,16 +403,19 @@ const Dashboard = (props: DashboardProps) => {
            ***************************************************/
           // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
           const roomCurriculumsFetch = await API.graphql(
-            graphqlOperation(customQueries.listRoomCurriculums, queryObj.valueObj)
+            graphqlOperation(queries.listRoomCurriculums, {filter:{
+              roomID: {eq: state.activeRoom},
+            }})
           );
           const response = await roomCurriculumsFetch;
           // @ts-ignore
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+          console.log('roomCurriculums list - ', arrayOfResponseObjects)
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(
             arrayOfResponseObjects,
             'curriculumID'
           );
-          console.log('array of curriculum ids - ', arrayOfCurriculumIds)
+
           setCurriculumIds(arrayOfCurriculumIds);
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
