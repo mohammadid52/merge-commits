@@ -71,7 +71,6 @@ export interface UniversalLessonStudentData {
   studentID: string;
   currentLocation: string;
   lessonProgress: string;
-  anthologyContent: any[];
   pageData: StudentDataPageData[];
 }
 
