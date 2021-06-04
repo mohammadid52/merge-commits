@@ -152,10 +152,8 @@ const RoomsList = (props: RoomListProps) => {
                   onClick={createNewRoom}
                 />
               </div>
-              <p
-                className={`text-center text-lg mt-4 text-gray-500 ${
-                  messages.isError ? 'text-red-600' : ''
-                }`}>
+
+              <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
                 {messages.message}
               </p>
             </Fragment>
