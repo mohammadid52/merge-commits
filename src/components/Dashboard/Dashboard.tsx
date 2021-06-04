@@ -8,6 +8,7 @@ import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
 import SideMenu from './Menu/SideMenu';
 import {useCookies} from 'react-cookie';
 import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
@@ -23,6 +24,9 @@ import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
 import {useParams} from 'react-router';
+import Modal from '../Atoms/Modal';
+import {getAsset} from '../../assets';
+import Tooltip from '../Atoms/Tooltip';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -57,6 +61,7 @@ export interface DashboardProps {
   syllabusLoading?: boolean;
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   handleRoomSelection?: Function;
+  justLoggedIn?: boolean;
 }
 
 export interface ClassroomControlProps extends DashboardProps {
@@ -64,8 +69,113 @@ export interface ClassroomControlProps extends DashboardProps {
   [key: string]: any;
 }
 
+const EmojiFeedback = ({
+  themeColor,
+  justLoggedIn,
+  greetQuestion,
+}: {
+  justLoggedIn: boolean;
+  themeColor: string;
+  greetQuestion: {question: string};
+}) => {
+  const emojiList = [
+    {emoji: '😠', id: '0', name: 'Angry'},
+    {emoji: '😞', id: '1', name: 'Sad'},
+    {emoji: '😐', id: '2', name: 'Neutral'},
+    {emoji: '🙂', id: '3', name: 'Happy'},
+    {emoji: '😀', id: '4', name: 'Excited'},
+  ];
+
+  const onSave = () => {
+    setShowGreetings(false);
+    return {
+      name: selectedEmoji.name,
+      range,
+    };
+  };
+
+  const getThemeColor = () => (themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue');
+
+  const [selectedEmoji, setSelectedEmoji] = useState({id: '', emoji: '', name: ''});
+  const [showGreetings, setShowGreetings] = useState(justLoggedIn);
+  const [range, setRange] = useState(5);
+  const showRangeSlider = selectedEmoji.name !== '';
+  return (
+    showGreetings && (
+      <Modal
+        intenseOpacity
+        showHeader={false}
+        showHeaderBorder={false}
+        showFooter={false}>
+        <div
+          style={{minHeight: showRangeSlider ? '14rem' : '9rem'}}
+          className={` flex relative items-center min-w-132 justify-center flex-col`}>
+          <p className="w-auto mb-6 text-2xl font-semibold">
+            {greetQuestion?.question || ''}
+          </p>
+          {/* @Mohammad: Add this to dictionary */}
+          <div className="grid grid-cols-5">
+            {emojiList.map(
+              ({name, emoji, id}: {emoji: string; name: string; id: string}) => (
+                <Tooltip text={name} placement="bottom">
+                  <div
+                    key={id}
+                    onClick={() => setSelectedEmoji({emoji, id, name})}
+                    className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-4xl feedback-emoji ${
+                      selectedEmoji.id === id ? 'selected' : ''
+                    }`}>
+                    {emoji}
+                  </div>
+                </Tooltip>
+              )
+            )}
+          </div>
+          <div className={`emotion_range  ${showRangeSlider ? 'show mt-4 p-2' : ''} `}>
+            <p
+              className={`${
+                showRangeSlider ? 'mb-1' : 'hidden'
+              }  w-auto text-dark font-medium`}>
+              How much {selectedEmoji.name} you are:
+            </p>
+            {showRangeSlider && (
+              <div className="border-0 p-2 border-gray-200 rounded-md flex items-center justify-center">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={range}
+                  onChange={(e) => setRange(e.target.valueAsNumber)}
+                  className="slider"
+                  id="myRange"
+                />
+                <label className="w-7 h-7 text-gray-400 ml-4">{range}</label>
+              </div>
+            )}
+          </div>
+          <div className={`mt-2 flex items-center justify-between`}>
+            <p
+              onClick={() => setShowGreetings(false)}
+              className={`w-auto cursor-pointer text-sm px-1 py-0.5 text-gray-400 hover:text-${getThemeColor()}-500 transition-all  duration-150`}>
+              skip for now
+            </p>
+            {showRangeSlider ? (
+              <p
+                onClick={onSave}
+                className={`w-auto cursor-pointer text-sm px-2 py-0.5 text-white bg-${getThemeColor()}-500 hover:bg-${getThemeColor()}-700 transition-all rounded-md  duration-150`}>
+                save
+              </p>
+            ) : (
+              <div className="w-auto" />
+            )}
+          </div>
+        </div>
+      </Modal>
+    )
+  );
+};
+
 const Dashboard = (props: DashboardProps) => {
-  const {updateAuthState} = props;
+  const {updateAuthState, justLoggedIn} = props;
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
@@ -75,8 +185,8 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: '',
   });
-  const {state, dispatch} = useContext(GlobalContext);
-
+  const {state, dispatch, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   // For controlling loading transitions
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
   const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
@@ -96,6 +206,49 @@ const Dashboard = (props: DashboardProps) => {
   // Fetching results
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
+  // currId:6eb59ca8-fc97-47b7-8fc1-55676bb7d177
+  //checId:aef64bbb-bc1f-49d1-b998-c97dc0dd2fdb
+  //qId:c5e7d375-8b87-4331-b4d5-1a1b0e5aa188
+  //getQuestion
+
+  //updateQuestion
+
+  const [greetQuestion, setGreetQuestion] = useState({question: ''});
+
+  const getGreetQuestion = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(queries.getQuestion, {
+          id: 'c5e7d375-8b87-4331-b4d5-1a1b0e5aa188',
+        })
+      );
+      setGreetQuestion(result.data.getQuestion);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // const updateGreetQuestion = async (response:string) => {
+  //   try {
+  //     const result: any = await API.graphql(
+  //       graphqlOperation(mutations.updateQuestionData, {
+  //         input: {
+  //           id: 'c5e7d375-8b87-4331-b4d5-1a1b0e5aa188',
+  //           responseObject:[{response: }]
+  //         },
+  //       })
+  //     );
+  //     setGreetQuestion(result.data.getQuestion);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (justLoggedIn) {
+      getGreetQuestion();
+    }
+  }, [justLoggedIn]);
 
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
@@ -643,6 +796,11 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
+      <EmojiFeedback
+        greetQuestion={greetQuestion}
+        justLoggedIn={justLoggedIn}
+        themeColor={themeColor}
+      />
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}

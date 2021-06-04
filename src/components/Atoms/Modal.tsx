@@ -14,6 +14,7 @@ interface ModalProps {
   closeAction?: () => void;
   isImage?: boolean;
   closeOnBackdrop?: boolean;
+  intenseOpacity?: boolean;
 }
 
 const ModalHeader = (headerProps: {
@@ -73,6 +74,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     showHeaderBorder,
     showFooter,
     children,
+    intenseOpacity = false,
     closeAction,
     saveAction,
     closeOnBackdrop = false,
@@ -89,7 +91,10 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
   });
   return (
     <>
-      <div className="backdrop fade-in fixed inset-0 z-40 bg-black"></div>
+      <div
+        className={`${
+          intenseOpacity ? 'dark-backdrop' : 'backdrop fade-in'
+        } fixed inset-0 z-40 bg-black`}></div>
       <div
         onClick={() => closeOnBackdrop && closeAction()}
         className="modal show justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
