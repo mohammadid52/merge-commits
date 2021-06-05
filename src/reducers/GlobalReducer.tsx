@@ -89,6 +89,7 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         currentPage: action.payload.data,
       };
     case 'UPDATE_ACTIVEROOM':
+      // console.log('new activeroom - ', action.payload.data)
       return {
         ...state,
         activeRoom: action.payload.data,

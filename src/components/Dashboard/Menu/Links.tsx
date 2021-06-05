@@ -106,12 +106,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
       case 'ADM':
         return setLinks((links) => {
           return [
-            // {
-            //   title: sideBarLinksDict[userLanguage].DASHBOARD,
-            //   name: sideBarLinksDict[userLanguage].DASHBOARD,
-            //   label: 'Dashboard',
-            //   path: 'home',
-            // },
             {
               title: sideBarLinksDict[userLanguage].INSTITUTIONS,
               name: sideBarLinksDict[userLanguage].INSTITUTIONS,
@@ -127,18 +121,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               subMenuItems: [{title: 'Add New Person', path: 'registration'}],
             },
             {
-              title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
-              name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
-              label: 'Lesson Planner',
-              path: 'lesson-planner',
-            },
-            {
-              title: sideBarLinksDict[userLanguage].CLASSROOM,
-              name: sideBarLinksDict[userLanguage].CLASSROOM,
-              label: 'Classroom',
-              path: 'classroom',
-            },
-            {
               title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               label: 'Lesson Builder',
@@ -146,12 +128,6 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               subMenuItems: [
                 {title: 'Add New Lesson', path: 'lesson-builder/lesson/add'},
               ],
-            },
-            {
-              title: sideBarLinksDict[userLanguage].ANTHOLOGY,
-              name: sideBarLinksDict[userLanguage].ANTHOLOGY,
-              label: 'Anthology',
-              path: 'anthology',
             },
             {
               title: sideBarLinksDict[userLanguage].RESEARCHANALYTICS,
