@@ -78,50 +78,78 @@ const EmojiFeedback = ({
   themeColor: string;
   greetQuestion: {question: string};
 }) => {
+  const {clientKey} = useContext(GlobalContext);
+
   const emojiList = [
-    {emoji: '😠', id: '0', name: 'Angry'},
-    {emoji: '😞', id: '1', name: 'Sad'},
-    {emoji: '😐', id: '2', name: 'Neutral'},
-    {emoji: '🙂', id: '3', name: 'Happy'},
-    {emoji: '😀', id: '4', name: 'Excited'},
+    {
+      emoji: '😠',
+      link: '',
+      id: '0',
+      name: 'Angry',
+    },
+    {
+      emoji: '😞',
+      link: '',
+      id: '1',
+      name: 'Sad',
+    },
+
+    {
+      emoji: '🙂',
+      link: '',
+      id: '3',
+      name: 'Happy',
+    },
   ];
 
   const onSave = () => {
     setShowGreetings(false);
     return {
       name: selectedEmoji.name,
-      range,
+      // range,
     };
   };
 
   const getThemeColor = () => (themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue');
 
   const [selectedEmoji, setSelectedEmoji] = useState({id: '', emoji: '', name: ''});
-  const [showGreetings, setShowGreetings] = useState(justLoggedIn);
-  const [range, setRange] = useState(5);
-  const showRangeSlider = selectedEmoji.name !== '';
+  const [showGreetings, setShowGreetings] = useState(true);
+  // const [range, setRange] = useState(5);
+  // const showRangeSlider = selectedEmoji.name !== '';
+  const showContinueButton = selectedEmoji.name !== '';
   return (
     showGreetings && (
       <Modal
         intenseOpacity
+        closeAction={() => setShowGreetings(false)}
+        closeOnBackdrop
         showHeader={false}
         showHeaderBorder={false}
         showFooter={false}>
         <div
-          style={{minHeight: showRangeSlider ? '14rem' : '9rem'}}
+          style={{minHeight: '7rem'}}
           className={` flex relative items-center min-w-132 justify-center flex-col`}>
           <p className="w-auto mb-6 text-2xl font-semibold">
-            {greetQuestion?.question || ''}
+            {greetQuestion?.question || 'How are you feeling today?'}
           </p>
           {/* @Mohammad: Add this to dictionary */}
-          <div className="grid grid-cols-5">
+          <div className="grid grid-cols-3">
             {emojiList.map(
-              ({name, emoji, id}: {emoji: string; name: string; id: string}) => (
-                <Tooltip text={name} placement="bottom">
+              ({
+                name,
+                emoji,
+                id,
+                link,
+              }: {
+                link: string;
+                emoji: string;
+                name: string;
+                id: string;
+              }) => (
+                <Tooltip key={id} text={name} placement="bottom">
                   <div
-                    key={id}
                     onClick={() => setSelectedEmoji({emoji, id, name})}
-                    className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-4xl feedback-emoji ${
+                    className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${
                       selectedEmoji.id === id ? 'selected' : ''
                     }`}>
                     {emoji}
@@ -130,7 +158,7 @@ const EmojiFeedback = ({
               )
             )}
           </div>
-          <div className={`emotion_range  ${showRangeSlider ? 'show mt-4 p-2' : ''} `}>
+          {/* <div className={`emotion_range  ${showRangeSlider ? 'show mt-4 p-2' : ''} `}>
             <p
               className={`${
                 showRangeSlider ? 'mb-1' : 'hidden'
@@ -152,22 +180,34 @@ const EmojiFeedback = ({
               </div>
             )}
           </div>
-          <div className={`mt-2 flex items-center justify-between`}>
-            <p
-              onClick={() => setShowGreetings(false)}
-              className={`w-auto cursor-pointer text-sm px-1 py-0.5 text-gray-400 hover:text-${getThemeColor()}-500 transition-all  duration-150`}>
-              skip for now
-            </p>
-            {showRangeSlider ? (
+          {showRangeSlider && (
+            <div className={`mt-2 flex items-center justify-between`}>
               <p
-                onClick={onSave}
-                className={`w-auto cursor-pointer text-sm px-2 py-0.5 text-white bg-${getThemeColor()}-500 hover:bg-${getThemeColor()}-700 transition-all rounded-md  duration-150`}>
-                save
+                onClick={() => setShowGreetings(false)}
+                className={`w-auto cursor-pointer text-sm px-1 py-0.5 text-gray-400 hover:text-${getThemeColor()}-500 transition-all  duration-150`}>
+                skip for now
               </p>
-            ) : (
-              <div className="w-auto" />
-            )}
-          </div>
+              {showRangeSlider ? (
+                <p
+                  onClick={onSave}
+                  className={`w-auto cursor-pointer text-sm px-2 py-0.5 text-white bg-${getThemeColor()}-500 hover:bg-${getThemeColor()}-700 transition-all rounded-md  duration-150`}>
+                  save
+                </p>
+              ) : (
+                <div className="w-auto" />
+              )}
+            </div>
+          )} */}
+
+          {showContinueButton && (
+            <div className="flex items-center justify-center">
+              <button
+                onClick={() => onSave()}
+                className={`w-auto bg-${getThemeColor()}-500 rounded text-white p-1 py-0.5 mt-2 hover:bg-${getThemeColor()}-600 transition-all`}>
+                Continue
+              </button>
+            </div>
+          )}
         </div>
       </Modal>
     )
@@ -206,20 +246,16 @@ const Dashboard = (props: DashboardProps) => {
   // Fetching results
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
-  // currId:6eb59ca8-fc97-47b7-8fc1-55676bb7d177
-  //checId:aef64bbb-bc1f-49d1-b998-c97dc0dd2fdb
-  //qId:c5e7d375-8b87-4331-b4d5-1a1b0e5aa188
-  //getQuestion
 
   //updateQuestion
 
   const [greetQuestion, setGreetQuestion] = useState({question: ''});
-
+  const DEFAULT_QUESTION_ID: string = 'c5e7d375-8b87-4331-b4d5-1a1b0e5aa188'; // @5: Change this
   const getGreetQuestion = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(queries.getQuestion, {
-          id: 'c5e7d375-8b87-4331-b4d5-1a1b0e5aa188',
+          id: DEFAULT_QUESTION_ID,
         })
       );
       setGreetQuestion(result.data.getQuestion);
@@ -244,11 +280,11 @@ const Dashboard = (props: DashboardProps) => {
   //   }
   // };
 
-  useEffect(() => {
-    if (justLoggedIn) {
-      getGreetQuestion();
-    }
-  }, [justLoggedIn]);
+  // useEffect(() => {
+  //   if (justLoggedIn) {
+  //     getGreetQuestion();
+  //   }
+  // }, [justLoggedIn]);
 
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
