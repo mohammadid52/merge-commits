@@ -67,14 +67,12 @@ const Body = (props: BodyProps) => {
         return <Lyrics />;
       case 'poem':
         return <Poem />;
+      case 'tchart':
+      case 'multi-list':
       case 'list':
         return <List />;
       case 'truthgame':
         return <TruthGame />;
-      case 'tchart':
-        return <TChart />;
-      case 'multi-list':
-        return <MultiList />;
       case 'poll':
         return <Poll />;
       case 'adventure':
