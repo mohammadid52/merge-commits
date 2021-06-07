@@ -23,9 +23,7 @@ import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
-import {useParams} from 'react-router';
 import Modal from '../Atoms/Modal';
-import {getAsset} from '../../assets';
 import Tooltip from '../Atoms/Tooltip';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
@@ -68,54 +66,49 @@ export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
   [key: string]: any;
 }
+const emojiList = [
+  {
+    emoji: '😠',
+    link:
+      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/face_with_steam_from_nose.gif?Expires=1623059878&Signature=blFVLo331bEcWWQP4ZLUN4fePsrGD8zaBuYTLWb66nlLF4heVbkxxpsJYzLU8Jk8XnITIO8rbdfJSgLTTf~r8jTQEISXXJrPTruUSUvh0tNO2jtg3erRmb97Nn~yKtDyUrCvr0CPIjMBfsx7out~w82tPX1Vb86dlYvaGckwaC1M-7TWn-T~~H2CZ73iY6SNCpup4viKGCmffp-Ttn6o-MgewC6Tmpvpk9BRBDqfrHqSHF7fWEhPYo4s0iv3sukZ76Uo9OaJg3jLVatg3nOXe9A64nQgGng7Pq5RQP5S4SGDTy8LCTi5IJgX6jbisDNrzmXivhlorZtRgrcG1gtR3A__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    id: '0',
+    name: 'Angry',
+  },
+  {
+    emoji: '😞',
+    link:
+      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/frowning_face.gif?Expires=1623059906&Signature=N2qb2Juc6QMnXviLkPu-ZrIxMjt-eTMNhylgIOKK2Mf8lKObaSf0gZmhzDcGzMJeQaliJtE~O~o8XYte~G4HTYa24vUDhhFZhdhL8vcO7pV-O2aoAyA0dAFtWvTpArDoQw0yJPvSS6IK28RSB9gT0iZNbm8Bikcf9YK2AIIf2qu-Fy576v5lKZTEdhb0VqRwunuuKjYrcNF201YjQwHv8rkYcFwHJy2qkCqwLppZldeGOSXJd1T7EH0TrbtUIjDoDSYOYRzRGjaZqEivv1bCLpM~DMfhOliiwG1ED4PTeg5pgH2F4fyYwaKhMz1aEYnq7BgGjTSLfhlZstdBLTvHpQ__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    id: '1',
+    name: 'Sad',
+  },
 
+  {
+    emoji: '🙂',
+    link:
+      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/grinning_face_with_smiling_eyes.gif?Expires=1623059816&Signature=RqpecnHnq-5bku7T10itOMbZbg0yAZHjhvp~bJoxFJCrI-Mmb2s1-8CZ6TDgtg0RKL8TvQwcKIa1R8dY2LxUttEQ3NzHbcegLH1j3lPGM~34lQ3Gt27nuihB2-mM5~obvg1pe92Fg9V7tE0uTkxuGdrSRqTk0BuKF5yWfq1wAx0lT0--AOMPx7z5eBxnIKsBW5FYkkbi9ES7IjwWvzhoxDH0R3LrM2PHmAhC8oF7lVSi5z~LrfRA2kEfMo1~Os3YPwvUacxtAejNlwlKqigffjiIU1QoCYMQar6PB6zsEV~lrsu~YTv7dv5zTbAV8quN6qCjq6yek33OV3GA0iCgbw__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    id: '3',
+    name: 'Happy',
+  },
+];
 const EmojiFeedback = ({
-  themeColor,
   justLoggedIn,
   greetQuestion,
+  onSave,
 }: {
   justLoggedIn: boolean;
-  themeColor: string;
+  onSave: (response: string) => void;
   greetQuestion: {question: string};
 }) => {
-  const {clientKey} = useContext(GlobalContext);
-
-  const emojiList = [
-    {
-      emoji: '😠',
-      link: '',
-      id: '0',
-      name: 'Angry',
-    },
-    {
-      emoji: '😞',
-      link: '',
-      id: '1',
-      name: 'Sad',
-    },
-
-    {
-      emoji: '🙂',
-      link: '',
-      id: '3',
-      name: 'Happy',
-    },
-  ];
-
-  const onSave = () => {
+  const onSubmit = () => {
     setShowGreetings(false);
-    return {
-      name: selectedEmoji.name,
-      // range,
-    };
+    onSave(selectedEmoji.emoji);
   };
 
-  const getThemeColor = () => (themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue');
-
   const [selectedEmoji, setSelectedEmoji] = useState({id: '', emoji: '', name: ''});
-  const [showGreetings, setShowGreetings] = useState(true);
+  const [showGreetings, setShowGreetings] = useState(justLoggedIn);
   // const [range, setRange] = useState(5);
   // const showRangeSlider = selectedEmoji.name !== '';
+  const DEFAULT_QUESTION = 'How are you feeling today?'; // Fallback question
   const showContinueButton = selectedEmoji.name !== '';
   return (
     showGreetings && (
@@ -127,12 +120,11 @@ const EmojiFeedback = ({
         showHeaderBorder={false}
         showFooter={false}>
         <div
-          style={{minHeight: '7rem'}}
+          style={{minHeight: '10rem'}}
           className={` flex relative items-center min-w-132 justify-center flex-col`}>
           <p className="w-auto mb-6 text-2xl font-semibold">
-            {greetQuestion?.question || 'How are you feeling today?'}
+            {greetQuestion?.question || DEFAULT_QUESTION}
           </p>
-          {/* @Mohammad: Add this to dictionary */}
           <div className="grid grid-cols-3">
             {emojiList.map(
               ({
@@ -147,13 +139,23 @@ const EmojiFeedback = ({
                 id: string;
               }) => (
                 <Tooltip key={id} text={name} placement="bottom">
-                  <div
-                    onClick={() => setSelectedEmoji({emoji, id, name})}
-                    className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${
-                      selectedEmoji.id === id ? 'selected' : ''
-                    }`}>
-                    {emoji}
-                  </div>
+                  {link ? (
+                    <div
+                      onClick={() => setSelectedEmoji({emoji, id, name})}
+                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center feedback-emoji ${
+                        selectedEmoji.id === id ? 'selected' : ''
+                      }`}>
+                      <img src={link} alt={name} className="h-20 w-20" />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => setSelectedEmoji({emoji, id, name})}
+                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${
+                        selectedEmoji.id === id ? 'selected' : ''
+                      }`}>
+                      {emoji}
+                    </div>
+                  )}
                 </Tooltip>
               )
             )}
@@ -199,15 +201,18 @@ const EmojiFeedback = ({
             </div>
           )} */}
 
-          {showContinueButton && (
-            <div className="flex items-center justify-center">
-              <button
-                onClick={() => onSave()}
-                className={`w-auto bg-${getThemeColor()}-500 rounded text-white p-1 py-0.5 mt-2 hover:bg-${getThemeColor()}-600 transition-all`}>
-                Continue
-              </button>
-            </div>
-          )}
+          <div
+            style={{bottom: '-1.7rem'}}
+            className="flex items-center justify-center absolute right-0 left-0">
+            <button
+              onClick={() => onSubmit()}
+              style={{background: '#333333'}}
+              className={`h-8 w-24 rounded text-white  p-1 py-0.5 mt-2 transition-all continue_btn ${
+                showContinueButton ? 'show' : 'hide'
+              }`}>
+              Submit
+            </button>
+          </div>
         </div>
       </Modal>
     )
@@ -225,8 +230,7 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: '',
   });
-  const {state, dispatch, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {state, dispatch} = useContext(GlobalContext);
   // For controlling loading transitions
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
   const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
@@ -250,12 +254,32 @@ const Dashboard = (props: DashboardProps) => {
   //updateQuestion
 
   const [greetQuestion, setGreetQuestion] = useState({question: ''});
-  const DEFAULT_QUESTION_ID: string = 'c5e7d375-8b87-4331-b4d5-1a1b0e5aa188'; // @5: Change this
+  const DEFAULT_CHECKPOINT_ID: string = '5372952f-ad80-4677-985a-e798c89d6bb7';
+  const DEFAULT_QUESTION_ID: string = '6867fd8e-2457-409c-ba34-f2ffabdf7385'; // THIS IS STATIC -- @key5: Change this
+
   const getGreetQuestion = async () => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(queries.getQuestion, {
           id: DEFAULT_QUESTION_ID,
+        })
+      );
+      console.log(result.data.getQuestion);
+
+      setGreetQuestion(result.data.getQuestion);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateGreetQuestion = async (response: any) => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.updateQuestionData, {
+          input: {
+            id: DEFAULT_CHECKPOINT_ID,
+            responseObject: [{qid: DEFAULT_QUESTION_ID, response}],
+          },
         })
       );
       setGreetQuestion(result.data.getQuestion);
@@ -264,27 +288,11 @@ const Dashboard = (props: DashboardProps) => {
     }
   };
 
-  // const updateGreetQuestion = async (response:string) => {
-  //   try {
-  //     const result: any = await API.graphql(
-  //       graphqlOperation(mutations.updateQuestionData, {
-  //         input: {
-  //           id: 'c5e7d375-8b87-4331-b4d5-1a1b0e5aa188',
-  //           responseObject:[{response: }]
-  //         },
-  //       })
-  //     );
-  //     setGreetQuestion(result.data.getQuestion);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (justLoggedIn) {
-  //     getGreetQuestion();
-  //   }
-  // }, [justLoggedIn]);
+  useEffect(() => {
+    if (justLoggedIn) {
+      getGreetQuestion();
+    }
+  }, [justLoggedIn]);
 
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
@@ -835,7 +843,7 @@ const Dashboard = (props: DashboardProps) => {
       <EmojiFeedback
         greetQuestion={greetQuestion}
         justLoggedIn={justLoggedIn}
-        themeColor={themeColor}
+        onSave={(response: string) => updateGreetQuestion(response)}
       />
       {/* <ResizablePanels> */}
       <SideMenu

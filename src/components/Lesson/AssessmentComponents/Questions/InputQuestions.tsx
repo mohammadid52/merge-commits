@@ -4,6 +4,8 @@ import {QuestionProps} from '../Question';
 import {LessonControlContext} from '../../../../contexts/LessonControlContext';
 import find from 'lodash/find';
 import {get} from 'lodash';
+import {BiSmile} from 'react-icons/bi';
+import EmojiPicker from 'emoji-picker-react';
 
 interface TextInputState {
   id: string;
@@ -23,6 +25,7 @@ const InputQuestions = (props: QuestionProps) => {
     handleInputChange,
     questionKey,
     value,
+    emoji = false,
     type = 'text',
   } = props;
   const switchContext = isTeacher
@@ -51,7 +54,19 @@ const InputQuestions = (props: QuestionProps) => {
     });
     handleInputChange(questionId, value, checkpointID);
   };
+  const [showEmoji, setShowEmoji] = useState({show: false});
+  const onEmojiSelect = (e: any) => {
+    let value = contents.value.concat(e.emoji) || '';
+    setContents({
+      id: questionId,
+      value,
+    });
+    handleInputChange(questionId, value, checkpointID);
 
+    setShowEmoji({show: false});
+  };
+
+  const actionStyles = `flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500`;
   return (
     visible &&
     question && (
@@ -62,14 +77,51 @@ const InputQuestions = (props: QuestionProps) => {
             {question.question.question}
           </p>
         </label>
-        <input
-          id={questionId}
-          className={`${theme.elem.textInput} w-full rounded-xl`}
-          type={type}
-          name={question.question.label}
-          value={contents.value}
-          onChange={(e) => (!isTeacher ? handleTextInputChange(e) : null)}
-        />
+
+        {emoji ? (
+          <div className="flex items-center relative">
+            <input
+              id={questionId}
+              className={`${theme.elem.textInput} w-full rounded-xl`}
+              type={type}
+              name={question.question.label}
+              value={contents.value}
+              onChange={(e) => (!isTeacher ? handleTextInputChange(e) : null)}
+            />
+
+            <span
+              onClick={() =>
+                setShowEmoji({
+                  show: true,
+                })
+              }
+              className={`${actionStyles}`}>
+              <BiSmile className="text-xl" />
+            </span>
+
+            {showEmoji.show && (
+              <div
+                id="picker-wrapper"
+                className="picker-wrapper absolute top-2 right-2 w-auto">
+                <EmojiPicker
+                  groupVisibility={{
+                    recently_used: false,
+                  }}
+                  onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji)}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <input
+            id={questionId}
+            className={`${theme.elem.textInput} w-full rounded-xl`}
+            type={type}
+            name={question.question.label}
+            value={contents.value}
+            onChange={(e) => (!isTeacher ? handleTextInputChange(e) : null)}
+          />
+        )}
       </div>
     )
   );
