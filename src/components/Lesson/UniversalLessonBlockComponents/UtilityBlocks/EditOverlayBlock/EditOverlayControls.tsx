@@ -79,7 +79,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           flex flex-row
           items-center
           bg-transparent rounded-lg
-          z-100
+          ${overlayVisible ? 'z-100' : 'z-10'}
           h-auto w-auto
           ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
           ${isComponent ? '' : offsetClass}
@@ -90,6 +90,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                       grid grid-cols-5 gap-2
                       my-auto
                       h-auto
+                      z-10
                       ${overlayVisible && isComponent ? 'w-auto' : 'w-full'} 
                       `}>
           <Buttons
@@ -112,15 +113,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           />
           <div className={`relative`}>
             <Buttons
-              onClick={()=>setColorPickerActive(!colorPickerActive)}
+              onClick={() => setColorPickerActive(!colorPickerActive)}
               label="BG Color"
               overrideClass={true}
               btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
               Icon={AiOutlineBgColors}
             />
-            {colorPickerActive && (
-              <ColorPicker callbackColor={handleColorPickerSelect} />
-            )}
+            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
           </div>
           <Buttons
             onClick={() => deleteFromULBHandler(contentID)}
@@ -137,7 +136,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         onClick={() => handleEditBlockToggle()}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
-        containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}
+        containerBgClass={`rounded-full bg-gray-600 ${
+          overlayVisible ? 'z-100' : 'z-10'
+        } cursor-pointer`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={'text-white'}
       />

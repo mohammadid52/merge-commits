@@ -15,15 +15,15 @@ export const RowWrapper = (props: RowWrapperProps) => {
         ${classString ? classString : ''}
         relative
         my-4
-        z-50
+        
       `}>
       <div
         className={`
           ${mode === 'building' ? buildModeClass : viewModeClass}
           shadow rounded-lg divide-y divide-gray-200
-          z-50
+          
           `}>
-        <div className="relative z-50">{children}</div>
+        <div className="relative">{children}</div>
       </div>
     </div>
   );
