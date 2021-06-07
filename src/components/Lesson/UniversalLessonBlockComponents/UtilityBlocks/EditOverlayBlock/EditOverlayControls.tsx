@@ -15,7 +15,7 @@ import {CgEditFlipH} from 'react-icons/cg';
 import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
-
+import ClickAwayListener from 'react-click-away-listener';
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
@@ -72,6 +72,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
   const offsetClass = 'transform translate-x-6';
 
+  const actionClass =
+    'flex items-center justify-start w-auto hover:bg-white hover:bg-opacity-10 mx-2 px-4  my-2 py-1 font-bold uppercase text-xs text-white rounded-lg';
+
+  const iconClass = 'w-8 h-8 flex items-center text-xl';
+  const textClass = 'mx-2 w-auto tracking-widest';
   return (
     <div
       className={`
@@ -84,63 +89,58 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
           ${isComponent ? '' : offsetClass}
           `}>
-      {overlayVisible ? (
+      <ClickAwayListener onClickAway={() => setOverlayVisible(false)}>
         <div
-          className={`
-                      grid grid-cols-5 gap-2
-                      my-auto
-                      h-auto
-                      ${overlayVisible && isComponent ? 'w-auto' : 'w-full'} 
-                      `}>
-          <Buttons
-            label="Split"
-            overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-            Icon={BsLayoutSplit}
-          />
-          <Buttons
-            label="Flip"
-            overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-            Icon={CgEditFlipH}
-          />
-          <Buttons
-            label="Edit"
-            overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-            Icon={AiOutlineEdit}
-          />
+          className={`flex ulb_actions ${
+            overlayVisible ? 'show' : ''
+          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 right-3.5 bg-dark rounded-lg shadow-lg `}>
+          <button className={`${actionClass}`}>
+            <span className={iconClass}>
+              <CgEditFlipH />
+            </span>
+            <span className={textClass}>Split</span>
+          </button>
+          <button className={`${actionClass}`}>
+            <span className={iconClass}>
+              <AiOutlineEdit />
+            </span>
+            <span className={textClass}>Edit</span>
+          </button>
+
           <div className={`relative`}>
-            <Buttons
-              onClick={()=>setColorPickerActive(!colorPickerActive)}
-              label="BG Color"
-              overrideClass={true}
-              btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-              Icon={AiOutlineBgColors}
-            />
-            {colorPickerActive && (
-              <ColorPicker callbackColor={handleColorPickerSelect} />
-            )}
+            <button
+              onClick={() => setColorPickerActive(!colorPickerActive)}
+              className={`${actionClass}`}>
+              <span className={iconClass}>
+                <AiOutlineEdit />
+              </span>
+              <span className={textClass}>BG Color</span>
+            </button>
+            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
           </div>
-          <Buttons
+
+          <button
             onClick={() => deleteFromULBHandler(contentID)}
-            label="Delete"
-            overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-            Icon={AiOutlineDelete}
-          />
+            className={`${actionClass} text-red-600`}>
+            <span className={iconClass}>
+              <AiOutlineDelete />
+            </span>
+            <span className={textClass}>Delete</span>
+          </button>
         </div>
-      ) : null}
+      </ClickAwayListener>
 
       <ButtonsRound
         Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
         onClick={() => handleEditBlockToggle()}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
-        containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}
+        containerBgClass={`rounded bg-gray-600 z-50 cursor-pointer`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={'text-white'}
       />
+
+      <div></div>
     </div>
   );
 };

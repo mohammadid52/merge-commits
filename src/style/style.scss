@@ -808,3 +808,15 @@
     transform: translateX(0px);
   }
 }
+
+// Universal Lesson Builder - styles starts here
+
+.ulb_actions {
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
