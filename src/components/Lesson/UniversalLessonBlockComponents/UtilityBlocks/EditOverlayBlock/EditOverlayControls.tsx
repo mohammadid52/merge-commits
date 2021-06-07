@@ -95,8 +95,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           setColorPickerActive(false);
         }}>
         <div
-          className={`flex ulb_actions ${
-            overlayVisible ? 'show' : ''
+          className={`flex ulb_action transition-all duration-300 ${
+            overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 right-3.5 bg-dark rounded-lg shadow-lg `}>
           <button className={`${actionClass}`}>
             <span className={iconClass}>
