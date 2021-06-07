@@ -9,7 +9,12 @@ interface PatternObject {
  * @param inputPattern
  * @param outputPattern
  */
-export const formatPattern = (pattern: string, separator: string, inputPattern: string, outputPattern: string) => {
+export const formatPattern = (
+  pattern: string,
+  separator: string,
+  inputPattern: string,
+  outputPattern: string
+) => {
   if (
     typeof pattern === 'undefined' ||
     typeof separator === 'undefined' ||
@@ -20,10 +25,14 @@ export const formatPattern = (pattern: string, separator: string, inputPattern: 
   }
 
   const patternStringObject = pattern.split(separator);
-  const originalTime = inputPattern.split(separator).reduce((acc: PatternObject, val: string, i: number) => {
-    return { ...acc, [`${val}`]: patternStringObject[i] };
-  }, {});
-  const outputTime = outputPattern.split(separator).map((val: string, i: number) => originalTime[val]);
+  const originalTime = inputPattern
+    .split(separator)
+    .reduce((acc: PatternObject, val: string, i: number) => {
+      return {...acc, [`${val}`]: patternStringObject[i]};
+    }, {});
+  const outputTime = outputPattern
+    .split(separator)
+    .map((val: string, i: number) => originalTime[val]);
 
   return outputTime.join(separator);
 };
@@ -200,7 +209,7 @@ export const createFilterToFetchSpecificItemsOnly = (arr: any, key: string) => {
         },
       };
     });
-    return { or: newArray };
+    return {or: newArray};
   }
   return {};
 };
@@ -220,7 +229,7 @@ export const createFilterToFetchAllItemsExcept = (arr: any, key: string) => {
         },
       };
     });
-    return { and: newArray };
+    return {and: newArray};
   }
   return {};
 };
@@ -293,6 +302,10 @@ export const getTypeString = (type: string) => {
       return 'Select Many';
     case 'selectOne':
       return 'Select One';
+    case 'datePicker':
+      return 'Date Picker';
+    case 'link':
+      return 'link';
     default:
       return 'Text';
   }
@@ -334,7 +347,11 @@ export const getUserRoleString = (role: string) => {
  * @param current
  * @param after
  */
-export const checkIfFirstNewInSequence = (before: string, current: string, after: string) => {
+export const checkIfFirstNewInSequence = (
+  before: string,
+  current: string,
+  after: string
+) => {
   const notSameAsBefore = current !== before;
   const sameAsAfter = current === after;
 

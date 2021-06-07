@@ -16,6 +16,10 @@ import MultipleSelector from '../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../Atoms/Form/FormInput';
 import Selector from '../../../Atoms/Form/Selector';
 import {convertArrayIntoObj} from '../../../../utilities/strings';
+import {getAsset} from '../../../../assets';
+import {HiEmojiHappy} from 'react-icons/hi';
+import {BiSmile} from 'react-icons/bi';
+import EmojiPicker from 'emoji-picker-react';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -50,6 +54,7 @@ const UserEdit = (props: UserInfoProps) => {
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const {UserEditDict, BreadcrumsTitles} = useDictionary(clientKey);
   const [checkpointData, setCheckpointData] = useState<any>({});
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   useEffect(() => {
     setEditUser(user);
@@ -77,6 +82,7 @@ const UserEdit = (props: UserInfoProps) => {
         graphqlOperation(customMutations.updatePerson, {input: input})
       );
       setStatus('loading');
+
       history.push(`/dashboard/manage-users/user${location.search}`);
     } catch (error) {
       console.error(error);
@@ -418,6 +424,12 @@ const UserEdit = (props: UserInfoProps) => {
       return [...options];
     }
   };
+  const getColor = (theme = 'indigo') => {
+    return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500`;
+  };
+  const actionStyles = `flex ${
+    themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
+  } items-center justify-center ml-2 h-9 w-9 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500`;
 
   const getCurrentTabQuestions = () => {
     if (checkpointID) {
@@ -456,6 +468,23 @@ const UserEdit = (props: UserInfoProps) => {
           : ''
         : '';
     }
+  };
+  const [showEmoji, setShowEmoji] = useState({show: false, cId: '', qId: ''});
+
+  const onEmojiSelect = (e: any) => {
+    const questionID = showEmoji.qId;
+    const checkpointID = showEmoji.cId;
+    let value = checkpointData[checkpointID][questionID] || '';
+
+    let responseWithEmoji = value.concat(e.emoji);
+    setCheckpointData({
+      ...checkpointData,
+      [checkpointID]: {
+        ...checkpointData[checkpointID],
+        [questionID]: responseWithEmoji,
+      },
+    });
+    setShowEmoji({show: false, cId: '', qId: ''});
   };
 
   return (
@@ -657,6 +686,112 @@ const UserEdit = (props: UserInfoProps) => {
                                 </div>
                               </div>
                             </>
+                          ) : null}
+                          {item.question.type === 'datePicker' ? (
+                            <div className="sm:col-span-3">
+                              <label
+                                htmlFor="date picker"
+                                className="block text-m font-medium leading-5 text-gray-700">
+                                {item?.question?.question}
+                              </label>
+                              <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                                <input
+                                  id={item.question.id}
+                                  type="date"
+                                  value={
+                                    checkpointData[checkpointID]
+                                      ? checkpointData[checkpointID][item.question.id]
+                                      : ''
+                                  }
+                                  onChange={(e) =>
+                                    onInputChange(e, checkpointID, item.question.id)
+                                  }
+                                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
+                                />
+                              </div>
+                            </div>
+                          ) : null}
+                          {item.question.type === 'link' ? (
+                            <div className="sm:col-span-3">
+                              <label
+                                htmlFor="date picker"
+                                className="block text-m font-medium leading-5 text-gray-700">
+                                {item?.question?.question}
+                              </label>
+                              <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                                <input
+                                  id={item.question.id}
+                                  // type="url"
+                                  name="url"
+                                  placeholder="https://example.com"
+                                  // pattern="https://.*"
+                                  size={30}
+                                  value={
+                                    checkpointData[checkpointID]
+                                      ? checkpointData[checkpointID][item.question.id]
+                                      : ''
+                                  }
+                                  onChange={(e) =>
+                                    onInputChange(e, checkpointID, item.question.id)
+                                  }
+                                  className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
+                                />
+                              </div>
+                            </div>
+                          ) : null}
+                          {item.question.type === 'emoji' ? (
+                            <div className="sm:col-span-3">
+                              <label
+                                htmlFor="date picker"
+                                className="block text-m font-medium leading-5 text-gray-700">
+                                {item?.question?.question}
+                              </label>
+                              <div className="flex items-center justify-center relative">
+                                <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                                  <input
+                                    id={item.question.id}
+                                    type="text"
+                                    placeholder="Put your emoji here"
+                                    value={
+                                      checkpointData[checkpointID]
+                                        ? checkpointData[checkpointID][item.question.id]
+                                        : ''
+                                    }
+                                    onChange={(e) =>
+                                      onInputChange(e, checkpointID, item.question.id)
+                                    }
+                                    className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
+                                  />
+                                </div>
+
+                                <span
+                                  onClick={() =>
+                                    setShowEmoji({
+                                      show: true,
+                                      cId: checkpointID,
+                                      qId: item.question.id,
+                                    })
+                                  }
+                                  className={`${actionStyles}`}>
+                                  <BiSmile className="text-xl" />
+                                </span>
+
+                                {showEmoji.show && (
+                                  <div
+                                    id="picker-wrapper"
+                                    className="picker-wrapper absolute top-2 right-2 w-auto">
+                                    <EmojiPicker
+                                      groupVisibility={{
+                                        recently_used: false,
+                                      }}
+                                      onEmojiClick={(e: any, emoji: any) =>
+                                        onEmojiSelect(emoji)
+                                      }
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
                           ) : null}
                           {/* Will change it to text box if required. */}
 

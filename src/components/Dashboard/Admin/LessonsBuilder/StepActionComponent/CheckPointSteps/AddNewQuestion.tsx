@@ -1,8 +1,8 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline } from 'react-icons/io';
-import { RiArrowRightLine } from 'react-icons/ri';
+import React, {Fragment, useState, useEffect, useContext} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {IoIosKeypad, IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
+import {RiArrowRightLine} from 'react-icons/ri';
 
 import * as mutations from '../../../../../../graphql/mutations';
 
@@ -11,8 +11,8 @@ import FormInput from '../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../Atoms/Form/TextArea';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 import Selector from '../../../../../Atoms/Form/Selector';
-import { getAsset } from '../../../../../../assets';
-import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import {getAsset} from '../../../../../../assets';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
 interface AddNewQuestionProps {
@@ -30,7 +30,7 @@ interface InitialState {
   type: InputValue;
   language: InputValue;
   isRequired: boolean;
-  options: { label: string; text: string }[] | null;
+  options: {label: string; text: string}[] | null;
   otherOpt: boolean;
   noneOfAbove: boolean;
 }
@@ -42,22 +42,29 @@ interface InputValue {
 }
 
 const AddNewQuestion = (props: AddNewQuestionProps) => {
-  const { changeStep, setUnsavedChanges, setCheckpQuestions, goBackToPreviousStep, lessonName, lessonType } = props;
+  const {
+    changeStep,
+    setUnsavedChanges,
+    setCheckpQuestions,
+    goBackToPreviousStep,
+    lessonName,
+    lessonType,
+  } = props;
 
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { AddNewQuestionDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {AddNewQuestionDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const initialState = {
     question: '',
     notes: '',
     label: '',
-    type: { id: '', name: '', value: '' },
-    language: { id: '1', name: 'English', value: 'EN' },
+    type: {id: '', name: '', value: ''},
+    language: {id: '1', name: 'English', value: 'EN'},
     isRequired: false,
     options: [
-      { label: '1', text: '' },
-      { label: '2', text: '' },
+      {label: '1', text: ''},
+      {label: '2', text: ''},
     ],
     otherOpt: false,
     noneOfAbove: false,
@@ -74,15 +81,19 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     isError: true,
   });
   const typeList: any = [
-    { id: '1', name: 'Text', value: 'text' },
-    { id: '2', name: 'Input', value: 'input' },
-    { id: '3', name: 'Select Many', value: 'selectMany' },
-    { id: '4', name: 'Select One', value: 'selectOne' },
+    {id: '1', name: 'Text', value: 'text'},
+    {id: '2', name: 'Input', value: 'input'},
+    {id: '3', name: 'Select Many', value: 'selectMany'},
+    {id: '4', name: 'Select One', value: 'selectOne'},
+    {id: '5', name: 'Date Picker', value: 'datePicker'},
+    {id: '6', name: 'Emoji', value: 'emoji'},
+    {id: '7', name: 'Link', value: 'link'},
+    {id: '8', name: 'Link', value: 'link'},
   ];
 
   const languageList = [
-    { id: 1, name: 'English', value: 'EN' },
-    { id: 2, name: 'Spanish', value: 'ES' },
+    {id: 1, name: 'English', value: 'EN'},
+    {id: 2, name: 'Spanish', value: 'ES'},
   ];
 
   const selectOneOptions = [
@@ -127,7 +138,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
   const onOptionAdd = (index: number) => {
     // adding new option field after selected options index.
     const currentOptions = [...questionData.options];
-    const newItem = { label: (index + 2).toString(), text: '' };
+    const newItem = {label: (index + 2).toString(), text: ''};
     currentOptions.splice(index + 1, 0, newItem);
     let updatedOptions = currentOptions.map((item, i) => {
       if (i > index + 1) {
@@ -171,13 +182,13 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
       },
     });
   };
-  const filteredOptions = (options: { label: string; text: string }[]) => {
+  const filteredOptions = (options: {label: string; text: string}[]) => {
     let optionsObj = [...options];
     if (questionData.otherOpt) {
-      optionsObj.push({ label: 'other', text: 'Other' });
+      optionsObj.push({label: 'other', text: 'Other'});
     }
     if (questionData.noneOfAbove) {
-      optionsObj.push({ label: 'none', text: 'None of the above' });
+      optionsObj.push({label: 'none', text: 'None of the above'});
     }
     return optionsObj;
   };
@@ -203,7 +214,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     } else {
       msgs.label = '';
     }
-    setValidation({ ...msgs });
+    setValidation({...msgs});
     return isValid;
   };
 
@@ -221,7 +232,9 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
           language: questionData.language.value,
           options: filteredOptions(questionData.options),
         };
-        const results: any = await API.graphql(graphqlOperation(mutations.createQuestion, { input: input }));
+        const results: any = await API.graphql(
+          graphqlOperation(mutations.createQuestion, {input: input})
+        );
         const newQuestion = results?.data?.createQuestion;
         if (newQuestion.id) {
           newQuestion.required = questionData.isRequired;
@@ -261,8 +274,8 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
       setQuestionData({
         ...questionData,
         options: [
-          { label: '1', text: '' },
-          { label: '2', text: '' },
+          {label: '1', text: ''},
+          {label: '2', text: ''},
         ],
       });
     }
@@ -272,24 +285,36 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
     setUnsavedChanges(false);
   }, [questionData]);
 
-  const { question, notes, label, type, language, isRequired, options, otherOpt, noneOfAbove } = questionData;
+  const {
+    question,
+    notes,
+    label,
+    type,
+    language,
+    isRequired,
+    options,
+    otherOpt,
+    noneOfAbove,
+  } = questionData;
   return (
     <Fragment>
       <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex items-center">
         <span className="w-6 h-6 flex items-center mr-4" onClick={() => console.log('')}>
-          <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+          <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
             <IoIosKeypad />
           </IconContext.Provider>
         </span>
 
         {/* Breadcrums */}
         <h4 className="text-base leading-6 font-medium text-gray-900 flex items-center">
-          <span className="w-auto flex-shrink-0 cursor-pointer" onClick={() => changeStep('SelectedCheckPointsList')}>
-            {lessonType === 'survey' ? 'Survey' : 'Assessment'} {AddNewQuestionDict[userLanguage]['BUILDER']} -{' '}
-            {lessonName}
+          <span
+            className="w-auto flex-shrink-0 cursor-pointer"
+            onClick={() => changeStep('SelectedCheckPointsList')}>
+            {lessonType === 'survey' ? 'Survey' : 'Assessment'}{' '}
+            {AddNewQuestionDict[userLanguage]['BUILDER']} - {lessonName}
           </span>
           <span className="w-6 h-6 flex items-center mx-4">
-            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
@@ -297,7 +322,7 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
             {AddNewQuestionDict[userLanguage]['CHECKPOINT']}
           </span>
           <span className="w-6 h-6 flex items-center mx-4">
-            <IconContext.Provider value={{ size: '1.5rem', color: 'darkgrey' }}>
+            <IconContext.Provider value={{size: '1.5rem', color: 'darkgrey'}}>
               <RiArrowRightLine />
             </IconContext.Provider>
           </span>
@@ -319,7 +344,9 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
               label={AddNewQuestionDict[userLanguage]['QUESTION']}
               isRequired
             />
-            {validation.question && <p className="text-red-600 text-sm">{validation.question}</p>}
+            {validation.question && (
+              <p className="text-red-600 text-sm">{validation.question}</p>
+            )}
           </div>
           <div>
             <FormInput
@@ -330,7 +357,9 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
               label={AddNewQuestionDict[userLanguage]['QUESTIONLABEL']}
               isRequired
             />
-            {validation.label && <p className="text-red-600 text-sm">{validation.label}</p>}
+            {validation.label && (
+              <p className="text-red-600 text-sm">{validation.label}</p>
+            )}
           </div>
         </div>
 
@@ -342,7 +371,8 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
             <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-              {AddNewQuestionDict[userLanguage]['SELECTTYPE']} <span className="text-red-500">*</span>
+              {AddNewQuestionDict[userLanguage]['SELECTTYPE']}{' '}
+              <span className="text-red-500">*</span>
             </label>
             <Selector
               selectedItem={type.name}
@@ -399,14 +429,16 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
                       <span
                         className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
                         onClick={() => onOptionAdd(index)}>
-                        <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
+                        <IconContext.Provider
+                          value={{size: '2rem', color: theme.iconColor[themeColor]}}>
                           <IoMdAddCircleOutline />
                         </IconContext.Provider>
                       </span>
                       <span
                         className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
                         onClick={() => onOptionRemove(index)}>
-                        <IconContext.Provider value={{ size: '2rem', color: theme.iconColor[themeColor] }}>
+                        <IconContext.Provider
+                          value={{size: '2rem', color: theme.iconColor[themeColor]}}>
                           <IoMdRemoveCircleOutline />
                         </IconContext.Provider>
                       </span>
@@ -440,7 +472,9 @@ const AddNewQuestion = (props: AddNewQuestionProps) => {
         <div className="mt-8 px-6 pb-4">
           {validation.message && (
             <div className="py-4 m-auto mt-2 text-center">
-              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>{validation.message}</p>
+              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
+                {validation.message}
+              </p>
             </div>
           )}
           <div className="flex justify-center my-6">

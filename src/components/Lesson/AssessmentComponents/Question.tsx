@@ -19,10 +19,11 @@ export interface QuestionProps {
   questionIndex?: number;
   questionKey: any;
   animate?: boolean;
+  type?: string;
   handleInputChange?: (
     id: number | string,
     value: string | string[],
-    checkpointID: string,
+    checkpointID: string
   ) => void;
   value?: ResponseState;
 }
@@ -65,6 +66,20 @@ const Question = (props: QuestionProps) => {
             questionKey={key}
             handleInputChange={handleInputChange}
             value={value}
+          />
+        );
+      case 'datePicker':
+        return (
+          <InputQuestions
+            checkpointID={checkpointID}
+            visible={visible}
+            isTeacher={isTeacher}
+            question={question}
+            questionIndex={questionIndex}
+            questionKey={key}
+            handleInputChange={handleInputChange}
+            value={value}
+            type={'date'}
           />
         );
       case 'text':

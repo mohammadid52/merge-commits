@@ -9,6 +9,7 @@ import {IoLockClosed} from 'react-icons/io5';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import Status from '../../../Atoms/Status';
 import {getAsset} from '../../../../assets';
+import LinkPreview from '../../../Atoms/LinkPreview';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -37,6 +38,7 @@ const UserInformation = (props: UserInfoProps) => {
     const selectedCheckp: any = questionData.find(
       (item: any) => item.checkpointID === checkpointID
     );
+
     if (selectedCheckp) {
       const questionResponce: any = selectedCheckp.responseObject?.find(
         (item: any) => item.qid === questionID
@@ -200,7 +202,15 @@ const UserInformation = (props: UserInfoProps) => {
                     {item.question.question}
                   </dt>
                   <dd className="mt-2 text-base leading-5 text-gray-900">
-                    {getQuestionResponse(checkpointID, item.question.id) || '--'}
+                    {item.question.type !== 'link' ? (
+                      getQuestionResponse(checkpointID, item.question.id) || '--'
+                    ) : getQuestionResponse(checkpointID, item.question.id) ? (
+                      <LinkPreview
+                        url={getQuestionResponse(checkpointID, item.question.id)}
+                      />
+                    ) : (
+                      <p>Loading preview</p>
+                    )}
                   </dd>
                 </div>
               );
