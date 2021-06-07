@@ -135,7 +135,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         onClick={() => handleEditBlockToggle()}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
-        containerBgClass={`rounded bg-gray-600 z-50 cursor-pointer`}
+        containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={'text-white'}
       />
