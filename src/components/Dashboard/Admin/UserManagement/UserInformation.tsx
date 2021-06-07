@@ -82,7 +82,9 @@ const UserInformation = (props: UserInfoProps) => {
     <div className="w-3/4 md:px-2 pt-2">
       <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
         <div className="border-b-0 border-gray-200">
-          <nav className="-mb-px flex space-x-8 overflow-x-auto" aria-label="Tabs">
+          <nav
+            className="-mb-px flex space-x-8 overflow-x-auto custom-scrollbar"
+            aria-label="Tabs">
             <a
               onClick={() => setTab('p')}
               key="personal_information"

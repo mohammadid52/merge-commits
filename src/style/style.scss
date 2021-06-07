@@ -879,6 +879,11 @@
   transform: scaleY(0);
 }
 
+.custom-scrollbar {
+  scrollbar-color: #eee white;
+  scrollbar-width: thin;
+}
+
 .slidecontainer {
   width: 100%;
 }
