@@ -242,7 +242,7 @@ export const reorder = (list: any, startIndex: number, endIndex: number) => {
 export const getClientKey = () => {
   const url = new URL(window.location.href);
   let hostname = url.hostname;
-  console.log('hostname', hostname)
+  // console.log('hostname', hostname)
   if (hostname.indexOf('localhost') >= 0) return 'iconoclast';
   if (hostname.indexOf('demo') >= 0) return 'iconoclast';
   if (hostname.indexOf('iconoclast') >= 0) return 'iconoclast';
