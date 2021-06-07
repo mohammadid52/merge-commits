@@ -146,7 +146,7 @@ const Dashboard = (props: DashboardProps) => {
     ) {
       setActiveRoomName(name);
       dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: id}});
-      setSyllabusLoading(true); // Trigger loading ui element
+      setSyllabusLoading(true);
       setLessonLoading(true);
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
       history.push(`/dashboard/${route}/${id}`);
@@ -210,9 +210,13 @@ const Dashboard = (props: DashboardProps) => {
           email: email,
         },
       };
-      const dashboardDataFetch = await handleFetchAndCache(queryObj);
+      // const dashboardDataFetch = await handleFetchAndCache(queryObj);
+      const dashboardDataFetch = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+      );
       const response = await dashboardDataFetch;
 
+      // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
@@ -313,8 +317,12 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      const classIdFromRoomsFetch = await handleFetchAndCache(queryObj);
+      // const classIdFromRoomsFetch = await handleFetchAndCache(queryObj);
+      const classIdFromRoomsFetch = await API.graphql(
+        graphqlOperation(customQueries.listRooms, queryObj.valueObj)
+      );
       const response = await classIdFromRoomsFetch;
+      //@ts-ignore
       const arrayOfResponseObjects = response?.data?.listRooms?.items;
 
       setRooms(arrayOfResponseObjects);
@@ -382,17 +390,33 @@ const Dashboard = (props: DashboardProps) => {
           const queryObj = {
             name: 'customQueries.listRoomCurriculums',
             valueObj: {
-              roomID: {contains: state.activeRoom},
+              roomID: {eq: state.activeRoom},
             },
           };
 
-          const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
+
+          /***************************************************
+           *                                                 *
+           * DISABLED handleFetchAndCache()                  *
+           * TO TROUBLESHOOT LESSONS NOT LOADING             *
+           * ON SYLLABUS-ACTIVATION SWTICH                   *
+           *                                                 *
+           ***************************************************/
+          // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
+          const roomCurriculumsFetch = await API.graphql(
+            graphqlOperation(queries.listRoomCurriculums, {filter:{
+              roomID: {eq: state.activeRoom},
+            }})
+          );
           const response = await roomCurriculumsFetch;
+          // @ts-ignore
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+          console.log('roomCurriculums list - ', arrayOfResponseObjects)
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(
             arrayOfResponseObjects,
             'curriculumID'
           );
+
           setCurriculumIds(arrayOfCurriculumIds);
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
@@ -438,14 +462,30 @@ const Dashboard = (props: DashboardProps) => {
             },
           };
 
-          const syllabusCSequenceFetch = await handleFetchAndCache(queryObj);
-          const syllabusMultiFetch = await handleFetchAndCache(queryObj2);
+          /***************************************************
+           *                                                 *
+           * DISABLED handleFetchAndCache()                  *
+           * TO TROUBLESHOOT LESSONS NOT LOADING             *
+           * ON SYLLABUS-ACTIVATION SWTICH                   *
+           *                                                 *
+           ***************************************************/
+          // const syllabusCSequenceFetch = await handleFetchAndCache(queryObj);
+          const syllabusCSequenceFetch = await API.graphql(
+            graphqlOperation(queries.getCSequences, queryObj.valueObj)
+            );
+          // const syllabusMultiFetch = await handleFetchAndCache(queryObj2);
+          const syllabusMultiFetch = await API.graphql(
+            graphqlOperation(customQueries.listSyllabuss, queryObj2.valueObj)
+            );
 
           const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
           const responseRoomSyllabus = await syllabusMultiFetch;
+          console.log('available syllabus -', responseRoomSyllabus)
 
           const arrayOfRoomSyllabusSequence =
+          //@ts-ignore
             responseRoomSyllabusSequence?.data.getCSequences?.sequence;
+          //@ts-ignore
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
 
           // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
@@ -507,8 +547,12 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {id: `lesson_${syllabusID}`},
       };
 
-      const syllabusLessonCSequenceFetch = handleFetchAndCache(queryObj);
+      // const syllabusLessonCSequenceFetch = handleFetchAndCache(queryObj);
+      const syllabusLessonCSequenceFetch = await API.graphql(
+        graphqlOperation(queries.getCSequences, queryObj.valueObj)
+      );
       const response = await syllabusLessonCSequenceFetch;
+      //@ts-ignore
       const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
       setSyllabusLessonSequence(arrayOfResponseObjects);
     } catch (e) {
@@ -556,8 +600,12 @@ const Dashboard = (props: DashboardProps) => {
           },
         };
 
-        const syllabusLessonFetch = await handleFetchAndCache(queryObj);
+        // const syllabusLessonFetch = await handleFetchAndCache(queryObj);
+        const syllabusLessonFetch = await API.graphql(
+          graphqlOperation(customQueries.listSyllabusLessons, queryObj.valueObj)
+        );
         const response = await syllabusLessonFetch;
+        //@ts-ignore
         const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
         // SOMETHING TO REFACTOR
         const syllabusLessonsReordered = syllabusLessonSequence.reduce(
@@ -578,7 +626,8 @@ const Dashboard = (props: DashboardProps) => {
           type: 'UPDATE_ROOM',
           payload: {
             property: 'lessons',
-            data: syllabusLessonsReordered,
+            // data: syllabusLessonsReordered,
+            data: arrayOfResponseObjects,
           },
         });
       } catch (e) {
@@ -605,6 +654,7 @@ const Dashboard = (props: DashboardProps) => {
     });
 
   useEffect(() => {
+
     const getSyllabusLessonsAndCSequence = async () => {
       await getSyllabusLessonCSequence(classRoomActiveSyllabus[0].id);
     };
@@ -614,6 +664,7 @@ const Dashboard = (props: DashboardProps) => {
       state.roomData.syllabus.length > 0 &&
       classRoomActiveSyllabus[0]
     ) {
+      console.log('different active syllabus --', classRoomActiveSyllabus[0].id)
       getSyllabusLessonsAndCSequence();
     }
   }, [state.roomData.syllabus]);
