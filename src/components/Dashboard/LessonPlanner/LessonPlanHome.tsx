@@ -66,7 +66,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       maxPersons: roomStateObject.room.maxPersons,
       activeSyllabus: syllabusID,
     };
-    console.log('lessonplanhome activateSyl --> ', input);
+    // console.log('lessonplanhome activateSyl --> ', input);
 
     try {
       const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));

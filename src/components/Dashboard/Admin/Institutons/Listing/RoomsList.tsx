@@ -143,7 +143,7 @@ const RoomsList = (props: RoomListProps) => {
                 ))}
               </div>
             </Fragment>
-          ) : roomList.length < 0 ? (
+          ) : roomList.length <= 0 ? (
             <Fragment>
               <div className="flex justify-center mt-8">
                 <Buttons
@@ -152,10 +152,8 @@ const RoomsList = (props: RoomListProps) => {
                   onClick={createNewRoom}
                 />
               </div>
-              <p
-                className={`text-center text-lg text-gray-500 ${
-                  messages.isError ? 'text-red-600' : ''
-                }`}>
+
+              <p className={`text-center p-16 ${messages.isError ? 'text-red-600' : ''}`}>
                 {messages.message}
               </p>
             </Fragment>

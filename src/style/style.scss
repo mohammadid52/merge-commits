@@ -705,14 +705,23 @@
 .user__profile-tabs {
   & .tab {
     transition: all 0.3s ease;
-    &.active {
+
+    &.active.iconoclastIndigo {
       background: #e0e7ff;
       color: #4338ca;
     }
-    &:not(.active):hover {
-      background-color: #eef2ff;
-      color: #4338ca;
+    &.active.curateBlue {
+      background: #e0e7ff;
+      color: #0081cb;
     }
+    // &:not(.active.iconoclastIndigo):hover {
+    //   background-color: #eef2ff;
+    //   color: #4338ca;
+    // }
+    // &:not(.active.curateBlue):hover {
+    //   background-color: #eef2ff;
+    //   color: #0081cb;
+    // }
     background: transparent;
     color: #6b7280;
     text-align: center;
@@ -819,4 +828,19 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
+}
+.picker-wrapper {
+  * {
+    width: auto;
+  }
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

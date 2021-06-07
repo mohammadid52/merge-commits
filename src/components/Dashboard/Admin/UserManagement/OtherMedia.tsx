@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {BiCloudDownload} from 'react-icons/bi';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import Loader from '../../../Atoms/Loader';
 import Size from './Size';
 
@@ -25,11 +27,16 @@ const downloadFile = (uri: string, name: string, isAudio: boolean) => {
 };
 
 const OtherMedia = ({attachment}: any) => {
+  const {clientKey, theme} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const getColor = (theme = 'indigo') => {
+    return `hover:bg-${theme}-500 active:bg-${theme}-500 focus:bg-${theme}-500`;
+  };
   return attachment.url === 'loading' ? (
     <div className="h-12 w-80 p-2 text-gray-500 border-0 border-gray-300 hover:border-gray-400 max-w-7xl min-w-56 rounded-md transition-all cursor-pointer flex justify-between items-center px-4">
       <p className="truncate w-auto">{attachment.filename}</p>
       <span className={'flex items-center justify-center h-8 w-8'}>
-        <Loader color="#6366F1" />
+        <Loader color={theme.iconColor[themeColor]} />
       </span>
     </div>
   ) : (
@@ -44,9 +51,9 @@ const OtherMedia = ({attachment}: any) => {
             attachment.type.includes('audio')
           );
         }}
-        className={
-          'flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white hover:bg-indigo-400 text-gray-500 text-lg'
-        }>
+        className={`${
+          themeColor === 'iconoclastIndigo' ? getColor('indigo') : getColor('blue')
+        } flex items-center justify-center h-7 w-7 rounded cursor-pointer transition-all duration-150 hover:text-white text-gray-500 text-lg`}>
         <BiCloudDownload />
       </span>
     </div>
