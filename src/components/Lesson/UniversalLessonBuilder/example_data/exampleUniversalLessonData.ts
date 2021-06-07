@@ -36,10 +36,14 @@ export const exampleUniversalLesson: UniversalLesson = {
       pageContent: [
         {
           id: 'page_2_part_0',
+          tags: ['homework', 'story', 'school'],
           partType: 'default',
           class: 'bg-red-500 bg-opacity-40 rounded-lg',
           partContent: [
-            { id: 'page_2_part_0_header-0', type: 'header-default', value: ['Instructions'] },
+            {
+              id: 'page_2_part_0_header-0',
+              type: 'header-default',
+              value: ['Instructions'] },
             {
               id: 'page_2_part_0_text-0',
               type: 'paragraph',
