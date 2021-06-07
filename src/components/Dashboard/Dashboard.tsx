@@ -218,6 +218,8 @@ const Dashboard = (props: DashboardProps) => {
       // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
+      console.log('all student classes - ', arrayOfResponseObjects)
+
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
       );

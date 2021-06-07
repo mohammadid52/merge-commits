@@ -43,6 +43,8 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
         );
       case 'poem':
         return <PoemView fullscreen={fullscreen} />;
+      case 'tchart':
+      case 'multi-list':
       case 'list':
         return <ListView fullscreen={fullscreen} />;
       case 'truthgame':
