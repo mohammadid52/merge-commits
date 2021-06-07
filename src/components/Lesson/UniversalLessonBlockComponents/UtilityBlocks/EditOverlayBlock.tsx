@@ -1,4 +1,5 @@
 import React from 'react';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
@@ -14,6 +15,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
     isLast,
     handleEditBlockToggle,
   } = props;
+  const {previewMode} = useULBContext();
 
   return (
     <>
@@ -23,7 +25,11 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
         relative 
         h-auto 
         flex items-center
-        ${isComponent && !isLast ? 'border-b-0 border-dashed border-gray-400' : ''}
+        ${
+          isComponent && !isLast && !previewMode
+            ? 'border-b-0 border-dashed border-gray-400'
+            : ''
+        }
         `}>
           <EditOverlayControls
             mode={mode}
