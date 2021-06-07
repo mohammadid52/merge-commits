@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LessonContext } from '../../../../../contexts/LessonContext';
 import ReflectionQuestions from '../../ReflectionQuestions';
 import Modules from './Modules';
-import Banner from './Banner';
+import Banner from '../../Banner';
 import ListOutput from './ListOutput';
 
 import {firstInitialFunc} from '../../../../../utilities/strings';
@@ -90,12 +90,11 @@ const CoopDisplay = () => {
 
         <Banner
           title={
-            teacherData && teacherData.warmUpData && teacherData.warmUpData.title
+            teacherData.warmUpData?.title
               ? teacherData.warmUpData.title
               : 'Classmates List'
           }
-          fullscreen={fullscreen}
-          display="COOP"
+          iconName={'list'}
         />
 
         <div className="w-full h-8.8/10 flex md:flex-col justify-between">
@@ -127,9 +126,8 @@ const CoopDisplay = () => {
         </div>
 
         <Banner
-          title={displayProps && displayProps.title ? displayProps.title : 'Your List'}
-          display="SELFinCOOP"
-          fullscreen={fullscreen}
+          title={displayProps.title ? displayProps.title : 'Your List'}
+          iconName={'list'}
         />
 
         <div className="w-full h-8.8/10 flex flex-col justify-between">
