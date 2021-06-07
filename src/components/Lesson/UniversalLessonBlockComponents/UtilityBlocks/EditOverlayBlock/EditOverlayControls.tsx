@@ -89,7 +89,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
           ${isComponent ? '' : offsetClass}
           `}>
-      <ClickAwayListener onClickAway={() => setOverlayVisible(false)}>
+      <ClickAwayListener
+        onClickAway={() => {
+          setOverlayVisible(false);
+          setColorPickerActive(false);
+        }}>
         <div
           className={`flex ulb_actions ${
             overlayVisible ? 'show' : ''
