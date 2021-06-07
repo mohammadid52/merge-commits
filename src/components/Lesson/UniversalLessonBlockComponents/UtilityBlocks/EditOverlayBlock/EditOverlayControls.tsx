@@ -96,7 +96,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         }}>
         <div
           style={{zIndex: 9999999}}
-          className={`flex ulb_action transition-all duration-300 ${
+          className={`flex ulb_action ${
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left' : 'right'
