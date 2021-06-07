@@ -22,8 +22,9 @@ import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
-import { useParams } from 'react-router';
+import {useParams} from 'react-router';
 import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -219,7 +220,7 @@ const Dashboard = (props: DashboardProps) => {
       // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
-      console.log('all student classes - ', arrayOfResponseObjects)
+      console.log('all student classes - ', arrayOfResponseObjects);
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
         (item: any) => item.class !== null
@@ -396,7 +397,6 @@ const Dashboard = (props: DashboardProps) => {
             },
           };
 
-
           /***************************************************
            *                                                 *
            * DISABLED handleFetchAndCache()                  *
@@ -406,14 +406,16 @@ const Dashboard = (props: DashboardProps) => {
            ***************************************************/
           // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
           const roomCurriculumsFetch = await API.graphql(
-            graphqlOperation(queries.listRoomCurriculums, {filter:{
-              roomID: {eq: state.activeRoom},
-            }})
+            graphqlOperation(queries.listRoomCurriculums, {
+              filter: {
+                roomID: {eq: state.activeRoom},
+              },
+            })
           );
           const response = await roomCurriculumsFetch;
           // @ts-ignore
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
-          console.log('roomCurriculums list - ', arrayOfResponseObjects)
+          console.log('roomCurriculums list - ', arrayOfResponseObjects);
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(
             arrayOfResponseObjects,
             'curriculumID'
@@ -474,18 +476,18 @@ const Dashboard = (props: DashboardProps) => {
           // const syllabusCSequenceFetch = await handleFetchAndCache(queryObj);
           const syllabusCSequenceFetch = await API.graphql(
             graphqlOperation(queries.getCSequences, queryObj.valueObj)
-            );
+          );
           // const syllabusMultiFetch = await handleFetchAndCache(queryObj2);
           const syllabusMultiFetch = await API.graphql(
             graphqlOperation(customQueries.listSyllabuss, queryObj2.valueObj)
-            );
+          );
 
           const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
           const responseRoomSyllabus = await syllabusMultiFetch;
-          console.log('available syllabus -', responseRoomSyllabus)
+          console.log('available syllabus -', responseRoomSyllabus);
 
           const arrayOfRoomSyllabusSequence =
-          //@ts-ignore
+            //@ts-ignore
             responseRoomSyllabusSequence?.data.getCSequences?.sequence;
           //@ts-ignore
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
@@ -656,7 +658,6 @@ const Dashboard = (props: DashboardProps) => {
     });
 
   useEffect(() => {
-
     const getSyllabusLessonsAndCSequence = async () => {
       await getSyllabusLessonCSequence(classRoomActiveSyllabus[0].id);
     };
@@ -666,7 +667,7 @@ const Dashboard = (props: DashboardProps) => {
       state.roomData.syllabus.length > 0 &&
       classRoomActiveSyllabus[0]
     ) {
-      console.log('different active syllabus --', classRoomActiveSyllabus[0].id)
+      console.log('different active syllabus --', classRoomActiveSyllabus[0].id);
       getSyllabusLessonsAndCSequence();
     }
   }, [state.roomData.syllabus]);
@@ -830,9 +831,14 @@ const Dashboard = (props: DashboardProps) => {
 
             <Route
               path={`${match.url}/universal-lesson-builder`}
-              render={() => <UniversalLessonBuilder />}
+              render={() => {
+                return (
+                  <UniversalLessonBuilderProvider>
+                    <UniversalLessonBuilder />
+                  </UniversalLessonBuilderProvider>
+                );
+              }}
             />
-
           </Switch>
         </Suspense>
       </div>

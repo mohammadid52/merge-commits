@@ -18,7 +18,7 @@ import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
 import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
 import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
-import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';

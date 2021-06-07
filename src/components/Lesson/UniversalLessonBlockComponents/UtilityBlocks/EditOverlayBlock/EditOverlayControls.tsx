@@ -16,8 +16,7 @@ import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
 import ClickAwayListener from 'react-click-away-listener';
-import {HiPencil} from 'react-icons/hi';
-import {IoCloseSharp} from 'react-icons/io5';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
@@ -35,7 +34,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
-
+  const {previewMode} = useULBContext();
   useEffect(() => {
     if (isActive) {
       if (!overlayVisible) {
@@ -79,94 +78,85 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
-  return (
-    <div
-      id="editControlsWrapper"
-      className={`
+  if (previewMode) return null;
+  else
+    return (
+      <div
+        className={`
           absolute 
           flex flex-row
           items-center
           bg-transparent rounded-lg
           z-100
           h-auto w-auto
-          
+         
           ${isComponent ? '' : offsetClass}
           `}>
-      <ClickAwayListener
-        onClickAway={() => {
-          setOverlayVisible(false);
-          setColorPickerActive(false);
-        }}>
-        <div
-          style={{zIndex: 9999999}}
-          className={`flex ulb_action ${
-            overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
-          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
-            isComponent ? 'left' : 'right'
-          }-3.5 bg-dark rounded-lg shadow-lg `}>
-          <button className={`${actionClass}`}>
-            <span className={iconClass}>
-              <CgEditFlipH />
-            </span>
-            <span className={textClass}>Split</span>
-          </button>
-          <button className={`${actionClass}`}>
-            <span className={iconClass}>
-              <AiOutlineEdit />
-            </span>
-            <span className={textClass}>Edit</span>
-          </button>
-
-          <div className={`relative`}>
-            <button
-              onClick={() => setColorPickerActive(!colorPickerActive)}
-              className={`${actionClass}`}>
+        <ClickAwayListener
+          onClickAway={() => {
+            setOverlayVisible(false);
+            setColorPickerActive(false);
+          }}>
+          <div
+            style={{zIndex: 9999999}}
+            className={`flex ulb_action ${
+              overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
+            }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
+              isComponent ? 'left' : 'right'
+            }-3.5 bg-dark rounded-lg shadow-lg `}>
+            <button className={`${actionClass}`}>
+              <span className={iconClass}>
+                <CgEditFlipH />
+              </span>
+              <span className={textClass}>Split</span>
+            </button>
+            <button className={`${actionClass}`}>
               <span className={iconClass}>
                 <AiOutlineEdit />
               </span>
-              <span className={textClass}>BG Color</span>
+              <span className={textClass}>Edit</span>
             </button>
-            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
+
+            <div className={`relative`}>
+              <button
+                onClick={() => setColorPickerActive(!colorPickerActive)}
+                className={`${actionClass}`}>
+                <span className={iconClass}>
+                  <AiOutlineEdit />
+                </span>
+                <span className={textClass}>BG Color</span>
+              </button>
+              {colorPickerActive && (
+                <ColorPicker callbackColor={handleColorPickerSelect} />
+              )}
+            </div>
+
+            <button
+              onClick={() => deleteFromULBHandler(contentID)}
+              className={`${actionClass} text-red-600`}>
+              <span className={iconClass}>
+                <AiOutlineDelete />
+              </span>
+              <span className={textClass}>Delete</span>
+            </button>
           </div>
+        </ClickAwayListener>
 
-          <button
-            onClick={() => deleteFromULBHandler(contentID)}
-            className={`${actionClass} text-red-600`}>
-            <span className={iconClass}>
-              <AiOutlineDelete />
-            </span>
-            <span className={textClass}>Delete</span>
-          </button>
-        </div>
-      </ClickAwayListener>
+        <ButtonsRound
+          Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
+          onClick={() => {
+            handleEditBlockToggle();
+          }}
+          iconSizePX={24}
+          buttonWHClass={`w-8 h-8`}
+          containerBgClass={`rounded-full bg-gray-600 z-10 cursor-pointer`}
+          buttonBgClass={`bg-transparent`}
+          iconTxtColorClass={'text-white'}
+        />
 
-      {/* <ButtonsRound
-        Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
-        onClick={() => {
-          handleEditBlockToggle();
-        }}
-        iconSizePX={24}
-        buttonWHClass={`w-8 h-8`}
-        containerBgClass={`rounded-full bg-gray-600 z-10 cursor-pointer`}
-        buttonBgClass={`bg-transparent`}
-        iconTxtColorClass={'text-white'}
-      /> */}
-
-      <button
-        className="bg-dark rounded-full h-8 w-16 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer"
-        onClick={() => {
-          handleEditBlockToggle();
-        }}>
-        {overlayVisible ? (
-          <IoCloseSharp color={'#fff'} size={20} />
-        ) : (
-          <HiPencil color={'#fff'} size={20} />
-        )}
-      </button>
-
-      <div></div>
-    </div>
-  );
+        <div></div>
+      </div>
+    );
 };
 
 export default EditOverlayControls;

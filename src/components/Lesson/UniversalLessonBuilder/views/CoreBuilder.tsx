@@ -12,7 +12,10 @@ import {RowWrapper} from '../../UniversalLessonBlockComponents/RowWrapper';
 import {AddNewBlock} from '../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import EditOverlayBlock from '../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
+import Tooltip from '../../../Atoms/Tooltip';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
@@ -40,6 +43,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setSelectedPartContentID,
     handleModalPopToggle,
   } = props;
+  const {previewMode, setPreviewMode} = useULBContext();
 
   return (
     <div className={`h-full bg-dark-gray overflow-hidden overflow-y-scroll`}>
@@ -61,6 +65,16 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             handleModalPopToggle={handleModalPopToggle}
           />
         </LessonPageWrapper>
+      </div>
+
+      <div className="absolute top-7 right-2 w-auto">
+        <Tooltip placement="left" text={`Preview Mode: ${previewMode ? 'On' : 'Off'}`}>
+          <button
+            onClick={() => setPreviewMode(!previewMode)}
+            className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+            {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

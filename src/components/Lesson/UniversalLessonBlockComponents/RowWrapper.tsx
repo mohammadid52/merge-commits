@@ -1,4 +1,5 @@
 import React from 'react';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export const RowWrapper = (props: RowWrapperProps) => {
@@ -13,6 +14,7 @@ export const RowWrapper = (props: RowWrapperProps) => {
   } = props;
 
   const viewModeClass = ``;
+  const {previewMode} = useULBContext();
   const buildModeClass = `border-0 border-dashed border-gray-400`;
 
   return (
@@ -27,9 +29,9 @@ export const RowWrapper = (props: RowWrapperProps) => {
       `}>
       <div
         className={`
-          ${mode === 'building' ? buildModeClass : viewModeClass}
-          shadow rounded-lg divide-y divide-gray-200
-          
+          ${mode === 'building' && !previewMode ? buildModeClass : viewModeClass}
+           rounded-lg divide-y divide-gray-200
+          ${!previewMode ? 'shadow' : ''}
           `}>
         <div className="relative ">{children}</div>
       </div>
