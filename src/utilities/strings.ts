@@ -306,6 +306,8 @@ export const getTypeString = (type: string) => {
       return 'Date Picker';
     case 'link':
       return 'link';
+    case 'emoji':
+      return 'Emoji';
     default:
       return 'Text';
   }
