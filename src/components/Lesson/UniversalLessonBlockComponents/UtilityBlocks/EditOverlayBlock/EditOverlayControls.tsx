@@ -86,7 +86,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           bg-transparent rounded-lg
           z-100
           h-auto w-auto
-          ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
+         
           ${isComponent ? '' : offsetClass}
           `}>
       <ClickAwayListener
@@ -95,9 +95,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           setColorPickerActive(false);
         }}>
         <div
+          style={{zIndex: 9999999}}
           className={`flex ulb_action transition-all duration-300 ${
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
-          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 right-3.5 bg-dark rounded-lg shadow-lg `}>
+          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
+            isComponent ? 'left' : 'right'
+          }-3.5 bg-dark rounded-lg shadow-lg `}>
           <button className={`${actionClass}`}>
             <span className={iconClass}>
               <CgEditFlipH />
@@ -136,10 +139,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
       <ButtonsRound
         Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
-        onClick={() => handleEditBlockToggle()}
+        onClick={() => {
+          handleEditBlockToggle();
+        }}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
-        containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}
+        containerBgClass={`rounded-full bg-gray-600 z-10 cursor-pointer`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={'text-white'}
       />
