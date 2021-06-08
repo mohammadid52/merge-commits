@@ -16,6 +16,8 @@ import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
 import ClickAwayListener from 'react-click-away-listener';
+import {HiPencil} from 'react-icons/hi';
+import {IoCloseSharp} from 'react-icons/io5';
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
@@ -79,6 +81,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const textClass = 'mx-2 w-auto tracking-widest';
   return (
     <div
+      id="editControlsWrapper"
       className={`
           absolute 
           flex flex-row
@@ -86,7 +89,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           bg-transparent rounded-lg
           z-100
           h-auto w-auto
-         
+          
           ${isComponent ? '' : offsetClass}
           `}>
       <ClickAwayListener
@@ -137,7 +140,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         </div>
       </ClickAwayListener>
 
-      <ButtonsRound
+      {/* <ButtonsRound
         Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
         onClick={() => {
           handleEditBlockToggle();
@@ -147,7 +150,19 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         containerBgClass={`rounded-full bg-gray-600 z-10 cursor-pointer`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={'text-white'}
-      />
+      /> */}
+
+      <button
+        className="bg-dark rounded-full h-8 w-16 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer"
+        onClick={() => {
+          handleEditBlockToggle();
+        }}>
+        {overlayVisible ? (
+          <IoCloseSharp color={'#fff'} size={20} />
+        ) : (
+          <HiPencil color={'#fff'} size={20} />
+        )}
+      </button>
 
       <div></div>
     </div>
