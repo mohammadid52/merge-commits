@@ -14,6 +14,7 @@ import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterf
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
+import {JumbotronBlock} from './Blocks/JumbotronBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -27,9 +28,7 @@ const RowComposer = (props: RowComposerProps) => {
   } = props;
   const [editedID, setEditedID] = useState<string>('');
 
-  const handleEditBlockToggle = (
-    dataID: string
-  ) => {
+  const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {
       if (editedID !== dataID) {
         setEditedID(dataID);
@@ -40,42 +39,16 @@ const RowComposer = (props: RowComposerProps) => {
   };
 
   const composePartContent = (id: string, type: string, value: any, inputKey: string) => {
-    if (type.includes('header')) {
-      return (
-        <HeaderBlock
-          id={id}
-          type={type}
-          value={value}
-          mode={mode}
-        />
-      );
+    if (type.includes('jumbotron')) {
+      return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
+    } else if (type.includes('header')) {
+      return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
-      return (
-        <ParagraphBlock
-          id={id}
-          type={type}
-          value={value}
-          mode={mode}
-        />
-      );
+      return <ParagraphBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('form')) {
-      return (
-        <FormBlock
-          id={id}
-          value={value}
-          mode={mode}
-        />
-      );
+      return <FormBlock id={id} value={value} mode={mode} />;
     } else {
-      return (
-        <StringifyBlock
-          key={inputKey}
-          id={id}
-          dataIdAttribute={inputKey}
-          anyObj={value}
-          mode={mode}
-        />
-      );
+      return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
     }
   };
 
@@ -119,18 +92,16 @@ const RowComposer = (props: RowComposerProps) => {
                         isLast={idx2 === pagePart.partContent.length - 1}
                         handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
                         deleteFromULBHandler={deleteFromULBHandler}>
-                        {
-                            content.value.length > 0 ? (
-                              composePartContent(
-                                content.id,
-                                content.type,
-                                content.value,
-                                `pp_${idx}_pc_${idx2}`
-                              )
-                          ) : (
-                            <p>No content</p>
+                        {content.value.length > 0 ? (
+                          composePartContent(
+                            content.id,
+                            content.type,
+                            content.value,
+                            `pp_${idx}_pc_${idx2}`
                           )
-                        }
+                        ) : (
+                          <p>No content</p>
+                        )}
                       </EditOverlayBlock>
                     ))
                   ) : (

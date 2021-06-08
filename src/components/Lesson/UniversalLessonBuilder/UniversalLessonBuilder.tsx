@@ -82,6 +82,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   // in this area ^
   useEffect(() => {
     setUniversalLessonDetails(exampleUniversalLesson);
+    if(exampleUniversalLesson.universalLessonPages.length > 0){
+      setSelectedPageID(exampleUniversalLesson.universalLessonPages[0].id)
+    }
   }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
@@ -111,6 +114,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     initialUniversalLessonData
   );
   const [selectedPageID, setSelectedPageID] = useState<string>('');
+
 
   /**
    *
