@@ -144,7 +144,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
                   case 'delete':
                     return acc2;
                   case 'update':
-                    // return [...acc2, {...targetArrayObj, class: ''}];
                     console.log({
                       [propertyToTarget]: replaceTailwindClass(
                         targetArrayObj[propertyToTarget],

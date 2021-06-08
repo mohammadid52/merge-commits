@@ -10,6 +10,7 @@ interface FormInputProps {
   name?: string;
   placeHolder?: string;
   disabled?: boolean;
+  type?: string;
 }
 
 const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
@@ -22,6 +23,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     id,
     name,
     placeHolder,
+    type = 'text',
   } = inputProps;
   const {theme} = useContext(GlobalContext);
 
@@ -32,7 +34,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
       </label>
       <input
         disabled={disabled}
-        type="text"
+        type={type}
         id={id}
         name={name}
         onChange={(e: any) => onChange(e)}

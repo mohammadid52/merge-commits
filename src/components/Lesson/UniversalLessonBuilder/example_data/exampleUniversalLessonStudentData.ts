@@ -21,7 +21,6 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
   studentID: 'jasperprague@yopmail.com',
   currentLocation: '2',
   lessonProgress: '2',
-  anthologyContent: [],
   pageData: [
     {
       pagePartID: 'page_2_part_1',
