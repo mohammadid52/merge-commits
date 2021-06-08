@@ -9,6 +9,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     children,
+    classString,
     contentID,
     editedID,
     isComponent,
@@ -34,6 +35,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
           <EditOverlayControls
             mode={mode}
             contentID={contentID}
+            classString={classString}
             isActive={contentID === editedID}
             isComponent={isComponent}
             handleEditBlockToggle={handleEditBlockToggle}
