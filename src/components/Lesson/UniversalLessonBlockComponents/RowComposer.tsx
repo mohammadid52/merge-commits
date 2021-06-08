@@ -101,13 +101,12 @@ const RowComposer = (props: RowComposerProps) => {
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
+                classString={pagePart.class}
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
-                handleEditBlockToggle={() =>
-                  handleEditBlockToggle(pagePart.id)
-                }>
+                handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}>
                 <RowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
@@ -124,11 +123,8 @@ const RowComposer = (props: RowComposerProps) => {
                         editedID={editedID}
                         isComponent={true}
                         isLast={idx2 === pagePart.partContent.length - 1}
-                        handleEditBlockToggle={() =>
-                          handleEditBlockToggle(content.id)
-                        }
-                        deleteFromULBHandler={deleteFromULBHandler
-                        }>
+                        handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
+                        deleteFromULBHandler={deleteFromULBHandler}>
                         {content.value.length > 0 ? (
                           content.value.map((value: any, idx3: number) =>
                             composePartContent(

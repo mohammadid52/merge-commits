@@ -1,8 +1,9 @@
 import React from 'react';
-import {FaSortUp} from 'react-icons/fa';
+import {FaCheck, FaSortUp} from 'react-icons/fa';
 
 interface ColorPickerProps {
   callbackColor: (pickedColor: string) => void;
+  classString?: string;
 }
 
 interface ColorObject {
@@ -11,8 +12,8 @@ interface ColorObject {
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
-  const {callbackColor} = props;
-
+  const {callbackColor, classString} = props;
+  
   const availableColors: ColorObject[] = [
     {value: 'gray', label: 'Gray'},
     {value: 'red', label: 'Red'},
@@ -46,9 +47,14 @@ const ColorPicker = (props: ColorPickerProps) => {
               return (
                 <div
                   key={`${color.value}_${code.value}_${idx2}`}
-                  className={`bg-${color.value}-${code.value} w-12 h-12 rounded-full shadow-sm cursor-pointer mx-1 border-2 border-${color.value}-${code.value}`}
-                  onClick={() => callbackColor(`${color.value}-${code.value}`)}
-                />
+                  className={`relative bg-${color.value}-${code.value} w-12 h-12 rounded-full shadow-sm cursor-pointer mx-1 border-2 border-${color.value}-${code.value}`}
+                  onClick={() => callbackColor(`${color.value}-${code.value}`)}>
+                  {classString?.includes(`bg-${color.value}-${code.value}`) ? 
+                  <div
+                    className={`absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 left-1/2`}>
+                    <FaCheck />
+                  </div> : null}
+                </div>
               );
             })}
           </div>

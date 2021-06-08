@@ -25,6 +25,7 @@ interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const {
+    classString,
     contentID,
     editedID,
     isActive,
@@ -33,6 +34,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
   } = props;
+
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
 
@@ -99,7 +101,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         }}>
         <div
           style={{zIndex: 9999999}}
-          className={`flex ulb_action ${
+          className={`relative flex ulb_action ${
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left' : 'right'
@@ -126,7 +128,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               </span>
               <span className={textClass}>BG Color</span>
             </button>
-            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
+            {colorPickerActive && (
+              <ColorPicker
+                callbackColor={handleColorPickerSelect}
+                classString={classString}
+              />
+            )}
           </div>
 
           <button
