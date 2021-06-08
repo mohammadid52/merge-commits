@@ -23,6 +23,7 @@ interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const {
+    classString,
     contentID,
     editedID,
     isActive,
@@ -31,6 +32,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
   } = props;
+  
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
 
@@ -119,7 +121,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
               Icon={AiOutlineBgColors}
             />
-            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
+            {colorPickerActive && (
+              <ColorPicker
+                callbackColor={handleColorPickerSelect}
+                classString={classString}
+              />
+            )}
           </div>
           <Buttons
             onClick={() => deleteFromULBHandler(contentID)}
