@@ -54,7 +54,7 @@ const RowComposer = (props: RowComposerProps) => {
           id={id}
           dataIdAttribute={inputKey}
           type={type}
-          value={value}
+          value={value || []}
           mode={mode}
           classString={classString}
         />
@@ -62,7 +62,7 @@ const RowComposer = (props: RowComposerProps) => {
     } else if (type.includes('jumbotron')) {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
-      return <ParagraphBlock id={id} type={type} value={value} mode={mode} />;
+      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
     } else {

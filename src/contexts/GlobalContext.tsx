@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {globalReducer} from '../reducers/GlobalReducer';
 import {globalState} from '../state/GlobalState';
 import {getClientKey} from '../utilities/strings';
@@ -147,6 +147,8 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
   const uLang = userLanguage;
   const clientKey = getClientKey();
 
+  const [collapse, setCollapse] = useState(false);
+
   useEffect(() => {}, []);
 
   useEffect(() => {
@@ -186,6 +188,8 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         userLanguage,
         uLang,
         clientKey,
+        collapse,
+        setCollapse,
       }}>
       {children}
     </GlobalContext.Provider>

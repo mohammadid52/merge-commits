@@ -28,9 +28,8 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
     setLessonLoading,
     handleRoomSelection,
   } = props;
-  const {dispatch, theme, clientKey} = useContext(GlobalContext);
+  const {dispatch, theme, clientKey, collapse, setCollapse} = useContext(GlobalContext);
   const history = useHistory();
-  const [collapse, setCollapse] = useState(false);
 
   const handleLink = (e: React.MouseEvent) => {
     history.push('/dashboard/home');
