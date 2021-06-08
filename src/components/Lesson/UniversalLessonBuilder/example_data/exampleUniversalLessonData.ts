@@ -55,6 +55,7 @@ export const exampleUniversalLesson: UniversalLesson = {
             },
           ],
         },
+        
         {
           id: 'page_2_part_1',
           partType: 'default',

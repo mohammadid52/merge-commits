@@ -25,6 +25,7 @@ const PageSelector = (props: PageSelectorProps) => {
     setSelectedPageID,
     deleteFromULBHandler,
     handleModalPopToggle,
+    hideAllModals,
   } = props;
   const pages = universalLessonDetails?.universalLessonPages;
 
@@ -40,6 +41,7 @@ const PageSelector = (props: PageSelectorProps) => {
   const handleSelectPage = (pageID: string) => {
     try {
       selectPage(pageID);
+      hideAllModals();
     } catch (e) {
       console.error('handleSelectPage: ', e);
     }

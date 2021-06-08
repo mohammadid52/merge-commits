@@ -49,4 +49,5 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   isComponent?: boolean;
   isLast?: boolean;
   handleEditBlockToggle?: () => void;
+  idx?: number;
 }

@@ -20,8 +20,6 @@ const NewPageDialog = () => {
 
   return (
     <div className={`flex flex-row z-50`}>
-
-
       {/* LEFT */}
       <div
         className={`
@@ -96,7 +94,6 @@ const NewPageDialog = () => {
         </div>
       </div>
 
-
       {/* MIDDLE */}
       <div
         className={`
@@ -122,7 +119,7 @@ const NewPageDialog = () => {
           />
         </div>
 
-        <div className={`h-full w-full bg-gray-200`}>
+        <div className={`w-full bg-gray-200`}>
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Activities
           </p>
@@ -144,7 +141,6 @@ const NewPageDialog = () => {
           </div>
         </div>
       </div>
-
 
       {/* RIGHT */}
       <div
@@ -171,7 +167,7 @@ const NewPageDialog = () => {
           />
         </div>
 
-        <div className={`h-full w-full bg-gray-200`}>
+        <div className={`w-full bg-gray-200`}>
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Style 1
           </p>
@@ -191,8 +187,6 @@ const NewPageDialog = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };

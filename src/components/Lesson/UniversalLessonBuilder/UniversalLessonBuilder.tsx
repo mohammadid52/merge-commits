@@ -11,6 +11,7 @@ import {
 import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -110,7 +111,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
   );
-  const [selectedPageID, setSelectedPageID] = useState<string>('');
+  const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
 
   /**
    *
@@ -206,6 +207,22 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
   };
+  const {newBlockSeqId} = useULBContext();
+
+  const addULBHandler = (pageId: string, newPageContent: PagePart) => {
+    // find current page object from universalLessonPages array
+    let currentPage = universalLessonDetails.universalLessonPages.find(
+      (page: any) => page.id === pageId
+    );
+
+    // find current page content from pageContent array
+    let pageContent = currentPage.pageContent;
+    if (pageContent && pageContent.length > 0) {
+      pageContent.splice(newBlockSeqId + 1, 0, newPageContent);
+
+      setUniversalLessonDetails({...universalLessonDetails});
+    }
+  };
 
   const updateULBHandler = (
     targetID: string,
@@ -246,6 +263,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         universalBuilderStep={universalBuilderStep}
         setUniversalBuilderStep={setUniversalBuilderStep}
         selectedPageID={selectedPageID}
+        addFromULBHandler={addULBHandler}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
       />

@@ -1,8 +1,10 @@
 import React from 'react';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export const AddNewBlockMini = (props: RowWrapperProps) => {
-  const {mode, hasContent, contentID, hoveredID, handleModalPopToggle} = props;
+  const {mode, hasContent, contentID, idx, hoveredID, handleModalPopToggle} = props;
+  const {setNewBlockSeqId} = useULBContext();
 
   return (
     <div
@@ -12,7 +14,10 @@ export const AddNewBlockMini = (props: RowWrapperProps) => {
       flex flex-col justify-center items-center
       z-50`}>
       <button
-        onClick={() => handleModalPopToggle('ADD_CONTENT')}
+        onClick={() => {
+          handleModalPopToggle('ADD_CONTENT');
+          setNewBlockSeqId(idx);
+        }}
         className={`
         w-auto 
         p-2
