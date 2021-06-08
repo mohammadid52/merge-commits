@@ -18,6 +18,7 @@ import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPic
 import ClickAwayListener from 'react-click-away-listener';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
@@ -57,7 +58,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const handleColorPickerSelect = (pickedColor: string) => {
     updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
   };
-
+  const {previewMode} = useULBContext();
   /**
    * Here is where I should add buttons
    * and dials and switches and controls
@@ -80,6 +81,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
+  if (previewMode) return null;
   return (
     <div
       id="editControlsWrapper"
@@ -103,8 +105,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           className={`flex ulb_action ${
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
-            isComponent ? 'left' : 'right'
-          }-3.5 bg-dark rounded-lg shadow-lg `}>
+            isComponent ? 'left-2' : 'right-3.5'
+          } bg-dark rounded-lg shadow-lg `}>
           <button className={`${actionClass}`}>
             <span className={iconClass}>
               <CgEditFlipH />
