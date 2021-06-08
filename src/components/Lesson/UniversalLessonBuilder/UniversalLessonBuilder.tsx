@@ -160,6 +160,17 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
                         ),
                       },
                     ];
+                  case 'create':
+                    return [
+                      ...acc2,
+                      {
+                        ...targetArrayObj,
+                        [propertyToTarget]: replaceTailwindClass(
+                          targetArrayObj[propertyToTarget],
+                          replacementValue
+                        ),
+                      },
+                    ];
                   default:
                     return [
                       ...acc2,
@@ -223,6 +234,40 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(updated);
   };
 
+  const createNewBlockULBHandler = (targetID: string, inputValue:any) => {
+    let temp = {...universalLessonDetails};
+    // const created = crudULBHandler(
+    //   universalLessonDetails,
+    //   'create',
+    //   targetID,
+    //   undefined,
+    //   inputValue
+    // );
+    const activePageIndex = universalLessonDetails.universalLessonPages.findIndex(
+      (page) => page.id === 'page_2'
+      );
+      console.log(universalLessonDetails, activePageIndex,'created');
+      let updatedPageContent = [...universalLessonDetails.universalLessonPages];
+      updatedPageContent[activePageIndex] = {
+        ...updatedPageContent[activePageIndex],
+        pageContent: [
+          ...updatedPageContent[activePageIndex].pageContent,
+          {class: 'rounded-lg',
+        id: "page_2_part_3",
+partContent: [],
+partType: "default"},
+        ],
+      };
+    temp = {
+      ...temp,
+      universalLessonPages: updatedPageContent,
+    };
+    console.log(temp, 'temptemp');
+    
+    
+    setUniversalLessonDetails(temp);
+  };
+
   return (
     /**
      *
@@ -242,6 +287,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         mode={`building`}
         deleteFromULBHandler={deleteULBHandler}
         updateFromULBHandler={updateULBHandler}
+        createNewBlockULBHandler={createNewBlockULBHandler}
         universalLessonDetails={universalLessonDetails}
         universalBuilderStep={universalBuilderStep}
         setUniversalBuilderStep={setUniversalBuilderStep}

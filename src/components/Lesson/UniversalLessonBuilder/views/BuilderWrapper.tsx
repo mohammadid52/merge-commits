@@ -32,6 +32,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
 const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
@@ -111,7 +112,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'USE_TEMPLATE':
         return <UseTemplateDialog />;
       case 'ADD_CONTENT':
-        return <AddContentDialog />;
+        return <AddContentDialog createNewBlockULBHandler={createNewBlockULBHandler} />;
       default:
         return <NewPageDialog />;
     }
