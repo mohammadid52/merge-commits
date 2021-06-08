@@ -41,6 +41,7 @@ export interface UniversalLessonPage {
   class: string;
   pageContent: PagePart[];
   dataLifecycleManagements?: boolean; //will determine if cleanup happens for page
+  estTime?: number;
   [key: string]:any;
 }
 
@@ -57,6 +58,13 @@ export interface PartContent {
   type?: string;
   value: any[];
   [key: string]:any;
+}
+
+export interface PartContentSub {
+  id?: string;
+  type?: string;
+  label?: string;
+  value?: string;
 }
 
 /**************************************

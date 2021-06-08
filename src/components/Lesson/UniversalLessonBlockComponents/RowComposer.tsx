@@ -15,6 +15,7 @@ import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import {JumbotronBlock} from './Blocks/JumbotronBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -58,37 +59,14 @@ const RowComposer = (props: RowComposerProps) => {
           classString={classString}
         />
       );
+    } else if (type.includes('jumbotron')) {
+      return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
-      return (
-        <ParagraphBlock
-          key={inputKey}
-          id={id}
-          dataIdAttribute={inputKey}
-          type={type}
-          value={value}
-          mode={mode}
-        />
-      );
+      return <ParagraphBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('form')) {
-      return (
-        <FormBlock
-          key={inputKey}
-          id={id}
-          dataIdAttribute={inputKey}
-          value={value}
-          mode={mode}
-        />
-      );
+      return <FormBlock id={id} value={value} mode={mode} />;
     } else {
-      return (
-        <StringifyBlock
-          key={inputKey}
-          id={id}
-          dataIdAttribute={inputKey}
-          anyObj={value}
-          mode={mode}
-        />
-      );
+      return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
     }
   };
 
