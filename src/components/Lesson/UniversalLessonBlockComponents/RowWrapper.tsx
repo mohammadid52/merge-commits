@@ -25,7 +25,7 @@ export const RowWrapper = (props: RowWrapperProps) => {
         ${classString ? classString : ''}
         relative
         my-4
-       
+        
       `}>
       <div
         className={`
@@ -33,7 +33,7 @@ export const RowWrapper = (props: RowWrapperProps) => {
            rounded-lg divide-y divide-gray-200
           ${!previewMode ? 'shadow' : ''}
           `}>
-        <div className="relative ">{children}</div>
+        <div className="relative">{children}</div>
       </div>
     </div>
   );
