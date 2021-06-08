@@ -11,6 +11,7 @@ import {
 import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -63,6 +64,7 @@ const initialUniversalLessonPagePartContent: PartContent = {
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {state, dispatch} = useContext(GlobalContext);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
+  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -80,9 +82,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    **********************************************/
 
   // in this area ^
-  useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
-  }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
   // const currentStepComp = (currentStep: string) => {
@@ -107,10 +106,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   // };
 
   //  CORE DATA MANAGEMENT
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
-    initialUniversalLessonData
-  );
-  const [selectedPageID, setSelectedPageID] = useState<string>('');
+
+  const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
 
   /**
    *
@@ -217,6 +214,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
   };
+  const {newBlockSeqId} = useULBContext();
 
   const updateULBHandler = (
     targetID: string,
@@ -244,19 +242,20 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     //   inputValue
     // );
     const activePageIndex = universalLessonDetails.universalLessonPages.findIndex(
-      (page) => page.id === 'page_2'
+      (page:any) => page.id === 'page_2'
       );
-      console.log(universalLessonDetails, activePageIndex,'created');
       let updatedPageContent = [...universalLessonDetails.universalLessonPages];
+      let pageContentData = [...updatedPageContent[activePageIndex].pageContent]
+      pageContentData.splice(2, 0, {
+            class: 'rounded-lg',
+            id: 'page_2_part_3',
+            partContent: [inputValue],
+            partType: 'default',
+          })
+          console.log(pageContentData,'pageContentData')
       updatedPageContent[activePageIndex] = {
         ...updatedPageContent[activePageIndex],
-        pageContent: [
-          ...updatedPageContent[activePageIndex].pageContent,
-          {class: 'rounded-lg',
-        id: "page_2_part_3",
-partContent: [],
-partType: "default"},
-        ],
+        pageContent: pageContentData
       };
     temp = {
       ...temp,

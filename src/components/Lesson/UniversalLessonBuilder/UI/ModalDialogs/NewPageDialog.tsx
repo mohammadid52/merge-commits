@@ -20,8 +20,6 @@ const NewPageDialog = () => {
 
   return (
     <div className={`flex flex-row z-50`}>
-
-
       {/* LEFT */}
       <div
         className={`
@@ -34,7 +32,7 @@ const NewPageDialog = () => {
         }
         transition-all duration-400 ease-in-out
         flex flex-col`}>
-        <div className="relative flex items-center">
+        {/* <div className="relative flex items-center">
           <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
             Add New Page
           </h2>
@@ -45,7 +43,7 @@ const NewPageDialog = () => {
             overrideClass={true}
             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
           />
-        </div>
+        </div> */}
         <div className={`bg-gray-200 p-2`}>
           <label
             htmlFor="field1"
@@ -96,7 +94,6 @@ const NewPageDialog = () => {
         </div>
       </div>
 
-
       {/* MIDDLE */}
       <div
         className={`
@@ -122,7 +119,7 @@ const NewPageDialog = () => {
           />
         </div>
 
-        <div className={`h-full w-full bg-gray-200`}>
+        <div className={`w-full bg-gray-200`}>
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Activities
           </p>
@@ -144,7 +141,6 @@ const NewPageDialog = () => {
           </div>
         </div>
       </div>
-
 
       {/* RIGHT */}
       <div
@@ -171,7 +167,7 @@ const NewPageDialog = () => {
           />
         </div>
 
-        <div className={`h-full w-full bg-gray-200`}>
+        <div className={`w-full bg-gray-200`}>
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Style 1
           </p>
@@ -191,8 +187,6 @@ const NewPageDialog = () => {
           </div>
         </div>
       </div>
-
-
     </div>
   );
 };

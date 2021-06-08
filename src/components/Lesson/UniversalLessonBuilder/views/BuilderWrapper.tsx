@@ -4,21 +4,22 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import PageSelector from '../UI/PageSelector';
 import {Toolbar} from '../UI/Toolbar';
-import {
-  PagePart,
-  PartContent,
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
+import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
 import {HierarchyPanel} from '../UI/HierarchyPanel';
 import {BuilderMenu} from '../UI/BuilderMenu';
-import ModalPopIn from '../../../Molecules/ModalPopIn';
+
 import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
 import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
-import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
+
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+
+import Modal from '../../../Atoms/Modal';
+
+import HeaderModalComponent from '../UI/FormElements/Header';
+import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -35,12 +36,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
-    universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
     initialUniversalLessonPagePartContent,
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {addFromULBHandler, universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
 
@@ -89,10 +90,23 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       setCurrentModalDialog(dialogToToggle);
     }
   };
+  const [inputFields, setInputFields] = useState<any>({});
+
+  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
+    show: false,
+    type: '',
+  });
+
+  const dialogLabelList = {
+    VIEW_PAGES: 'VIEW_PAGES',
+    NEW_PAGE: 'NEW_PAGE',
+    ADD_CONTENT: 'ADD_CONTENT',
+    USE_TEMPLATE: 'USE_TEMPLATE',
+  };
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
-      case 'VIEW_PAGES':
+      case dialogLabelList.VIEW_PAGES:
         return (
           <PageSelector
             universalLessonDetails={universalLessonDetails}
@@ -107,16 +121,83 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             hideAllModals={hideAllModals}
           />
         );
-      case 'NEW_PAGE':
+      case dialogLabelList.NEW_PAGE:
         return <NewPageDialog />;
-      case 'USE_TEMPLATE':
+      case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
-      case 'ADD_CONTENT':
-        return <AddContentDialog createNewBlockULBHandler={createNewBlockULBHandler} />;
+      case dialogLabelList.ADD_CONTENT:
+        return (
+          <AddContentDialog
+            hideAllModals={hideAllModals}
+            addContentModal={addContentModal}
+            setAddContentModal={setAddContentModal}
+          />
+        );
       default:
         return <NewPageDialog />;
     }
   };
+
+  const onChange = (e: any) => {
+    const {value, id} = e.target;
+    setInputFields({
+      ...inputFields,
+      [id]: value,
+    });
+  };
+
+  const closeAction = () => setAddContentModal({type: '', show: false});
+
+  function capitalizeFirstLetter(str: string = '') {
+    if (str.length > 0) {
+      const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+      return capitalized;
+    }
+  }
+
+  const modalByType = (type: 'header' | 'text' | string) => {
+    switch (type) {
+      case 'header':
+        return (
+          <HeaderModalComponent
+            inputValue={inputFields[type]}
+            onChange={onChange}
+            selectedPageID={selectedPageID}
+            setInputFields={setInputFields}
+            inputFields={inputFields}
+            addFromULBHandler={addFromULBHandler}
+            closeAction={closeAction}
+          />
+        );
+      case 'video':
+        return (
+          <YouTubeMediaDialog
+            createNewBlockULBHandler={createNewBlockULBHandler}
+            closeAction={closeAction}
+          />
+        );
+
+      default:
+        break;
+    }
+  };
+
+  const getTitleByType = (dialogLabel: string) => {
+    switch (dialogLabel) {
+      case dialogLabelList.ADD_CONTENT:
+        return 'Add Content';
+      case dialogLabelList.NEW_PAGE:
+        return 'Add New Page';
+      case dialogLabelList.VIEW_PAGES:
+        return 'Lesson Pages';
+      case dialogLabelList.USE_TEMPLATE:
+        return 'Use Template';
+
+      default:
+        return 'Title';
+    }
+  };
+console.log(modalPopVisible, addContentModal, 'addContentModal');
 
   return (
     <div
@@ -141,10 +222,25 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       />
 
       {modalPopVisible && (
-        <ModalPopIn
-          closeAction={() => hideAllModals()}
-          inputJSX={modalDialogSwitch(currentModalDialog)}
-        />
+        <Modal
+          showHeader
+          showFooter={false}
+          showHeaderBorder
+          title={getTitleByType(currentModalDialog)}
+          closeOnBackdrop
+          closeAction={hideAllModals}>
+          <div className="min-w-256">{modalDialogSwitch(currentModalDialog)}</div>
+        </Modal>
+      )}
+      {addContentModal.show && (
+        <Modal
+          showHeader={true}
+          title={`Add ${capitalizeFirstLetter(addContentModal.type)}`}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={closeAction}>
+          <div className="min-w-256">{modalByType(addContentModal.type)}</div>
+        </Modal>
       )}
 
       <HierarchyPanel
