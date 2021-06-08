@@ -8,6 +8,7 @@ import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
 import SideMenu from './Menu/SideMenu';
 import {useCookies} from 'react-cookie';
 import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import LessonPlanHome from './LessonPlanner/LessonPlanHome';
 import InstitutionsHome from './Admin/Institutons/InstitutionsHome';
@@ -22,7 +23,8 @@ import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
-import {useParams} from 'react-router';
+import Modal from '../Atoms/Modal';
+import Tooltip from '../Atoms/Tooltip';
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -57,15 +59,168 @@ export interface DashboardProps {
   syllabusLoading?: boolean;
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   handleRoomSelection?: Function;
+  justLoggedIn?: boolean;
 }
 
 export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
   [key: string]: any;
 }
+const emojiList = [
+  {
+    emoji: '😠',
+    link:
+      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/face_with_steam_from_nose.gif?Expires=1623059878&Signature=blFVLo331bEcWWQP4ZLUN4fePsrGD8zaBuYTLWb66nlLF4heVbkxxpsJYzLU8Jk8XnITIO8rbdfJSgLTTf~r8jTQEISXXJrPTruUSUvh0tNO2jtg3erRmb97Nn~yKtDyUrCvr0CPIjMBfsx7out~w82tPX1Vb86dlYvaGckwaC1M-7TWn-T~~H2CZ73iY6SNCpup4viKGCmffp-Ttn6o-MgewC6Tmpvpk9BRBDqfrHqSHF7fWEhPYo4s0iv3sukZ76Uo9OaJg3jLVatg3nOXe9A64nQgGng7Pq5RQP5S4SGDTy8LCTi5IJgX6jbisDNrzmXivhlorZtRgrcG1gtR3A__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    id: '0',
+    name: 'Angry',
+  },
+  {
+    emoji: '😞',
+    link:
+      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/frowning_face.gif?Expires=1623059906&Signature=N2qb2Juc6QMnXviLkPu-ZrIxMjt-eTMNhylgIOKK2Mf8lKObaSf0gZmhzDcGzMJeQaliJtE~O~o8XYte~G4HTYa24vUDhhFZhdhL8vcO7pV-O2aoAyA0dAFtWvTpArDoQw0yJPvSS6IK28RSB9gT0iZNbm8Bikcf9YK2AIIf2qu-Fy576v5lKZTEdhb0VqRwunuuKjYrcNF201YjQwHv8rkYcFwHJy2qkCqwLppZldeGOSXJd1T7EH0TrbtUIjDoDSYOYRzRGjaZqEivv1bCLpM~DMfhOliiwG1ED4PTeg5pgH2F4fyYwaKhMz1aEYnq7BgGjTSLfhlZstdBLTvHpQ__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    id: '1',
+    name: 'Sad',
+  },
+
+  {
+    emoji: '🙂',
+    link:
+      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/grinning_face_with_smiling_eyes.gif?Expires=1623059816&Signature=RqpecnHnq-5bku7T10itOMbZbg0yAZHjhvp~bJoxFJCrI-Mmb2s1-8CZ6TDgtg0RKL8TvQwcKIa1R8dY2LxUttEQ3NzHbcegLH1j3lPGM~34lQ3Gt27nuihB2-mM5~obvg1pe92Fg9V7tE0uTkxuGdrSRqTk0BuKF5yWfq1wAx0lT0--AOMPx7z5eBxnIKsBW5FYkkbi9ES7IjwWvzhoxDH0R3LrM2PHmAhC8oF7lVSi5z~LrfRA2kEfMo1~Os3YPwvUacxtAejNlwlKqigffjiIU1QoCYMQar6PB6zsEV~lrsu~YTv7dv5zTbAV8quN6qCjq6yek33OV3GA0iCgbw__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    id: '3',
+    name: 'Happy',
+  },
+];
+const EmojiFeedback = ({
+  justLoggedIn,
+  greetQuestion,
+  onSave,
+}: {
+  justLoggedIn: boolean;
+  onSave: (response: string) => void;
+  greetQuestion: {question: string};
+}) => {
+  const onSubmit = () => {
+    setShowGreetings(false);
+    onSave(selectedEmoji.emoji);
+  };
+
+  const [selectedEmoji, setSelectedEmoji] = useState({id: '', emoji: '', name: ''});
+  const [showGreetings, setShowGreetings] = useState(justLoggedIn);
+  // const [range, setRange] = useState(5);
+  // const showRangeSlider = selectedEmoji.name !== '';
+  const DEFAULT_QUESTION = 'How are you feeling today?'; // Fallback question
+  const showContinueButton = selectedEmoji.name !== '';
+  return (
+    showGreetings && (
+      <Modal
+        intenseOpacity
+        closeAction={() => setShowGreetings(false)}
+        closeOnBackdrop
+        showHeader={false}
+        showHeaderBorder={false}
+        showFooter={false}>
+        <div
+          style={{minHeight: '10rem'}}
+          className={` flex relative items-center min-w-132 justify-center flex-col`}>
+          <p className="w-auto mb-6 text-2xl font-semibold">
+            {greetQuestion?.question || DEFAULT_QUESTION}
+          </p>
+          <div className="grid grid-cols-3">
+            {emojiList.map(
+              ({
+                name,
+                emoji,
+                id,
+                link,
+              }: {
+                link: string;
+                emoji: string;
+                name: string;
+                id: string;
+              }) => (
+                <Tooltip key={id} text={name} placement="bottom">
+                  {link ? (
+                    <div
+                      onClick={() => setSelectedEmoji({emoji, id, name})}
+                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center feedback-emoji ${
+                        selectedEmoji.id === id ? 'selected' : ''
+                      }`}>
+                      <img src={link} alt={name} className="h-20 w-20" />
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => setSelectedEmoji({emoji, id, name})}
+                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${
+                        selectedEmoji.id === id ? 'selected' : ''
+                      }`}>
+                      {emoji}
+                    </div>
+                  )}
+                </Tooltip>
+              )
+            )}
+          </div>
+          {/* <div className={`emotion_range  ${showRangeSlider ? 'show mt-4 p-2' : ''} `}>
+            <p
+              className={`${
+                showRangeSlider ? 'mb-1' : 'hidden'
+              }  w-auto text-dark font-medium`}>
+              How much {selectedEmoji.name} you are:
+            </p>
+            {showRangeSlider && (
+              <div className="border-0 p-2 border-gray-200 rounded-md flex items-center justify-center">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={range}
+                  onChange={(e) => setRange(e.target.valueAsNumber)}
+                  className="slider"
+                  id="myRange"
+                />
+                <label className="w-7 h-7 text-gray-400 ml-4">{range}</label>
+              </div>
+            )}
+          </div>
+          {showRangeSlider && (
+            <div className={`mt-2 flex items-center justify-between`}>
+              <p
+                onClick={() => setShowGreetings(false)}
+                className={`w-auto cursor-pointer text-sm px-1 py-0.5 text-gray-400 hover:text-${getThemeColor()}-500 transition-all  duration-150`}>
+                skip for now
+              </p>
+              {showRangeSlider ? (
+                <p
+                  onClick={onSave}
+                  className={`w-auto cursor-pointer text-sm px-2 py-0.5 text-white bg-${getThemeColor()}-500 hover:bg-${getThemeColor()}-700 transition-all rounded-md  duration-150`}>
+                  save
+                </p>
+              ) : (
+                <div className="w-auto" />
+              )}
+            </div>
+          )} */}
+
+          <div
+            style={{bottom: '-1.7rem'}}
+            className="flex items-center justify-center absolute right-0 left-0">
+            <button
+              onClick={() => onSubmit()}
+              style={{background: '#333333'}}
+              className={`h-8 w-24 rounded text-white  p-1 py-0.5 mt-2 transition-all continue_btn ${
+                showContinueButton ? 'show' : 'hide'
+              }`}>
+              Submit
+            </button>
+          </div>
+        </div>
+      </Modal>
+    )
+  );
+};
 
 const Dashboard = (props: DashboardProps) => {
-  const {updateAuthState} = props;
+  const {updateAuthState, justLoggedIn} = props;
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
@@ -76,7 +231,6 @@ const Dashboard = (props: DashboardProps) => {
     image: '',
   });
   const {state, dispatch} = useContext(GlobalContext);
-
   // For controlling loading transitions
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
   const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
@@ -96,6 +250,49 @@ const Dashboard = (props: DashboardProps) => {
   // Fetching results
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
+
+  //updateQuestion
+
+  const [greetQuestion, setGreetQuestion] = useState({question: ''});
+  const DEFAULT_CHECKPOINT_ID: string = '5372952f-ad80-4677-985a-e798c89d6bb7';
+  const DEFAULT_QUESTION_ID: string = '6867fd8e-2457-409c-ba34-f2ffabdf7385'; // THIS IS STATIC -- @key5: Change this
+
+  const getGreetQuestion = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(queries.getQuestion, {
+          id: DEFAULT_QUESTION_ID,
+        })
+      );
+      console.log(result.data.getQuestion);
+
+      setGreetQuestion(result.data.getQuestion);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateGreetQuestion = async (response: any) => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.updateQuestionData, {
+          input: {
+            id: DEFAULT_CHECKPOINT_ID,
+            responseObject: [{qid: DEFAULT_QUESTION_ID, response}],
+          },
+        })
+      );
+      setGreetQuestion(result.data.getQuestion);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (justLoggedIn) {
+      getGreetQuestion();
+    }
+  }, [justLoggedIn]);
 
   const [classIds, setClassIds] = useState<string[]>([]);
   const [rooms, setRooms] = useState<any[]>([]);
@@ -145,7 +342,7 @@ const Dashboard = (props: DashboardProps) => {
     ) {
       setActiveRoomName(name);
       dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: id}});
-      setSyllabusLoading(true); // Trigger loading ui element
+      setSyllabusLoading(true);
       setLessonLoading(true);
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
       history.push(`/dashboard/${route}/${id}`);
@@ -209,9 +406,13 @@ const Dashboard = (props: DashboardProps) => {
           email: email,
         },
       };
-      const dashboardDataFetch = await handleFetchAndCache(queryObj);
+      // const dashboardDataFetch = await handleFetchAndCache(queryObj);
+      const dashboardDataFetch = await API.graphql(
+        graphqlOperation(customQueries.getDashboardData, queryObj.valueObj)
+      );
       const response = await dashboardDataFetch;
 
+      // @ts-ignore
       let arrayOfResponseObjects = await response?.data.getPerson.classes.items;
 
       arrayOfResponseObjects = arrayOfResponseObjects.filter(
@@ -312,8 +513,12 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      const classIdFromRoomsFetch = await handleFetchAndCache(queryObj);
+      // const classIdFromRoomsFetch = await handleFetchAndCache(queryObj);
+      const classIdFromRoomsFetch = await API.graphql(
+        graphqlOperation(customQueries.listRooms, queryObj.valueObj)
+      );
       const response = await classIdFromRoomsFetch;
+      //@ts-ignore
       const arrayOfResponseObjects = response?.data?.listRooms?.items;
 
       setRooms(arrayOfResponseObjects);
@@ -381,17 +586,33 @@ const Dashboard = (props: DashboardProps) => {
           const queryObj = {
             name: 'customQueries.listRoomCurriculums',
             valueObj: {
-              roomID: {contains: state.activeRoom},
+              roomID: {eq: state.activeRoom},
             },
           };
 
-          const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
+
+          /***************************************************
+           *                                                 *
+           * DISABLED handleFetchAndCache()                  *
+           * TO TROUBLESHOOT LESSONS NOT LOADING             *
+           * ON SYLLABUS-ACTIVATION SWTICH                   *
+           *                                                 *
+           ***************************************************/
+          // const roomCurriculumsFetch = await handleFetchAndCache(queryObj);
+          const roomCurriculumsFetch = await API.graphql(
+            graphqlOperation(queries.listRoomCurriculums, {filter:{
+              roomID: {eq: state.activeRoom},
+            }})
+          );
           const response = await roomCurriculumsFetch;
+          // @ts-ignore
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+          console.log('roomCurriculums list - ', arrayOfResponseObjects)
           const arrayOfCurriculumIds = getArrayOfUniqueValueByProperty(
             arrayOfResponseObjects,
             'curriculumID'
           );
+
           setCurriculumIds(arrayOfCurriculumIds);
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
@@ -437,14 +658,30 @@ const Dashboard = (props: DashboardProps) => {
             },
           };
 
-          const syllabusCSequenceFetch = await handleFetchAndCache(queryObj);
-          const syllabusMultiFetch = await handleFetchAndCache(queryObj2);
+          /***************************************************
+           *                                                 *
+           * DISABLED handleFetchAndCache()                  *
+           * TO TROUBLESHOOT LESSONS NOT LOADING             *
+           * ON SYLLABUS-ACTIVATION SWTICH                   *
+           *                                                 *
+           ***************************************************/
+          // const syllabusCSequenceFetch = await handleFetchAndCache(queryObj);
+          const syllabusCSequenceFetch = await API.graphql(
+            graphqlOperation(queries.getCSequences, queryObj.valueObj)
+            );
+          // const syllabusMultiFetch = await handleFetchAndCache(queryObj2);
+          const syllabusMultiFetch = await API.graphql(
+            graphqlOperation(customQueries.listSyllabuss, queryObj2.valueObj)
+            );
 
           const responseRoomSyllabusSequence = await syllabusCSequenceFetch;
           const responseRoomSyllabus = await syllabusMultiFetch;
+          console.log('available syllabus -', responseRoomSyllabus)
 
           const arrayOfRoomSyllabusSequence =
+          //@ts-ignore
             responseRoomSyllabusSequence?.data.getCSequences?.sequence;
+          //@ts-ignore
           const arrayOfRoomSyllabus = responseRoomSyllabus?.data?.listSyllabuss?.items;
 
           // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
@@ -506,8 +743,12 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {id: `lesson_${syllabusID}`},
       };
 
-      const syllabusLessonCSequenceFetch = handleFetchAndCache(queryObj);
+      // const syllabusLessonCSequenceFetch = handleFetchAndCache(queryObj);
+      const syllabusLessonCSequenceFetch = await API.graphql(
+        graphqlOperation(queries.getCSequences, queryObj.valueObj)
+      );
       const response = await syllabusLessonCSequenceFetch;
+      //@ts-ignore
       const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
       setSyllabusLessonSequence(arrayOfResponseObjects);
     } catch (e) {
@@ -555,8 +796,12 @@ const Dashboard = (props: DashboardProps) => {
           },
         };
 
-        const syllabusLessonFetch = await handleFetchAndCache(queryObj);
+        // const syllabusLessonFetch = await handleFetchAndCache(queryObj);
+        const syllabusLessonFetch = await API.graphql(
+          graphqlOperation(customQueries.listSyllabusLessons, queryObj.valueObj)
+        );
         const response = await syllabusLessonFetch;
+        //@ts-ignore
         const arrayOfResponseObjects = response?.data?.listSyllabusLessons?.items;
         // SOMETHING TO REFACTOR
         const syllabusLessonsReordered = syllabusLessonSequence.reduce(
@@ -577,7 +822,8 @@ const Dashboard = (props: DashboardProps) => {
           type: 'UPDATE_ROOM',
           payload: {
             property: 'lessons',
-            data: syllabusLessonsReordered,
+            // data: syllabusLessonsReordered,
+            data: arrayOfResponseObjects,
           },
         });
       } catch (e) {
@@ -604,6 +850,7 @@ const Dashboard = (props: DashboardProps) => {
     });
 
   useEffect(() => {
+
     const getSyllabusLessonsAndCSequence = async () => {
       await getSyllabusLessonCSequence(classRoomActiveSyllabus[0].id);
     };
@@ -613,6 +860,7 @@ const Dashboard = (props: DashboardProps) => {
       state.roomData.syllabus.length > 0 &&
       classRoomActiveSyllabus[0]
     ) {
+      console.log('different active syllabus --', classRoomActiveSyllabus[0].id)
       getSyllabusLessonsAndCSequence();
     }
   }, [state.roomData.syllabus]);
@@ -643,6 +891,11 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
+      <EmojiFeedback
+        greetQuestion={greetQuestion}
+        justLoggedIn={justLoggedIn}
+        onSave={(response: string) => updateGreetQuestion(response)}
+      />
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}

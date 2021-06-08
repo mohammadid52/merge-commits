@@ -224,7 +224,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
               <h1
                 style={{fontSize: '6rem'}}
-                className="z-50 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+                className="z-10 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
                 Dashboard
               </h1>
             </div>
@@ -232,7 +232,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div
-              className={`${theme.section} z-50 relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+              className={`w-full max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
               <h2 className={`text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">

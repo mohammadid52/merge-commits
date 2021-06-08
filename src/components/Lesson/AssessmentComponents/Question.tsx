@@ -10,6 +10,7 @@ import InputQuestions from './Questions/InputQuestions';
 import TextQuestions from './Questions/TextQuestions';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import SelectManyQuestions from './Questions/SelectManyQuestions';
+import {url} from 'inspector';
 
 export interface QuestionProps {
   checkpointID?: string;
@@ -20,6 +21,7 @@ export interface QuestionProps {
   questionKey: any;
   animate?: boolean;
   type?: string;
+  emoji?: boolean;
   handleInputChange?: (
     id: number | string,
     value: string | string[],
@@ -56,6 +58,8 @@ const Question = (props: QuestionProps) => {
   const questionSwitch = (questionIndex: number, key: string) => {
     switch (question.question.type) {
       case 'input':
+      case 'link':
+      case 'emoji':
         return (
           <InputQuestions
             checkpointID={checkpointID}
@@ -66,8 +70,15 @@ const Question = (props: QuestionProps) => {
             questionKey={key}
             handleInputChange={handleInputChange}
             value={value}
+            type={
+              question.question.type === 'input' || question.question.type === 'emoji'
+                ? 'text'
+                : 'url'
+            }
+            emoji={question.question.type === 'emoji'}
           />
         );
+
       case 'datePicker':
         return (
           <InputQuestions

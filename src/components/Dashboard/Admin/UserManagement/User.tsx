@@ -1363,9 +1363,9 @@ const User = () => {
           </div>
           {curTab === 'User Information' && (
             <div
-              className={`w-full white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
+              className={`w-full overflow-hidden white_back p-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <div className="h-1/2 flex flex-col md:flex-row">
-                <div className="w-1/3 p-4 flex flex-col text-center items-center">
+                <div className="w-1/4 p-4 flex flex-col text-center items-center">
                   <div className="cursor-pointer">
                     {user.image ? (
                       <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">

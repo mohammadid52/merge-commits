@@ -488,11 +488,13 @@ const UserEdit = (props: UserInfoProps) => {
   };
 
   return (
-    <div className="h-full w-full md:px-2 pt-2">
+    <div className="h-full w-3/4 md:px-2 pt-2">
       <form>
         <div className="h-full border-l-0 border-gray-200 bg-white mb-4">
           <div className="border-b-0 border-gray-200">
-            <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+            <nav
+              className="-mb-px flex space-x-8 overflow-x-auto custom-scrollbar"
+              aria-label="Tabs">
               <a
                 onClick={() => setTab('p')}
                 key="personal_information"
