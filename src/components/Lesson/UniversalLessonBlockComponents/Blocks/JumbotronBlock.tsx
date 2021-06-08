@@ -36,6 +36,8 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
               return {...acc, title: val.value};
             } else if (val.type === 'subtitle') {
               return {...acc, subtitle: val.value};
+            } else if (val.type === 'description') {
+              return {...acc, description: val.value};
             } else {
               return acc;
             }
