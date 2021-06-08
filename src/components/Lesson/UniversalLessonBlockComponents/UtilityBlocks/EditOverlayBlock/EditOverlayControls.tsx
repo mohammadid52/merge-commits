@@ -28,6 +28,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     contentID,
     editedID,
     isActive,
+    classString,
     isComponent,
     handleEditBlockToggle,
     deleteFromULBHandler,
@@ -126,7 +127,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               </span>
               <span className={textClass}>BG Color</span>
             </button>
-            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
+            {colorPickerActive && (
+              <ColorPicker
+                classString={classString}
+                callbackColor={handleColorPickerSelect}
+              />
+            )}
           </div>
 
           <button
