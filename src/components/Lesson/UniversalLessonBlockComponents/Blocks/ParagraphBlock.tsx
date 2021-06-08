@@ -6,26 +6,29 @@ import {
 
 interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
-  value?: string;
+  value?: any;
   type?: string;
 }
 
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
-  const {mode, id, dataIdAttribute, value, type, handleEditBlockToggle} = props;
+  const {mode, id, value, type, handleEditBlockToggle} = props;
 
-  const composeParagraph = (inputId: string, inputValue: string, inputType: string) => {
+  const composeParagraph = (inputID: string, inputValue: string, inputType: string) => {
     switch (inputType) {
       default:
         return (
-          <p
-            id={inputId}
-            className={`p-4`}
-            data-id={dataIdAttribute}>
+          <p key={inputID} id={inputID} className={`p-4`}>
             {inputValue}
           </p>
         );
     }
   };
 
-  return value && composeParagraph(id, value, type);
+  return (
+    <>
+      {value &&
+        value.length > 0 &&
+        value.map((v: any, i: number) => composeParagraph(`${id}_${i}`, v, type))}
+    </>
+  );
 };

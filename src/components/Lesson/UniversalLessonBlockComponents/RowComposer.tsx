@@ -43,9 +43,7 @@ const RowComposer = (props: RowComposerProps) => {
     if (type.includes('header')) {
       return (
         <HeaderBlock
-          key={inputKey}
           id={id}
-          dataIdAttribute={inputKey}
           type={type}
           value={value}
           mode={mode}
@@ -54,9 +52,7 @@ const RowComposer = (props: RowComposerProps) => {
     } else if (type.includes('paragraph')) {
       return (
         <ParagraphBlock
-          key={inputKey}
           id={id}
-          dataIdAttribute={inputKey}
           type={type}
           value={value}
           mode={mode}
@@ -65,9 +61,7 @@ const RowComposer = (props: RowComposerProps) => {
     } else if (type.includes('form')) {
       return (
         <FormBlock
-          key={inputKey}
           id={id}
-          dataIdAttribute={inputKey}
           value={value}
           mode={mode}
         />
@@ -125,18 +119,18 @@ const RowComposer = (props: RowComposerProps) => {
                         isLast={idx2 === pagePart.partContent.length - 1}
                         handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
                         deleteFromULBHandler={deleteFromULBHandler}>
-                        {content.value.length > 0 ? (
-                          content.value.map((value: any, idx3: number) =>
-                            composePartContent(
-                              content.id,
-                              content.type,
-                              value,
-                              `pp_${idx}_pc_${idx2}_cv_${idx3}`
-                            )
+                        {
+                            content.value.length > 0 ? (
+                              composePartContent(
+                                content.id,
+                                content.type,
+                                content.value,
+                                `pp_${idx}_pc_${idx2}`
+                              )
+                          ) : (
+                            <p>No content</p>
                           )
-                        ) : (
-                          <p>No content</p>
-                        )}
+                        }
                       </EditOverlayBlock>
                     ))
                   ) : (
