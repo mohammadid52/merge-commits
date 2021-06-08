@@ -86,7 +86,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           bg-transparent rounded-lg
           z-100
           h-auto w-auto
-         
+          ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
           ${isComponent ? '' : offsetClass}
           `}>
       <ClickAwayListener
