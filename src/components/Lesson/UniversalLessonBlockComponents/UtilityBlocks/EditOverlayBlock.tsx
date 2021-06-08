@@ -23,7 +23,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
           className={`
         relative 
         h-auto 
-        flex items-center
+        flex items-center rowWrapper
         ${isComponent && !isLast ? 'border-b-0 border-dashed border-gray-400' : ''}
         `}>
           <EditOverlayControls
@@ -36,6 +36,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
           />
+
           <div>{children}</div>
         </div>
       ) : (
