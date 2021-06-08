@@ -15,15 +15,15 @@ interface AddContentDialog {
   hideAllModals?: () => void;
 }
 const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog) => {
+  const buttonClass =
+    'w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer';
+  const colHeaderTextClass = 'text-center text-xl text-dark font-semibold mb-2';
   return (
     <div className={` z-50 `}>
-      <div className="relative flex items-center">
-        <h2 className="w-auto bg-white text-lg font-medium text-gray-900">Add Content</h2>
-      </div>
-      <div className={`grid grid-cols-3 gap-2`}>
+      <div className={`grid grid-cols-3 gap-2 p-2`}>
         {/* LEFT */}
         <div>
-          <h2 className={`text-center text-sm text-gray-600`}>Text-Content</h2>
+          <h2 className={`${colHeaderTextClass}`}>Text-Content</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div
@@ -31,15 +31,14 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                   hideAllModals();
                   setAddContentModal({show: true, type: 'header'});
                 }}
-                className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
+                className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <MdTitle />
                 </IconContext.Provider>
               </div>
               <p className={`text-center text-sm text-gray-600`}>Title</p>
 
-              <div
-                className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
+              <div className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <VscSymbolParameter />
                 </IconContext.Provider>
@@ -51,19 +50,17 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
 
         {/* MIDDLE */}
         <div>
-          <h2 className={`text-center text-sm text-gray-600`}>Media</h2>
+          <h2 className={`${colHeaderTextClass}`}>Media</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
-              <div
-                className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
+              <div className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <AiOutlineFileImage />
                 </IconContext.Provider>
               </div>
               <p className={`text-center text-sm text-gray-600`}>Image</p>
 
-              <div
-                className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
+              <div className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <AiOutlineYoutube />
                 </IconContext.Provider>
@@ -75,19 +72,17 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
 
         {/* RIGHT */}
         <div>
-          <h2 className={`text-center text-sm text-gray-600`}>User Interaction</h2>
+          <h2 className={`${colHeaderTextClass}`}>User Interaction</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
-              <div
-                className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
+              <div className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <AiOutlineQuestionCircle />
                 </IconContext.Provider>
               </div>
               <p className={`text-center text-sm text-gray-600`}>Checkpoint</p>
 
-              <div
-                className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
+              <div className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <AiOutlineMore />
                 </IconContext.Provider>

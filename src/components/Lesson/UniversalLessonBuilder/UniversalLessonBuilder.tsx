@@ -64,6 +64,7 @@ const initialUniversalLessonPagePartContent: PartContent = {
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {state, dispatch} = useContext(GlobalContext);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
+  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -81,9 +82,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    **********************************************/
 
   // in this area ^
-  useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
-  }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
   // const currentStepComp = (currentStep: string) => {
@@ -108,9 +106,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   // };
 
   //  CORE DATA MANAGEMENT
-  const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
-    initialUniversalLessonData
-  );
+
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
 
   /**
@@ -209,21 +205,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   };
   const {newBlockSeqId} = useULBContext();
 
-  const addULBHandler = (pageId: string, newPageContent: PagePart) => {
-    // find current page object from universalLessonPages array
-    let currentPage = universalLessonDetails.universalLessonPages.find(
-      (page: any) => page.id === pageId
-    );
-
-    // find current page content from pageContent array
-    let pageContent = currentPage.pageContent;
-    if (pageContent && pageContent.length > 0) {
-      pageContent.splice(newBlockSeqId + 1, 0, newPageContent);
-
-      setUniversalLessonDetails({...universalLessonDetails});
-    }
-  };
-
   const updateULBHandler = (
     targetID: string,
     propertyToTarget: string,
@@ -263,7 +244,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         universalBuilderStep={universalBuilderStep}
         setUniversalBuilderStep={setUniversalBuilderStep}
         selectedPageID={selectedPageID}
-        addFromULBHandler={addULBHandler}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
       />

@@ -4,36 +4,27 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import PageSelector from '../UI/PageSelector';
 import {Toolbar} from '../UI/Toolbar';
-import {
-  PagePart,
-  PartContent,
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
+import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
 import {HierarchyPanel} from '../UI/HierarchyPanel';
 import {BuilderMenu} from '../UI/BuilderMenu';
-import ModalPopIn from '../../../Molecules/ModalPopIn';
+
 import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
 import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
-import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
+
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import FormInput from '../../../Atoms/Form/FormInput';
+
 import Modal from '../../../Atoms/Modal';
-import Buttons from '../../../Atoms/Buttons';
-import {EditQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-import {uniqueId} from 'lodash';
-import Selector from '../../../Atoms/Form/Selector';
-import ColorPicker from '../UI/ColorPicker/ColorPicker';
+
 import HeaderModalComponent from '../UI/FormElements/Header';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
   universalBuilderStep?: string;
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
-  addFromULBHandler?: (pageId: string, newDataObject: any) => void;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -42,13 +33,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     mode,
     deleteFromULBHandler,
     updateFromULBHandler,
-    universalLessonDetails,
-    addFromULBHandler,
     selectedPageID,
     setSelectedPageID,
     initialUniversalLessonPagePartContent,
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {addFromULBHandler, universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
 
@@ -104,9 +94,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     type: '',
   });
 
+  const dialogLabelList = {
+    VIEW_PAGES: 'VIEW_PAGES',
+    NEW_PAGE: 'NEW_PAGE',
+    ADD_CONTENT: 'ADD_CONTENT',
+    USE_TEMPLATE: 'USE_TEMPLATE',
+  };
+
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
-      case 'VIEW_PAGES':
+      case dialogLabelList.VIEW_PAGES:
         return (
           <PageSelector
             universalLessonDetails={universalLessonDetails}
@@ -121,11 +118,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             hideAllModals={hideAllModals}
           />
         );
-      case 'NEW_PAGE':
+      case dialogLabelList.NEW_PAGE:
         return <NewPageDialog />;
-      case 'USE_TEMPLATE':
+      case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
-      case 'ADD_CONTENT':
+      case dialogLabelList.ADD_CONTENT:
         return (
           <AddContentDialog
             hideAllModals={hideAllModals}
@@ -155,7 +152,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (type: 'header' | string) => {
+  const modalByType = (type: 'header' | 'text' | string) => {
     switch (type) {
       case 'header':
         return (
@@ -172,6 +169,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       default:
         break;
+    }
+  };
+
+  const getTitleByType = (dialogLabel: string) => {
+    switch (dialogLabel) {
+      case dialogLabelList.ADD_CONTENT:
+        return 'Add Content';
+      case dialogLabelList.NEW_PAGE:
+        return 'Add New Page';
+      case dialogLabelList.VIEW_PAGES:
+        return 'Lesson Pages';
+      case dialogLabelList.USE_TEMPLATE:
+        return 'Use Template';
+
+      default:
+        return 'Title';
     }
   };
 
@@ -199,11 +212,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       {modalPopVisible && (
         <Modal
-          showHeader={false}
+          showHeader
           showFooter={false}
-          showHeaderBorder={false}
+          showHeaderBorder
+          title={getTitleByType(currentModalDialog)}
           closeOnBackdrop
-          closeAction={() => hideAllModals()}>
+          closeAction={hideAllModals}>
           <div className="min-w-256">{modalDialogSwitch(currentModalDialog)}</div>
         </Modal>
       )}
