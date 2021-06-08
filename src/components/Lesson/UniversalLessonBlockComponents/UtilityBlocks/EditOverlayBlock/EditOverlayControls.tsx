@@ -28,6 +28,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     contentID,
     editedID,
     isActive,
+    isPagePart,
     classString,
     isComponent,
     handleEditBlockToggle,
@@ -131,6 +132,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               <ColorPicker
                 classString={classString}
                 callbackColor={handleColorPickerSelect}
+                isPagePart={isPagePart}
               />
             )}
           </div>
