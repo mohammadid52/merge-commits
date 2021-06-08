@@ -19,6 +19,8 @@ import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
 import ApplyTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import FormInput from '../../../Atoms/Form/FormInput';
+import Modal from '../../../Atoms/Modal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -88,6 +90,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       setCurrentModalDialog(dialogToToggle);
     }
   };
+  const [inputFields, setInputFields] = useState<any>({});
+
+  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
+    show: false,
+    type: '',
+  });
 
   const modalDialogSwitch = (dialogLabel: string) => {
     switch (dialogLabel) {
@@ -111,11 +119,27 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'USE_TEMPLATE':
         return <UseTemplateDialog />;
       case 'ADD_CONTENT':
-        return <AddContentDialog />;
+        return (
+          <AddContentDialog
+            hideAllModals={hideAllModals}
+            addContentModal={addContentModal}
+            setAddContentModal={setAddContentModal}
+          />
+        );
       default:
         return <NewPageDialog />;
     }
   };
+
+  const onChange = (e: any) => {
+    const {value, id} = e.target;
+    setInputFields({
+      ...inputFields,
+      [id]: value,
+    });
+  };
+
+  const getValue = (id: string) => inputFields[id];
 
   return (
     <div
@@ -144,6 +168,26 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           closeAction={() => hideAllModals()}
           inputJSX={modalDialogSwitch(currentModalDialog)}
         />
+      )}
+      {addContentModal.show && (
+        <Modal
+          showHeader={true}
+          title={'Add Header'}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={() => setAddContentModal({type: '', show: false})}>
+          <div className="min-w-256 py-6">
+            <FormInput
+              onChange={onChange}
+              label="Title"
+              isRequired
+              value={getValue('title')}
+              id="title"
+              placeHolder="Enter title"
+              type="text"
+            />
+          </div>
+        </Modal>
       )}
 
       <HierarchyPanel

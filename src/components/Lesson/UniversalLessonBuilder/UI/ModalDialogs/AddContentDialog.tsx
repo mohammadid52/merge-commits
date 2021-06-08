@@ -9,7 +9,12 @@ import {
 } from 'react-icons/ai';
 import {MdTitle} from 'react-icons/md';
 
-const AddContentDialog = () => {
+interface AddContentDialog {
+  addContentModal: {show: boolean; type: string};
+  setAddContentModal: React.Dispatch<React.SetStateAction<{show: boolean; type: string}>>;
+  hideAllModals?: () => void;
+}
+const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog) => {
   return (
     <div className={` z-50 `}>
       <div className="relative flex items-center">
@@ -18,10 +23,14 @@ const AddContentDialog = () => {
       <div className={`grid grid-cols-3 gap-2`}>
         {/* LEFT */}
         <div>
-           <h2 className={`text-center text-sm text-gray-600`}>Text-Content</h2>
+          <h2 className={`text-center text-sm text-gray-600`}>Text-Content</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'header'});
+                }}
                 className={`w-full h-24 flex flex-col justify-center items-center bg-gray-200 rounded`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <MdTitle />
@@ -42,7 +51,7 @@ const AddContentDialog = () => {
 
         {/* MIDDLE */}
         <div>
-           <h2 className={`text-center text-sm text-gray-600`}>Media</h2>
+          <h2 className={`text-center text-sm text-gray-600`}>Media</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div
@@ -66,7 +75,7 @@ const AddContentDialog = () => {
 
         {/* RIGHT */}
         <div>
-           <h2 className={`text-center text-sm text-gray-600`}>User Interaction</h2>
+          <h2 className={`text-center text-sm text-gray-600`}>User Interaction</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div
