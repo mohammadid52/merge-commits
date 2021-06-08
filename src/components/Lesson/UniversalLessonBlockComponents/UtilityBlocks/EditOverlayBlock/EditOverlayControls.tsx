@@ -16,6 +16,9 @@ import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
 import ClickAwayListener from 'react-click-away-listener';
+import {HiPencil} from 'react-icons/hi';
+import {IoCloseSharp} from 'react-icons/io5';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
@@ -26,6 +29,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     contentID,
     editedID,
     isActive,
+    classString,
     isComponent,
     handleEditBlockToggle,
     deleteFromULBHandler,
@@ -54,7 +58,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const handleColorPickerSelect = (pickedColor: string) => {
     updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
   };
-
+  const {previewMode} = useULBContext();
   /**
    * Here is where I should add buttons
    * and dials and switches and controls
@@ -77,14 +81,16 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
+  if (previewMode) return null;
   return (
     <div
+      id="editControlsWrapper"
       className={`
           absolute 
           flex flex-row
           items-center
           bg-transparent rounded-lg
-          z-100
+          ${overlayVisible ? 'z-100' : 'z-10'}
           h-auto w-auto
           ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
           ${isComponent ? '' : offsetClass}
@@ -95,9 +101,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           setColorPickerActive(false);
         }}>
         <div
-          className={`flex ulb_action transition-all duration-300 ${
+          style={{zIndex: 9999999}}
+          className={`flex ulb_action ${
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
-          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 right-3.5 bg-dark rounded-lg shadow-lg `}>
+          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
+            isComponent ? 'left-2' : 'right-3.5'
+          } bg-dark rounded-lg shadow-lg `}>
           <button className={`${actionClass}`}>
             <span className={iconClass}>
               <CgEditFlipH />
@@ -120,7 +129,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               </span>
               <span className={textClass}>BG Color</span>
             </button>
-            {colorPickerActive && <ColorPicker callbackColor={handleColorPickerSelect} />}
+            {colorPickerActive && (
+              <ColorPicker
+                classString={classString}
+                callbackColor={handleColorPickerSelect}
+              />
+            )}
           </div>
 
           <button
@@ -134,15 +148,33 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         </div>
       </ClickAwayListener>
 
-      <ButtonsRound
+      {/* <ButtonsRound
         Icon={overlayVisible ? AiOutlineCloseCircle : FiEdit2}
-        onClick={() => handleEditBlockToggle()}
+        onClick={() => {
+          handleEditBlockToggle();
+        }}
         iconSizePX={24}
         buttonWHClass={`w-8 h-8`}
-        containerBgClass={`rounded-full bg-gray-600 z-50 cursor-pointer`}
+        containerBgClass={`rounded-full bg-gray-600 ${
+          overlayVisible ? 'z-100' : 'z-10'
+        } cursor-pointer`}
         buttonBgClass={`bg-transparent`}
         iconTxtColorClass={'text-white'}
-      />
+      /> */}
+
+      <button
+        className={`bg-dark rounded-full h-8 w-${
+          isComponent ? '8' : '16'
+        } hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
+        onClick={() => {
+          handleEditBlockToggle();
+        }}>
+        {overlayVisible ? (
+          <IoCloseSharp color={'#fff'} size={20} />
+        ) : (
+          <HiPencil color={'#fff'} size={20} />
+        )}
+      </button>
 
       <div></div>
     </div>

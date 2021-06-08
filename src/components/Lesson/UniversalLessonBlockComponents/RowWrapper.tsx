@@ -1,10 +1,20 @@
 import React from 'react';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 
 export const RowWrapper = (props: RowWrapperProps) => {
-  const {mode, hasContent, dataIdAttribute, contentID, classString, children, pagePart} = props;
+  const {
+    mode,
+    hasContent,
+    dataIdAttribute,
+    contentID,
+    classString,
+    children,
+    pagePart,
+  } = props;
 
   const viewModeClass = ``;
+  const {previewMode} = useULBContext();
   const buildModeClass = `border-0 border-dashed border-gray-400`;
 
   return (
@@ -15,15 +25,15 @@ export const RowWrapper = (props: RowWrapperProps) => {
         ${classString ? classString : ''}
         relative
         my-4
-        z-50
+        
       `}>
       <div
         className={`
-          ${mode === 'building' ? buildModeClass : viewModeClass}
-          shadow rounded-lg divide-y divide-gray-200
-          z-50
+          ${mode === 'building' && !previewMode ? buildModeClass : viewModeClass}
+           rounded-lg divide-y divide-gray-200
+          ${!previewMode ? 'shadow' : ''}
           `}>
-        <div className="relative z-50">{children}</div>
+        <div className="relative">{children}</div>
       </div>
     </div>
   );
