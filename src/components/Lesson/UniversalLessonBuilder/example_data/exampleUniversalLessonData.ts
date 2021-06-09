@@ -62,6 +62,34 @@ export const exampleUniversalLesson: UniversalLesson = {
                   value: 'This is the description text',
                 },
               ],
+            },{
+              id: 'page_1_part_1_keywords-0',
+              type: 'keywords',
+              value: [
+                {
+                  id: '',
+                  type: '',
+                  label: 'Keyword Title',
+                  value: 'Keyword description',
+                },
+                {
+                  id: '',
+                  type: '',
+                  label: 'Keyword Title',
+                  value: 'Keyword description',
+                },
+                {
+                  id: '',
+                  type: '',
+                  label: 'Keyword Title',
+                  value: 'Keyword description',
+                },{
+                  id: '',
+                  type: '',
+                  label: 'Keyword Title',
+                  value: 'Keyword description',
+                },
+              ],
             },
             {
               id: 'page_1_part_0_header-0',

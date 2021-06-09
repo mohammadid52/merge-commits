@@ -16,6 +16,7 @@ import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
+import KeywordBlock from './Blocks/KeywordBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -42,7 +43,9 @@ const RowComposer = (props: RowComposerProps) => {
   const composePartContent = (id: string, type: string, value: any, inputKey: string) => {
     if (type.includes('jumbotron')) {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
-    } else if (type.includes('header')) {
+    } else if (type.includes('keyword')) {
+      return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    }else if (type.includes('header')) {
       return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
