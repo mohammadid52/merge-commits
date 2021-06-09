@@ -19,6 +19,7 @@ import Modal from '../../../Atoms/Modal';
 
 import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
 import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
+import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 
@@ -182,6 +183,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             setInputFields={setInputFields}
             inputFields={inputFields}
             addFromULBHandler={addFromULBHandler}
+            closeAction={closeAction}
+          />
+        );
+      case 'input':
+        return (
+          <InputModalComponent
+            selectedPageID={selectedPageID}
             closeAction={closeAction}
           />
         );

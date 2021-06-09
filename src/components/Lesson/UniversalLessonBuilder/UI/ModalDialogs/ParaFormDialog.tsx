@@ -6,7 +6,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-const HeaderModalComponent = ({
+const ParaModalComponent = ({
   onChange,
   selectedPageID,
   setInputFields,
@@ -83,4 +83,4 @@ const HeaderModalComponent = ({
   );
 };
 
-export default HeaderModalComponent;
+export default ParaModalComponent;
