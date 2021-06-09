@@ -232,38 +232,40 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(updated);
   };
 
-  const createNewBlockULBHandler = (targetID: string, inputValue:any) => {
+  const createNewBlockULBHandler = (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any,
+    addBlockAtPosition: number
+  ) => {
     let temp = {...universalLessonDetails};
-    // const created = crudULBHandler(
-    //   universalLessonDetails,
-    //   'create',
-    //   targetID,
-    //   undefined,
-    //   inputValue
-    // );
     const activePageIndex = universalLessonDetails.universalLessonPages.findIndex(
-      (page:any) => page.id === 'page_2'
-      );
-      let updatedPageContent = [...universalLessonDetails.universalLessonPages];
-      let pageContentData = [...updatedPageContent[activePageIndex].pageContent]
-      pageContentData.splice(2, 0, {
-            class: 'rounded-lg',
-            id: 'page_2_part_3',
-            partContent: [inputValue],
-            partType: 'default',
-          })
-          console.log(pageContentData,'pageContentData')
-      updatedPageContent[activePageIndex] = {
-        ...updatedPageContent[activePageIndex],
-        pageContent: pageContentData
-      };
+      (page: any) => page.id === targetID
+    );
+    let lessonPages = [...universalLessonDetails.universalLessonPages];
+    switch (propertyToTarget) {
+      case 'pageContent':
+        const pageContentId:string = `${targetID}_part_${addBlockAtPosition}`;
+        let pageContentData = [...lessonPages[activePageIndex].pageContent];
+        pageContentData.splice(addBlockAtPosition, 0, {
+          class: 'rounded-lg',
+          id: pageContentId,
+          partContent: [{id: `${pageContentId}_${contentType}_1`, type:contentType,value: inputValue}],
+          partType: 'default',
+        });
+        lessonPages[activePageIndex] = {
+          ...lessonPages[activePageIndex],
+          pageContent: pageContentData,
+        };
+        break;
+      default:
+        break;
+    }
     temp = {
       ...temp,
-      universalLessonPages: updatedPageContent,
+      universalLessonPages: lessonPages,
     };
-    console.log(temp, 'temptemp');
-    
-    
     setUniversalLessonDetails(temp);
   };
 

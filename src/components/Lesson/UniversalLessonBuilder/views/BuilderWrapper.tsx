@@ -53,6 +53,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
+  const [addBlockAtPosition, setAddBlockAtPosition] = useState<number>(0);
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
   /**
@@ -77,12 +78,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setCurrentModalDialog('');
   };
 
-  const handleModalPopToggle = (dialogToToggle: string) => {
+  const handleModalPopToggle = (dialogToToggle: string, addBlockAtPosition?: number) => {
     // Hide all UI Menus
     hideAllUIMenus();
 
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
+      setAddBlockAtPosition(addBlockAtPosition);
       setModalPopVisible(true);
     }
     // Toggle Which Dialog is Shown
@@ -172,7 +174,20 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'video':
         return (
           <YouTubeMediaDialog
-            createNewBlockULBHandler={createNewBlockULBHandler}
+            createNewBlockULBHandler={(
+              targetID: string,
+              propertyToTarget: string,
+              contentType: string,
+              inputValue: any
+            ) =>
+              createNewBlockULBHandler(
+                selectedPageID,
+                propertyToTarget,
+                contentType,
+                inputValue,
+                addBlockAtPosition
+              )
+            }
             closeAction={closeAction}
           />
         );

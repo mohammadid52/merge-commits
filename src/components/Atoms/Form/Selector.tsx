@@ -13,10 +13,12 @@ interface SelectorProps {
   onChange: (c: string, n: string, id: string) => void;
   disabled?: boolean;
   loading?: boolean;
+  label?: string;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const {
+    label,
     list,
     selectedItem,
     btnClass,
@@ -70,6 +72,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   return (
     <div className="relative" ref={currentRef}>
+      {label && 
+      <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+        {label}
+      </label>}
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           disabled={disabled || loading}

@@ -27,7 +27,9 @@ export interface ULBSelectionProps {
   createNewBlockULBHandler?: (
     targetID: string,
     propertyToTarget: string,
-    replacementValue?: string
+    contentType: string,
+    replacementValue?: string,
+    addBlockAtPosition?: number
   ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
@@ -43,7 +45,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
-  handleModalPopToggle?: (dialogToToggle: string) => void;
+  handleModalPopToggle?: (dialogToToggle: string, addBlockAtPosition?: Number) => void;
 }
 
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {

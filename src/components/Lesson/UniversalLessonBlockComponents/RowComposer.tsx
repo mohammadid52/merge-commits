@@ -10,6 +10,7 @@ import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {FormBlock} from './Blocks/FormBlock';
+import { VideoBlock } from './Blocks/VideoBlock';
 import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
@@ -79,7 +80,18 @@ const RowComposer = (props: RowComposerProps) => {
           mode={mode}
         />
       );
-    } else {
+    }else if (type.includes('video')) {
+      return (
+        <VideoBlock
+          key={inputKey}
+          id={id}
+          dataIdAttribute={inputKey}
+          value={value}
+          mode={mode}
+        />
+      );
+    }
+     else {
       return (
         <StringifyBlock
           key={inputKey}
@@ -110,12 +122,14 @@ const RowComposer = (props: RowComposerProps) => {
           <AddNewBlock
             idx={selectedPageDetails.pageContent.length - 1}
             mode={mode}
-            handleModalPopToggle={handleModalPopToggle}
+            handleModalPopToggle={(dialogToToggle) =>
+              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length)
+            }
           />
         </RowWrapper>
       </EditOverlayBlock>
     );
-
+    
   return (
     <div>
       {selectedPageID &&
@@ -180,7 +194,9 @@ const RowComposer = (props: RowComposerProps) => {
                 <AddNewBlockMini
                   mode={mode}
                   idx={idx}
-                  handleModalPopToggle={handleModalPopToggle}
+                  handleModalPopToggle={(dialogToToggle) =>
+                    handleModalPopToggle(dialogToToggle, idx + 1)
+                  }
                 />
               )}
             </React.Fragment>
