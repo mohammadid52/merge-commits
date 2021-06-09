@@ -9,6 +9,10 @@ interface VideoBlockProps extends RowWrapperProps {
 export const ImageBlock = (props: VideoBlockProps) => {
   const {id, dataIdAttribute, value} = props;
   const {url, width = '', height = '', caption = ''} = value;
+  const styleAttribute = {
+    width: width === 'auto' ? 'auto' : `${width}px`,
+    height: height === 'auto' ? 'auto' : `${height}px`,
+  };
   return (
     <div
       id={id}
@@ -16,7 +20,7 @@ export const ImageBlock = (props: VideoBlockProps) => {
       className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}>
       <img
         className="mx-auto"
-        style={{width: `${width}px`, height: `${height}px`}}
+        style={styleAttribute}
         width={width}
         height={height}
         src={url}

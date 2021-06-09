@@ -1,8 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
+
+import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {
+  EditQuestionModalDict,
+  UniversalBuilderDict,
+} from '../../../../../dictionary/dictionary.iconoclast';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface IImageInput {
   url: string;
@@ -11,22 +18,16 @@ interface IImageInput {
   caption?: string;
 }
 
-interface IVideoDialogProps {
+interface IImageFormComponentProps extends IContentTypeComponentProps {
   inputObj?: IImageInput;
-  closeAction: () => void;
-  createNewBlockULBHandler: (
-    targetID: string,
-    propertyToTarget: string,
-    contentType: string,
-    inputValue: any
-  ) => void;
 }
 
 const ImageFormComponent = ({
   inputObj,
   closeAction,
   createNewBlockULBHandler,
-}: IVideoDialogProps) => {
+}: IImageFormComponentProps) => {
+  const {userLanguage} = useContext(GlobalContext);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
     width: 'auto',
@@ -52,7 +53,7 @@ const ImageFormComponent = ({
     const name: string = (event.target as HTMLInputElement).name;
     const value: string = (event.target as HTMLInputElement).value;
     setImageInputs((prevValues) => ({...prevValues, [name]: value}));
-    setErrors((prevValues) => ({...prevValues, [name]: ""}));
+    setErrors((prevValues) => ({...prevValues, [name]: ''}));
   };
 
   const onSave = (event: React.FormEvent<HTMLFormElement>) => {
@@ -74,15 +75,18 @@ const ImageFormComponent = ({
     };
     if (!url) {
       isValid = false;
-      errorMsgs.url = 'Please upload image';
+      errorMsgs.url =
+        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_REQUIRED'];
     }
-    if (!width || (width !== "auto" && !Number(width))) {
+    if (!width || (width !== 'auto' && !Number(width))) {
       isValid = false;
-      errorMsgs.width = 'Please enter valid width for image or set it to auto';
+      errorMsgs.width =
+        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_WIDTH'];
     }
     if (!height || (height !== 'auto' && !Number(height))) {
       isValid = false;
-      errorMsgs.height = 'Please enter valid height for image or set it to auto';
+      errorMsgs.height =
+        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_HEIGHT'];;
     }
     setErrors(errorMsgs);
     return isValid;
@@ -131,7 +135,7 @@ const ImageFormComponent = ({
                 onChange={handleInputChange}
                 name="caption"
                 label={'Caption'}
-                placeHolder={'Enter title here'}
+                placeHolder={'Enter image caption here'}
               />
             </div>
           </div>
@@ -140,13 +144,13 @@ const ImageFormComponent = ({
           <div className="flex justify-end">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
-              label={'Cancel'}
+              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={closeAction}
               transparent
             />
             <Buttons
               btnClass="py-1 px-8 text-xs ml-2"
-              label={'Save'}
+              label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
               type="submit"
               onClick={onSave}
             />
