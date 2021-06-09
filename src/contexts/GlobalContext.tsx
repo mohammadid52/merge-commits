@@ -147,8 +147,6 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
   const uLang = userLanguage;
   const clientKey = getClientKey();
 
-  const [collapse, setCollapse] = useState(false);
-
   useEffect(() => {}, []);
 
   useEffect(() => {
@@ -188,8 +186,6 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         userLanguage,
         uLang,
         clientKey,
-        collapse,
-        setCollapse,
       }}>
       {children}
     </GlobalContext.Provider>

@@ -163,6 +163,17 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
                         ),
                       },
                     ];
+                  case 'create':
+                    return [
+                      ...acc2,
+                      {
+                        ...targetArrayObj,
+                        [propertyToTarget]: replaceTailwindClass(
+                          targetArrayObj[propertyToTarget],
+                          replacementValue
+                        ),
+                      },
+                    ];
                   default:
                     return [
                       ...acc2,
@@ -227,6 +238,43 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(updated);
   };
 
+  const createNewBlockULBHandler = (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any,
+    addBlockAtPosition: number
+  ) => {
+    let temp = {...universalLessonDetails};
+    const activePageIndex = universalLessonDetails.universalLessonPages.findIndex(
+      (page: any) => page.id === targetID
+    );
+    let lessonPages = [...universalLessonDetails.universalLessonPages];
+    switch (propertyToTarget) {
+      case 'pageContent':
+        const pageContentId:string = `${targetID}_part_${addBlockAtPosition}`;
+        let pageContentData = [...lessonPages[activePageIndex].pageContent];
+        pageContentData.splice(addBlockAtPosition, 0, {
+          class: 'rounded-lg',
+          id: pageContentId,
+          partContent: [{id: `${pageContentId}_${contentType}_1`, type:contentType,value: inputValue}],
+          partType: 'default',
+        });
+        lessonPages[activePageIndex] = {
+          ...lessonPages[activePageIndex],
+          pageContent: pageContentData,
+        };
+        break;
+      default:
+        break;
+    }
+    temp = {
+      ...temp,
+      universalLessonPages: lessonPages,
+    };
+    setUniversalLessonDetails(temp);
+  };
+
   return (
     /**
      *
@@ -246,6 +294,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         mode={`building`}
         deleteFromULBHandler={deleteULBHandler}
         updateFromULBHandler={updateULBHandler}
+        createNewBlockULBHandler={createNewBlockULBHandler}
         universalLessonDetails={universalLessonDetails}
         universalBuilderStep={universalBuilderStep}
         setUniversalBuilderStep={setUniversalBuilderStep}

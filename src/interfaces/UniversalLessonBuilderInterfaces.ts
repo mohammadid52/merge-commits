@@ -18,8 +18,19 @@ export interface ULBDialogComponent {
 
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
-  deleteFromULBHandler?: (targetID:string) => void;
-  updateFromULBHandler?: (targetID:string, propertyToTarget: string, replacementValue?: string) => void;
+  deleteFromULBHandler?: (targetID: string) => void;
+  updateFromULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    replacementValue?: string
+  ) => void;
+  createNewBlockULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    replacementValue?: string,
+    addBlockAtPosition?: number
+  ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
   targetID?: string;
@@ -34,7 +45,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
-  handleModalPopToggle?: (dialogToToggle: string) => void;
+  handleModalPopToggle?: (dialogToToggle: string, addBlockAtPosition?: Number) => void;
 }
 
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {

@@ -10,6 +10,7 @@ import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {FormBlock} from './Blocks/FormBlock';
+import { VideoBlock } from './Blocks/VideoBlock';
 import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
@@ -47,7 +48,18 @@ const RowComposer = (props: RowComposerProps) => {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
-    } else {
+    }else if (type.includes('video')) {
+      return (
+        <VideoBlock
+          key={inputKey}
+          id={id}
+          dataIdAttribute={inputKey}
+          value={value[0]}
+          mode={mode}
+        />
+      );
+    }
+     else {
       return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
     }
   };
@@ -116,7 +128,9 @@ const RowComposer = (props: RowComposerProps) => {
               {idx < selectedPageDetails.pageContent.length - 1 && (
                 <AddNewBlockMini
                   mode={mode}
-                  handleModalPopToggle={handleModalPopToggle}
+                  handleModalPopToggle={(dialogToToggle) =>
+                    handleModalPopToggle(dialogToToggle, idx + 1)
+                  }
                 />
               )}
             </React.Fragment>
@@ -129,7 +143,15 @@ const RowComposer = (props: RowComposerProps) => {
             editedID={editedID}
             handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-              <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
+              <AddNewBlock
+                mode={mode}
+                handleModalPopToggle={(dialogToToggle) =>
+                  handleModalPopToggle(
+                    dialogToToggle,
+                    selectedPageDetails.pageContent.length
+                  )
+                }
+              />
             </RowWrapper>
           </EditOverlayBlock>,
         ]

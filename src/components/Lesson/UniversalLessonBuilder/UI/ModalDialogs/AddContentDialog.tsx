@@ -60,7 +60,12 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
               </div>
               <p className={`text-center text-sm text-gray-600`}>Image</p>
 
-              <div className={`${buttonClass}`}>
+              <div
+                className={`${buttonClass}`}
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'video'});
+                }}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <AiOutlineYoutube />
                 </IconContext.Provider>

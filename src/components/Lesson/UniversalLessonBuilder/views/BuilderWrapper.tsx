@@ -18,7 +18,9 @@ import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderIn
 import Modal from '../../../Atoms/Modal';
 
 import HeaderModalComponent from '../UI/FormElements/Header';
+import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
   universalBuilderStep?: string;
@@ -31,6 +33,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
 const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     selectedPageID,
@@ -50,6 +53,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
+  const [addBlockAtPosition, setAddBlockAtPosition] = useState<number>(0);
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
   /**
@@ -74,12 +78,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setCurrentModalDialog('');
   };
 
-  const handleModalPopToggle = (dialogToToggle: string) => {
+  const handleModalPopToggle = (dialogToToggle: string, addBlockAtPosition?: number) => {
     // Hide all UI Menus
     hideAllUIMenus();
 
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
+      setAddBlockAtPosition(addBlockAtPosition);
       setModalPopVisible(true);
     }
     // Toggle Which Dialog is Shown
@@ -166,6 +171,26 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             closeAction={closeAction}
           />
         );
+      case 'video':
+        return (
+          <YouTubeMediaDialog
+            createNewBlockULBHandler={(
+              targetID: string,
+              propertyToTarget: string,
+              contentType: string,
+              inputValue: any
+            ) =>
+              createNewBlockULBHandler(
+                selectedPageID,
+                propertyToTarget,
+                contentType,
+                inputValue,
+                addBlockAtPosition
+              )
+            }
+            closeAction={closeAction}
+          />
+        );
 
       default:
         break;
@@ -187,6 +212,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Title';
     }
   };
+console.log(modalPopVisible, addContentModal, 'addContentModal');
 
   return (
     <div
