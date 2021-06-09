@@ -23,6 +23,7 @@ export const exampleUniversalLesson: UniversalLesson = {
   universalLessonPages: [
     {
       id: 'page_1',
+      label: '',
       title: '',
       description: '',
       class: '',
@@ -80,6 +81,7 @@ export const exampleUniversalLesson: UniversalLesson = {
     },
     {
       id: 'page_2',
+      label: '',
       title: 'Tales of Myth and Urban Legend',
       description: '',
       class: '',
@@ -177,6 +179,7 @@ export const exampleUniversalLesson: UniversalLesson = {
     },
     {
       id: 'page_3',
+      label: '',
       title: '',
       description: '',
       class: '',
