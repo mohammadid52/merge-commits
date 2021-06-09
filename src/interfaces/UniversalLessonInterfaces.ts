@@ -15,7 +15,7 @@ export interface UniversalLesson{
   unit?: string; //get this information from LESSON PLAN BUILDER
   categories?: string[];
   additionalFiles?: string[];
-  universalLessonPlan: UniversalLessonPlanStage[];
+  // universalLessonPlan: UniversalLessonPlanStage[];
   universalLessonPages: UniversalLessonPage[];
 }
 
@@ -36,6 +36,9 @@ interface UniversalLessonPages {
 //
 export interface UniversalLessonPage {
   id: string;
+  enabled?: boolean;
+  open?: boolean;
+  active?: boolean;
   label?: string;
   title: string;
   description: string;
