@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {FaCloudUploadAlt} from 'react-icons/fa';
 
@@ -39,9 +39,7 @@ const ULBFileUploader = ({
     multiple,
     ...otherProps,
   });
-  const label: string = multiple ? 'files' : 'file';
-  console.log(fileRejections, 'fileRejections');
-
+  const label: string = multiple ? 'some files' : 'file';
   return (
     <div
       {...getRootProps()}
@@ -54,7 +52,7 @@ const ULBFileUploader = ({
           <>
             <FaCloudUploadAlt size="50" />
             <p className="text-center mt-2">
-              Drag 'n' drop some {label} here, or click to select {label}
+              Drag 'n' drop {label} here, or click to select {label}
             </p>
           </>
         )}

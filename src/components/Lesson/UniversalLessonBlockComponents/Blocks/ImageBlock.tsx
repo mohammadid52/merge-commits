@@ -15,13 +15,14 @@ export const ImageBlock = (props: VideoBlockProps) => {
       data-id={dataIdAttribute}
       className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}>
       <img
+        className="mx-auto"
         style={{width: `${width}px`, height: `${height}px`}}
         width={width}
         height={height}
         src={url}
         alt=""
       />
-      <p>{caption}</p>
+      <p className="text-center">{caption}</p>
     </div>
   );
 };

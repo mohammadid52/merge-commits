@@ -233,7 +233,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Title';
     }
   };
-console.log(modalPopVisible, addContentModal, 'addContentModal');
 
   return (
     <div
