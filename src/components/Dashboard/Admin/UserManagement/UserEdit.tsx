@@ -1,4 +1,4 @@
-import React, {useContext, useState, Fragment, useEffect} from 'react';
+import React, {useContext, useState, Fragment, useEffect, useRef} from 'react';
 // import { API, graphqlOperation } from 'aws-amplify';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {IoLockClosed} from 'react-icons/io5';
@@ -18,8 +18,12 @@ import Selector from '../../../Atoms/Form/Selector';
 import {convertArrayIntoObj} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import {HiEmojiHappy} from 'react-icons/hi';
-import {BiSmile} from 'react-icons/bi';
+import {BiImageAdd, BiSmile} from 'react-icons/bi';
 import EmojiPicker from 'emoji-picker-react';
+import Storage from '@aws-amplify/storage';
+import Loader from '../../../Atoms/Loader';
+import {AiFillCheckCircle, AiOutlineCheckCircle} from 'react-icons/ai';
+import {getImageFromS3} from '../../../../utilities/services';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -54,6 +58,11 @@ const UserEdit = (props: UserInfoProps) => {
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const {UserEditDict, BreadcrumsTitles} = useDictionary(clientKey);
   const [checkpointData, setCheckpointData] = useState<any>({});
+  console.log(
+    '🚀 ~ file: UserEdit.tsx ~ line 61 ~ UserEdit ~ checkpointData',
+    checkpointData
+  );
+
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   useEffect(() => {
@@ -312,6 +321,7 @@ const UserEdit = (props: UserInfoProps) => {
       });
     }
   };
+
   const onSingleSelect = (
     value: string,
     name: string,
@@ -409,6 +419,128 @@ const UserEdit = (props: UserInfoProps) => {
     return newArr;
   };
 
+  // key:31
+
+  const uploadAttachment = async (file: any, id: string, type: string) => {
+    // Upload Attachments
+    return new Promise((resolve, reject) => {
+      Storage.put(id, file, {
+        contentType: type,
+      })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
+
+  const Attachment = ({item}: any) => {
+    const inputOther = useRef(null);
+
+    const handleFileSelection = async (e: any, cId: string, qId: string) => {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        setfileObject(file);
+        const id: string = `profile_attachments/${Date.now().toString()}_${file.name}`;
+        setUploading(true);
+
+        await uploadAttachment(file, id, file.type);
+        const imageUrl: any = await getImageFromS3(id);
+        if (imageUrl) addImageUrlToResponse(imageUrl, cId, qId);
+        setUploading(false);
+      }
+    };
+
+    const addImageUrlToResponse = (url: string, cId: string, qId: string) => {
+      setCheckpointData({
+        ...checkpointData,
+        [checkpointID]: {
+          ...checkpointData[checkpointID],
+          [qId]: `attachments-url || ${url}`,
+        },
+      });
+    };
+    const getUrlFromResponse = (response: string) => {
+      if (response) {
+        return response.split('attachments-url || ')[1];
+      }
+    };
+
+    const [fileObject, setfileObject] = useState<any>({});
+
+    const [uploading, setUploading] = useState(false);
+    const openFilesExplorer = () => inputOther.current.click();
+    return (
+      <div>
+        <div className="sm:col-span-3">
+          <label
+            htmlFor="date picker"
+            className="block text-m font-medium leading-5 text-gray-700">
+            {item?.question?.question}
+          </label>
+          <span
+            role="button"
+            tabIndex={-1}
+            onClick={openFilesExplorer}
+            className={`border-0 border-gray-300 flex items-center justify-center text-sm px-4 py-2 text-gray-700 hover:text-${
+              themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+            }-700 hover:border-${
+              themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+            }-400 transition-all duration-300 rounded-md shadow-sm`}>
+            <BiImageAdd
+              className={`text-gray-700 w-auto mr-2 hover:text-${
+                themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+              }-700`}
+            />
+            Upload Attachments
+          </span>
+          <input
+            ref={inputOther}
+            onChange={(e: any) => handleFileSelection(e, checkpointID, item.question.id)}
+            type="file"
+            className="hidden"
+            multiple={false}
+          />
+        </div>
+        {(uploading || fileObject.name) && (
+          <div className="sm:col-span-3 flex items-center justify-between border-0 border-gray-300 rounded-md shadow-sm mt-2 p-2 px-4">
+            <p className="text-center text-gray-700 w-auto truncate">
+              {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
+            </p>
+
+            {uploading ? (
+              <div className=" w-auto">
+                <Loader
+                  color={`${themeColor === 'iconoclastIndigo' ? '#6366F1' : '#0081CB'}`}
+                />
+              </div>
+            ) : (
+              <AiOutlineCheckCircle className="w-auto text-green-500 text-lg" />
+            )}
+          </div>
+        )}
+        {checkpointData &&
+          checkpointData[checkpointID] &&
+          checkpointData[checkpointID][item.question.id] &&
+          getUrlFromResponse(checkpointData[checkpointID][item.question.id]) && (
+            <div className="mt-2 text-right">
+              <a
+                target="_blank"
+                className="text-blue-700 cursor-pointer text-sm hover:underline"
+                href={getUrlFromResponse(checkpointData[checkpointID][item.question.id])}>
+                View Attachment
+              </a>
+            </div>
+          )}
+      </div>
+    );
+  };
+
+  // -----
+
   const selectedMultiOptions = (options: any[]) => {
     if (typeof options === 'string') {
       return [{id: '0', name: options, value: options}];
@@ -462,6 +594,7 @@ const UserEdit = (props: UserInfoProps) => {
   const getValue = (checkpointId: string, questionId: string) => {
     if (checkpointData[checkpointId]) {
       const currentQuestionResponse = checkpointData[checkpointId][questionId];
+
       return currentQuestionResponse
         ? currentQuestionResponse.split(' || ').length === 2
           ? currentQuestionResponse.split(' || ')[1]
@@ -484,6 +617,7 @@ const UserEdit = (props: UserInfoProps) => {
         [questionID]: responseWithEmoji,
       },
     });
+
     setShowEmoji({show: false, cId: '', qId: ''});
   };
 
@@ -660,7 +794,10 @@ const UserEdit = (props: UserInfoProps) => {
                 <div className="text-gray-900">
                   {getCurrentTabQuestions().map((item: any) => (
                     <Fragment key={item.question.id}>
-                      <div className="p-2 flex mb-4 items-end">
+                      <div
+                        className={`p-2 flex  items-end ${
+                          item.question.type !== 'attachments' ? 'mb-4' : 'mb-0 pb-0'
+                        }`}>
                         <div className="flex flex-col justify-between">
                           {item.question.type === 'text' ||
                           item.question.type === 'input' ? (
@@ -713,6 +850,12 @@ const UserEdit = (props: UserInfoProps) => {
                               </div>
                             </div>
                           ) : null}
+
+                          {/* key:31 */}
+                          {item.question.type === 'attachments' ? (
+                            <Attachment item={item} />
+                          ) : null}
+
                           {item.question.type === 'link' ? (
                             <div className="sm:col-span-3">
                               <label
@@ -723,10 +866,10 @@ const UserEdit = (props: UserInfoProps) => {
                               <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                                 <input
                                   id={item.question.id}
-                                  // type="url"
+                                  type="url"
                                   name="url"
-                                  placeholder="https://example.com"
-                                  // pattern="https://.*"
+                                  placeholder="Paste url here"
+                                  pattern="https://.*"
                                   size={30}
                                   value={
                                     checkpointData[checkpointID]
@@ -938,6 +1081,7 @@ const UserEdit = (props: UserInfoProps) => {
             transparent
           />
           <Buttons
+            // disabled={uploading}
             btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
             label={UserEditDict[userLanguage]['button']['save']}
             onClick={onSubmit}

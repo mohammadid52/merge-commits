@@ -10,6 +10,7 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import Status from '../../../Atoms/Status';
 import {getAsset} from '../../../../assets';
 import LinkPreview from '../../../Atoms/LinkPreview';
+import ImageMedia from './ImageMedia';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -78,6 +79,16 @@ const UserInformation = (props: UserInfoProps) => {
     color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280',
   });
 
+  const getUrlFromResponse = (response: string) => {
+    // #1 'image_url - somelongurl'
+    // #2 ['', 'somelongurl']
+    // #3 'somelongurl'
+    if (response) {
+      const imageUrl: string = response.split('attachments-url || ')[1];
+
+      return imageUrl;
+    }
+  };
   return (
     <div className="w-3/4 md:px-2 pt-2">
       <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
@@ -204,15 +215,29 @@ const UserInformation = (props: UserInfoProps) => {
                     {item.question.question}
                   </dt>
                   <dd className="mt-2 text-base leading-5 text-gray-900">
-                    {item.question.type !== 'link' ? (
-                      getQuestionResponse(checkpointID, item.question.id) || '--'
-                    ) : getQuestionResponse(checkpointID, item.question.id) ? (
-                      <LinkPreview
-                        url={getQuestionResponse(checkpointID, item.question.id)}
-                      />
-                    ) : (
-                      <p>Loading preview</p>
-                    )}
+                    {item.question.type !== 'attachments' &&
+                      (item.question.type !== 'link' ? (
+                        getQuestionResponse(checkpointID, item.question.id) || '--'
+                      ) : getQuestionResponse(checkpointID, item.question.id) ? (
+                        <LinkPreview
+                          url={getQuestionResponse(checkpointID, item.question.id)}
+                        />
+                      ) : (
+                        <p>Loading preview</p>
+                      ))}
+                    {item.question.type === 'attachments' &&
+                      (getQuestionResponse(checkpointID, item.question.id) ? (
+                        <a
+                          target="_blank"
+                          className="text-blue-700 text-sm hover:underline"
+                          href={getUrlFromResponse(
+                            getQuestionResponse(checkpointID, item.question.id)
+                          )}>
+                          View Attachment
+                        </a>
+                      ) : (
+                        '--'
+                      ))}
                   </dd>
                 </div>
               );
