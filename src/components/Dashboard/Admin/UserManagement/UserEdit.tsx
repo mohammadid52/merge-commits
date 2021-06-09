@@ -459,14 +459,9 @@ const UserEdit = (props: UserInfoProps) => {
         ...checkpointData,
         [checkpointID]: {
           ...checkpointData[checkpointID],
-          [qId]: `attachments-url || ${url}`,
+          [qId]: `${url}`,
         },
       });
-    };
-    const getUrlFromResponse = (response: string) => {
-      if (response) {
-        return response.split('attachments-url || ')[1];
-      }
     };
 
     const [fileObject, setfileObject] = useState<any>({});
@@ -524,13 +519,12 @@ const UserEdit = (props: UserInfoProps) => {
         )}
         {checkpointData &&
           checkpointData[checkpointID] &&
-          checkpointData[checkpointID][item.question.id] &&
-          getUrlFromResponse(checkpointData[checkpointID][item.question.id]) && (
+          checkpointData[checkpointID][item.question.id] && (
             <div className="mt-2 text-right">
               <a
                 target="_blank"
                 className="text-blue-700 cursor-pointer text-sm hover:underline"
-                href={getUrlFromResponse(checkpointData[checkpointID][item.question.id])}>
+                href={checkpointData[checkpointID][item.question.id]}>
                 View Attachment
               </a>
             </div>

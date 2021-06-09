@@ -308,6 +308,8 @@ export const getTypeString = (type: string) => {
       return 'link';
     case 'emoji':
       return 'Emoji';
+    case 'attachments':
+      return 'Attachments';
     default:
       return 'Text';
   }

@@ -22,6 +22,7 @@ export interface QuestionProps {
   animate?: boolean;
   type?: string;
   emoji?: boolean;
+  attachments?: boolean;
   handleInputChange?: (
     id: number | string,
     value: string | string[],
@@ -60,6 +61,7 @@ const Question = (props: QuestionProps) => {
       case 'input':
       case 'link':
       case 'emoji':
+      case 'attachments':
         return (
           <InputQuestions
             checkpointID={checkpointID}
@@ -76,6 +78,7 @@ const Question = (props: QuestionProps) => {
                 : 'url'
             }
             emoji={question.question.type === 'emoji'}
+            attachments={question.question.type === 'attachments'}
           />
         );
 

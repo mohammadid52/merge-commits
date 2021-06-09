@@ -79,16 +79,6 @@ const UserInformation = (props: UserInfoProps) => {
     color: condition ? `${theme.iconColor[themeColor]}` : '#6B7280',
   });
 
-  const getUrlFromResponse = (response: string) => {
-    // #1 'image_url - somelongurl'
-    // #2 ['', 'somelongurl']
-    // #3 'somelongurl'
-    if (response) {
-      const imageUrl: string = response.split('attachments-url || ')[1];
-
-      return imageUrl;
-    }
-  };
   return (
     <div className="w-3/4 md:px-2 pt-2">
       <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
@@ -230,9 +220,7 @@ const UserInformation = (props: UserInfoProps) => {
                         <a
                           target="_blank"
                           className="text-blue-700 text-sm hover:underline"
-                          href={getUrlFromResponse(
-                            getQuestionResponse(checkpointID, item.question.id)
-                          )}>
+                          href={getQuestionResponse(checkpointID, item.question.id)}>
                           View Attachment
                         </a>
                       ) : (
