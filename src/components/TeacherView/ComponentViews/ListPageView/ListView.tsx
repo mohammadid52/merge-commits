@@ -26,9 +26,6 @@ const StoryPage = (props: props) => {
       <Route exact path={`${match.url}`}>
         <StoryActivityView fullscreen={fullscreen} />
       </Route>
-      {/* <Route>
-                <ErrorPage />
-            </Route> */}
     </Switch>
   );
 };

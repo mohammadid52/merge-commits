@@ -13,7 +13,7 @@ import {
   FaHourglassStart,
   FaHeadphonesAlt,
   FaScroll,
-  FaPenFancy,
+  FaPenFancy, FaListAlt,
 } from 'react-icons/fa';
 
 interface BannerProps {
@@ -68,6 +68,8 @@ const Banner = (props: BannerProps) => {
         return <FaCheck />;
       case 'FaPenFancy':
         return <FaPenFancy />;
+      case 'list':
+        return <FaListAlt />;
       default:
         return <FaQuestion />;
     }
