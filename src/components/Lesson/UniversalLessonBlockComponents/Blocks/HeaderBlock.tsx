@@ -3,7 +3,7 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
-  value?: string;
+  value?: any;
   type?: string;
 }
 
@@ -18,7 +18,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     classString,
   } = props;
 
-  const composeHeader = (inputId: string, inputValue: string, inputType: string) => {
+  const composeHeader = (inputID: string, inputValue: string, inputType: string) => {
     switch (inputType) {
       case 'header-default':
         return (
@@ -40,17 +40,19 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
           </h3>
         );
       default:
-        return <p id={inputId}>{inputValue}</p>;
+        return <p id={inputID}>{inputValue}</p>;
     }
   };
 
   return (
     <>
-      {value ? (
-        <div id={id} data-id={dataIdAttribute} className={`p-4`}>
-          {composeHeader(id, value, type)}
-        </div>
-      ) : null}
+      {value &&
+        value.length > 0 &&
+        value.map((v: any, i: number) => (
+          <div key={id} className={`p-4`}>
+            {composeHeader(id, v, type)}
+          </div>
+        ))}
     </>
   );
 };

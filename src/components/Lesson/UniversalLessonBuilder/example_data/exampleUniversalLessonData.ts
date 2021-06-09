@@ -1,4 +1,4 @@
-import { UniversalLesson } from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
 
 /**
  *
@@ -16,9 +16,9 @@ export const exampleUniversalLesson: UniversalLesson = {
   teachers: ['Marlon Lizama'],
   categories: ['Creative Writing'],
   universalLessonPlan: [
-    { enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF' },
+    {enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF'},
+    {enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF'},
+    {enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF'},
   ],
   universalLessonPages: [
     {
@@ -26,7 +26,57 @@ export const exampleUniversalLesson: UniversalLesson = {
       title: '',
       description: '',
       class: '',
-      pageContent: [],
+      pageContent: [
+        {
+          id: 'page_1_part_0',
+          tags: [''],
+          partType: 'default',
+          class: 'rounded-lg',
+          partContent: [
+            {
+              id: 'page_1_part_0_jumbotron-0',
+              type: 'jumbotron-quote',
+              value: [
+                {
+                  id: '',
+                  type: 'background',
+                  label: '',
+                  value: 'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
+                },
+                {
+                  id: '',
+                  type: 'title',
+                  label: '',
+                  value: 'Jumbo Title',
+                },
+                {
+                  id: '',
+                  type: 'subtitle',
+                  label: '',
+                  value: 'This is the placeholder',
+                },{
+                  id: '',
+                  type: 'description',
+                  label: '',
+                  value: 'This is the description text',
+                },
+              ],
+            },
+            {
+              id: 'page_1_part_0_header-0',
+              type: 'header-default',
+              value: ['Introduction'],
+            },
+            {
+              id: 'page_1_part_0_text-0',
+              type: 'paragraph',
+              value: [
+                "Just some instruction text"
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       id: 'page_2',
@@ -43,7 +93,8 @@ export const exampleUniversalLesson: UniversalLesson = {
             {
               id: 'page_2_part_0_header-0',
               type: 'header-default',
-              value: ['Instructions'] },
+              value: ['Instructions'],
+            },
             {
               id: 'page_2_part_0_text-0',
               type: 'paragraph',
@@ -70,8 +121,18 @@ export const exampleUniversalLesson: UniversalLesson = {
               id: 'page_2_part_1_questionGroup-1',
               type: 'form-default',
               value: [
-                { id: 'title', type: 'text-input', label: 'Title', value: ['This is the placeholder'] },
-                { id: 'story', type: 'text-area', label: '', value: ['This is the placeholder'] },
+                {
+                  id: 'title',
+                  type: 'text-input',
+                  label: 'Title',
+                  value: 'This is the placeholder',
+                },
+                {
+                  id: 'story',
+                  type: 'text-area',
+                  label: '',
+                  value: 'This is the placeholder',
+                },
               ],
             },
           ],
@@ -94,19 +155,19 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: 'culture',
                   type: 'text-input',
                   label: 'What culture does this story come from?',
-                  value: ['Mexican etc.'],
+                  value: 'Mexican etc.',
                 },
                 {
                   id: 'storyteller',
                   type: 'text-input',
                   label: 'Who is the storyteller in your life?',
-                  value: ['Grandma etc.'],
+                  value: 'Grandma etc.',
                 },
                 {
                   id: 'lessons',
                   type: 'text-input',
                   label: 'What lessons does this story teach us?',
-                  value: ['Perseverance etc.'],
+                  value: 'Perseverance etc.',
                 },
               ],
             },

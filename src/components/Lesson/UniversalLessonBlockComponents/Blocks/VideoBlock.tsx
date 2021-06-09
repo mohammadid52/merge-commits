@@ -11,8 +11,8 @@ interface VideoBlockProps extends RowWrapperProps {
 export const VideoBlock = (props: VideoBlockProps) => {
   const {id, dataIdAttribute, value} = props;
   const {url, size = ''} = value;
-  const width: string = `${size.split(' x ')[0]}px` || '315';
-  const height: string = `${size.split(' x ')[1]}px` || '560';
+  const width: string = size ? `${size.split(' x ')[0]}px` : '315px';
+  const height: string = size ? `${size.split(' x ')[1]}px` : '560px';
   return (
     <p
       id={id}

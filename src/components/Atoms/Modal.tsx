@@ -77,7 +77,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     saveAction,
     closeOnBackdrop = false,
   } = modalProps;
-  const {theme} = useContext(GlobalContext);
+  const {theme, collapse} = useContext(GlobalContext);
   useEffect(() => {
     const close = (e: any) => {
       if (e.keyCode === 27) {
@@ -99,6 +99,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
               e.stopPropagation();
             }
           }}
+          style={{marginRight: !collapse ? '20rem' : '0rem'}}
           className="relative w-auto my-4 mx-auto max-w-lg">
           <div className={`${theme.modals.content}`}>
             {showHeader && (
