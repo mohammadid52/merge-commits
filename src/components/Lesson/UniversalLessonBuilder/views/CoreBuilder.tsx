@@ -1,17 +1,11 @@
 import React from 'react';
 import RowComposer from '../../UniversalLessonBlockComponents/RowComposer';
 import {
-  PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import {HierarchyPanel} from '../UI/HierarchyPanel';
-import {EditPanel} from '../UI/EditPanel';
-import {RowWrapper} from '../../UniversalLessonBlockComponents/RowWrapper';
-import {AddNewBlock} from '../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
-import EditOverlayBlock from '../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';

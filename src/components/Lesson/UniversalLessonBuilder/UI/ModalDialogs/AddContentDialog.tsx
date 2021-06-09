@@ -38,7 +38,12 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
               </div>
               <p className={`text-center text-sm text-gray-600`}>Title</p>
 
-              <div className={`${buttonClass}`}>
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'paragraph'});
+                }}
+                className={`${buttonClass}`}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <VscSymbolParameter />
                 </IconContext.Provider>

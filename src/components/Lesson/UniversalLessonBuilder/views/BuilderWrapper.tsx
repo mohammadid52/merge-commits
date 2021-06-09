@@ -17,7 +17,8 @@ import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderIn
 
 import Modal from '../../../Atoms/Modal';
 
-import HeaderModalComponent from '../UI/FormElements/Header';
+import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
+import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 
@@ -27,6 +28,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
+  createNewBlockULBHandler?: any;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -157,11 +159,23 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (type: 'header' | 'text' | string) => {
+  const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
     switch (type) {
       case 'header':
         return (
           <HeaderModalComponent
+            inputValue={inputFields[type]}
+            onChange={onChange}
+            selectedPageID={selectedPageID}
+            setInputFields={setInputFields}
+            inputFields={inputFields}
+            addFromULBHandler={addFromULBHandler}
+            closeAction={closeAction}
+          />
+        );
+      case 'paragraph':
+        return (
+          <ParaModalComponent
             inputValue={inputFields[type]}
             onChange={onChange}
             selectedPageID={selectedPageID}
@@ -212,7 +226,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Title';
     }
   };
-console.log(modalPopVisible, addContentModal, 'addContentModal');
 
   return (
     <div
