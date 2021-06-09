@@ -36,6 +36,7 @@ interface UniversalLessonPages {
 //
 export interface UniversalLessonPage {
   id: string;
+  label?: string;
   title: string;
   description: string;
   class: string;
