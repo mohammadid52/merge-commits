@@ -1,13 +1,10 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import Selector from '../../../../Atoms/Form/Selector';
-import ColorPicker from '../ColorPicker/ColorPicker';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
-import {doResize} from '../../../../../utilities/functions';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 const HeaderModalComponent = ({
   onChange,

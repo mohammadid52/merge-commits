@@ -17,6 +17,7 @@ import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -69,6 +70,31 @@ const RowComposer = (props: RowComposerProps) => {
   const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
+
+  const {previewMode} = useULBContext();
+
+  const LastBlock = ({selectedPageDetails}: any) => {
+    return !previewMode ? (
+      <EditOverlayBlock
+        mode={mode}
+        key={`pp_addNew`}
+        contentID={`addNewRow`}
+        editedID={editedID}
+        handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
+        <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+          <AddNewBlock
+            idx={selectedPageDetails.pageContent.length - 1}
+            mode={mode}
+            handleModalPopToggle={(dialogToToggle) =>
+              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length)
+            }
+          />
+        </RowWrapper>
+      </EditOverlayBlock>
+    ) : (
+      <div />
+    );
+  };
 
   return (
     <>
@@ -127,7 +153,7 @@ const RowComposer = (props: RowComposerProps) => {
               </EditOverlayBlock>
 
               {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
-              {idx < selectedPageDetails.pageContent.length - 1 && (
+              {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
                 <AddNewBlockMini
                   mode={mode}
                   idx={idx}
@@ -139,25 +165,7 @@ const RowComposer = (props: RowComposerProps) => {
             </React.Fragment>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
-          <EditOverlayBlock
-            mode={mode}
-            key={`pp_addNew`}
-            contentID={`addNewRow`}
-            editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
-            <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-              <AddNewBlock
-                idx={selectedPageDetails.pageContent.length - 1}
-                mode={mode}
-                handleModalPopToggle={(dialogToToggle) =>
-                  handleModalPopToggle(
-                    dialogToToggle,
-                    selectedPageDetails.pageContent.length
-                  )
-                }
-              />
-            </RowWrapper>
-          </EditOverlayBlock>,
+          <LastBlock selectedPageDetails={selectedPageDetails} />,
         ]
       ) : (
         <>
