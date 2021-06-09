@@ -20,6 +20,7 @@ import Modal from '../../../Atoms/Modal';
 import HeaderModalComponent from '../UI/FormElements/Header';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import ImageFormComponent from '../UI/FormElements/ImageComponent';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -168,6 +169,26 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             setInputFields={setInputFields}
             inputFields={inputFields}
             addFromULBHandler={addFromULBHandler}
+            closeAction={closeAction}
+          />
+        );
+      case 'image':
+        return (
+          <ImageFormComponent
+            createNewBlockULBHandler={(
+              targetID: string,
+              propertyToTarget: string,
+              contentType: string,
+              inputValue: any
+            ) =>
+              createNewBlockULBHandler(
+                selectedPageID,
+                propertyToTarget,
+                contentType,
+                inputValue,
+                addBlockAtPosition
+              )
+            }
             closeAction={closeAction}
           />
         );
