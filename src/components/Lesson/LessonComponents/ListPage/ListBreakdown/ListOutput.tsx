@@ -17,7 +17,7 @@ const ListOutput = (props: ListOutputProps) => {
   return (
     <>
       <div className={`w-full flex flex-col`}>
-        {props.list && props.list !== [''] ? (
+        {props.list && props.list.length > 0 ? (
           props.list.map((item: string, i: number) => (
             <div
               key={`listoutput_${i}`}

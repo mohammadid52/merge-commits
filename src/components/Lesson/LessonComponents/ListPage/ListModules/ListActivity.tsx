@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
-import { useCookies } from 'react-cookie';
+import React, {useState, useContext, useEffect} from 'react';
+import {LessonContext} from '../../../../../contexts/LessonContext';
+import {useCookies} from 'react-cookie';
 import InstructionsBlock from './InstructionBlock';
-import Banner from './Banner';
 import Modules from './Modules';
 import InstructionsPopup from '../../../Popup/InstructionsPopup';
 import ListForm from './ListForm';
-import { string } from 'prop-types';
+import {string} from 'prop-types';
+import Banner from '../../Banner';
 
 export interface StoryState {
   story: string[];
@@ -18,7 +18,7 @@ export interface StoryState {
 }
 
 const List = () => {
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {state, theme, dispatch} = useContext(LessonContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const [openPopup, setOpenPopup] = useState(false);
 
@@ -26,10 +26,14 @@ const List = () => {
   const inputs = state.data.lesson.warmUp.inputs;
   const video = state.data.lesson.warmUp.instructions.link;
   const nrLists = inputs.listInputNumber;
-  const listArray = nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
+  const listArray =
+    nrLists === null ? [''] : Array.from(Array(nrLists).keys()).map((elem: number) => '');
 
   useEffect(() => {
-    if (!cookies[`lesson-${state.syllabusLessonID}`]?.story && !state.componentState.story) {
+    if (
+      !cookies[`lesson-${state.syllabusLessonID}`]?.story &&
+      !state.componentState.story
+    ) {
       let tempObj: StoryState = {
         story: listArray,
         additional: [
@@ -51,10 +55,9 @@ const List = () => {
       // UPDATE: somehow commenting this out does not affect the standard list,
       // curious as to why it was here in the first place
 
-
       if (inputs.additionalInputs.length > 0) {
-        let additional: Array<{ name: string; text: string | [] }> = [];
-        inputs.additionalInputs.forEach((input: { name: string }) => {
+        let additional: Array<{name: string; text: string | []}> = [];
+        inputs.additionalInputs.forEach((input: {name: string}) => {
           let newInput = {
             name: input.name,
             text: '',
@@ -88,19 +91,21 @@ const List = () => {
         },
       });
     }
-
   }, []);
 
   return (
     <>
       <InstructionsPopup video={video} open={openPopup} setOpen={setOpenPopup} />
       <div className={theme.section}>
-        <Banner />
+        <Banner title={state.data.lesson?.warmUp && state.data.lesson?.warmUp.title}
+        iconName={'list'}/>
 
         <div className="flex flex-col justify-between items-center">
           <InstructionsBlock />
 
-          {inputs.additionalInputs.length > 0 ? <Modules inputs={inputs.additionalInputs} /> : null}
+          {inputs.additionalInputs.length > 0 ? (
+            <Modules inputs={inputs.additionalInputs} />
+          ) : null}
 
           <ListForm listArray={listArray} nrLists={nrLists} />
         </div>
