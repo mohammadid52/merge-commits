@@ -306,7 +306,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     if (justLoggedIn) {
-      getGreetQuestion();
+      // getGreetQuestion();
     }
   }, [justLoggedIn]);
 
@@ -909,13 +909,13 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
-      {state.user.role === 'ST' && (
+      {/* {state.user.role === 'ST' && (
         <EmojiFeedback
           greetQuestion={greetQuestion}
           justLoggedIn={justLoggedIn}
           onSave={(response: string) => updateGreetQuestion(response)}
         />
-      )}
+      )} */}
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}
