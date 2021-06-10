@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 
+import Storage from '@aws-amplify/storage';
+
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
@@ -16,6 +18,7 @@ interface IImageInput {
   width: string;
   height: string;
   caption?: string;
+  imageData?: File | null;
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
@@ -30,6 +33,7 @@ const ImageFormComponent = ({
   const {userLanguage} = useContext(GlobalContext);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
+    imageData: null,
     width: 'auto',
     height: 'auto',
     caption: '',
@@ -39,15 +43,16 @@ const ImageFormComponent = ({
     width: '',
     height: '',
   });
+  const [loading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (inputObj && inputObj.url) {
       setImageInputs(inputObj);
     }
   }, [inputObj]);
-  const updateFileUrl = (url: string) => {
-    setImageInputs((prevValues) => ({...prevValues, url}));
-    setErrors((prevValues) => ({...prevValues, [url]: ''}));
+  const updateFileUrl = (previewUrl: string, imageData: File|null) => {
+    setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
+    setErrors((prevValues) => ({...prevValues, url: ''}));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name: string = (event.target as HTMLInputElement).name;
@@ -56,11 +61,28 @@ const ImageFormComponent = ({
     setErrors((prevValues) => ({...prevValues, [name]: ''}));
   };
 
-  const onSave = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSave = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
     if (isValid) {
-      createNewBlockULBHandler('', 'pageContent', 'image', [imageInputs]);
+      let temp = imageInputs.imageData.name.split('.');
+      const extension = temp.pop();
+      const fileName = `${Date.now()}_${temp
+        .join(' ')
+        .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+      setIsLoading(true);
+      await uploadImageToS3(
+        imageInputs.imageData,
+        `${fileName}`,
+        'image/jpeg'
+      );
+      createNewBlockULBHandler('', 'pageContent', 'image', [
+        {
+          ...imageInputs,
+          url: `ULB/content_image_${fileName}`,
+        },
+      ]);
+      setIsLoading(false);
       closeAction();
     }
   };
@@ -91,6 +113,29 @@ const ImageFormComponent = ({
     setErrors(errorMsgs);
     return isValid;
   };
+
+    const uploadImageToS3 = async (file: any, id: string, type: string) => {
+      // Upload file to s3 bucket
+
+      return new Promise((resolve, reject) => {
+        Storage.put(`ULB/content_image_${id}`, file, {
+          contentType: type,
+          ContentEncoding: 'base64',
+        })
+          .then((result: any) => {
+            console.log('File successfully uploaded to s3', result);
+            resolve(true);
+          })
+          .catch((err: any) => {
+            setErrors((prevValues) => ({
+              ...prevValues,
+              url: 'Unable to upload image. Please try again later. ',
+            }));
+            console.log('Error in uploading file to s3', err);
+            reject(err);
+          });
+      });
+    };
 
   const {caption = '', url = '', width = '', height = ''} = imageInputs;
   return (
@@ -150,9 +195,14 @@ const ImageFormComponent = ({
             />
             <Buttons
               btnClass="py-1 px-8 text-xs ml-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+              label={
+                loading
+                  ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVING']
+                  : EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
+              }
               type="submit"
               onClick={onSave}
+              disabled={loading}
             />
           </div>
         </div>

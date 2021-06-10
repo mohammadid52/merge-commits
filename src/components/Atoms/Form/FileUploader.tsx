@@ -10,7 +10,7 @@ interface IULBFileUploader {
   error?: string;
   fileUrl: string;
   multiple?: boolean;
-  updateFileUrl: (url: string) => void;
+  updateFileUrl: (url: string, imageData: File | null) => void;
 }
 
 const ULBFileUploader = ({
@@ -26,14 +26,14 @@ const ULBFileUploader = ({
     otherProps.accept = acceptedFilesFormat;
   }
   const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach((file: any) => {
+    acceptedFiles.forEach((file: File | null) => {
       const reader = new FileReader();
       reader.onabort = () => console.log('file reading was aborted');
       reader.onerror = () => console.log('file reading has failed');
       reader.onload = () => {
         // Do whatever you want with the file contents
         // const binaryStr = reader.result;
-        updateFileUrl(URL.createObjectURL(file));
+        updateFileUrl(URL.createObjectURL(file), file);
       };
       reader.readAsArrayBuffer(file);
     });

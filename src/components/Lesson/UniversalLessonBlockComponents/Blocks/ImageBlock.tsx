@@ -1,5 +1,6 @@
 import React from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { getImageFromS3Static } from '../../../../utilities/services';
 
 interface VideoBlockProps extends RowWrapperProps {
   id: string;
@@ -23,7 +24,7 @@ export const ImageBlock = (props: VideoBlockProps) => {
         style={styleAttribute}
         width={width}
         height={height}
-        src={url}
+        src={getImageFromS3Static(url)}
         alt=""
       />
       <p className="text-center">{caption}</p>
