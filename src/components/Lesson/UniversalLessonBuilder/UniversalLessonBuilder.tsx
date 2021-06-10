@@ -246,7 +246,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     let pageContentData = [...lessonPages[activePageIndex].pageContent];
     switch (propertyToTarget) {
       case 'pageContent':
-        const pageContentId: string = `${targetID}_part_${pageContentData.length}`;
+        const pageContentId: string = `${selectedPageID}_part_${pageContentData.length}`;
         pageContentData.splice(addBlockAtPosition, 0, {
           class: 'rounded-lg',
           id: pageContentId,
@@ -279,8 +279,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               value: inputValue,
             },
           ];
-          pageContentData[activePageIndex] = {
-            ...pageContentData[activePageIndex],
+          pageContentData[activePageContentIndex] = {
+            ...pageContentData[activePageContentIndex],
             partContent: activePagePartContentData,
           };
           lessonPages[activePageIndex] = {

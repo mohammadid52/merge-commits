@@ -98,7 +98,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-
+    
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
       setNewBlockConfig({
@@ -180,8 +180,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
     const {position = 0, section = 'pageContent'} = newBlockConfig;
-    console.log(newBlockConfig, 'newBlockConfig');
-    
+
     switch (type) {
       case 'header':
         return (
