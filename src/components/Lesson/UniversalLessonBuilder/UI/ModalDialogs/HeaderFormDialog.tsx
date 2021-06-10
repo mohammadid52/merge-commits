@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
-import ColorPicker from '../../UI/ColorPicker/ColorPicker';
+import ColorPicker from '../ColorPicker/ColorPicker';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';

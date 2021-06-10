@@ -17,7 +17,9 @@ import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderIn
 
 import Modal from '../../../Atoms/Modal';
 
-import HeaderModalComponent from '../UI/FormElements/Header';
+import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
+import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
+import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
@@ -28,6 +30,7 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
+  createNewBlockULBHandler?: any;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -158,7 +161,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (type: 'header' | 'text' | string) => {
+  const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
     switch (type) {
       case 'header':
         return (
@@ -189,6 +192,24 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
                 addBlockAtPosition
               )
             }
+            closeAction={closeAction}
+          />)
+      case 'paragraph':
+        return (
+          <ParaModalComponent
+            inputValue={inputFields[type]}
+            onChange={onChange}
+            selectedPageID={selectedPageID}
+            setInputFields={setInputFields}
+            inputFields={inputFields}
+            addFromULBHandler={addFromULBHandler}
+            closeAction={closeAction}
+          />
+        );
+      case 'input':
+        return (
+          <InputModalComponent
+            selectedPageID={selectedPageID}
             closeAction={closeAction}
           />
         );
