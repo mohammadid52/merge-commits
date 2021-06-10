@@ -107,12 +107,14 @@ const RowComposer = (props: RowComposerProps) => {
                         handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
                         deleteFromULBHandler={deleteFromULBHandler}>
                         {content.value.length > 0 ? (
-                          composePartContent(
-                            content.id,
-                            content.type,
-                            content.value,
-                            `pp_${idx}_pc_${idx2}`
-                          )
+                          <div id={content.id}>
+                            {composePartContent(
+                              content.id,
+                              content.type,
+                              content.value,
+                              `pp_${idx}_pc_${idx2}`
+                            )}
+                          </div>
                         ) : (
                           <p>No content</p>
                         )}

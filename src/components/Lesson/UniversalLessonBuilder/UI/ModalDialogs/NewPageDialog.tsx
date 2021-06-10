@@ -27,11 +27,11 @@ const NewPageDialog = () => {
           focussed === ''
             ? ''
             : focussed === 'new_page'
-            ? 'w-full h-full'
+            ? 'w-full h-full m-4 '
             : 'w-0 overflow-hidden opacity-0'
         }
         transition-all duration-400 ease-in-out
-        flex flex-col m-4 bg-gray-200`}>
+        flex flex-col bg-gray-200`}>
         {/* <div className="relative flex items-center">
           <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
             Add New Page
@@ -99,23 +99,23 @@ const NewPageDialog = () => {
         className={`
         ${
           focussed === ''
-            ? ''
+            ? ' m-2'
             : focussed === 'existing_page'
             ? 'w-full'
-            : 'w-0 overflow-hidden opacity-0'
+            : 'w-0 overflow-hidden opacity-0 m-0'
         }
-        transition-all duration-400 ease-in-out m-2
+        transition-all duration-400 ease-in-out
       `}>
-        <div className="relative flex items-center mb-2">
-          <h2 className="w-auto bg-white text-lg font-medium justify-between text-gray-900 truncate">
+        <div className="relative flex items-center justify-between mb-2">
+          <h2 className="w-auto bg-white text-lg font-semibold  text-gray-900 truncate">
             Use Existing Page
           </h2>
           <Buttons
             onClick={() => handleToggleFocussed('existing_page')}
             Icon={VscNewFile}
-            label="More"
+            label={`${focussed === 'existing_page' ? 'Less' : 'More'}`}
             overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
           />
         </div>
 
@@ -150,20 +150,20 @@ const NewPageDialog = () => {
             ? ''
             : focussed === 'template'
             ? 'w-full'
-            : 'w-0 overflow-hidden opacity-0'
+            : 'w-0 overflow-hidden opacity-0 m-0'
         }
         transition-all duration-400 ease-in-out m-2
       `}>
-        <div className="relative flex items-center mb-2">
-          <h2 className="w-auto bg-white text-lg font-medium justify-between text-gray-900 truncate">
+        <div className="relative flex items-center justify-between mb-2">
+          <h2 className="w-auto bg-white text-lg font-semibold  text-gray-900 truncate">
             Page From Template
           </h2>
           <Buttons
             onClick={() => handleToggleFocussed('template')}
             Icon={VscNewFile}
-            label="More"
+            label={`${focussed === 'template' ? 'Less' : 'More'}`}
             overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
           />
         </div>
 

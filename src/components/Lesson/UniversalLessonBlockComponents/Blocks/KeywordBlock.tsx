@@ -35,7 +35,7 @@ const KeywordBlock = (props: KeywordBlockProps) => {
   }, [value]);
 
   return (
-    <div className={`flex flex-col md:w-full text-gray-200 rounded-r-lg`}>
+    <div id={id} className={`flex flex-col md:w-full text-gray-200 rounded-r-lg`}>
       <div
         className={`relative flex flex-row items-center w-full pb-2 px-4 mb-2 mt-4 font-medium text-left text-xl border-b border-white border-opacity-10`}>
         <h3>Keywords:</h3>

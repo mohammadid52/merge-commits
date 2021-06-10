@@ -14,7 +14,7 @@ export const FormBlock = (props: FormBlockProps) => {
     switch (type) {
       case 'text-input':
         return (
-          <div key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
@@ -31,7 +31,7 @@ export const FormBlock = (props: FormBlockProps) => {
         );
       case 'text-area':
         return (
-          <div key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>

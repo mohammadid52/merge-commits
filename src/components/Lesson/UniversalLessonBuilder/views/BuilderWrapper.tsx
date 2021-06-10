@@ -212,7 +212,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Title';
     }
   };
-console.log(modalPopVisible, addContentModal, 'addContentModal');
+  console.log(modalPopVisible, addContentModal, 'addContentModal');
 
   return (
     <div
@@ -270,6 +270,7 @@ console.log(modalPopVisible, addContentModal, 'addContentModal');
         galleryVisible={galleryVisible}
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
+        setBuilderMenuVisible={setBuilderMenuVisible}
       />
 
       {/*<EditPanel*/}
