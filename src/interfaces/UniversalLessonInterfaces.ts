@@ -16,7 +16,7 @@ export interface UniversalLesson{
   categories?: string[];
   additionalFiles?: string[];
   // universalLessonPlan: UniversalLessonPlanStage[];
-  universalLessonPages: UniversalLessonPage[];
+  lessonPlan: UniversalLessonPage[];
 }
 
 export interface UniversalLessonPlanStage {
@@ -43,9 +43,9 @@ export interface UniversalLessonPage {
   title: string;
   description: string;
   class: string;
-  pageContent: PagePart[];
   dataLifecycleManagements?: boolean; //will determine if cleanup happens for page
   estTime?: number;
+  pageContent: PagePart[];
   [key: string]:any;
 }
 
