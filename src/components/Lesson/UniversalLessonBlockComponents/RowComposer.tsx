@@ -10,7 +10,7 @@ import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {FormBlock} from './Blocks/FormBlock';
-import { VideoBlock } from './Blocks/VideoBlock';
+import {VideoBlock} from './Blocks/VideoBlock';
 import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
@@ -45,13 +45,13 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
-    }else if (type.includes('header')) {
+    } else if (type.includes('header')) {
       return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
-    }else if (type.includes('video')) {
+    } else if (type.includes('video')) {
       return (
         <VideoBlock
           key={inputKey}
@@ -61,8 +61,7 @@ const RowComposer = (props: RowComposerProps) => {
           mode={mode}
         />
       );
-    }
-     else {
+    } else {
       return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
     }
   };

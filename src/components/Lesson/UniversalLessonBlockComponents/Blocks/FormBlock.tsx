@@ -21,7 +21,7 @@ export const FormBlock = (props: FormBlockProps) => {
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray text-blue-100`}
+              className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
               name="title"
               type="text"
               placeholder={value.length > 0 ? value : 'Please input...'}
@@ -49,7 +49,6 @@ export const FormBlock = (props: FormBlockProps) => {
         return <p>No valid form input type</p>;
     }
   };
-
 
   return (
     <>
