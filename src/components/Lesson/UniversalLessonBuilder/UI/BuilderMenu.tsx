@@ -31,7 +31,7 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
           {/* Header */}
           <ClickAwayListener onClickAway={() => setBuilderMenuVisible(false)}>
             <>
-              <div className="relative text-white bg-dark py-2 rounded-t-lg ">
+              <div className="relative text-white bg-gray-800 py-2 rounded-t-lg ">
                 <div className="absolute  flex items-center" aria-hidden="true">
                   <div className="w-full border-t border-gray-400"></div>
                 </div>

@@ -59,7 +59,7 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
         <ClickAwayListener onClickAway={() => setHierarchyVisible(false)}>
           <div className="m-2 ">
             {/* Header */}
-            <div className="relative text-white bg-dark py-2 rounded-t-md">
+            <div className="relative text-white bg-gray-800 py-2 rounded-t-md">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
                 <div className="w-full border-t border-gray-400"></div>
               </div>

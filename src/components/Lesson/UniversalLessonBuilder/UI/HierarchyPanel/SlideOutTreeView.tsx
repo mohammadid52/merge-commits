@@ -48,7 +48,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
           <button
             key={`hierarchy_parent_btn_${idx}`}
             type="button"
-            className={`bg-dark text-white
+            className={`bg-gray-800 text-white
             hover:bg-white hover:bg-opacity-10
             group w-full flex
             items-center p-2 text-sm
@@ -68,7 +68,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                 <a
                   key={`pagePart_tree_${idx}_${idx2}`}
                   href={`#${partContent.id}`}
-                  className={`group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10 bg-dark my-1`}>
+                  className={`group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10 bg-gray-800 my-1`}>
                   <div className={`ml-2 flex flex-row justify-start`}>
                     <IconContext.Provider
                       value={{className: 'w-auto mr-2', size: '24px'}}>
@@ -87,7 +87,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
   };
 
   return (
-    <div className="min-w-72 max-w-96 flex flex-col flex-grow p-1 overflow-y-auto bg-dark shadow-lg rounded-b-md">
+    <div className="min-w-72 max-w-96 flex flex-col flex-grow p-1 overflow-y-auto bg-gray-800 shadow-lg rounded-b-md">
       <div className="flex-grow flex flex-col">
         <nav className="flex-1" aria-label="Sidebar">
           {selectedPageDetails &&

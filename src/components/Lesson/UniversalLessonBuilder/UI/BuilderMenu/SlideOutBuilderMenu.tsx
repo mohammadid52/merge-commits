@@ -48,7 +48,7 @@ const SlideOutBuilderMenu = (props: BuilderMenuProps) => {
   };
 
   return (
-    <div className="flex flex-col flex-grow p-1 overflow-y-auto overflow-hidden bg-dark">
+    <div className="flex flex-col flex-grow p-1 overflow-y-auto overflow-hidden bg-gray-800">
       <div className="flex-grow flex flex-col">
         <nav
           className="flex flex-col items-center justify-center rounded-b-lg"
@@ -61,7 +61,7 @@ const SlideOutBuilderMenu = (props: BuilderMenuProps) => {
                   key={`menu_btn_${idx}`}
                   id={option.id}
                   type="button"
-                  className={`bg-dark  mx-2 px-4 w-52 my-2 py-2 font-bold uppercase text-xs rounded-lg text-white hover:bg-white hover:bg-opacity-10 flex items-center p-2 text-left ${
+                  className={`bg-gray-800  mx-2 px-4 w-52 my-2 py-2 font-bold uppercase text-xs rounded-lg text-white hover:bg-white hover:bg-opacity-10 flex items-center p-2 text-left ${
                     option.id === 'delete_lesson' ? 'text-red-600' : ''
                   }`}
                   aria-controls={`sub-menu-${idx}`}

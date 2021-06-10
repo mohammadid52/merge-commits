@@ -56,7 +56,7 @@ const InputModalComponent = ({
       class: 'rounded-lg',
       partContent: [
         {
-          id: partContentId,
+          id: `${partContentId}_questionGroup`,
           type: `form-${numberedForm ? 'numbered' : 'default'}`,
           value: inputObjArray,
         },
@@ -141,37 +141,35 @@ const InputModalComponent = ({
           const shouldShowActions = idx !== inputList.length - 1;
           return (
             <div key={input.id} className="flex flex-col input-container">
-              <div className="flex items-center ">
-                <div className="mr-4">
-                  <FormInput
-                    onChange={onChange}
-                    label={'Form Title'}
-                    isRequired
-                    value={inputFields[`formFieldInput_${input.id}`]}
-                    id={`formFieldInput_${input.id}`}
-                    placeHolder={`Enter Form Field Title`}
-                  />
-                </div>
-                <div>
-                  <FormInput
-                    onChange={onChange}
-                    label={'Placeholder'}
-                    value={inputFields[`placeholder_${input.id}`]}
-                    id={`placeholder_${input.id}`}
-                    placeHolder={`Enter placeholder`}
-                  />
-                </div>
+              <div className="">
+                <FormInput
+                  onChange={onChange}
+                  label={'Form Title'}
+                  isRequired
+                  value={inputFields[`formFieldInput_${input.id}`]}
+                  id={`formFieldInput_${input.id}`}
+                  placeHolder={`Enter Form Field Title`}
+                />
+
+                <FormInput
+                  onChange={onChange}
+                  label={'Placeholder'}
+                  value={inputFields[`placeholder_${input.id}`]}
+                  id={`placeholder_${input.id}`}
+                  placeHolder={`Enter placeholder`}
+                />
+
                 {idx !== 0 ? (
-                  <div className="flex flex-col items-center justify-center w-auto mx-3">
+                  <div className="flex my-2 items-center justify-end w-auto mx-3">
                     <div
                       onClick={() => changeCheckboxValue(idx, input.textArea)}
-                      className="flex items-center justify-between self-end text-gray-500 font-medium">
+                      className="flex items-center mr-2 justify-between self-end text-gray-500 font-medium w-auto">
                       <Checkbox val={input.textArea} />
                     </div>
 
                     <button
                       onClick={() => removeInputFromList(input.id)}
-                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600`}>
+                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
                       Remove
                     </button>
                   </div>
