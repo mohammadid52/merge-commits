@@ -4,8 +4,9 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {forEach, map, uniqueId} from 'lodash';
+import {every, filter, forEach, map, uniqueId, values} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 
 // {
 //     id: 'page_2_part_1_questionGroup-1',
@@ -27,14 +28,13 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 //   },
 
 const InputModalComponent = ({
-  //   onChange,
   selectedPageID,
-  //   setInputFields,
-  //   inputFields,
+
   closeAction,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
+
   const [inputFields, setInputFields] = useState<any>({});
   const onChange = (e: any) => {
     const {value, id} = e.target;
@@ -43,31 +43,29 @@ const InputModalComponent = ({
       [id]: value,
     });
   };
+
   const onInputCreate = () => {
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
-
+    // const readyToGo = validateFieldBeforeSave();
     const inputObjArray = generateInputAndPlaceholderValues();
-    forEach(inputObjArray, (dataObj: any) => {
-      const newDataObject = {
-        id: pageContentId,
-        partType: 'default',
-        class: 'rounded-lg',
-        partContent: [
-          {
-            id: partContentId,
-            type: 'form-numbered',
-            value: [dataObj],
-          },
-        ],
-      };
-      addFromULBHandler(selectedPageID, newDataObject);
-    });
-
+    const newDataObject = {
+      id: pageContentId,
+      partType: 'default',
+      class: 'rounded-lg',
+      partContent: [
+        {
+          id: partContentId,
+          type: 'form-numbered',
+          value: inputObjArray,
+        },
+      ],
+    };
     // add data to list
-    // close modal after saving
+    addFromULBHandler(selectedPageID, newDataObject);
+    // // close modal after saving
     closeAction();
-    // clear fields
+    // // clear fields
     forEach(inputList, ({id}: any) => {
       setInputFields({
         ...inputFields,
@@ -77,17 +75,17 @@ const InputModalComponent = ({
     });
   };
 
-  const [inputList, setInputList] = useState([{id: '9999'}]);
+  const [inputList, setInputList] = useState([{id: '9999', textArea: false}]);
 
   const generateInputAndPlaceholderValues = () => {
     let values: any[] = [];
-    forEach(inputList, ({id}: any) => {
+    forEach(inputList, ({id, textArea}: {id: string; textArea: boolean}) => {
       const inputValue = inputFields[`formFieldInput_${id}`];
       const placeHolderValue = inputFields[`placeholder_${id}`];
       const item = {
         id: uniqueId(),
-        type: 'text-input',
-        value: placeHolderValue,
+        type: `text-${textArea ? 'area' : 'input'}`,
+        value: placeHolderValue || '',
         label: inputValue,
       };
       values.push(item);
@@ -96,19 +94,52 @@ const InputModalComponent = ({
     return values;
   };
 
+  const validateFieldBeforeSave = (): boolean => {
+    let inputFieldValueArray = values(inputFields);
+    let isAllFieldsFilled: boolean = every(
+      inputFieldValueArray,
+      (value: string) => value !== ''
+    );
+
+    return !isAllFieldsFilled;
+  };
+
   const addOneInputField = () => {
-    const newItem = {id: uniqueId()};
+    const newItem = {id: uniqueId(), textArea: false};
     setInputList([...inputList, newItem]);
   };
 
+  const changeCheckboxValue = (idx: number, currentValue: boolean) => {
+    inputList[idx].textArea = !currentValue;
+    setInputList([...inputList]);
+  };
+
+  const removeInputFromList = (id: string) => {
+    const itemRemovedList = filter(inputList, (input: any) => input.id !== id);
+    setInputList([...itemRemovedList]);
+  };
+
+  const Checkbox = ({val}: {val: boolean}) => {
+    return (
+      <>
+        {val ? (
+          <BiCheckboxChecked className="w-auto text-3xl text-blue-600" />
+        ) : (
+          <BiCheckbox className="w-auto text-3xl text-blue-600" />
+        )}
+        <p>textarea</p>
+      </>
+    );
+  };
+
   return (
-    <div>
+    <div className="max-h-200 overflow-y-auto">
       <div className="flex flex-col my-2">
         {map(inputList, (input: any, idx: number) => {
           const shouldShowActions = idx !== inputList.length - 1;
           return (
-            <div className="flex flex-col ">
-              <div className="flex items-center col-span-2">
+            <div key={input.id} className="flex flex-col input-container">
+              <div className="flex items-center ">
                 <div className="mr-4">
                   <FormInput
                     onChange={onChange}
@@ -123,15 +154,35 @@ const InputModalComponent = ({
                   <FormInput
                     onChange={onChange}
                     label={'Placeholder'}
-                    isRequired
                     value={inputFields[`placeholder_${input.id}`]}
                     id={`placeholder_${input.id}`}
                     placeHolder={`Enter placeholder`}
                   />
                 </div>
+                {idx !== 0 ? (
+                  <div className="flex flex-col items-center justify-center w-auto mx-3">
+                    <div
+                      onClick={() => changeCheckboxValue(idx, input.textArea)}
+                      className="flex items-center justify-between self-end text-gray-500 font-medium">
+                      <Checkbox val={input.textArea} />
+                    </div>
+
+                    <button
+                      onClick={() => removeInputFromList(input.id)}
+                      className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600`}>
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => changeCheckboxValue(idx, input.textArea)}
+                    className="flex cursor-pointer items-center justify-between text-gray-500 font-medium w-auto mx-3 self-end">
+                    <Checkbox val={input.textArea} />
+                  </div>
+                )}
               </div>
               {shouldShowActions && (
-                <div className="border-b-2 border-dashed border-gray-400 my-4"></div>
+                <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
               )}
             </div>
           );
