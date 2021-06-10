@@ -25,6 +25,8 @@ import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
+// const happyEmoji = require('')
+
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
 // const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
@@ -66,28 +68,38 @@ export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
   [key: string]: any;
 }
+
 const emojiList = [
   {
     emoji: '😠',
-    link:
-      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/face_with_steam_from_nose.gif?Expires=1623059878&Signature=blFVLo331bEcWWQP4ZLUN4fePsrGD8zaBuYTLWb66nlLF4heVbkxxpsJYzLU8Jk8XnITIO8rbdfJSgLTTf~r8jTQEISXXJrPTruUSUvh0tNO2jtg3erRmb97Nn~yKtDyUrCvr0CPIjMBfsx7out~w82tPX1Vb86dlYvaGckwaC1M-7TWn-T~~H2CZ73iY6SNCpup4viKGCmffp-Ttn6o-MgewC6Tmpvpk9BRBDqfrHqSHF7fWEhPYo4s0iv3sukZ76Uo9OaJg3jLVatg3nOXe9A64nQgGng7Pq5RQP5S4SGDTy8LCTi5IJgX6jbisDNrzmXivhlorZtRgrcG1gtR3A__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    link: 'angry',
     id: '0',
     name: 'Angry',
   },
   {
     emoji: '😞',
-    link:
-      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/frowning_face.gif?Expires=1623059906&Signature=N2qb2Juc6QMnXviLkPu-ZrIxMjt-eTMNhylgIOKK2Mf8lKObaSf0gZmhzDcGzMJeQaliJtE~O~o8XYte~G4HTYa24vUDhhFZhdhL8vcO7pV-O2aoAyA0dAFtWvTpArDoQw0yJPvSS6IK28RSB9gT0iZNbm8Bikcf9YK2AIIf2qu-Fy576v5lKZTEdhb0VqRwunuuKjYrcNF201YjQwHv8rkYcFwHJy2qkCqwLppZldeGOSXJd1T7EH0TrbtUIjDoDSYOYRzRGjaZqEivv1bCLpM~DMfhOliiwG1ED4PTeg5pgH2F4fyYwaKhMz1aEYnq7BgGjTSLfhlZstdBLTvHpQ__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    link: 'sad',
     id: '1',
     name: 'Sad',
+  },
+  {
+    emoji: '😐',
+    link: 'neutral',
+    id: '1',
+    name: 'Neutral',
   },
 
   {
     emoji: '🙂',
-    link:
-      'https://d3qhp42p4neron.cloudfront.net/ARCHIVE/animated/3.5/GIF/512/grinning_face_with_smiling_eyes.gif?Expires=1623059816&Signature=RqpecnHnq-5bku7T10itOMbZbg0yAZHjhvp~bJoxFJCrI-Mmb2s1-8CZ6TDgtg0RKL8TvQwcKIa1R8dY2LxUttEQ3NzHbcegLH1j3lPGM~34lQ3Gt27nuihB2-mM5~obvg1pe92Fg9V7tE0uTkxuGdrSRqTk0BuKF5yWfq1wAx0lT0--AOMPx7z5eBxnIKsBW5FYkkbi9ES7IjwWvzhoxDH0R3LrM2PHmAhC8oF7lVSi5z~LrfRA2kEfMo1~Os3YPwvUacxtAejNlwlKqigffjiIU1QoCYMQar6PB6zsEV~lrsu~YTv7dv5zTbAV8quN6qCjq6yek33OV3GA0iCgbw__&Key-Pair-Id=APKAIRGCVGOY7DOKYTJA',
+    link: 'happy',
     id: '3',
     name: 'Happy',
+  },
+  {
+    emoji: '🤩',
+    link: 'excited',
+    id: '3',
+    name: 'Excited',
   },
 ];
 const EmojiFeedback = ({
@@ -125,7 +137,7 @@ const EmojiFeedback = ({
           <p className="w-auto mb-6 text-2xl font-semibold">
             {greetQuestion?.question || DEFAULT_QUESTION}
           </p>
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-5">
             {emojiList.map(
               ({
                 name,
@@ -145,7 +157,11 @@ const EmojiFeedback = ({
                       className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center feedback-emoji ${
                         selectedEmoji.id === id ? 'selected' : ''
                       }`}>
-                      <img src={link} alt={name} className="h-20 w-20" />
+                      <img
+                        src={`/media/src/assets/images/emojis/${link}.gif`}
+                        alt={name}
+                        className="h-20 w-20"
+                      />
                     </div>
                   ) : (
                     <div
@@ -290,7 +306,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     if (justLoggedIn) {
-      getGreetQuestion();
+      // getGreetQuestion();
     }
   }, [justLoggedIn]);
 
@@ -893,11 +909,13 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
-      {/* <EmojiFeedback
-        greetQuestion={greetQuestion}
-        justLoggedIn={justLoggedIn}
-        onSave={(response: string) => updateGreetQuestion(response)}
-      /> */}
+      {/* {state.user.role === 'ST' && (
+        <EmojiFeedback
+          greetQuestion={greetQuestion}
+          justLoggedIn={justLoggedIn}
+          onSave={(response: string) => updateGreetQuestion(response)}
+        />
+      )} */}
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}
