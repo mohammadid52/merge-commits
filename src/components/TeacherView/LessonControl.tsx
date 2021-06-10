@@ -287,7 +287,7 @@ const LessonControl = () => {
   };
 
   const handleHome = () => {
-    history.push('/dashboard/lesson-planner');
+    history.push('/dashboard/home');
   };
 
   const {visible, setVisible, ref} = useOutsideAlerter(false);

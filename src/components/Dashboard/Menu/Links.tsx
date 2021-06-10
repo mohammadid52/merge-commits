@@ -201,6 +201,12 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Research & Analytics',
               path: 'csv',
             },
+            {
+              title: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
+              name: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
+              label: 'Universal Lesson Builder',
+              path: 'universal-lesson-builder',
+            },
           ];
         });
       case 'ST':

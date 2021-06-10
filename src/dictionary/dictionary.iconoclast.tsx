@@ -274,6 +274,7 @@ const sideBarLinksDict: any = {
     LESSON_PLANNER: 'Homeroom',
     CLASSROOM: 'Classroom',
     LESSON_BUILDER: 'Lesson Builder',
+    UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
     NOTEBOOK: 'Notebook',
@@ -288,6 +289,7 @@ const sideBarLinksDict: any = {
     CLASSROOM: 'Aula',
     NOTEBOOK: 'Computadora portátil',
     LESSON_BUILDER: 'Constructor de lecciones',
+    UNIVERSAL_LESSON_BUILDER: 'Constructor Universal',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
     RESEARCHANALYTICS: 'Investigación y Análisis',
@@ -3133,6 +3135,41 @@ const LessonsListDict: any = {
   },
 };
 
+
+const UniversalBuilderDict: any = {
+  EN: {
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'Lesson Pages',
+    },
+    TEMPLATES: {
+      TITLE: 'Lesson Templates',
+    },
+    FORMS: {
+      FILE_UPLOAD_TEXT: "Drag 'n' drop {label} here, or click to select {label}",
+      VIDEO_URL_LABEL: 'Video URL',
+      VIDEO_SIZE_LABEL: 'Video SIZE',
+      VIDEO_SIZE_PLACEHOLDER: 'Select Video size',
+    },
+    FORMS_ERROR_MSG: {
+      IMAGE_REQUIRED: 'Please upload image',
+      IMAGE_WIDTH: 'Please enter valid width for image or set it to auto',
+      IMAGE_HEIGHT: 'Please enter valid height for image or set it to auto',
+      VIDEO_REQUIRED: 'Please enter youtube video url',
+      VIDEO_INVALID: 'Please enter valid youtube video url',
+    },
+  },
+  ES: {
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'TBD',
+    },
+    TEMPLATES: {
+      TITLE: 'TBD',
+    },
+  },
+};
+
 const CsvDict: any = {
   EN: {
     TITLE: 'Research & Analytics',
@@ -3248,4 +3285,5 @@ export {
   LessonEditDict,
   LessonsListDict,
   EditQuestionModalDict,
+  UniversalBuilderDict,
 };

@@ -358,3 +358,13 @@ export const stripStyleFromHTML = (str: string) => {
     return str;
   }
 };
+
+export const replaceAll = (content:string, replaceObj:any) => {
+  for (const key in replaceObj) {
+    if (replaceObj.hasOwnProperty(key)) {
+      const val = replaceObj[key];
+      content = content.replace(new RegExp(`{${key}}`, 'g'), val);
+    }
+  }
+  return content
+}
