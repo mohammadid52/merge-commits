@@ -33,8 +33,7 @@ const initialUniversalLessonData: UniversalLesson = {
   designers: [''],
   teachers: [''],
   categories: [''],
-  universalLessonPlan: [],
-  universalLessonPages: [],
+  lessonPlan: [],
 };
 
 const initialUniversalLessonPage: UniversalLessonPage = {
@@ -84,8 +83,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   // in this area ^
   useEffect(() => {
     setUniversalLessonDetails(exampleUniversalLesson);
-    if (exampleUniversalLesson.universalLessonPages.length > 0) {
-      setSelectedPageID(exampleUniversalLesson.universalLessonPages[0].id);
+    if (exampleUniversalLesson.lessonPlan.length > 0) {
+      setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
     }
   }, []);
 
