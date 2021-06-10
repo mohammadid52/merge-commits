@@ -19,6 +19,7 @@ import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import { ImageBlock } from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import PoemBlock from './Blocks/PoemBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -47,6 +48,8 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    } else if(type.includes('poem')){
+      return <PoemBlock id={id} type={type} value={value} mode={mode}/>
     } else if (type.includes('header')) {
       return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
