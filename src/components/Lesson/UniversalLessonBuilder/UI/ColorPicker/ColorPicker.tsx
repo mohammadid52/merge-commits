@@ -4,6 +4,8 @@ import {FaCheck, FaSortUp} from 'react-icons/fa';
 interface ColorPickerProps {
   callbackColor: (pickedColor: string) => void;
   classString?: string;
+  isPagePart?: boolean;
+  isMainPage?: boolean;
 }
 
 interface ColorObject {
@@ -12,8 +14,8 @@ interface ColorObject {
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
-  const {callbackColor, classString} = props;
-  
+  const {callbackColor, classString, isMainPage, isPagePart} = props;
+
   const availableColors: ColorObject[] = [
     {value: 'gray', label: 'Gray'},
     {value: 'red', label: 'Red'},
@@ -49,11 +51,13 @@ const ColorPicker = (props: ColorPickerProps) => {
                   key={`${color.value}_${code.value}_${idx2}`}
                   className={`relative bg-${color.value}-${code.value} w-12 h-12 rounded-full shadow-sm cursor-pointer mx-1 border-2 border-${color.value}-${code.value}`}
                   onClick={() => callbackColor(`${color.value}-${code.value}`)}>
-                  {classString?.includes(`bg-${color.value}-${code.value}`) ? 
-                  <div
-                    className={`absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 left-1/2`}>
-                    <FaCheck />
-                  </div> : null}
+                  {classString?.split(' ').indexOf(`bg-${color.value}-${code.value}`) >
+                  -1 ? (
+                    <div
+                      className={`absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 left-1/2`}>
+                      <FaCheck color="white" />
+                    </div>
+                  ) : null}
                 </div>
               );
             })}
@@ -62,9 +66,29 @@ const ColorPicker = (props: ColorPickerProps) => {
       );
     });
 
+  const styles = {
+    padding: isPagePart ? 'pr-2' : 'pl-2',
+    pickerTransform: isPagePart
+      ? {right: '100%'}
+      : isMainPage
+      ? {top: '29%'}
+      : {left: '100%'},
+    rotation: isPagePart ? 'rotate-90' : isMainPage ? '' : '-rotate-90',
+    svgTransform: isPagePart
+      ? {right: '-5px'}
+      : isMainPage
+      ? {top: '-5px', color: 'white'}
+      : {left: '-5px'},
+    icon: isMainPage ? '' : '-translate-y-1/2 top-1/2',
+  };
+
   return (
-    <div className={`absolute w-max z-100 transform -translate-x-1/2 left-1/2 pt-2`}>
-      <div className={`absolute top-0 transform -translate-x-1/2 left-1/2`}>
+    <div
+      className={`absolute z-100 transform -translate-y-1/2 left-full top-1/2 ${styles.padding} w-max`}
+      style={styles.pickerTransform}>
+      <div
+        className={`absolute w-10 transform ${styles.rotation} ${styles.icon}`}
+        style={styles.svgTransform}>
         <FaSortUp size="40" />
       </div>
       <div className={`bg-white my-2 rounded-lg p-4`}>
