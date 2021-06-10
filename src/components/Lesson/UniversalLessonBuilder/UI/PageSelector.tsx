@@ -28,7 +28,7 @@ const PageSelector = (props: PageSelectorProps) => {
     selectedPageID,
     hideAllModals,
   } = props;
-  const pages = universalLessonDetails?.universalLessonPages;
+  const pages = universalLessonDetails?.lessonPlan;
 
   const selectPage = (pageID: string) => {
     const thePageObj = pages?.find((page: UniversalLessonPage) => page.id === pageID);

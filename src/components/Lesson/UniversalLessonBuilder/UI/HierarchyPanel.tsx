@@ -29,7 +29,7 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
     setSelectedPartContentID,
   } = props;
 
-  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+  const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
 

@@ -67,7 +67,7 @@ const RowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+  const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
 

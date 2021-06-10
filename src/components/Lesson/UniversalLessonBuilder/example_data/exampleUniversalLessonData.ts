@@ -14,7 +14,7 @@ export const exampleUniversalLesson: UniversalLesson = {
   designers: ['Marlon Lizama'],
   teachers: ['Marlon Lizama'],
   categories: ['Creative Writing'],
-  universalLessonPages: [
+  lessonPlan: [
     {
       enabled: true,
       open: true,
