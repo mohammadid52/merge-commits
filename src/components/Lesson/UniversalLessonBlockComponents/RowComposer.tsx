@@ -16,6 +16,7 @@ import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
+import { ImageBlock } from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 
 const RowComposer = (props: RowComposerProps) => {
@@ -51,6 +52,16 @@ const RowComposer = (props: RowComposerProps) => {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
+    }else if (type.includes('image')) {
+      return (
+        <ImageBlock
+          key={inputKey}
+          id={id}
+          dataIdAttribute={inputKey}
+          value={value[0]}
+          mode={mode}
+        />
+      );
     }else if (type.includes('video')) {
       return (
         <VideoBlock
@@ -83,6 +94,7 @@ const RowComposer = (props: RowComposerProps) => {
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
+                isPagePart={true}
                 classString={pagePart.class}
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}

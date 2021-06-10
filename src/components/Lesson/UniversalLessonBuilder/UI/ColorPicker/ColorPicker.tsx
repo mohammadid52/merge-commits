@@ -4,6 +4,7 @@ import {FaCheck, FaSortUp} from 'react-icons/fa';
 interface ColorPickerProps {
   callbackColor: (pickedColor: string) => void;
   classString?: string;
+  isPagePart?: boolean;
 }
 
 interface ColorObject {
@@ -12,7 +13,7 @@ interface ColorObject {
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
-  const {callbackColor, classString} = props;
+  const {callbackColor, classString, isPagePart} = props;
   
   const availableColors: ColorObject[] = [
     {value: 'gray', label: 'Gray'},
@@ -63,8 +64,8 @@ const ColorPicker = (props: ColorPickerProps) => {
     });
 
   return (
-    <div className={`absolute w-max z-100 transform -translate-x-1/2 left-1/2 pt-2`}>
-      <div className={`absolute top-0 transform -translate-x-1/2 left-1/2`}>
+    <div className={`absolute w-max z-100 transform -translate-y-1/2 left-full top-1/2 pl-2`} style={isPagePart ? {right:"100%"} : {left:"100%"}}>
+      <div className={`absolute transform -translate-y-1/2 top-1/2`}>
         <FaSortUp size="40" />
       </div>
       <div className={`bg-white my-2 rounded-lg p-4`}>

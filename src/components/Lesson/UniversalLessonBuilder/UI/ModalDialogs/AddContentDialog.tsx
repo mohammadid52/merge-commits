@@ -53,7 +53,12 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
           <h2 className={`${colHeaderTextClass}`}>Media</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
-              <div className={`${buttonClass}`}>
+              <div
+                className={`${buttonClass}`}
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'image'});
+                }}>
                 <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
                   <AiOutlineFileImage />
                 </IconContext.Provider>
