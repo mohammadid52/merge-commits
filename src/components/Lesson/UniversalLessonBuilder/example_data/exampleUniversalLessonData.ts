@@ -10,20 +10,18 @@ import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces'
 
 export const exampleUniversalLesson: UniversalLesson = {
   id: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
-  summary:
-    "This is a fun lesson where everyone is encouraged to be a part of the conversation about how our own cultures have influenced our sense of self-identity.  We start by writing about where we are from and share stories from these places.  Afterward, we will have the opportunity to see Marlon tell about how culture influenced his sense of self-identify through his poem 'Where I'm from.' Finally, we will create our own poems and learn more about each other and where we are from by sharing these poem...",
+  summary: "This is a fun lesson where everyone is encouraged to be a part of the conversation about how our own cultures have influenced our sense of self-identity.  We start by writing about where we are from and share stories from these places.  Afterward, we will have the opportunity to see Marlon tell about how culture influenced his sense of self-identify through his poem 'Where I'm from.' Finally, we will create our own poems and learn more about each other and where we are from by sharing these poem...",
   designers: ['Marlon Lizama'],
   teachers: ['Marlon Lizama'],
   categories: ['Creative Writing'],
-  universalLessonPlan: [
-    {enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF'},
-    {enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF'},
-    {enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF'},
-  ],
-  universalLessonPages: [
+  lessonPlan: [
     {
+      enabled: true,
+      open: true,
+      active: true,
       id: 'page_1',
-      label: '',
+      label: 'Introduction',
+      displayMode: 'SELF',
       title: '',
       description: '',
       class: '',
@@ -42,7 +40,8 @@ export const exampleUniversalLesson: UniversalLesson = {
                   id: '',
                   type: 'background',
                   label: '',
-                  value: 'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
+                  value:
+                    'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
                 },
                 {
                   id: '',
@@ -55,14 +54,16 @@ export const exampleUniversalLesson: UniversalLesson = {
                   type: 'subtitle',
                   label: '',
                   value: 'This is the placeholder',
-                },{
+                },
+                {
                   id: '',
                   type: 'description',
                   label: '',
                   value: 'This is the description text',
                 },
               ],
-            },{
+            },
+            {
               id: 'page_1_part_1_keywords-0',
               type: 'keywords',
               value: [
@@ -83,7 +84,8 @@ export const exampleUniversalLesson: UniversalLesson = {
                   type: '',
                   label: 'Keyword Title',
                   value: 'Keyword description',
-                },{
+                },
+                {
                   id: '',
                   type: '',
                   label: 'Keyword Title',
@@ -99,17 +101,19 @@ export const exampleUniversalLesson: UniversalLesson = {
             {
               id: 'page_1_part_0_text-0',
               type: 'paragraph',
-              value: [
-                "Just some instruction text"
-              ],
+              value: ['Just some instruction text'],
             },
           ],
         },
       ],
     },
     {
+      enabled: true,
+      open: false,
+      active: false,
       id: 'page_2',
-      label: '',
+      label: 'Story',
+      displayMode: 'SELF',
       title: 'Tales of Myth and Urban Legend',
       description: '',
       class: '',
@@ -136,7 +140,7 @@ export const exampleUniversalLesson: UniversalLesson = {
             },
           ],
         },
-        
+
         {
           id: 'page_2_part_1',
           partType: 'default',
@@ -206,8 +210,12 @@ export const exampleUniversalLesson: UniversalLesson = {
       ],
     },
     {
+      enabled: true,
+      open: false,
+      active: false,
       id: 'page_3',
-      label: '',
+      label: 'Outro',
+      displayMode: 'SELF',
       title: '',
       description: '',
       class: '',

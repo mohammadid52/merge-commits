@@ -33,8 +33,7 @@ const initialUniversalLessonData: UniversalLesson = {
   designers: [''],
   teachers: [''],
   categories: [''],
-  universalLessonPlan: [],
-  universalLessonPages: [],
+  lessonPlan: [],
 };
 
 const initialUniversalLessonPage: UniversalLessonPage = {
@@ -84,8 +83,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   // in this area ^
   useEffect(() => {
     setUniversalLessonDetails(exampleUniversalLesson);
-    if (exampleUniversalLesson.universalLessonPages.length > 0) {
-      setSelectedPageID(exampleUniversalLesson.universalLessonPages[0].id);
+    if (exampleUniversalLesson.lessonPlan.length > 0) {
+      setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
     }
   }, []);
 
@@ -134,7 +133,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   ) => {
     const reduced = Object.keys(inputObj).reduce((acc: any, inputObjKey: string) => {
       if (
-        inputObjKey === 'universalLessonPages' ||
+        inputObjKey === 'lessonPlan' ||
         inputObjKey === 'pageContent' ||
         inputObjKey === 'partContent'
       ) {
@@ -246,10 +245,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     addBlockAtPosition: number
   ) => {
     let temp = {...universalLessonDetails};
-    const activePageIndex = universalLessonDetails.universalLessonPages.findIndex(
+    const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
       (page: any) => page.id === targetID
     );
-    let lessonPages = [...universalLessonDetails.universalLessonPages];
+    let lessonPages = [...universalLessonDetails.lessonPlan];
     switch (propertyToTarget) {
       case 'pageContent':
         const pageContentId:string = `${targetID}_part_${addBlockAtPosition}`;
@@ -270,7 +269,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }
     temp = {
       ...temp,
-      universalLessonPages: lessonPages,
+      lessonPlan: lessonPages,
     };
     setUniversalLessonDetails(temp);
   };
