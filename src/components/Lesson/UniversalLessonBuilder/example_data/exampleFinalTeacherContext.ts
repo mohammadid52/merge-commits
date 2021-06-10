@@ -1,3 +1,8 @@
+/**
+ * THIS WILL CHANGE BECAUSE OF
+ * TYPE DEFINITION UPDATES
+ */
+
 const exampleFinalTeacherContext = {
   status: 'loaded',
   universalLessonID: '7ad8e2ce-2882-4d8c-9b03-383310a56482', // formerly: syllabusLessonID

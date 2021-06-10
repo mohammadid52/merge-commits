@@ -73,7 +73,7 @@ export const Toolbar = (props: ToolbarProps) => {
     setBuilderMenuVisible(!builderMenuVisible);
   };
 
-  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+  const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
 

@@ -9,8 +9,7 @@ const initialUniversalLessonData: UniversalLesson = {
   designers: [''],
   teachers: [''],
   categories: [''],
-  universalLessonPlan: [],
-  universalLessonPages: [],
+  lessonPlan: [],
 };
 
 export const UniversalLessonBuilderProvider = ({children}: any) => {
@@ -22,8 +21,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   );
 
   const addULBHandler = (pageId: string, newPageContent: PagePart) => {
-    // find current page object from universalLessonPages array
-    let currentPage = universalLessonDetails.universalLessonPages.find(
+    // find current page object from lessonPlan array
+    let currentPage = universalLessonDetails.lessonPlan.find(
       (page: any) => page.id === pageId
     );
 

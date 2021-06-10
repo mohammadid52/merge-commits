@@ -133,7 +133,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   ) => {
     const reduced = Object.keys(inputObj).reduce((acc: any, inputObjKey: string) => {
       if (
-        inputObjKey === 'universalLessonPages' ||
+        inputObjKey === 'lessonPlan' ||
         inputObjKey === 'pageContent' ||
         inputObjKey === 'partContent'
       ) {
@@ -245,10 +245,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     addBlockAtPosition: number
   ) => {
     let temp = {...universalLessonDetails};
-    const activePageIndex = universalLessonDetails.universalLessonPages.findIndex(
+    const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
       (page: any) => page.id === targetID
     );
-    let lessonPages = [...universalLessonDetails.universalLessonPages];
+    let lessonPages = [...universalLessonDetails.lessonPlan];
     switch (propertyToTarget) {
       case 'pageContent':
         const pageContentId:string = `${targetID}_part_${addBlockAtPosition}`;
@@ -269,7 +269,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }
     temp = {
       ...temp,
-      universalLessonPages: lessonPages,
+      lessonPlan: lessonPages,
     };
     setUniversalLessonDetails(temp);
   };
