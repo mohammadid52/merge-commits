@@ -45,7 +45,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
-  handleModalPopToggle?: (dialogToToggle: string, addBlockAtPosition?: Number) => void;
+  handleModalPopToggle?: (dialogToToggle: string, position?: Number, section?:string, targetID?:string) => void;
 }
 
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {

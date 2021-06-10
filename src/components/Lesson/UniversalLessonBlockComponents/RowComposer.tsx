@@ -161,6 +161,19 @@ const RowComposer = (props: RowComposerProps) => {
                       This pagepart has no content.
                     </h1>
                   )}
+                  <div className="my-2">
+                    <AddNewBlockMini
+                      mode={mode}
+                      handleModalPopToggle={(dialogToToggle) =>
+                        handleModalPopToggle(
+                          dialogToToggle,
+                          pagePart.partContent.length + 1,
+                          'partContent',
+                          pagePart.id
+                        )
+                      }
+                    />
+                  </div>
                 </RowWrapper>
               </EditOverlayBlock>
 
