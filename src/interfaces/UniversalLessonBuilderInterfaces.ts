@@ -63,3 +63,13 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   idx?: number;
   isPagePart?: boolean;
 }
+
+export interface IContentTypeComponentProps{
+  closeAction: () => void;
+  createNewBlockULBHandler: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any
+  ) => void;
+}

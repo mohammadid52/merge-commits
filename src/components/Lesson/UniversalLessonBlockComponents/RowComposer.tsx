@@ -10,13 +10,15 @@ import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {FormBlock} from './Blocks/FormBlock';
-import { VideoBlock } from './Blocks/VideoBlock';
+import {VideoBlock} from './Blocks/VideoBlock';
 import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
+import { ImageBlock } from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -45,12 +47,22 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
-    }else if (type.includes('header')) {
+    } else if (type.includes('header')) {
       return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('paragraph')) {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
+    }else if (type.includes('image')) {
+      return (
+        <ImageBlock
+          key={inputKey}
+          id={id}
+          dataIdAttribute={inputKey}
+          value={value[0]}
+          mode={mode}
+        />
+      );
     }else if (type.includes('video')) {
       return (
         <VideoBlock
@@ -61,8 +73,7 @@ const RowComposer = (props: RowComposerProps) => {
           mode={mode}
         />
       );
-    }
-     else {
+    } else {
       return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
     }
   };
@@ -70,6 +81,31 @@ const RowComposer = (props: RowComposerProps) => {
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
+
+  const {previewMode} = useULBContext();
+
+  const LastBlock = ({selectedPageDetails}: any) => {
+    return !previewMode ? (
+      <EditOverlayBlock
+        mode={mode}
+        key={`pp_addNew`}
+        contentID={`addNewRow`}
+        editedID={editedID}
+        handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
+        <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+          <AddNewBlock
+            idx={selectedPageDetails.pageContent.length - 1}
+            mode={mode}
+            handleModalPopToggle={(dialogToToggle) =>
+              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length)
+            }
+          />
+        </RowWrapper>
+      </EditOverlayBlock>
+    ) : (
+      <div />
+    );
+  };
 
   return (
     <>
@@ -135,9 +171,10 @@ const RowComposer = (props: RowComposerProps) => {
               </EditOverlayBlock>
 
               {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
-              {idx < selectedPageDetails.pageContent.length - 1 && (
+              {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
                 <AddNewBlockMini
                   mode={mode}
+                  idx={idx}
                   handleModalPopToggle={(dialogToToggle) =>
                     handleModalPopToggle(dialogToToggle, idx + 1)
                   }
@@ -146,25 +183,7 @@ const RowComposer = (props: RowComposerProps) => {
             </React.Fragment>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
-          <EditOverlayBlock
-            mode={mode}
-            key={`pp_addNew`}
-            contentID={`addNewRow`}
-            editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
-            isPagePart={true}>
-            <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-              <AddNewBlock
-                mode={mode}
-                handleModalPopToggle={(dialogToToggle) =>
-                  handleModalPopToggle(
-                    dialogToToggle,
-                    selectedPageDetails.pageContent.length
-                  )
-                }
-              />
-            </RowWrapper>
-          </EditOverlayBlock>,
+          <LastBlock selectedPageDetails={selectedPageDetails} />,
         ]
       ) : (
         <>
@@ -176,7 +195,11 @@ const RowComposer = (props: RowComposerProps) => {
             editedID={editedID}
             handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
-              <AddNewBlock mode={mode} handleModalPopToggle={handleModalPopToggle} />
+              <AddNewBlock
+                idx={-1}
+                mode={mode}
+                handleModalPopToggle={handleModalPopToggle}
+              />
             </RowWrapper>
           </EditOverlayBlock>
         </>

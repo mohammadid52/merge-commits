@@ -1,4 +1,4 @@
-import { UniversalLessonStudentData } from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonStudentData} from '../../../../interfaces/UniversalLessonInterfaces';
 
 /**
  *
@@ -11,7 +11,6 @@ import { UniversalLessonStudentData } from '../../../../interfaces/UniversalLess
  *        state.studentData (would have to be created)
  *
  */
-
 
 const exampleStudentDataMutation: UniversalLessonStudentData = {
   id: '000001',
@@ -27,10 +26,11 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
       pagePartInput: [
         {
           domID: 'title',
-          input: 'My story title',
-        }, {
+          input: ['My story title'],
+        },
+        {
           domID: 'story',
-          input: 'My story content',
+          input: ['My story content'],
         },
       ],
     },
@@ -39,15 +39,17 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
       pagePartInput: [
         {
           domID: 'culture',
-          input: 'Dutch'
-        },{
+          input: ['Dutch'],
+        },
+        {
           domID: 'storyteller',
-          input: 'Grandmother'
-        },{
+          input: ['Grandmother'],
+        },
+        {
           domID: 'lessons',
-          input: 'Perseverance'
-        }
-      ]
-    }
+          input: ['Perseverance'],
+        },
+      ],
+    },
   ],
 };
