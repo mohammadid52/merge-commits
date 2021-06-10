@@ -15,6 +15,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
     isComponent,
     isLast,
     handleEditBlockToggle,
+    isPagePart,
   } = props;
   const {previewMode} = useULBContext();
 
@@ -38,6 +39,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
             classString={classString}
             isActive={contentID === editedID}
             isComponent={isComponent}
+            isPagePart={isPagePart}
             handleEditBlockToggle={handleEditBlockToggle}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}

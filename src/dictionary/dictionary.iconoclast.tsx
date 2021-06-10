@@ -3137,25 +3137,38 @@ const LessonsListDict: any = {
 
 
 const UniversalBuilderDict: any = {
-  'EN':{
+  EN: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'Lesson Pages'
+      LESSON_PAGES: 'Lesson Pages',
     },
-    TEMPLATES:{
-      TITLE: 'Lesson Templates'
-    }
+    TEMPLATES: {
+      TITLE: 'Lesson Templates',
+    },
+    FORMS: {
+      FILE_UPLOAD_TEXT: "Drag 'n' drop {label} here, or click to select {label}",
+      VIDEO_URL_LABEL: 'Video URL',
+      VIDEO_SIZE_LABEL: 'Video SIZE',
+      VIDEO_SIZE_PLACEHOLDER: 'Select Video size',
+    },
+    FORMS_ERROR_MSG: {
+      IMAGE_REQUIRED: 'Please upload image',
+      IMAGE_WIDTH: 'Please enter valid width for image or set it to auto',
+      IMAGE_HEIGHT: 'Please enter valid height for image or set it to auto',
+      VIDEO_REQUIRED: 'Please enter youtube video url',
+      VIDEO_INVALID: 'Please enter valid youtube video url',
+    },
   },
-  'ES':{
+  ES: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'TBD'
+      LESSON_PAGES: 'TBD',
     },
-    TEMPLATES:{
-      TITLE: 'TBD'
-    }
-  }
-}
+    TEMPLATES: {
+      TITLE: 'TBD',
+    },
+  },
+};
 
 const CsvDict: any = {
   EN: {
@@ -3272,4 +3285,5 @@ export {
   LessonEditDict,
   LessonsListDict,
   EditQuestionModalDict,
+  UniversalBuilderDict,
 };

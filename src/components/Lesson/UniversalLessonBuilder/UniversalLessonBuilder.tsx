@@ -146,12 +146,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
                   case 'delete':
                     return acc2;
                   case 'update':
-                    console.log({
-                      [propertyToTarget]: replaceTailwindClass(
-                        targetArrayObj[propertyToTarget],
-                        replacementValue
-                      ),
-                    });
                     return [
                       ...acc2,
                       {
@@ -251,8 +245,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     let lessonPages = [...universalLessonDetails.lessonPlan];
     switch (propertyToTarget) {
       case 'pageContent':
-        const pageContentId:string = `${targetID}_part_${addBlockAtPosition}`;
         let pageContentData = [...lessonPages[activePageIndex].pageContent];
+        const pageContentId: string = `${targetID}_part_${pageContentData.length}`;
         pageContentData.splice(addBlockAtPosition, 0, {
           class: 'rounded-lg',
           id: pageContentId,
@@ -273,7 +267,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     };
     setUniversalLessonDetails(temp);
   };
-
+  
   return (
     /**
      *

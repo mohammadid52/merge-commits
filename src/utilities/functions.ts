@@ -8,4 +8,20 @@ export const goBackBreadCrumb = (list:any[],history: any) => {
     } else {
       history.goBack();
     }
-  };
+};
+  
+export const doResize = (textbox: any) => {
+  var maxrows = 50;
+  var txt = textbox.value;
+  var cols = textbox.cols;
+
+  var arraytxt: any = txt.split('\n');
+  var rows = arraytxt.length;
+
+  for (let i = 0; i < arraytxt.length; i++)
+    // @ts-ignore
+    rows += parseInt(arraytxt[i].length / cols);
+
+  if (rows > maxrows) textbox.rows = maxrows;
+  else textbox.rows = rows;
+};

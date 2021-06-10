@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactPlayer from 'react-player';
 import {
   RowWrapperProps,
 } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -14,17 +15,11 @@ export const VideoBlock = (props: VideoBlockProps) => {
   const width: string = size ? `${size.split(' x ')[0]}px` : '315px';
   const height: string = size ? `${size.split(' x ')[1]}px` : '560px';
   return (
-    <p
+    <div
       id={id}
       data-id={dataIdAttribute}
-      className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}>
-      <iframe
-        width={width}
-        height={height}
-        title={'video'}
-        frameBorder="0"
-        src={url}
-        allowFullScreen></iframe>
-    </p>
+      className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6 flex justify-center`}>
+      <ReactPlayer url={url} width={width} height={height} />
+    </div>
   );
 };

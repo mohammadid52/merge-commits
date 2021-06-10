@@ -91,5 +91,5 @@ export interface StudentDataPageData {
 
 export interface PagePartInput {
   domID: string;
-  input: string;
+  input: string[];
 }

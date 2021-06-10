@@ -54,9 +54,10 @@ export const FormBlock = (props: FormBlockProps) => {
     <>
       {value &&
         value.length > 0 &&
-        value.map((v: any, i: number) =>
-          composeInput(`${id}_${i}`, v.type, v.label, v.value)
-        )}
+        value.map((v: any, i: number) => {
+          console.log(v);
+          return composeInput(`${id}_${i}`, v.type, v.label, v.value);
+        })}
     </>
   );
 };

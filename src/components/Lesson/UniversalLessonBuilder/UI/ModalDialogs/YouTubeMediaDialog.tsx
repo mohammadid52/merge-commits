@@ -1,7 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
+
+import {
+  UniversalBuilderDict,
+  EditQuestionModalDict,
+} from '../../../../../dictionary/dictionary.iconoclast';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 const youTubeVideoRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
@@ -17,15 +25,8 @@ interface IVideoInput {
   size: string;
 }
 
-interface IVideoDialogProps {
+interface IVideoDialogProps extends IContentTypeComponentProps {
   inputObj?: IVideoInput;
-  closeAction: () => void;
-  createNewBlockULBHandler: (
-    targetID: string,
-    propertyToTarget: string,
-    contentType: string,
-    inputValue: any
-  ) => void;
 }
 
 const YouTubeMediaDialog = ({
@@ -33,6 +34,7 @@ const YouTubeMediaDialog = ({
   closeAction,
   createNewBlockULBHandler,
 }: IVideoDialogProps) => {
+  const {userLanguage} = useContext(GlobalContext);
   const [videoInputs, setVideoInputs] = useState<IVideoInput>({
     url: '',
     size: '560 x 315',
@@ -48,6 +50,7 @@ const YouTubeMediaDialog = ({
     const name: string = (event.target as HTMLInputElement).name;
     const value: string = (event.target as HTMLInputElement).value;
     setVideoInputs((prevValues) => ({...prevValues, [name]: value}));
+    setError('');
   };
   const onChangeVideoSize = (_: string, name: string) => {
     setVideoInputs((prevValues) => ({...prevValues, size: name}));
@@ -63,18 +66,20 @@ const YouTubeMediaDialog = ({
   };
   const checkUrl = () => {
     if (!videoInputs.url) {
-      setError('Please enter youtube video url');
+      setError(UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['VIDEO_REQUIRED']);
       return false;
     }
     if (!youTubeVideoRegex.test(videoInputs.url)) {
-      setError('Please enter valid youtube video url');
+      setError(UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['VIDEO_INVALID']);
       return false;
     } else {
       setError('');
       return true;
     }
   };
+
   const {url = '', size = ''} = videoInputs;
+
   return (
     <div>
       <form onSubmit={onSave}>
@@ -85,18 +90,18 @@ const YouTubeMediaDialog = ({
               id="url"
               onChange={onChange}
               name="url"
-              label={'Enter video URL'}
+              label={UniversalBuilderDict[userLanguage]['FORMS']['VIDEO_URL_LABEL']}
               placeHolder={'Ex. https://www.youtube.com/embed/12345678912'}
               isRequired
+              error={error}
             />
-            <p className="text-red-500 text-xs">{error}</p>
           </div>
           <div>
             <Selector
               onChange={onChangeVideoSize}
               list={videoSizeOptions}
               placeholder="Select Video size"
-              label="Video size"
+              label={UniversalBuilderDict[userLanguage]['FORMS']['VIDEO_SIZE_LABEL']}
               selectedItem={size || ''}
             />
           </div>
@@ -105,13 +110,13 @@ const YouTubeMediaDialog = ({
           <div className="flex justify-end">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
-              label={'Cancel'}
+              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
               onClick={closeAction}
               transparent
             />
             <Buttons
               btnClass="py-1 px-8 text-xs ml-2"
-              label={'Save'}
+              label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
               type="submit"
               onClick={onSave}
             />
