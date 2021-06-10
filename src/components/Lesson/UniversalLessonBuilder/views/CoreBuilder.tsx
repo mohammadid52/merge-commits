@@ -54,12 +54,16 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     updateFromULBHandler(selectedPageID, 'class', `bg-${pickedColor}`);
   };
 
-  const activePageData = universalLessonDetails.universalLessonPages.find(
+  const activePageData = universalLessonDetails.lessonPlan.find(
     (lessonPage) => lessonPage.id === selectedPageID
   );
 
   const onColorPickerToggle = () => {
     setIsColorPickerOpen((prevValue) => !prevValue);
+  };
+
+  const onClickAwayFromColorPicker = () => {
+    setIsColorPickerOpen(false);
   };
     
   return (
@@ -68,7 +72,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'
       }`}>
       <div className={`relative w-full flex flex-row mx-auto`}>
-        <ClickAwayListener onClickAway={onColorPickerToggle}>
+        <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
           <div className={`w-auto my-10 mx-5`}>
             <Buttons
               onClick={onColorPickerToggle}

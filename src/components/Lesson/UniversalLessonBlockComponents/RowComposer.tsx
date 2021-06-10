@@ -151,7 +151,8 @@ const RowComposer = (props: RowComposerProps) => {
             key={`pp_addNew`}
             contentID={`addNewRow`}
             editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
+            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
+            isPagePart={true}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock
                 mode={mode}
