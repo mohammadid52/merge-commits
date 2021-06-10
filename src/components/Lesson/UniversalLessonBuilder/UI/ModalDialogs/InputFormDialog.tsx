@@ -7,6 +7,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {every, filter, forEach, map, uniqueId, values} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
+import Tooltip from '../../../../Atoms/Tooltip';
 
 // {
 //     id: 'page_2_part_1_questionGroup-1',
@@ -56,7 +57,7 @@ const InputModalComponent = ({
       partContent: [
         {
           id: partContentId,
-          type: 'form-numbered',
+          type: `form-${numberedForm ? 'numbered' : 'default'}`,
           value: inputObjArray,
         },
       ],
@@ -76,6 +77,7 @@ const InputModalComponent = ({
   };
 
   const [inputList, setInputList] = useState([{id: '9999', textArea: false}]);
+  const [numberedForm, setNumberedForm] = useState(false);
 
   const generateInputAndPlaceholderValues = () => {
     let values: any[] = [];
@@ -188,11 +190,17 @@ const InputModalComponent = ({
           );
         })}
       </div>
-      <div>
+      <div className="flex items-center w-auto">
         <button
           onClick={addOneInputField}
-          className="w-auto border-0 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+          className="w-auto mr-4 border-0 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
           + Add Input
+        </button>
+
+        <button
+          onClick={() => setNumberedForm(!numberedForm)}
+          className="w-auto border-0 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+          Form type : {numberedForm ? 'Numbered' : 'Default'}
         </button>
       </div>
       <div className="flex mt-8 justify-center px-6 pb-4">
