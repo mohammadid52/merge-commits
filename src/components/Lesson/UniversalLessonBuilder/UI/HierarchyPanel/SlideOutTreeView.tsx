@@ -62,7 +62,6 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
   };
 
   const DraggableList = ({list, idx, pagePartId}: any) => {
-    const [copylist, setCopylist] = useState(list);
     const handleOnDragEnd = (result: any) => {
       if (!result.destination) return;
       const items = Array.from(movableList);
@@ -87,7 +86,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                       draggableId={`pagePart_tree_${idx}_${idx2}`}
                       index={idx2}
                       key={`pagePart_tree_${idx}_${idx2}`}>
-                      {(provided) => {
+                      {(provided, snapshot) => {
                         return (
                           <li
                             ref={provided.innerRef}
@@ -96,7 +95,9 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                             onClick={() => {
                               window.location.href = `#${partContent.id}`;
                             }}
-                            className={`bg-gray-700 group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
+                            className={`${
+                              snapshot.isDragging ? 'bg-gray-700' : 'bg-gray-700'
+                            } group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
                             <div
                               className={`ml-2 flex flex-row justify-start items-center`}>
                               <IconContext.Provider
