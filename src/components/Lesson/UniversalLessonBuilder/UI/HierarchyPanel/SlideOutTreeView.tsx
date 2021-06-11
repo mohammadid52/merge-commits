@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   PagePart,
   PartContent,
@@ -9,6 +9,7 @@ import {MdTitle} from 'react-icons/md';
 import {IconContext} from 'react-icons';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {findIndex} from 'lodash';
 interface SlideOutTreeViewProps {
   open?: boolean;
   toggleOpen?: (openOrClosed: boolean) => void;
@@ -29,7 +30,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setHierarchyVisible,
     setEditMode,
   } = props;
-  const {movableList, setMovableList} = useULBContext();
+  const {movableList, setMovableList, selectedPageID, getCurrentPage} = useULBContext();
 
   // const handleSelectionProcess = (
   //   pagePartDetails: PagePart,
@@ -61,14 +62,20 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setEditMode(false);
   };
 
-  const DraggableList = ({idx, pagePartId}: any) => {
+  const DraggableList = ({idx, partContent, pagePartId}: any) => {
+    useEffect(() => {
+      if (movableList.length === 0) {
+        setMovableList(partContent);
+      }
+    }, [movableList]);
+
     const handleOnDragEnd = (result: any) => {
       if (!result.destination) return;
       const items = Array.from(movableList);
 
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
-      setMovableList(items);
+      // setMovableList(items);
     };
     return (
       <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -177,7 +184,11 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                   <HiPencil className="hover:text-indigo-400 text-white" size={18} />
                 </span>
               </button>
-              <DraggableList idx={idx} pagePartId={pagePart.id} />
+              <DraggableList
+                pagePartId={pagePart.id}
+                idx={idx}
+                partContent={pagePart.partContent}
+              />
             </div>
           ))}
         </div>

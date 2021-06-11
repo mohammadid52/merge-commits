@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   PagePart,
   PartContent,
@@ -21,6 +21,7 @@ import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
+import {findIndex} from 'lodash';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -33,16 +34,7 @@ const RowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
-  const {previewMode, movableList, setMovableList} = useULBContext();
-
-  const handleOnDragEnd = (result: any) => {
-    if (!result.destination) return;
-    const items = Array.from(movableList);
-
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setMovableList(items);
-  };
+  const {previewMode, getCurrentPage} = useULBContext();
 
   const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {
@@ -139,6 +131,82 @@ const RowComposer = (props: RowComposerProps) => {
     );
   };
 
+  const DraggableList = ({partContent, idx}: any) => {
+    const [movableList, setMovableList] = useState(partContent);
+
+    // useEffect(() => {
+    //   if (movableList.length === 0) {
+    //     setMovableList(partContent);
+    //   }
+    // }, [movableList]);
+
+    const handleOnDragEnd = (result: any) => {
+      if (!result.destination) return;
+      const items = Array.from(movableList);
+
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+      setMovableList(items);
+    };
+
+    return movableList.length > 0 ? (
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="partContent">
+          {(provided) => {
+            return (
+              <ul {...provided.droppableProps} ref={provided.innerRef}>
+                {movableList.map((content: PartContent, idx2: number) => (
+                  <Draggable
+                    draggableId={`pagePart_tree_${idx}_${idx2}`}
+                    index={idx2}
+                    key={`pagePart_tree_${idx}_${idx2}`}>
+                    {(provided) => {
+                      return (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}>
+                          <EditOverlayBlock
+                            key={`pp_${idx}_pc_${idx2}`}
+                            mode={mode}
+                            contentID={content.id}
+                            editedID={editedID}
+                            isComponent={true}
+                            isLast={idx2 === movableList.length - 1}
+                            handleEditBlockToggle={() =>
+                              handleEditBlockToggle(content.id)
+                            }
+                            deleteFromULBHandler={deleteFromULBHandler}>
+                            {content.value.length > 0 ? (
+                              <div id={content.id}>
+                                {composePartContent(
+                                  content.id,
+                                  content.type,
+                                  content.value,
+                                  `pp_${idx}_pc_${idx2}`,
+                                  content.class
+                                )}
+                              </div>
+                            ) : (
+                              <p>No content</p>
+                            )}
+                          </EditOverlayBlock>
+                        </li>
+                      );
+                    }}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            );
+          }}
+        </Droppable>
+      </DragDropContext>
+    ) : (
+      <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
+    );
+  };
+
   return (
     <>
       {selectedPageID &&
@@ -160,69 +228,16 @@ const RowComposer = (props: RowComposerProps) => {
                 handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}>
                 <RowWrapper
                   mode={mode}
-                  hasContent={movableList.length > 0}
+                  hasContent={pagePart.partContent.length > 0}
                   contentID={pagePart.id}
                   classString={pagePart.class}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
-                  {movableList.length > 0 ? (
-                    <DragDropContext onDragEnd={handleOnDragEnd}>
-                      <Droppable droppableId="partContent">
-                        {(provided) => {
-                          return (
-                            <ul {...provided.droppableProps} ref={provided.innerRef}>
-                              {movableList.map((content: PartContent, idx2: number) => (
-                                <Draggable
-                                  draggableId={`pagePart_tree_${idx}_${idx2}`}
-                                  index={idx2}
-                                  key={`pagePart_tree_${idx}_${idx2}`}>
-                                  {(provided) => {
-                                    return (
-                                      <li
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}>
-                                        <EditOverlayBlock
-                                          key={`pp_${idx}_pc_${idx2}`}
-                                          mode={mode}
-                                          contentID={content.id}
-                                          editedID={editedID}
-                                          isComponent={true}
-                                          isLast={idx2 === movableList.length - 1}
-                                          handleEditBlockToggle={() =>
-                                            handleEditBlockToggle(content.id)
-                                          }
-                                          deleteFromULBHandler={deleteFromULBHandler}>
-                                          {content.value.length > 0 ? (
-                                            <div id={content.id}>
-                                              {composePartContent(
-                                                content.id,
-                                                content.type,
-                                                content.value,
-                                                `pp_${idx}_pc_${idx2}`,
-                                                content.class
-                                              )}
-                                            </div>
-                                          ) : (
-                                            <p>No content</p>
-                                          )}
-                                        </EditOverlayBlock>
-                                      </li>
-                                    );
-                                  }}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </ul>
-                          );
-                        }}
-                      </Droppable>
-                    </DragDropContext>
-                  ) : (
-                    <h1 className={`w-full text-center`}>
-                      This pagepart has no content.
-                    </h1>
-                  )}
+                  <DraggableList
+                    id={pagePart.id}
+                    partContent={pagePart.partContent}
+                    idx={idx}
+                  />
                   {!previewMode && (
                     <div className="my-2">
                       <AddNewBlockMini

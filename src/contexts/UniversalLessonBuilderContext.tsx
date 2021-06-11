@@ -43,10 +43,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     setUniversalLessonDetails(exampleUniversalLesson);
   }, []);
 
-  useEffect(() => {
-    setMovableList(exampleUniversalLesson.lessonPlan[0].pageContent[0].partContent);
-  }, []);
-
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
@@ -57,6 +53,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         universalLessonDetails,
         selectedPageID,
         setSelectedPageID,
+        getCurrentPage,
         movableList,
         setMovableList,
         setUniversalLessonDetails,
