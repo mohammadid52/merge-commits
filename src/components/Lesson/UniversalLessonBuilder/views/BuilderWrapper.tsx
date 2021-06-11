@@ -57,7 +57,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [galleryVisible, setGalleryVisible] = useState<boolean>(false);
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
-  const [modalPopVisible, setModalPopVisible] = useState<boolean>(true);
+  const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
   const [addBlockAtPosition, setAddBlockAtPosition] = useState<number>(0);
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
@@ -293,7 +293,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           title={getTitleByType(currentModalDialog)}
           closeOnBackdrop
           closeAction={hideAllModals}>
-          <div className="min-w-256">{modalDialogSwitch(dialogLabelList.VIEW_PAGES)}</div>
+          <div className="min-w-256">{modalDialogSwitch(currentModalDialog)}</div>
         </Modal>
       )}
       {addContentModal.show && (
