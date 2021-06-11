@@ -7,19 +7,27 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 const HeaderModalComponent = ({
-  onChange,
   selectedPageID,
-  setInputFields,
-  inputFields,
-  addFromULBHandler,
-  inputValue,
+
   closeAction,
   isEditingMode,
   updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
+  const {addFromULBHandler} = useULBContext();
+
+  const onChange = (e: any) => {
+    const {value, id} = e.target;
+    setInputFields({
+      ...inputFields,
+      [id]: value,
+    });
+  };
+  const [inputFields, setInputFields] = useState<any>({});
+  const FIELD_ID = 'header';
 
   const convertSizeNameToClass = (sizeName: string) => {
     switch (sizeName) {
@@ -38,8 +46,7 @@ const HeaderModalComponent = ({
     }
   };
   const onHeaderCreate = () => {
-    const fieldId = 'header';
-    const value: string = inputFields[fieldId];
+    const value: string = inputFields[FIELD_ID];
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
@@ -68,7 +75,7 @@ const HeaderModalComponent = ({
     // clear fields
     setInputFields({
       ...inputFields,
-      [fieldId]: '',
+      [FIELD_ID]: '',
     });
   };
 
@@ -98,8 +105,8 @@ const HeaderModalComponent = ({
             onChange={onChange}
             label={'Header'}
             isRequired
-            value={inputValue}
-            id={'header'}
+            value={inputFields[FIELD_ID]}
+            id={FIELD_ID}
             placeHolder={`Enter header text`}
             type="text"
           />

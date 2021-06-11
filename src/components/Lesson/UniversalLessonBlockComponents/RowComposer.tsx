@@ -16,9 +16,10 @@ import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
-import { ImageBlock } from './Blocks/ImageBlock';
+import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import PoemBlock from './Blocks/PoemBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -44,18 +45,35 @@ const RowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const composePartContent = (id: string, type: string, value: any, inputKey: string, classString: string) => {
+  const composePartContent = (
+    id: string,
+    type: string,
+    value: any,
+    inputKey: string,
+    classString: string = ''
+  ) => {
     if (type.includes('jumbotron')) {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    } else if(type.includes('poem')){
+      return <PoemBlock id={id} type={type} value={value} mode={mode}/>
     } else if (type.includes('header')) {
-      return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
+      return (
+        <HeaderBlock
+          id={id}
+          type={type}
+          classString={classString}
+          value={value}
+          mode={mode}
+        />
+      );
     } else if (type.includes('paragraph')) {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
-    }else if (type.includes('image')) {
+    } else if (type.includes('video')) {
+    } else if (type.includes('image')) {
       return (
         <ImageBlock
           key={inputKey}
@@ -65,7 +83,7 @@ const RowComposer = (props: RowComposerProps) => {
           mode={mode}
         />
       );
-    }else if (type.includes('video')) {
+    } else if (type.includes('video')) {
       return (
         <VideoBlock
           key={inputKey}
@@ -167,7 +185,7 @@ const RowComposer = (props: RowComposerProps) => {
                         deleteFromULBHandler={deleteFromULBHandler}
                         updateFromULBHandler={updateFromULBHandler}>
                         {content.value.length > 0 ? (
-                          <div className={content.class}>
+                          <div className={content.class} id={content.id}>
                             {composePartContent(
                               content.id,
                               content.type,

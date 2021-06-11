@@ -23,6 +23,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
       case 'header-default':
         return (
           <h2
+            id={inputID}
             className={`
             relative
             w-full text-xl font-semibold  text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
@@ -32,6 +33,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
       case 'header-section':
         return (
           <h3
+            id={inputID}
             className={`
             ${classString || 'border-sea-green text-xl'}
             relative

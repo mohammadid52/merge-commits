@@ -214,12 +214,51 @@ export const exampleUniversalLesson: UniversalLesson = {
       open: false,
       active: false,
       id: 'page_3',
-      label: 'Outro',
+      label: 'Activity',
       displayMode: 'SELF',
       title: '',
       description: '',
       class: '',
-      pageContent: [],
+      pageContent: [
+        {
+          id: 'page_3_part_0',
+          tags: [''],
+          partType: 'default',
+          class: 'rounded-lg',
+          partContent: [
+            {
+              id: 'page_3_part_0_dropdown-0',
+              type: 'poem',
+              value: [
+                {
+                  id: 'line_1',
+                  type: '',
+                  label: '',
+                  value: 'Poem line starter one',
+                },
+                {
+                  id: 'line_2',
+                  type: '',
+                  label: '',
+                  value: 'Poem line starter two',
+                },
+                {
+                  id: 'line_3',
+                  type: '',
+                  label: '',
+                  value: 'Poem line starter three',
+                },
+                {
+                  id: 'line_4',
+                  type: '',
+                  label: '',
+                  value: 'Poem line starter four',
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
   ],
 };
