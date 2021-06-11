@@ -27,11 +27,11 @@ const NewPageDialog = () => {
           focussed === ''
             ? ''
             : focussed === 'new_page'
-            ? 'w-full h-full'
+            ? 'w-full h-full m-4 '
             : 'w-0 overflow-hidden opacity-0'
         }
         transition-all duration-400 ease-in-out
-        flex flex-col`}>
+        flex flex-col bg-gray-200`}>
         {/* <div className="relative flex items-center">
           <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
             Add New Page
@@ -44,50 +44,50 @@ const NewPageDialog = () => {
             btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
           />
         </div> */}
-        <div className={`bg-gray-200 p-2`}>
+        <div className={`bg-gray-200 mb-4 p-2`}>
           <label
             htmlFor="field1"
             className="text-left block text-xs font-medium text-gray-700">
             Lesson Name
           </label>
-          <div className="mt-1">
+          <div className="mt-2">
             <input
               type="text"
               name="lessonNameInput"
               id="lessonNameInput"
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
               placeholder="My Custom Lesson"
             />
           </div>
         </div>
-        <div className={`bg-gray-200 p-2`}>
+        <div className={`bg-gray-200 mb-4 p-2`}>
           <label
             htmlFor="field1"
             className="text-left block text-xs font-medium text-gray-700">
             Subject
           </label>
-          <div className="mt-1">
+          <div className="mt-2">
             <input
               type="text"
               name="lessonSubjectInput"
               id="lessonSubjectInput"
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
               placeholder="Creative Writing"
             />
           </div>
         </div>
-        <div className={`bg-gray-200 p-2`}>
+        <div className={`bg-gray-200 mb-4 p-2`}>
           <label
             htmlFor="field1"
             className="text-left block text-xs font-medium text-gray-700">
             Type
           </label>
-          <div className="mt-1">
+          <div className="mt-2">
             <input
               type="text"
               name="lessonTypeInput"
               id="lessonTypeInput"
-              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2"
               placeholder="Standard Lesson"
             />
           </div>
@@ -99,31 +99,31 @@ const NewPageDialog = () => {
         className={`
         ${
           focussed === ''
-            ? ''
+            ? ' m-2'
             : focussed === 'existing_page'
             ? 'w-full'
-            : 'w-0 overflow-hidden opacity-0'
+            : 'w-0 overflow-hidden opacity-0 m-0'
         }
         transition-all duration-400 ease-in-out
       `}>
-        <div className="relative flex items-center">
-          <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
+        <div className="relative flex items-center justify-between mb-2">
+          <h2 className="w-auto bg-white text-lg font-semibold  text-gray-900 truncate">
             Use Existing Page
           </h2>
           <Buttons
             onClick={() => handleToggleFocussed('existing_page')}
             Icon={VscNewFile}
-            label="More"
+            label={`${focussed === 'existing_page' ? 'Less' : 'More'}`}
             overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
           />
         </div>
 
-        <div className={`w-full bg-gray-200`}>
+        <div className={`w-full bg-gray-200 rounded py-2`}>
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Activities
           </p>
-          <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+          <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
@@ -133,7 +133,7 @@ const NewPageDialog = () => {
             Checkpoints
           </p>
           <div>
-            <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+            <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
@@ -150,28 +150,28 @@ const NewPageDialog = () => {
             ? ''
             : focussed === 'template'
             ? 'w-full'
-            : 'w-0 overflow-hidden opacity-0'
+            : 'w-0 overflow-hidden opacity-0 m-0'
         }
-        transition-all duration-400 ease-in-out
+        transition-all duration-400 ease-in-out m-2
       `}>
-        <div className="relative flex items-center">
-          <h2 className="w-auto bg-white text-lg font-medium text-gray-900 truncate">
+        <div className="relative flex items-center justify-between mb-2">
+          <h2 className="w-auto bg-white text-lg font-semibold  text-gray-900 truncate">
             Page From Template
           </h2>
           <Buttons
             onClick={() => handleToggleFocussed('template')}
             Icon={VscNewFile}
-            label="More"
+            label={`${focussed === 'template' ? 'Less' : 'More'}`}
             overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-indigo-400 rounded-lg hover:bg-indigo-500 transition-all"
           />
         </div>
 
-        <div className={`w-full bg-gray-200`}>
+        <div className={`w-full bg-gray-200 rounded py-2`}>
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Style 1
           </p>
-          <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+          <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
@@ -180,7 +180,7 @@ const NewPageDialog = () => {
           <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
             Style 2
           </p>
-          <div className="mt-4 p-4 grid grid-cols-3 bg-gray-200">
+          <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />

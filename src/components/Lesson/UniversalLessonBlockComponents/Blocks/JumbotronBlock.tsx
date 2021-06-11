@@ -53,6 +53,7 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
 
   return (
     <div
+      id={id}
       className="h-96 flex flex-col mb-4 justify-between items-center bg-cover bg-right-top rounded-lg z-10"
       style={{backgroundImage: `url(${jumbotronInfo.src})`}}>
       <QuoteBlock
