@@ -28,8 +28,9 @@ export interface ULBSelectionProps {
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    replacementValue?: string,
-    addBlockAtPosition?: number
+    replacementValue?: any,
+    addBlockAtPosition?: number,
+    classString?: string
   ) => void;
   updateBlockContentULBHandler?: (
     targetID: string,

@@ -66,8 +66,15 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
   };
   const handleSplitColumnChange = (column: number) => {
-    updateFromULBHandler(contentID, 'class', `grid grid-cols-${column}`);
-    createNewBlockULBHandler(contentID, 'subPartContent', '');
+    // updateFromULBHandler(contentID, 'class', `grid grid-cols-${column}`);
+    createNewBlockULBHandler(
+      contentID,
+      'subPartContent',
+      '',
+      Array(column-1).fill(""),
+      0,
+      `grid grid-cols-${column}`
+    );
   };
   const handleSplitColToggle = () => {
     setColDropdownActive(prevValue => !prevValue);

@@ -74,27 +74,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       className={`h-full overflow-hidden overflow-y-scroll ${
         activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'
       }`}>
-      <div className={`relative w-full flex flex-row mx-auto`}>
-        <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
-          <div className={`w-auto my-10 mx-5`}>
-            <Buttons
-              onClick={onColorPickerToggle}
-              label="BG Color"
-              overrideClass={true}
-              btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
-              Icon={AiOutlineBgColors}
-            />
-            {isColorPickerOpen && (
-              <ColorPicker
-                callbackColor={handleColorPickerSelect}
-                classString={
-                  activePageData && activePageData.class ? activePageData.class : ''
-                }
-                isMainPage={true}
-              />
-            )}
-          </div>
-        </ClickAwayListener>
+      <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <RowComposer
             mode={mode}
@@ -125,6 +105,28 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </button>
         </Tooltip>
       </div>
+      <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
+        <div className={`absolute w-auto top-7 left-2`}>
+          <Buttons
+            onClick={onColorPickerToggle}
+            label="BG Color"
+            overrideClass={true}
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            Icon={AiOutlineBgColors}
+          />
+          {isColorPickerOpen && (
+            <div className="relative">
+              <ColorPicker
+                callbackColor={handleColorPickerSelect}
+                classString={
+                  activePageData && activePageData.class ? activePageData.class : ''
+                }
+                isMainPage={true}
+              />
+            </div>
+          )}
+        </div>
+      </ClickAwayListener>
     </div>
   );
 };

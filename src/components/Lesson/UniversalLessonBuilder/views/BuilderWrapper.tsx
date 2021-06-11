@@ -137,12 +137,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputObj,
       isEditingMode: true,
     });
-    if (type !== 'video' && type !== 'image') {
-      setInputFields((prevInputFields: any) => ({
-        ...prevInputFields,
-        [type]: inputObj && inputObj.length ? inputObj[0] : ""
-      }));
-    }
+    // if (type !== 'video' && type !== 'image') {
+    //   setInputFields((prevInputFields: any) => ({
+    //     ...prevInputFields,
+    //     [type]: inputObj && inputObj.length ? inputObj[0] : ""
+    //   }));
+    // }
   };
 
   const [inputFields, setInputFields] = useState<any>({});
@@ -238,7 +238,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             selectedPageID={selectedPageID}
             closeAction={closeAction}
             updateBlockContentULBHandler={updateBlockContent}
-            isEditingMode={isEditingMode}
+            inputObj={inputObj}
           />
         );
       case 'image':
@@ -260,20 +260,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             }
             closeAction={closeAction}
             inputObj={inputObj}
-            updateBlockContentULBHandler={(
-              targetID: string,
-              propertyToTarget: string,
-              contentType: string,
-              inputValue: any
-            ) =>
-              updateBlockContentULBHandler(
-                targetID || blockConfig.targetId,
-                propertyToTarget || section,
-                contentType,
-                inputValue,
-                position
-              )
-            }
+            updateBlockContentULBHandler={updateBlockContent}
           />
         );
       case 'paragraph':
@@ -281,15 +268,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           <ParaModalComponent
             selectedPageID={selectedPageID}
             closeAction={closeAction}
-            isEditingMode={isEditingMode}
+            inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
           />
         );
       case 'input':
+      case 'form-numbered':
+      case 'form-default':
         return (
           <InputModalComponent
             selectedPageID={selectedPageID}
             closeAction={closeAction}
+            inputObj={inputObj}
           />
         );
       case 'video':
@@ -311,20 +301,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             }
             closeAction={closeAction}
             inputObj={inputObj}
-            updateBlockContentULBHandler={(
-              targetID: string,
-              propertyToTarget: string,
-              contentType: string,
-              inputValue: any
-            ) =>
-              updateBlockContentULBHandler(
-                targetID || blockConfig.targetId,
-                propertyToTarget || section,
-                contentType,
-                inputValue,
-                position
-              )
-            }
+            updateBlockContentULBHandler={updateBlockContent}
           />
         );
 

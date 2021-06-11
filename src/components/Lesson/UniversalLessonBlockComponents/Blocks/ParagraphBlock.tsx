@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   RowComposerProps,
   RowWrapperProps,
 } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { AddNewBlock } from '../UtilityBlocks/AddNewBlock';
 
 interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
@@ -28,7 +29,19 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
     <>
       {value &&
         value.length > 0 &&
-        value.map((v: any, i: number) => composeParagraph(`${id}_${i}`, v, type))}
+        value.map((v: any, i: number) =>
+          v ? (
+            composeParagraph(`${id}_${i}`, v, type)
+          ) : (
+            <Fragment key={i}>
+            <AddNewBlock
+              idx={-1}
+              mode={mode}
+              // handleModalPopToggle={handleModalPopToggle}
+            />
+            </Fragment>
+          )
+        )}
     </>
   );
 };

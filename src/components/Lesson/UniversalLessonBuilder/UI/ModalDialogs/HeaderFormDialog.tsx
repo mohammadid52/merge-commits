@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
@@ -11,13 +11,13 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 
 const HeaderModalComponent = ({
   selectedPageID,
-
   closeAction,
-  isEditingMode,
+  inputObj,
   updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
     const {value, id} = e.target;
@@ -28,6 +28,16 @@ const HeaderModalComponent = ({
   };
   const [inputFields, setInputFields] = useState<any>({});
   const FIELD_ID = 'header';
+
+  useEffect(() => {
+    if (inputObj && inputObj.length) {
+      setInputFields((prevInputFields: any) => ({
+        ...prevInputFields,
+        [FIELD_ID]: inputObj[0],
+      }));
+      setIsEditingMode(true);
+    }
+  }, [inputObj]);
 
   const convertSizeNameToClass = (sizeName: string) => {
     switch (sizeName) {

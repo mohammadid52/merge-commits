@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
@@ -25,7 +25,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   } = props;
   const {previewMode} = useULBContext();
   return (
-    <>
+    <Fragment key={`${contentID}_${editedID}`}>
       {mode === 'building' ? (
         <div
           className={`
@@ -56,7 +56,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
       ) : (
         children
       )}
-    </>
+    </Fragment>
   );
 };
 

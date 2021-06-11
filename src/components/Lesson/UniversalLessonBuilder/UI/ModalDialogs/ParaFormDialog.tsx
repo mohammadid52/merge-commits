@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
@@ -9,11 +9,24 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 const ParaModalComponent = ({
   selectedPageID,
   closeAction,
-  isEditingMode,
+  inputObj,
   updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
+  
+  const FIELD_ID = 'paragraph';
+  
+  useEffect(() => {
+    if (inputObj && inputObj.length) {
+      setInputFields((prevInputFields: any) => ({
+        ...prevInputFields,
+        [FIELD_ID]: inputObj[0],
+      }));
+      setIsEditingMode(true);
+    }
+  }, [inputObj]);
 
   const onChange = (e: any) => {
     const {value, id} = e.target;
@@ -23,7 +36,6 @@ const ParaModalComponent = ({
     });
   };
   const [inputFields, setInputFields] = useState<any>({});
-  const FIELD_ID = 'paragraph';
 
   const onParaCreate = () => {
     const value: string = inputFields[FIELD_ID];

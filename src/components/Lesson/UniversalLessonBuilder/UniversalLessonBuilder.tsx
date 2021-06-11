@@ -239,10 +239,11 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     propertyToTarget: string,
     contentType: string,
     inputObj: any,
-    addBlockAtPosition: number
+    addBlockAtPosition: number,
+    classString?: string
   ) => {
-    console.log('inside createNewBlockULBHandler', targetID);
-    
+    console.log('inside createNewBlockULBHandler', universalLessonDetails, targetID);
+
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
       (page: any) => page.id === selectedPageID
@@ -294,41 +295,53 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           };
         }
         break;
-      // case 'subPartContent':
-      //   let activePagePartContentIdx:number = -1;
-      //   const activePageContentIdx = pageContentData.findIndex(
-      //     (pageContent) => pageContent.partContent.findIndex((parts:any, idx:number) => {
-      //       activePagePartContentIdx=idx;
-      //       return parts.id === targetID
-      //     }
-      //   ) > -1);
-      //   console.log(
-      //     activePagePartContentIdx,
-      //     activePageContentIdx,
-      //     'activePageContentIdxactivePageContentIdxs'
-      //   );
-        
-      //   if (activePagePartContentIdx > -1) {
-      //     let activePageContentData = pageContentData[activePageContentIndex];
-      //     const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
-      //     let activePagePartContentData = [
-      //       ...activePageContentData.partContent,
-      //       {
-      //         id: partContentId,
-      //         type: contentType,
-      //         value: inputObj,
-      //       },
-      //     ];
-      //     partContent[];
-      //     pageContentData[activePageContentIndex] = {
-      //       ...pageContentData[activePageContentIndex],
-      //       partContent: activePagePartContentData,
-      //     };
-      //     lessonPages[activePageIndex] = {
-      //       ...lessonPages[activePageIndex],
-      //       pageContent: pageContentData,
-      //     };
-      //   }
+      case 'subPartContent':
+        console.log(universalLessonDetails, 'universalLessonDetails');
+
+        let activePagePartContentIdx: number = -1;
+        const activePageContentIdx = pageContentData.findIndex(
+          (pageContent) =>
+            pageContent.partContent.findIndex((parts: any, idx: number) => {
+              activePagePartContentIdx = idx;
+              return parts.id === targetID;
+            }) > -1
+        );
+        console.log(
+          activePagePartContentIdx,
+          activePageContentIdx,
+          'activePageContentIdxactivePageContentIdxs'
+        );
+
+        if (activePagePartContentIdx > -1) {
+          let activePagePartContentData = [
+            ...pageContentData[activePageContentIdx].partContent,
+          ];
+          const subPartContentId: string = `${activePagePartContentData[activePagePartContentIdx].id}_0_value_${activePagePartContentData[activePagePartContentIdx].value.length}`;
+          activePagePartContentData[activePagePartContentIdx] = {
+            ...activePagePartContentData[activePagePartContentIdx],
+            class: replaceTailwindClass(
+              activePagePartContentData[activePagePartContentIdx].class,
+              classString
+            ),
+            value: [
+              ...activePagePartContentData[activePagePartContentIdx].value.filter(Boolean),
+              ...inputObj,
+              // {
+              //   id: subPartContentId,
+              // },
+            ],
+          };
+          console.log(activePagePartContentData, 'activePagePartContentData');
+
+          pageContentData[activePageContentIdx] = {
+            ...pageContentData[activePageContentIdx],
+            partContent: activePagePartContentData,
+          };
+          lessonPages[activePageIndex] = {
+            ...lessonPages[activePageIndex],
+            pageContent: pageContentData,
+          };
+        }
         break;
       default:
         break;
