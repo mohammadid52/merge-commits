@@ -270,8 +270,8 @@ const Dashboard = (props: DashboardProps) => {
   //updateQuestion
 
   const [greetQuestion, setGreetQuestion] = useState({question: ''});
-  const DEFAULT_CHECKPOINT_ID: string = '5372952f-ad80-4677-985a-e798c89d6bb7';
-  const DEFAULT_QUESTION_ID: string = '6867fd8e-2457-409c-ba34-f2ffabdf7385'; // THIS IS STATIC -- @key5: Change this
+  const DEFAULT_CHECKPOINT_ID: string = 'c3d68822-b7c0-416c-b84c-dd94c322b127';
+  const DEFAULT_QUESTION_ID: string = '4b8a334c-2cf4-4152-a2e0-b9ea491eb813'; // THIS IS STATIC -- @key5: Change this
 
   const getGreetQuestion = async () => {
     try {
@@ -306,7 +306,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     if (justLoggedIn) {
-      // getGreetQuestion();
+      getGreetQuestion();
     }
   }, [justLoggedIn]);
 
@@ -909,13 +909,13 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
-      {/* {state.user.role === 'ST' && (
+      {state.user.role === 'ST' && (
         <EmojiFeedback
           greetQuestion={greetQuestion}
           justLoggedIn={justLoggedIn}
           onSave={(response: string) => updateGreetQuestion(response)}
         />
-      )} */}
+      )}
       {/* <ResizablePanels> */}
       <SideMenu
         setActiveRoomSyllabus={setActiveRoomSyllabus}
