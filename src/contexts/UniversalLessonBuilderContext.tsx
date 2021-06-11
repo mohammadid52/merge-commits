@@ -1,3 +1,4 @@
+import {find, findIndex, includes, keys, update} from 'lodash';
 import React, {useContext, createContext, useState, useEffect} from 'react';
 import {exampleUniversalLesson} from '../components/Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
@@ -22,12 +23,12 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_1');
 
+  const getCurrentPage = (id: string) =>
+    universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
+
   const addULBHandler = (pageId: string, newPageContent: PagePart) => {
     // find current page object from lessonPlan array
-    let currentPage = universalLessonDetails.lessonPlan.find(
-      (page: any) => page.id === pageId
-    );
-
+    let currentPage = getCurrentPage(pageId);
     // find current page content from pageContent array
     let pageContent = currentPage.pageContent;
     if (pageContent && pageContent.length > 0) {

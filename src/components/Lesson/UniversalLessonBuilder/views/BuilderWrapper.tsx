@@ -23,6 +23,7 @@ import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
+import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -121,6 +122,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             userLanguage={userLanguage}
             galleryVisible={galleryVisible}
             loading={loading}
+            setEditModal={setEditModal}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}
             handleModalPopToggle={handleModalPopToggle}
@@ -245,6 +247,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   };
 
+  // For Edit Page Names
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [editModal, setEditModal] = useState({
+    show: false,
+    content: {},
+    editOnlyId: true,
+  });
+  const closeEditModal = () => setEditModal({show: false, content: {}, editOnlyId: true});
+  const content: any = editModal.content;
+  const getEditModalTitle = () => {
+    if (!editModal.editOnlyId) {
+      return `Edit - ${content.id}`;
+    } else {
+      return `Edit - ${content.partContentId || content.pageContentId}`;
+    }
+  };
   return (
     <div
       id={`builderWrapper`}
@@ -289,11 +307,31 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
 
+      {editModal.show && (
+        <Modal
+          showHeader={true}
+          title={getEditModalTitle()}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={closeEditModal}>
+          <div className="min-w-256">
+            <EditPageNameDialog
+              editOnlyId={editModal.editOnlyId}
+              closeAction={closeEditModal}
+              content={content}
+            />
+          </div>
+        </Modal>
+      )}
+
       <HierarchyPanel
         universalLessonDetails={universalLessonDetails}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
         hierarchyVisible={hierarchyVisible}
+        editMode={editMode}
+        setEditMode={setEditMode}
+        setEditModal={setEditModal}
         setHierarchyVisible={setHierarchyVisible}
       />
 

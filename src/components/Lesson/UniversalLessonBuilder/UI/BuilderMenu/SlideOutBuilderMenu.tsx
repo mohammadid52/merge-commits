@@ -48,7 +48,7 @@ const SlideOutBuilderMenu = (props: BuilderMenuProps) => {
   };
 
   return (
-    <div className="flex flex-col flex-grow p-1 overflow-y-auto overflow-hidden bg-gray-800">
+    <div className="flex flex-col flex-grow p-1 overflow-y-auto overflow-hidden bg-gray-700">
       <div className="flex-grow flex flex-col">
         <nav
           className="flex flex-col items-center justify-center rounded-b-lg"
