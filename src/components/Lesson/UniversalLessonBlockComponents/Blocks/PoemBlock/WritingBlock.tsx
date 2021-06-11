@@ -1,47 +1,52 @@
-import React, {useEffect, useState} from 'react';
-import {useOutsideAlerter} from '../../../../General/hooks/outsideAlerter';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlinePlus} from 'react-icons/ai';
-import {
-  PagePartInput,
-  PartContentSub,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
+import React, { useState } from 'react';
+import { nanoid } from 'nanoid';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { PagePartInput, PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
 
 interface WritingBlockProps {
   id?: string;
   linestarters?: PartContentSub[];
   poemInput?: PagePartInput[];
   setPoemInput?: React.Dispatch<React.SetStateAction<PagePartInput[]>>;
+  saveAndEdit?: boolean;
+  setSaveAndEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WritingBlock = (props: WritingBlockProps) => {
-  const {id, linestarters, poemInput, setPoemInput} = props;
-  const [nrLines, setNrLines] = useState<number>(1);
+  const {id, linestarters, poemInput, setPoemInput, saveAndEdit, setSaveAndEdit} = props;
 
   const handleAddInput = () => {
-    setNrLines(nrLines + 1);
+    setPoemInput([
+      ...poemInput,
+      {
+        domID: `${id}_${nanoid(4)}`,
+        input: [''],
+      },
+    ]);
   };
 
-  useEffect(() => {
-    const initialPoemInput = Array.from(Array(nrLines).keys()).map(
-      (_: any, idx: number) => {
-        return {
-          domID: `${id}_${idx}`,
-          input: [''],
-        };
-      }
-    );
-    setPoemInput(initialPoemInput);
-  }, [nrLines]);
+  const handleDeleteInput = (e: React.MouseEvent) => {
+    const {id} = e.target as HTMLElement;
+    const filtered = poemInput.filter((input: PagePartInput) => input.domID !== id);
+    setPoemInput(filtered);
+  };
 
-  const handleDeleteInput = (e: any) => {};
 
-  const handleMenuToggle = (e: any) => {};
-
-  const handleSubmit = () => {};
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {id, value} = e.target;
+    const {id, value} = e.target as HTMLSelectElement;
+    const mapped = poemInput.map((input: PagePartInput) => {
+      if (input.domID === id) {
+        return {
+          domID: input.domID,
+          input: [value],
+        };
+      } else {
+        return input;
+      }
+    });
+    setPoemInput(mapped)
   };
 
   return (
@@ -71,16 +76,22 @@ const WritingBlock = (props: WritingBlockProps) => {
       </div>
 
       <div
-        className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg`}>
+        className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg p-4`}>
         {/* MAP THE LINE PROMPTS */}
         {poemInput.map((inputObj: PagePartInput, idx: number) => (
-          <div key={`${inputObj.domID}`}>
+          <div key={`${inputObj.domID}`} className={`mb-4`}>
             <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-              Input {idx}:
+              Input {idx}:{' '}
+              <span
+                id={`${inputObj.domID}`}
+                onClick={(e) => handleDeleteInput(e)}
+                className={`font-semibold text-xs text-red-400 cursor-pointer`}>
+                Delete?
+              </span>
             </label>
             <select
               id={`${inputObj.domID}`}
-              onChange={(e)=>handleInputChange(e)}
+              onChange={(e) => handleInputChange(e)}
               name={`${inputObj.domID}`}
               className="bg-charcoal mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
               {linestarters.map((line: PartContentSub, idx2: number) => (
@@ -90,10 +101,6 @@ const WritingBlock = (props: WritingBlockProps) => {
           </div>
         ))}
       </div>
-      <button
-        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 text-gray-200`}>
-        Save and Edit Your Poem
-      </button>
     </div>
   );
 };
