@@ -427,6 +427,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
+        createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}
         universalLessonDetails={universalLessonDetails}

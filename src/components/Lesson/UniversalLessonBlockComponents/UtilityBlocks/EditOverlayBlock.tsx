@@ -10,6 +10,7 @@ interface IEditOverlayBlockProps extends RowWrapperProps {
 const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     children,
@@ -46,6 +47,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             isPagePart={isPagePart}
             handleEditBlockContent={handleEditBlockContent}
             handleEditBlockToggle={handleEditBlockToggle}
+            createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
           />

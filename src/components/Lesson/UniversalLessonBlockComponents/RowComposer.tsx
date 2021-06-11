@@ -23,6 +23,7 @@ import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 const RowComposer = (props: RowComposerProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
@@ -93,6 +94,7 @@ const RowComposer = (props: RowComposerProps) => {
         contentID={`addNewRow`}
         editedID={editedID}
         handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
+        createNewBlockULBHandler={createNewBlockULBHandler}
         updateFromULBHandler={updateFromULBHandler}>
         <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
           <AddNewBlock
@@ -128,6 +130,7 @@ const RowComposer = (props: RowComposerProps) => {
                 mode={mode}
                 isPagePart={true}
                 classString={pagePart.class}
+                createNewBlockULBHandler={createNewBlockULBHandler}
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
@@ -160,6 +163,7 @@ const RowComposer = (props: RowComposerProps) => {
                             idx2
                           )
                         }
+                        createNewBlockULBHandler={createNewBlockULBHandler}
                         deleteFromULBHandler={deleteFromULBHandler}
                         updateFromULBHandler={updateFromULBHandler}>
                         {content.value.length > 0 ? (
@@ -224,6 +228,7 @@ const RowComposer = (props: RowComposerProps) => {
             contentID={`addNewRow`}
             editedID={editedID}
             handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
+            createNewBlockULBHandler={createNewBlockULBHandler}
             updateFromULBHandler={updateFromULBHandler}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock

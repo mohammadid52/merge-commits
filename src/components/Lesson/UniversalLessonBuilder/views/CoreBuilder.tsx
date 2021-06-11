@@ -31,6 +31,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
@@ -53,6 +54,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonPageWrapper>
           <RowComposer
             mode={mode}
+            createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
             universalLessonDetails={universalLessonDetails}
