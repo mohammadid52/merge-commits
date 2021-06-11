@@ -76,7 +76,7 @@ const ImageFormComponent = ({
         `${fileName}`,
         'image/jpeg'
       );
-      createNewBlockULBHandler('', 'pageContent', 'image', [
+      createNewBlockULBHandler('', '', 'image', [
         {
           ...imageInputs,
           url: `ULB/content_image_${fileName}`,

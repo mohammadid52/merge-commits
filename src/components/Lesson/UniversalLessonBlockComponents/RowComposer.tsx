@@ -20,6 +20,7 @@ import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import PoemBlock from './Blocks/PoemBlock';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -64,6 +65,8 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    } else if (type.includes('poem')) {
+      return <PoemBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {
       return (
         <HeaderBlock
@@ -121,7 +124,12 @@ const RowComposer = (props: RowComposerProps) => {
             idx={selectedPageDetails.pageContent.length - 1}
             mode={mode}
             handleModalPopToggle={(dialogToToggle) =>
-              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length)
+              handleModalPopToggle(
+                dialogToToggle,
+                selectedPageDetails.pageContent.length,
+                'pageContent',
+                selectedPageID
+              )
             }
           />
         </RowWrapper>
@@ -214,6 +222,21 @@ const RowComposer = (props: RowComposerProps) => {
                     <h1 className={`w-full text-center`}>
                       This pagepart has no content.
                     </h1>
+                  )}
+                  {!previewMode && (
+                    <div className="my-2">
+                      <AddNewBlockMini
+                        mode={mode}
+                        handleModalPopToggle={(dialogToToggle) =>
+                          handleModalPopToggle(
+                            dialogToToggle,
+                            pagePart.partContent.length + 1,
+                            'partContent',
+                            pagePart.id
+                          )
+                        }
+                      />
+                    </div>
                   )}
                 </RowWrapper>
               </EditOverlayBlock>

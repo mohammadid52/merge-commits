@@ -58,7 +58,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-  const [addBlockAtPosition, setAddBlockAtPosition] = useState<number>(0);
+  const [newBlockConfig, setNewBlockConfig] = useState<{
+    section: string;
+    position: number;
+    targetId: string;
+  }>({
+    section: 'pageContent',
+    position: 0,
+    targetId: '',
+  });
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
   /**
@@ -83,13 +91,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setCurrentModalDialog('');
   };
 
-  const handleModalPopToggle = (dialogToToggle: string, addBlockAtPosition?: number) => {
+  const handleModalPopToggle = (
+    dialogToToggle: string,
+    position?: number,
+    section: string = 'pageContent',
+    targetId?:string
+  ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-
+    
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
-      setAddBlockAtPosition(addBlockAtPosition);
+      setNewBlockConfig({
+        section,
+        position,
+        targetId,
+      });
       setModalPopVisible(true);
     }
     // Toggle Which Dialog is Shown
@@ -163,9 +180,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (
-    type: 'header' | 'paragraph' | 'video' | 'image' | 'input' | string
-  ) => {
+  const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
+    const {position = 0, section = 'pageContent'} = newBlockConfig;
+
     switch (type) {
       case 'header':
         return (
@@ -184,11 +201,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               inputValue: any
             ) =>
               createNewBlockULBHandler(
-                selectedPageID,
-                propertyToTarget,
+                targetID || newBlockConfig.targetId,
+                propertyToTarget || section,
                 contentType,
                 inputValue,
-                addBlockAtPosition
+                position
               )
             }
             closeAction={closeAction}
@@ -215,11 +232,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               inputValue: any
             ) =>
               createNewBlockULBHandler(
-                selectedPageID,
-                propertyToTarget,
+                targetID || newBlockConfig.targetId,
+                propertyToTarget || section,
                 contentType,
                 inputValue,
-                addBlockAtPosition
+                position
               )
             }
             closeAction={closeAction}

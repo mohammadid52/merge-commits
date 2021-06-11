@@ -60,7 +60,7 @@ const YouTubeMediaDialog = ({
     event.preventDefault();
     const isValid: boolean = checkUrl();
     if (isValid) {
-      createNewBlockULBHandler('', 'pageContent', 'video', [videoInputs]);
+      createNewBlockULBHandler('', '', 'video', [videoInputs]);
       closeAction();
     }
   };
