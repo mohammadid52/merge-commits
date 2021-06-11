@@ -243,13 +243,13 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   ) => {
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
-      (page: any) => page.id === targetID
+      (page: any) => page.id === selectedPageID
     );
     let lessonPages = [...universalLessonDetails.lessonPlan];
+    let pageContentData = [...lessonPages[activePageIndex].pageContent];
     switch (propertyToTarget) {
       case 'pageContent':
-        let pageContentData = [...lessonPages[activePageIndex].pageContent];
-        const pageContentId: string = `${targetID}_part_${pageContentData.length}`;
+        const pageContentId: string = `${selectedPageID}_part_${pageContentData.length}`;
         pageContentData.splice(addBlockAtPosition, 0, {
           class: 'rounded-lg',
           id: pageContentId,
@@ -267,9 +267,35 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           pageContent: pageContentData,
         };
         break;
+      case 'partContent':
+        const activePageContentIndex = pageContentData.findIndex(
+          (content: any) => content.id === targetID
+        );
+        if (activePageContentIndex > -1) {
+          let activePageContentData = pageContentData[activePageContentIndex];
+          const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
+          let activePagePartContentData = [
+            ...activePageContentData.partContent,
+            {
+              id: partContentId,
+              type: contentType,
+              value: inputValue,
+            },
+          ];
+          pageContentData[activePageContentIndex] = {
+            ...pageContentData[activePageContentIndex],
+            partContent: activePagePartContentData,
+          };
+          lessonPages[activePageIndex] = {
+            ...lessonPages[activePageIndex],
+            pageContent: pageContentData,
+          };
+        }
+        break;
       default:
         break;
     }
+
     temp = {
       ...temp,
       lessonPlan: lessonPages,

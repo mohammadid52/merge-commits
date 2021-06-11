@@ -2,12 +2,12 @@ import React from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import { getImageFromS3Static } from '../../../../utilities/services';
 
-interface VideoBlockProps extends RowWrapperProps {
+interface ImageBlockProps extends RowWrapperProps {
   id: string;
   value: any;
 }
 
-export const ImageBlock = (props: VideoBlockProps) => {
+export const ImageBlock = (props: ImageBlockProps) => {
   const {id, dataIdAttribute, value} = props;
   const {url, width = '', height = '', caption = ''} = value;
   const styleAttribute = {
@@ -18,7 +18,7 @@ export const ImageBlock = (props: VideoBlockProps) => {
     <div
       id={id}
       data-id={dataIdAttribute}
-      className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}>
+      className={`px-4 py-5 sm:p-6`}>
       <img
         className="mx-auto"
         style={styleAttribute}

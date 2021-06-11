@@ -115,7 +115,7 @@ const RowComposer = (props: RowComposerProps) => {
             idx={selectedPageDetails.pageContent.length - 1}
             mode={mode}
             handleModalPopToggle={(dialogToToggle) =>
-              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length)
+              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length, 'pageContent', selectedPageID)
             }
           />
         </RowWrapper>
@@ -182,12 +182,21 @@ const RowComposer = (props: RowComposerProps) => {
                       This pagepart has no content.
                     </h1>
                   )}
-                  {/* <AddNewBlockMini
-                    mode={mode}
-                    handleModalPopToggle={(dialogToToggle) =>
-                      handleModalPopToggle(dialogToToggle, idx + 1)
-                    }
-                  /> */}
+                  {!previewMode && 
+                    <div className="my-2">
+                      <AddNewBlockMini
+                        mode={mode}
+                        handleModalPopToggle={(dialogToToggle) =>
+                          handleModalPopToggle(
+                            dialogToToggle,
+                            pagePart.partContent.length + 1,
+                            'partContent',
+                            pagePart.id
+                          )
+                        }
+                      />
+                    </div>
+                  }
                 </RowWrapper>
               </EditOverlayBlock>
 
