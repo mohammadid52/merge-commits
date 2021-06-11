@@ -11,6 +11,7 @@ interface FormInputProps {
   placeHolder?: string;
   disabled?: boolean;
   type?: string;
+  error?: string;
 }
 
 const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
@@ -24,6 +25,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     name,
     placeHolder,
     type = 'text',
+    error = ''
   } = inputProps;
   const {theme} = useContext(GlobalContext);
 
@@ -42,6 +44,9 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
         value={value ? value : ''}
         placeholder={placeHolder}
       />
+      <p className="text-red-500 text-xs">
+        {error}
+      </p>
     </Fragment>
   );
 };

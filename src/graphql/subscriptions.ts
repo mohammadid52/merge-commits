@@ -3778,6 +3778,7 @@ export const onCreateDoFirstQuestion = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -3817,6 +3818,7 @@ export const onUpdateDoFirstQuestion = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -3856,6 +3858,7 @@ export const onDeleteDoFirstQuestion = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4678,6 +4681,7 @@ export const onCreateCheckpointQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4729,6 +4733,7 @@ export const onUpdateCheckpointQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4780,6 +4785,7 @@ export const onDeleteCheckpointQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4923,6 +4929,7 @@ export const onCreateAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4967,6 +4974,7 @@ export const onUpdateAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -5011,6 +5019,7 @@ export const onDeleteAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -5177,6 +5186,7 @@ export const onCreateQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -5199,6 +5209,7 @@ export const onUpdateQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -5221,6 +5232,7 @@ export const onDeleteQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -8762,6 +8774,7 @@ export const onCreateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -8877,6 +8890,7 @@ export const onUpdateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -8992,6 +9006,7 @@ export const onDeleteQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -9185,6 +9200,7 @@ export const onCreateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
@@ -9331,6 +9347,7 @@ export const onUpdateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
@@ -9477,6 +9494,7 @@ export const onDeleteQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id

@@ -3363,6 +3363,7 @@ export const createDoFirstQuestion = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -3405,6 +3406,7 @@ export const updateDoFirstQuestion = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -3447,6 +3449,7 @@ export const deleteDoFirstQuestion = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4317,6 +4320,7 @@ export const createCheckpointQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4371,6 +4375,7 @@ export const updateCheckpointQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4425,6 +4430,7 @@ export const deleteCheckpointQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4580,6 +4586,7 @@ export const createAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4627,6 +4634,7 @@ export const updateAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4674,6 +4682,7 @@ export const deleteAssessmentQuestions = /* GraphQL */ `
           icon
           color
         }
+        published
         createdAt
         updatedAt
       }
@@ -4852,6 +4861,7 @@ export const createQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -4877,6 +4887,7 @@ export const updateQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -4902,6 +4913,7 @@ export const deleteQuestion = /* GraphQL */ `
         icon
         color
       }
+      published
       createdAt
       updatedAt
     }
@@ -9136,6 +9148,7 @@ export const createQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -9254,6 +9267,7 @@ export const updateQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -9372,6 +9386,7 @@ export const deleteQuestionData = /* GraphQL */ `
       responseObject {
         qid
         response
+        otherResponse
       }
       syllabusLesson {
         id
@@ -9568,6 +9583,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
@@ -9717,6 +9733,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
@@ -9866,6 +9883,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
         responseObject {
           qid
           response
+          otherResponse
         }
         syllabusLesson {
           id
