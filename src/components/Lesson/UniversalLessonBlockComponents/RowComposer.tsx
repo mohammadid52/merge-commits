@@ -42,13 +42,27 @@ const RowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const composePartContent = (id: string, type: string, value: any, inputKey: string) => {
+  const composePartContent = (
+    id: string,
+    type: string,
+    value: any,
+    inputKey: string,
+    classString: string = ''
+  ) => {
     if (type.includes('jumbotron')) {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {
-      return <HeaderBlock id={id} type={type} value={value} mode={mode} />;
+      return (
+        <HeaderBlock
+          id={id}
+          type={type}
+          classString={classString}
+          value={value}
+          mode={mode}
+        />
+      );
     } else if (type.includes('paragraph')) {
       return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
@@ -151,7 +165,8 @@ const RowComposer = (props: RowComposerProps) => {
                               content.id,
                               content.type,
                               content.value,
-                              `pp_${idx}_pc_${idx2}`
+                              `pp_${idx}_pc_${idx2}`,
+                              content.class
                             )}
                           </div>
                         ) : (

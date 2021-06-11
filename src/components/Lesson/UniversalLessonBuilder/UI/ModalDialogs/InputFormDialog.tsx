@@ -7,7 +7,6 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {every, filter, forEach, map, uniqueId, values} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import Tooltip from '../../../../Atoms/Tooltip';
 
 // {
 //     id: 'page_2_part_1_questionGroup-1',
@@ -36,7 +35,6 @@ const InputModalComponent = ({
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
 
-  const [inputFields, setInputFields] = useState<any>({});
   const onChange = (e: any) => {
     const {value, id} = e.target;
     setInputFields({
@@ -78,6 +76,7 @@ const InputModalComponent = ({
 
   const [inputList, setInputList] = useState([{id: '9999', textArea: false}]);
   const [numberedForm, setNumberedForm] = useState(false);
+  const [inputFields, setInputFields] = useState<any>({});
 
   const generateInputAndPlaceholderValues = () => {
     let values: any[] = [];
@@ -129,7 +128,7 @@ const InputModalComponent = ({
         ) : (
           <BiCheckbox className="w-auto text-3xl text-blue-600" />
         )}
-        <p>textarea</p>
+        <p className="w-auto">textarea</p>
       </>
     );
   };
@@ -142,23 +141,25 @@ const InputModalComponent = ({
           return (
             <div key={input.id} className="flex flex-col input-container">
               <div className="">
-                <FormInput
-                  onChange={onChange}
-                  label={'Form Title'}
-                  isRequired
-                  value={inputFields[`formFieldInput_${input.id}`]}
-                  id={`formFieldInput_${input.id}`}
-                  placeHolder={`Enter Form Field Title`}
-                />
-
-                <FormInput
-                  onChange={onChange}
-                  label={'Placeholder'}
-                  value={inputFields[`placeholder_${input.id}`]}
-                  id={`placeholder_${input.id}`}
-                  placeHolder={`Enter placeholder`}
-                />
-
+                <div className="mb-2">
+                  <FormInput
+                    onChange={onChange}
+                    label={'Form Title'}
+                    isRequired
+                    value={inputFields[`formFieldInput_${input.id}`]}
+                    id={`formFieldInput_${input.id}`}
+                    placeHolder={`Enter Form Field Title`}
+                  />
+                </div>
+                <div>
+                  <FormInput
+                    onChange={onChange}
+                    label={'Placeholder'}
+                    value={inputFields[`placeholder_${input.id}`]}
+                    id={`placeholder_${input.id}`}
+                    placeHolder={`Enter placeholder`}
+                  />
+                </div>
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto mx-3">
                     <div
@@ -176,7 +177,7 @@ const InputModalComponent = ({
                 ) : (
                   <div
                     onClick={() => changeCheckboxValue(idx, input.textArea)}
-                    className="flex cursor-pointer items-center justify-between text-gray-500 font-medium w-auto mx-3 self-end">
+                    className="flex cursor-pointer items-center justify-end text-gray-500 font-medium w-auto mx-3 self-end mt-2">
                     <Checkbox val={input.textArea} />
                   </div>
                 )}
