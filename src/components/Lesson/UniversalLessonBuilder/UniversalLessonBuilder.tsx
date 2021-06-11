@@ -235,7 +235,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    inputValue: any,
+    inputObj: any,
     addBlockAtPosition: number
   ) => {
     let temp = {...universalLessonDetails};
@@ -254,7 +254,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
             {
               id: `${pageContentId}_${contentType}_1`,
               type: contentType,
-              value: inputValue,
+              value: inputObj,
             },
           ],
           partType: 'default',
@@ -276,7 +276,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
             {
               id: partContentId,
               type: contentType,
-              value: inputValue,
+              value: inputObj,
             },
           ];
           pageContentData[activePageContentIndex] = {
@@ -300,6 +300,74 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
+  const updateBlockContentULBHandler = (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputObj: any,
+    addBlockAtPosition: number
+  ) => {
+    let temp = {...universalLessonDetails};
+    const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
+      (page: any) => page.id === selectedPageID
+    );
+    let lessonPages = [...universalLessonDetails.lessonPlan];
+    let pageContentData = [...lessonPages[activePageIndex].pageContent];
+    switch (propertyToTarget) {
+      case 'pageContent':
+        const pageContentId: string = `${selectedPageID}_part_${pageContentData.length}`;
+        pageContentData.splice(addBlockAtPosition, 0, {
+          class: 'rounded-lg',
+          id: pageContentId,
+          partContent: [
+            {
+              id: `${pageContentId}_${contentType}_1`,
+              type: contentType,
+              value: inputObj,
+            },
+          ],
+          partType: 'default',
+        });
+        lessonPages[activePageIndex] = {
+          ...lessonPages[activePageIndex],
+          pageContent: pageContentData,
+        };
+        break;
+      case 'partContent':
+        const activePageContentIndex = pageContentData.findIndex(
+          (content: any) => content.id === targetID
+        );
+        if (activePageContentIndex > -1) {
+          let activePageContentData = pageContentData[activePageContentIndex];
+          let activePagePartContentData = activePageContentData.partContent;
+          activePagePartContentData[addBlockAtPosition] = {
+            ...activePagePartContentData[addBlockAtPosition],
+            value: inputObj
+          };
+          pageContentData[activePageContentIndex] = {
+            ...pageContentData[activePageContentIndex],
+            partContent: activePagePartContentData,
+          };
+          lessonPages[activePageIndex] = {
+            ...lessonPages[activePageIndex],
+            pageContent: pageContentData,
+          };
+        }
+        break;
+      default:
+        break;
+    }
+
+    temp = {
+      ...temp,
+      lessonPlan: lessonPages,
+    };
+    setUniversalLessonDetails(temp);
+  };
+
+  console.log(universalLessonDetails, 'universalLessonDetails');
+  
+
   return (
     /**
      *
@@ -320,6 +388,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         deleteFromULBHandler={deleteULBHandler}
         updateFromULBHandler={updateULBHandler}
         createNewBlockULBHandler={createNewBlockULBHandler}
+        updateBlockContentULBHandler={updateBlockContentULBHandler}
         universalLessonDetails={universalLessonDetails}
         universalBuilderStep={universalBuilderStep}
         setUniversalBuilderStep={setUniversalBuilderStep}

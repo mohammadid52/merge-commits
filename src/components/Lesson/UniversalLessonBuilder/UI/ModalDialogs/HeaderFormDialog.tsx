@@ -16,6 +16,8 @@ const HeaderModalComponent = ({
   addFromULBHandler,
   inputValue,
   closeAction,
+  isEditingMode,
+  updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
 
@@ -42,21 +44,25 @@ const HeaderModalComponent = ({
     const partContentId: string = uniqueId(`${pageContentId}_`);
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
     const bgColorClass: string = selectedValues.color;
-    const newDataObject = {
-      id: pageContentId,
-      partType: 'default',
-      class: 'rounded-lg',
-      partContent: [
-        {
-          id: partContentId,
-          type: 'header-section',
-          value: [value],
-          class: `${fontSizeClass} border-${bgColorClass}`,
-        },
-      ],
-    };
-    // add data to list
-    addFromULBHandler(selectedPageID, newDataObject);
+    if (isEditingMode) {
+      updateBlockContentULBHandler('', '', 'header-section', [value]);
+    } else {
+      const newDataObject = {
+        id: pageContentId,
+        partType: 'default',
+        class: 'rounded-lg',
+        partContent: [
+          {
+            id: partContentId,
+            type: 'header-section',
+            value: [value],
+            class: `${fontSizeClass} border-${bgColorClass}`,
+          },
+        ],
+      };
+      // add data to list
+      addFromULBHandler(selectedPageID, newDataObject);
+    }
     // close modal after saving
     closeAction();
     // clear fields

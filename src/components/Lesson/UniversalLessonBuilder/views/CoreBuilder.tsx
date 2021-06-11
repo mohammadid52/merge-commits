@@ -19,6 +19,13 @@ interface CoreBuilderProps extends ULBSelectionProps {
   hierarchyVisible?: boolean;
   initialUniversalLessonPagePartContent: PartContent;
   handleModalPopToggle?: (dialogToToggle: string) => void;
+  handleEditBlockContent?: (
+    type: string,
+    section: string,
+    inputObj: any,
+    targetId: string,
+    indexToUpdate: number
+  ) => void;
 }
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
@@ -35,6 +42,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setSelectedPagePartID,
     selectedPartContentID,
     setSelectedPartContentID,
+    handleEditBlockContent,
     handleModalPopToggle,
   } = props;
   const {previewMode, setPreviewMode} = useULBContext();
@@ -57,6 +65,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             selectedPartContentID={selectedPartContentID}
             setSelectedPartContentID={setSelectedPartContentID}
             handleModalPopToggle={handleModalPopToggle}
+            handleEditBlockContent={handleEditBlockContent}
           />
         </LessonPageWrapper>
       </div>

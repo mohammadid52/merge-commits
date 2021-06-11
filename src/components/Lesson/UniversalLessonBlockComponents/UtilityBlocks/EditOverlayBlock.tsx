@@ -3,7 +3,11 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
-const EditOverlayBlock = (props: RowWrapperProps) => {
+interface IEditOverlayBlockProps extends RowWrapperProps {
+  handleEditBlockContent?: () => void;
+}
+
+const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const {
     mode,
     deleteFromULBHandler,
@@ -14,11 +18,11 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
     editedID,
     isComponent,
     isLast,
+    handleEditBlockContent,
     handleEditBlockToggle,
     isPagePart,
   } = props;
   const {previewMode} = useULBContext();
-
   return (
     <>
       {mode === 'building' ? (
@@ -40,6 +44,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
             isActive={contentID === editedID}
             isComponent={isComponent}
             isPagePart={isPagePart}
+            handleEditBlockContent={handleEditBlockContent}
             handleEditBlockToggle={handleEditBlockToggle}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}

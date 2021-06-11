@@ -22,6 +22,7 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
+  handleEditBlockContent?: () => void;
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
@@ -32,6 +33,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     isPagePart,
     classString,
     isComponent,
+    handleEditBlockContent,
     handleEditBlockToggle,
     deleteFromULBHandler,
     updateFromULBHandler,
@@ -110,11 +112,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           } bg-dark rounded-lg shadow-lg `}>
           <button className={`${actionClass}`}>
             <span className={iconClass}>
-              <CgEditFlipH />
+              <BsLayoutSplit />
             </span>
             <span className={textClass}>Split</span>
           </button>
-          <button className={`${actionClass}`}>
+          <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
             <span className={iconClass}>
               <AiOutlineEdit />
             </span>
@@ -126,7 +128,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               onClick={() => setColorPickerActive(!colorPickerActive)}
               className={`${actionClass}`}>
               <span className={iconClass}>
-                <AiOutlineEdit />
+                <AiOutlineBgColors />
               </span>
               <span className={textClass}>BG Color</span>
             </button>

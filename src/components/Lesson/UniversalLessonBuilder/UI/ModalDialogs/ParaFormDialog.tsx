@@ -14,6 +14,8 @@ const ParaModalComponent = ({
 
   inputValue,
   closeAction,
+  isEditingMode,
+  updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
@@ -23,21 +25,24 @@ const ParaModalComponent = ({
     const value: string = inputFields[fieldId];
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
-
-    const newDataObject = {
-      id: pageContentId,
-      partType: 'default',
-      class: 'rounded-lg',
-      partContent: [
-        {
-          id: partContentId,
-          type: 'paragraph',
-          value: [value],
-        },
-      ],
-    };
-    // add data to list
-    addFromULBHandler(selectedPageID, newDataObject);
+    if (isEditingMode) {
+      updateBlockContentULBHandler('', '', 'video', [value]);
+    } else {
+      const newDataObject = {
+        id: pageContentId,
+        partType: 'default',
+        class: 'rounded-lg',
+        partContent: [
+          {
+            id: partContentId,
+            type: 'paragraph',
+            value: [value],
+          },
+        ],
+      };
+      // add data to list
+      addFromULBHandler(selectedPageID, newDataObject);
+    }
     // close modal after saving
     closeAction();
     // clear fields
