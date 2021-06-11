@@ -161,17 +161,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
+  const modalByType = (
+    type: 'header' | 'paragraph' | 'video' | 'image' | 'input' | string
+  ) => {
     switch (type) {
       case 'header':
         return (
           <HeaderModalComponent
-            inputValue={inputFields[type]}
-            onChange={onChange}
             selectedPageID={selectedPageID}
-            setInputFields={setInputFields}
-            inputFields={inputFields}
-            addFromULBHandler={addFromULBHandler}
             closeAction={closeAction}
           />
         );
@@ -193,18 +190,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               )
             }
             closeAction={closeAction}
-          />)
+          />
+        );
       case 'paragraph':
         return (
-          <ParaModalComponent
-            inputValue={inputFields[type]}
-            onChange={onChange}
-            selectedPageID={selectedPageID}
-            setInputFields={setInputFields}
-            inputFields={inputFields}
-            addFromULBHandler={addFromULBHandler}
-            closeAction={closeAction}
-          />
+          <ParaModalComponent selectedPageID={selectedPageID} closeAction={closeAction} />
         );
       case 'input':
         return (
@@ -311,6 +301,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         galleryVisible={galleryVisible}
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
+        setBuilderMenuVisible={setBuilderMenuVisible}
       />
 
       {/*<EditPanel*/}

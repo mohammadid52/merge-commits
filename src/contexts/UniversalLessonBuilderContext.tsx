@@ -20,6 +20,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     initialUniversalLessonData
   );
 
+  const [selectedPageID, setSelectedPageID] = useState<string>('page_1');
+
   const addULBHandler = (pageId: string, newPageContent: PagePart) => {
     // find current page object from lessonPlan array
     let currentPage = universalLessonDetails.lessonPlan.find(
@@ -47,6 +49,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         newBlockSeqId,
         setNewBlockSeqId,
         universalLessonDetails,
+        selectedPageID,
+        setSelectedPageID,
         setUniversalLessonDetails,
         addFromULBHandler: addULBHandler,
       }}>

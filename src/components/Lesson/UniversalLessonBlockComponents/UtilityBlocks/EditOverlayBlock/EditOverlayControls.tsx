@@ -107,7 +107,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left-2' : 'right-3.5'
-          } bg-dark rounded-lg shadow-lg `}>
+          } bg-gray-800 rounded-lg shadow-lg `}>
           <button className={`${actionClass}`}>
             <span className={iconClass}>
               <CgEditFlipH />
@@ -141,7 +141,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
           <button
             onClick={() => deleteFromULBHandler(contentID)}
-            className={`${actionClass} text-red-600`}>
+            className={`${actionClass} text-red-400`}>
             <span className={iconClass}>
               <AiOutlineDelete />
             </span>
@@ -165,7 +165,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       /> */}
 
       <button
-        className={`bg-dark rounded-full h-8 w-${
+        className={`bg-gray-800 rounded-full h-8 w-${
           isComponent ? '8' : '16'
         } hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
         onClick={() => {

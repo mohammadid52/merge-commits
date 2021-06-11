@@ -63,7 +63,12 @@ const initialUniversalLessonPagePartContent: PartContent = {
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {state, dispatch} = useContext(GlobalContext);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
-  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
+  const {
+    universalLessonDetails,
+    setUniversalLessonDetails,
+    selectedPageID,
+    setSelectedPageID,
+  } = useULBContext();
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -111,8 +116,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   // };
 
   //  CORE DATA MANAGEMENT
-
-  const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
 
   /**
    *
@@ -250,7 +253,13 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         pageContentData.splice(addBlockAtPosition, 0, {
           class: 'rounded-lg',
           id: pageContentId,
-          partContent: [{id: `${pageContentId}_${contentType}_1`, type:contentType,value: inputValue}],
+          partContent: [
+            {
+              id: `${pageContentId}_${contentType}_1`,
+              type: contentType,
+              value: inputValue,
+            },
+          ],
           partType: 'default',
         });
         lessonPages[activePageIndex] = {
@@ -267,7 +276,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     };
     setUniversalLessonDetails(temp);
   };
-  
+
   return (
     /**
      *

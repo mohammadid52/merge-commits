@@ -14,14 +14,14 @@ export const FormBlock = (props: FormBlockProps) => {
     switch (type) {
       case 'text-input':
         return (
-          <div key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray text-blue-100`}
+              className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
               name="title"
               type="text"
               placeholder={value.length > 0 ? value : 'Please input...'}
@@ -31,7 +31,7 @@ export const FormBlock = (props: FormBlockProps) => {
         );
       case 'text-area':
         return (
-          <div key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
@@ -55,7 +55,6 @@ export const FormBlock = (props: FormBlockProps) => {
       {value &&
         value.length > 0 &&
         value.map((v: any, i: number) => {
-          console.log(v);
           return composeInput(`${id}_${i}`, v.type, v.label, v.value);
         })}
     </>

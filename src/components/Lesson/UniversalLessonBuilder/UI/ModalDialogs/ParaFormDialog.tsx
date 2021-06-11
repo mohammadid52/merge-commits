@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
@@ -6,21 +6,22 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-const ParaModalComponent = ({
-  onChange,
-  selectedPageID,
-  setInputFields,
-  inputFields,
-
-  inputValue,
-  closeAction,
-}: any) => {
+const ParaModalComponent = ({selectedPageID, closeAction}: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
 
+  const onChange = (e: any) => {
+    const {value, id} = e.target;
+    setInputFields({
+      ...inputFields,
+      [id]: value,
+    });
+  };
+  const [inputFields, setInputFields] = useState<any>({});
+  const FIELD_ID = 'paragraph';
+
   const onParaCreate = () => {
-    const fieldId = 'paragraph';
-    const value: string = inputFields[fieldId];
+    const value: string = inputFields[FIELD_ID];
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
 
@@ -43,7 +44,7 @@ const ParaModalComponent = ({
     // clear fields
     setInputFields({
       ...inputFields,
-      [fieldId]: '',
+      [FIELD_ID]: '',
     });
   };
 
@@ -55,8 +56,8 @@ const ParaModalComponent = ({
             onChange={onChange}
             label={'Paragraph'}
             isRequired
-            value={inputValue}
-            id={'paragraph'}
+            value={inputFields[FIELD_ID]}
+            id={FIELD_ID}
             placeHolder={`Enter text`}
             textarea
             rows={2}
