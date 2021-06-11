@@ -270,7 +270,7 @@ const Dashboard = (props: DashboardProps) => {
   //updateQuestion
 
   const [greetQuestion, setGreetQuestion] = useState({question: ''});
-  const DEFAULT_CHECKPOINT_ID: string = 'c3d68822-b7c0-416c-b84c-dd94c322b127';
+  const DEFAULT_CHECKPOINT_ID: string = '63ac4c50-8db3-48cb-86d9-a568d27c40eb';
   const DEFAULT_QUESTION_ID: string = '4b8a334c-2cf4-4152-a2e0-b9ea491eb813'; // THIS IS STATIC -- @key5: Change this
 
   const getGreetQuestion = async () => {
