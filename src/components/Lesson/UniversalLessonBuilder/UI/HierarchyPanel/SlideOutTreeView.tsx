@@ -61,7 +61,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setEditMode(false);
   };
 
-  const DraggableList = ({list, idx, pagePartId}: any) => {
+  const DraggableList = ({idx, pagePartId}: any) => {
     const handleOnDragEnd = (result: any) => {
       if (!result.destination) return;
       const items = Array.from(movableList);
@@ -96,10 +96,10 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                               window.location.href = `#${partContent.id}`;
                             }}
                             className={`${
-                              snapshot.isDragging ? 'bg-gray-700' : 'bg-gray-700'
-                            } group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
+                              snapshot.isDragging ? 'bg-gray-800' : 'bg-gray-700'
+                            }  group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
                             <div
-                              className={`ml-2 flex flex-row justify-start items-center`}>
+                              className={`ml-2 flex flex-row justify-start items-center `}>
                               <IconContext.Provider
                                 value={{
                                   className: 'w-auto mr-2',
@@ -177,11 +177,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                   <HiPencil className="hover:text-indigo-400 text-white" size={18} />
                 </span>
               </button>
-              <DraggableList
-                list={pagePart.partContent}
-                idx={idx}
-                pagePartId={pagePart.id}
-              />
+              <DraggableList idx={idx} pagePartId={pagePart.id} />
             </div>
           ))}
         </div>
