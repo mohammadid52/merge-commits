@@ -141,7 +141,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
           <button
             onClick={() => deleteFromULBHandler(contentID)}
-            className={`${actionClass} text-red-600`}>
+            className={`${actionClass} text-red-400`}>
             <span className={iconClass}>
               <AiOutlineDelete />
             </span>
