@@ -62,10 +62,7 @@ const HeaderModalComponent = ({
         },
       ],
     };
-    console.log(
-      '🚀 ~ file: HeaderFormDialog.tsx ~ line 65 ~ onHeaderCreate ~ newDataObject',
-      newDataObject
-    );
+
     // add data to list
     addFromULBHandler(selectedPageID, newDataObject);
     // close modal after saving

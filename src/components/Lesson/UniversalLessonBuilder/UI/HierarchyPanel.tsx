@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SlideOutTreeView} from './HierarchyPanel/SlideOutTreeView';
 import {Transition} from '@headlessui/react';
 import {
@@ -9,11 +9,17 @@ import {
 } from '../../../../interfaces/UniversalLessonInterfaces';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import ClickAwayListener from 'react-click-away-listener';
+
 interface HierarchyPanelProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
   universalLessonDetails: UniversalLesson;
   hierarchyVisible?: boolean;
   setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  editMode?: boolean;
+  setEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditModal?: React.Dispatch<
+    React.SetStateAction<{show: boolean; content: string; editOnlyId: boolean}>
+  >;
 }
 
 export const HierarchyPanel = (props: HierarchyPanelProps) => {
@@ -22,11 +28,10 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
     hierarchyVisible,
     setHierarchyVisible,
     selectedPageID,
-    setSelectedPageID,
-    selectedPagePartID,
-    setSelectedPagePartID,
-    selectedPartContentID,
-    setSelectedPartContentID,
+
+    editMode,
+    setEditMode,
+    setEditModal,
   } = props;
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
@@ -59,17 +64,23 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
         <ClickAwayListener onClickAway={() => setHierarchyVisible(false)}>
           <div className="m-2 ">
             {/* Header */}
-            <div className="relative text-white bg-gray-800 py-2 rounded-t-md">
+            <div className="relative text-white bg-gray-700 py-2 rounded-t-md">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
                 <div className="w-full border-t border-gray-400"></div>
               </div>
-              <div className="relative flex text-center">
-                <span className="text-md text-white font-semibold">Layers</span>
+              <div className="relative flex items-center justify-center px-4 text-center">
+                <span className="text-md text-white font-semibold w-auto">Layers</span>]
               </div>
             </div>
 
             {/* The Tree View */}
-            <SlideOutTreeView selectedPageDetails={selectedPageDetails} />
+            <SlideOutTreeView
+              editMode={editMode}
+              setHierarchyVisible={setHierarchyVisible}
+              setEditModal={setEditModal}
+              setEditMode={setEditMode}
+              selectedPageDetails={selectedPageDetails}
+            />
           </div>
         </ClickAwayListener>
       </Transition>
