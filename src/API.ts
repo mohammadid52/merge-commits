@@ -258,6 +258,7 @@ export type Staff = {
   statusChangeDate?: string | null,
   staffMember?: Person,
   curricula?: ModelTeacherCurriculumConnection,
+  institution?: Institution,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1134,7 +1135,7 @@ export type StudentWord = {
 };
 
 export type UpdatePersonInput = {
-  id: string,
+  id?: string | null,
   authId: string,
   status?: PersonStatus | null,
   email: string,
@@ -1258,7 +1259,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStaffInput = {
@@ -1291,7 +1292,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomInput = {
@@ -1363,7 +1364,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1393,7 +1394,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateClassInput = {
@@ -1420,7 +1421,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateClassStudentInput = {
@@ -1453,7 +1454,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCurriculumInput = {
@@ -1657,7 +1658,7 @@ export type UpdateTeacherCurriculumInput = {
 };
 
 export type DeleteTeacherCurriculumInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomCurriculumInput = {
@@ -1681,7 +1682,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateArtistInput = {
@@ -1733,7 +1734,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateSELStructureInput = {
@@ -1766,7 +1767,7 @@ export type UpdateSELStructureInput = {
 };
 
 export type DeleteSELStructureInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateDoFirstInput = {
@@ -1790,7 +1791,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1814,7 +1815,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateWarmUpInput = {
@@ -1915,7 +1916,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCoreLessonInput = {
@@ -1974,7 +1975,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateActivityInput = {
@@ -2019,7 +2020,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCheckpointInput = {
@@ -2076,7 +2077,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2103,7 +2104,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2130,7 +2131,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentInput = {
@@ -2160,7 +2161,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2184,7 +2185,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2208,7 +2209,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionInput = {
@@ -2259,7 +2260,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionSourceInput = {
@@ -2288,7 +2289,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionTypeInput = {
@@ -2317,7 +2318,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateWordInput = {
@@ -2341,7 +2342,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStudentWordInput = {
@@ -2368,7 +2369,7 @@ export type UpdateStudentWordInput = {
 };
 
 export type DeleteStudentWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomMsgsInput = {
@@ -2413,7 +2414,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCourseInput = {
@@ -2454,7 +2455,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonInput = {
@@ -2599,7 +2600,7 @@ export type UpdateLessonRubricsInput = {
 };
 
 export type DeleteLessonRubricsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonCheckpointInput = {
@@ -2626,7 +2627,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2650,7 +2651,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateSyllabusInput = {
@@ -2837,7 +2838,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStudentDataInput = {
@@ -2879,7 +2880,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id: string,
+  id?: string | null,
   lessonProgress?: string | null,
   currentLocation?: string | null,
   status?: string | null,
@@ -2961,7 +2962,7 @@ export type UpdateAnthologyCommentInput = {
 };
 
 export type DeleteAnthologyCommentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionDataInput = {
@@ -3008,7 +3009,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -3032,7 +3033,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateFeedbackInput = {
@@ -3059,7 +3060,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateIntroInput = {
@@ -3131,7 +3132,7 @@ export type UpdateIntroInput = {
 };
 
 export type DeleteIntroInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateOutroInput = {
@@ -3197,7 +3198,7 @@ export type UpdateOutroInput = {
 };
 
 export type DeleteOutroInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreatePersonLocationInput = {
@@ -3237,7 +3238,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id: string,
+  id?: string | null,
   personAuthID: string,
   personEmail: string,
   syllabusLessonID?: string | null,
@@ -3348,7 +3349,7 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -4877,6 +4878,49 @@ export type CreateStaffMutation = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -4941,6 +4985,49 @@ export type UpdateStaffMutation = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5004,6 +5091,49 @@ export type DeleteStaffMutation = {
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
+    } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
@@ -16978,6 +17108,49 @@ export type GetStaffQuery = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17028,6 +17201,25 @@ export type ListStaffsQuery = {
       curricula?:  {
         __typename: "ModelTeacherCurriculumConnection",
         nextToken?: string | null,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
       } | null,
       createdAt: string,
       updatedAt: string,
@@ -23557,6 +23749,49 @@ export type OnCreateStaffSubscription = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23616,6 +23851,49 @@ export type OnUpdateStaffSubscription = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23674,6 +23952,49 @@ export type OnDeleteStaffSubscription = {
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
+    } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
     } | null,
     createdAt: string,
     updatedAt: string,
