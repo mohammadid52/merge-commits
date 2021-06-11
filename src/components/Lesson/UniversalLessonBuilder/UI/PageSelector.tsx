@@ -151,7 +151,7 @@ const PageSelector = (props: PageSelectorProps) => {
             />
           </div> */}
 
-          <div className="py-4 flex items-center bg-gray-200">
+          <div className="py-4 flex  bg-gray-200">
             {movablePagesList && movablePagesList.length > 0 && <DroppablePages />}
 
             <Buttons
