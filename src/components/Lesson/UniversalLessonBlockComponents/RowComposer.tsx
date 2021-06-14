@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   PagePart,
   PartContent,
@@ -19,7 +19,84 @@ import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
+
+const DraggableList = ({
+  partContent,
+  idx,
+  composePartContent,
+  handleEditBlockToggle,
+  deleteFromULBHandler,
+  editedID,
+  mode,
+}: any) => {
+  const [movableList, setMovableList] = useState(partContent);
+
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const items = Array.from(movableList);
+
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setMovableList(items);
+  };
+
+  return movableList.length > 0 ? (
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <Droppable droppableId="partContent">
+        {(provided) => {
+          return (
+            <ul {...provided.droppableProps} ref={provided.innerRef}>
+              {movableList.map((content: PartContent, idx2: number) => (
+                <Draggable
+                  draggableId={`pagePart_tree_${idx}_${idx2}`}
+                  index={idx2}
+                  key={`pagePart_tree_${idx}_${idx2}`}>
+                  {(provided) => {
+                    return (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}>
+                        <EditOverlayBlock
+                          key={`pp_${idx}_pc_${idx2}`}
+                          mode={mode}
+                          contentID={content.id}
+                          editedID={editedID}
+                          isComponent={true}
+                          isLast={idx2 === movableList.length - 1}
+                          handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
+                          deleteFromULBHandler={deleteFromULBHandler}>
+                          {content.value.length > 0 ? (
+                            <div id={content.id}>
+                              {composePartContent(
+                                content.id,
+                                content.type,
+                                content.value,
+                                `pp_${idx}_pc_${idx2}`,
+                                content.class
+                              )}
+                            </div>
+                          ) : (
+                            <p>No content</p>
+                          )}
+                        </EditOverlayBlock>
+                      </li>
+                    );
+                  }}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          );
+        }}
+      </Droppable>
+    </DragDropContext>
+  ) : (
+    <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
+  );
+};
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -34,6 +111,7 @@ const RowComposer = (props: RowComposerProps) => {
     handleModalPopToggle,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
+  const {previewMode, getCurrentPage} = useULBContext();
 
   const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {
@@ -56,8 +134,8 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
-    } else if(type.includes('poem')){
-      return <PoemBlock id={id} type={type} value={value} mode={mode}/>
+    } else if (type.includes('poem')) {
+      return <PoemBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {
       return (
         <HeaderBlock
@@ -107,8 +185,6 @@ const RowComposer = (props: RowComposerProps) => {
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
-
-  const {previewMode} = useULBContext();
 
   const LastBlock = ({selectedPageDetails}: any) => {
     return !previewMode ? (
@@ -160,8 +236,7 @@ const RowComposer = (props: RowComposerProps) => {
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
                 handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
-                section="pageContent"
-                >
+                section="pageContent">
                 <RowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
@@ -225,6 +300,16 @@ const RowComposer = (props: RowComposerProps) => {
                       </h1>
                     )}
                   </div>
+                  <DraggableList
+                    id={pagePart.id}
+                    mode={mode}
+                    deleteFromULBHandler={deleteFromULBHandler}
+                    editedID={editedID}
+                    composePartContent={composePartContent}
+                    handleEditBlockToggle={handleEditBlockToggle}
+                    partContent={pagePart.partContent}
+                    idx={idx}
+                  />
                   {!previewMode && (
                     <div className="my-2 grid grid-cols-1">
                       <AddNewBlockMini
