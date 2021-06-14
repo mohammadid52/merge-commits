@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
@@ -11,11 +11,13 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 
 const HeaderModalComponent = ({
   selectedPageID,
-
   closeAction,
+  inputObj,
+  updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
     const {value, id} = e.target;
@@ -26,6 +28,16 @@ const HeaderModalComponent = ({
   };
   const [inputFields, setInputFields] = useState<any>({});
   const FIELD_ID = 'header';
+
+  useEffect(() => {
+    if (inputObj && inputObj.length) {
+      setInputFields((prevInputFields: any) => ({
+        ...prevInputFields,
+        [FIELD_ID]: inputObj[0],
+      }));
+      setIsEditingMode(true);
+    }
+  }, [inputObj]);
 
   const convertSizeNameToClass = (sizeName: string) => {
     switch (sizeName) {
@@ -49,22 +61,25 @@ const HeaderModalComponent = ({
     const partContentId: string = uniqueId(`${pageContentId}_`);
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
     const bgColorClass: string = selectedValues.color;
-    const newDataObject = {
-      id: pageContentId,
-      partType: 'default',
-      class: 'rounded-lg',
-      partContent: [
-        {
-          id: partContentId,
-          type: 'header-section',
-          value: [value],
-          class: `${fontSizeClass} border-${bgColorClass}`,
-        },
-      ],
-    };
-
-    // add data to list
-    addFromULBHandler(selectedPageID, newDataObject);
+    if (isEditingMode) {
+      updateBlockContentULBHandler('', '', 'header-section', [value]);
+    } else {
+      const newDataObject = {
+        id: pageContentId,
+        partType: 'default',
+        class: 'rounded-lg',
+        partContent: [
+          {
+            id: partContentId,
+            type: 'header-section',
+            value: [value],
+            class: `${fontSizeClass} border-${bgColorClass}`,
+          },
+        ],
+      };
+      // add data to list
+      addFromULBHandler(selectedPageID, newDataObject);
+    }
     // close modal after saving
     closeAction();
     // clear fields

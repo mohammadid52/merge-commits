@@ -26,15 +26,17 @@ interface IVideoInput {
 }
 
 interface IVideoDialogProps extends IContentTypeComponentProps {
-  inputObj?: IVideoInput;
+  inputObj?: IVideoInput[];
 }
 
 const YouTubeMediaDialog = ({
   inputObj,
   closeAction,
   createNewBlockULBHandler,
+  updateBlockContentULBHandler,
 }: IVideoDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [videoInputs, setVideoInputs] = useState<IVideoInput>({
     url: '',
     size: '560 x 315',
@@ -42,8 +44,9 @@ const YouTubeMediaDialog = ({
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    if (inputObj && inputObj.url) {
-      setVideoInputs(inputObj);
+    if (inputObj && inputObj.length) {
+      setVideoInputs(inputObj[0]);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +63,11 @@ const YouTubeMediaDialog = ({
     event.preventDefault();
     const isValid: boolean = checkUrl();
     if (isValid) {
-      createNewBlockULBHandler('', '', 'video', [videoInputs]);
+      if (isEditingMode) {
+        updateBlockContentULBHandler('', '', 'video', [videoInputs]);
+      } else {
+        createNewBlockULBHandler('', '', 'video', [videoInputs]);
+      }
       closeAction();
     }
   };

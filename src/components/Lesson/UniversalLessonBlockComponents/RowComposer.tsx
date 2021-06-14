@@ -23,13 +23,19 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
 
 const DraggableList = ({
+  classString,
   partContent,
+  id,
   idx,
   composePartContent,
+  createNewBlockULBHandler,
+  handleEditBlockContent,
   handleEditBlockToggle,
+  updateFromULBHandler,
   deleteFromULBHandler,
   editedID,
   mode,
+  handleModalPopToggle,
 }: any) => {
   const [movableList, setMovableList] = useState(partContent);
 
@@ -39,15 +45,22 @@ const DraggableList = ({
 
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
+    
     setMovableList(items);
   };
+  useEffect(() => {
+    setMovableList(partContent);
+  }, [partContent]);
 
   return movableList.length > 0 ? (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <Droppable droppableId="partContent">
         {(provided) => {
           return (
-            <ul {...provided.droppableProps} ref={provided.innerRef}>
+            <ul
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={classString}>
               {movableList.map((content: PartContent, idx2: number) => (
                 <Draggable
                   draggableId={`pagePart_tree_${idx}_${idx2}`}
@@ -62,14 +75,26 @@ const DraggableList = ({
                         <EditOverlayBlock
                           key={`pp_${idx}_pc_${idx2}`}
                           mode={mode}
+                          classString={content.class}
                           contentID={content.id}
                           editedID={editedID}
                           isComponent={true}
                           isLast={idx2 === movableList.length - 1}
                           handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
-                          deleteFromULBHandler={deleteFromULBHandler}>
+                          handleEditBlockContent={() =>
+                            handleEditBlockContent(
+                              content.type,
+                              'partContent',
+                              content.value,
+                              id,
+                              idx2
+                            )
+                          }
+                          createNewBlockULBHandler={createNewBlockULBHandler}
+                          deleteFromULBHandler={deleteFromULBHandler}
+                          updateFromULBHandler={updateFromULBHandler}>
                           {content.value.length > 0 ? (
-                            <div id={content.id}>
+                            <div className={content.class} id={content.id}>
                               {composePartContent(
                                 content.id,
                                 content.type,
@@ -79,7 +104,18 @@ const DraggableList = ({
                               )}
                             </div>
                           ) : (
-                            <p>No content</p>
+                            <AddNewBlock
+                              idx={-1}
+                              mode={mode}
+                              handleModalPopToggle={(dialogToToggle) =>
+                                handleModalPopToggle(
+                                  dialogToToggle,
+                                  idx2,
+                                  'partContent',
+                                  id
+                                )
+                              }
+                            />
                           )}
                         </EditOverlayBlock>
                       </li>
@@ -101,11 +137,13 @@ const DraggableList = ({
 const RowComposer = (props: RowComposerProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
     selectedPageID,
     setTargetID,
+    handleEditBlockContent,
     handleModalPopToggle,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
@@ -145,10 +183,16 @@ const RowComposer = (props: RowComposerProps) => {
         />
       );
     } else if (type.includes('paragraph')) {
-      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
+      return (
+        <ParagraphBlock
+          id={id}
+          type={type}
+          value={value || []}
+          mode={mode}
+        />
+      );
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
-    } else if (type.includes('video')) {
     } else if (type.includes('image')) {
       return (
         <ImageBlock
@@ -185,7 +229,9 @@ const RowComposer = (props: RowComposerProps) => {
         key={`pp_addNew`}
         contentID={`addNewRow`}
         editedID={editedID}
-        handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
+        handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
+        createNewBlockULBHandler={createNewBlockULBHandler}
+        updateFromULBHandler={updateFromULBHandler}>
         <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
           <AddNewBlock
             idx={selectedPageDetails.pageContent.length - 1}
@@ -220,36 +266,42 @@ const RowComposer = (props: RowComposerProps) => {
                 mode={mode}
                 isPagePart={true}
                 classString={pagePart.class}
+                createNewBlockULBHandler={createNewBlockULBHandler}
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
-                handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}>
+                handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
+                section="pageContent">
                 <RowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
                   contentID={pagePart.id}
-                  classString={pagePart.class}
+                  classString={`${pagePart.class}`}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
                   <DraggableList
                     id={pagePart.id}
                     mode={mode}
+                    classString={`${pagePart.class}`}
                     deleteFromULBHandler={deleteFromULBHandler}
                     editedID={editedID}
                     composePartContent={composePartContent}
                     handleEditBlockToggle={handleEditBlockToggle}
+                    handleModalPopToggle={handleModalPopToggle}
+                    createNewBlockULBHandler={createNewBlockULBHandler}
+                    updateFromULBHandler={updateFromULBHandler}
                     partContent={pagePart.partContent}
                     idx={idx}
                   />
                   {!previewMode && (
-                    <div className="my-2">
+                    <div className="my-2 grid grid-cols-1">
                       <AddNewBlockMini
                         mode={mode}
                         handleModalPopToggle={(dialogToToggle) =>
                           handleModalPopToggle(
                             dialogToToggle,
-                            pagePart.partContent.length + 1,
+                            pagePart.partContent.length,
                             'partContent',
                             pagePart.id
                           )
@@ -273,7 +325,7 @@ const RowComposer = (props: RowComposerProps) => {
             </React.Fragment>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
-          <LastBlock selectedPageDetails={selectedPageDetails} />,
+          <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,
         ]
       ) : (
         <>
@@ -283,7 +335,9 @@ const RowComposer = (props: RowComposerProps) => {
             key={`pp_addNew`}
             contentID={`addNewRow`}
             editedID={editedID}
-            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}>
+            handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
+            createNewBlockULBHandler={createNewBlockULBHandler}
+            updateFromULBHandler={updateFromULBHandler}>
             <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock
                 idx={-1}

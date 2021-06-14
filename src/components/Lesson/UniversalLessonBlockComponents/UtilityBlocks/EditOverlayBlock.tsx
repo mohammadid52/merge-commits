@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
-const EditOverlayBlock = (props: RowWrapperProps) => {
+interface IEditOverlayBlockProps extends RowWrapperProps {
+  handleEditBlockContent?: () => void;
+  section?: string;
+}
+
+const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     children,
@@ -13,14 +19,15 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
     contentID,
     editedID,
     isComponent,
-    isLast,
+    // isLast,
+    handleEditBlockContent,
     handleEditBlockToggle,
     isPagePart,
+    section
   } = props;
   const {previewMode} = useULBContext();
-
   return (
-    <>
+    <Fragment key={`${contentID}`}>
       {mode === 'building' ? (
         <div
           className={`
@@ -28,7 +35,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
         h-auto 
         flex items-center rowWrapper
         ${
-          isComponent && !isLast && !previewMode
+          isComponent && !previewMode
             ? 'border-b-0 border-dashed border-gray-400'
             : ''
         }
@@ -40,7 +47,10 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
             isActive={contentID === editedID}
             isComponent={isComponent}
             isPagePart={isPagePart}
+            section={section}
+            handleEditBlockContent={handleEditBlockContent}
             handleEditBlockToggle={handleEditBlockToggle}
+            createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
           />
@@ -49,7 +59,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
       ) : (
         children
       )}
-    </>
+    </Fragment>
   );
 };
 

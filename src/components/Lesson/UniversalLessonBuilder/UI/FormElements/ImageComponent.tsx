@@ -22,15 +22,17 @@ interface IImageInput {
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
-  inputObj?: IImageInput;
+  inputObj?: IImageInput[];
 }
 
 const ImageFormComponent = ({
   inputObj,
   closeAction,
   createNewBlockULBHandler,
+  updateBlockContentULBHandler,
 }: IImageFormComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
     imageData: null,
@@ -46,11 +48,12 @@ const ImageFormComponent = ({
   const [loading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (inputObj && inputObj.url) {
-      setImageInputs(inputObj);
+    if (inputObj && inputObj.length) {
+      setImageInputs(inputObj[0]);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
-  const updateFileUrl = (previewUrl: string, imageData: File|null) => {
+  const updateFileUrl = (previewUrl: string, imageData: File | null) => {
     setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
     setErrors((prevValues) => ({...prevValues, url: ''}));
   };
@@ -61,7 +64,7 @@ const ImageFormComponent = ({
     setErrors((prevValues) => ({...prevValues, [name]: ''}));
   };
 
-  const onSave = async(event: React.FormEvent<HTMLFormElement>) => {
+  const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
     if (isValid) {
@@ -76,12 +79,21 @@ const ImageFormComponent = ({
         `${fileName}`,
         'image/jpeg'
       );
-      createNewBlockULBHandler('', '', 'image', [
-        {
-          ...imageInputs,
-          url: `ULB/content_image_${fileName}`,
-        },
-      ]);
+      if (isEditingMode) {
+        updateBlockContentULBHandler('', '', 'video', [
+          {
+            ...imageInputs,
+            url: `ULB/content_image_${fileName}`,
+          },
+        ]);
+      } else {
+        createNewBlockULBHandler('', '', 'image', [
+          {
+            ...imageInputs,
+            url: `ULB/content_image_${fileName}`,
+          },
+        ]);
+      }
       setIsLoading(false);
       closeAction();
     }
@@ -108,34 +120,34 @@ const ImageFormComponent = ({
     if (!height || (height !== 'auto' && !Number(height))) {
       isValid = false;
       errorMsgs.height =
-        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_HEIGHT'];;
+        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_HEIGHT'];
     }
     setErrors(errorMsgs);
     return isValid;
   };
 
-    const uploadImageToS3 = async (file: any, id: string, type: string) => {
-      // Upload file to s3 bucket
+  const uploadImageToS3 = async (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
 
-      return new Promise((resolve, reject) => {
-        Storage.put(`ULB/content_image_${id}`, file, {
-          contentType: type,
-          ContentEncoding: 'base64',
+    return new Promise((resolve, reject) => {
+      Storage.put(`ULB/content_image_${id}`, file, {
+        contentType: type,
+        ContentEncoding: 'base64',
+      })
+        .then((result: any) => {
+          console.log('File successfully uploaded to s3', result);
+          resolve(true);
         })
-          .then((result: any) => {
-            console.log('File successfully uploaded to s3', result);
-            resolve(true);
-          })
-          .catch((err: any) => {
-            setErrors((prevValues) => ({
-              ...prevValues,
-              url: 'Unable to upload image. Please try again later. ',
-            }));
-            console.log('Error in uploading file to s3', err);
-            reject(err);
-          });
-      });
-    };
+        .catch((err: any) => {
+          setErrors((prevValues) => ({
+            ...prevValues,
+            url: 'Unable to upload image. Please try again later. ',
+          }));
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
 
   const {caption = '', url = '', width = '', height = ''} = imageInputs;
   return (
