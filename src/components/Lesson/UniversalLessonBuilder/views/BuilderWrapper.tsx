@@ -24,6 +24,7 @@ import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
+import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -242,6 +243,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             closeAction={closeAction}
           />
         );
+      case 'tag':
+        return (
+          <TagInputDialog />
+        )
 
       default:
         break;
@@ -380,6 +385,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleModalPopToggle={handleModalPopToggle}
+        setAddContentModal={setAddContentModal}
       />
     </div>
   );

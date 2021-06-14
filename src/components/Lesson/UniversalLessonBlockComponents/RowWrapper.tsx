@@ -25,7 +25,6 @@ export const RowWrapper = (props: RowWrapperProps) => {
         ${classString ? classString : ''}
         relative
         my-4
-        
       `}>
       <div
         className={`

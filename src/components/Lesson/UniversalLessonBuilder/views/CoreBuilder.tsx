@@ -41,6 +41,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     selectedPartContentID,
     setSelectedPartContentID,
     handleModalPopToggle,
+    setAddContentModal,
   } = props;
   const {previewMode, setPreviewMode} = useULBContext();
 
@@ -81,6 +82,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             selectedPartContentID={selectedPartContentID}
             setSelectedPartContentID={setSelectedPartContentID}
             handleModalPopToggle={handleModalPopToggle}
+            setAddContentModal={setAddContentModal}
           />
         </LessonPageWrapper>
       </div>

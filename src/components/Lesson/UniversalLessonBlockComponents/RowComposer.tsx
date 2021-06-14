@@ -21,6 +21,7 @@ import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
+import Buttons from '../../Atoms/Buttons';
 
 const DraggableList = ({
   partContent,
@@ -107,6 +108,7 @@ const RowComposer = (props: RowComposerProps) => {
     selectedPageID,
     setTargetID,
     handleModalPopToggle,
+    setAddContentModal,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
   const {previewMode, getCurrentPage} = useULBContext();
@@ -215,6 +217,9 @@ const RowComposer = (props: RowComposerProps) => {
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
             <React.Fragment key={`row_pagepart_${idx}`}>
+              <div className="absolute w-auto top-7 z-10">
+                <Buttons label="Add tag" onClick={() => setAddContentModal({show: true, type: 'tag'})} />
+              </div>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
