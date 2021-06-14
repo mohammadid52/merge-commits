@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 
 import RowComposer from '../../UniversalLessonBlockComponents/RowComposer';
@@ -59,7 +59,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const onClickAwayFromColorPicker = () => {
     setIsColorPickerOpen(false);
   };
-    
+
   return (
     <div
       className={`h-full overflow-hidden overflow-y-scroll ${
@@ -89,7 +89,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <Tooltip placement="left" text={`Preview Mode: ${previewMode ? 'On' : 'Off'}`}>
           <button
             onClick={() => setPreviewMode(!previewMode)}
-            className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+            className="text-white bg-gray-700  h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
             {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
           </button>
         </Tooltip>

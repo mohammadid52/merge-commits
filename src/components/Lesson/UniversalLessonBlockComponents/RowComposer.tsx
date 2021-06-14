@@ -20,14 +20,13 @@ import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import PoemBlock from './Blocks/PoemBlock';
+import {findIndex, update} from 'lodash';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
     mode,
     deleteFromULBHandler,
     updateFromULBHandler,
-    universalLessonDetails,
-    selectedPageID,
     setTargetID,
     handleModalPopToggle,
   } = props;
@@ -43,19 +42,42 @@ const RowComposer = (props: RowComposerProps) => {
     }
   };
 
+  const {
+    getCurrentPageIdx,
+    selectedPageID,
+    universalLessonDetails,
+    setUniversalLessonDetails,
+    getPartContent,
+    getPageContent,
+  } = useULBContext();
+
+  const updateOnSave = (inputID: string, updatedText: string, pagePartId: string) => {
+    const pageIdx = getCurrentPageIdx(selectedPageID);
+    const pageContent = getPageContent(pageIdx);
+    const pageContentIdx = findIndex(pageContent, (d: any) => d.id === pagePartId);
+    const partContent = getPartContent(pageIdx, pageContentIdx);
+    const partContentIdx = findIndex(partContent, (d: any) => d.id === inputID);
+
+    const PATH_TO_PARTCONTENT = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent[${partContentIdx}].value`;
+
+    update(universalLessonDetails, PATH_TO_PARTCONTENT, () => [updatedText]);
+    setUniversalLessonDetails({...universalLessonDetails});
+  };
+
   const composePartContent = (
     id: string,
     type: string,
     value: any,
     inputKey: string,
-    classString: string = ''
+    classString: string = '',
+    pagePartId: string
   ) => {
     if (type.includes('jumbotron')) {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
-    } else if(type.includes('poem')){
-      return <PoemBlock id={id} type={type} value={value} mode={mode}/>
+    } else if (type.includes('poem')) {
+      return <PoemBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {
       return (
         <HeaderBlock
@@ -64,10 +86,21 @@ const RowComposer = (props: RowComposerProps) => {
           classString={classString}
           value={value}
           mode={mode}
+          updateOnSave={updateOnSave}
+          pagePartId={pagePartId}
         />
       );
     } else if (type.includes('paragraph')) {
-      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
+      return (
+        <ParagraphBlock
+          updateOnSave={updateOnSave}
+          id={id}
+          pagePartId={pagePartId}
+          type={type}
+          value={value || []}
+          mode={mode}
+        />
+      );
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
     } else if (type.includes('video')) {
@@ -115,7 +148,12 @@ const RowComposer = (props: RowComposerProps) => {
             idx={selectedPageDetails.pageContent.length - 1}
             mode={mode}
             handleModalPopToggle={(dialogToToggle) =>
-              handleModalPopToggle(dialogToToggle, selectedPageDetails.pageContent.length, 'pageContent', selectedPageID)
+              handleModalPopToggle(
+                dialogToToggle,
+                selectedPageDetails.pageContent.length,
+                'pageContent',
+                selectedPageID
+              )
             }
           />
         </RowWrapper>
@@ -133,7 +171,7 @@ const RowComposer = (props: RowComposerProps) => {
         [
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <React.Fragment key={`row_pagepart_${idx}`}>
+            <div className="w-auto" key={`row_pagepart_${idx}`}>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -169,7 +207,8 @@ const RowComposer = (props: RowComposerProps) => {
                               content.type,
                               content.value,
                               `pp_${idx}_pc_${idx2}`,
-                              content.class
+                              content.class,
+                              pagePart.id
                             )}
                           </div>
                         ) : (
@@ -182,7 +221,7 @@ const RowComposer = (props: RowComposerProps) => {
                       This pagepart has no content.
                     </h1>
                   )}
-                  {!previewMode && 
+                  {!previewMode && (
                     <div className="my-2">
                       <AddNewBlockMini
                         mode={mode}
@@ -196,7 +235,7 @@ const RowComposer = (props: RowComposerProps) => {
                         }
                       />
                     </div>
-                  }
+                  )}
                 </RowWrapper>
               </EditOverlayBlock>
 
@@ -210,7 +249,7 @@ const RowComposer = (props: RowComposerProps) => {
                   }
                 />
               )}
-            </React.Fragment>
+            </div>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
           <LastBlock selectedPageDetails={selectedPageDetails} />,

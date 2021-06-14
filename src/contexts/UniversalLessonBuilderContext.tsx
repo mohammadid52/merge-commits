@@ -1,4 +1,4 @@
-import {find, findIndex, includes, keys, update} from 'lodash';
+import {find, findIndex, get, includes, keys, update} from 'lodash';
 import React, {useContext, createContext, useState, useEffect} from 'react';
 import {exampleUniversalLesson} from '../components/Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
@@ -23,8 +23,23 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_1');
 
+  // Getters
+
   const getCurrentPage = (id: string) =>
     universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
+
+  const getCurrentPageIdx = (id: string) =>
+    findIndex(universalLessonDetails.lessonPlan, (page: any) => page.id === id);
+
+  const getPageContent = (pageIdx: number) =>
+    get(universalLessonDetails, `lessonPlan[${pageIdx}].pageContent`, []);
+
+  const getPartContent = (pageIdx: number, pageContentIdx: number) =>
+    get(
+      universalLessonDetails,
+      `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`,
+      []
+    );
 
   const addULBHandler = (pageId: string, newPageContent: PagePart) => {
     // find current page object from lessonPlan array
@@ -49,11 +64,14 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         setPreviewMode,
         newBlockSeqId,
         setNewBlockSeqId,
+        getCurrentPageIdx,
         universalLessonDetails,
         selectedPageID,
         setSelectedPageID,
         setUniversalLessonDetails,
         addFromULBHandler: addULBHandler,
+        getPartContent,
+        getPageContent,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>
