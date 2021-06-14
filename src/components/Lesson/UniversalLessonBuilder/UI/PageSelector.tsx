@@ -54,17 +54,17 @@ const PageSelector = (props: PageSelectorProps) => {
       console.error('handleSelectPage: ', e);
     }
   };
-  const [movablePagesList, setMovablePagesList] = useState(pages);
-  const handleOnDragEnd = (result: any) => {
-    if (!result.destination) return;
-    const items = Array.from(movablePagesList);
-
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setMovablePagesList(items);
-  };
 
   const DroppablePages = () => {
+    const [movablePagesList, setMovablePagesList] = useState(pages);
+    const handleOnDragEnd = (result: any) => {
+      if (!result.destination) return;
+      const items = Array.from(movablePagesList);
+
+      const [reorderedItem] = items.splice(result.source.index, 1);
+      items.splice(result.destination.index, 0, reorderedItem);
+      setMovablePagesList(items);
+    };
     return (
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="partContent" direction="horizontal">
@@ -151,9 +151,10 @@ const PageSelector = (props: PageSelectorProps) => {
             />
           </div> */}
 
-          <div className="py-4 flex  bg-gray-200">
-            {movablePagesList && movablePagesList.length > 0 && <DroppablePages />}
-
+          <div className="py-4 flex  justify-between bg-gray-200">
+            <div className="py-4 flex  w-auto bg-gray-200">
+              {pages && pages.length > 0 && <DroppablePages />}
+            </div>
             <Buttons
               onClick={() => handleModalPopToggle('NEW_PAGE')}
               Icon={VscNewFile}
@@ -161,9 +162,9 @@ const PageSelector = (props: PageSelectorProps) => {
               overrideClass={true}
               btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
             />
-          </div>
 
-          {/*<PageGalleryControls handleModalPopToggle={handleModalPopToggle}/>*/}
+            {/*<PageGalleryControls handleModalPopToggle={handleModalPopToggle}/>*/}
+          </div>
         </div>
       )}
     </div>
