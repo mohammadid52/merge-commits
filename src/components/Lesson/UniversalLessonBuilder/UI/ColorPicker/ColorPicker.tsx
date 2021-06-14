@@ -43,7 +43,6 @@ const ColorPicker = (props: ColorPickerProps) => {
     availableColors.map((color: ColorObject, idx: number) => {
       return (
         <div key={`${color.value}_${idx}`} className={`w-auto h-auto my-1`}>
-          {/* <p className={`bg-white text-indigo-500`}>{color.label}:</p> */}
           <div className={`grid grid-cols-10`}>
             {colorCodes.map((code: ColorObject, idx2: number) => {
               return (
@@ -71,13 +70,13 @@ const ColorPicker = (props: ColorPickerProps) => {
     pickerTransform: isPagePart
       ? {right: '100%'}
       : isMainPage
-      ? {top: '29%'}
+      ? {bottom: '0%'}
       : {left: '100%'},
     rotation: isPagePart ? 'rotate-90' : isMainPage ? '' : '-rotate-90',
     svgTransform: isPagePart
       ? {right: '-5px'}
       : isMainPage
-      ? {top: '-8px', left: '25px', color: 'white'}
+      ? {top: '-4px', left: '25px', color: 'white'}
       : {left: '-5px'},
     icon: isMainPage ? '' : '-translate-y-1/2 top-1/2',
   };
@@ -91,7 +90,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         style={styles.svgTransform}>
         <FaSortUp size="40" />
       </div>
-      <div className={`bg-white my-2 rounded-lg p-4`}>
+      <div className={`bg-white my-3 rounded-lg p-4`}>
         <p className={`text-black w-auto text-2xl`}>Select a color</p>
         <div className={`my-4`}>
           {availableColors.length > 0 && colorCodes.length > 0 ? colorGrid() : null}
