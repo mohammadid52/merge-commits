@@ -21,7 +21,82 @@ import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
-import {findIndex} from 'lodash';
+
+const DraggableList = ({
+  partContent,
+  idx,
+  composePartContent,
+  handleEditBlockToggle,
+  deleteFromULBHandler,
+  editedID,
+  mode,
+}: any) => {
+  const [movableList, setMovableList] = useState(partContent);
+
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const items = Array.from(movableList);
+
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setMovableList(items);
+  };
+
+  return movableList.length > 0 ? (
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <Droppable droppableId="partContent">
+        {(provided) => {
+          return (
+            <ul {...provided.droppableProps} ref={provided.innerRef}>
+              {movableList.map((content: PartContent, idx2: number) => (
+                <Draggable
+                  draggableId={`pagePart_tree_${idx}_${idx2}`}
+                  index={idx2}
+                  key={`pagePart_tree_${idx}_${idx2}`}>
+                  {(provided) => {
+                    return (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}>
+                        <EditOverlayBlock
+                          key={`pp_${idx}_pc_${idx2}`}
+                          mode={mode}
+                          contentID={content.id}
+                          editedID={editedID}
+                          isComponent={true}
+                          isLast={idx2 === movableList.length - 1}
+                          handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
+                          deleteFromULBHandler={deleteFromULBHandler}>
+                          {content.value.length > 0 ? (
+                            <div id={content.id}>
+                              {composePartContent(
+                                content.id,
+                                content.type,
+                                content.value,
+                                `pp_${idx}_pc_${idx2}`,
+                                content.class
+                              )}
+                            </div>
+                          ) : (
+                            <p>No content</p>
+                          )}
+                        </EditOverlayBlock>
+                      </li>
+                    );
+                  }}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          );
+        }}
+      </Droppable>
+    </DragDropContext>
+  ) : (
+    <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
+  );
+};
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -131,82 +206,6 @@ const RowComposer = (props: RowComposerProps) => {
     );
   };
 
-  const DraggableList = ({partContent, idx}: any) => {
-    const [movableList, setMovableList] = useState(partContent);
-
-    // useEffect(() => {
-    //   if (movableList.length === 0) {
-    //     setMovableList(partContent);
-    //   }
-    // }, [movableList]);
-
-    const handleOnDragEnd = (result: any) => {
-      if (!result.destination) return;
-      const items = Array.from(movableList);
-
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      items.splice(result.destination.index, 0, reorderedItem);
-      setMovableList(items);
-    };
-
-    return movableList.length > 0 ? (
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="partContent">
-          {(provided) => {
-            return (
-              <ul {...provided.droppableProps} ref={provided.innerRef}>
-                {movableList.map((content: PartContent, idx2: number) => (
-                  <Draggable
-                    draggableId={`pagePart_tree_${idx}_${idx2}`}
-                    index={idx2}
-                    key={`pagePart_tree_${idx}_${idx2}`}>
-                    {(provided) => {
-                      return (
-                        <li
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}>
-                          <EditOverlayBlock
-                            key={`pp_${idx}_pc_${idx2}`}
-                            mode={mode}
-                            contentID={content.id}
-                            editedID={editedID}
-                            isComponent={true}
-                            isLast={idx2 === movableList.length - 1}
-                            handleEditBlockToggle={() =>
-                              handleEditBlockToggle(content.id)
-                            }
-                            deleteFromULBHandler={deleteFromULBHandler}>
-                            {content.value.length > 0 ? (
-                              <div id={content.id}>
-                                {composePartContent(
-                                  content.id,
-                                  content.type,
-                                  content.value,
-                                  `pp_${idx}_pc_${idx2}`,
-                                  content.class
-                                )}
-                              </div>
-                            ) : (
-                              <p>No content</p>
-                            )}
-                          </EditOverlayBlock>
-                        </li>
-                      );
-                    }}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </ul>
-            );
-          }}
-        </Droppable>
-      </DragDropContext>
-    ) : (
-      <h1 className={`w-full text-center`}>This pagepart has no content.</h1>
-    );
-  };
-
   return (
     <>
       {selectedPageID &&
@@ -235,6 +234,11 @@ const RowComposer = (props: RowComposerProps) => {
                   pagePart={pagePart}>
                   <DraggableList
                     id={pagePart.id}
+                    mode={mode}
+                    deleteFromULBHandler={deleteFromULBHandler}
+                    editedID={editedID}
+                    composePartContent={composePartContent}
+                    handleEditBlockToggle={handleEditBlockToggle}
                     partContent={pagePart.partContent}
                     idx={idx}
                   />
