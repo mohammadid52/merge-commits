@@ -23,13 +23,19 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
 
 const DraggableList = ({
+  classString,
   partContent,
+  id,
   idx,
   composePartContent,
+  createNewBlockULBHandler,
+  handleEditBlockContent,
   handleEditBlockToggle,
+  updateFromULBHandler,
   deleteFromULBHandler,
   editedID,
   mode,
+  handleModalPopToggle,
 }: any) => {
   const [movableList, setMovableList] = useState(partContent);
 
@@ -39,15 +45,22 @@ const DraggableList = ({
 
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
+    
     setMovableList(items);
   };
+  useEffect(() => {
+    setMovableList(partContent);
+  }, [partContent]);
 
   return movableList.length > 0 ? (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <Droppable droppableId="partContent">
         {(provided) => {
           return (
-            <ul {...provided.droppableProps} ref={provided.innerRef}>
+            <ul
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={classString}>
               {movableList.map((content: PartContent, idx2: number) => (
                 <Draggable
                   draggableId={`pagePart_tree_${idx}_${idx2}`}
@@ -62,14 +75,26 @@ const DraggableList = ({
                         <EditOverlayBlock
                           key={`pp_${idx}_pc_${idx2}`}
                           mode={mode}
+                          classString={content.class}
                           contentID={content.id}
                           editedID={editedID}
                           isComponent={true}
                           isLast={idx2 === movableList.length - 1}
                           handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
-                          deleteFromULBHandler={deleteFromULBHandler}>
+                          handleEditBlockContent={() =>
+                            handleEditBlockContent(
+                              content.type,
+                              'partContent',
+                              content.value,
+                              id,
+                              idx2
+                            )
+                          }
+                          createNewBlockULBHandler={createNewBlockULBHandler}
+                          deleteFromULBHandler={deleteFromULBHandler}
+                          updateFromULBHandler={updateFromULBHandler}>
                           {content.value.length > 0 ? (
-                            <div id={content.id}>
+                            <div className={content.class} id={content.id}>
                               {composePartContent(
                                 content.id,
                                 content.type,
@@ -79,7 +104,18 @@ const DraggableList = ({
                               )}
                             </div>
                           ) : (
-                            <p>No content</p>
+                            <AddNewBlock
+                              idx={-1}
+                              mode={mode}
+                              handleModalPopToggle={(dialogToToggle) =>
+                                handleModalPopToggle(
+                                  dialogToToggle,
+                                  idx2,
+                                  'partContent',
+                                  id
+                                )
+                              }
+                            />
                           )}
                         </EditOverlayBlock>
                       </li>
@@ -244,69 +280,17 @@ const RowComposer = (props: RowComposerProps) => {
                   classString={`${pagePart.class}`}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
-                  <div className={`${pagePart.class}`}>
-                    {pagePart.partContent.length > 0 ? (
-                      pagePart.partContent.map((content: PartContent, idx2: number) => (
-                        <EditOverlayBlock
-                          key={`pp_${idx}_pc_${idx2}`}
-                          mode={mode}
-                          classString={content.class}
-                          contentID={content.id}
-                          editedID={editedID}
-                          isComponent={true}
-                          isLast={idx2 === pagePart.partContent.length - 1}
-                          handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
-                          handleEditBlockContent={() =>
-                            handleEditBlockContent(
-                              content.type,
-                              'partContent',
-                              content.value,
-                              pagePart.id,
-                              idx2
-                            )
-                          }
-                          createNewBlockULBHandler={createNewBlockULBHandler}
-                          deleteFromULBHandler={deleteFromULBHandler}
-                          updateFromULBHandler={updateFromULBHandler}>
-                          {content.value.length > 0 ? (
-                            <div className={content.class} id={content.id}>
-                              {composePartContent(
-                                content.id,
-                                content.type,
-                                content.value,
-                                `pp_${idx}_pc_${idx2}`,
-                                content.class
-                              )}
-                            </div>
-                          ) : (
-                            <AddNewBlock
-                              idx={-1}
-                              mode={mode}
-                              handleModalPopToggle={(dialogToToggle) =>
-                                handleModalPopToggle(
-                                  dialogToToggle,
-                                  idx2,
-                                  'partContent',
-                                  pagePart.id
-                                )
-                              }
-                            />
-                          )}
-                        </EditOverlayBlock>
-                      ))
-                    ) : (
-                      <h1 className={`w-full text-center`}>
-                        This pagepart has no content.
-                      </h1>
-                    )}
-                  </div>
                   <DraggableList
                     id={pagePart.id}
                     mode={mode}
+                    classString={`${pagePart.class}`}
                     deleteFromULBHandler={deleteFromULBHandler}
                     editedID={editedID}
                     composePartContent={composePartContent}
                     handleEditBlockToggle={handleEditBlockToggle}
+                    handleModalPopToggle={handleModalPopToggle}
+                    createNewBlockULBHandler={createNewBlockULBHandler}
+                    updateFromULBHandler={updateFromULBHandler}
                     partContent={pagePart.partContent}
                     idx={idx}
                   />
