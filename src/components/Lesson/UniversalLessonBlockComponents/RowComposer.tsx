@@ -69,10 +69,16 @@ const RowComposer = (props: RowComposerProps) => {
         />
       );
     } else if (type.includes('paragraph')) {
-      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
+      return (
+        <ParagraphBlock
+          id={id}
+          type={type}
+          value={value || []}
+          mode={mode}
+        />
+      );
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
-    } else if (type.includes('video')) {
     } else if (type.includes('image')) {
       return (
         <ImageBlock
@@ -153,65 +159,80 @@ const RowComposer = (props: RowComposerProps) => {
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
                 editedID={editedID}
-                handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}>
+                handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
+                section="pageContent"
+                >
                 <RowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
                   contentID={pagePart.id}
-                  classString={pagePart.class}
+                  classString={`${pagePart.class}`}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
-                  {pagePart.partContent.length > 0 ? (
-                    pagePart.partContent.map((content: PartContent, idx2: number) => (
-                      <EditOverlayBlock
-                        key={`pp_${idx}_pc_${idx2}`}
-                        mode={mode}
-                        classString={content.class}
-                        contentID={content.id}
-                        editedID={editedID}
-                        isComponent={true}
-                        isLast={idx2 === pagePart.partContent.length - 1}
-                        handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
-                        handleEditBlockContent={() =>
-                          handleEditBlockContent(
-                            content.type,
-                            'partContent',
-                            content.value,
-                            pagePart.id,
-                            idx2
-                          )
-                        }
-                        createNewBlockULBHandler={createNewBlockULBHandler}
-                        deleteFromULBHandler={deleteFromULBHandler}
-                        updateFromULBHandler={updateFromULBHandler}>
-                        {content.value.length > 0 ? (
-                          <div className={content.class} id={content.id}>
-                            {composePartContent(
-                              content.id,
+                  <div className={`${pagePart.class}`}>
+                    {pagePart.partContent.length > 0 ? (
+                      pagePart.partContent.map((content: PartContent, idx2: number) => (
+                        <EditOverlayBlock
+                          key={`pp_${idx}_pc_${idx2}`}
+                          mode={mode}
+                          classString={content.class}
+                          contentID={content.id}
+                          editedID={editedID}
+                          isComponent={true}
+                          isLast={idx2 === pagePart.partContent.length - 1}
+                          handleEditBlockToggle={() => handleEditBlockToggle(content.id)}
+                          handleEditBlockContent={() =>
+                            handleEditBlockContent(
                               content.type,
+                              'partContent',
                               content.value,
-                              `pp_${idx}_pc_${idx2}`,
-                              content.class
-                            )}
-                          </div>
-                        ) : (
-                          <p>No content</p>
-                        )}
-                      </EditOverlayBlock>
-                    ))
-                  ) : (
-                    <h1 className={`w-full text-center`}>
-                      This pagepart has no content.
-                    </h1>
-                  )}
+                              pagePart.id,
+                              idx2
+                            )
+                          }
+                          createNewBlockULBHandler={createNewBlockULBHandler}
+                          deleteFromULBHandler={deleteFromULBHandler}
+                          updateFromULBHandler={updateFromULBHandler}>
+                          {content.value.length > 0 ? (
+                            <div className={content.class} id={content.id}>
+                              {composePartContent(
+                                content.id,
+                                content.type,
+                                content.value,
+                                `pp_${idx}_pc_${idx2}`,
+                                content.class
+                              )}
+                            </div>
+                          ) : (
+                            <AddNewBlock
+                              idx={-1}
+                              mode={mode}
+                              handleModalPopToggle={(dialogToToggle) =>
+                                handleModalPopToggle(
+                                  dialogToToggle,
+                                  idx2,
+                                  'partContent',
+                                  pagePart.id
+                                )
+                              }
+                            />
+                          )}
+                        </EditOverlayBlock>
+                      ))
+                    ) : (
+                      <h1 className={`w-full text-center`}>
+                        This pagepart has no content.
+                      </h1>
+                    )}
+                  </div>
                   {!previewMode && (
-                    <div className="my-2">
+                    <div className="my-2 grid grid-cols-1">
                       <AddNewBlockMini
                         mode={mode}
                         handleModalPopToggle={(dialogToToggle) =>
                           handleModalPopToggle(
                             dialogToToggle,
-                            pagePart.partContent.length + 1,
+                            pagePart.partContent.length,
                             'partContent',
                             pagePart.id
                           )
@@ -235,7 +256,7 @@ const RowComposer = (props: RowComposerProps) => {
             </React.Fragment>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
-          <LastBlock selectedPageDetails={selectedPageDetails} />,
+          <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,
         ]
       ) : (
         <>

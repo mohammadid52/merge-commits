@@ -24,6 +24,7 @@ import SplitColumnDropdown from '../../../UniversalLessonBuilder/UI/SplitColumn/
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
+  section: string;
   handleEditBlockContent?: () => void;
 }
 
@@ -35,6 +36,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     isPagePart,
     classString,
     isComponent,
+    section,
     handleEditBlockContent,
     handleEditBlockToggle,
     createNewBlockULBHandler,
@@ -66,14 +68,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
   };
   const handleSplitColumnChange = (column: number) => {
-    // updateFromULBHandler(contentID, 'class', `grid grid-cols-${column}`);
     createNewBlockULBHandler(
       contentID,
-      'subPartContent',
+      'pageContentColumn',
       '',
-      Array(column-1).fill(""),
+      column,
       0,
-      `grid grid-cols-${column}`
+      `grid grid-cols-${column} gap-1`
     );
   };
   const handleSplitColToggle = () => {
@@ -130,7 +131,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left-2' : 'right-3.5'
           } bg-gray-800 rounded-lg shadow-lg `}>
-          <button className={`${actionClass}`} onClick={handleSplitColToggle}>
+          {section === "pageContent" ? <><button className={`${actionClass}`} onClick={handleSplitColToggle}>
             <span className={iconClass}>
               <BsLayoutSplit />
             </span>
@@ -141,7 +142,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               isPagePart={isPagePart}
               handleSplitColumnChange={handleSplitColumnChange}
             />
-          )}
+          )}</> : null}
           <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
             <span className={iconClass}>
               <AiOutlineEdit />

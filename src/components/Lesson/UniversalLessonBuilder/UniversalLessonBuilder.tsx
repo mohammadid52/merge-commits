@@ -242,14 +242,13 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     addBlockAtPosition: number,
     classString?: string
   ) => {
-    console.log('inside createNewBlockULBHandler', universalLessonDetails, targetID);
-
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
       (page: any) => page.id === selectedPageID
     );
     let lessonPages = [...universalLessonDetails.lessonPlan];
     let pageContentData = [...lessonPages[activePageIndex].pageContent];
+
     switch (propertyToTarget) {
       case 'pageContent':
         const pageContentId: string = `${selectedPageID}_part_${pageContentData.length}`;
@@ -270,23 +269,31 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           pageContent: pageContentData,
         };
         break;
-      case 'partContent':
-        const activePageContentIndex = pageContentData.findIndex(
+      case 'pageContentColumn':
+        const splittedPageContentIndex = pageContentData.findIndex(
           (content: any) => content.id === targetID
         );
-        if (activePageContentIndex > -1) {
-          let activePageContentData = pageContentData[activePageContentIndex];
-          const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
-          let activePagePartContentData = [
-            ...activePageContentData.partContent,
-            {
-              id: partContentId,
-              type: contentType,
-              value: inputObj,
-            },
-          ];
-          pageContentData[activePageContentIndex] = {
-            ...pageContentData[activePageContentIndex],
+        if (splittedPageContentIndex > -1) {
+          let activePageContentData = pageContentData[splittedPageContentIndex];
+          // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
+          const alreadyAddedPartContentLength: number =
+            activePageContentData.partContent.length;
+            let activePagePartContentData = [
+            ...activePageContentData.partContent]
+          if (alreadyAddedPartContentLength < inputObj) {
+            activePagePartContentData = [
+              ...activePagePartContentData,
+              ...Array(inputObj - alreadyAddedPartContentLength)
+                .fill({})
+                .map((_, index: number) => ({
+                  id: `${selectedPageID}_part_${alreadyAddedPartContentLength + index}`,
+                  value: [],
+                })),
+            ];
+          }
+          pageContentData[splittedPageContentIndex] = {
+            ...pageContentData[splittedPageContentIndex],
+            class: replaceTailwindClass(activePageContentData.class, classString),
             partContent: activePagePartContentData,
           };
           lessonPages[activePageIndex] = {
@@ -295,46 +302,22 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           };
         }
         break;
-      case 'subPartContent':
-        console.log(universalLessonDetails, 'universalLessonDetails');
-
-        let activePagePartContentIdx: number = -1;
-        const activePageContentIdx = pageContentData.findIndex(
-          (pageContent) =>
-            pageContent.partContent.findIndex((parts: any, idx: number) => {
-              activePagePartContentIdx = idx;
-              return parts.id === targetID;
-            }) > -1
+      case 'partContent':
+        const activePageContentIndex = pageContentData.findIndex(
+          (content: any) => content.id === targetID
         );
-        console.log(
-          activePagePartContentIdx,
-          activePageContentIdx,
-          'activePageContentIdxactivePageContentIdxs'
-        );
-
-        if (activePagePartContentIdx > -1) {
-          let activePagePartContentData = [
-            ...pageContentData[activePageContentIdx].partContent,
-          ];
-          const subPartContentId: string = `${activePagePartContentData[activePagePartContentIdx].id}_0_value_${activePagePartContentData[activePagePartContentIdx].value.length}`;
-          activePagePartContentData[activePagePartContentIdx] = {
-            ...activePagePartContentData[activePagePartContentIdx],
-            class: replaceTailwindClass(
-              activePagePartContentData[activePagePartContentIdx].class,
-              classString
-            ),
-            value: [
-              ...activePagePartContentData[activePagePartContentIdx].value.filter(Boolean),
-              ...inputObj,
-              // {
-              //   id: subPartContentId,
-              // },
-            ],
-          };
-          console.log(activePagePartContentData, 'activePagePartContentData');
-
-          pageContentData[activePageContentIdx] = {
-            ...pageContentData[activePageContentIdx],
+        if (activePageContentIndex > -1) {
+          let activePageContentData = pageContentData[activePageContentIndex];
+          const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
+           let activePagePartContentData = [
+            ...activePageContentData.partContent]
+            activePagePartContentData[addBlockAtPosition] = {
+              id: partContentId,
+              type: contentType,
+              value: inputObj,
+            }
+          pageContentData[activePageContentIndex] = {
+            ...pageContentData[activePageContentIndex],
             partContent: activePagePartContentData,
           };
           lessonPages[activePageIndex] = {

@@ -5,6 +5,7 @@ import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
 interface IEditOverlayBlockProps extends RowWrapperProps {
   handleEditBlockContent?: () => void;
+  section?: string;
 }
 
 const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
@@ -22,6 +23,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     handleEditBlockContent,
     handleEditBlockToggle,
     isPagePart,
+    section
   } = props;
   const {previewMode} = useULBContext();
   return (
@@ -45,6 +47,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             isActive={contentID === editedID}
             isComponent={isComponent}
             isPagePart={isPagePart}
+            section={section}
             handleEditBlockContent={handleEditBlockContent}
             handleEditBlockToggle={handleEditBlockToggle}
             createNewBlockULBHandler={createNewBlockULBHandler}

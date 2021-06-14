@@ -45,8 +45,17 @@ const InputModalComponent = ({
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
+      let fieldsValue = {}
       setInputList(inputObj);
       // setIsEditingMode(true);
+      forEach(inputObj, ({id, label, value}: any) => {
+        fieldsValue = {
+          ...fieldsValue,
+          [`formFieldInput_${id}`]: label,
+          [`placeholder_${id}`]: value,
+        };
+      });
+      setInputFields(fieldsValue);
     }
   }, [inputObj]);
 
