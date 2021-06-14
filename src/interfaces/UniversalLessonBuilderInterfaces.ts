@@ -28,6 +28,14 @@ export interface ULBSelectionProps {
     targetID: string,
     propertyToTarget: string,
     contentType: string,
+    replacementValue?: any,
+    addBlockAtPosition?: number,
+    classString?: string
+  ) => void;
+  updateBlockContentULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
     replacementValue?: string,
     addBlockAtPosition?: number
   ) => void;
@@ -45,6 +53,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
+  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number) => void;
   handleModalPopToggle?: (dialogToToggle: string, position?: Number, section?:string, targetID?:string) => void;
 }
 
@@ -67,6 +76,12 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
 export interface IContentTypeComponentProps{
   closeAction: () => void;
   createNewBlockULBHandler: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any
+  ) => void;
+  updateBlockContentULBHandler: (
     targetID: string,
     propertyToTarget: string,
     contentType: string,

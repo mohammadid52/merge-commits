@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
@@ -29,8 +29,8 @@ import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 
 const InputModalComponent = ({
   selectedPageID,
-
   closeAction,
+  inputObj,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
@@ -42,6 +42,22 @@ const InputModalComponent = ({
       [id]: value,
     });
   };
+
+  useEffect(() => {
+    if (inputObj && inputObj.length) {
+      let fieldsValue = {}
+      setInputList(inputObj);
+      // setIsEditingMode(true);
+      forEach(inputObj, ({id, label, value}: any) => {
+        fieldsValue = {
+          ...fieldsValue,
+          [`formFieldInput_${id}`]: label,
+          [`placeholder_${id}`]: value,
+        };
+      });
+      setInputFields(fieldsValue);
+    }
+  }, [inputObj]);
 
   const onInputCreate = () => {
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
@@ -133,6 +149,8 @@ const InputModalComponent = ({
     );
   };
 
+  console.log(inputFields, 'inputFields+++++++', inputList);
+  
   return (
     <div className="max-h-200 overflow-y-auto">
       <div className="flex flex-col my-2">
