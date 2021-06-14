@@ -1,27 +1,29 @@
 import React, {useEffect, useState} from 'react';
+import { FaPlus } from 'react-icons/fa';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {
   PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
+import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import Buttons from '../../Atoms/Buttons';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {FormBlock} from './Blocks/FormBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
-import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
+import TagBlock from './UtilityBlocks/TagBlock';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
-import Buttons from '../../Atoms/Buttons';
 
 const DraggableList = ({
   classString,
@@ -146,7 +148,7 @@ const RowComposer = (props: RowComposerProps) => {
     setTargetID,
     handleEditBlockContent,
     handleModalPopToggle,
-    setAddContentModal,
+    handleTagModalOpen,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
   const {previewMode, getCurrentPage} = useULBContext();
@@ -262,9 +264,33 @@ const RowComposer = (props: RowComposerProps) => {
         [
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <React.Fragment key={`row_pagepart_${idx}`}>
-              <div className="absolute w-auto top-7 z-10">
-                <Buttons label="Add tag" onClick={() => setAddContentModal({show: true, type: 'tag'})} />
+            <div key={`row_pagepart_${idx}`} className="relative">
+              {/* <div className="absolute w-auto top-2 z-10">
+                <Buttons
+                  Icon={<FaPlus />}
+                  label="Add tag"
+                  onClick={() =>
+                    handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                  }
+                />
+              </div> */}
+              <div className="absolute w-auto top-2 right-2 z-10">
+                {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
+                  <TagBlock
+                    tags={pagePart.tags}
+                    handleEditTag={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }
+                  />
+                ) : (
+                  <Buttons
+                    Icon={FaPlus}
+                    label="Add tag"
+                    onClick={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }
+                  />
+                )}
               </div>
               <EditOverlayBlock
                 key={`pp_${idx}`}
@@ -327,7 +353,7 @@ const RowComposer = (props: RowComposerProps) => {
                   }
                 />
               )}
-            </React.Fragment>
+            </div>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
           <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,

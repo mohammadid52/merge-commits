@@ -21,57 +21,37 @@ interface IVideoDialogProps extends IContentTypeComponentProps {
   inputObj?: IVideoInput;
 }
 
-const TagInputDialog = ({
-  inputObj,
-  closeAction,
-  createNewBlockULBHandler,
-}: any) => {
+const TagInputDialog = ({inputObj, closeAction, updateBlockContentULBHandler}: any) => {
   const {userLanguage} = useContext(GlobalContext);
-  const [videoInputs, setVideoInputs] = useState<IVideoInput>({
-    url: '',
-    size: '560 x 315',
-  });
+  const [tags, setTags] = useState([]);
+
+  const handleChange = (tags: any) => {
+    setTags(tags);
+  };
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    if (inputObj && inputObj.url) {
-      setVideoInputs(inputObj);
+    if (inputObj && inputObj.tags) {
+      setTags(inputObj.tags.filter(Boolean));
     }
   }, [inputObj]);
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name: string = (event.target as HTMLInputElement).name;
-    const value: string = (event.target as HTMLInputElement).value;
-    setVideoInputs((prevValues) => ({...prevValues, [name]: value}));
-    setError('');
-  };
-  const onChangeVideoSize = (_: string, name: string) => {
-    setVideoInputs((prevValues) => ({...prevValues, size: name}));
-  };
 
   const onSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const isValid: boolean = checkUrl();
-    if (isValid) {
-      createNewBlockULBHandler('', '', 'video', [videoInputs]);
-      closeAction();
+    if (!tags.length) {
+      setError("Please enter atleast one tag");
+      return;
     }
+    updateBlockContentULBHandler('', 'pageContent', '', {tags});
+    closeAction();
   };
-  const checkUrl = () => {
-    if (!videoInputs.url) {
-      setError(UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['VIDEO_REQUIRED']);
-      return false;
-    }
-  };
-
-  const {url = '', size = ''} = videoInputs;
 
   return (
     <div>
       <form onSubmit={onSave}>
         <div className={`grid grid-cols-1 gap-2`}>
           <div className={`col-span-2`}>
-            <FormTagInput
-            />
+            <FormTagInput tags={tags} handleChange={handleChange} error={error} />
           </div>
         </div>
         <div className="flex mt-8 justify-center px-6 pb-4">

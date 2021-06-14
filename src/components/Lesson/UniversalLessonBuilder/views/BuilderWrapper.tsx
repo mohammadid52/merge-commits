@@ -146,6 +146,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     // }
   };
 
+  const handleTagModalOpen = (targetId: string, inputObj: any) => {
+    setAddContentModal({type: 'tag', show: true});
+    setBlockConfig({
+      section: 'pageContent',
+      position: 0,
+      targetId,
+      inputObj: inputObj,
+      isEditingMode: false,
+    });
+  };
+
   const [inputFields, setInputFields] = useState<any>({});
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
@@ -307,8 +318,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         );
       case 'tag':
         return (
-          <TagInputDialog />
-        )
+          <TagInputDialog
+            updateBlockContentULBHandler={updateBlockContent}
+            closeAction={closeAction}
+            inputObj={inputObj}
+          />
+        );
 
       default:
         break;
@@ -449,7 +464,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
-        setAddContentModal={setAddContentModal}
+        handleTagModalOpen={handleTagModalOpen}
       />
     </div>
   );
