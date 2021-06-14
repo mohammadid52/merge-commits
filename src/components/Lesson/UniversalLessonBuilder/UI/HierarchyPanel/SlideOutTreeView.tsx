@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   PagePart,
   PartContent,
@@ -7,6 +7,9 @@ import {
 import {BsLayers, HiPencil, ImParagraphLeft, MdInput} from 'react-icons/all';
 import {MdTitle} from 'react-icons/md';
 import {IconContext} from 'react-icons';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {findIndex} from 'lodash';
 
 interface SlideOutTreeViewProps {
   open?: boolean;
@@ -20,6 +23,85 @@ interface SlideOutTreeViewProps {
   setEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const DraggableList = ({idx, partContent, pagePartId, getTreeIcon, openModal}: any) => {
+  const [movableList, setMovableList] = useState(partContent);
+
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+    const items = Array.from(movableList);
+
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setMovableList(items);
+  };
+  return (
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <Droppable droppableId="partContent">
+        {(provided) => {
+          return (
+            <ul
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className=""
+              id={`sub-menu-${idx}`}>
+              {movableList.length > 0 &&
+                movableList.map((partContent: PartContent, idx2: number) => (
+                  <Draggable
+                    draggableId={`pagePart_tree_${idx}_${idx2}`}
+                    index={idx2}
+                    key={`pagePart_tree_${idx}_${idx2}`}>
+                    {(provided, snapshot) => {
+                      return (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          onClick={() => {
+                            window.location.href = `#${partContent.id}`;
+                          }}
+                          className={`${
+                            snapshot.isDragging ? 'bg-gray-800' : 'bg-gray-700'
+                          }  group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
+                          <div
+                            className={`ml-2 flex flex-row justify-start items-center `}>
+                            <IconContext.Provider
+                              value={{
+                                className: 'w-auto mr-2',
+                                size: '24px',
+                              }}>
+                              {getTreeIcon(partContent.type)}
+                            </IconContext.Provider>
+                            <span className={``}>{partContent.id}</span>
+                            <span
+                              onClick={(e: any) => {
+                                e.stopPropagation();
+                                openModal({
+                                  partContentId: partContent.id,
+                                  pageContentId: pagePartId,
+                                });
+                              }}
+                              className="cursor-pointer w-6 h-6 flex items-center justify-center p-0.5">
+                              {' '}
+                              <HiPencil
+                                className="hover:text-indigo-400 text-white"
+                                size={18}
+                              />
+                            </span>
+                          </div>
+                        </li>
+                      );
+                    }}
+                  </Draggable>
+                ))}
+              {provided.placeholder}
+            </ul>
+          );
+        }}
+      </Droppable>
+    </DragDropContext>
+  );
+};
+
 export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
   const {
     selectedPageDetails,
@@ -28,6 +110,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setHierarchyVisible,
     setEditMode,
   } = props;
+  const {selectedPageID, getCurrentPage} = useULBContext();
 
   // const handleSelectionProcess = (
   //   pagePartDetails: PagePart,
@@ -59,74 +142,56 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setEditMode(false);
   };
 
-  const generatePagePartButtons = (pagePartArr: PagePart[]) => {
+  const PagePartButtons = ({pagePartArr}: {pagePartArr: PagePart[]}) => {
     if (pagePartArr.length > 0) {
-      return pagePartArr.map((pagePart: PagePart, idx: number) => (
-        <div key={`pagePart_tree_${idx}`} className="">
-          <button
-            onClick={() => {
-              window.location.href = `#${pagePart.id}`;
-            }}
-            key={`hierarchy_parent_btn_${idx}`}
-            type="button"
-            className={`bg-gray-700 text-white
-            hover:bg-white hover:bg-opacity-10
-            group w-full flex
-            items-center p-2 text-sm
-            font-medium text-left
-            border-l-4 border-indigo-600 rounded-r-md
-            `}
-            aria-controls={`sub-menu-${idx}`}
-            aria-expanded="false">
-            <IconContext.Provider value={{className: 'w-auto mr-2', size: '24px'}}>
-              {getTreeIcon('')}
-            </IconContext.Provider>
-            <span>{pagePart.id}</span>
-            <span
-              onClick={(e: any) => {
-                e.stopPropagation();
-                openModal({
-                  pageContentId: pagePart.id,
-                });
-              }}
-              className="cursor-pointer w-6 h-6 flex items-center justify-center p-0.5">
-              {' '}
-              <HiPencil className="hover:text-indigo-400 text-white" size={18} />
-            </span>
-          </button>
-          <div className="" id={`sub-menu-${idx}`}>
-            {pagePart.partContent.length > 0 &&
-              pagePart.partContent.map((partContent: PartContent, idx2: number) => (
-                <div
-                  onClick={() => {
-                    window.location.href = `#${partContent.id}`;
+      return (
+        <div>
+          {pagePartArr.map((pagePart: PagePart, idx: number) => (
+            <div key={`pagePart_tree_${idx}`} className="">
+              <button
+                onClick={(e: any) => {
+                  e.stopPropagation();
+
+                  window.location.href = `#${pagePart.id}`;
+                }}
+                key={`hierarchy_parent_btn_${idx}`}
+                type="button"
+                className={`bg-gray-700 text-white
+      hover:bg-white hover:bg-opacity-10
+      group w-full flex
+      items-center p-2 text-sm
+      font-medium text-left
+      border-l-4 border-indigo-600 rounded-r-md
+      `}
+                aria-controls={`sub-menu-${idx}`}
+                aria-expanded="false">
+                <IconContext.Provider value={{className: 'w-auto mr-2', size: '24px'}}>
+                  {getTreeIcon('')}
+                </IconContext.Provider>
+                <span>{pagePart.id}</span>
+                <span
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    openModal({
+                      pageContentId: pagePart.id,
+                    });
                   }}
-                  key={`pagePart_tree_${idx}_${idx2}`}
-                  className={`bg-gray-700 group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
-                  <div className={`ml-2 flex flex-row justify-start items-center`}>
-                    <IconContext.Provider
-                      value={{className: 'w-auto mr-2', size: '24px'}}>
-                      {getTreeIcon(partContent.type)}
-                    </IconContext.Provider>
-                    <span className={``}>{partContent.id}</span>
-                    <span
-                      onClick={(e: any) => {
-                        e.stopPropagation();
-                        openModal({
-                          partContentId: partContent.id,
-                          pageContentId: pagePart.id,
-                        });
-                      }}
-                      className="cursor-pointer w-6 h-6 flex items-center justify-center p-0.5">
-                      {' '}
-                      <HiPencil className="hover:text-indigo-400 text-white" size={18} />
-                    </span>
-                  </div>
-                </div>
-              ))}
-          </div>
+                  className="cursor-pointer w-6 h-6 flex items-center justify-center p-0.5">
+                  {' '}
+                  <HiPencil className="hover:text-indigo-400 text-white" size={18} />
+                </span>
+              </button>
+              <DraggableList
+                openModal={openModal}
+                getTreeIcon={getTreeIcon}
+                pagePartId={pagePart.id}
+                idx={idx}
+                partContent={pagePart.partContent}
+              />
+            </div>
+          ))}
         </div>
-      ));
+      );
     } else {
       return <p>No page parts...</p>;
     }
@@ -136,9 +201,9 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     <div className="min-w-72 max-w-96 flex flex-col flex-grow p-1 overflow-y-auto bg-gray-700 shadow-lg rounded-b-md">
       <div className="flex-grow flex flex-col">
         <nav className="flex-1" aria-label="Sidebar">
-          {selectedPageDetails &&
-            selectedPageDetails.pageContent &&
-            generatePagePartButtons(selectedPageDetails.pageContent)}
+          {selectedPageDetails && selectedPageDetails.pageContent && (
+            <PagePartButtons pagePartArr={selectedPageDetails.pageContent} />
+          )}
         </nav>
       </div>
     </div>
