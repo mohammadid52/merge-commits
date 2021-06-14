@@ -185,8 +185,9 @@ const QuickRegister = (props: QuickRegisterProps) => {
         return userData;
       });
       return userData;
-    } catch (error) {
-      console.log('error signing up:', error);
+    } catch (er) {
+      console.log('error signing up:', er.response.data);
+      const error = er.response.data
       setMessage(() => {
         switch (error.code) {
           case 'InvalidParameterException':
