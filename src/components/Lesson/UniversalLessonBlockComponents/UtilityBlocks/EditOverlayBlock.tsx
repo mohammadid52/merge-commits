@@ -19,7 +19,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     contentID,
     editedID,
     isComponent,
-    isLast,
+    // isLast,
     handleEditBlockContent,
     handleEditBlockToggle,
     isPagePart,
@@ -35,7 +35,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         h-auto 
         flex items-center rowWrapper
         ${
-          isComponent && !isLast && !previewMode
+          isComponent && !previewMode
             ? 'border-b-0 border-dashed border-gray-400'
             : ''
         }
