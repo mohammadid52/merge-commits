@@ -9,13 +9,14 @@ const Chat = lazy(() => import('../RoomChat/Chat'));
 const Csv = lazy(() => import('../Dashboard/Csv/Csv'));
 interface AuthRoutesProps {
   updateAuthState: Function;
+  justLoggedIn?: boolean;
 }
 
-const AuthRoutes = ({updateAuthState}: AuthRoutesProps) => {
+const AuthRoutes = ({updateAuthState, justLoggedIn}: AuthRoutesProps) => {
   return (
     <Switch>
       <PrivateRoute path="/dashboard">
-        <Dashboard updateAuthState={updateAuthState} />
+        <Dashboard justLoggedIn={justLoggedIn} updateAuthState={updateAuthState} />
       </PrivateRoute>
       <PrivateRoute path="/lesson/:lessonID">
         <Lesson />

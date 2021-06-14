@@ -24,10 +24,16 @@ import {languageList} from '../../../../utilities/staticData';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+
+import Loader from '../../../Atoms/Loader';
+import {AddNewCheckPointDict} from '../../../../dictionary/dictionary.iconoclast';
+import {isEmpty} from 'lodash';
 
 interface LessonEditProps {
   designersList: any[];
 }
+
 export interface InstructionInitialState {
   introductionTitle: string;
   instructionsTitle: string;
@@ -36,16 +42,19 @@ export interface InstructionInitialState {
   instructions: string;
   summary: string;
 }
+
 export interface LessonPlansProps {
   type: string;
   LessonComponentID: string;
   sequence: number;
   stage: string;
 }
+
 export interface SavedLessonDetailsProps {
   lessonPlans: LessonPlansProps[] | null;
   lessonInstructions: InstructionInitialState | null;
 }
+
 const LessonEdit = (props: LessonEditProps) => {
   const {designersList} = props;
   const history = useHistory();
@@ -492,6 +501,18 @@ const LessonEdit = (props: LessonEditProps) => {
             }
           />
         );
+      case 'Universal Builder':
+        return (
+          <UniversalLessonBuilder
+            lessonPlans={savedLessonDetails.lessonPlans}
+            updateLessonPlan={updateLessonPlan}
+            designersList={designersList}
+            lessonID={lessonId || assessmentId}
+            setUnsavedChanges={setUnsavedChanges}
+            activeStep={activeStep}
+            lessonName={formData.name}
+            lessonType={formData.type?.value}/>
+        )
       case 'Preview Details':
         return (
           <PreviewForm
@@ -549,7 +570,7 @@ const LessonEdit = (props: LessonEditProps) => {
 
       {/* Body */}
       <PageWrapper>
-        <div className="w-full m-auto">
+        <div className='w-full m-auto'>
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
             <div className="sm:col-span-1">
@@ -582,14 +603,14 @@ const LessonEdit = (props: LessonEditProps) => {
                 }}
               />
             </div>
-            <div className="sm:col-span-4">
+            <div className='sm:col-span-4'>
               {loading ? (
                 <p className="h-100 flex justify-center items-center">
                   Fetching lesson details pleas wait...
                 </p>
               ) : (
                 <Fragment>
-                  <div className="mx-6">{currentStepComp(activeStep)}</div>
+                  <div className="mx-6 h-full">{currentStepComp(activeStep)}</div>
                 </Fragment>
               )}
             </div>

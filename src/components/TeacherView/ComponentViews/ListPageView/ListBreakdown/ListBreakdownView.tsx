@@ -36,10 +36,6 @@ const SelfDisplay = (props: props) => {
     return setDataProps(null);
   }, [state.studentViewing]);
 
-  useEffect(() => {
-    console.log('List breakdown selfdisplay: ', dataProps);
-  }, [dataProps]);
-
   return (
     <div className={theme.section}>
       <ReflectionQuestions fullscreen={fullscreen} />

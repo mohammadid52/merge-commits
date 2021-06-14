@@ -283,6 +283,7 @@ const sideBarLinksDict: any = {
     LESSON_PLANNER: 'Pasillo',
     CLASSROOM: 'Aula',
     LESSON_BUILDER: 'Constructor de lecciones',
+    UNIVERSAL_LESSON_BUILDER: 'Constructor Universal',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
     RESEARCHANALYTICS: 'TBD',
@@ -2431,7 +2432,7 @@ const AddNewQuestionDict: any = {
     CHECKPOINT: 'Checkpoints',
     ADDNEWQUESTION: 'Add New Question',
     QUESTION: 'Question',
-    QUESTIONLABE: 'Question Label',
+    QUESTIONLABEL: 'Question Label',
     SELECTTYPE: 'Select Type',
     SELECTLANGUAGE: 'Select Language',
     LANGUAGE: 'Language',
@@ -2459,7 +2460,7 @@ const AddNewQuestionDict: any = {
     CHECKPOINT: 'TBD',
     ADDNEWQUESTION: 'TBD',
     QUESTION: 'TBD',
-    QUESTIONLABE: 'TBD',
+    QUESTIONLABEL: 'TBD',
     SELECTTYPE: 'TBD',
     SELECTLANGUAGE: 'TBD',
     LANGUAGE: 'TBD',
@@ -2982,6 +2983,27 @@ const UnitLookupDict: any = {
       ADDED: 'TBD',
       ADDERR: 'TBD',
       FETCHERR: 'TBD',
+    },
+  },
+};
+
+const UniversalBuilderDict: any = {
+  EN: {
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'Lesson Pages',
+    },
+    TEMPLATES: {
+      TITLE: 'Lesson Templates',
+    },
+  },
+  ES: {
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'TBD',
+    },
+    TEMPLATES: {
+      TITLE: 'TBD',
     },
   },
 };
