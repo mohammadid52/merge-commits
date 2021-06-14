@@ -23,12 +23,20 @@ interface CoreBuilderProps extends ULBSelectionProps {
   hierarchyVisible?: boolean;
   initialUniversalLessonPagePartContent: PartContent;
   handleModalPopToggle?: (dialogToToggle: string) => void;
+  handleEditBlockContent?: (
+    type: string,
+    section: string,
+    inputObj: any,
+    targetId: string,
+    indexToUpdate: number
+  ) => void;
 }
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const [isColorPickerOpen, setIsColorPickerOpen] = useState<Boolean>(false);
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
@@ -40,6 +48,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setSelectedPagePartID,
     selectedPartContentID,
     setSelectedPartContentID,
+    handleEditBlockContent,
     handleModalPopToggle,
     setAddContentModal,
   } = props;
@@ -70,6 +79,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <LessonPageWrapper>
           <RowComposer
             mode={mode}
+            createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
             universalLessonDetails={universalLessonDetails}
@@ -83,6 +93,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             setSelectedPartContentID={setSelectedPartContentID}
             handleModalPopToggle={handleModalPopToggle}
             setAddContentModal={setAddContentModal}
+            handleEditBlockContent={handleEditBlockContent}
           />
         </LessonPageWrapper>
       </div>
@@ -96,7 +107,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </button>
         </Tooltip>
       </div>
-
       <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
         <div className={`absolute w-auto top-7 left-2`}>
           <Buttons

@@ -16,13 +16,12 @@ export const RowWrapper = (props: RowWrapperProps) => {
   const viewModeClass = ``;
   const {previewMode} = useULBContext();
   const buildModeClass = `border-0 border-dashed border-gray-400`;
-
+  
   return (
     <div
       id={contentID}
       data-id={dataIdAttribute}
       className={`
-        ${classString ? classString : ''}
         relative
         my-4
       `}>
@@ -36,4 +35,4 @@ export const RowWrapper = (props: RowWrapperProps) => {
       </div>
     </div>
   );
-};
+}
