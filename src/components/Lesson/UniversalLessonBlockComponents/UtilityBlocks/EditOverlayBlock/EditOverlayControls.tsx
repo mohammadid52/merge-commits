@@ -24,7 +24,7 @@ import SplitColumnDropdown from '../../../UniversalLessonBuilder/UI/SplitColumn/
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
-  section: string;
+  section?: string;
   handleEditBlockContent?: () => void;
 }
 

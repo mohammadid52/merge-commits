@@ -27,7 +27,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   } = props;
   const {previewMode} = useULBContext();
   return (
-    <Fragment key={`${contentID}_${editedID}`}>
+    <Fragment key={`${contentID}`}>
       {mode === 'building' ? (
         <div
           className={`
