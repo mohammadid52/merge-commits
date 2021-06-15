@@ -1,25 +1,28 @@
 import React, {useEffect, useState} from 'react';
+import {FaPlus} from 'react-icons/fa';
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {
   PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
+import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import Buttons from '../../Atoms/Buttons';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import {RowWrapper} from './RowWrapper';
 import {HeaderBlock} from './Blocks/HeaderBlock';
 import {ParagraphBlock} from './Blocks/ParagraphBlock';
 import {FormBlock} from './Blocks/FormBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
-import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
+import TagBlock from './UtilityBlocks/TagBlock';
 import {JumbotronBlock} from './Blocks/JumbotronBlock';
 import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
 import HighlighterBlock from './Blocks/HighlighterBlock';
 
@@ -146,6 +149,7 @@ const RowComposer = (props: RowComposerProps) => {
     setTargetID,
     handleEditBlockContent,
     handleModalPopToggle,
+    handleTagModalOpen,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
   const {previewMode, getCurrentPage} = useULBContext();
@@ -256,7 +260,56 @@ const RowComposer = (props: RowComposerProps) => {
         [
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <React.Fragment key={`row_pagepart_${idx}`}>
+            <div key={`row_pagepart_${idx}`} className="relative">
+              {/* <div className="absolute w-auto top-2 right-2 z-10">
+                {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
+                  <TagBlock
+                    tags={pagePart.tags}
+                    handleEditTag={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }
+                  />
+                ) : (
+                  <Buttons
+                    btnClass="py-1 px-4 text-xs mr-2"
+                    Icon={FaPlus}
+                    label="Add tag"
+                    onClick={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }
+                  />
+                )}
+              </div> */}
+              <div
+                className={`absolute w-auto bottom-${
+                  idx === selectedPageDetails.pageContent.length - 1 ? 2 : 4
+                } right-2 z-100`}>
+                {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
+                  <TagBlock
+                    tags={pagePart.tags}
+                    handleEditTag={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }
+                  />
+                ) : (
+                  <button
+                    className=" flex items-center
+                      w-auto 
+                      px-2
+                      cursor-pointer 
+                      text-xs text-center bg-blue-200 text-blue-700 rounded-lg z-100 .-mb-2"
+                      style={{marginBottom:"-6px"}}
+                    onClick={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }>
+                    <span className="w-8 h-8 flex items-center">
+                      <FaPlus />
+                    </span>
+                    Add tag
+                  </button>
+                )}
+              </div>
+
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -284,6 +337,7 @@ const RowComposer = (props: RowComposerProps) => {
                     editedID={editedID}
                     composePartContent={composePartContent}
                     handleEditBlockToggle={handleEditBlockToggle}
+                    handleEditBlockContent={handleEditBlockContent}
                     handleModalPopToggle={handleModalPopToggle}
                     createNewBlockULBHandler={createNewBlockULBHandler}
                     updateFromULBHandler={updateFromULBHandler}
@@ -318,7 +372,7 @@ const RowComposer = (props: RowComposerProps) => {
                   }
                 />
               )}
-            </React.Fragment>
+            </div>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
           <LastBlock selectedPageDetails={selectedPageDetails} key="last-block" />,

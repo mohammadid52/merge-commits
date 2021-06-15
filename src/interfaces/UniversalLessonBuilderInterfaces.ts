@@ -47,6 +47,7 @@ export interface ULBSelectionProps {
   setSelectedPagePartID?: React.Dispatch<React.SetStateAction<string>>;
   selectedPartContentID?: string;
   setSelectedPartContentID?: React.Dispatch<React.SetStateAction<string>>;
+  handleTagModalOpen?: (targetID: string, inputObj:any) => void;
 }
 
 export interface RowComposerProps extends ULBSelectionProps {
