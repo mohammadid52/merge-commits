@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { FaPlus } from 'react-icons/fa';
+import {FaPlus} from 'react-icons/fa';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {
   PagePart,
@@ -48,7 +48,7 @@ const DraggableList = ({
 
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    
+
     setMovableList(items);
   };
   useEffect(() => {
@@ -187,14 +187,7 @@ const RowComposer = (props: RowComposerProps) => {
         />
       );
     } else if (type.includes('paragraph')) {
-      return (
-        <ParagraphBlock
-          id={id}
-          type={type}
-          value={value || []}
-          mode={mode}
-        />
-      );
+      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
     } else if (type.includes('image')) {
@@ -265,16 +258,7 @@ const RowComposer = (props: RowComposerProps) => {
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
             <div key={`row_pagepart_${idx}`} className="relative">
-              {/* <div className="absolute w-auto top-2 z-10">
-                <Buttons
-                  Icon={<FaPlus />}
-                  label="Add tag"
-                  onClick={() =>
-                    handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
-                  }
-                />
-              </div> */}
-              <div className="absolute w-auto top-2 right-2 z-10">
+              {/* <div className="absolute w-auto top-2 right-2 z-10">
                 {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
                   <TagBlock
                     tags={pagePart.tags}
@@ -284,6 +268,7 @@ const RowComposer = (props: RowComposerProps) => {
                   />
                 ) : (
                   <Buttons
+                    btnClass="py-1 px-4 text-xs mr-2"
                     Icon={FaPlus}
                     label="Add tag"
                     onClick={() =>
@@ -291,7 +276,37 @@ const RowComposer = (props: RowComposerProps) => {
                     }
                   />
                 )}
+              </div> */}
+              <div
+                className={`absolute w-auto bottom-${
+                  idx === selectedPageDetails.pageContent.length - 1 ? 2 : 4
+                } right-2 z-100`}>
+                {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
+                  <TagBlock
+                    tags={pagePart.tags}
+                    handleEditTag={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }
+                  />
+                ) : (
+                  <button
+                    className=" flex items-center
+                      w-auto 
+                      px-2
+                      cursor-pointer 
+                      text-xs text-center bg-blue-200 text-blue-700 rounded-lg z-100 .-mb-2"
+                      style={{marginBottom:"-6px"}}
+                    onClick={() =>
+                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
+                    }>
+                    <span className="w-8 h-8 flex items-center">
+                      <FaPlus />
+                    </span>
+                    Add tag
+                  </button>
+                )}
               </div>
+
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -319,6 +334,7 @@ const RowComposer = (props: RowComposerProps) => {
                     editedID={editedID}
                     composePartContent={composePartContent}
                     handleEditBlockToggle={handleEditBlockToggle}
+                    handleEditBlockContent={handleEditBlockContent}
                     handleModalPopToggle={handleModalPopToggle}
                     createNewBlockULBHandler={createNewBlockULBHandler}
                     updateFromULBHandler={updateFromULBHandler}

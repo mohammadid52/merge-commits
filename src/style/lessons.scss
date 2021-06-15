@@ -132,6 +132,12 @@
   border-bottom: 20px solid #cbd5e0;
 }
 
-.react-tagsinput-tag{
-  width: auto;
+.custom-tagsinput-tag a::before {
+  content: " ×";
+}
+.react-tagsinput .react-tagsinput-input{
+  font-size: 16px
+}
+.react-tagsinput.react-tagsinput--focused {
+  border-color: #bee3f8;
 }

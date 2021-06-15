@@ -12,13 +12,13 @@ const TagBlock = ({tags, handleEditTag}: ITagBlockInterface) => {
     <div className="flex">
       {tags.map((tag: string, index: number) => (
         <span
-          className="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 ml-1 bg-blue-200 text-blue-700 rounded-full w-auto"
+          className="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 ml-1 bg-blue-200 text-blue-700 rounded-lg w-auto"
           key={index}>
           {tag}
         </span>
       ))}
       <span
-        className="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 ml-1 bg-blue-200 text-blue-700 rounded-full w-auto"
+        className="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 ml-1 bg-blue-200 text-blue-700 rounded-lg w-12 cursor-pointer"
         onClick={handleEditTag}>
         <AiOutlineEdit size={12} />
       </span>
