@@ -21,6 +21,7 @@ import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import PoemBlock from './Blocks/PoemBlock';
+import HighlighterBlock from './Blocks/HighlighterBlock';
 
 const DraggableList = ({
   classString,
@@ -45,7 +46,7 @@ const DraggableList = ({
 
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    
+
     setMovableList(items);
   };
   useEffect(() => {
@@ -170,6 +171,8 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    } else if (type.includes('highlighter')) {
+      return <HighlighterBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('poem')) {
       return <PoemBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {
@@ -183,14 +186,7 @@ const RowComposer = (props: RowComposerProps) => {
         />
       );
     } else if (type.includes('paragraph')) {
-      return (
-        <ParagraphBlock
-          id={id}
-          type={type}
-          value={value || []}
-          mode={mode}
-        />
-      );
+      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
     } else if (type.includes('image')) {
