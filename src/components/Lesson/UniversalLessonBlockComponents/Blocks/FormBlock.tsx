@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import StarRatingBlock from './FormBlock/StarRatingBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
-  value?: any;
-  value2?: {id: string; type: string; label: string; value: string[]};
+  value?: {id: string; type: string; label: string; value: string}[];
 }
 
 export const FormBlock = (props: FormBlockProps) => {
@@ -45,6 +45,10 @@ export const FormBlock = (props: FormBlockProps) => {
             />
           </div>
         );
+      case 'rating-star':
+        return (
+          <StarRatingBlock id={id} inputID={inputID} label={label}/>
+        )
       default:
         return <p>No valid form input type</p>;
     }
