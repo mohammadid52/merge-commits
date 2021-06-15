@@ -28,97 +28,6 @@ export const exampleUniversalLesson: UniversalLesson = {
       class: '',
       pageContent: [
         {
-          id: 'page_2_part_3',
-          partType: 'default',
-          class: 'rounded-lg',
-          partContent: [
-            {
-              id: 'page_2_part_3_questionGroup-1',
-              type: 'form-numbered',
-              value: [
-                {
-                  id: 'culture',
-                  type: 'radio-input',
-                  label: 'What culture does this story come from?',
-                  value: [
-                    {
-                      label: 'option 1',
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 2',
-
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 3',
-
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 4',
-
-                      value: 'Keyword description',
-                    },
-                  ],
-                },
-                {
-                  id: 'storyteller',
-                  type: 'radio-input',
-                  label: 'Who is the storyteller in your life?',
-                  value: [
-                    {
-                      label: 'option 1',
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 2',
-
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 3',
-
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 4',
-
-                      value: 'Keyword description',
-                    },
-                  ],
-                },
-                {
-                  id: 'lessons',
-                  type: 'radio-input',
-                  label: 'What lessons does this story teach us?',
-                  value: [
-                    {
-                      label: 'option 1',
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 2',
-
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 3',
-
-                      value: 'Keyword description',
-                    },
-                    {
-                      label: 'option 4',
-
-                      value: 'Keyword description',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
           id: 'page_1_part_0',
           tags: [''],
           partType: 'default',
@@ -384,7 +293,8 @@ export const exampleUniversalLesson: UniversalLesson = {
                   value: '',
                 },
               ],
-            },{
+            },
+            {
               id: 'page_3_part_0_links-0',
               type: 'links',
               value: [
@@ -393,7 +303,8 @@ export const exampleUniversalLesson: UniversalLesson = {
                   type: '',
                   label: 'Link to Page',
                   value: 'https://www.google.com',
-                },{
+                },
+                {
                   id: 'link2',
                   type: '',
                   label: 'Link to Page',
