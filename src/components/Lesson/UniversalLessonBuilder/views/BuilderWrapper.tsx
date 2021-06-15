@@ -24,6 +24,7 @@ import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
+import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -143,6 +144,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     // }
   };
 
+  const handleTagModalOpen = (targetId: string, inputObj: any) => {
+    setAddContentModal({type: 'tag', show: true});
+    setBlockConfig({
+      section: 'pageContent',
+      position: 0,
+      targetId,
+      inputObj: inputObj,
+      isEditingMode: false,
+    });
+  };
+
   const [inputFields, setInputFields] = useState<any>({});
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
@@ -220,14 +232,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       targetID: string,
       propertyToTarget: string,
       contentType: string,
-      inputValue: any
+      inputValue: any,
+      _: number,
+      classString: string
     ) =>
       updateBlockContentULBHandler(
         targetID || blockConfig.targetId,
         propertyToTarget || section,
         contentType,
         inputValue,
-        position
+        position,
+        classString
       );
     switch (type) {
       case 'header':
@@ -300,6 +315,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             closeAction={closeAction}
             inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'tag':
+        return (
+          <TagInputDialog
+            updateBlockContentULBHandler={updateBlockContent}
+            closeAction={closeAction}
+            inputObj={inputObj}
           />
         );
 
@@ -442,6 +465,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
+        handleTagModalOpen={handleTagModalOpen}
       />
     </div>
   );
