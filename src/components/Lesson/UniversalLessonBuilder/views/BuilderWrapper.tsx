@@ -62,7 +62,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string;
     position: number;
     targetId: string;
-    inputObj?:any;
+    inputObj?: any;
     isEditingMode?: boolean;
   }>({
     section: 'pageContent',
@@ -97,11 +97,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     dialogToToggle: string,
     position?: number,
     section: string = 'pageContent',
-    targetId?:string
+    targetId?: string
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-    
+
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
       setBlockConfig({
@@ -125,8 +125,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
     indexToUpdate: number
   ) => {
-    console.log(inputObj,type, 'inputObj inside handleEditBlockContent');
-    
     // Hide all UI Menus
     hideAllUIMenus();
     setAddContentModal({type, show: true});
