@@ -833,3 +833,106 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.dark-backdrop {
+  opacity: 0.75;
+  animation-name: darkBackdrop;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+  animation-duration: 0.2s;
+}
+
+@keyframes darkBackdrop {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.75;
+  }
+}
+
+.feedback-emoji {
+  &:hover {
+    filter: grayscale(0%) !important;
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  &.selected {
+    filter: grayscale(0%) !important;
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  transition: all 0.3s ease-in-out;
+  filter: grayscale(100%) !important;
+  opacity: 0.5;
+  transform: scale(1);
+}
+.emotion_range {
+  &.show {
+    overflow: hidden;
+    transition: transform 0.3s ease-out; // note that we're transitioning max-height, not height!
+    height: 6rem;
+    transform: scaleY(1);
+  }
+
+  transform: scaleY(0);
+}
+
+.custom-scrollbar {
+  scrollbar-color: #eee white;
+  scrollbar-width: thin;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;
+  background: #3b82f6;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #dc2626;
+  cursor: pointer;
+  border-color: #fff;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #dc2626;
+  cursor: pointer;
+  border-color: #fff;
+}
+
+.continue_btn {
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.hide {
+    opacity: 0;
+    visibility: hidden;
+  }
+  transition: all 0.3s ease-in-out;
+}
