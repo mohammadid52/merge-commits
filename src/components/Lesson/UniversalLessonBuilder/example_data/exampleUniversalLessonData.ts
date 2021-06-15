@@ -10,7 +10,8 @@ import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces'
 
 export const exampleUniversalLesson: UniversalLesson = {
   id: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
-  summary: "This is a fun lesson where everyone is encouraged to be a part of the conversation about how our own cultures have influenced our sense of self-identity.  We start by writing about where we are from and share stories from these places.  Afterward, we will have the opportunity to see Marlon tell about how culture influenced his sense of self-identify through his poem 'Where I'm from.' Finally, we will create our own poems and learn more about each other and where we are from by sharing these poem...",
+  summary:
+    "This is a fun lesson where everyone is encouraged to be a part of the conversation about how our own cultures have influenced our sense of self-identity.  We start by writing about where we are from and share stories from these places.  Afterward, we will have the opportunity to see Marlon tell about how culture influenced his sense of self-identify through his poem 'Where I'm from.' Finally, we will create our own poems and learn more about each other and where we are from by sharing these poem...",
   designers: ['Marlon Lizama'],
   teachers: ['Marlon Lizama'],
   categories: ['Creative Writing'],
@@ -26,6 +27,97 @@ export const exampleUniversalLesson: UniversalLesson = {
       description: '',
       class: '',
       pageContent: [
+        {
+          id: 'page_2_part_3',
+          partType: 'default',
+          class: 'rounded-lg',
+          partContent: [
+            {
+              id: 'page_2_part_3_questionGroup-1',
+              type: 'form-numbered',
+              value: [
+                {
+                  id: 'culture',
+                  type: 'radio-input',
+                  label: 'What culture does this story come from?',
+                  value: [
+                    {
+                      label: 'option 1',
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 2',
+
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 3',
+
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 4',
+
+                      value: 'Keyword description',
+                    },
+                  ],
+                },
+                {
+                  id: 'storyteller',
+                  type: 'radio-input',
+                  label: 'Who is the storyteller in your life?',
+                  value: [
+                    {
+                      label: 'option 1',
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 2',
+
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 3',
+
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 4',
+
+                      value: 'Keyword description',
+                    },
+                  ],
+                },
+                {
+                  id: 'lessons',
+                  type: 'radio-input',
+                  label: 'What lessons does this story teach us?',
+                  value: [
+                    {
+                      label: 'option 1',
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 2',
+
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 3',
+
+                      value: 'Keyword description',
+                    },
+                    {
+                      label: 'option 4',
+
+                      value: 'Keyword description',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
         {
           id: 'page_1_part_0',
           tags: [''],

@@ -20,7 +20,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     initialUniversalLessonData
   );
 
-  const [selectedPageID, setSelectedPageID] = useState<string>('page_1');
+  const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
 
   const getCurrentPage = (id: string) =>
     universalLessonDetails.lessonPlan.find((page: any) => page.id === id);
