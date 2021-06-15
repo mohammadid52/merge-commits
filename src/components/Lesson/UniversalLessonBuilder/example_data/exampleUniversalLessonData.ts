@@ -293,6 +293,22 @@ export const exampleUniversalLesson: UniversalLesson = {
                   value: '',
                 },
               ],
+            },{
+              id: 'page_3_part_0_links-0',
+              type: 'links',
+              value: [
+                {
+                  id: 'link1',
+                  type: '',
+                  label: 'Link to Page',
+                  value: 'https://www.google.com',
+                },{
+                  id: 'link2',
+                  type: '',
+                  label: 'Link to Page',
+                  value: 'https://www.google.com',
+                },
+              ],
             },
           ],
         },
