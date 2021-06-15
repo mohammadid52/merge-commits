@@ -24,6 +24,7 @@ import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
+import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -143,6 +144,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     //     [type]: inputObj && inputObj.length ? inputObj[0] : ""
     //   }));
     // }
+  };
+
+  const handleTagModalOpen = (targetId: string, inputObj: any) => {
+    setAddContentModal({type: 'tag', show: true});
+    setBlockConfig({
+      section: 'pageContent',
+      position: 0,
+      targetId,
+      inputObj: inputObj,
+      isEditingMode: false,
+    });
   };
 
   const [inputFields, setInputFields] = useState<any>({});
@@ -304,6 +316,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             updateBlockContentULBHandler={updateBlockContent}
           />
         );
+      case 'tag':
+        return (
+          <TagInputDialog
+            updateBlockContentULBHandler={updateBlockContent}
+            closeAction={closeAction}
+            inputObj={inputObj}
+          />
+        );
 
       default:
         break;
@@ -444,6 +464,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
+        handleTagModalOpen={handleTagModalOpen}
       />
     </div>
   );

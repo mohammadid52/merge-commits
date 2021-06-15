@@ -350,30 +350,21 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     );
     let lessonPages = [...universalLessonDetails.lessonPlan];
     let pageContentData = [...lessonPages[activePageIndex].pageContent];
+    const activePageContentIndex = pageContentData.findIndex(
+      (content: any) => content.id === targetID
+    );
     switch (propertyToTarget) {
       case 'pageContent':
-        const pageContentId: string = `${selectedPageID}_part_${pageContentData.length}`;
-        pageContentData.splice(addBlockAtPosition, 0, {
-          class: 'rounded-lg',
-          id: pageContentId,
-          partContent: [
-            {
-              id: `${pageContentId}_${contentType}_1`,
-              type: contentType,
-              value: inputObj,
-            },
-          ],
-          partType: 'default',
-        });
+        pageContentData[activePageContentIndex] = {
+          ...pageContentData[activePageContentIndex],
+          ...inputObj,
+        };
         lessonPages[activePageIndex] = {
           ...lessonPages[activePageIndex],
           pageContent: pageContentData,
         };
         break;
       case 'partContent':
-        const activePageContentIndex = pageContentData.findIndex(
-          (content: any) => content.id === targetID
-        );
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
           let activePagePartContentData = activePageContentData.partContent;
