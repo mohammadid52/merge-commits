@@ -24,6 +24,7 @@ import {ImageBlock} from './Blocks/ImageBlock';
 import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import PoemBlock from './Blocks/PoemBlock';
+import HighlighterBlock from './Blocks/HighlighterBlock';
 
 const DraggableList = ({
   classString,
@@ -174,6 +175,8 @@ const RowComposer = (props: RowComposerProps) => {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('keyword')) {
       return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
+    } else if (type.includes('highlighter')) {
+      return <HighlighterBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('poem')) {
       return <PoemBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {

@@ -261,6 +261,41 @@ export const exampleUniversalLesson: UniversalLesson = {
             },
           ],
         },
+        {
+          id: 'page_3_part_1',
+          tags: [''],
+          partType: 'default',
+          class: 'rounded-lg',
+          partContent: [
+            {
+              id: 'page_3_part_1_highlighter-0',
+              type: 'highlighter',
+              value: [
+                '<p>No man is an island,</p>\\n<p>Entire of itself,</p>\\n<p>Every man is a piece of the continent,</p>\\n<p>A part of the main.</p>\\n<p>If a clod be washed away by the sea,</p>\\n<p>Europe is the less.</p>\\n<p>As well as if a promontory were.</p>\\n<p>As well as if a manor of thy friend’s</p>\\n<p>Or of thine own were:</p>\\n<p>Any man’s death diminishes me,</p>\\n<p>Because I am involved in mankind,</p>\\n<p>And therefore never send to know for whom the bell tolls;</p>\\n<p>It tolls for thee.</p>\\n',
+              ],
+            },
+          ],
+        },
+        {
+          id: 'page_3_part_2',
+          tags: [''],
+          partType: 'default',
+          class: 'rounded-lg',
+          partContent: [
+            {
+              id: 'page_3_part_0_rating-0',
+              type: 'form-rating',
+              value: [
+                {
+                  id: '',
+                  type: 'rating-star',
+                  label: 'What did you think of this test lesson?',
+                  value: '',
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
