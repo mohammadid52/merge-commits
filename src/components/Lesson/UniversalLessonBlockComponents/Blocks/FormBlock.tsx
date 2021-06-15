@@ -4,8 +4,7 @@ import StarRatingBlock from './FormBlock/StarRatingBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
-  value?: any;
-  value2?: {id: string; type: string; label: string; value: string[]};
+  value?: {id: string; type: string; label: string; value: string}[];
 }
 
 export const FormBlock = (props: FormBlockProps) => {

@@ -25,6 +25,7 @@ import KeywordBlock from './Blocks/KeywordBlock';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import PoemBlock from './Blocks/PoemBlock';
 import HighlighterBlock from './Blocks/HighlighterBlock';
+import LinksBlock from './Blocks/LinksBlock';
 
 const DraggableList = ({
   classString,
@@ -179,6 +180,8 @@ const RowComposer = (props: RowComposerProps) => {
       return <HighlighterBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('poem')) {
       return <PoemBlock id={id} type={type} value={value} mode={mode} />;
+    } else if (type.includes('links')) {
+      return <LinksBlock id={id} type={type} value={value} mode={mode} />;
     } else if (type.includes('header')) {
       return (
         <HeaderBlock
@@ -298,7 +301,7 @@ const RowComposer = (props: RowComposerProps) => {
                       px-2
                       cursor-pointer 
                       text-xs text-center bg-blue-200 text-blue-700 rounded-lg z-100 .-mb-2"
-                      style={{marginBottom:"-6px"}}
+                    style={{marginBottom: '-6px'}}
                     onClick={() =>
                       handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
                     }>
