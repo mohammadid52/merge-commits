@@ -17,9 +17,13 @@ interface selectorProps {
   placeholder: string;
   imageFromS3?: boolean;
   onChange: (c: string, n: string, id: string, avatar: string) => void;
+  fetchStudentList?: (searchQuery: string) => void;
+  clearFilteredStudents?: () => void;
+  searchStatus?: boolean;
+  searchCallback?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SelectorWithAvatar = (props: selectorProps) => {
+const SearchSelectorWithAvatar = (props: selectorProps) => {
   const {
     list,
     selectedItem,
@@ -28,11 +32,18 @@ const SelectorWithAvatar = (props: selectorProps) => {
     placeholder,
     onChange,
     imageFromS3 = true,
+    fetchStudentList,
+    clearFilteredStudents,
+    searchStatus,
+    searchCallback,
   } = props;
+  const countdownTimer = 1000;
+  const [countdownEnabled, setCountdownEnabled] = useState(undefined);
+  const [searchTerm, setSearchTerm] = useState<string>(undefined);
+
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
   const [teacherList, setTeacherList] = useState([]);
-
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -51,9 +62,39 @@ const SelectorWithAvatar = (props: selectorProps) => {
 
   const handleOutsideClick = (e: any) => {
     const stringElement = e.target.innerHTML;
-    if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
-      window.removeEventListener('click', handleOutsideClick, false);
-      setShowList(false);
+    const id = e.target.id;
+    if (id !== 'searchForStudent') {
+      if (!stringElement || currentRef.current.outerHTML.indexOf(stringElement) === -1) {
+        window.removeEventListener('click', handleOutsideClick, false);
+        setShowList(false);
+      }
+    }
+  };
+
+  const handleSearchChange = (e: any) => {
+    const {value} = e.target as HTMLInputElement;
+    setSearchTerm(value);
+
+    if (countdownEnabled) {
+      clearTimeout(countdownEnabled);
+    }
+
+    if (value.length > 0) {
+      if (!searchStatus) searchCallback(true);
+    } else {
+      if (searchStatus) searchCallback(false);
+    }
+
+    if (value.length < 3) {
+      clearFilteredStudents();
+    } else {
+      setCountdownEnabled(
+        setTimeout(() => {
+          console.log('doing search');
+          fetchStudentList(searchTerm);
+          clearTimeout(countdownEnabled);
+        }, countdownTimer)
+      );
     }
   };
 
@@ -95,9 +136,22 @@ const SelectorWithAvatar = (props: selectorProps) => {
           className={`flex items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-400 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
-          <span className="block truncate text-gray-700">
-            {selectedItem?.value ? selectedItem.value : placeholder}
-          </span>
+          {/* TOGGLE SEARCH FIELD */}
+          {showList ? (
+            <input
+              autoFocus
+              onChange={handleSearchChange}
+              id={`searchForStudent`}
+              type={`text`}
+              value={searchTerm ? searchTerm : ''}
+              placeholder={selectedItem?.value ? selectedItem.value : placeholder}
+            />
+          ) : (
+            <span className="block truncate text-gray-700">
+              {selectedItem?.value ? selectedItem.value : placeholder}
+            </span>
+          )}
+
           <span
             className={`relative justify-end inset-y-0 right-0 items-center pr-2 pointer-events-none ${
               arrowHidden ? 'hidden' : 'flex'
@@ -197,4 +251,4 @@ const SelectorWithAvatar = (props: selectorProps) => {
   );
 };
 
-export default SelectorWithAvatar;
+export default SearchSelectorWithAvatar;
