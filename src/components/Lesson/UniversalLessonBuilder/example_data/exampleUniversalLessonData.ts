@@ -96,7 +96,7 @@ export const exampleUniversalLesson: UniversalLesson = {
             },
             {
               id: 'page_1_part_0_header-0',
-              type: 'header-default',
+              type: 'header',
               value: ['Introduction'],
             },
             {
@@ -127,7 +127,7 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_2_part_0_header-0',
-              type: 'header-default',
+              type: 'header',
               value: ['Instructions'],
             },
             {
@@ -149,7 +149,8 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_2_part_1_header-1',
-              type: 'header-section',
+              type: 'header',
+              class: 'border-b-4 border-green-500',
               value: ['Myths Story Warmup'],
             },
             {
@@ -179,7 +180,8 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_2_part_2_header-2',
-              type: 'header-section',
+              type: 'header',
+              class: 'border-b-4 border-green-500',
               value: ['Focus Questions'],
             },
             {
