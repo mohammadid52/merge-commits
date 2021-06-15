@@ -30,8 +30,7 @@ const SelectableBlock = (props: SelectableBlockProps) => {
   } = props;
   const [firstLastSelected, setFirstLastSelected] = useState<string[]>(['', '']);
 
-  //  mouse
-  // const [mouseTarget] = useState<string>('');
+  const removeHtmlTagsFromText = rawText.replace(/<\w>|<\/\w>/g, '').split(/\\n/g);
 
   /**
    * Function to check if selected textID is already somewhere in the initialSelectedText state
@@ -159,7 +158,7 @@ const SelectableBlock = (props: SelectableBlockProps) => {
    * - Makes it easier to parse on the breakdown page
    */
 
-  const combineLyrics = rawText.map((str: string) => [...str.split(' '), '\n'])
+  const combineLyrics = removeHtmlTagsFromText.map((str: string) => [...str.split(' '), '\n'])
     .reduce((acc: string[], val: string[]) => [...acc, ...val]);
 
   const combineMappedWords = combineLyrics.map(

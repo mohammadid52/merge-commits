@@ -29,12 +29,13 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   const [selectGroup, setSelectGroup] = useState<number>(0);
 
   return (
-    <>
+    <div className={`p-4`}>
       <HighlightColorBlock
         color={color}
         setColor={setColor}
       />
       <SelectableBlock
+        rawText={value && value.length > 0 ? value[0] : ''}
         color={color}
         selected={selected}
         setSelected={setSelected}
@@ -45,7 +46,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         selectGroup={selectGroup}
         setSelectGroup={setSelectGroup}
       />
-    </>
+    </div>
   );
 };
 

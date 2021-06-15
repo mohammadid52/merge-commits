@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconContext } from 'react-icons';
-import { FaEraser, FaHighlighter } from 'react-icons/fa';
+import {IconContext} from 'react-icons';
+import {FaEraser, FaHighlighter} from 'react-icons/fa';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface HighlightColorBlockProps {
@@ -18,16 +18,10 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
   };
 
   return (
-    <div className="h-auto z-50">
+    <>
       <div
         className={`
-        flex flex-row 
-        w-auto text-xl
-        pb-2 mb-2 mt-4
-        relative  
-        font-medium text-left text-gray-100
-        items-center   
-        border-b border-white border-opacity-10`}
+        relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}
         style={{marginTop: '0', paddingBottom: '0'}}>
         <div className="w-3.3/10  flex flex-col justify-center items-center">
           <span>Select Highlighter:</span>
@@ -119,7 +113,7 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
           2. <b>Double-Click 1 word</b> to select a word.
         </p>
       </div>
-    </div>
+    </>
   );
 };
 
