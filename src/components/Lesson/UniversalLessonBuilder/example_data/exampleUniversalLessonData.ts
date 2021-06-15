@@ -274,6 +274,26 @@ export const exampleUniversalLesson: UniversalLesson = {
             },
           ],
         },
+        {
+          id: 'page_3_part_2',
+          tags: [''],
+          partType: 'default',
+          class: 'rounded-lg',
+          partContent: [
+            {
+              id: 'page_3_part_0_rating-0',
+              type: 'form-rating',
+              value: [
+                {
+                  id: '',
+                  type: 'rating-star',
+                  label: 'What did you think of this test lesson?',
+                  value: '',
+                },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],
