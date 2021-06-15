@@ -126,8 +126,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
     indexToUpdate: number
   ) => {
-    console.log(inputObj,type, 'inputObj inside handleEditBlockContent');
-    
     // Hide all UI Menus
     hideAllUIMenus();
     setAddContentModal({type, show: true});
@@ -234,14 +232,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       targetID: string,
       propertyToTarget: string,
       contentType: string,
-      inputValue: any
+      inputValue: any,
+      _: number,
+      classString: string
     ) =>
       updateBlockContentULBHandler(
         targetID || blockConfig.targetId,
         propertyToTarget || section,
         contentType,
         inputValue,
-        position
+        position,
+        classString
       );
     switch (type) {
       case 'header':

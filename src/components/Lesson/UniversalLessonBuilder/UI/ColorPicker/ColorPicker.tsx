@@ -6,6 +6,7 @@ interface ColorPickerProps {
   classString?: string;
   isPagePart?: boolean;
   isMainPage?: boolean;
+  styleString?: {[key: string]: string};
 }
 
 interface ColorObject {
@@ -14,7 +15,7 @@ interface ColorObject {
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
-  const {callbackColor, classString, isMainPage, isPagePart} = props;
+  const {callbackColor, classString, isMainPage, isPagePart, styleString} = props;
 
   const availableColors: ColorObject[] = [
     {value: 'gray', label: 'Gray'},
@@ -84,7 +85,7 @@ const ColorPicker = (props: ColorPickerProps) => {
   return (
     <div
       className={`absolute z-100 transform -translate-y-1/2 left-full top-1/2 ${styles.padding} w-max`}
-      style={styles.pickerTransform}>
+      style={{...styles.pickerTransform, ...styleString}}>
       <div
         className={`absolute w-10 transform ${styles.rotation} ${styles.icon}`}
         style={styles.svgTransform}>

@@ -150,7 +150,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             <span className={textClass}>Edit</span>
           </button>
 
-          <div className={`relative`}>
+          {section === "pageContent" && <div className={`relative`}>
             <button
               onClick={() => setColorPickerActive(!colorPickerActive)}
               className={`${actionClass}`}>
@@ -166,7 +166,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                 isPagePart={isPagePart}
               />
             )}
-          </div>
+          </div>}
 
           <button
             onClick={() => deleteFromULBHandler(contentID)}

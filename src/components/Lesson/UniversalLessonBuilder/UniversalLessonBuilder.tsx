@@ -342,7 +342,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     propertyToTarget: string,
     contentType: string,
     inputObj: any,
-    addBlockAtPosition: number
+    addBlockAtPosition: number,
+    classString?: string
   ) => {
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
@@ -370,7 +371,11 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           let activePagePartContentData = activePageContentData.partContent;
           activePagePartContentData[addBlockAtPosition] = {
             ...activePagePartContentData[addBlockAtPosition],
-            value: inputObj
+            class: replaceTailwindClass(
+              activePagePartContentData[addBlockAtPosition].class,
+              classString
+            ),
+            inputObj,
           };
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
