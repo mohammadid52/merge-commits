@@ -1,3 +1,4 @@
+import {findIndex, update} from 'lodash';
 import React, {useContext, createContext, useState, useEffect} from 'react';
 import {exampleUniversalLesson} from '../components/Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
@@ -39,6 +40,29 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
+  const updateMovableList = (
+    items: any,
+    pageId: string,
+    pageContentId: string,
+    partContentId: string
+  ) => {
+    const pageIdx = findIndex(
+      universalLessonDetails.lessonPlan,
+      (item: any) => item.id === pageId
+    );
+    const pageContentIdx = findIndex(
+      universalLessonDetails.lessonPlan[pageIdx].pageContent,
+      (item: any) => item.id === pageContentId
+    );
+
+    const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
+
+    update(universalLessonDetails, PATH, () => items);
+    console.log('universalLessonDetails: ----> ', universalLessonDetails.lessonPlan);
+
+    setUniversalLessonDetails({...universalLessonDetails});
+  };
+
   useEffect(() => {
     setUniversalLessonDetails(exampleUniversalLesson);
   }, []);
@@ -58,6 +82,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         setMovableList,
         setUniversalLessonDetails,
         addFromULBHandler: addULBHandler,
+        updateMovableList,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>
