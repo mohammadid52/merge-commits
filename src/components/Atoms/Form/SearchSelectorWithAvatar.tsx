@@ -37,7 +37,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     searchStatus,
     searchCallback,
   } = props;
-  const countdownTimer = 1000;
+  const countdownTimer = 500;
   const [countdownEnabled, setCountdownEnabled] = useState(undefined);
   const [searchTerm, setSearchTerm] = useState<string>(undefined);
 
