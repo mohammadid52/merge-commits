@@ -8,10 +8,46 @@ import {uniqueId} from 'lodash';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
 
+interface IImageInput {
+  url: string;
+  width: string;
+  height: string;
+  caption?: string;
+  imageData?: File | null;
+}
+
 interface IJumbotronModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
 }
+
+const initialInputFieldsState = [
+  {
+    id: 'background',
+    type: 'background',
+    label: 'Background',
+    value:
+      'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
+  },
+  {
+    id: 'title',
+    type: 'title',
+    label: 'Title',
+    value: 'Jumbo Title placeholder',
+  },
+  {
+    id: 'subtitle',
+    type: 'subtitle',
+    label: 'Subtitle',
+    value: 'This is the subtitle placeholder',
+  },
+  {
+    id: 'description',
+    type: 'description',
+    label: 'Description',
+    value: 'This is the description text placeholder',
+  },
+];
 
 const JumbotronModalComponent = ({
   selectedPageID,
@@ -25,33 +61,7 @@ const JumbotronModalComponent = ({
 
   const FIELD_ID = 'jumbotron';
 
-  const [inputFieldsArray, setInputFieldsArray] = useState<PartContentSub[]>([
-    {
-      id: 'background',
-      type: 'background',
-      label: 'Background',
-      value:
-        'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
-    },
-    {
-      id: 'title',
-      type: 'title',
-      label: 'Title',
-      value: 'Jumbo Title placeholder',
-    },
-    {
-      id: 'subtitle',
-      type: 'subtitle',
-      label: 'Subtitle',
-      value: 'This is the subtitle placeholder',
-    },
-    {
-      id: 'description',
-      type: 'description',
-      label: 'Description',
-      value: 'This is the description text placeholder',
-    },
-  ]);
+  const [inputFieldsArray, setInputFieldsArray] = useState<PartContentSub[]>(initialInputFieldsState);
   useEffect(() => {
     if (inputObj) {
       if (inputObj?.value) {
@@ -73,17 +83,15 @@ const JumbotronModalComponent = ({
   };
 
   const onJumbotronCreate = () => {
-    const newJumbotronObj = {...inputObj, value: inputFieldsArray}
-    const pageContentId: string = uniqueId(`${selectedPageID}_`);
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'jumbotron', newJumbotronObj, 0);
+      updateBlockContentULBHandler('', '', 'jumbotron', inputFieldsArray, 0);
     } else {
-      createNewBlockULBHandler('', '', 'jumbotron', newJumbotronObj, 0);
+      createNewBlockULBHandler('', '', 'jumbotron', inputFieldsArray, 0);
     }
     // close modal after saving
     closeAction();
     // clear fields
-    // NEED TO UPDATE
+    setInputFieldsArray(initialInputFieldsState)
   };
 
   return (
