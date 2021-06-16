@@ -1,7 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import { EditQuestionModalDict, UniversalBuilderDict } from '../../../../../dictionary/dictionary.iconoclast';
+import {
+  EditQuestionModalDict,
+  UniversalBuilderDict,
+} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
@@ -9,6 +12,7 @@ import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLes
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
 import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
+import Loader from '../../../../Atoms/Loader';
 
 interface IImageInput {
   url: string;
@@ -65,7 +69,9 @@ const JumbotronModalComponent = ({
   //////////////////////////
   //  DATA STORAG         //
   //////////////////////////
-  const [inputFieldsArray, setInputFieldsArray] = useState<PartContentSub[]>(initialInputFieldsState);
+  const [inputFieldsArray, setInputFieldsArray] = useState<PartContentSub[]>(
+    initialInputFieldsState
+  );
   useEffect(() => {
     if (inputObj) {
       if (inputObj?.value) {
@@ -81,14 +87,11 @@ const JumbotronModalComponent = ({
     height: 'auto',
     caption: '',
   });
-  useEffect(()=>{
-    if(url !== ''){
+  useEffect(() => {
+    if (url !== '') {
       handleUpdateInputFields('background', imageInputs.url);
     }
-  },[imageInputs])
-
-
-
+  }, [imageInputs]);
 
   //////////////////////////
   //  FOR DATA UPDATE     //
@@ -102,8 +105,7 @@ const JumbotronModalComponent = ({
       }
     });
     setInputFieldsArray(newInputFieldsArray);
-  }
-
+  };
 
   //////////////////////////
   //  FOR IMAGE UPLOADING //
@@ -134,11 +136,7 @@ const JumbotronModalComponent = ({
         .join(' ')
         .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
       setIsLoading(true);
-      await uploadImageToS3(
-        imageInputs.imageData,
-        `${fileName}`,
-        'image/jpeg'
-      );
+      await uploadImageToS3(imageInputs.imageData, `${fileName}`, 'image/jpeg');
       if (isEditingMode) {
         updateBlockContentULBHandler('', '', 'video', [
           {
@@ -210,8 +208,6 @@ const JumbotronModalComponent = ({
 
   const {caption = '', url = '', width = '', height = ''} = imageInputs;
 
-
-
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
@@ -230,44 +226,42 @@ const JumbotronModalComponent = ({
     // close modal after saving
     closeAction();
     // clear fields
-    setInputFieldsArray(initialInputFieldsState)
+    setInputFieldsArray(initialInputFieldsState);
   };
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2">
-
-
-
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
-           if(inputObj.id === 'background'){
-             return (
-               <ULBFileUploader
-                 key={`jumboform_${idx}`}
-                 fileUrl={url}
-                 updateFileUrl={updateFileUrl}
-                 acceptedFilesFormat={'image/*'}
-                 error={errors?.url}
-               />
-             )
-           } else {
-             return  (
-               <FormInput
-               key={`jumboform_${idx}`}
-               onChange={onChange}
-               label={inputFieldsArray[idx]?.label}
-               isRequired
-               value={inputFieldsArray[idx]?.value}
-               id={inputFieldsArray[idx]?.id}
-               placeHolder={inputFieldsArray[idx]?.value}
-               type="text"
-             />
-             )
-           }
+            if (inputObj.id === 'background') {
+              return (
+                <ULBFileUploader
+                  key={`jumboform_${idx}`}
+                  fileUrl={url}
+                  updateFileUrl={updateFileUrl}
+                  acceptedFilesFormat={'image/*'}
+                  error={errors?.url}
+                />
+              );
+            } else {
+              return (
+                <FormInput
+                  key={`jumboform_${idx}`}
+                  onChange={onChange}
+                  label={inputFieldsArray[idx]?.label}
+                  isRequired
+                  value={inputFieldsArray[idx]?.value}
+                  id={inputFieldsArray[idx]?.id}
+                  placeHolder={inputFieldsArray[idx]?.value}
+                  type="text"
+                />
+              );
+            }
           })}
         </div>
       </div>
+
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons
@@ -276,14 +270,17 @@ const JumbotronModalComponent = ({
             onClick={closeAction}
             transparent
           />
-          <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={onJumbotronCreate}
-          />
+
+            <Buttons
+              btnClass="py-1 px-8 text-xs ml-2"
+              label={!loading ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVE'] : <Loader/>}
+              onClick={onJumbotronCreate}
+              disabled={loading}
+            />
+
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
