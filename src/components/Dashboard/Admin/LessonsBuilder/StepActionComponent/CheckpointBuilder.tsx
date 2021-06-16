@@ -134,10 +134,6 @@ const CheckpointBuilder = (props: CheckpointBuilderProps) => {
   useEffect(() => {
     const isUnsaved: boolean = hasCheckpointUnsaved();
     const isIndividualEmpty: boolean = checkIndividualFields();
-    console.log(
-      '🚀 ~ file: CheckpointBuilder.tsx ~ line 135 ~ useEffect ~ isIndividualEmpty',
-      isIndividualEmpty
-    );
 
     hasUnsavedCheckpoint(
       isUnsaved,

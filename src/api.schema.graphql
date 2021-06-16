@@ -50,8 +50,8 @@ type Person
   lastLoggedIn: AWSDateTime
   lastLoggedOut: AWSDateTime
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
-  wordbank: [StudentWord] @connection(keyName: "wordsByStudent", fields: ["email"])
 }
+
 type Institution @model @key(fields: ["id"]) {
   id: ID!
   name: String!
@@ -96,8 +96,6 @@ type Staff
   status: String
   statusChangeDate: AWSDate
   staffMember: Person @connection(fields: ["staffEmail", "staffAuthID"])
-  curricula: [TeacherCurriculum]
-    @connection(keyName: "curriculumByTeacher", fields: ["id"])
 }
 
 type Room
@@ -214,15 +212,6 @@ type Rubric @model @key(fields: ["id"]) {
   topicID: ID!
   topic: Topic @connection(fields: ["topicID"])
   curriculumID: ID!
-}
-
-type TeacherCurriculum
-  @model(queries: null)
-  @key(name: "curriculumByTeacher", fields: ["staffID"]) {
-  id: ID!
-  staffID: ID!
-  curriculumID: ID!
-  curriculum: Curriculum @connection(fields: ["curriculumID"])
 }
 
 type RoomCurriculum @model @key(name: "curriculumByRoom", fields: ["roomID"]) {
@@ -370,11 +359,6 @@ type DisplayData {
   warmUpData: WarmUpData
   corelessonData: CoreLessonData
   activityData: ActivityData
-}
-type SELStructure @model {
-  id: ID!
-  name: String!
-  description: String
 }
 
 type DoFirst @model {
@@ -601,16 +585,6 @@ type Word @model @key(name: "byWord", fields: ["word"], queryField: "searchByWor
   definition: String
 }
 
-type StudentWord
-  @model(queries: null)
-  @key(name: "wordsByStudent", fields: ["studentID", "wordID"]) {
-  id: ID!
-  wordID: ID!
-  studentID: String!
-  studentAuthID: String!
-  word: Word @connection(fields: ["wordID"])
-  student: Person @connection(fields: ["studentID", "studentAuthID"])
-}
 type RoomMsgs
   @model
   @key(
@@ -838,39 +812,6 @@ type Feedback @model {
   liked: String
   comment: String
   syllabusLesson: SyllabusLesson @connection(fields: ["syllabusLessonID"])
-}
-
-type Intro @model {
-  id: ID!
-  title: String
-  label: String
-  stage: String
-  type: String
-  connectionTitle: String
-  connection: String
-  keywordsTitle: String
-  keywords: [LessonKeyWord] @connection(keyName: "wordsByLesson", fields: ["id"])
-  questionsTitle: String
-  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
-  language: String
-  estTime: Int
-  artistID: ID!
-  artist: Artist @connection(fields: ["artistID"])
-}
-
-type Outro @model {
-  id: ID!
-  title: String
-  subtitle: String
-  stage: String
-  type: String
-  closingTitle: String
-  closingText: String
-  questionsTitle: String
-  questions: [DoFirstQuestion!]! @connection(keyName: "byDoFirst", fields: ["id"])
-  additionalInfo: String
-  language: String
-  estTime: Int
 }
 
 type Theme {

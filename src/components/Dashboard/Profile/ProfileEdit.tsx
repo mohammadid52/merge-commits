@@ -521,6 +521,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                         {checkpoint.questions?.items.map((item: any) => (
                           <Fragment key={item.question.id}>
+                            {console.log(item)}
                             <div className="sm:col-span-6 p-2 flex items-end">
                               <div className="flex flex-col justify-between">
                                 {item.question.type === 'text' ? (
@@ -540,6 +541,56 @@ const ProfileEdit = (props: UserInfoProps) => {
                                 ) : null}
                                 {/* Will change it to text box if required. */}
                                 {item.question.type === 'input' ? (
+                                  <FormInput
+                                    value={
+                                      checkpointData[checkpoint.id]
+                                        ? checkpointData[checkpoint.id][item.question.id]
+                                        : ''
+                                    }
+                                    id={item.question.id}
+                                    name=""
+                                    label={item?.question?.question}
+                                    onChange={(e) =>
+                                      onInputChange(e, checkpoint.id, item.question.id)
+                                    }
+                                  />
+                                ) : null}
+                                {item.question.type === 'link' ? (
+                                  <div className="sm:col-span-3">
+                                    <label
+                                      htmlFor="date picker"
+                                      className="block text-m font-medium leading-5 text-gray-700">
+                                      {item?.question?.question}
+                                    </label>
+                                    <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                                      <input
+                                        id={item.question.id}
+                                        type="url"
+                                        name="url"
+                                        placeholder="https://example.com"
+                                        pattern="https://.*"
+                                        size={30}
+                                        required
+                                        value={
+                                          checkpointData[checkpoint.id]
+                                            ? checkpointData[checkpoint.id][
+                                                item.question.id
+                                              ]
+                                            : ''
+                                        }
+                                        onChange={(e) =>
+                                          onInputChange(
+                                            e,
+                                            checkpoint.id,
+                                            item.question.id
+                                          )
+                                        }
+                                        className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 text-gray-900"
+                                      />
+                                    </div>
+                                  </div>
+                                ) : null}
+                                {item.question.type === 'datePicker' ? (
                                   <FormInput
                                     value={
                                       checkpointData[checkpoint.id]
