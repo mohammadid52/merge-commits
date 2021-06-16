@@ -25,6 +25,7 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
+import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronFormDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -221,12 +222,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
+  const modalByType = (type: string) => {
     const {
       position = 0,
       section = 'pageContent',
       inputObj = {},
     } = blockConfig;
+
     const updateBlockContent = (
       targetID: string,
       propertyToTarget: string,
@@ -243,6 +245,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         position,
         classString
       );
+
     const createNewBlock = (
       targetID: string,
       propertyToTarget: string,
@@ -259,6 +262,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         position,
         classString
       );
+
     let commonProps = {
       createNewBlockULBHandler:createNewBlock,
       closeAction:closeAction,
@@ -266,6 +270,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       selectedPageID,
       updateBlockContentULBHandler:updateBlockContent,
     }
+
     switch (type) {
       case 'header':
         return <HeaderModalComponent {...commonProps} />;
@@ -301,7 +306,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             inputObj={inputObj}
           />
         );
-
+      case 'jumbotron':
+        return (
+          <JumbotronFormDialog
+            {...commonProps}
+          />
+        );
       default:
         break;
     }

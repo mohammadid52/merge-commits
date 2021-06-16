@@ -401,7 +401,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  console.log(universalLessonDetails, 'universalLessonDetails');
+  // console.log(universalLessonDetails, 'universalLessonDetails');
+  
 
   return (
     /**

@@ -35,31 +35,31 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_1_part_0_jumbotron-0',
-              type: 'jumbotron-quote',
+              type: 'jumbotron',
               value: [
                 {
-                  id: '',
+                  id: 'background',
                   type: 'background',
-                  label: '',
+                  label: 'Background',
                   value:
                     'https://images.freeimages.com/images/large-previews/d5d/powerlines-5-1389930.jpg',
                 },
                 {
-                  id: '',
+                  id: 'title',
                   type: 'title',
-                  label: '',
+                  label: 'Title',
                   value: 'Jumbo Title',
                 },
                 {
-                  id: '',
+                  id: 'subtitle',
                   type: 'subtitle',
-                  label: '',
+                  label: 'Subtitle',
                   value: 'This is the placeholder',
                 },
                 {
-                  id: '',
+                  id: 'description',
                   type: 'description',
-                  label: '',
+                  label: 'Description',
                   value: 'This is the description text',
                 },
               ],
