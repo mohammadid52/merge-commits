@@ -59,7 +59,7 @@ const DraggableList = ({
 
   return movableList.length > 0 ? (
     <DragDropContext onDragEnd={handleOnDragEnd}>
-      <Droppable droppableId="partContent">
+      <Droppable isDropDisabled droppableId="partContent">
         {(provided) => {
           return (
             <ul
@@ -267,7 +267,7 @@ const RowComposer = (props: RowComposerProps) => {
               <div
                 className={`absolute w-auto bottom-${
                   idx === selectedPageDetails.pageContent.length - 1 || previewMode
-                     ? 2
+                    ? 2
                     : 4
                 } right-2 z-100`}>
                 {pagePart.tags && pagePart.tags.filter(Boolean).length ? (

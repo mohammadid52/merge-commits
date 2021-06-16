@@ -14,6 +14,7 @@ const initialUniversalLessonData: UniversalLesson = {
 
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
+  const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
@@ -57,6 +58,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         movableList,
         setMovableList,
         setUniversalLessonDetails,
+        enableDnD,
+        setEnableDnD,
         addFromULBHandler: addULBHandler,
       }}>
       {children}
