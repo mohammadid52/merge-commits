@@ -31,8 +31,11 @@ const InputModalComponent = ({
   selectedPageID,
   closeAction,
   inputObj,
+  createNewBlockULBHandler,
+  updateBlockContentULBHandler,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const {addFromULBHandler} = useULBContext();
 
   const onChange = (e: any) => {
@@ -45,9 +48,8 @@ const InputModalComponent = ({
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      let fieldsValue = {}
-      setInputList(inputObj);
-      // setIsEditingMode(true);
+      let fieldsValue = {};
+      setInputList(inputObj.map((input:any) => ({...input, textArea: input.type.includes('area')})));
       forEach(inputObj, ({id, label, value}: any) => {
         fieldsValue = {
           ...fieldsValue,
@@ -56,6 +58,7 @@ const InputModalComponent = ({
         };
       });
       setInputFields(fieldsValue);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
 
@@ -64,20 +67,36 @@ const InputModalComponent = ({
     const partContentId: string = uniqueId(`${pageContentId}_`);
     // const readyToGo = validateFieldBeforeSave();
     const inputObjArray = generateInputAndPlaceholderValues();
-    const newDataObject = {
-      id: pageContentId,
-      partType: 'default',
-      class: 'rounded-lg',
-      partContent: [
-        {
-          id: `${partContentId}_questionGroup`,
-          type: `form-${numberedForm ? 'numbered' : 'default'}`,
-          value: inputObjArray,
-        },
-      ],
-    };
-    // add data to list
-    addFromULBHandler(selectedPageID, newDataObject);
+    const contentType = `form-${numberedForm ? 'numbered' : 'default'}`;
+    if (isEditingMode) {
+      updateBlockContentULBHandler(
+        '',
+        '',
+        contentType,
+        inputObjArray,
+      );
+    } else {
+      createNewBlockULBHandler(
+        '',
+        '',
+        contentType,
+        inputObjArray,
+      );
+      }
+    // const newDataObject = {
+    //   id: pageContentId,
+    //   partType: 'default',
+    //   class: 'rounded-lg',
+    //   partContent: [
+    //     {
+    //       id: `${partContentId}_questionGroup`,
+    //       type: `form-${numberedForm ? 'numbered' : 'default'}`,
+    //       value: inputObjArray,
+    //     },
+    //   ],
+    // };
+    // // add data to list
+    // addFromULBHandler(selectedPageID, newDataObject);
     // // close modal after saving
     closeAction();
     // // clear fields
@@ -149,8 +168,6 @@ const InputModalComponent = ({
     );
   };
 
-  console.log(inputFields, 'inputFields+++++++', inputList);
-  
   return (
     <div className="max-h-200 overflow-y-auto">
       <div className="flex flex-col my-2">

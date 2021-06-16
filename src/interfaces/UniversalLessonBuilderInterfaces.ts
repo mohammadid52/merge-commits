@@ -81,7 +81,9 @@ export interface IContentTypeComponentProps {
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    inputValue: any
+    inputValue: any,
+    position?:number,
+    classString?:string
   ) => void;
   updateBlockContentULBHandler: (
     targetID: string,

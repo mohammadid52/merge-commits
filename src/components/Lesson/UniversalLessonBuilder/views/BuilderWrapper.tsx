@@ -244,74 +244,51 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         position,
         classString
       );
+    const createNewBlock = (
+      targetID: string,
+      propertyToTarget: string,
+      contentType: string,
+      inputValue: any,
+      _: number,
+      classString?: string
+    ) =>
+      createNewBlockULBHandler(
+        targetID || blockConfig.targetId,
+        propertyToTarget || section,
+        contentType,
+        inputValue,
+        position,
+        classString
+      );
+    let commonProps = {
+      createNewBlockULBHandler:createNewBlock,
+      closeAction:closeAction,
+      inputObj:inputObj,
+      selectedPageID,
+      updateBlockContentULBHandler:updateBlockContent,
+    }
     switch (type) {
       case 'header':
-        return (
-          <HeaderModalComponent
-            selectedPageID={selectedPageID}
-            closeAction={closeAction}
-            updateBlockContentULBHandler={updateBlockContent}
-            inputObj={inputObj}
-          />
-        );
+        return <HeaderModalComponent {...commonProps} />;
       case 'image':
         return (
           <ImageFormComponent
-            createNewBlockULBHandler={(
-              targetID: string,
-              propertyToTarget: string,
-              contentType: string,
-              inputValue: any
-            ) =>
-              createNewBlockULBHandler(
-                targetID || blockConfig.targetId,
-                propertyToTarget || section,
-                contentType,
-                inputValue,
-                position
-              )
-            }
+            createNewBlockULBHandler={createNewBlock}
             closeAction={closeAction}
             inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
           />
         );
       case 'paragraph':
-        return (
-          <ParaModalComponent
-            selectedPageID={selectedPageID}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <ParaModalComponent {...commonProps} />;
       case 'input':
       case 'form-numbered':
       case 'form-default':
-        return (
-          <InputModalComponent
-            selectedPageID={selectedPageID}
-            closeAction={closeAction}
-            inputObj={inputObj}
-          />
-        );
+        return <InputModalComponent {...commonProps} />;
       case 'video':
         return (
           <YouTubeMediaDialog
-            createNewBlockULBHandler={(
-              targetID: string,
-              propertyToTarget: string,
-              contentType: string,
-              inputValue: any
-            ) =>
-              createNewBlockULBHandler(
-                targetID || blockConfig.targetId,
-                propertyToTarget || section,
-                contentType,
-                inputValue,
-                position
-              )
-            }
+            createNewBlockULBHandler={createNewBlock}
             closeAction={closeAction}
             inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
