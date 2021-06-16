@@ -41,17 +41,6 @@ export const createPerson = /* GraphQL */ `
         }
         nextToken
       }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -96,17 +85,6 @@ export const updatePerson = /* GraphQL */ `
         }
         nextToken
       }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -146,17 +124,6 @@ export const deletePerson = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
           createdAt
           updatedAt
         }
@@ -686,21 +653,8 @@ export const createStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -743,21 +697,8 @@ export const updateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -800,21 +741,8 @@ export const deleteStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -892,9 +820,6 @@ export const createRoom = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -1040,9 +965,6 @@ export const updateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1184,9 +1106,6 @@ export const deleteRoom = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -1369,9 +1288,6 @@ export const createRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1490,9 +1406,6 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1609,9 +1522,6 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -1948,9 +1858,6 @@ export const createClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2027,9 +1934,6 @@ export const updateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2104,9 +2008,6 @@ export const deleteClassStudent = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -2813,162 +2714,6 @@ export const deleteRubric = /* GraphQL */ `
     }
   }
 `;
-export const createTeacherCurriculum = /* GraphQL */ `
-  mutation CreateTeacherCurriculum(
-    $input: CreateTeacherCurriculumInput!
-    $condition: ModelTeacherCurriculumConditionInput
-  ) {
-    createTeacherCurriculum(input: $input, condition: $condition) {
-      id
-      staffID
-      curriculumID
-      curriculum {
-        id
-        institutionID
-        name
-        type
-        image
-        summary
-        description
-        objectives
-        languages
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        designers
-        syllabi {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateTeacherCurriculum = /* GraphQL */ `
-  mutation UpdateTeacherCurriculum(
-    $input: UpdateTeacherCurriculumInput!
-    $condition: ModelTeacherCurriculumConditionInput
-  ) {
-    updateTeacherCurriculum(input: $input, condition: $condition) {
-      id
-      staffID
-      curriculumID
-      curriculum {
-        id
-        institutionID
-        name
-        type
-        image
-        summary
-        description
-        objectives
-        languages
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        designers
-        syllabi {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteTeacherCurriculum = /* GraphQL */ `
-  mutation DeleteTeacherCurriculum(
-    $input: DeleteTeacherCurriculumInput!
-    $condition: ModelTeacherCurriculumConditionInput
-  ) {
-    deleteTeacherCurriculum(input: $input, condition: $condition) {
-      id
-      staffID
-      curriculumID
-      curriculum {
-        id
-        institutionID
-        name
-        type
-        image
-        summary
-        description
-        objectives
-        languages
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        designers
-        syllabi {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createRoomCurriculum = /* GraphQL */ `
   mutation CreateRoomCurriculum(
     $input: CreateRoomCurriculumInput!
@@ -3210,48 +2955,6 @@ export const deleteArtist = /* GraphQL */ `
           link
         }
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createSelStructure = /* GraphQL */ `
-  mutation CreateSelStructure(
-    $input: CreateSELStructureInput!
-    $condition: ModelSELStructureConditionInput
-  ) {
-    createSELStructure(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateSelStructure = /* GraphQL */ `
-  mutation UpdateSelStructure(
-    $input: UpdateSELStructureInput!
-    $condition: ModelSELStructureConditionInput
-  ) {
-    updateSELStructure(input: $input, condition: $condition) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteSelStructure = /* GraphQL */ `
-  mutation DeleteSelStructure(
-    $input: DeleteSELStructureInput!
-    $condition: ModelSELStructureConditionInput
-  ) {
-    deleteSELStructure(input: $input, condition: $condition) {
-      id
-      name
-      description
       createdAt
       updatedAt
     }
@@ -5039,162 +4742,6 @@ export const deleteWord = /* GraphQL */ `
     }
   }
 `;
-export const createStudentWord = /* GraphQL */ `
-  mutation CreateStudentWord(
-    $input: CreateStudentWordInput!
-    $condition: ModelStudentWordConditionInput
-  ) {
-    createStudentWord(input: $input, condition: $condition) {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateStudentWord = /* GraphQL */ `
-  mutation UpdateStudentWord(
-    $input: UpdateStudentWordInput!
-    $condition: ModelStudentWordConditionInput
-  ) {
-    updateStudentWord(input: $input, condition: $condition) {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteStudentWord = /* GraphQL */ `
-  mutation DeleteStudentWord(
-    $input: DeleteStudentWordInput!
-    $condition: ModelStudentWordConditionInput
-  ) {
-    deleteStudentWord(input: $input, condition: $condition) {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createRoomMsgs = /* GraphQL */ `
   mutation CreateRoomMsgs(
     $input: CreateRoomMsgsInput!
@@ -5229,9 +4776,6 @@ export const createRoomMsgs = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -5277,9 +4821,6 @@ export const updateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -5321,9 +4862,6 @@ export const deleteRoomMsgs = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -8475,9 +8013,6 @@ export const createStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -8664,9 +8199,6 @@ export const updateStudentData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -8857,9 +8389,6 @@ export const deleteStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -8979,9 +8508,6 @@ export const createAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -9029,9 +8555,6 @@ export const updateAnthologyComment = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -9083,9 +8606,6 @@ export const deleteAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -9134,9 +8654,6 @@ export const createQuestionData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -9255,9 +8772,6 @@ export const updateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -9372,9 +8886,6 @@ export const deleteQuestionData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -10148,282 +9659,6 @@ export const deleteFeedback = /* GraphQL */ `
     }
   }
 `;
-export const createIntro = /* GraphQL */ `
-  mutation CreateIntro(
-    $input: CreateIntroInput!
-    $condition: ModelIntroConditionInput
-  ) {
-    createIntro(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateIntro = /* GraphQL */ `
-  mutation UpdateIntro(
-    $input: UpdateIntroInput!
-    $condition: ModelIntroConditionInput
-  ) {
-    updateIntro(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteIntro = /* GraphQL */ `
-  mutation DeleteIntro(
-    $input: DeleteIntroInput!
-    $condition: ModelIntroConditionInput
-  ) {
-    deleteIntro(input: $input, condition: $condition) {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createOutro = /* GraphQL */ `
-  mutation CreateOutro(
-    $input: CreateOutroInput!
-    $condition: ModelOutroConditionInput
-  ) {
-    createOutro(input: $input, condition: $condition) {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateOutro = /* GraphQL */ `
-  mutation UpdateOutro(
-    $input: UpdateOutroInput!
-    $condition: ModelOutroConditionInput
-  ) {
-    updateOutro(input: $input, condition: $condition) {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteOutro = /* GraphQL */ `
-  mutation DeleteOutro(
-    $input: DeleteOutroInput!
-    $condition: ModelOutroConditionInput
-  ) {
-    deleteOutro(input: $input, condition: $condition) {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const createPersonLocation = /* GraphQL */ `
   mutation CreatePersonLocation(
     $input: CreatePersonLocationInput!
@@ -10459,9 +9694,6 @@ export const createPersonLocation = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -10649,9 +9881,6 @@ export const updatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10835,9 +10064,6 @@ export const deletePersonLocation = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -11039,9 +10265,6 @@ export const createNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -11101,9 +10324,6 @@ export const updateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -11161,9 +10381,6 @@ export const deleteNoticeboardWidget = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt

@@ -274,6 +274,7 @@ const sideBarLinksDict: any = {
     LESSON_PLANNER: 'Homeroom',
     CLASSROOM: 'Classroom',
     LESSON_BUILDER: 'Lesson Builder',
+    UNIVERSAL_LESSON_BUILDER: 'Universal Builder',
     ANTHOLOGY: 'Notebook',
     NOTICEBOARD: 'Noticeboard',
     NOTEBOOK: 'Notebook',
@@ -288,6 +289,7 @@ const sideBarLinksDict: any = {
     CLASSROOM: 'Aula',
     NOTEBOOK: 'Computadora portátil',
     LESSON_BUILDER: 'Constructor de lecciones',
+    UNIVERSAL_LESSON_BUILDER: 'Constructor Universal',
     ANTHOLOGY: 'Cuaderno',
     NOTICEBOARD: 'Tablón de anuncios',
     RESEARCHANALYTICS: 'Investigación y Análisis',
@@ -3132,6 +3134,28 @@ const LessonsListDict: any = {
     },
   },
 };
+
+
+const UniversalBuilderDict: any = {
+  'EN':{
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'Lesson Pages'
+    },
+    TEMPLATES:{
+      TITLE: 'Lesson Templates'
+    }
+  },
+  'ES':{
+    FETCHING: 'Fetching lesson pages...',
+    GALLERY: {
+      LESSON_PAGES: 'TBD'
+    },
+    TEMPLATES:{
+      TITLE: 'TBD'
+    }
+  }
+}
 
 const CsvDict: any = {
   EN: {
