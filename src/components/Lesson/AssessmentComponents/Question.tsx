@@ -10,6 +10,7 @@ import InputQuestions from './Questions/InputQuestions';
 import TextQuestions from './Questions/TextQuestions';
 import SelectOneQuestions from './Questions/SelectOneQuestions';
 import SelectManyQuestions from './Questions/SelectManyQuestions';
+import {url} from 'inspector';
 
 export interface QuestionProps {
   checkpointID?: string;
@@ -19,10 +20,13 @@ export interface QuestionProps {
   questionIndex?: number;
   questionKey: any;
   animate?: boolean;
+  type?: string;
+  emoji?: boolean;
+  attachments?: boolean;
   handleInputChange?: (
     id: number | string,
     value: string | string[],
-    checkpointID: string,
+    checkpointID: string
   ) => void;
   value?: ResponseState;
 }
@@ -55,6 +59,9 @@ const Question = (props: QuestionProps) => {
   const questionSwitch = (questionIndex: number, key: string) => {
     switch (question.question.type) {
       case 'input':
+      case 'link':
+      case 'emoji':
+      case 'attachments':
         return (
           <InputQuestions
             checkpointID={checkpointID}
@@ -65,6 +72,28 @@ const Question = (props: QuestionProps) => {
             questionKey={key}
             handleInputChange={handleInputChange}
             value={value}
+            type={
+              question.question.type === 'input' || question.question.type === 'emoji'
+                ? 'text'
+                : 'url'
+            }
+            emoji={question.question.type === 'emoji'}
+            attachments={question.question.type === 'attachments'}
+          />
+        );
+
+      case 'datePicker':
+        return (
+          <InputQuestions
+            checkpointID={checkpointID}
+            visible={visible}
+            isTeacher={isTeacher}
+            question={question}
+            questionIndex={questionIndex}
+            questionKey={key}
+            handleInputChange={handleInputChange}
+            value={value}
+            type={'date'}
           />
         );
       case 'text':
