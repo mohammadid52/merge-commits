@@ -38,17 +38,6 @@ export const getPerson = /* GraphQL */ `
         }
         nextToken
       }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -93,9 +82,6 @@ export const listPersons = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -300,21 +286,8 @@ export const getStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
       }
       createdAt
       updatedAt
@@ -358,9 +331,6 @@ export const listStaffs = /* GraphQL */ `
           lastLoggedOut
           createdAt
           updatedAt
-        }
-        curricula {
-          nextToken
         }
         createdAt
         updatedAt
@@ -437,9 +407,6 @@ export const getRoom = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -705,9 +672,6 @@ export const getRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -968,9 +932,6 @@ export const getClassStudent = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -1584,35 +1545,6 @@ export const listArtists = /* GraphQL */ `
         additionalContent {
           video
         }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getSelStructure = /* GraphQL */ `
-  query GetSelStructure($id: ID!) {
-    getSELStructure(id: $id) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listSelStructures = /* GraphQL */ `
-  query ListSelStructures(
-    $filter: ModelSELStructureFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listSELStructures(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
-        description
         createdAt
         updatedAt
       }
@@ -2375,9 +2307,6 @@ export const getRoomMsgs = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -3552,9 +3481,6 @@ export const getStudentData = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -3772,9 +3698,6 @@ export const getAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -3874,9 +3797,6 @@ export const getQuestionData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -4138,163 +4058,6 @@ export const listFeedbacks = /* GraphQL */ `
     }
   }
 `;
-export const getIntro = /* GraphQL */ `
-  query GetIntro($id: ID!) {
-    getIntro(id: $id) {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listIntros = /* GraphQL */ `
-  query ListIntros(
-    $filter: ModelIntroFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listIntros(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        title
-        label
-        stage
-        type
-        connectionTitle
-        connection
-        keywordsTitle
-        keywords {
-          nextToken
-        }
-        questionsTitle
-        questions {
-          nextToken
-        }
-        language
-        estTime
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getOutro = /* GraphQL */ `
-  query GetOutro($id: ID!) {
-    getOutro(id: $id) {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listOutros = /* GraphQL */ `
-  query ListOutros(
-    $filter: ModelOutroFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listOutros(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        title
-        subtitle
-        stage
-        type
-        closingTitle
-        closingText
-        questionsTitle
-        questions {
-          nextToken
-        }
-        additionalInfo
-        language
-        estTime
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getPersonLocation = /* GraphQL */ `
   query GetPersonLocation($personEmail: String!, $personAuthID: String!) {
     getPersonLocation(personEmail: $personEmail, personAuthID: $personAuthID) {
@@ -4327,9 +4090,6 @@ export const getPersonLocation = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -4618,9 +4378,6 @@ export const getNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -4732,9 +4489,6 @@ export const userById = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -4779,9 +4533,6 @@ export const usersByRole = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
