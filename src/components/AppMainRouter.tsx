@@ -1,24 +1,24 @@
-import React, { useState, useContext, useEffect, Suspense } from 'react';
-import { Auth } from '@aws-amplify/auth';
-import { useCookies } from 'react-cookie';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useContext, useEffect, Suspense} from 'react';
+import {Auth} from '@aws-amplify/auth';
+import {useCookies} from 'react-cookie';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
-import { GlobalContext } from '../contexts/GlobalContext';
+import {GlobalContext} from '../contexts/GlobalContext';
 import useDeviceDetect from '../customHooks/deviceDetect';
 import MobileOops from '../components/Error/MobileOops';
 import ComponentLoading from './Lesson/Loading/ComponentLoading';
 
 import AuthRoutes from './AppRoutes/AuthRoutes';
 import UnauthRoutes from './AppRoutes/UnauthRoutes';
-import { getAsset } from '../assets';
+import {getAsset} from '../assets';
 
 import * as customMutations from '../customGraphql/customMutations';
 import * as customQueries from '../customGraphql/customQueries';
 
 const MainRouter: React.FC = () => {
   const deviceDetected = useDeviceDetect();
-  const { state, theme, clientKey, dispatch } = useContext(GlobalContext);
+  const {state, theme, clientKey, dispatch} = useContext(GlobalContext);
   const [cookies, setCookie, removeCookie] = useCookies();
   const [authState, setAuthState] = useState('loading');
 
@@ -26,8 +26,8 @@ const MainRouter: React.FC = () => {
     if (authState === 'loggedIn') {
       checkForUserInactivity();
     } else {
-      removeCookie('auth', { path: '/' });
-      dispatch({ type: 'CLEANUP' });
+      removeCookie('auth', {path: '/'});
+      dispatch({type: 'CLEANUP'});
       sessionStorage.removeItem('accessToken');
     }
   }, [authState]);
@@ -52,7 +52,9 @@ const MainRouter: React.FC = () => {
     document
       .querySelector('meta[name="apple-mobile-web-app-title"]')
       .setAttribute('content', getAsset(clientKey, 'webAppTitle'));
-    document.querySelector('meta[name="application-name"]').setAttribute('content', getAsset(clientKey, 'appName'));
+    document
+      .querySelector('meta[name="application-name"]')
+      .setAttribute('content', getAsset(clientKey, 'appName'));
     document
       .querySelector('meta[name="msapplication-TileImage"]')
       .setAttribute('content', getAsset(clientKey, 'tileImage'));
@@ -65,13 +67,15 @@ const MainRouter: React.FC = () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
       if (user) {
-        const { email, sub } = user.attributes;
-        let userInfo: any = await API.graphql(graphqlOperation(queries.getPerson, { email: email, authId: sub }));
+        const {email, sub} = user.attributes;
+        let userInfo: any = await API.graphql(
+          graphqlOperation(queries.getPerson, {email: email, authId: sub})
+        );
         userInfo = userInfo.data.getPerson;
         updateAuthState(true);
         dispatch({
           type: 'PREV_LOG_IN',
-          payload: { email, authId: sub },
+          payload: {email, authId: sub},
         });
         // SETUP USER
         dispatch({
@@ -119,7 +123,7 @@ const MainRouter: React.FC = () => {
         email: state.user.email,
         lastLoggedOut: new Date().toISOString(),
       };
-      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, { input }));
+      API.graphql(graphqlOperation(customMutations.updatePersonLogoutTime, {input}));
       await Auth.signOut();
       updateAuthState(false);
     }
@@ -137,6 +141,8 @@ const MainRouter: React.FC = () => {
     }
   };
 
+  const [justLoggedIn, setJustLoggedIn] = useState(false);
+
   {
     return (
       <div
@@ -150,8 +156,15 @@ const MainRouter: React.FC = () => {
                 <ComponentLoading />
               </div>
             }>
-            {authState === 'loggedIn' && <AuthRoutes updateAuthState={updateAuthState} />}
-            {authState === 'notLoggedIn' && <UnauthRoutes updateAuthState={updateAuthState} />}
+            {authState === 'loggedIn' && (
+              <AuthRoutes justLoggedIn={justLoggedIn} updateAuthState={updateAuthState} />
+            )}
+            {authState === 'notLoggedIn' && (
+              <UnauthRoutes
+                setJustLoggedIn={setJustLoggedIn}
+                updateAuthState={updateAuthState}
+              />
+            )}
           </Suspense>
         )}
       </div>

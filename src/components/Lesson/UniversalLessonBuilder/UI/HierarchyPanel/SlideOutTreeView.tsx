@@ -30,7 +30,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
     setHierarchyVisible,
     setEditMode,
   } = props;
-  const {selectedPageID, updateMovableList} = useULBContext();
+  const {selectedPageID, updateMovableList, enableDnD} = useULBContext();
 
   const getTreeIcon = (partType: string) => {
     switch (partType) {
@@ -103,18 +103,12 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                     <HiPencil className="hover:text-indigo-400 text-white" size={18} />
                   </span>
                 </button>
-                {/* <DraggableList
-              openModal={openModal}
-              getTreeIcon={getTreeIcon}
-              pagePartId={pagePart.id}
-              idx={idx}
-              partContent={pagePart.partContent}
-            /> */}
+
                 <DragDropContext
                   onDragEnd={(result) =>
                     handleOnDragEnd(result, pagePart.id, partContent)
                   }>
-                  <Droppable droppableId="partContent">
+                  <Droppable isDropDisabled={!enableDnD} droppableId="partContent">
                     {(provided) => {
                       return (
                         <ul
@@ -125,6 +119,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                           {partContent.length > 0 &&
                             partContent.map((partContent: PartContent, idx2: number) => (
                               <Draggable
+                                isDragDisabled={!enableDnD}
                                 draggableId={`pagePart_tree_${idx}_${idx2}`}
                                 index={idx2}
                                 key={`pagePart_tree_${idx}_${idx2}`}>

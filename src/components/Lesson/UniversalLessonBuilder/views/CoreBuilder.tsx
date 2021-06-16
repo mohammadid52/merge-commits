@@ -14,6 +14,7 @@ import {AiOutlineEye, AiOutlineEyeInvisible, AiOutlineBgColors} from 'react-icon
 import Tooltip from '../../../Atoms/Tooltip';
 import Buttons from '../../../Atoms/Buttons';
 import ColorPicker from '../UI/ColorPicker/ColorPicker';
+import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
@@ -52,7 +53,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleModalPopToggle,
     handleTagModalOpen,
   } = props;
-  const {previewMode, setPreviewMode} = useULBContext();
+  const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
 
   const handleColorPickerSelect = (pickedColor: string) => {
     updateFromULBHandler(selectedPageID, 'class', `bg-${pickedColor}`);
@@ -98,22 +99,38 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         </LessonPageWrapper>
       </div>
 
-      <div className="absolute top-7 right-2 w-auto">
-        <Tooltip placement="left" text={`Preview Mode: ${previewMode ? 'On' : 'Off'}`}>
-          <button
-            onClick={() => setPreviewMode(!previewMode)}
-            className="text-white bg-gray-700  h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
-            {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-          </button>
-        </Tooltip>
+      <div className="absolute top-7 right-2 w-auto flex flex-col items-center">
+        <div className=" w-auto my-2">
+          <Tooltip
+            placement="left"
+            text={`${previewMode ? 'Show pencil' : 'Hide Pencil'}`}>
+            <button
+              onClick={() => setPreviewMode(!previewMode)}
+              className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+              {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </button>
+          </Tooltip>
+        </div>
+        <div className="w-auto my-2">
+          <Tooltip
+            placement="left"
+            text={`${enableDnD ? 'Disable Drag' : 'Enable Drag'}`}>
+            <button
+              onClick={() => setEnableDnD(!enableDnD)}
+              className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+              {enableDnD ? <RiDragDropFill /> : <RiDragDropLine />}
+            </button>
+          </Tooltip>
+        </div>
       </div>
+
       <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
-        <div className={`absolute w-auto top-7 left-2`}>
+        <div className={`absolute w-auto top-7 left-2 z-30`}>
           <Buttons
             onClick={onColorPickerToggle}
             label="BG Color"
             overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-lg"
+            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-md"
             Icon={AiOutlineBgColors}
           />
           {isColorPickerOpen && (

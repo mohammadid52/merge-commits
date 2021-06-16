@@ -261,7 +261,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               id: `${pageContentId}_${contentType}_1`,
               type: contentType,
               value: inputObj,
-              class: classString || ''
+              class: classString || '',
             },
           ],
           partType: 'default',
@@ -403,7 +403,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  console.log(universalLessonDetails, 'universalLessonDetails');
+  // console.log(universalLessonDetails, 'universalLessonDetails');
   
 
   return (

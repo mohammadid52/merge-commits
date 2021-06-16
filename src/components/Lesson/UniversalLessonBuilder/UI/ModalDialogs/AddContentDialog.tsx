@@ -49,6 +49,18 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                 </IconContext.Provider>
               </div>
               <p className={`text-center text-sm text-gray-600`}>Paragraph</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'jumbotron'});
+                }}
+                className={`${buttonClass}`}>
+                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
+                  <AiOutlineFileImage />
+                </IconContext.Provider>
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Jumbotron</p>
             </div>
           </div>
         </div>
