@@ -226,7 +226,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       position = 0,
       section = 'pageContent',
       inputObj = {},
-      isEditingMode = false,
     } = blockConfig;
     const updateBlockContent = (
       targetID: string,
@@ -284,7 +283,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'input':
       case 'form-numbered':
       case 'form-default':
-        return <InputModalComponent {...commonProps} />;
+        return <InputModalComponent {...commonProps} contentType={type} />;
       case 'video':
         return (
           <YouTubeMediaDialog
