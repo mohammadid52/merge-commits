@@ -13,10 +13,18 @@ import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {getAsset} from '../../../../../assets';
 import {v4 as uuidv4} from 'uuid';
 
-const InputModalComponent = ({selectedPageID, closeAction, inputObj}: any) => {
-  const {addFromULBHandler} = useULBContext();
+const InputModalComponent = ({
+  selectedPageID,
+  closeAction,
+  contentType,
+  inputObj,
+  createNewBlockULBHandler,
+  updateBlockContentULBHandler,
+}: any) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
+  const {addFromULBHandler} = useULBContext();
 
   // useEffect(() => {
   //   if (inputObj && inputObj.length) {
@@ -191,11 +199,11 @@ const InputModalComponent = ({selectedPageID, closeAction, inputObj}: any) => {
     return (
       <>
         {val ? (
-          <BiCheckboxChecked className="w-auto text-3xl text-blue-600" />
+          <BiCheckboxChecked className="w-auto text-3xl text-blue-600 cursor-pointer" />
         ) : (
-          <BiCheckbox className="w-auto text-3xl text-blue-600" />
+          <BiCheckbox className="w-auto text-3xl text-blue-600 cursor-pointer" />
         )}
-        <p className="w-auto">textarea</p>
+        <p className="w-auto cursor-pointer">textarea</p>
       </>
     );
   };

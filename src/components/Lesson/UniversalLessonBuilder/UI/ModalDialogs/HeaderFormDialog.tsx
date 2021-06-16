@@ -8,13 +8,20 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+
+interface IHeaderModalComponentProps extends IContentTypeComponentProps {
+  inputObj?: any;
+  selectedPageID?: string;
+}
 
 const HeaderModalComponent = ({
   selectedPageID,
   closeAction,
   inputObj,
+  createNewBlockULBHandler,
   updateBlockContentULBHandler,
-}: any) => {
+}: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -67,25 +74,33 @@ const HeaderModalComponent = ({
         '',
         'header-section',
         [value],
-        '',
+        0,
         `${fontSizeClass} border-b-4 border-${bgColorClass}`
       );
     } else {
-      const newDataObject = {
-        id: pageContentId,
-        partType: 'default',
-        class: 'rounded-lg',
-        partContent: [
-          {
-            id: partContentId,
-            type: 'header-section',
-            value: [value],
-            class: `${fontSizeClass} ${bgColorClass ? `border-b-4 border-${bgColorClass}`:''}`,
-          },
-        ],
-      };
-      // add data to list
-      addFromULBHandler(selectedPageID, newDataObject);
+      createNewBlockULBHandler(
+        '',
+        '',
+        'header',
+        [value],
+        0,
+        `${fontSizeClass} ${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`
+      );
+      // const newDataObject = {
+      //   id: pageContentId,
+      //   partType: 'default',
+      //   class: 'rounded-lg',
+      //   partContent: [
+      //     {
+      //       id: partContentId,
+      //       type: 'header-section',
+      //       value: [value],
+      //       class: `${fontSizeClass} ${bgColorClass ? `border-b-4 border-${bgColorClass}`:''}`,
+      //     },
+      //   ],
+      // };
+      // // add data to list
+      // addFromULBHandler(selectedPageID, newDataObject);
     }
     // close modal after saving
     closeAction();
@@ -152,7 +167,7 @@ const HeaderModalComponent = ({
               classString={''}
               callbackColor={handleColorPickerSelect}
               isMainPage={true}
-              styleString={{top:"100%"}}
+              styleString={{top: '100%'}}
             />
           )}
         </div>
