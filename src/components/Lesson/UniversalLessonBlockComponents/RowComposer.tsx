@@ -97,6 +97,7 @@ const DraggableList = ({
                           }
                           createNewBlockULBHandler={createNewBlockULBHandler}
                           deleteFromULBHandler={deleteFromULBHandler}
+                          section={'partContent'}
                           updateFromULBHandler={updateFromULBHandler}>
                           {content.value.length > 0 ? (
                             <div className={content.class} id={content.id}>

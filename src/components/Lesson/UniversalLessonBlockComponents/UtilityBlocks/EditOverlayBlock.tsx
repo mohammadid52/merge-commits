@@ -32,7 +32,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
         <div
           className={`
         relative 
-        h-auto 
+        ${section === "partContent" ? 'h-full' : 'h-auto'} 
         flex items-center rowWrapper
         ${
           isComponent && !previewMode
