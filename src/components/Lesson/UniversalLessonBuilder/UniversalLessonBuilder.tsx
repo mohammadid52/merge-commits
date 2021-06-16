@@ -12,6 +12,7 @@ import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData'
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import {MovableListProvider} from './MovableListContext';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -260,7 +261,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               id: `${pageContentId}_${contentType}_1`,
               type: contentType,
               value: inputObj,
-              class: classString || ''
+              class: classString || '',
             },
           ],
           partType: 'default',
@@ -309,14 +310,12 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
           const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
-           let activePagePartContentData = [
-            ...activePageContentData.partContent]
-            activePagePartContentData[addBlockAtPosition] = {
-              id: partContentId,
-              type: contentType,
-              value: inputObj,
-              class: classString || '',
-            };
+          let activePagePartContentData = [...activePageContentData.partContent];
+          activePagePartContentData[addBlockAtPosition] = {
+            id: partContentId,
+            type: contentType,
+            value: inputObj,
+          };
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
             partContent: activePagePartContentData,
@@ -403,7 +402,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   };
 
   console.log(universalLessonDetails, 'universalLessonDetails');
-  
 
   return (
     /**
@@ -420,6 +418,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       id={`universalLessonBuilder`}
       className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
+
       <BuilderWrapper
         mode={`building`}
         deleteFromULBHandler={deleteULBHandler}
