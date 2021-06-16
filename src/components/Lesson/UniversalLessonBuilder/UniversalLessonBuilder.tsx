@@ -279,8 +279,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
           const alreadyAddedPartContentLength: number =
             activePageContentData.partContent.length;
-            let activePagePartContentData = [
-            ...activePageContentData.partContent]
+          let activePagePartContentData = [...activePageContentData.partContent];
           if (alreadyAddedPartContentLength < inputObj) {
             activePagePartContentData = [
               ...activePagePartContentData,
@@ -379,6 +378,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
                   classString
                 )
               : activePagePartContentData[addBlockAtPosition].class,
+            type: contentType,
             value: inputObj,
           };
           pageContentData[activePageContentIndex] = {
@@ -418,7 +418,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      */
     <div
       id={`universalLessonBuilder`}
-      className="h-full flex bg-white shadow-5 sm:rounded-lg">
+      className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
       <BuilderWrapper
         mode={`building`}

@@ -63,7 +63,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string;
     position: number;
     targetId: string;
-    inputObj?:any;
+    inputObj?: any;
     isEditingMode?: boolean;
   }>({
     section: 'pageContent',
@@ -98,11 +98,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     dialogToToggle: string,
     position?: number,
     section: string = 'pageContent',
-    targetId?:string
+    targetId?: string
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-    
+
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
       setBlockConfig({
