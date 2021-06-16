@@ -26,21 +26,40 @@ const InputModalComponent = ({
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const {addFromULBHandler} = useULBContext();
 
-  // useEffect(() => {
-  //   if (inputObj && inputObj.length) {
-  //     let fieldsValue = {};
-  //     setInputList(inputObj);
-  //     // setIsEditingMode(true);
-  //     forEach(inputObj, ({id, label, value}: any) => {
-  //       fieldsValue = {
-  //         ...fieldsValue,
-  //         [`formFieldInput_${id}`]: label,
-  //         [`placeholder_${id}`]: value,
-  //       };
-  //     });
-  //     setInputFields(fieldsValue);
-  //   }
-  // }, [inputObj]);
+  useEffect(() => {
+    if (inputObj && inputObj.length) {
+      setNumbered(contentType.includes('numbered'));
+      if (inputObj[0].type === 'radio-input') {
+        setRadioList(
+          inputObj.map((input: any) => ({
+            ...input,
+            options: input.value,
+          }))
+        );
+        setSelectedFormType(SELECT_ONE);
+      } else if (inputObj[0].type === 'emoji-input') {
+        setEmojiInputList(
+          inputObj.map((input: any) => ({
+            ...input,
+            title: input.label,
+            placeholder: input.value,
+          }))
+        );
+        setSelectedFormType(INPUT_WITH_EMOJI);
+      } else {
+        setInputList(
+          inputObj.map((input: any) => ({
+            ...input,
+            textArea: input.type.includes('area'),
+            title: input.label,
+            placeholder: input.value,
+          }))
+        );
+        setSelectedFormType(INPUT);
+      }
+      setIsEditingMode(true);
+    }
+  }, [inputObj]);
 
   const modifiedOptions = (opt: any) =>
     map(opt, (o) => ({
@@ -101,9 +120,14 @@ const InputModalComponent = ({
     const partContentId: string = `${pageContentId}_`;
 
     const inputObjArray = valueArray(partContentId);
-
+    const type: string = `form-${numbered ? 'numbered' : 'default'}`;
+    if (isEditingMode) {
+      updateBlockContentULBHandler('', '', type, inputObjArray);
+    } else {
+      createNewBlockULBHandler('', '', type, inputObjArray);
+    }
     // add data to list
-    pushToULB(pageContentId, partContentId, inputObjArray);
+    // pushToULB(pageContentId, partContentId, inputObjArray);
 
     // // close modal after saving
     closeAction();
@@ -256,7 +280,7 @@ const InputModalComponent = ({
   };
 
   const [numbered, setNumbered] = useState(false);
-
+  
   const getForm = (type: 'Input' | 'Select One' | 'Input With Emoji' | string) => {
     switch (type) {
       case INPUT:
