@@ -9,7 +9,7 @@ import {
 import {BsLayoutSplit} from 'react-icons/bs';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
-import { FaSortUp } from 'react-icons/fa';
+import {FaSortUp} from 'react-icons/fa';
 import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 
@@ -78,7 +78,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     );
   };
   const handleSplitColToggle = () => {
-    setColDropdownActive(prevValue => !prevValue);
+    setColDropdownActive((prevValue) => !prevValue);
     setColorPickerActive(false);
   };
   const {previewMode} = useULBContext();
@@ -131,42 +131,50 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left-2' : 'right-3.5'
           } bg-gray-800 rounded-lg shadow-lg `}>
-          {section === "pageContent" ? <><button className={`${actionClass}`} onClick={handleSplitColToggle}>
-            <span className={iconClass}>
-              <BsLayoutSplit />
-            </span>
-            <span className={textClass}>Split</span>
-          </button>
-          {colDropdownActive && (
-            <SplitColumnDropdown
-              isPagePart={isPagePart}
-              handleSplitColumnChange={handleSplitColumnChange}
-            />
-          )}</> : null}
-          <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
-            <span className={iconClass}>
-              <AiOutlineEdit />
-            </span>
-            <span className={textClass}>Edit</span>
-          </button>
-
-          {section === "pageContent" && <div className={`relative`}>
-            <button
-              onClick={() => setColorPickerActive(!colorPickerActive)}
-              className={`${actionClass}`}>
+          {section === 'pageContent' ? (
+            <>
+              <button className={`${actionClass}`} onClick={handleSplitColToggle}>
+                <span className={iconClass}>
+                  <BsLayoutSplit />
+                </span>
+                <span className={textClass}>Split</span>
+              </button>
+              {colDropdownActive && (
+                <SplitColumnDropdown
+                  isPagePart={isPagePart}
+                  handleSplitColumnChange={handleSplitColumnChange}
+                />
+              )}
+            </>
+          ) : null}
+          {section !== 'pageContent' ? (
+            <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
               <span className={iconClass}>
-                <AiOutlineBgColors />
+                <AiOutlineEdit />
               </span>
-              <span className={textClass}>BG Color</span>
+              <span className={textClass}>Edit</span>
             </button>
-            {colorPickerActive && (
-              <ColorPicker
-                classString={classString}
-                callbackColor={handleColorPickerSelect}
-                isPagePart={isPagePart}
-              />
-            )}
-          </div>}
+          ) : null}
+
+          {section === 'pageContent' && (
+            <div className={`relative`}>
+              <button
+                onClick={() => setColorPickerActive(!colorPickerActive)}
+                className={`${actionClass}`}>
+                <span className={iconClass}>
+                  <AiOutlineBgColors />
+                </span>
+                <span className={textClass}>BG Color</span>
+              </button>
+              {colorPickerActive && (
+                <ColorPicker
+                  classString={classString}
+                  callbackColor={handleColorPickerSelect}
+                  isPagePart={isPagePart}
+                />
+              )}
+            </div>
+          )}
 
           <button
             onClick={() => deleteFromULBHandler(contentID)}
