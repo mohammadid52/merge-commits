@@ -26,6 +26,7 @@ import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import PoemBlock from './Blocks/PoemBlock';
 import HighlighterBlock from './Blocks/HighlighterBlock';
 import LinksBlock from './Blocks/LinksBlock';
+import {findIndex, update} from 'lodash';
 
 const RowComposer = (props: RowComposerProps) => {
   const {
@@ -33,8 +34,6 @@ const RowComposer = (props: RowComposerProps) => {
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
-    universalLessonDetails,
-    selectedPageID,
     setTargetID,
     handleEditBlockContent,
     handleModalPopToggle,
@@ -53,12 +52,35 @@ const RowComposer = (props: RowComposerProps) => {
     }
   };
 
+  const {
+    getCurrentPageIdx,
+    selectedPageID,
+    universalLessonDetails,
+    setUniversalLessonDetails,
+    getPartContent,
+    getPageContent,
+  } = useULBContext();
+
+  const updateOnSave = (inputID: string, updatedText: string, pagePartId: string) => {
+    const pageIdx = getCurrentPageIdx(selectedPageID);
+    const pageContent = getPageContent(pageIdx);
+    const pageContentIdx = findIndex(pageContent, (d: any) => d.id === pagePartId);
+    const partContent = getPartContent(pageIdx, pageContentIdx);
+    const partContentIdx = findIndex(partContent, (d: any) => d.id === inputID);
+
+    const PATH_TO_PARTCONTENT = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent[${partContentIdx}].value`;
+
+    update(universalLessonDetails, PATH_TO_PARTCONTENT, () => [updatedText]);
+    setUniversalLessonDetails({...universalLessonDetails});
+  };
+
   const composePartContent = (
     id: string,
     type: string,
     value: any,
     inputKey: string,
-    classString: string = ''
+    classString: string = '',
+    pagePartId: string
   ) => {
     if (type.includes('jumbotron')) {
       return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
@@ -78,10 +100,21 @@ const RowComposer = (props: RowComposerProps) => {
           classString={classString}
           value={value}
           mode={mode}
+          updateOnSave={updateOnSave}
+          pagePartId={pagePartId}
         />
       );
     } else if (type.includes('paragraph')) {
-      return <ParagraphBlock id={id} type={type} value={value || []} mode={mode} />;
+      return (
+        <ParagraphBlock
+          updateOnSave={updateOnSave}
+          id={id}
+          pagePartId={pagePartId}
+          type={type}
+          value={value || []}
+          mode={mode}
+        />
+      );
     } else if (type.includes('form')) {
       return <FormBlock id={id} value={value} mode={mode} />;
     } else if (type.includes('image')) {
@@ -288,7 +321,8 @@ const RowComposer = (props: RowComposerProps) => {
                                                 content.type,
                                                 content.value,
                                                 `pp_${idx}_pc_${idx2}`,
-                                                content.class
+                                                content.class,
+                                                pagePart.id
                                               )}
                                             </div>
                                           ) : (
