@@ -1050,11 +1050,14 @@ const Dashboard = (props: DashboardProps) => {
               render={() => <LessonsBuilderHome />}
             />
 
-            {/* <Route
+            <Route
               path={`${match.url}/universal-lesson-builder`}
-              render={() => <UniversalLessonBuilder />}
-            /> */}
-
+              render={() => (
+                <UniversalLessonBuilderProvider>
+                  <UniversalLessonBuilder />
+                </UniversalLessonBuilderProvider>
+              )}
+            />
           </Switch>
         </Suspense>
       </div>
