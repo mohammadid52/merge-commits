@@ -15,10 +15,11 @@ import * as customMutations from '../../customGraphql/customMutations';
 import {getAsset} from '../../assets';
 
 interface LoginProps {
+  setJustLoggedIn?: any;
   updateAuthState: Function;
 }
 
-const Login = ({updateAuthState}: LoginProps) => {
+const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
@@ -87,6 +88,7 @@ const Login = ({updateAuthState}: LoginProps) => {
         const update: any = await API.graphql(
           graphqlOperation(customMutations.updatePersonLoginTime, {input})
         );
+        setJustLoggedIn(true);
         updateAuthState(true);
       } catch (error) {
         const errMsg = {show: true, type: 'error'};
