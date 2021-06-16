@@ -195,28 +195,11 @@ const RowComposer = (props: RowComposerProps) => {
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
             <div key={`row_pagepart_${idx}`} className="relative">
-              {/* <div className="absolute w-auto top-2 right-2 z-10">
-                {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
-                  <TagBlock
-                    tags={pagePart.tags}
-                    handleEditTag={() =>
-                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
-                    }
-                  />
-                ) : (
-                  <Buttons
-                    btnClass="py-1 px-4 text-xs mr-2"
-                    Icon={FaPlus}
-                    label="Add tag"
-                    onClick={() =>
-                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
-                    }
-                  />
-                )}
-              </div> */}
               <div
                 className={`absolute w-auto bottom-${
-                  idx === selectedPageDetails.pageContent.length - 1 ? 2 : 4
+                  idx === selectedPageDetails.pageContent.length - 1 || previewMode
+                     ? 2
+                    : 4
                 } right-2 z-100`}>
                 {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
                   <TagBlock
@@ -225,7 +208,7 @@ const RowComposer = (props: RowComposerProps) => {
                       handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
                     }
                   />
-                ) : (
+                ) : !previewMode ? (
                   <button
                     className=" flex items-center
                       w-auto 
@@ -241,7 +224,7 @@ const RowComposer = (props: RowComposerProps) => {
                     </span>
                     Add tag
                   </button>
-                )}
+                ) : null}
               </div>
 
               <EditOverlayBlock
