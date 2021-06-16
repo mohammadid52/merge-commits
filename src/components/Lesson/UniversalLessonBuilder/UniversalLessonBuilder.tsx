@@ -397,8 +397,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  console.log(universalLessonDetails, 'universalLessonDetails');
-
   return (
     /**
      *
@@ -412,7 +410,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      */
     <div
       id={`universalLessonBuilder`}
-      className="h-full flex bg-white shadow-5 sm:rounded-lg">
+      className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
 
       <BuilderWrapper
