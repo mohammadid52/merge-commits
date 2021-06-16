@@ -18,6 +18,7 @@ interface IImageInput {
 
 interface IJumbotronModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
+  imageInput?: IImageInput[];
   selectedPageID?: string;
 }
 
@@ -50,17 +51,35 @@ const initialInputFieldsState = [
 ];
 
 const JumbotronModalComponent = ({
-  selectedPageID,
   closeAction,
   inputObj,
+  imageInput,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: IJumbotronModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
+  const [isEditingMode] = useState<boolean>(false);
 
-  const FIELD_ID = 'jumbotron';
+  //////////////////////////
+  //  FOR IMAGE UPLOADING //
+  //////////////////////////
+  const [imageInputs, setImageInputs] = useState<IImageInput>({
+    url: '',
+    imageData: null,
+    width: 'auto',
+    height: 'auto',
+    caption: '',
+  });
+  const [errors, setErrors] = useState<IImageInput>({
+    url: '',
+    width: '',
+    height: '',
+  });
+  const [loading, setIsLoading] = useState<boolean>(false);
 
+  //////////////////////////
+  //  FOR NORMAL INPUT    //
+  //////////////////////////
   const [inputFieldsArray, setInputFieldsArray] = useState<PartContentSub[]>(initialInputFieldsState);
   useEffect(() => {
     if (inputObj) {
