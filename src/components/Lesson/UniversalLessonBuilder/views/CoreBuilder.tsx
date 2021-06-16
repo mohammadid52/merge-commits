@@ -114,7 +114,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <div className="w-auto my-2">
           <Tooltip
             placement="left"
-            text={`${previewMode ? 'Disable Drag' : 'Enable Drag'}`}>
+            text={`${enableDnD ? 'Disable Drag' : 'Enable Drag'}`}>
             <button
               onClick={() => setEnableDnD(!enableDnD)}
               className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
