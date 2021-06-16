@@ -24,6 +24,7 @@ import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
+import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -31,7 +32,6 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
-  createNewBlockULBHandler?: any;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -39,6 +39,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     mode,
     createNewBlockULBHandler,
+    updateBlockContentULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     selectedPageID,
@@ -58,10 +59,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-  const [newBlockConfig, setNewBlockConfig] = useState<{
+  const [blockConfig, setBlockConfig] = useState<{
     section: string;
     position: number;
     targetId: string;
+    inputObj?:any;
+    isEditingMode?: boolean;
   }>({
     section: 'pageContent',
     position: 0,
@@ -102,10 +105,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
-      setNewBlockConfig({
+      setBlockConfig({
         section,
         position,
         targetId,
+        isEditingMode: false,
       });
       setModalPopVisible(true);
     }
@@ -114,6 +118,43 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       setCurrentModalDialog(dialogToToggle);
     }
   };
+
+  const handleEditBlockContent = (
+    type: string,
+    section: string = 'pageContent',
+    inputObj: any,
+    targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
+    indexToUpdate: number
+  ) => {
+    // Hide all UI Menus
+    hideAllUIMenus();
+    setAddContentModal({type, show: true});
+    setBlockConfig({
+      section,
+      position: indexToUpdate,
+      targetId: targetContainerId,
+      inputObj,
+      isEditingMode: true,
+    });
+    // if (type !== 'video' && type !== 'image') {
+    //   setInputFields((prevInputFields: any) => ({
+    //     ...prevInputFields,
+    //     [type]: inputObj && inputObj.length ? inputObj[0] : ""
+    //   }));
+    // }
+  };
+
+  const handleTagModalOpen = (targetId: string, inputObj: any) => {
+    setAddContentModal({type: 'tag', show: true});
+    setBlockConfig({
+      section: 'pageContent',
+      position: 0,
+      targetId,
+      inputObj: inputObj,
+      isEditingMode: false,
+    });
+  };
+
   const [inputFields, setInputFields] = useState<any>({});
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
@@ -181,14 +222,36 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   }
 
   const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
-    const {position = 0, section = 'pageContent'} = newBlockConfig;
-
+    const {
+      position = 0,
+      section = 'pageContent',
+      inputObj = {},
+      isEditingMode = false,
+    } = blockConfig;
+    const updateBlockContent = (
+      targetID: string,
+      propertyToTarget: string,
+      contentType: string,
+      inputValue: any,
+      _: number,
+      classString: string
+    ) =>
+      updateBlockContentULBHandler(
+        targetID || blockConfig.targetId,
+        propertyToTarget || section,
+        contentType,
+        inputValue,
+        position,
+        classString
+      );
     switch (type) {
       case 'header':
         return (
           <HeaderModalComponent
             selectedPageID={selectedPageID}
             closeAction={closeAction}
+            updateBlockContentULBHandler={updateBlockContent}
+            inputObj={inputObj}
           />
         );
       case 'image':
@@ -201,7 +264,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               inputValue: any
             ) =>
               createNewBlockULBHandler(
-                targetID || newBlockConfig.targetId,
+                targetID || blockConfig.targetId,
                 propertyToTarget || section,
                 contentType,
                 inputValue,
@@ -209,17 +272,27 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               )
             }
             closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
           />
         );
       case 'paragraph':
         return (
-          <ParaModalComponent selectedPageID={selectedPageID} closeAction={closeAction} />
+          <ParaModalComponent
+            selectedPageID={selectedPageID}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
         );
       case 'input':
+      case 'form-numbered':
+      case 'form-default':
         return (
           <InputModalComponent
             selectedPageID={selectedPageID}
             closeAction={closeAction}
+            inputObj={inputObj}
           />
         );
       case 'video':
@@ -232,7 +305,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               inputValue: any
             ) =>
               createNewBlockULBHandler(
-                targetID || newBlockConfig.targetId,
+                targetID || blockConfig.targetId,
                 propertyToTarget || section,
                 contentType,
                 inputValue,
@@ -240,6 +313,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               )
             }
             closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'tag':
+        return (
+          <TagInputDialog
+            updateBlockContentULBHandler={updateBlockContent}
+            closeAction={closeAction}
+            inputObj={inputObj}
           />
         );
 
@@ -371,6 +454,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
+        createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}
         universalLessonDetails={universalLessonDetails}
@@ -379,7 +463,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
+        handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
+        handleTagModalOpen={handleTagModalOpen}
       />
     </div>
   );

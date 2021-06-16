@@ -118,19 +118,40 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
   };
 
   const composeHeader = (inputID: string, inputValue: string, inputType: string) => {
-    switch (inputType) {
-      case 'header-default':
-      case 'header-section':
-        return (
-          <Header
-            inputID={inputID}
-            section={inputType ? 'header-section' : 'header-default'}
-            inputValue={inputValue}
-          />
-        );
-      default:
-        return <p id={inputID}>{inputValue}</p>;
-    }
+    return (
+      <h3
+        id={inputID}
+        className={`
+            relative
+            w-full flex font-medium text-left flex-row items-center text-gray-100 mt-4`}>
+        {inputValue}
+      </h3>
+    );
+    // switch (inputType) {
+    //   case 'header-default':
+    //     return (
+    //       <h2
+    //         id={inputID}
+    //         className={`
+    //         relative
+    //         w-full text-xl font-semibold  text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
+    //         {inputValue}
+    //       </h2>
+    //     );
+    //   case 'header-section':
+    //     return (
+    //       <h3
+    //         id={inputID}
+    //         className={`
+    //         ${classString || 'border-sea-green text-xl'}
+    //         relative
+    //         w-full flex border-b-4  font-medium text-left  flex-row items-center text-gray-100 mt-4`}>
+    //         {inputValue}
+    //       </h3>
+    //     );
+    //   default:
+    //     return <p id={inputID}>{inputValue}</p>;
+    // }
   };
 
   return (

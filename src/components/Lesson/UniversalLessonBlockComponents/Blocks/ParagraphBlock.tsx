@@ -1,5 +1,5 @@
 import {findIndex, update} from 'lodash';
-import React, {useState} from 'react';
+import React, {useState, Fragment} from 'react';
 import {BiCheckCircle} from 'react-icons/bi';
 import {GiCancel} from 'react-icons/gi';
 import {HiPencil} from 'react-icons/hi';
@@ -9,6 +9,7 @@ import {
   RowWrapperProps,
 } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {doResize} from '../../../../utilities/functions';
+import {AddNewBlock} from '../UtilityBlocks/AddNewBlock';
 
 interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;

@@ -68,6 +68,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         universalLessonDetails,
         selectedPageID,
         setSelectedPageID,
+        getCurrentPage,
+
         setUniversalLessonDetails,
         addFromULBHandler: addULBHandler,
         getPartContent,

@@ -1,9 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  RowWrapperProps,
-  ULBSelectionProps,
-} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import Buttons from '../../../../Atoms/Buttons';
+import ClickAwayListener from 'react-click-away-listener';
 import {
   AiOutlineBgColors,
   AiOutlineCloseCircle,
@@ -11,17 +7,25 @@ import {
   AiOutlineEdit,
 } from 'react-icons/ai';
 import {BsLayoutSplit} from 'react-icons/bs';
-import {CgEditFlipH} from 'react-icons/cg';
-import ButtonsRound from '../../../../Atoms/ButtonsRound';
-import {FiEdit2} from 'react-icons/fi';
-import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
-import ClickAwayListener from 'react-click-away-listener';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
+import {FaSortUp} from 'react-icons/fa';
+import ButtonsRound from '../../../../Atoms/ButtonsRound';
+import {FiEdit2} from 'react-icons/fi';
+
+import {
+  RowWrapperProps,
+  ULBSelectionProps,
+} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
+import SplitColumnDropdown from '../../../UniversalLessonBuilder/UI/SplitColumn/SplitColumnDropdown';
+
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
+  section?: string;
+  handleEditBlockContent?: () => void;
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
@@ -32,12 +36,16 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     isPagePart,
     classString,
     isComponent,
+    section,
+    handleEditBlockContent,
     handleEditBlockToggle,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
+  const [colDropdownActive, setColDropdownActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (isActive) {
@@ -58,6 +66,20 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
   const handleColorPickerSelect = (pickedColor: string) => {
     updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
+  };
+  const handleSplitColumnChange = (column: number) => {
+    createNewBlockULBHandler(
+      contentID,
+      'pageContentColumn',
+      '',
+      column,
+      0,
+      `grid grid-cols-${column} gap-1`
+    );
+  };
+  const handleSplitColToggle = () => {
+    setColDropdownActive((prevValue) => !prevValue);
+    setColorPickerActive(false);
   };
   const {previewMode} = useULBContext();
   /**
@@ -102,6 +124,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         onClickAway={() => {
           setOverlayVisible(false);
           setColorPickerActive(false);
+          setColDropdownActive(false);
         }}>
         <div
           style={{zIndex: 9999999}}
@@ -109,37 +132,49 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left-2' : 'right-3.5'
-          } bg-gray-700 rounded-lg shadow-lg `}>
-          <button className={`${actionClass}`}>
-            <span className={iconClass}>
-              <CgEditFlipH />
-            </span>
-            <span className={textClass}>Split</span>
-          </button>
-          <button className={`${actionClass}`}>
+          } bg-gray-800 rounded-lg shadow-lg `}>
+          {section === 'pageContent' ? (
+            <>
+              <button className={`${actionClass}`} onClick={handleSplitColToggle}>
+                <span className={iconClass}>
+                  <BsLayoutSplit />
+                </span>
+                <span className={textClass}>Split</span>
+              </button>
+              {colDropdownActive && (
+                <SplitColumnDropdown
+                  isPagePart={isPagePart}
+                  handleSplitColumnChange={handleSplitColumnChange}
+                />
+              )}
+            </>
+          ) : null}
+          <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
             <span className={iconClass}>
               <AiOutlineEdit />
             </span>
             <span className={textClass}>Edit</span>
           </button>
 
-          <div className={`relative`}>
-            <button
-              onClick={() => setColorPickerActive(!colorPickerActive)}
-              className={`${actionClass}`}>
-              <span className={iconClass}>
-                <AiOutlineEdit />
-              </span>
-              <span className={textClass}>BG Color</span>
-            </button>
-            {colorPickerActive && (
-              <ColorPicker
-                classString={classString}
-                callbackColor={handleColorPickerSelect}
-                isPagePart={isPagePart}
-              />
-            )}
-          </div>
+          {section === 'pageContent' && (
+            <div className={`relative`}>
+              <button
+                onClick={() => setColorPickerActive(!colorPickerActive)}
+                className={`${actionClass}`}>
+                <span className={iconClass}>
+                  <AiOutlineBgColors />
+                </span>
+                <span className={textClass}>BG Color</span>
+              </button>
+              {colorPickerActive && (
+                <ColorPicker
+                  classString={classString}
+                  callbackColor={handleColorPickerSelect}
+                  isPagePart={isPagePart}
+                />
+              )}
+            </div>
+          )}
 
           <button
             onClick={() => deleteFromULBHandler(contentID)}
