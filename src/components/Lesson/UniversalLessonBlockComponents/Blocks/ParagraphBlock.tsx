@@ -96,14 +96,14 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
             {updatedText}
           </p>
         )}
-        {!previewMode && (
+        {/* {!previewMode && (
           <EditButton
             editing={editing}
             onCancel={onCancel}
             onSave={onSave}
             onEdit={onEdit}
           />
-        )}
+        )} */}
       </div>
     );
   };

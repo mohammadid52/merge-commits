@@ -6,9 +6,7 @@ import ColorPicker from '../ColorPicker/ColorPicker';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {uniqueId} from 'lodash';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -16,14 +14,12 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
 }
 
 const HeaderModalComponent = ({
-  selectedPageID,
   closeAction,
   inputObj,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const {addFromULBHandler} = useULBContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
@@ -64,8 +60,6 @@ const HeaderModalComponent = ({
   };
   const onHeaderCreate = () => {
     const value: string = inputFields[FIELD_ID];
-    const pageContentId: string = uniqueId(`${selectedPageID}_`);
-    const partContentId: string = uniqueId(`${pageContentId}_`);
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
     const bgColorClass: string = selectedValues.color;
     if (isEditingMode) {
@@ -86,21 +80,6 @@ const HeaderModalComponent = ({
         0,
         `${fontSizeClass} ${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`
       );
-      // const newDataObject = {
-      //   id: pageContentId,
-      //   partType: 'default',
-      //   class: 'rounded-lg',
-      //   partContent: [
-      //     {
-      //       id: partContentId,
-      //       type: 'header-section',
-      //       value: [value],
-      //       class: `${fontSizeClass} ${bgColorClass ? `border-b-4 border-${bgColorClass}`:''}`,
-      //     },
-      //   ],
-      // };
-      // // add data to list
-      // addFromULBHandler(selectedPageID, newDataObject);
     }
     // close modal after saving
     closeAction();

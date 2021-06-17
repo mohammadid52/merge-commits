@@ -260,6 +260,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     switch (type) {
       case 'header':
         return <HeaderModalComponent {...commonProps} />;
+      case 'header-section':
+        return <HeaderModalComponent {...commonProps} />;
       case 'image':
         return (
           <ImageFormComponent
@@ -331,6 +333,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }
   };
+
   return (
     <div
       id={`builderWrapper`}
