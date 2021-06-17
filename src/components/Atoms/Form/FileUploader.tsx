@@ -47,12 +47,13 @@ const ULBFileUploader = ({
   return (
     <div
       {...getRootProps()}
-      className={'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer'}>
+      // className={'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer'}
+      >
       <input {...getInputProps()} />
       <div className={'flex flex-col items-center justify-center h-full'}>
-        {fileUrl ? (
+        {/* {fileUrl ? (
           <img src={fileUrl} alt="" className={`w-30 h-30 mx-auto`} />
-        ) : (
+        ) : ( */}
           <>
             <FaCloudUploadAlt size="50" className="text-gray-400" />
             <p className="text-center mt-2 text-gray-400">
@@ -62,7 +63,7 @@ const ULBFileUploader = ({
               )}
             </p>
           </>
-        )}
+        {/* )} */}
       </div>
       <p className="text-red-500 text-xs">
         {fileRejections && fileRejections.length
