@@ -95,6 +95,24 @@ export const exampleUniversalLesson: UniversalLesson = {
               ],
             },
             {
+              id: 'page_2_part_1_questionGroup-1',
+              type: 'form-default',
+              value: [
+                {
+                  id: 'title',
+                  type: 'emoji-input',
+                  label: 'Title',
+                  value: 'This is the placeholder',
+                },
+                {
+                  id: 'story',
+                  type: 'emoji-input',
+                  label: '',
+                  value: 'This is the placeholder',
+                },
+              ],
+            },
+            {
               id: 'page_1_part_0_header-0',
               type: 'header',
               value: ['Introduction'],

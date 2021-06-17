@@ -951,3 +951,9 @@
   }
   transition: all 0.3s ease-in-out;
 }
+
+.picker-wrapper {
+  * {
+    width: auto;
+  }
+}
