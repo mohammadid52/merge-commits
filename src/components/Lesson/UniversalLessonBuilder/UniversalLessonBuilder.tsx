@@ -315,6 +315,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
             id: partContentId,
             type: contentType,
             value: inputObj,
+            class: classString || '',
           };
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
@@ -402,7 +403,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   };
 
   // console.log(universalLessonDetails, 'universalLessonDetails');
-  
 
   return (
     /**

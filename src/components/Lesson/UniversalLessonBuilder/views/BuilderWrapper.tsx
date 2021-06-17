@@ -49,7 +49,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     initialUniversalLessonPagePartContent,
   } = props;
   const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {addFromULBHandler, universalLessonDetails} = useULBContext();
+  const {universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
 
@@ -157,8 +157,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     });
   };
 
-  const [inputFields, setInputFields] = useState<any>({});
-
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
     show: false,
     type: '',
@@ -206,14 +204,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   };
 
-  const onChange = (e: any) => {
-    const {value, id} = e.target;
-    setInputFields({
-      ...inputFields,
-      [id]: value,
-    });
-  };
-
   const closeAction = () => setAddContentModal({type: '', show: false});
 
   function capitalizeFirstLetter(str: string = '') {
@@ -224,11 +214,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   }
 
   const modalByType = (type: string) => {
-    const {
-      position = 0,
-      section = 'pageContent',
-      inputObj = {},
-    } = blockConfig;
+    const {position = 0, section = 'pageContent', inputObj = {}} = blockConfig;
 
     const updateBlockContent = (
       targetID: string,
@@ -265,12 +251,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       );
 
     let commonProps = {
-      createNewBlockULBHandler:createNewBlock,
-      closeAction:closeAction,
-      inputObj:inputObj,
+      createNewBlockULBHandler: createNewBlock,
+      closeAction: closeAction,
+      inputObj: inputObj,
       selectedPageID,
-      updateBlockContentULBHandler:updateBlockContent,
-    }
+      updateBlockContentULBHandler: updateBlockContent,
+    };
 
     switch (type) {
       case 'header':

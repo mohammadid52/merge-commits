@@ -95,7 +95,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
    * either in the middle of the row component, or to the side of the row
    */
   const componentAlignmentToggleClass = 'w-full justify-center';
-  const rowAlignmentToggleClass = 'w-auto right-0';
+  const rowAlignmentToggleClass = 'w-auto';
 
   const offsetClass = 'transform translate-x-6';
 
@@ -105,9 +105,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
   if (previewMode) return null;
+  const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-3rem'};
   return (
     <div
       id="editControlsWrapper"
+      style={{...iconPos}}
       className={`
           absolute 
           flex flex-row
@@ -147,14 +149,12 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               )}
             </>
           ) : null}
-          {section !== 'pageContent' ? (
-            <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
-              <span className={iconClass}>
-                <AiOutlineEdit />
-              </span>
-              <span className={textClass}>Edit</span>
-            </button>
-          ) : null}
+          <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
+            <span className={iconClass}>
+              <AiOutlineEdit />
+            </span>
+            <span className={textClass}>Edit</span>
+          </button>
 
           {section === 'pageContent' && (
             <div className={`relative`}>
@@ -202,7 +202,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       /> */}
 
       <button
-        className={`bg-gray-800 rounded-full h-8 w-${
+        className={`bg-gray-700 rounded-full h-8 w-${
           isComponent ? '8' : '16'
         } hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
         onClick={() => {

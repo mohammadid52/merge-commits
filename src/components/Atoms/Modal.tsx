@@ -20,6 +20,7 @@ interface ModalProps {
 const ModalHeader = (headerProps: {
   title?: string;
   onClick?: () => void;
+
   showBorder?: boolean;
 }) => {
   const {title, onClick, showBorder} = headerProps;
@@ -28,6 +29,7 @@ const ModalHeader = (headerProps: {
   return (
     <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
       {title && <h3 className="text-xl font-semibold">{title}</h3>}
+
       <button className={`ml-auto w-auto ${theme.outlineNone}`} onClick={onClick}>
         <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
           <IconContext.Provider value={{size: '1.5rem', color: '#000000'}}>
@@ -82,6 +84,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
     const close = (e: any) => {
+      // close modal on ESC press
       if (e.keyCode === 27) {
         closeAction();
       }
@@ -97,7 +100,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
         } fixed inset-0 z-40 bg-black`}></div>
       <div
         onClick={() => closeOnBackdrop && closeAction()}
-        className="modal show justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+        className="absolute modal show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {

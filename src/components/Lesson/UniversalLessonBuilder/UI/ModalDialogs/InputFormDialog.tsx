@@ -28,85 +28,56 @@ const InputModalComponent = ({
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      let fieldsValue = {};
       setNumbered(contentType.includes('numbered'));
-      if (inputObj[0].type === 'text-input' || inputObj[0].type === 'text-area') {
-        setInputList(
-          inputObj.map((input: any) => ({
-            ...input,
-            textArea: input.type.includes('area'),
-          }))
-        );
-        forEach(inputObj, ({id, label, value}: any) => {
-          fieldsValue = {
-            ...fieldsValue,
-            [`formFieldInput_${id}`]: label,
-            [`placeholder_${id}`]: value,
-          };
-        });
-        setSelectedFormType('Input');
-      } else {
+      if (inputObj[0].type === 'radio-input') {
         setRadioList(
           inputObj.map((input: any) => ({
             ...input,
             options: input.value,
           }))
         );
-        setSelectedFormType('Select One');
+        setSelectedFormType(SELECT_ONE);
+      } else if (inputObj[0].type === 'emoji-input') {
+        setEmojiInputList(
+          inputObj.map((input: any) => ({
+            ...input,
+            title: input.label,
+            placeholder: input.value,
+          }))
+        );
+        setSelectedFormType(INPUT_WITH_EMOJI);
+      } else {
+        setInputList(
+          inputObj.map((input: any) => ({
+            ...input,
+            textArea: input.type.includes('area'),
+            title: input.label,
+            placeholder: input.value,
+          }))
+        );
+        setSelectedFormType(INPUT);
       }
-      setInputFields(fieldsValue);
       setIsEditingMode(true);
     }
   }, [inputObj]);
 
-  const onInputCreate = () => {
-    const pageContentId: string = uniqueId(`${selectedPageID}_`);
-    const partContentId: string = uniqueId(`${pageContentId}_`);
-    // const readyToGo = validateFieldBeforeSave();
-    const inputObjArray = generateInputAndPlaceholderValues();
-    const contentType = `form-${numbered ? 'numbered' : 'default'}`;
-    if (isEditingMode) {
-      updateBlockContentULBHandler('', '', contentType, inputObjArray);
-    } else {
-      createNewBlockULBHandler('', '', contentType, inputObjArray);
-    }
-    // const newDataObject = {
-    //   id: pageContentId,
-    //   partType: 'default',
-    //   class: 'rounded-lg',
-    //   partContent: [
-    //     {
-    //       id: `${partContentId}_questionGroup`,
-    //       type: `form-${numberedForm ? 'numbered' : 'default'}`,
-    //       value: inputObjArray,
-    //     },
-    //   ],
-    // };
-    // // add data to list
-    // addFromULBHandler(selectedPageID, newDataObject);
-    // // close modal after saving
-    closeAction();
-    // // clear fields
-    forEach(inputList, ({id}: any) => {
-      setInputFields({
-        ...inputFields,
-        [`formFieldInput_${id}`]: '',
-        [`placeholder_${id}`]: '',
+  const modifiedOptions = (opt: any) =>
+    map(opt, (o) => ({
+      label: o.label,
+      text: o.text,
+    }));
+
+  const valueArray = (partContentId: string) => {
+    if (isEmoji) {
+      return map(emojiInputList, (d: any, idx: number) => {
+        return {
+          id: partContentId,
+          type: 'emoji-input',
+          label: d.title,
+          value: d.placeholder,
+        };
       });
-    });
-  };
-
-  const onRadioCreate = () => {
-    const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_`;
-
-    const valueArray = () => {
-      const modifiedOptions = (opt: any) =>
-        map(opt, (o) => ({
-          label: o.label,
-          text: o.text,
-        }));
-
+    } else if (isRadio) {
       return map(radioList, (d: any, idx: number) => {
         return {
           id: partContentId,
@@ -115,28 +86,49 @@ const InputModalComponent = ({
           value: modifiedOptions(d.options),
         };
       });
+    } else {
+      return map(inputList, (d: any, idx: number) => {
+        return {
+          id: partContentId,
+          type: `text-${d.textArea ? 'area' : 'input'}`,
+          label: d.title,
+          value: d.placeholder,
+        };
+      });
+    }
+  };
+
+  const pushToULB = (pageContentId: string, partContentId: string, value: any) => {
+    const newDataObject = {
+      id: pageContentId,
+      partType: 'default',
+      class: 'rounded-lg',
+      partContent: [
+        {
+          id: `${partContentId}_questionGroup`,
+          type: `form-${numbered ? 'numbered' : 'default'}`,
+          value,
+        },
+      ],
     };
 
-    // const newDataObject = {
-    //   id: pageContentId,
-    //   partType: 'default',
-    //   class: 'rounded-lg',
-    //   partContent: [
-    //     {
-    //       id: `${partContentId}_questionGroup`,
-    //       type: `form-${numbered ? 'numbered' : 'default'}`,
-    //       value: valueArray(),
-    //     },
-    //   ],
-    // };
-    const contentType:string = `form-${numbered ? 'numbered' : 'default'}`;
+    addFromULBHandler(selectedPageID, newDataObject);
+  };
+
+  const onFormCreate = () => {
+    const pageContentId: string = `${uuidv4()}_`;
+    const partContentId: string = `${pageContentId}_`;
+
+    const inputObjArray = valueArray(partContentId);
+    const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', contentType, valueArray());
+      updateBlockContentULBHandler('', '', type, inputObjArray);
     } else {
-      createNewBlockULBHandler('', '', contentType, valueArray());
+      createNewBlockULBHandler('', '', type, inputObjArray);
     }
     // add data to list
-    // addFromULBHandler(selectedPageID, newDataObject);
+    // pushToULB(pageContentId, partContentId, inputObjArray);
+
     // // close modal after saving
     closeAction();
   };
@@ -146,34 +138,52 @@ const InputModalComponent = ({
     {label: '2', text: '', id: '1'},
   ];
 
-  const [inputList, setInputList] = useState([{id: '9999', textArea: false}]);
+  const INITIAL_VALUE = {id: '9999', title: '', placeholder: ''};
+
+  const [inputList, setInputList] = useState([{textArea: false, ...INITIAL_VALUE}]);
+  const [emojiInputList, setEmojiInputList] = useState([{...INITIAL_VALUE}]);
   const [radioList, setRadioList] = useState([
     {id: '9999', label: '', options: DEFAULT_OPTIONS},
   ]);
   // this is UI list that shows multiple input fields on form
 
-  const [inputFields, setInputFields] = useState<any>({});
+  // const [inputFields, setInputFields] = useState<any>({});
   // this is the data object that contains key values
 
-  const formTypes = [{label: 'Input'}, {label: 'Select One'}];
+  const INPUT = 'Input';
+  const SELECT_ONE = 'Select One';
+  const INPUT_WITH_EMOJI = 'Input With Emoji';
+  const formTypes = [{label: INPUT}, {label: SELECT_ONE}, {label: INPUT_WITH_EMOJI}];
   const DEFAULT_FORM_TYPE = formTypes[0].label;
 
-  const [selectedFormType, setSelectedFormType] = useState(DEFAULT_FORM_TYPE);
-  const isRadio = selectedFormType === 'Select One';
+  const [selectedFormType, setSelectedFormType] = useState<string>(DEFAULT_FORM_TYPE);
+  const isRadio = selectedFormType === SELECT_ONE;
+  const isEmoji = selectedFormType === INPUT_WITH_EMOJI;
 
   const generateInputAndPlaceholderValues = () => {
     let values: any[] = [];
-    forEach(inputList, ({id, textArea}: {id: string; textArea: boolean}) => {
-      const inputValue = inputFields[`formFieldInput_${id}`];
-      const placeHolderValue = inputFields[`placeholder_${id}`];
-      const item = {
-        id: uniqueId(),
-        type: `text-${textArea ? 'area' : 'input'}`,
-        value: placeHolderValue || '',
-        label: inputValue,
-      };
-      values.push(item);
-    });
+    forEach(
+      inputList,
+      ({
+        id,
+        textArea,
+        title,
+        placeholder,
+      }: {
+        id: string;
+        textArea: boolean;
+        title: string;
+        placeholder: string;
+      }) => {
+        const item = {
+          id,
+          type: `text-${textArea ? 'area' : 'input'}`,
+          value: placeholder || '',
+          label: title,
+        };
+        values.push(item);
+      }
+    );
 
     return values;
   };
@@ -182,8 +192,11 @@ const InputModalComponent = ({
     if (isRadio) {
       const newItem = {id: uuidv4(), label: '', options: DEFAULT_OPTIONS};
       setRadioList([...radioList, newItem]);
+    } else if (isEmoji) {
+      const newItem = {id: uuidv4(), title: '', placeholder: ''};
+      setEmojiInputList([...emojiInputList, newItem]);
     } else {
-      const newItem = {id: uuidv4(), textArea: false};
+      const newItem = {id: uuidv4(), textArea: false, title: '', placeholder: ''};
       setInputList([...inputList, newItem]);
     }
   };
@@ -193,9 +206,17 @@ const InputModalComponent = ({
     setInputList([...inputList]);
   };
 
-  const removeInputFromList = (id: string) => {
-    const itemRemovedList = filter(inputList, (input: any) => input.id !== id);
-    setInputList([...itemRemovedList]);
+  const removeItemFromList = (id: string) => {
+    if (isRadio) {
+      remove(radioList, (n) => n.id === id);
+      setRadioList([...radioList]);
+    } else if (isEmoji) {
+      remove(emojiInputList, (n) => n.id === id);
+      setEmojiInputList([...emojiInputList]);
+    } else {
+      remove(inputList, (n) => n.id === id);
+      setInputList([...inputList]);
+    }
   };
 
   const Checkbox = ({val}: {val: boolean}) => {
@@ -211,15 +232,16 @@ const InputModalComponent = ({
     );
   };
 
-  const onChange = (e: any, idx?: number) => {
-    const {value, id} = e.target;
-    if (!isRadio) {
-      setInputFields({
-        ...inputFields,
-        [id]: value,
-      });
+  const onChange = (e: any, idx?: number, placeHolder: boolean = false) => {
+    const {value} = e.target;
+    if (isRadio) {
+      update(radioList[idx], `label`, () => value);
+      setRadioList([...radioList]);
+    } else if (isEmoji) {
+      update(emojiInputList[idx], placeHolder ? `placeholder` : 'title', () => value);
+      setRadioList([...radioList]);
     } else {
-      update(radioList[idx], `label`, () => e.target.value);
+      update(inputList[idx], placeHolder ? `placeholder` : 'title', () => value);
       setRadioList([...radioList]);
     }
   };
@@ -257,44 +279,12 @@ const InputModalComponent = ({
     }
   };
 
-  const removeRadioFromList = (id: string) => {
-    remove(radioList, (n) => n.id === id);
-    setRadioList([...radioList]);
-  };
-
   const [numbered, setNumbered] = useState(false);
-
-  return (
-    <div className="max-h-200 relative overflow-y-auto">
-      <div className="w-auto flex item-center justify-between mb-4">
-        <div className="flex items-center w-auto">
-          {map(formTypes, ({label}) => (
-            <button
-              key={label}
-              onClick={() => setSelectedFormType(label)}
-              className={`${
-                label === selectedFormType
-                  ? 'border-indigo-500 text-white bg-indigo-400'
-                  : 'border-gray-300 text-dark'
-              } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-              {label}
-            </button>
-          ))}
-        </div>
-        <button
-          key={label}
-          onClick={() => setNumbered(!numbered)}
-          className={`${
-            numbered
-              ? 'border-indigo-500 text-white bg-indigo-400'
-              : 'border-gray-300 text-dark'
-          } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-          {numbered ? 'Ordered Form' : 'Unordered Form'}
-        </button>
-      </div>
-
-      <div className="flex flex-col my-2">
-        {!isRadio ? (
+  
+  const getForm = (type: 'Input' | 'Select One' | 'Input With Emoji' | string) => {
+    switch (type) {
+      case INPUT:
+        return (
           <div>
             {map(inputList, (input: any, idx: number) => {
               const shouldShowActions = idx !== inputList.length - 1;
@@ -303,19 +293,19 @@ const InputModalComponent = ({
                   <div className="">
                     <div className="mb-2">
                       <FormInput
-                        onChange={onChange}
+                        onChange={(e) => onChange(e, idx, false)}
                         label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
                         isRequired
-                        value={inputFields[`formFieldInput_${input.id}`]}
+                        value={input.title}
                         id={`formFieldInput_${input.id}`}
                         placeHolder={`Enter Form Field Title`}
                       />
                     </div>
                     <div>
                       <FormInput
-                        onChange={onChange}
+                        onChange={(e) => onChange(e, idx, true)}
                         label={'Placeholder'}
-                        value={inputFields[`placeholder_${input.id}`]}
+                        value={input.placeholder}
                         id={`placeholder_${input.id}`}
                         placeHolder={`Enter placeholder`}
                       />
@@ -329,7 +319,7 @@ const InputModalComponent = ({
                         </div>
 
                         <button
-                          onClick={() => removeInputFromList(input.id)}
+                          onClick={() => removeItemFromList(input.id)}
                           className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
                           Remove
                         </button>
@@ -349,7 +339,9 @@ const InputModalComponent = ({
               );
             })}
           </div>
-        ) : (
+        );
+      case SELECT_ONE:
+        return (
           <div>
             {map(radioList, (input: any, idx: number) => {
               const shouldShowActions = idx !== radioList.length - 1;
@@ -370,9 +362,6 @@ const InputModalComponent = ({
                       {input.options?.length &&
                         input.options?.map((item: any, index: number) => {
                           // @ts-ignore
-                          const currentValue: string =
-                            // @ts-ignore
-                            radioList[idx].options[index].text;
 
                           return (
                             <div
@@ -380,7 +369,7 @@ const InputModalComponent = ({
                               className="flex w-9/10 mx-auto mt-4">
                               <div className="w-8/10">
                                 <FormInput
-                                  value={currentValue}
+                                  value={item.text}
                                   id={`formFieldRadioOption_${idx}_${index}`}
                                   onChange={(e) => onOptionInputChange(idx, index, e)}
                                   name={item.label}
@@ -419,7 +408,7 @@ const InputModalComponent = ({
                     {idx !== 0 && (
                       <div className="flex my-2 items-center justify-end w-auto mx-3">
                         <button
-                          onClick={() => removeRadioFromList(input.id)}
+                          onClick={() => removeItemFromList(input.id)}
                           className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
                           Remove
                         </button>
@@ -433,8 +422,86 @@ const InputModalComponent = ({
               );
             })}
           </div>
-        )}
+        );
+
+      case INPUT_WITH_EMOJI:
+        return (
+          <div>
+            {map(emojiInputList, (input: any, idx: number) => {
+              const shouldShowActions = idx !== emojiInputList.length - 1;
+              return (
+                <div key={input.id} className="flex flex-col input-container">
+                  <div className="mb-4">
+                    <div className="mb-2">
+                      <FormInput
+                        onChange={(e) => onChange(e, idx)}
+                        label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
+                        isRequired
+                        value={emojiInputList[idx].title}
+                        id={`formFieldInput_${input.id}`}
+                        placeHolder={`Enter Form Field Title`}
+                      />
+                    </div>
+                    <div>
+                      <FormInput
+                        onChange={(e) => onChange(e, idx, true)}
+                        label={'Placeholder'}
+                        value={emojiInputList[idx].placeholder}
+                        id={`placeholder_${input.id}`}
+                        placeHolder={`Enter placeholder`}
+                      />
+                    </div>
+                    {idx !== 0 && (
+                      <div className="flex my-2 items-center justify-end w-auto mx-3">
+                        <button
+                          onClick={() => removeItemFromList(input.id)}
+                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  {shouldShowActions && (
+                    <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="max-h-200 relative overflow-y-auto">
+      <div className="w-auto flex item-center justify-between mb-4">
+        <div className="flex items-center w-auto">
+          {map(formTypes, ({label}) => (
+            <button
+              key={label}
+              onClick={() => setSelectedFormType(label)}
+              className={`${
+                label === selectedFormType
+                  ? 'border-indigo-500 text-white bg-indigo-400'
+                  : 'border-gray-300 text-dark'
+              } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <button
+          key={label}
+          onClick={() => setNumbered(!numbered)}
+          className={`${
+            numbered
+              ? 'border-indigo-500 text-white bg-indigo-400'
+              : 'border-gray-300 text-dark'
+          } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+          {numbered ? 'Ordered Form' : 'Unordered Form'}
+        </button>
       </div>
+
+      <div className="flex flex-col my-2">{getForm(selectedFormType)}</div>
       <div className="flex items-center w-auto">
         <button
           onClick={addOneInputField}
@@ -453,7 +520,7 @@ const InputModalComponent = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={isRadio ? onRadioCreate : onInputCreate}
+            onClick={onFormCreate}
           />
         </div>
       </div>
