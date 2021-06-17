@@ -6,6 +6,8 @@ import {
 } from '../../../../utilities/services';
 import Loader from '../../../Atoms/Loader';
 
+const limit = 10;
+
 const ImageGallery = ({basePath, onSelectImage}: any) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [images, setImages] = useState<any>([]);
@@ -15,7 +17,7 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
   }, []);
 
   const fetchImagesFromS3 = async (startAfter: string = '') => {
-    const response: any = await getImagesFromS3Folder(basePath, startAfter, 1);
+    const response: any = await getImagesFromS3Folder(basePath, startAfter, limit);
     setImages((prevImages: any) => [
       ...prevImages,
       ...response.Contents,
@@ -35,7 +37,7 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
         dataLength={images.length}
         next={onLoadMore}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
+        loader={images.length >= limit ? <h4>Loading...</h4> : null}
         scrollableTarget="scrollableDiv">
         <div className="grid grid-cols-5 gap-1">
           {images.map((image: any, index: number) => {

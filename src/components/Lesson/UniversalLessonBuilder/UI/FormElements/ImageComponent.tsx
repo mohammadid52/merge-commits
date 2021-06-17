@@ -73,26 +73,26 @@ const ImageFormComponent = ({
     event.preventDefault();
     const isValid: boolean = validateFormFields();
     if (isValid) {
-      let payload = imageInputs;
+      let {imageData, ...payload} = imageInputs;
       if (imageInputs.imageData) {
-        let temp = imageInputs.imageData.name.split('.');
+        let temp = imageData.name.split('.');
         const extension = temp.pop();
         const fileName = `${Date.now()}_${temp
           .join(' ')
           .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
         setIsLoading(true);
         await uploadImageToS3(
-          imageInputs.imageData,
+          imageData,
           `${fileName}`,
           'image/jpeg'
         );
         payload = {
-          ...imageInputs,
+          ...payload,
           url: `ULB/${user.id}/content_image_${fileName}`,
         };
       }
       if (isEditingMode) {
-        updateBlockContentULBHandler('', '', 'video', [payload]);
+        updateBlockContentULBHandler('', '', 'image', [payload]);
       } else {
         createNewBlockULBHandler('', '', 'image', [payload]);
       }
@@ -175,7 +175,7 @@ const ImageFormComponent = ({
               error={errors?.url}
             />
             <div className="flex flex-col items-center justify-center text-gray-400">
-              Or
+              --- Or ---
             </div>
             <div className="flex flex-col items-center justify-center">
               <Buttons label={'Browse'} onClick={handleGalleryModal} />
