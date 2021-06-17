@@ -14,6 +14,7 @@ import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {reorder} from '../../../../utilities/strings';
 import {update} from 'lodash';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import Tooltip from '../../../Atoms/Tooltip';
 
 interface PageSelectorProps extends ULBSelectionProps {
   universalLessonDetails: UniversalLesson;
@@ -117,33 +118,45 @@ const PageSelector = (props: PageSelectorProps) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
-                        <div className="flex items-center justify-center mb-2">
-                          <button
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              moveLeft(idx);
-                            }}
-                            disabled={DISABLE_PREV}
-                            className={`mr-1 text-center ${
-                              DISABLE_PREV
-                                ? 'text-opacity-40'
-                                : 'hover:bg-gray-600 hover:text-white'
-                            }   text-xs font-semibold  p-1 cursor-pointer rounded mt-2  text-gray-500 transition-all duration-300`}>
-                            <AiOutlineLeft className="" size={18} />
-                          </button>
-                          <button
-                            disabled={DISABLE_NEXT}
-                            onClick={(e: any) => {
-                              e.stopPropagation();
-                              moveRight(idx);
-                            }}
-                            className={`mr-1 text-center ${
-                              DISABLE_NEXT
-                                ? 'text-opacity-40'
-                                : 'hover:bg-gray-600 hover:text-white'
-                            }   text-xs font-semibold  p-1 cursor-pointer rounded mt-2  text-gray-500 transition-all duration-300`}>
-                            <AiOutlineRight className="" size={18} />
-                          </button>
+                        <div className="flex items-center justify-between mb-2">
+                          <Tooltip
+                            additionalClass="flex items-center"
+                            text="Move Left"
+                            show={!DISABLE_PREV}
+                            placement="left">
+                            <button
+                              onClick={(e: any) => {
+                                e.stopPropagation();
+                                moveLeft(idx);
+                              }}
+                              disabled={DISABLE_PREV}
+                              className={`mr-1 text-center w-auto ${
+                                DISABLE_PREV
+                                  ? 'text-opacity-40'
+                                  : 'hover:bg-gray-600 hover:text-white'
+                              }   text-xs font-semibold  p-1 cursor-pointer rounded mt-2  text-gray-500 transition-all duration-300`}>
+                              <AiOutlineLeft className="" size={18} />
+                            </button>
+                          </Tooltip>
+                          <Tooltip
+                            additionalClass="flex items-center"
+                            text="Move Right"
+                            show={!DISABLE_NEXT}
+                            placement="right">
+                            <button
+                              disabled={DISABLE_NEXT}
+                              onClick={(e: any) => {
+                                e.stopPropagation();
+                                moveRight(idx);
+                              }}
+                              className={`mr-1 text-center w-auto ${
+                                DISABLE_NEXT
+                                  ? 'text-opacity-40'
+                                  : 'hover:bg-gray-600 hover:text-white'
+                              }   text-xs font-semibold  p-1 cursor-pointer rounded mt-2  text-gray-500 transition-all duration-300`}>
+                              <AiOutlineRight className="" size={18} />
+                            </button>
+                          </Tooltip>
                         </div>
                         <PageTile />
                         <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
