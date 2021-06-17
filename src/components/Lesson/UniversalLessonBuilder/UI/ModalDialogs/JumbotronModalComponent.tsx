@@ -1,11 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import { EditQuestionModalDict, UniversalBuilderDict } from '../../../../../dictionary/dictionary.iconoclast';
+import {
+  EditQuestionModalDict,
+  UniversalBuilderDict,
+} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
 import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 import Loader from '../../../../Atoms/Loader';
@@ -70,9 +73,7 @@ const JumbotronModalComponent = ({
   );
   useEffect(() => {
     if (inputObj) {
-      if (inputObj?.value) {
-        setInputFieldsArray(inputObj.value);
-      }
+      setInputFieldsArray(inputObj);
     }
   }, [inputObj]);
 
@@ -261,13 +262,18 @@ const JumbotronModalComponent = ({
             transparent
           />
 
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={!loading ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVE'] : <Loader/>}
-              onClick={onJumbotronCreate}
-              disabled={loading}
-            />
-
+          <Buttons
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={
+              !loading ? (
+                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
+              ) : (
+                <Loader />
+              )
+            }
+            onClick={onJumbotronCreate}
+            disabled={loading}
+          />
         </div>
       </div>
     </>
