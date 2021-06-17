@@ -55,7 +55,7 @@ const initialInputFieldsState = [
   },
 ];
 
-const JumbotronModalComponent = ({
+const JumbotronModalDialog = ({
   closeAction,
   inputObj,
   imageInput,
@@ -63,7 +63,7 @@ const JumbotronModalComponent = ({
   updateBlockContentULBHandler,
 }: IJumbotronModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const [isEditingMode] = useState<boolean>(false);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
   //  DATA STORAG         //
@@ -74,6 +74,7 @@ const JumbotronModalComponent = ({
   useEffect(() => {
     if (inputObj) {
       setInputFieldsArray(inputObj);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
 
@@ -280,4 +281,4 @@ const JumbotronModalComponent = ({
   );
 };
 
-export default JumbotronModalComponent;
+export default JumbotronModalDialog;

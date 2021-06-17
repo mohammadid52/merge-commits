@@ -16,6 +16,17 @@ const PoemBlock = (props: PoemBlockProps) => {
   const [poemWriting, setPoemWriting] = useState<string>('');
   const [saveAndEdit, setSaveAndEdit] = useState<boolean>(false);
 
+  // init poemInput so the first linestarter shows up
+  useEffect(()=>{
+    if(poemInput.length === 0 && value.length > 0){
+      setPoemInput([{
+        domID: value[0].id,
+        input:[value[0].value]
+      }])
+    }
+  },[value])
+
+  // init poemWriting for WYSIWYG
   useEffect(() => {
     if (poemInput.length > 0) {
       const concatenated = poemInput.reduce((acc: string, poemInputObj: PagePartInput) => {

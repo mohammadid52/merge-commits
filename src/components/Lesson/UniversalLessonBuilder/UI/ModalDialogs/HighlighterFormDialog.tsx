@@ -17,7 +17,7 @@ const HighlighterFormDialog = ({
   updateBlockContentULBHandler,
 }: IHighlighterFormDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const [isEditingMode] = useState<boolean>(false);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
   //  DATA STORAG         //
@@ -26,8 +26,8 @@ const HighlighterFormDialog = ({
 
   useEffect(() => {
     if (inputObj) {
-      console.log(inputObj[0])
       setInputFieldValue(inputObj[0]);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
 
