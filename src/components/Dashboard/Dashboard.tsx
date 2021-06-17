@@ -23,6 +23,8 @@ import {handleFetchAndCache} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
+import { useParams } from 'react-router';
+import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
 // const happyEmoji = require('')
@@ -1037,6 +1039,12 @@ const Dashboard = (props: DashboardProps) => {
               path={`${match.url}/lesson-builder`}
               render={() => <LessonsBuilderHome />}
             />
+
+            {/* <Route
+              path={`${match.url}/universal-lesson-builder`}
+              render={() => <UniversalLessonBuilder />}
+            /> */}
+
           </Switch>
         </Suspense>
       </div>

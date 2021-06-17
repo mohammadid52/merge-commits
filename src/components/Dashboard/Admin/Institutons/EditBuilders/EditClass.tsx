@@ -15,7 +15,7 @@ import {
   stringToHslColor,
   getInitialsFromString,
   initials,
-  createFilterToFetchAllItemsExcept,
+  createFilterToFetchAllItemsExcept, createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import { statusList } from '../../../../../utilities/staticData';
@@ -29,6 +29,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import { goBackBreadCrumb } from '../../../../../utilities/functions';
+import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
 
 interface EditClassProps {}
 
@@ -46,6 +47,10 @@ const EditClass = (props: EditClassProps) => {
   const [messages, setMessages] = useState({ show: false, message: '', isError: false });
   const [classStudents, setClassStudents] = useState([]);
   const [students, setStudents] = useState([]);
+
+  const [searching, setSearching] = useState<boolean>(false);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [statusEdit, setStatusEdit] = useState('');
   const [loading, setLoading] = useState(true);
@@ -141,6 +146,30 @@ const EditClass = (props: EditClassProps) => {
     }
   };
 
+  const fetchStudentList = async (searchQuery: string) => {
+    const result: any = await API.graphql(
+      graphqlOperation(customQueries.listPersons, {
+        filter: { role: { eq: 'ST' },
+          status: { eq: 'ACTIVE' }, or: [{ firstName: { contains: searchQuery} }, { lastName: { contains: searchQuery } }] },
+      })
+    );
+    const students = result.data.listPersons.items;
+    const mappedStudents = students.map((item: any, i: any) => ({
+      id: item.id,
+      name: `${item.firstName || ''} ${item.lastName || ''}`,
+      value: `${item.firstName || ''} ${item.lastName || ''}`,
+      avatar: item.image ? getImageFromS3(item.image) : '',
+      status: item.status || 'Inactive',
+      email: item.email || '',
+      authId: item.authId || '',
+    }));
+    setFilteredStudents(mappedStudents)
+  }
+
+  const clearFilteredStudents = () => {
+    setFilteredStudents([])
+  }
+
   const onNameChange = (e: any) => {
     setClassData({
       ...classData,
@@ -167,6 +196,7 @@ const EditClass = (props: EditClassProps) => {
       saveClassStudent(id, classData.id);
       setNewMember(defaultNewMember);
     }
+    setFilteredStudents([])
   };
 
   const saveClassStudent = async (id: string, classId: string) => {
@@ -382,11 +412,15 @@ const EditClass = (props: EditClassProps) => {
         <div className="flex flex-col items-center justify-center w-6/10 m-auto px-2">
           <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">Add students to class</label>
           <div className="flex items-center justify-between">
-            <SelectorWithAvatar
+            <SearchSelectorWithAvatar
               selectedItem={newMember}
-              list={students}
+              list={searching ? filteredStudents : students}
               placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
               onChange={onStudentSelect}
+              fetchStudentList={fetchStudentList}
+              clearFilteredStudents={clearFilteredStudents}
+              searchStatus={searching}
+              searchCallback={setSearching}
               imageFromS3={false}
             />
 
