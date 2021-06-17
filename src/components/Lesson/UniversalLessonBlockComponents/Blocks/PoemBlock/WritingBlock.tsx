@@ -20,7 +20,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     setPoemInput([
       ...poemInput,
       {
-        domID: `${id}_${nanoid(4)}`,
+        domID: `line_${nanoid(4)}`,
         input: [''],
       },
     ]);
