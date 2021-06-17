@@ -1,18 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
-
-import FormInput from '../../../../Atoms/Form/FormInput';
-import {
-  EditQuestionModalDict,
-  UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
+import React, { useContext, useEffect, useState } from 'react';
+import { EditQuestionModalDict } from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {uniqueId} from 'lodash';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import Storage from '@aws-amplify/storage';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Loader from '../../../../Atoms/Loader';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 
 interface IHighlighterFormDialogProps extends IContentTypeComponentProps {
@@ -33,16 +23,13 @@ const HighlighterFormDialog = ({
   //  DATA STORAG         //
   //////////////////////////
   const [inputFieldValue, setInputFieldValue] = useState<string>('');
+
   useEffect(() => {
     if (inputObj) {
-      if (inputObj?.value) {
-        setInputFieldValue(inputObj.value[0]);
-      }
+      console.log(inputObj[0])
+      setInputFieldValue(inputObj[0]);
     }
   }, [inputObj]);
-
-  const setEditorContent = (html: string) =>
-    setInputFieldValue(html);
 
 
   const onHighlighterBlockCreate = () => {
@@ -55,18 +42,22 @@ const HighlighterFormDialog = ({
     closeAction();
     // clear fields
     setInputFieldValue('');
+  };
+
+  const setEditorContent = (html: string, text: string) => {
+    setInputFieldValue(html);
   }
 
   return (
     <>
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2">
-          <RichTextEditor
-            initialValue={inputFieldValue}
-            onChange={(htmlContent, plainText) =>
-              setEditorContent(htmlContent)
-            }
-          />
+          {
+            inputFieldValue.length > 0 && <RichTextEditor
+              initialValue={inputFieldValue.length > 0 ? inputFieldValue : ''}
+              onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText)}
+            />
+          }
         </div>
       </div>
 
@@ -84,11 +75,10 @@ const HighlighterFormDialog = ({
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onHighlighterBlockCreate}
           />
-
         </div>
       </div>
-      </>
-  )
+    </>
+  );
 };
 
 export default HighlighterFormDialog;
