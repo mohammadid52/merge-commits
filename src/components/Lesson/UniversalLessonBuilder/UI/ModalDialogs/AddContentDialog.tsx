@@ -112,6 +112,18 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
               <div
                 onClick={() => {
                   hideAllModals();
+                  setAddContentModal({show: true, type: 'highlighter'});
+                }}
+                className={`${buttonClass}`}>
+                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
+                  <AiOutlineMore />
+                </IconContext.Provider>
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Highlighter</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
                   setAddContentModal({show: true, type: 'input'});
                 }}
                 className={`${buttonClass}`}>

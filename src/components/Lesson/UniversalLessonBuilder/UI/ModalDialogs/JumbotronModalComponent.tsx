@@ -1,15 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {
-  EditQuestionModalDict,
-  UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
+import { EditQuestionModalDict, UniversalBuilderDict } from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {uniqueId} from 'lodash';
-import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
 import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 import Loader from '../../../../Atoms/Loader';
@@ -121,12 +117,6 @@ const JumbotronModalComponent = ({
     setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
     setErrors((prevValues) => ({...prevValues, url: ''}));
   };
-  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const name: string = (event.target as HTMLInputElement).name;
-  //   const value: string = (event.target as HTMLInputElement).value;
-  //   setImageInputs((prevValues) => ({...prevValues, [name]: value}));
-  //   setErrors((prevValues) => ({...prevValues, [name]: ''}));
-  // };
   const onSave = async () => {
     const isValid: boolean = validateFormFields();
     if (isValid) {
