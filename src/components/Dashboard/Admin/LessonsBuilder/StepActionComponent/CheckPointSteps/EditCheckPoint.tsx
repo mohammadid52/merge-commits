@@ -27,9 +27,11 @@ import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import EditQuestionModal from '../../HelperComponents/EditQuestionModal';
-import {findIndex, get, update} from 'lodash';
+import {findIndex, get, remove, update} from 'lodash';
 import {AiOutlineEdit, AiOutlineInfoCircle} from 'react-icons/ai';
 import ToolTip from '../../../../../Atoms/Tooltip';
+import {BsFillTrashFill} from 'react-icons/bs';
+import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 
 interface EditCheckPointProps {
   changeStep: (step: string) => void;
@@ -400,6 +402,14 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
     }
   }, [checkpQuestions]);
 
+  const deleteQuestion = (id: string) => {
+    remove(checkpQuestions, (qItem: any) => qItem.id === id);
+    setCheckpQuestions([...checkpQuestions]);
+    setShowModal({show: false, message: '', qId: ''});
+  };
+
+  const [showModal, setShowModal] = useState({show: false, message: '', qId: ''});
+
   const {
     title,
     subtitle,
@@ -475,7 +485,7 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
             {!item.published && (
               <div
                 onClick={() => setIsEditing(true)}
-                className={`mx-1 py-3 rounded-md cursor-pointer`}>
+                className={`mx-1 py-3 rounded-md cursor-pointer w-auto`}>
                 <AiOutlineEdit
                   color={theme.iconColor[themeColor]}
                   className="text-right"
@@ -485,10 +495,22 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
             {(item.type === 'selectMany' || item.type === 'selectOne') && (
               <div
                 onClick={() => showOptions(item.id, item.options)}
-                className={`mx-1 py-3 rounded-md cursor-pointer`}>
+                className={`mx-1 py-3 w-auto rounded-md cursor-pointer`}>
                 <AiOutlineInfoCircle color={theme.iconColor[themeColor]} />
               </div>
             )}
+            <div
+              onClick={(e: any) => {
+                e.stopPropagation();
+                setShowModal({
+                  show: true,
+                  message: `Are you sure you want to delete this question`,
+                  qId: item.id,
+                });
+              }}
+              className="hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto p-1 cursor-pointer">
+              <BsFillTrashFill />
+            </div>
           </div>
           {/* <div className="flex w-1/10 px-6 py-1 text-s leading-4 items-center justify-center">
             {(item.type === 'selectMany' || item.type === 'selectOne') && (
@@ -844,6 +866,16 @@ const EditCheckPoint = (props: AddNewCheckPointProps) => {
             />
           </div>
         </div>
+        {showModal.show && (
+          <ModalPopUp
+            closeAction={() => setShowModal({show: false, message: '', qId: ''})}
+            saveAction={() => deleteQuestion(showModal.qId)}
+            saveLabel="Yes"
+            cancelLabel="Cancel"
+            message={showModal.message}
+            cancelTooltip={'Continue Editing'}
+          />
+        )}
       </div>
     </Fragment>
   );
