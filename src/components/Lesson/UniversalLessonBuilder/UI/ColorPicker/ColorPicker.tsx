@@ -77,7 +77,7 @@ const ColorPicker = (props: ColorPickerProps) => {
     svgTransform: isPagePart
       ? {right: '-5px'}
       : isMainPage
-      ? {top: '-4px', left: '25px', color: 'white'}
+      ? {top: '-4px', left: '8px', color: 'white'}
       : {left: '-5px'},
     icon: isMainPage ? '' : '-translate-y-1/2 top-1/2',
   };

@@ -66,7 +66,7 @@ const HeaderModalComponent = ({
       updateBlockContentULBHandler(
         '',
         '',
-        'header-section',
+        'header',
         [value],
         0,
         `${fontSizeClass} border-b-4 border-${bgColorClass}`

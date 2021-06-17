@@ -5,7 +5,6 @@ import Storage from '@aws-amplify/storage';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Modal from '../../../../Atoms/Modal';
 
 import { getImageFromS3Static } from '../../../../../utilities/services';
 import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -14,8 +13,6 @@ import {
   UniversalBuilderDict,
 } from '../../../../../dictionary/dictionary.iconoclast';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
-
-import ImageGallery from '../ImageGallery';
 
 interface IImageInput {
   url: string;
@@ -26,7 +23,9 @@ interface IImageInput {
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
+  handleGalleryModal: () => void;
   inputObj?: IImageInput[];
+  selectedImageFromGallery?: string;
 }
 
 const ImageFormComponent = ({
@@ -34,8 +33,13 @@ const ImageFormComponent = ({
   closeAction,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
+  handleGalleryModal,
+  selectedImageFromGallery,
 }: IImageFormComponentProps) => {
-  const {userLanguage, state:{user}} = useContext(GlobalContext);
+  const {
+    userLanguage,
+    state: {user},
+  } = useContext(GlobalContext);
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
@@ -58,6 +62,18 @@ const ImageFormComponent = ({
       setIsEditingMode(true);
     }
   }, [inputObj]);
+
+  // To update the selected image from gallery to input object
+  useEffect(() => {
+    if (selectedImageFromGallery) {
+      setImageInputs((prevValues) => ({
+        ...prevValues,
+        url: selectedImageFromGallery,
+        imageData: null,
+      }));
+    }
+  }, [selectedImageFromGallery]);
+
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
     setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
     setErrors((prevValues) => ({...prevValues, url: ''}));
@@ -81,11 +97,7 @@ const ImageFormComponent = ({
           .join(' ')
           .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
         setIsLoading(true);
-        await uploadImageToS3(
-          imageData,
-          `${fileName}`,
-          'image/jpeg'
-        );
+        await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
         payload = {
           ...payload,
           url: `ULB/${user.id}/content_image_${fileName}`,
@@ -151,14 +163,6 @@ const ImageFormComponent = ({
     });
   };
 
-  const handleGalleryModal = () => {
-    setOpenGallery(prevShow => !prevShow);
-  }; 
-
-  const onSelectImage = (url:string) => {
-    setImageInputs((prevValues) => ({...prevValues, url, imageData: null}));
-    setOpenGallery(false);
-  }
   const {caption = '', url = '', width = '', height = '', imageData} = imageInputs;
   return (
     <div>
@@ -249,18 +253,6 @@ const ImageFormComponent = ({
           </div>
         </div>
       </form>
-      {openGallery && (
-        <Modal
-          showHeader={true}
-          title={`Select from gallery`}
-          showHeaderBorder={true}
-          showFooter={false}
-          closeAction={handleGalleryModal}>
-          <div className="min-w-256">
-            <ImageGallery basePath={`ULB/${user.id}`} onSelectImage={onSelectImage} />
-          </div>
-        </Modal>
-      )}
     </div>
   );
 };
