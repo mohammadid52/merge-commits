@@ -36,9 +36,6 @@ export const onChangePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -285,9 +282,6 @@ export const onChangeStudentData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -618,17 +612,6 @@ export const onCreatePerson = /* GraphQL */ `
         }
         nextToken
       }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -670,17 +653,6 @@ export const onUpdatePerson = /* GraphQL */ `
         }
         nextToken
       }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -717,17 +689,6 @@ export const onDeletePerson = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      wordbank {
-        items {
-          id
-          wordID
-          studentID
-          studentAuthID
           createdAt
           updatedAt
         }
@@ -1236,55 +1197,6 @@ export const onCreateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1326,55 +1238,6 @@ export const onUpdateStaff = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1414,55 +1277,6 @@ export const onDeleteStaff = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      curricula {
-        items {
-          id
-          staffID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      institution {
-        id
-        name
-        type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
-        image
-        isServiceProvider
-        serviceProviders {
-          nextToken
-        }
-        staff {
-          nextToken
-        }
-        rooms {
-          nextToken
-        }
-        curricula {
-          nextToken
-        }
-        classes {
-          nextToken
-        }
-        filters
-        checkpoints {
           nextToken
         }
         createdAt
@@ -1541,9 +1355,6 @@ export const onCreateRoom = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -1686,9 +1497,6 @@ export const onUpdateRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1827,9 +1635,6 @@ export const onDeleteRoom = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -2009,9 +1814,6 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2127,9 +1929,6 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2243,9 +2042,6 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -2570,9 +2366,6 @@ export const onCreateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2646,9 +2439,6 @@ export const onUpdateClassStudent = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2720,9 +2510,6 @@ export const onDeleteClassStudent = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -3384,153 +3171,6 @@ export const onDeleteRubric = /* GraphQL */ `
     }
   }
 `;
-export const onCreateTeacherCurriculum = /* GraphQL */ `
-  subscription OnCreateTeacherCurriculum {
-    onCreateTeacherCurriculum {
-      id
-      staffID
-      curriculumID
-      curriculum {
-        id
-        institutionID
-        name
-        type
-        image
-        summary
-        description
-        objectives
-        languages
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        designers
-        syllabi {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateTeacherCurriculum = /* GraphQL */ `
-  subscription OnUpdateTeacherCurriculum {
-    onUpdateTeacherCurriculum {
-      id
-      staffID
-      curriculumID
-      curriculum {
-        id
-        institutionID
-        name
-        type
-        image
-        summary
-        description
-        objectives
-        languages
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        designers
-        syllabi {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteTeacherCurriculum = /* GraphQL */ `
-  subscription OnDeleteTeacherCurriculum {
-    onDeleteTeacherCurriculum {
-      id
-      staffID
-      curriculumID
-      curriculum {
-        id
-        institutionID
-        name
-        type
-        image
-        summary
-        description
-        objectives
-        languages
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        designers
-        syllabi {
-          nextToken
-        }
-        checkpoints {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateRoomCurriculum = /* GraphQL */ `
   subscription OnCreateRoomCurriculum {
     onCreateRoomCurriculum {
@@ -3754,39 +3394,6 @@ export const onDeleteArtist = /* GraphQL */ `
           link
         }
       }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateSelStructure = /* GraphQL */ `
-  subscription OnCreateSelStructure {
-    onCreateSELStructure {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateSelStructure = /* GraphQL */ `
-  subscription OnUpdateSelStructure {
-    onUpdateSELStructure {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteSelStructure = /* GraphQL */ `
-  subscription OnDeleteSelStructure {
-    onDeleteSELStructure {
-      id
-      name
-      description
       createdAt
       updatedAt
     }
@@ -5439,153 +5046,6 @@ export const onDeleteWord = /* GraphQL */ `
     }
   }
 `;
-export const onCreateStudentWord = /* GraphQL */ `
-  subscription OnCreateStudentWord {
-    onCreateStudentWord {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateStudentWord = /* GraphQL */ `
-  subscription OnUpdateStudentWord {
-    onUpdateStudentWord {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteStudentWord = /* GraphQL */ `
-  subscription OnDeleteStudentWord {
-    onDeleteStudentWord {
-      id
-      wordID
-      studentID
-      studentAuthID
-      word {
-        id
-        word
-        definition
-        createdAt
-        updatedAt
-      }
-      student {
-        id
-        authId
-        status
-        email
-        role
-        type
-        firstName
-        preferredName
-        lastName
-        externalId
-        grade
-        onBoardSurvey
-        offBoardSurvey
-        phone
-        birthdate
-        image
-        language
-        filters
-        lastLoggedIn
-        lastLoggedOut
-        classes {
-          nextToken
-        }
-        wordbank {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateRoomMsgs = /* GraphQL */ `
   subscription OnCreateRoomMsgs {
     onCreateRoomMsgs {
@@ -5617,9 +5077,6 @@ export const onCreateRoomMsgs = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -5662,9 +5119,6 @@ export const onUpdateRoomMsgs = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -5703,9 +5157,6 @@ export const onDeleteRoomMsgs = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -8722,9 +8173,6 @@ export const onCreateAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -8769,9 +8217,6 @@ export const onUpdateAnthologyComment = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -8820,9 +8265,6 @@ export const onDeleteAnthologyComment = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -8868,9 +8310,6 @@ export const onCreateQuestionData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -8986,9 +8425,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -9100,9 +8536,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -9858,264 +9291,6 @@ export const onDeleteFeedback = /* GraphQL */ `
     }
   }
 `;
-export const onCreateIntro = /* GraphQL */ `
-  subscription OnCreateIntro {
-    onCreateIntro {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateIntro = /* GraphQL */ `
-  subscription OnUpdateIntro {
-    onUpdateIntro {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteIntro = /* GraphQL */ `
-  subscription OnDeleteIntro {
-    onDeleteIntro {
-      id
-      title
-      label
-      stage
-      type
-      connectionTitle
-      connection
-      keywordsTitle
-      keywords {
-        items {
-          id
-          wordID
-          lessonID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      language
-      estTime
-      artistID
-      artist {
-        id
-        images
-        name
-        type
-        bio
-        quotes {
-          id
-          source
-          text
-        }
-        additionalContent {
-          video
-        }
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateOutro = /* GraphQL */ `
-  subscription OnCreateOutro {
-    onCreateOutro {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateOutro = /* GraphQL */ `
-  subscription OnUpdateOutro {
-    onUpdateOutro {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteOutro = /* GraphQL */ `
-  subscription OnDeleteOutro {
-    onDeleteOutro {
-      id
-      title
-      subtitle
-      stage
-      type
-      closingTitle
-      closingText
-      questionsTitle
-      questions {
-        items {
-          id
-          doFirstID
-          questionID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      additionalInfo
-      language
-      estTime
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreatePersonLocation = /* GraphQL */ `
   subscription OnCreatePersonLocation {
     onCreatePersonLocation {
@@ -10148,9 +9323,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -10335,9 +9507,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10518,9 +9687,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
@@ -10719,9 +9885,6 @@ export const onCreateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10778,9 +9941,6 @@ export const onUpdateNoticeboardWidget = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -10835,9 +9995,6 @@ export const onDeleteNoticeboardWidget = /* GraphQL */ `
         lastLoggedIn
         lastLoggedOut
         classes {
-          nextToken
-        }
-        wordbank {
           nextToken
         }
         createdAt
