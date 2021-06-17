@@ -5,7 +5,7 @@ import {getAsset} from '../../assets';
 
 interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
-  label?: string;
+  label?: string | any;
   onClick?: (event?:any) => void;
   transparent?: boolean;
   Icon?: any;

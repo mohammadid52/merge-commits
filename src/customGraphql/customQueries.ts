@@ -692,9 +692,6 @@ export const getRoom = /* GraphQL */ `
         classes {
           nextToken
         }
-        wordbank {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -2253,9 +2250,6 @@ export const userById = /* GraphQL */ `
               }
             }
           }
-        }
-        wordbank {
-          nextToken
         }
         createdAt
         updatedAt

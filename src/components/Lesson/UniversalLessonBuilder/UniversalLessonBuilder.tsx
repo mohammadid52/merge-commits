@@ -261,7 +261,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               id: `${pageContentId}_${contentType}_1`,
               type: contentType,
               value: inputObj,
-              class: classString || ''
+              class: classString || '',
             },
           ],
           partType: 'default',
@@ -310,14 +310,12 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
           const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
-           let activePagePartContentData = [
-            ...activePageContentData.partContent]
-            activePagePartContentData[addBlockAtPosition] = {
-              id: partContentId,
-              type: contentType,
-              value: inputObj,
-              class: classString || '',
-            };
+          let activePagePartContentData = [...activePageContentData.partContent];
+          activePagePartContentData[addBlockAtPosition] = {
+            id: partContentId,
+            type: contentType,
+            value: inputObj,
+          };
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
             partContent: activePagePartContentData,
@@ -403,8 +401,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  console.log(universalLessonDetails, 'universalLessonDetails');
-  
+  // console.log(universalLessonDetails, 'universalLessonDetails');
 
   return (
     /**

@@ -40,7 +40,7 @@ const RowComposer = (props: RowComposerProps) => {
     handleTagModalOpen,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
-  const {previewMode, updateMovableList} = useULBContext();
+  const {previewMode, updateMovableList, enableDnD} = useULBContext();
 
   const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {
@@ -198,7 +198,7 @@ const RowComposer = (props: RowComposerProps) => {
               <div
                 className={`absolute w-auto bottom-${
                   idx === selectedPageDetails.pageContent.length - 1 || previewMode
-                     ? 2
+                    ? 2
                     : 4
                 } right-2 z-100`}>
                 {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
@@ -251,7 +251,7 @@ const RowComposer = (props: RowComposerProps) => {
                       onDragEnd={(result) =>
                         handleOnDragEnd(result, pagePart.id, pagePart.partContent)
                       }>
-                      <Droppable droppableId="partContent">
+                      <Droppable isDropDisabled={!enableDnD} droppableId="partContent">
                         {(provided) => {
                           const partContent = pagePart.partContent;
                           return (
@@ -261,6 +261,7 @@ const RowComposer = (props: RowComposerProps) => {
                               className={pagePart.class}>
                               {partContent.map((content: PartContent, idx2: number) => (
                                 <Draggable
+                                  isDragDisabled={!enableDnD}
                                   draggableId={`pagePart_tree_${idx}_${idx2}`}
                                   index={idx2}
                                   key={`pagePart_tree_${idx}_${idx2}`}>
@@ -335,6 +336,65 @@ const RowComposer = (props: RowComposerProps) => {
                       </Droppable>
                     </DragDropContext>
                   ) : (
+                    // ) : (
+                    // <></>
+                    // <ul className={pagePart.class}>
+                    //   {pagePart.partContent.map(
+                    //     (content: PartContent, idx2: number) => (
+                    //       <li>
+                    //         <EditOverlayBlock
+                    //           key={`pp_${idx}_pc_${idx2}`}
+                    //           mode={mode}
+                    //           classString={content.class}
+                    //           contentID={content.id}
+                    //           editedID={editedID}
+                    //           isComponent={true}
+                    //           isLast={idx2 === pagePart.partContent.length - 1}
+                    //           handleEditBlockToggle={() =>
+                    //             handleEditBlockToggle(content.id)
+                    //           }
+                    //           handleEditBlockContent={() =>
+                    //             handleEditBlockContent(
+                    //               content.type,
+                    //               'partContent',
+                    //               content.value,
+                    //               pagePart.id,
+                    //               idx2
+                    //             )
+                    //           }
+                    //           createNewBlockULBHandler={createNewBlockULBHandler}
+                    //           deleteFromULBHandler={deleteFromULBHandler}
+                    //           updateFromULBHandler={updateFromULBHandler}>
+                    //           {content.value.length > 0 ? (
+                    //             <div className={content.class} id={content.id}>
+                    //               {composePartContent(
+                    //                 content.id,
+                    //                 content.type,
+                    //                 content.value,
+                    //                 `pp_${idx}_pc_${idx2}`,
+                    //                 content.class
+                    //               )}
+                    //             </div>
+                    //           ) : (
+                    //             <AddNewBlock
+                    //               idx={-1}
+                    //               mode={mode}
+                    //               handleModalPopToggle={(dialogToToggle) =>
+                    //                 handleModalPopToggle(
+                    //                   dialogToToggle,
+                    //                   idx2,
+                    //                   'partContent',
+                    //                   pagePart.id
+                    //                 )
+                    //               }
+                    //             />
+                    //           )}
+                    //         </EditOverlayBlock>
+                    //       </li>
+                    //     )
+                    //   )}
+                    // </ul>
+                    // )
                     <h1 className={`w-full text-center`}>
                       This pagepart has no content.
                     </h1>
