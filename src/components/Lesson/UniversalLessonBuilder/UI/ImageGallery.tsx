@@ -14,8 +14,8 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
     fetchImagesFromS3();
   }, []);
 
-  const fetchImagesFromS3 = async () => {
-    const response: any = await getImagesFromS3Folder(basePath);
+  const fetchImagesFromS3 = async (startAfter: string = '') => {
+    const response: any = await getImagesFromS3Folder(basePath, startAfter, 1);
     setImages((prevImages: any) => [
       ...prevImages,
       ...response.Contents,
@@ -24,18 +24,16 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
     setLoading(false);
   };
 
+  const onLoadMore = () => {
+    fetchImagesFromS3(images[images.length-1].key);
+  }
   return (
-    <div
-      id="scrollableDiv"
-      style={{
-        height: 300,
-        overflow: 'auto',
-      }}>
+    <div id="scrollableDiv" className="h-80 overflow-auto">
       {loading ? <Loader /> : null}
       {/*Put the scroll bar always on the bottom*/}
       <InfiniteScroll
         dataLength={images.length}
-        next={fetchImagesFromS3}
+        next={onLoadMore}
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
         scrollableTarget="scrollableDiv">
