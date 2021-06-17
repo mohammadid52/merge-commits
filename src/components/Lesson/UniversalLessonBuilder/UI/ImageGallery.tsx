@@ -30,7 +30,7 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
     fetchImagesFromS3(images[images.length-1].key);
   }
   return (
-    <div id="scrollableDiv" className="h-80 overflow-auto">
+    <div id="scrollableDiv" className="h-84 overflow-auto">
       {loading ? <Loader /> : null}
       {/*Put the scroll bar always on the bottom*/}
       <InfiniteScroll
@@ -45,15 +45,14 @@ const ImageGallery = ({basePath, onSelectImage}: any) => {
             return (
               <div
                 key={index}
-                className={`w-40 h-40`}
+                className={`w-48 h-44 border-0 border-gray-400 flex items-center`}
                 onClick={() => onSelectImage(imageKey)}>
                 <img
                   className="mx-auto cursor-pointer"
-                  // style={styleAttribute}
                   width={'auto'}
                   height={'auto'}
                   src={getImageFromS3Static(imageKey)}
-                  alt="image"
+                  alt="Content image"
                 />
               </div>
             );
