@@ -26,7 +26,6 @@ import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalComponent';
-import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -260,7 +259,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
     switch (type) {
       case 'header':
-        return <HeaderModalComponent {...commonProps} />;
       case 'header-section':
         return <HeaderModalComponent {...commonProps} />;
       case 'image':
@@ -296,16 +294,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       case 'jumbotron':
-        return (
-          <JumbotronFormDialog
-            {...commonProps}
-          />
-        );case 'highlighter':
-        return (
-          <HighlighterFormDialog
-            {...commonProps}
-          />
-        );
+        return <JumbotronFormDialog {...commonProps} />;
       default:
         break;
     }
