@@ -69,6 +69,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string;
     position: number;
     targetId: string;
+    classString?: string;
     inputObj?: any;
     isEditingMode?: boolean;
   }>({
@@ -142,7 +143,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string = 'pageContent',
     inputObj: any,
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
-    indexToUpdate: number
+    indexToUpdate: number,
+    classString: string = ''
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
@@ -151,6 +153,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section,
       position: indexToUpdate,
       targetId: targetContainerId,
+      classString,
       inputObj,
       isEditingMode: true,
     });
@@ -168,6 +171,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section: 'pageContent',
       position: 0,
       targetId,
+      classString: '',
       inputObj: inputObj,
       isEditingMode: false,
     });
@@ -276,7 +280,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
     switch (type) {
       case 'header':
-      case 'header-section':
         return <HeaderModalComponent {...commonProps} />;
       case 'image':
         return (
