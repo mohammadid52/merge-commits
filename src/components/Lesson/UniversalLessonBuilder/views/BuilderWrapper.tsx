@@ -25,8 +25,11 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
-import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalComponent';
+
 import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
+import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
+import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
+import ImageGallery from '../UI/ImageGallery';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -48,7 +51,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setSelectedPageID,
     initialUniversalLessonPagePartContent,
   } = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {
+    userLanguage,
+    clientKey,
+    state: {user},
+  } = useContext(GlobalContext);
   const {universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
@@ -65,6 +72,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string;
     position: number;
     targetId: string;
+    classString?: string;
     inputObj?: any;
     isEditingMode?: boolean;
   }>({
@@ -73,6 +81,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     targetId: '',
   });
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
+
+  // Manage image gallery component
+  const [openGallery, setOpenGallery] = useState<boolean>(false);
+  const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
+
+  const handleGalleryModal = () => {
+    setOpenGallery((prevShow) => !prevShow);
+  };
+  const onSelectImage = (url: string) => {
+    setSelectedImageFromGallery(url);
+    setOpenGallery(false);
+  };
 
   /**
    *
@@ -126,7 +146,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string = 'pageContent',
     inputObj: any,
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
-    indexToUpdate: number
+    indexToUpdate: number,
+    classString: string = ''
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
@@ -135,6 +156,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section,
       position: indexToUpdate,
       targetId: targetContainerId,
+      classString,
       inputObj,
       isEditingMode: true,
     });
@@ -152,6 +174,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section: 'pageContent',
       position: 0,
       targetId,
+      classString: '',
       inputObj: inputObj,
       isEditingMode: false,
     });
@@ -214,7 +237,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   }
 
   const modalByType = (type: string) => {
-    const {position = 0, section = 'pageContent', inputObj = {}} = blockConfig;
+    const {
+      position = 0,
+      section = 'pageContent',
+      inputObj = {},
+      classString: selectedContentClass = '',
+    } = blockConfig;
 
     const updateBlockContent = (
       targetID: string,
@@ -271,6 +299,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             closeAction={closeAction}
             inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
+            handleGalleryModal={handleGalleryModal}
+            selectedImageFromGallery={selectedImageFromGallery}
           />
         );
       case 'paragraph':
@@ -298,6 +328,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         );
       case 'jumbotron':
         return <JumbotronFormDialog {...commonProps} />;
+      case 'poem':
+        return <LinestarterModalDialog {...commonProps} />;
       default:
         break;
     }
@@ -398,7 +430,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           </div>
         </Modal>
       )}
-
+      {openGallery && (
+        <Modal
+          showHeader={true}
+          title={`Select from gallery`}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={handleGalleryModal}>
+          <div className="min-w-256">
+            <ImageGallery basePath={`ULB/${user.id}`} onSelectImage={onSelectImage} />
+          </div>
+        </Modal>
+      )}
       <HierarchyPanel
         universalLessonDetails={universalLessonDetails}
         selectedPageID={selectedPageID}

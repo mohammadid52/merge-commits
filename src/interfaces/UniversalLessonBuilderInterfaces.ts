@@ -55,7 +55,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
-  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number) => void;
+  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number, classString?:string) => void;
   handleModalPopToggle?: (dialogToToggle: string, position?: Number, section?:string, targetID?:string) => void;
 }
 

@@ -1,11 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import { EditQuestionModalDict, UniversalBuilderDict } from '../../../../../dictionary/dictionary.iconoclast';
+import {
+  EditQuestionModalDict,
+  UniversalBuilderDict,
+} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
 import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 import Loader from '../../../../Atoms/Loader';
@@ -52,7 +55,7 @@ const initialInputFieldsState = [
   },
 ];
 
-const JumbotronModalComponent = ({
+const JumbotronModalDialog = ({
   closeAction,
   inputObj,
   imageInput,
@@ -60,7 +63,7 @@ const JumbotronModalComponent = ({
   updateBlockContentULBHandler,
 }: IJumbotronModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const [isEditingMode] = useState<boolean>(false);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   //////////////////////////
   //  DATA STORAG         //
@@ -70,9 +73,8 @@ const JumbotronModalComponent = ({
   );
   useEffect(() => {
     if (inputObj) {
-      if (inputObj?.value) {
-        setInputFieldsArray(inputObj.value);
-      }
+      setInputFieldsArray(inputObj);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
 
@@ -232,6 +234,9 @@ const JumbotronModalComponent = ({
                   updateFileUrl={updateFileUrl}
                   acceptedFilesFormat={'image/*'}
                   error={errors?.url}
+                  classString={
+                    'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2 mb-1'
+                  }
                 />
               );
             } else {
@@ -261,17 +266,22 @@ const JumbotronModalComponent = ({
             transparent
           />
 
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={!loading ? EditQuestionModalDict[userLanguage]['BUTTON']['SAVE'] : <Loader/>}
-              onClick={onJumbotronCreate}
-              disabled={loading}
-            />
-
+          <Buttons
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={
+              !loading ? (
+                EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']
+              ) : (
+                <Loader />
+              )
+            }
+            onClick={onJumbotronCreate}
+            disabled={loading}
+          />
         </div>
       </div>
     </>
   );
 };
 
-export default JumbotronModalComponent;
+export default JumbotronModalDialog;

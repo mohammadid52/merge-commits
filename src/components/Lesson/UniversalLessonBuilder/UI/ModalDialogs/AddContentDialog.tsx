@@ -111,6 +111,16 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
               <div
                 onClick={() => {
                   hideAllModals();
+                  setAddContentModal({show: true, type: 'poem'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineMore className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Linestarter</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
                   setAddContentModal({show: true, type: 'input'});
                 }}
                 className={`${buttonClass}`}>

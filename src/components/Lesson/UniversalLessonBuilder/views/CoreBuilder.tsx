@@ -126,13 +126,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
       <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
         <div className={`absolute w-auto top-7 left-2 z-30`}>
-          <Buttons
-            onClick={onColorPickerToggle}
-            label="BG Color"
-            overrideClass={true}
-            btnClass="flex items-center justify-center w-auto mx-2 px-4 py-0 font-bold uppercase text-xs text-white bg-gray-400 rounded-md"
-            Icon={AiOutlineBgColors}
-          />
+          <Tooltip
+            placement="right"
+            text={`Select background color`}>
+            <Buttons
+              onClick={onColorPickerToggle}
+              label=""
+              overrideClass={true}
+              btnClass="flex items-center justify-center w-auto p-2 font-bold uppercase text-xs text-white bg-dark rounded-md"
+              Icon={AiOutlineBgColors}
+            />
+          </Tooltip>
           {isColorPickerOpen && (
             <div className="relative">
               <ColorPicker

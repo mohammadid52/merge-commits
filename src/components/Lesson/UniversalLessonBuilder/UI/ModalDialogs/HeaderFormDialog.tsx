@@ -10,12 +10,14 @@ import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLes
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
+  classString?: string;
   selectedPageID?: string;
 }
 
 const HeaderModalComponent = ({
   closeAction,
   inputObj,
+  classString,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: IHeaderModalComponentProps) => {
@@ -38,6 +40,15 @@ const HeaderModalComponent = ({
         ...prevInputFields,
         [FIELD_ID]: inputObj[0],
       }));
+      // retrieves the result of matching a string against border color
+      const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
+      setSelectedValues({
+        size: convertClassToSizeName(classString),
+        color:
+          matchBorderColor && matchBorderColor.length
+            ? matchBorderColor[0].split('border-')[1]
+            : '',
+      });
       setIsEditingMode(true);
     }
   }, [inputObj]);
@@ -58,18 +69,42 @@ const HeaderModalComponent = ({
         return 'text-xl';
     }
   };
+  const convertClassToSizeName = (classString: string) => {
+    let sizeName = 'medium';
+    if (classString) {
+      if (classString.includes('text-base')) {
+        sizeName = 'smallest';
+      } else if (classString.includes('text-lg')) {
+        sizeName = 'small';
+      } else if (classString.includes('text-xl')) {
+        sizeName = 'medium';
+      } else if (classString.includes('text-2xl')) {
+        sizeName = 'large';
+      } else if (classString.includes('text-3xl')) {
+        sizeName = 'largest';
+      }else{
+        sizeName = 'medium';
+      }
+    }
+    return sizeName;
+  };
+  
   const onHeaderCreate = () => {
     const value: string = inputFields[FIELD_ID];
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
     const bgColorClass: string = selectedValues.color;
+    const classValue = [
+      fontSizeClass,
+      `${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`,
+    ].filter(Boolean).join(' ');
     if (isEditingMode) {
       updateBlockContentULBHandler(
         '',
         '',
-        'header-section',
+        'header',
         [value],
         0,
-        `${fontSizeClass} border-b-4 border-${bgColorClass}`
+        classValue
       );
     } else {
       createNewBlockULBHandler(
@@ -78,7 +113,7 @@ const HeaderModalComponent = ({
         'header',
         [value],
         0,
-        `${fontSizeClass} ${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`
+        classValue
       );
     }
     // close modal after saving

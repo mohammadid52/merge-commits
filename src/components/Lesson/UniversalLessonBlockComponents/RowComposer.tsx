@@ -283,14 +283,13 @@ const RowComposer = (props: RowComposerProps) => {
                                             handleEditBlockToggle(content.id)
                                           }
                                           handleEditBlockContent={() => {
-                                            console.log(content.type);
-
                                             handleEditBlockContent(
                                               content.type,
                                               'partContent',
                                               content.value,
                                               pagePart.id,
-                                              idx2
+                                              idx2,
+                                              content.class
                                             );
                                           }}
                                           createNewBlockULBHandler={
