@@ -1,3 +1,4 @@
+import {BsFillTrashFill} from 'react-icons/bs';
 import React, {Fragment, useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
@@ -26,6 +27,9 @@ import {getTypeString, reorder} from '../../../../../../utilities/strings';
 import {getAsset} from '../../../../../../assets';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import {remove} from 'lodash';
+import {deleteQuestion} from '../../../../../../graphql/mutations';
+import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 export interface AddNewCheckPointProps {
   changeStep: (step: string) => void;
   updateLessonPlan: (plan: LessonPlansProps[], newObj: any[]) => void;
@@ -406,7 +410,6 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
   // }, [checkpQuestions]);
 
   useEffect(() => {
-    console.log('Data updated');
     if (!isEqual(initialData, checkPointData)) {
       setUnsavedChanges(true);
     }
@@ -423,6 +426,14 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
     instructionHtml,
     estTime,
   } = checkPointData;
+
+  const deleteQuestion = (id: string) => {
+    remove(checkpQuestions, (qItem: any) => qItem.id === id);
+    setCheckpQuestions([...checkpQuestions]);
+    setShowModal({show: false, message: '', qId: ''});
+  };
+
+  const [showModal, setShowModal] = useState({show: false, message: '', qId: ''});
 
   return (
     <Fragment>
@@ -716,7 +727,7 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                           {(item.type === 'selectMany' ||
                                             item.type === 'selectOne') && (
                                             <div
-                                              className={`w-6 h-6 cursor-pointer ${theme.textColor[themeColor]}`}
+                                              className={`w-6 h-6 mr-4 cursor-pointer ${theme.textColor[themeColor]}`}
                                               onClick={() =>
                                                 showOptions(item.id, item.options)
                                               }>
@@ -729,6 +740,18 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
                                               </IconContext.Provider>
                                             </div>
                                           )}
+                                          <div
+                                            onClick={(e: any) => {
+                                              e.stopPropagation();
+                                              setShowModal({
+                                                show: true,
+                                                message: `Are you sure you want to delete this question`,
+                                                qId: item.id,
+                                              });
+                                            }}
+                                            className="hover:bg-red-400 hover:text-white transition-all duration-150 rounded text-red-400 w-auto p-1 cursor-pointer">
+                                            <BsFillTrashFill />
+                                          </div>
                                         </div>
                                       </div>
                                       {questionOptions.quesId === item.id && (
@@ -804,6 +827,16 @@ const AddNewCheckPoint = (props: AddNewCheckPointProps) => {
             />
           </div>
         </div>
+        {showModal.show && (
+          <ModalPopUp
+            closeAction={() => setShowModal({show: false, message: '', qId: ''})}
+            saveAction={() => deleteQuestion(showModal.qId)}
+            saveLabel="Yes"
+            cancelLabel="Cancel"
+            message={showModal.message}
+            cancelTooltip={'Continue Editing'}
+          />
+        )}
       </div>
     </Fragment>
   );
