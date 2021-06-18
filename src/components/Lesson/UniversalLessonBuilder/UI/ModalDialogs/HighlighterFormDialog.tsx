@@ -24,6 +24,10 @@ const HighlighterFormDialog = ({
   //////////////////////////
   const [inputFieldValue, setInputFieldValue] = useState<string>('');
 
+  useEffect(()=>{
+    setInputFieldValue('Enter your lyrics here...')
+  },[])
+
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setInputFieldValue(inputObj[0]);
@@ -52,12 +56,10 @@ const HighlighterFormDialog = ({
     <>
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2">
-          {
-            inputFieldValue.length > 0 && <RichTextEditor
-              initialValue={inputFieldValue.length > 0 ? inputFieldValue : ''}
+          {inputFieldValue && <RichTextEditor
+              initialValue={inputFieldValue ? inputFieldValue : ''}
               onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText)}
-            />
-          }
+            />}
         </div>
       </div>
 
