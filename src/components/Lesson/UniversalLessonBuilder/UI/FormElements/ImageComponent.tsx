@@ -177,6 +177,7 @@ const ImageFormComponent = ({
               updateFileUrl={updateFileUrl}
               fileUrl={url}
               error={errors?.url}
+              showPreview={false}
             />
             <div className="flex flex-col items-center justify-center text-gray-400">
               --- Or ---

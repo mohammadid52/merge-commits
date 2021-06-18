@@ -234,6 +234,9 @@ const JumbotronModalDialog = ({
                   updateFileUrl={updateFileUrl}
                   acceptedFilesFormat={'image/*'}
                   error={errors?.url}
+                  classString={
+                    'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2 mb-1'
+                  }
                 />
               );
             } else {
