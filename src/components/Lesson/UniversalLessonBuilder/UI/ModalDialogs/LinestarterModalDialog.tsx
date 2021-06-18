@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
+import React, {useContext, useEffect, useState} from 'react';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
-import { EditQuestionModalDict } from '../../../../../dictionary/dictionary.iconoclast';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
-import { nanoid } from 'nanoid';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {nanoid} from 'nanoid';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -87,7 +87,14 @@ const LinestarterModalDialog = ({
       ...inputFieldsArray,
       {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`},
     ];
-    setInputFieldsArray(longerInputFieldsArray)
+    setInputFieldsArray(longerInputFieldsArray);
+  };
+
+  const handleDeleteLinestarter = (linestarterIdx: number) => {
+    const shorterInputFieldsArray: PartContentSub[] = inputFieldsArray.filter(
+      (inputObj: PartContentSub, idx: number) => idx !== linestarterIdx
+    );
+    setInputFieldsArray(shorterInputFieldsArray);
   };
 
   //////////////////////////
@@ -116,16 +123,25 @@ const LinestarterModalDialog = ({
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
-              <FormInput
-                key={`jumboform_${idx}`}
-                onChange={onChange}
-                label={inputFieldsArray[idx]?.label}
-                isRequired
-                value={inputFieldsArray[idx]?.value}
-                id={inputFieldsArray[idx]?.id}
-                placeHolder={inputFieldsArray[idx]?.value}
-                type="text"
-              />
+              <React.Fragment key={`linestarter_${idx}`}>
+                <p>
+                  Line-starter {idx + 1}:{' '}
+                  <span
+                    onClick={() => handleDeleteLinestarter(idx)}
+                    className={`font-semibold text-xs text-red-400 cursor-pointer`}>
+                    Delete?{' '}
+                  </span>
+                </p>
+                <FormInput
+                  key={`jumboform_${idx}`}
+                  onChange={onChange}
+                  isRequired
+                  value={inputFieldsArray[idx]?.value}
+                  id={inputFieldsArray[idx]?.id}
+                  placeHolder={inputFieldsArray[idx]?.value}
+                  type="text"
+                />
+              </React.Fragment>
             );
           })}
         </div>

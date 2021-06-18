@@ -12,7 +12,7 @@ import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterface
 import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 import Loader from '../../../../Atoms/Loader';
-import { nanoid } from 'nanoid';
+import {nanoid} from 'nanoid';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -46,14 +46,12 @@ const initialInputFieldsState = [
   },
 ];
 
-
 const newKeywordObj: PartContentSub = {
   id: 'keyword_',
   type: '',
   label: 'Keyword Title',
   value: 'Keyword description',
 };
-
 
 const KeywordModalDialog = ({
   closeAction,
@@ -80,14 +78,16 @@ const KeywordModalDialog = ({
   //////////////////////////
   //  FOR DATA UPDATE     //
   //////////////////////////
-  const handleUpdateInputFields = (id: string, value: any) => {
-    const newInputFieldsArray = inputFieldsArray.map((inputObj: PartContentSub) => {
-      if (inputObj.id === id) {
-        return {...inputObj, value: value};
-      } else {
-        return inputObj;
+  const handleUpdateInputFields = (value: any, name: string, idx: number) => {
+    const newInputFieldsArray = inputFieldsArray.map(
+      (inputObj: PartContentSub, inputObjIdx: number) => {
+        if (inputObjIdx === idx) {
+          return {...inputObj, [`${name}`]: value};
+        } else {
+          return inputObj;
+        }
       }
-    });
+    );
     setInputFieldsArray(newInputFieldsArray);
   };
 
@@ -96,15 +96,22 @@ const KeywordModalDialog = ({
       ...inputFieldsArray,
       {...newKeywordObj, id: `${newKeywordObj.id}${nanoid(4)}`},
     ];
-    setInputFieldsArray(longerInputFieldsArray)
-  }
+    setInputFieldsArray(longerInputFieldsArray);
+  };
+
+  const handleDeleteKeyword = (keywordIdx: number) => {
+    const shorterInputFieldsArray: PartContentSub[] = inputFieldsArray.filter(
+      (inputObj: PartContentSub, idx: number) => idx !== keywordIdx
+    );
+    setInputFieldsArray(shorterInputFieldsArray);
+  };
 
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
-  const onChange = (e: React.FormEvent) => {
-    const {id, value} = e.target as HTMLFormElement;
-    handleUpdateInputFields(id, value);
+  const onChange = (e: React.FormEvent, idx: number) => {
+    const {id, value, name} = e.target as HTMLFormElement;
+    handleUpdateInputFields(value, name, idx);
   };
 
   const onKeywordCreate = async () => {
@@ -125,16 +132,30 @@ const KeywordModalDialog = ({
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
-              <FormInput
-                key={`keyword_${idx}`}
-                onChange={onChange}
-                label={inputFieldsArray[idx]?.label}
-                isRequired
-                value={inputFieldsArray[idx]?.value}
-                id={inputFieldsArray[idx]?.id}
-                placeHolder={inputFieldsArray[idx]?.value}
-                type="text"
-              />
+              <React.Fragment key={`keyword_${idx}`}>
+                <p>
+                  Word Tile {idx + 1}:{' '}
+                  <span
+                    onClick={() => handleDeleteKeyword(idx)}
+                    className={`font-semibold text-xs text-red-400 cursor-pointer`}>
+                    Delete?{' '}
+                  </span>
+                </p>
+                <input
+                  onChange={(e) => onChange(e, idx)}
+                  name={'label'}
+                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}
+                  value={inputFieldsArray[idx]?.label}
+                  placeholder={inputFieldsArray[idx]?.label}
+                />
+                <input
+                  onChange={(e) => onChange(e, idx)}
+                  name={'value'}
+                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}
+                  value={inputFieldsArray[idx]?.value}
+                  placeholder={inputFieldsArray[idx]?.value}
+                />
+              </React.Fragment>
             );
           })}
         </div>
@@ -163,7 +184,7 @@ const KeywordModalDialog = ({
         </div>
       </div>
     </>
-  )
+  );
 };
 
 export default KeywordModalDialog;
