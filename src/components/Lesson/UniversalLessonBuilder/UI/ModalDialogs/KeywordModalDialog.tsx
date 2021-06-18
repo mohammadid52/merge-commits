@@ -71,9 +71,8 @@ const KeywordModalDialog = ({
     initialInputFieldsState
   );
   useEffect(() => {
-    if (inputObj) {
-      // setInputFieldsArray(inputObj);
-      console.log('keyword modal input obj --', inputObj)
+    if (inputObj && inputObj.length) {
+      setInputFieldsArray(inputObj);
       setIsEditingMode(true);
     }
   }, [inputObj]);

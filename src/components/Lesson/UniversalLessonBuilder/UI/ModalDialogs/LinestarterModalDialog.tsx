@@ -62,9 +62,8 @@ const LinestarterModalDialog = ({
     initialInputFieldsState
   );
   useEffect(() => {
-    if (inputObj) {
-      console.log('linestarter modal input obj --', inputObj)
-      // setInputFieldsArray(inputObj);
+    if (inputObj && inputObj.length) {
+      setInputFieldsArray(inputObj);
       setIsEditingMode(true);
     }
   }, [inputObj]);

@@ -25,7 +25,7 @@ const HighlighterFormDialog = ({
   const [inputFieldValue, setInputFieldValue] = useState<string>('');
 
   useEffect(() => {
-    if (inputObj) {
+    if (inputObj && inputObj.length) {
       setInputFieldValue(inputObj[0]);
       setIsEditingMode(true);
     }

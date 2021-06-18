@@ -72,7 +72,7 @@ const JumbotronModalDialog = ({
     initialInputFieldsState
   );
   useEffect(() => {
-    if (inputObj) {
+    if (inputObj && inputObj.length) {
       setInputFieldsArray(inputObj);
       setIsEditingMode(true);
     }
