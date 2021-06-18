@@ -30,6 +30,7 @@ import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
 import ImageGallery from '../UI/ImageGallery';
 import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
 import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
+import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -334,6 +335,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             updateBlockContentULBHandler={updateBlockContent}
           />
         );
+      case 'highlighter':
+        return (
+          <HighlighterFormDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
       case 'poem':
         return (
           <LinestarterModalDialog
@@ -352,9 +362,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             updateBlockContentULBHandler={updateBlockContent}
           />
         );
-      case 'highlighter':
+      case 'links':
         return (
-          <HighlighterFormDialog
+          <LinksModalDialog
             createNewBlockULBHandler={createNewBlock}
             closeAction={closeAction}
             inputObj={inputObj}
