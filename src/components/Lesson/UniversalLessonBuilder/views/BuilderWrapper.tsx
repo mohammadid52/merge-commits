@@ -181,8 +181,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: true,
-    type: 'questions',
+    show: false,
+    type: '',
   });
 
   const dialogLabelList = {
