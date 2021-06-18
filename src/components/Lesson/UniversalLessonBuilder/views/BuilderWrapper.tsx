@@ -235,7 +235,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   }
 
   const modalByType = (type: string) => {
-    const {position = 0, section = 'pageContent', inputObj = {}} = blockConfig;
+    const {position = 0, section = 'pageContent', inputObj = {}, classString: selectedContentClass=''} = blockConfig;
 
     const updateBlockContent = (
       targetID: string,
@@ -281,7 +281,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
     switch (type) {
       case 'header':
-        return <HeaderModalComponent {...commonProps} />;
+        return (
+          <HeaderModalComponent {...commonProps} classString={selectedContentClass} />
+        );
       case 'image':
         return (
           <ImageFormComponent
