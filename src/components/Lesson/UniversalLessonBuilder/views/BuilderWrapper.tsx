@@ -28,6 +28,7 @@ import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
 import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
 import ImageGallery from '../UI/ImageGallery';
+import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -86,7 +87,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const handleGalleryModal = () => {
     setOpenGallery((prevShow) => !prevShow);
-  }; 
+  };
   const onSelectImage = (url: string) => {
     setSelectedImageFromGallery(url);
     setOpenGallery(false);
@@ -235,7 +236,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   }
 
   const modalByType = (type: string) => {
-    const {position = 0, section = 'pageContent', inputObj = {}, classString: selectedContentClass=''} = blockConfig;
+    const {
+      position = 0,
+      section = 'pageContent',
+      inputObj = {},
+      classString: selectedContentClass = '',
+    } = blockConfig;
 
     const updateBlockContent = (
       targetID: string,
@@ -322,6 +328,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <JumbotronFormDialog {...commonProps} />;
       case 'poem':
         return <LinestarterModalDialog {...commonProps} />;
+      case 'keywords':
+        return <KeywordModalDialog {...commonProps} />;
       default:
         break;
     }

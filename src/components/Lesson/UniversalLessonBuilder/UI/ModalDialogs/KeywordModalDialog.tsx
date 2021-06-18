@@ -1,57 +1,66 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
+import React, {useContext, useEffect, useState} from 'react';
+
 import FormInput from '../../../../Atoms/Form/FormInput';
+import {
+  EditQuestionModalDict,
+  UniversalBuilderDict,
+} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
-import { EditQuestionModalDict } from '../../../../../dictionary/dictionary.iconoclast';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
+import Storage from '@aws-amplify/storage';
+import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
+import Loader from '../../../../Atoms/Loader';
 import { nanoid } from 'nanoid';
 
-interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
+interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
 }
 
 const initialInputFieldsState = [
   {
-    id: 'line_1',
+    id: 'keyword_1',
     type: '',
-    label: '',
-    value: 'Poem line starter one',
+    label: 'Keyword Title',
+    value: 'Keyword description',
   },
   {
-    id: 'line_2',
+    id: 'keyword_2',
     type: '',
-    label: '',
-    value: 'Poem line starter two',
+    label: 'Keyword Title',
+    value: 'Keyword description',
   },
   {
-    id: 'line_3',
+    id: 'keyword_3',
     type: '',
-    label: '',
-    value: 'Poem line starter three',
+    label: 'Keyword Title',
+    value: 'Keyword description',
   },
   {
-    id: 'line_4',
+    id: 'keyword_4',
     type: '',
-    label: '',
-    value: 'Poem line starter four',
+    label: 'Keyword Title',
+    value: 'Keyword description',
   },
 ];
 
-const newLinestarterObj: PartContentSub = {
-  id: 'line_',
+
+const newKeywordObj: PartContentSub = {
+  id: 'keyword_',
   type: '',
-  label: '',
-  value: 'New linestarter...',
+  label: 'Keyword Title',
+  value: 'Keyword description',
 };
 
-const LinestarterModalDialog = ({
+
+const KeywordModalDialog = ({
   closeAction,
   inputObj,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
-}: ILinestarterModalDialogProps) => {
+}: KeywordModalDialog) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
@@ -63,8 +72,8 @@ const LinestarterModalDialog = ({
   );
   useEffect(() => {
     if (inputObj) {
-      console.log('linestarter modal input obj --', inputObj)
       // setInputFieldsArray(inputObj);
+      console.log('keyword modal input obj --', inputObj)
       setIsEditingMode(true);
     }
   }, [inputObj]);
@@ -83,13 +92,13 @@ const LinestarterModalDialog = ({
     setInputFieldsArray(newInputFieldsArray);
   };
 
-  const handleAddNewLinestarter = () => {
+  const handleAddNewKeyword = () => {
     const longerInputFieldsArray: PartContentSub[] = [
       ...inputFieldsArray,
-      {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`},
+      {...newKeywordObj, id: `${newKeywordObj.id}${nanoid(4)}`},
     ];
     setInputFieldsArray(longerInputFieldsArray)
-  };
+  }
 
   //////////////////////////
   //  FOR NORMAL INPUT    //
@@ -99,11 +108,11 @@ const LinestarterModalDialog = ({
     handleUpdateInputFields(id, value);
   };
 
-  const onJumbotronCreate = async () => {
+  const onKeywordCreate = async () => {
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'poem', inputFieldsArray, 0);
+      updateBlockContentULBHandler('', '', 'keywords', inputFieldsArray, 0);
     } else {
-      createNewBlockULBHandler('', '', 'poem', inputFieldsArray, 0);
+      createNewBlockULBHandler('', '', 'keywords', inputFieldsArray, 0);
     }
     // close modal after saving
     closeAction();
@@ -118,7 +127,7 @@ const LinestarterModalDialog = ({
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
               <FormInput
-                key={`jumboform_${idx}`}
+                key={`keyword_${idx}`}
                 onChange={onChange}
                 label={inputFieldsArray[idx]?.label}
                 isRequired
@@ -144,18 +153,18 @@ const LinestarterModalDialog = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={onJumbotronCreate}
+            onClick={onKeywordCreate}
           />
 
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={`ADD`}
-            onClick={handleAddNewLinestarter}
+            onClick={handleAddNewKeyword}
           />
         </div>
       </div>
     </>
-  );
+  )
 };
 
-export default LinestarterModalDialog;
+export default KeywordModalDialog;
