@@ -26,6 +26,7 @@ import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalComponent';
+import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -157,8 +158,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
+    show: true,
+    type: 'questions',
   });
 
   const dialogLabelList = {
@@ -261,6 +262,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'header':
       case 'header-section':
         return <HeaderModalComponent {...commonProps} />;
+      case 'questions':
+        return <CheckpointComponent {...commonProps} />;
       case 'image':
         return (
           <ImageFormComponent
@@ -369,7 +372,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       {addContentModal.show && (
         <Modal
           showHeader={true}
-          title={`Add ${capitalizeFirstLetter(addContentModal.type)}`}
+          title={`Add ${capitalizeFirstLetter(addContentModal.type)} ${
+            addContentModal.type === 'questions' ? 'To Lesson' : ''
+          }`}
           showHeaderBorder={true}
           showFooter={false}
           closeAction={closeAction}>

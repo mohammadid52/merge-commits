@@ -4,27 +4,30 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {filter, forEach, map, remove, uniqueId, update} from 'lodash';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {map, remove, update} from 'lodash';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 import {label} from 'aws-amplify';
 import {IconContext} from 'react-icons';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {getAsset} from '../../../../../assets';
 import {v4 as uuidv4} from 'uuid';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+
+interface InputModalComponentProps extends IContentTypeComponentProps {
+  inputObj?: any;
+  contentType?: any;
+}
 
 const InputModalComponent = ({
-  selectedPageID,
   closeAction,
   contentType,
   inputObj,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
-}: any) => {
+}: InputModalComponentProps) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
-  const {addFromULBHandler} = useULBContext();
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
@@ -69,7 +72,7 @@ const InputModalComponent = ({
 
   const valueArray = (partContentId: string) => {
     if (isEmoji) {
-      return map(emojiInputList, (d: any, idx: number) => {
+      return map(emojiInputList, (d: any) => {
         return {
           id: partContentId,
           type: 'emoji-input',
@@ -78,7 +81,7 @@ const InputModalComponent = ({
         };
       });
     } else if (isRadio) {
-      return map(radioList, (d: any, idx: number) => {
+      return map(radioList, (d: any) => {
         return {
           id: partContentId,
           type: 'radio-input',
@@ -87,7 +90,7 @@ const InputModalComponent = ({
         };
       });
     } else {
-      return map(inputList, (d: any, idx: number) => {
+      return map(inputList, (d: any) => {
         return {
           id: partContentId,
           type: `text-${d.textArea ? 'area' : 'input'}`,
@@ -96,23 +99,6 @@ const InputModalComponent = ({
         };
       });
     }
-  };
-
-  const pushToULB = (pageContentId: string, partContentId: string, value: any) => {
-    const newDataObject = {
-      id: pageContentId,
-      partType: 'default',
-      class: 'rounded-lg',
-      partContent: [
-        {
-          id: `${partContentId}_questionGroup`,
-          type: `form-${numbered ? 'numbered' : 'default'}`,
-          value,
-        },
-      ],
-    };
-
-    addFromULBHandler(selectedPageID, newDataObject);
   };
 
   const onFormCreate = () => {
@@ -126,8 +112,6 @@ const InputModalComponent = ({
     } else {
       createNewBlockULBHandler('', '', type, inputObjArray);
     }
-    // add data to list
-    // pushToULB(pageContentId, partContentId, inputObjArray);
 
     // // close modal after saving
     closeAction();
@@ -159,34 +143,6 @@ const InputModalComponent = ({
   const [selectedFormType, setSelectedFormType] = useState<string>(DEFAULT_FORM_TYPE);
   const isRadio = selectedFormType === SELECT_ONE;
   const isEmoji = selectedFormType === INPUT_WITH_EMOJI;
-
-  const generateInputAndPlaceholderValues = () => {
-    let values: any[] = [];
-    forEach(
-      inputList,
-      ({
-        id,
-        textArea,
-        title,
-        placeholder,
-      }: {
-        id: string;
-        textArea: boolean;
-        title: string;
-        placeholder: string;
-      }) => {
-        const item = {
-          id,
-          type: `text-${textArea ? 'area' : 'input'}`,
-          value: placeholder || '',
-          label: title,
-        };
-        values.push(item);
-      }
-    );
-
-    return values;
-  };
 
   const addOneInputField = () => {
     if (isRadio) {
@@ -280,7 +236,7 @@ const InputModalComponent = ({
   };
 
   const [numbered, setNumbered] = useState(false);
-  
+
   const getForm = (type: 'Input' | 'Select One' | 'Input With Emoji' | string) => {
     switch (type) {
       case INPUT:
@@ -476,18 +432,19 @@ const InputModalComponent = ({
     <div className="max-h-200 relative overflow-y-auto">
       <div className="w-auto flex item-center justify-between mb-4">
         <div className="flex items-center w-auto">
-          {map(formTypes, ({label}) => (
-            <button
-              key={label}
-              onClick={() => setSelectedFormType(label)}
-              className={`${
-                label === selectedFormType
-                  ? 'border-indigo-500 text-white bg-indigo-400'
-                  : 'border-gray-300 text-dark'
-              } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-              {label}
-            </button>
-          ))}
+          {!isEditingMode &&
+            map(formTypes, ({label}) => (
+              <button
+                key={label}
+                onClick={() => setSelectedFormType(label)}
+                className={`${
+                  label === selectedFormType
+                    ? 'border-indigo-500 text-white bg-indigo-400'
+                    : 'border-gray-300 text-dark'
+                } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+                {label}
+              </button>
+            ))}
         </div>
         <button
           key={label}
