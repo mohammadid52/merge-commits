@@ -28,6 +28,9 @@ import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
 import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
 import ImageGallery from '../UI/ImageGallery';
+import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
+import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
+import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -86,7 +89,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const handleGalleryModal = () => {
     setOpenGallery((prevShow) => !prevShow);
-  }; 
+  };
   const onSelectImage = (url: string) => {
     setSelectedImageFromGallery(url);
     setOpenGallery(false);
@@ -245,7 +248,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   }
 
   const modalByType = (type: string) => {
-    const {position = 0, section = 'pageContent', inputObj = {}, classString: selectedContentClass=''} = blockConfig;
+    const {
+      position = 0,
+      section = 'pageContent',
+      inputObj = {},
+      classString: selectedContentClass = '',
+    } = blockConfig;
 
     const updateBlockContent = (
       targetID: string,
@@ -329,9 +337,50 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       case 'jumbotron':
-        return <JumbotronFormDialog {...commonProps} />;
+        return (
+          <JumbotronFormDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'highlighter':
+        return (
+          <HighlighterFormDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
       case 'poem':
-        return <LinestarterModalDialog {...commonProps} />;
+        return (
+          <LinestarterModalDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'keywords':
+        return (
+          <KeywordModalDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'links':
+        return (
+          <LinksModalDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
       default:
         break;
     }

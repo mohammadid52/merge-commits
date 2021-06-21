@@ -51,6 +51,27 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                 <AiOutlineFileImage className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Jumbotron</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'keywords'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineFileImage className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Word Tiles</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'links'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineFileImage className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Links</p>
+
             </div>
           </div>
         </div>
