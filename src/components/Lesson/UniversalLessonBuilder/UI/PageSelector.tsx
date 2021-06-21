@@ -159,7 +159,7 @@ const PageSelector = (props: PageSelectorProps) => {
                           </Tooltip>
                         </div>
                         <PageTile />
-                        <p className={`text-center text-sm text-gray-600`}>{page.id}</p>
+                        <p className={`text-center text-sm text-gray-600 cursor-pointer`}>{page.id}</p>
                         <div className="flex items-center justify-between">
                           <button
                             onClick={() => deleteFromULBHandler(page.id)}

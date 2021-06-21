@@ -212,7 +212,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       case dialogLabelList.NEW_PAGE:
-        return <NewPageDialog />;
+        return (
+          <NewPageDialog
+            universalLessonDetails={universalLessonDetails}
+            closeAction={hideAllModals}
+          />
+        );
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
@@ -224,7 +229,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       default:
-        return <NewPageDialog />;
+        return (
+          <NewPageDialog
+            universalLessonDetails={universalLessonDetails}
+            closeAction={hideAllModals}
+          />
+        );
     }
   };
 
