@@ -18,6 +18,7 @@ import * as queries from '../../../../../graphql/queries';
 import {isObject, map} from 'lodash';
 import SearchInput from '../../../../Atoms/Form/SearchInput';
 import Loader from '../../../../Atoms/Loader';
+import RemoveInput from '../common/RemoveInput';
 
 interface InitialState {
   question: string;
@@ -161,24 +162,6 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     {id: 2, name: 'Spanish', value: 'ES'},
   ];
 
-  const selectOneOptions = [
-    {
-      label: '1',
-      text: 'Very Difficult',
-    },
-    {
-      label: '2',
-      text: 'Difficult',
-    },
-    {
-      label: '3',
-      text: 'Easy',
-    },
-    {
-      label: '4',
-      text: 'Very Easy',
-    },
-  ];
   const initialState = {
     question: '',
     notes: '',
@@ -291,6 +274,9 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
       });
     }
   };
+  const getColor = (color: string) => {
+    return `hover:bg-${color}-200 text-${color}-400 border-${color}-200 hover:text-${color}-600 focus:outline-none focus:bg-${color}-200 focus:border-transparent`;
+  };
 
   return (
     <Fragment>
@@ -362,44 +348,39 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
           <div className="p-6">
             <div className="p-6 border-gray-400  border-0 border-dashed">
               <p className="text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewQuestionDict[userLanguage]['ADDOPTION']}:{' '}
+                {AddNewQuestionDict[userLanguage]['ADDOPTION']}{' '}
               </p>
 
               {/* Options input fields */}
               {options?.length &&
                 options.map((item, index) => (
-                  <div className="flex w-9/10 mx-auto mt-4">
-                    <div className="w-8/10">
+                  <div className="flex justify-center items-center mx-auto mt-4">
+                    <div className="w-72">
                       <FormInput
                         value={item.text}
                         id={item.label}
                         onChange={(e) => optionInputChange(index, e)}
                         name={item.label}
+                        placeHolder={'Add Option'}
                       />
                     </div>
-                    <div className="w-1/10 flex items-center">
-                      <span
-                        className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
-                        onClick={() => onOptionAdd(index)}>
-                        <IconContext.Provider
-                          value={{
-                            size: '2rem',
-                            color: theme.iconColor[themeColor],
-                          }}>
-                          <IoMdAddCircleOutline />
-                        </IconContext.Provider>
-                      </span>
-                      <span
-                        className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
-                        onClick={() => onOptionRemove(index)}>
-                        <IconContext.Provider
-                          value={{
-                            size: '2rem',
-                            color: theme.iconColor[themeColor],
-                          }}>
-                          <IoMdRemoveCircleOutline />
-                        </IconContext.Provider>
-                      </span>
+                    <div className="w-auto flex items-center">
+                      <div className="flex items-center justify-end w-auto ml-3">
+                        <button
+                          onClick={() => onOptionAdd(index)}
+                          className={`text-center w-20 transition-all duration-200 ${getColor(
+                            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                          )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                          Add
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-end w-auto ml-3">
+                        <button
+                          onClick={() => onOptionRemove(index)}
+                          className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -656,7 +637,7 @@ const parseType = (type: string) => {
     case 'input':
       return 'text-input';
     case 'selectMany':
-      return 'text-input'; // temparory
+      return 'many-input'; // temparory
     case 'selectOne':
       return 'radio-input';
     case 'datePicker':
@@ -694,6 +675,7 @@ const QuestionLookup = ({
   const {AddNewCheckPointDict, EditQuestionModalDict} = useDictionary(clientKey);
 
   const uniqKey = 'questionID'; // this is temporary key to filter this questions from other questions
+
   const generateQuestionList = () => {
     let dataToSend = map(checkpQuestions, (question) => {
       const type = parseType(
@@ -704,7 +686,10 @@ const QuestionLookup = ({
         type,
 
         label: question.question,
-        value: type === 'radio-input' ? question.options : question.label,
+        value:
+          type === 'radio-input' || type === 'many-input'
+            ? question.options
+            : question.label,
       };
     });
     return dataToSend;
