@@ -6,6 +6,8 @@
   animation-duration: 0.2s;
 }
 
+
+
 @keyframes backdropFadeInOpacity {
   0% {
     opacity: 0;
@@ -15,6 +17,7 @@
     opacity: 0.25;
   }
 }
+
 
 .modal.show {
   opacity: 1;

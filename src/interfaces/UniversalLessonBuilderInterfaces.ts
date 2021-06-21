@@ -36,8 +36,9 @@ export interface ULBSelectionProps {
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    replacementValue?: string,
-    addBlockAtPosition?: number
+    inputObj?: any,
+    addBlockAtPosition?: number,
+    classString?:string
   ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
@@ -54,7 +55,7 @@ export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing';
   contentID?: string;
   dataIdAttribute?: string;
-  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number) => void;
+  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number, classString?:string) => void;
   handleModalPopToggle?: (dialogToToggle: string, position?: Number, section?:string, targetID?:string) => void;
 }
 
@@ -74,18 +75,22 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   isPagePart?: boolean;
 }
 
-export interface IContentTypeComponentProps{
+export interface IContentTypeComponentProps {
   closeAction: () => void;
   createNewBlockULBHandler: (
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    inputValue: any
+    inputValue: any,
+    position?:number,
+    classString?:string
   ) => void;
   updateBlockContentULBHandler: (
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    inputValue: any
+    inputValue: any,
+    addBlockAtPosition?: number,
+    classString?: string
   ) => void;
 }

@@ -6,18 +6,26 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+
+interface IParaModalComponentProps extends IContentTypeComponentProps {
+  inputObj?: any;
+  selectedPageID?: string;
+}
+
 const ParaModalComponent = ({
   selectedPageID,
   closeAction,
   inputObj,
+  createNewBlockULBHandler,
   updateBlockContentULBHandler,
-}: any) => {
+}: IParaModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const {addFromULBHandler} = useULBContext();
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
-  
+
   const FIELD_ID = 'paragraph';
-  
+
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setInputFields((prevInputFields: any) => ({
@@ -44,20 +52,21 @@ const ParaModalComponent = ({
     if (isEditingMode) {
       updateBlockContentULBHandler('', '', 'paragraph', [value]);
     } else {
-      const newDataObject = {
-        id: pageContentId,
-        partType: 'default',
-        class: 'rounded-lg',
-        partContent: [
-          {
-            id: partContentId,
-            type: 'paragraph',
-            value: [value],
-          },
-        ],
-      };
-      // add data to list
-      addFromULBHandler(selectedPageID, newDataObject);
+      createNewBlockULBHandler('', '', 'paragraph', [value]);
+      // const newDataObject = {
+      //   id: pageContentId,
+      //   partType: 'default',
+      //   class: 'rounded-lg',
+      //   partContent: [
+      //     {
+      //       id: partContentId,
+      //       type: 'paragraph',
+      //       value: [value],
+      //     },
+      //   ],
+      // };
+      // // add data to list
+      // addFromULBHandler(selectedPageID, newDataObject);
     }
     // close modal after saving
     closeAction();

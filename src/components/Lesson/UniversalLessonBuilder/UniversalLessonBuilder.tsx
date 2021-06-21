@@ -12,6 +12,7 @@ import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData'
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import {MovableListProvider} from './MovableListContext';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -260,6 +261,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               id: `${pageContentId}_${contentType}_1`,
               type: contentType,
               value: inputObj,
+              class: classString || '',
             },
           ],
           partType: 'default',
@@ -278,8 +280,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
           const alreadyAddedPartContentLength: number =
             activePageContentData.partContent.length;
-            let activePagePartContentData = [
-            ...activePageContentData.partContent]
+          let activePagePartContentData = [...activePageContentData.partContent];
           if (alreadyAddedPartContentLength < inputObj) {
             activePagePartContentData = [
               ...activePagePartContentData,
@@ -308,14 +309,16 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         );
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
-          const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
-           let activePagePartContentData = [
-            ...activePageContentData.partContent]
-            activePagePartContentData[addBlockAtPosition] = {
-              id: partContentId,
-              type: contentType,
-              value: inputObj,
-            }
+          let activePagePartContentData = [...activePageContentData.partContent];
+          const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${activePagePartContentData.filter(
+            (item) => item.type === contentType
+          ).length}`;
+          activePagePartContentData[addBlockAtPosition] = {
+            id: partContentId,
+            type: contentType,
+            value: inputObj,
+            class: classString || '',
+          };
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
             partContent: activePagePartContentData,
@@ -342,7 +345,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     propertyToTarget: string,
     contentType: string,
     inputObj: any,
-    addBlockAtPosition: number
+    addBlockAtPosition: number,
+    classString?: string
   ) => {
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
@@ -370,7 +374,14 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           let activePagePartContentData = activePageContentData.partContent;
           activePagePartContentData[addBlockAtPosition] = {
             ...activePagePartContentData[addBlockAtPosition],
-            value: inputObj
+            class: classString
+              ? replaceTailwindClass(
+                  activePagePartContentData[addBlockAtPosition].class,
+                  classString
+                )
+              : activePagePartContentData[addBlockAtPosition].class,
+            type: contentType,
+            value: inputObj,
           };
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
@@ -393,8 +404,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  console.log(universalLessonDetails, 'universalLessonDetails');
-  
+  // console.log(universalLessonDetails, 'universalLessonDetails');
 
   return (
     /**
@@ -409,8 +419,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      */
     <div
       id={`universalLessonBuilder`}
-      className="h-full flex bg-white shadow-5 sm:rounded-lg">
+      className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
+
       <BuilderWrapper
         mode={`building`}
         deleteFromULBHandler={deleteULBHandler}

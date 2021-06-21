@@ -25,6 +25,12 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
+import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
+import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
+import ImageGallery from '../UI/ImageGallery';
+import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
+import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
+import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -46,8 +52,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setSelectedPageID,
     initialUniversalLessonPagePartContent,
   } = props;
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const {addFromULBHandler, universalLessonDetails} = useULBContext();
+  const {
+    userLanguage,
+    clientKey,
+    state: {user},
+  } = useContext(GlobalContext);
+  const {universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
 
@@ -63,7 +73,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string;
     position: number;
     targetId: string;
-    inputObj?:any;
+    classString?: string;
+    inputObj?: any;
     isEditingMode?: boolean;
   }>({
     section: 'pageContent',
@@ -71,6 +82,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     targetId: '',
   });
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
+
+  // Manage image gallery component
+  const [openGallery, setOpenGallery] = useState<boolean>(false);
+  const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
+
+  const handleGalleryModal = () => {
+    setOpenGallery((prevShow) => !prevShow);
+  };
+  const onSelectImage = (url: string) => {
+    setSelectedImageFromGallery(url);
+    setOpenGallery(false);
+  };
 
   /**
    *
@@ -98,11 +121,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     dialogToToggle: string,
     position?: number,
     section: string = 'pageContent',
-    targetId?:string
+    targetId?: string
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-    
+
     // Toggle Modal Pop Visibility
     if (!modalPopVisible) {
       setBlockConfig({
@@ -124,10 +147,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     section: string = 'pageContent',
     inputObj: any,
     targetContainerId: string, // Parent id of element like page id in case of page content and page_content id in case of page part editing
-    indexToUpdate: number
+    indexToUpdate: number,
+    classString: string = ''
   ) => {
-    console.log(inputObj,type, 'inputObj inside handleEditBlockContent');
-    
     // Hide all UI Menus
     hideAllUIMenus();
     setAddContentModal({type, show: true});
@@ -135,6 +157,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section,
       position: indexToUpdate,
       targetId: targetContainerId,
+      classString,
       inputObj,
       isEditingMode: true,
     });
@@ -152,12 +175,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       section: 'pageContent',
       position: 0,
       targetId,
+      classString: '',
       inputObj: inputObj,
       isEditingMode: false,
     });
   };
-
-  const [inputFields, setInputFields] = useState<any>({});
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
     show: false,
@@ -190,7 +212,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       case dialogLabelList.NEW_PAGE:
-        return <NewPageDialog />;
+        return (
+          <NewPageDialog
+            universalLessonDetails={universalLessonDetails}
+            closeAction={hideAllModals}
+          />
+        );
       case dialogLabelList.USE_TEMPLATE:
         return <UseTemplateDialog />;
       case dialogLabelList.ADD_CONTENT:
@@ -202,16 +229,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       default:
-        return <NewPageDialog />;
+        return (
+          <NewPageDialog
+            universalLessonDetails={universalLessonDetails}
+            closeAction={hideAllModals}
+          />
+        );
     }
-  };
-
-  const onChange = (e: any) => {
-    const {value, id} = e.target;
-    setInputFields({
-      ...inputFields,
-      [id]: value,
-    });
   };
 
   const closeAction = () => setAddContentModal({type: '', show: false});
@@ -223,94 +247,82 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   }
 
-  const modalByType = (type: 'header' | 'paragraph' | 'video' | string) => {
+  const modalByType = (type: string) => {
     const {
       position = 0,
       section = 'pageContent',
       inputObj = {},
-      isEditingMode = false,
+      classString: selectedContentClass = '',
     } = blockConfig;
+
     const updateBlockContent = (
       targetID: string,
       propertyToTarget: string,
       contentType: string,
-      inputValue: any
+      inputValue: any,
+      _: number,
+      classString: string
     ) =>
       updateBlockContentULBHandler(
         targetID || blockConfig.targetId,
         propertyToTarget || section,
         contentType,
         inputValue,
-        position
+        position,
+        classString
       );
+
+    const createNewBlock = (
+      targetID: string,
+      propertyToTarget: string,
+      contentType: string,
+      inputValue: any,
+      _: number,
+      classString?: string
+    ) =>
+      createNewBlockULBHandler(
+        targetID || blockConfig.targetId,
+        propertyToTarget || section,
+        contentType,
+        inputValue,
+        position,
+        classString
+      );
+
+    let commonProps = {
+      createNewBlockULBHandler: createNewBlock,
+      closeAction: closeAction,
+      inputObj: inputObj,
+      selectedPageID,
+      updateBlockContentULBHandler: updateBlockContent,
+    };
+
     switch (type) {
       case 'header':
         return (
-          <HeaderModalComponent
-            selectedPageID={selectedPageID}
-            closeAction={closeAction}
-            updateBlockContentULBHandler={updateBlockContent}
-            inputObj={inputObj}
-          />
+          <HeaderModalComponent {...commonProps} classString={selectedContentClass} />
         );
       case 'image':
         return (
           <ImageFormComponent
-            createNewBlockULBHandler={(
-              targetID: string,
-              propertyToTarget: string,
-              contentType: string,
-              inputValue: any
-            ) =>
-              createNewBlockULBHandler(
-                targetID || blockConfig.targetId,
-                propertyToTarget || section,
-                contentType,
-                inputValue,
-                position
-              )
-            }
+            createNewBlockULBHandler={createNewBlock}
             closeAction={closeAction}
             inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
+            handleGalleryModal={handleGalleryModal}
+            selectedImageFromGallery={selectedImageFromGallery}
           />
         );
       case 'paragraph':
-        return (
-          <ParaModalComponent
-            selectedPageID={selectedPageID}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <ParaModalComponent {...commonProps} />;
       case 'input':
       case 'form-numbered':
       case 'form-default':
-        return (
-          <InputModalComponent
-            selectedPageID={selectedPageID}
-            closeAction={closeAction}
-            inputObj={inputObj}
-          />
-        );
+        return <InputModalComponent {...commonProps} contentType={type} />;
       case 'video':
         return (
           <YouTubeMediaDialog
-            createNewBlockULBHandler={(
-              targetID: string,
-              propertyToTarget: string,
-              contentType: string,
-              inputValue: any
-            ) =>
-              createNewBlockULBHandler(
-                targetID || blockConfig.targetId,
-                propertyToTarget || section,
-                contentType,
-                inputValue,
-                position
-              )
-            }
+            createNewBlockULBHandler={createNewBlock}
             closeAction={closeAction}
             inputObj={inputObj}
             updateBlockContentULBHandler={updateBlockContent}
@@ -324,7 +336,51 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             inputObj={inputObj}
           />
         );
-
+      case 'jumbotron':
+        return (
+          <JumbotronFormDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'highlighter':
+        return (
+          <HighlighterFormDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'poem':
+        return (
+          <LinestarterModalDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'keywords':
+        return (
+          <KeywordModalDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
+      case 'links':
+        return (
+          <LinksModalDialog
+            createNewBlockULBHandler={createNewBlock}
+            closeAction={closeAction}
+            inputObj={inputObj}
+            updateBlockContentULBHandler={updateBlockContent}
+          />
+        );
       default:
         break;
     }
@@ -362,6 +418,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }
   };
+
   return (
     <div
       id={`builderWrapper`}
@@ -422,7 +479,18 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           </div>
         </Modal>
       )}
-
+      {openGallery && (
+        <Modal
+          showHeader={true}
+          title={`Select from gallery`}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={handleGalleryModal}>
+          <div className="min-w-256">
+            <ImageGallery basePath={`ULB/${user.id}`} onSelectImage={onSelectImage} />
+          </div>
+        </Modal>
+      )}
       <HierarchyPanel
         universalLessonDetails={universalLessonDetails}
         selectedPageID={selectedPageID}

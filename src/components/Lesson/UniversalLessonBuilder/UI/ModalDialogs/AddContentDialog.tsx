@@ -1,13 +1,9 @@
 import React from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
+
 import {VscSymbolParameter} from 'react-icons/vsc';
-import {
-  AiOutlineFileImage,
-  AiOutlineMore,
-  AiOutlineQuestionCircle,
-  AiOutlineYoutube,
-} from 'react-icons/ai';
+import {AiOutlineFileImage, AiOutlineMore, AiOutlineYoutube} from 'react-icons/ai';
 import {MdTitle} from 'react-icons/md';
+import {RiSurveyLine} from 'react-icons/ri';
 
 interface AddContentDialog {
   addContentModal: {show: boolean; type: string};
@@ -32,9 +28,7 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                   setAddContentModal({show: true, type: 'header'});
                 }}
                 className={`${buttonClass}`}>
-                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
-                  <MdTitle />
-                </IconContext.Provider>
+                <MdTitle className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Title</p>
 
@@ -44,11 +38,40 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                   setAddContentModal({show: true, type: 'paragraph'});
                 }}
                 className={`${buttonClass}`}>
-                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
-                  <VscSymbolParameter />
-                </IconContext.Provider>
+                <VscSymbolParameter className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Paragraph</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'jumbotron'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineFileImage className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Jumbotron</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'keywords'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineFileImage className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Word Tiles</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'links'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineFileImage className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Links</p>
+
             </div>
           </div>
         </div>
@@ -64,9 +87,7 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                   hideAllModals();
                   setAddContentModal({show: true, type: 'image'});
                 }}>
-                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
-                  <AiOutlineFileImage />
-                </IconContext.Provider>
+                <AiOutlineFileImage className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Image</p>
 
@@ -76,9 +97,7 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                   hideAllModals();
                   setAddContentModal({show: true, type: 'video'});
                 }}>
-                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
-                  <AiOutlineYoutube />
-                </IconContext.Provider>
+                <AiOutlineYoutube className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Youtube Video</p>
             </div>
@@ -91,11 +110,29 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
               <div className={`${buttonClass}`}>
-                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
-                  <AiOutlineQuestionCircle />
-                </IconContext.Provider>
+                <RiSurveyLine className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Checkpoint</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'highlighter'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineMore className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Highlighter</p>
+
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'poem'});
+                }}
+                className={`${buttonClass}`}>
+                <AiOutlineMore className="text-gray-800 text-6xl" />
+              </div>
+              <p className={`text-center text-sm text-gray-600`}>Linestarter</p>
 
               <div
                 onClick={() => {
@@ -103,9 +140,7 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
                   setAddContentModal({show: true, type: 'input'});
                 }}
                 className={`${buttonClass}`}>
-                <IconContext.Provider value={{size: '64px', className: 'text-gray-800'}}>
-                  <AiOutlineMore />
-                </IconContext.Provider>
+                <AiOutlineMore className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Other</p>
             </div>

@@ -6,6 +6,7 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 
+import { getImageFromS3Static } from '../../../../../utilities/services';
 import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   EditQuestionModalDict,
@@ -22,7 +23,9 @@ interface IImageInput {
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
+  handleGalleryModal: () => void;
   inputObj?: IImageInput[];
+  selectedImageFromGallery?: string;
 }
 
 const ImageFormComponent = ({
@@ -30,8 +33,14 @@ const ImageFormComponent = ({
   closeAction,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
+  handleGalleryModal,
+  selectedImageFromGallery,
 }: IImageFormComponentProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {
+    userLanguage,
+    state: {user},
+  } = useContext(GlobalContext);
+  const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
@@ -53,6 +62,18 @@ const ImageFormComponent = ({
       setIsEditingMode(true);
     }
   }, [inputObj]);
+
+  // To update the selected image from gallery to input object
+  useEffect(() => {
+    if (selectedImageFromGallery) {
+      setImageInputs((prevValues) => ({
+        ...prevValues,
+        url: selectedImageFromGallery,
+        imageData: null,
+      }));
+    }
+  }, [selectedImageFromGallery]);
+
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
     setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
     setErrors((prevValues) => ({...prevValues, url: ''}));
@@ -68,31 +89,24 @@ const ImageFormComponent = ({
     event.preventDefault();
     const isValid: boolean = validateFormFields();
     if (isValid) {
-      let temp = imageInputs.imageData.name.split('.');
-      const extension = temp.pop();
-      const fileName = `${Date.now()}_${temp
-        .join(' ')
-        .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-      setIsLoading(true);
-      await uploadImageToS3(
-        imageInputs.imageData,
-        `${fileName}`,
-        'image/jpeg'
-      );
+      let {imageData, ...payload} = imageInputs;
+      if (imageInputs.imageData) {
+        let temp = imageData.name.split('.');
+        const extension = temp.pop();
+        const fileName = `${Date.now()}_${temp
+          .join(' ')
+          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+        setIsLoading(true);
+        await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
+        payload = {
+          ...payload,
+          url: `ULB/${user.id}/content_image_${fileName}`,
+        };
+      }
       if (isEditingMode) {
-        updateBlockContentULBHandler('', '', 'video', [
-          {
-            ...imageInputs,
-            url: `ULB/content_image_${fileName}`,
-          },
-        ]);
+        updateBlockContentULBHandler('', '', 'image', [payload]);
       } else {
-        createNewBlockULBHandler('', '', 'image', [
-          {
-            ...imageInputs,
-            url: `ULB/content_image_${fileName}`,
-          },
-        ]);
+        createNewBlockULBHandler('', '', 'image', [payload]);
       }
       setIsLoading(false);
       closeAction();
@@ -130,7 +144,7 @@ const ImageFormComponent = ({
     // Upload file to s3 bucket
 
     return new Promise((resolve, reject) => {
-      Storage.put(`ULB/content_image_${id}`, file, {
+      Storage.put(`ULB/${user.id}/content_image_${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
       })
@@ -149,17 +163,29 @@ const ImageFormComponent = ({
     });
   };
 
-  const {caption = '', url = '', width = '', height = ''} = imageInputs;
+  const {caption = '', url = '', width = '', height = '', imageData} = imageInputs;
   return (
     <div>
       <form onSubmit={onSave}>
         <div className={`grid grid-cols-2 gap-3`}>
-          <ULBFileUploader
-            acceptedFilesFormat={'image/*'}
-            updateFileUrl={updateFileUrl}
-            fileUrl={url}
-            error={errors?.url}
-          />
+          <div
+            className={
+              'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
+            }>
+            <ULBFileUploader
+              acceptedFilesFormat={'image/*'}
+              updateFileUrl={updateFileUrl}
+              fileUrl={url}
+              error={errors?.url}
+              showPreview={false}
+            />
+            <div className="flex flex-col items-center justify-center text-gray-400">
+              --- Or ---
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <Buttons label={'Browse'} onClick={handleGalleryModal} />
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <FormInput
@@ -197,6 +223,15 @@ const ImageFormComponent = ({
             </div>
           </div>
         </div>
+        {url ? (
+          <div>
+            <img
+              src={imageData ? url : getImageFromS3Static(url)}
+              alt=""
+              className={`w-auto h-30 pt-4`}
+            />
+          </div>
+        ) : null}
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
             <Buttons

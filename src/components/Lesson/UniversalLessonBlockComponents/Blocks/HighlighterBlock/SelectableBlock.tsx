@@ -30,7 +30,7 @@ const SelectableBlock = (props: SelectableBlockProps) => {
   } = props;
   const [firstLastSelected, setFirstLastSelected] = useState<string[]>(['', '']);
 
-  const removeHtmlTagsFromText = rawText.replace(/<\w>|<\/\w>/g, '').split(/\\n/g);
+  const removeHtmlTagsFromText = rawText.replace(/<\w>|<\/\w>/g, '').split(/<br>|\\n/g);
 
   /**
    * Function to check if selected textID is already somewhere in the initialSelectedText state

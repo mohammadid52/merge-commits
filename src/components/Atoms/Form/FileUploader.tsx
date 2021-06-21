@@ -7,17 +7,21 @@ import {replaceAll} from '../../../utilities/strings';
 
 interface IULBFileUploader {
   acceptedFilesFormat?: string;
+  classString?: string;
   error?: string;
   fileUrl: string;
   multiple?: boolean;
+  showPreview?: boolean
   updateFileUrl: (url: string, imageData: File | null) => void;
 }
 
 const ULBFileUploader = ({
   acceptedFilesFormat,
-  fileUrl,
+  classString,
   error,
+  fileUrl,
   multiple = false,
+  showPreview = true,
   updateFileUrl,
 }: IULBFileUploader) => {
   const {userLanguage} = useContext(GlobalContext);
@@ -47,10 +51,11 @@ const ULBFileUploader = ({
   return (
     <div
       {...getRootProps()}
-      className={'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer'}>
+      className={classString}
+      >
       <input {...getInputProps()} />
       <div className={'flex flex-col items-center justify-center h-full'}>
-        {fileUrl ? (
+        {showPreview && fileUrl ? (
           <img src={fileUrl} alt="" className={`w-30 h-30 mx-auto`} />
         ) : (
           <>
@@ -62,7 +67,7 @@ const ULBFileUploader = ({
               )}
             </p>
           </>
-        )}
+        )} 
       </div>
       <p className="text-red-500 text-xs">
         {fileRejections && fileRejections.length

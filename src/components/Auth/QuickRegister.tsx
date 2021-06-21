@@ -4,6 +4,9 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import * as customMutations from '../../customGraphql/customMutations';
 import {useCookies} from 'react-cookie';
+import axios from 'axios';
+import { createUserUrl } from '../../utilities/urls';
+
 interface newUserInput {
   key: number;
   authId: string;
@@ -54,7 +57,6 @@ const QuickRegister = (props: QuickRegisterProps) => {
   const [cookies] = useCookies(['room_info']);
   const roomInfoCookie = cookies['room_info'];
   const [classID, setClassID] = useState(roomInfoCookie.classID);
-  console.log('classID-----------', classID);
 
   const [message, setMessage] = useState<{
     show: boolean;
@@ -173,19 +175,19 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
   const cognitoSignUp = async () => {
     let username = newUserInputs.email;
-    let password = newUserInputs.password;
     try {
-      const user = await Auth.signUp({
-        username,
-        password,
-      });
-      let userData = {...newUserInputs, authId: user.userSub};
+      const response = await axios.post(createUserUrl, {
+        email: username
+      })
+      const user = response.data.User;
+      let userData = {...newUserInputs, authId: user.Username};
       setNewUserInputs(() => {
         return userData;
       });
       return userData;
-    } catch (error) {
-      console.log('error signing up:', error);
+    } catch (er) {
+      console.log('error signing up:', er.response.data);
+      const error = er.response.data
       setMessage(() => {
         switch (error.code) {
           case 'InvalidParameterException':

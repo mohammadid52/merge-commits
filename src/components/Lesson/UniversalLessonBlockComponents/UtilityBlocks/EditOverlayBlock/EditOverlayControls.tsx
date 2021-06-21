@@ -9,7 +9,7 @@ import {
 import {BsLayoutSplit} from 'react-icons/bs';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
-import { FaSortUp } from 'react-icons/fa';
+import {FaSortUp} from 'react-icons/fa';
 import ButtonsRound from '../../../../Atoms/ButtonsRound';
 import {FiEdit2} from 'react-icons/fi';
 
@@ -78,7 +78,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     );
   };
   const handleSplitColToggle = () => {
-    setColDropdownActive(prevValue => !prevValue);
+    setColDropdownActive((prevValue) => !prevValue);
     setColorPickerActive(false);
   };
   const {previewMode} = useULBContext();
@@ -95,7 +95,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
    * either in the middle of the row component, or to the side of the row
    */
   const componentAlignmentToggleClass = 'w-full justify-center';
-  const rowAlignmentToggleClass = 'w-auto right-0';
+  const rowAlignmentToggleClass = 'w-auto';
 
   const offsetClass = 'transform translate-x-6';
 
@@ -105,9 +105,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
   if (previewMode) return null;
+  const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-3rem'};
   return (
     <div
       id="editControlsWrapper"
+      style={{...iconPos}}
       className={`
           absolute 
           flex flex-row
@@ -131,18 +133,22 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left-2' : 'right-3.5'
           } bg-gray-800 rounded-lg shadow-lg `}>
-          {section === "pageContent" ? <><button className={`${actionClass}`} onClick={handleSplitColToggle}>
-            <span className={iconClass}>
-              <BsLayoutSplit />
-            </span>
-            <span className={textClass}>Split</span>
-          </button>
-          {colDropdownActive && (
-            <SplitColumnDropdown
-              isPagePart={isPagePart}
-              handleSplitColumnChange={handleSplitColumnChange}
-            />
-          )}</> : null}
+          {section === 'pageContent' ? (
+            <>
+              <button className={`${actionClass}`} onClick={handleSplitColToggle}>
+                <span className={iconClass}>
+                  <BsLayoutSplit />
+                </span>
+                <span className={textClass}>Split</span>
+              </button>
+              {colDropdownActive && (
+                <SplitColumnDropdown
+                  isPagePart={isPagePart}
+                  handleSplitColumnChange={handleSplitColumnChange}
+                />
+              )}
+            </>
+          ) : null}
           <button className={`${actionClass}`} onClick={() => handleEditBlockContent()}>
             <span className={iconClass}>
               <AiOutlineEdit />
@@ -150,23 +156,25 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             <span className={textClass}>Edit</span>
           </button>
 
-          <div className={`relative`}>
-            <button
-              onClick={() => setColorPickerActive(!colorPickerActive)}
-              className={`${actionClass}`}>
-              <span className={iconClass}>
-                <AiOutlineBgColors />
-              </span>
-              <span className={textClass}>BG Color</span>
-            </button>
-            {colorPickerActive && (
-              <ColorPicker
-                classString={classString}
-                callbackColor={handleColorPickerSelect}
-                isPagePart={isPagePart}
-              />
-            )}
-          </div>
+          {section === 'pageContent' && (
+            <div className={`relative`}>
+              <button
+                onClick={() => setColorPickerActive(!colorPickerActive)}
+                className={`${actionClass}`}>
+                <span className={iconClass}>
+                  <AiOutlineBgColors />
+                </span>
+                <span className={textClass}>BG Color</span>
+              </button>
+              {colorPickerActive && (
+                <ColorPicker
+                  classString={classString}
+                  callbackColor={handleColorPickerSelect}
+                  isPagePart={isPagePart}
+                />
+              )}
+            </div>
+          )}
 
           <button
             onClick={() => deleteFromULBHandler(contentID)}
@@ -194,7 +202,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       /> */}
 
       <button
-        className={`bg-gray-800 rounded-full h-8 w-${
+        className={`bg-gray-700 rounded-full h-8 w-${
           isComponent ? '8' : '16'
         } hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
         onClick={() => {
