@@ -2,7 +2,7 @@ import React, {useState, useEffect, Fragment, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
-import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
+import {FaRegEye, FaQuestionCircle, FaUnity} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
@@ -26,6 +26,10 @@ import {
 } from './LessonEdit';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
+import { UniversalLessonBuilderProvider } from '../../../../contexts/UniversalLessonBuilderContext';
+import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+import UnitLookup from './StepActionComponent/UnitLookup';
 
 export interface InitialData {
   name: string;
@@ -110,6 +114,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [lessonId, setLessonId] = useState('');
   const [activeStep, setActiveStep] = useState('Overview');
+  const [activeTab, setActiveTab] = useState(0);
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -391,6 +396,45 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const currentTabComp = (activeTab: string) => {
+    switch (activeTab) {
+      case '0':
+        return (
+          <AddNewLessonForm
+            lessonId={lessonId}
+            changeLessonType={changeLessonType}
+            formData={formData}
+            setFormData={setFormData}
+            designersList={designersList}
+            selectedDesigners={selectedDesigners}
+            setSelectedDesigners={setSelectedDesigners}
+            postLessonCreation={postLessonCreation}
+            allMeasurement={measurementList}
+            lessonMeasurements={selectedMeasurement}
+            setLessonMeasurements={setSelectedMeasurement}
+            institutionList={institutionList}
+            setUnsavedChanges={setUnsavedChanges}
+          />
+        );
+      case '1':
+        return (
+          <UniversalLessonBuilderProvider>
+            <UniversalLessonBuilder />
+          </UniversalLessonBuilderProvider>
+        );
+      case '2':
+        return (
+          <UnitLookup
+            lessonName={formData.name}
+            lessonId={lessonId}
+            institution={formData.institution}
+            lessonType={formData.type?.value}
+            lessonPlans={savedLessonDetails.lessonPlans}
+          />
+        );
+    }
+  };
+
   const [historyList, setHistoryList] = useState(['Overview']);
 
   const goBack = () => {
@@ -452,6 +496,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
+    setActiveTab(1);
     if (formData.type?.id === '1') {
       setActiveStep('Preview Details');
     } else {
@@ -482,6 +527,29 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   useEffect(() => {
     fetchMeasurementList();
   }, []);
+
+  const tabs = [
+    {
+      index: 0,
+      title: 'Overview',
+      icon: <IoCardSharp />,
+      content: currentTabComp(`${activeTab}`),
+    },
+    {
+      index: 1,
+      title: 'Builder',
+      icon: <FaQuestionCircle />,
+      content: currentTabComp(`${activeTab}`),
+      disabled: formData.institution ? false : true
+    },
+    {
+      index: 2,
+      title: 'Assign Units & Publish',
+      icon: <FaUnity />,
+      content: currentTabComp(`${activeTab}`),
+    },
+  ];
+
   return (
     <div className="w-full h-full">
       {/* Section Header */}
@@ -509,9 +577,36 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       <PageWrapper>
         <div className="w-full m-auto">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
-          <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
-            <div className="sm:col-span-1">
-              <WizardScroller
+          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 p-4">
+            {/* <div className="sm:col-span-1"> */}
+              <UnderlinedTabs
+                tabs={tabs}
+                activeTab={activeTab}
+                updateTab={(tab: number) => {
+                    setActiveTab(tab);
+                  // if (individualFieldEmpty) {
+                  //   setWarnModal2({
+                  //     stepOnHold: step,
+                  //     show: true,
+                  //     message: 'Please fill all required fields to save this checkpoint',
+                  //   });
+                  // } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                  //   setIndividualFieldEmpty(false);
+                  //   setWarnModal2({
+                  //     ...warnModal2,
+                  //     stepOnHold: step,
+                  //     show: true,
+                  //     message: 'You have unsaved checkpoint. Do you want to save it?',
+                  //   });
+                  // } else {
+                  //   setIndividualFieldEmpty(false);
+
+                  //   setActiveStep(step);
+                  //   setHistoryList([...historyList, step]);
+                  // }
+                }}
+              />
+              {/* <WizardScroller
                 stepsList={lessonBuilderSteps}
                 activeStep={activeStep}
                 setActiveStep={(step) => {
@@ -536,13 +631,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                     setHistoryList([...historyList, step]);
                   }
                 }}
-              />
-            </div>
-            <div className="sm:col-span-4">
+              /> */}
+            {/* </div> */}
+            {/* <div>
               <Fragment>
                 <div className="mx-6">{currentStepComp(activeStep)}</div>
               </Fragment>
-            </div>
+            </div> */}
           </div>
         </div>
         {warnModal.show && (
