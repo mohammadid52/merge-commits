@@ -97,31 +97,33 @@ const LinksModalDialog = ({
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
-  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([Array(inputFieldsArray.length).keys()].map((a:any)=> false))
+  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([])
   const onChange = (e: React.FormEvent, idx: number) => {
     const {id, value, name} = e.target as HTMLFormElement;
     // validateUrl(value, idx);
     handleUpdateInputFields(value, name, idx);
   };
 
-  const validateUrl = (inputUrl: string, urlIndex: number) => {
+  const validateUrl = (inputUrl: string) => {
     const isYoutubeLink = inputUrl.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/g);
-    if(isYoutubeLink === null){
-      const mappedErrorArray = inputErrorArray.map((b: any, idx)=> idx === urlIndex)
-      setInputErrorArray(mappedErrorArray);
-    }
+    return isYoutubeLink === null;
   }
 
   const onLinkCreate = async () => {
-    if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'links', inputFieldsArray, 0);
+    const validLinkArray = inputFieldsArray.map((field: PartContentSub, idx: number) => validateUrl(field.value));
+    if(!validLinkArray.includes(true)){
+      if (isEditingMode) {
+        updateBlockContentULBHandler('', '', 'links', inputFieldsArray, 0);
+      } else {
+        createNewBlockULBHandler('', '', 'links', inputFieldsArray, 0);
+      }
+      // close modal after saving
+      closeAction();
+      // clear fields
+      setInputFieldsArray(initialInputFieldsState);
     } else {
-      createNewBlockULBHandler('', '', 'links', inputFieldsArray, 0);
+      setInputErrorArray(validLinkArray)
     }
-    // close modal after saving
-    closeAction();
-    // clear fields
-    setInputFieldsArray(initialInputFieldsState);
   };
 
   return (
@@ -149,13 +151,16 @@ const LinksModalDialog = ({
                 <input
                   onChange={(e) => onChange(e, idx)}
                   name={'value'}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}
+                  className={`
+                  ${!validateUrl(inputFieldsArray[idx]?.value) ? 'border-0 border-gray-300' : 'border-2 border-red-400'} 
+                  mt-1 block w-full sm:text-sm sm:leading-5 
+                  py-2 px-3 rounded-md shadow-sm`}
                   value={inputFieldsArray[idx]?.value}
                   placeholder={inputFieldsArray[idx]?.value}
                 />
-                {/*{*/}
-                {/*  inputErrorArray[idx] ? <p className={`text-red-500 text-xs`}>Invalid URL!</p> : null*/}
-                {/*}*/}
+                {
+                  !validateUrl(inputFieldsArray[idx]?.value) ? null : <p className={`text-red-400 text-xs`}>Please enter a valid Youtube link :)</p>
+                }
               </React.Fragment>
             );
           })}
