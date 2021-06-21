@@ -1,17 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {
-  EditQuestionModalDict,
-  UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import Storage from '@aws-amplify/storage';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Loader from '../../../../Atoms/Loader';
 import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
@@ -104,35 +98,37 @@ const LinksModalDialog = ({
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
-  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>(
-    [Array(inputFieldsArray.length).keys()].map((a: any) => false)
-  );
+  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([]);
   const onChange = (e: React.FormEvent, idx: number) => {
     const {id, value, name} = e.target as HTMLFormElement;
     // validateUrl(value, idx);
     handleUpdateInputFields(value, name, idx);
   };
 
-  const validateUrl = (inputUrl: string, urlIndex: number) => {
+  const validateUrl = (inputUrl: string) => {
     const isYoutubeLink = inputUrl.match(
       /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/g
     );
-    if (isYoutubeLink === null) {
-      const mappedErrorArray = inputErrorArray.map((b: any, idx) => idx === urlIndex);
-      setInputErrorArray(mappedErrorArray);
-    }
+    return isYoutubeLink === null;
   };
 
   const onLinkCreate = async () => {
-    if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'links', inputFieldsArray, 0);
+    const validLinkArray = inputFieldsArray.map((field: PartContentSub, idx: number) =>
+      validateUrl(field.value)
+    );
+    if (!validLinkArray.includes(true)) {
+      if (isEditingMode) {
+        updateBlockContentULBHandler('', '', 'links', inputFieldsArray, 0);
+      } else {
+        createNewBlockULBHandler('', '', 'links', inputFieldsArray, 0);
+      }
+      // close modal after saving
+      closeAction();
+      // clear fields
+      setInputFieldsArray(initialInputFieldsState);
     } else {
-      createNewBlockULBHandler('', '', 'links', inputFieldsArray, 0);
+      setInputErrorArray(validLinkArray);
     }
-    // close modal after saving
-    closeAction();
-    // clear fields
-    setInputFieldsArray(initialInputFieldsState);
   };
 
   return (
@@ -163,9 +159,11 @@ const LinksModalDialog = ({
                     placeHolder={inputFieldsArray[idx]?.value}
                   />
                 </div>
-                {/*{*/}
-                {/*  inputErrorArray[idx] ? <p className={`text-red-500 text-xs`}>Invalid URL!</p> : null*/}
-                {/*}*/}
+                {!validateUrl(inputFieldsArray[idx]?.value) ? null : (
+                  <p className={`text-red-400 text-xs`}>
+                    Please enter a valid Youtube link :)
+                  </p>
+                )}
                 <RemoveInput
                   idx={idx}
                   inputId={inputObj.id}
