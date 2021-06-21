@@ -6,17 +6,318 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {map, remove, update} from 'lodash';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {IconContext} from 'react-icons';
-import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
+
 import {getAsset} from '../../../../../assets';
 import {v4 as uuidv4} from 'uuid';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import RemoveInput from '../common/RemoveInput';
+import {
+  FORM_TYPES,
+  INPUT,
+  INPUT_WITH_EMOJI,
+  SELECT_ONE,
+  LINK,
+  SELECT_MANY,
+} from '../common/constants';
 
 interface InputModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
   contentType?: any;
 }
+
+const Checkbox = ({val}: {val: boolean}) => {
+  return (
+    <>
+      {val ? (
+        <BiCheckboxChecked className="w-auto text-3xl text-blue-600 cursor-pointer" />
+      ) : (
+        <BiCheckbox className="w-auto text-3xl text-blue-600 cursor-pointer" />
+      )}
+      <p className="w-auto cursor-pointer">textarea</p>
+    </>
+  );
+};
+
+const TextInput = ({
+  list,
+  onChange,
+  numbered,
+  removeItemFromList,
+  changeCheckboxValue,
+}: any) => {
+  return (
+    <div>
+      {map(list, (input: any, idx: number) => {
+        const shouldShowActions = idx !== list.length - 1;
+        return (
+          <div key={input.id} className="flex flex-col input-container">
+            <div className="px-2">
+              <div className="mb-2 ">
+                <FormInput
+                  onChange={(e) => onChange(e, idx, false)}
+                  label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
+                  isRequired
+                  value={input.title}
+                  id={`formFieldInput_${input.id}`}
+                  placeHolder={`Enter Form Field Title`}
+                />
+              </div>
+              <div>
+                <FormInput
+                  onChange={(e) => onChange(e, idx, true)}
+                  label={'Placeholder'}
+                  value={input.placeholder}
+                  id={`placeholder_${input.id}`}
+                  placeHolder={`Enter placeholder`}
+                />
+              </div>
+              {idx !== 0 ? (
+                <div className="flex my-2 items-center justify-end w-auto mx-3">
+                  <div
+                    onClick={() => changeCheckboxValue(idx, input.textArea)}
+                    className="flex items-center mr-2 justify-between self-end text-gray-500 font-medium w-auto">
+                    <Checkbox val={input.textArea} />
+                  </div>
+
+                  <button
+                    onClick={() => removeItemFromList(input.id)}
+                    className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={() => changeCheckboxValue(idx, input.textArea)}
+                  className="flex cursor-pointer items-center justify-end text-gray-500 font-medium w-auto mx-3 self-end mt-2">
+                  <Checkbox val={input.textArea} />
+                </div>
+              )}
+            </div>
+            {shouldShowActions && (
+              <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const SelectOne = ({
+  list,
+  onChange,
+  numbered,
+  onOptionInputChange,
+  getColor,
+  removeItemFromList,
+  onOptionRemove,
+  onOptionAdd,
+  themeColor,
+}: any) => {
+  return (
+    <div>
+      {map(list, (input: any, idx: number) => {
+        const shouldShowActions = idx !== list.length - 1;
+        console.log(list);
+
+        return (
+          <div key={input.id} className="flex flex-col input-container">
+            <div className="px-2">
+              <div className="mb-2">
+                <FormInput
+                  onChange={(e) => onChange(e, idx)}
+                  label={`${numbered ? `${idx + 1}. ` : ''}Radio Input`}
+                  isRequired
+                  value={input.label}
+                  id={`formField_${input.id}`}
+                  placeHolder={`Enter Title`}
+                />
+                {/* Options input fields */}
+                {input.options?.length &&
+                  input.options?.map((item: any, index: number) => {
+                    // @ts-ignore
+
+                    return (
+                      <div
+                        key={index.toLocaleString()}
+                        className="flex w-9/10 mx-auto mt-4">
+                        <div className="w-8/10">
+                          <FormInput
+                            value={item.text}
+                            id={`formFieldRadioOption_${idx}_${index}`}
+                            onChange={(e) => onOptionInputChange(idx, index, e)}
+                            name={item.label}
+                            placeHolder={`Option ${index + 1}`}
+                          />
+                        </div>
+                        <div className="w-auto flex items-center">
+                          <div className="flex items-center justify-end w-auto ml-3">
+                            <button
+                              onClick={() => onOptionAdd(idx, index)}
+                              className={`text-center w-20 transition-all duration-200 ${getColor(
+                                themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                              )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                              Add
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-end w-auto ml-3">
+                            <button
+                              onClick={() => onOptionRemove(idx, item.id)}
+                              className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+              <RemoveInput
+                idx={idx}
+                inputId={input.id}
+                removeItemFromList={removeItemFromList}
+              />
+            </div>
+            {shouldShowActions && (
+              <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const SelectMany = ({
+  list,
+  onChange,
+  numbered,
+  onOptionInputChange,
+  getColor,
+  removeItemFromList,
+  onOptionRemove,
+  onOptionAdd,
+  themeColor,
+}: any) => {
+  return (
+    <div>
+      {map(list, (input: any, idx: number) => {
+        const shouldShowActions = idx !== list.length - 1;
+
+        return (
+          <div key={input.id} className="flex flex-col input-container">
+            <div className="px-2">
+              <div className="mb-2">
+                <FormInput
+                  onChange={(e) => onChange(e, idx)}
+                  label={`${numbered ? `${idx + 1}. ` : ''}Checkpoint Input`}
+                  isRequired
+                  value={input.label}
+                  id={`formField_${input.id}`}
+                  placeHolder={`Enter Title`}
+                />
+                {/* Options input fields */}
+                {input.options?.length &&
+                  input.options?.map((item: any, index: number) => {
+                    // @ts-ignore
+
+                    return (
+                      <div
+                        key={index.toLocaleString()}
+                        className="flex w-9/10 mx-auto mt-4">
+                        <div className="w-8/10">
+                          <FormInput
+                            value={item.text}
+                            id={`formFieldMultipleOption_${idx}_${index}`}
+                            onChange={(e) => onOptionInputChange(idx, index, e)}
+                            name={item.label}
+                            placeHolder={`Option ${index + 1}`}
+                          />
+                        </div>
+                        <div className="w-auto flex items-center">
+                          <div className="flex items-center justify-end w-auto ml-3">
+                            <button
+                              onClick={() => onOptionAdd(idx, index)}
+                              className={`text-center w-20 transition-all duration-200 ${getColor(
+                                themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                              )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                              Add
+                            </button>
+                          </div>
+                          <div className="flex items-center justify-end w-auto ml-3">
+                            <button
+                              onClick={() => onOptionRemove(idx, item.id)}
+                              className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+              <RemoveInput
+                idx={idx}
+                inputId={input.id}
+                removeItemFromList={removeItemFromList}
+              />
+            </div>
+            {shouldShowActions && (
+              <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const InputWithEmoji = ({list, onChange, numbered, removeItemFromList}: any) => {
+  return (
+    <div>
+      {map(list, (input: any, idx: number) => {
+        const shouldShowActions = idx !== list.length - 1;
+        return (
+          <div key={input.id} className="flex flex-col input-container">
+            <div className="mb-4 px-2">
+              <div className="mb-2">
+                <FormInput
+                  onChange={(e) => onChange(e, idx)}
+                  label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
+                  isRequired
+                  value={list[idx].title}
+                  id={`formFieldInput_${input.id}`}
+                  placeHolder={`Enter Form Field Title`}
+                />
+              </div>
+              <div>
+                <FormInput
+                  onChange={(e) => onChange(e, idx, true)}
+                  label={'Placeholder'}
+                  value={list[idx].placeholder}
+                  id={`placeholder_${input.id}`}
+                  placeHolder={`Enter placeholder`}
+                />
+              </div>
+              {idx !== 0 && (
+                <div className="flex my-2 items-center justify-end w-auto mx-3">
+                  <button
+                    onClick={() => removeItemFromList(input.id)}
+                    className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+                    Remove
+                  </button>
+                </div>
+              )}
+            </div>
+            {shouldShowActions && (
+              <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const InputModalComponent = ({
   closeAction,
@@ -25,14 +326,14 @@ const InputModalComponent = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: InputModalComponentProps) => {
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setNumbered(contentType.includes('numbered'));
-      if (inputObj[0].type === 'radio-input') {
+      if (inputObj[0].type === FORM_TYPES.RADIO) {
         setRadioList(
           inputObj.map((input: any) => ({
             ...input,
@@ -40,7 +341,7 @@ const InputModalComponent = ({
           }))
         );
         setSelectedFormType(SELECT_ONE);
-      } else if (inputObj[0].type === 'emoji-input') {
+      } else if (inputObj[0].type === FORM_TYPES.EMOJI) {
         setEmojiInputList(
           inputObj.map((input: any) => ({
             ...input,
@@ -75,16 +376,25 @@ const InputModalComponent = ({
       return map(emojiInputList, (d: any) => {
         return {
           id: partContentId,
-          type: 'emoji-input',
+          type: FORM_TYPES.EMOJI,
           label: d.title,
           value: d.placeholder,
+        };
+      });
+    } else if (isMultiple) {
+      return map(manyOptionList, (d: any) => {
+        return {
+          id: partContentId,
+          type: FORM_TYPES.MULTIPLE,
+          label: d.label,
+          value: modifiedOptions(d.options),
         };
       });
     } else if (isRadio) {
       return map(radioList, (d: any) => {
         return {
           id: partContentId,
-          type: 'radio-input',
+          type: FORM_TYPES.RADIO,
           label: d.label,
           value: modifiedOptions(d.options),
         };
@@ -93,7 +403,7 @@ const InputModalComponent = ({
       return map(inputList, (d: any) => {
         return {
           id: partContentId,
-          type: `text-${d.textArea ? 'area' : 'input'}`,
+          type: d.textArea ? FORM_TYPES.TEXTAREA : FORM_TYPES.TEXT,
           label: d.title,
           value: d.placeholder,
         };
@@ -126,28 +436,36 @@ const InputModalComponent = ({
 
   const [inputList, setInputList] = useState([{textArea: false, ...INITIAL_VALUE}]);
   const [emojiInputList, setEmojiInputList] = useState([{...INITIAL_VALUE}]);
+  const [manyOptionList, setManyOptionList] = useState([
+    {id: '9999', label: '', options: DEFAULT_OPTIONS},
+  ]);
+
   const [radioList, setRadioList] = useState([
     {id: '9999', label: '', options: DEFAULT_OPTIONS},
   ]);
-  // this is UI list that shows multiple input fields on form
 
-  // const [inputFields, setInputFields] = useState<any>({});
-  // this is the data object that contains key values
-
-  const INPUT = 'Input';
-  const SELECT_ONE = 'Select One';
-  const INPUT_WITH_EMOJI = 'Input With Emoji';
-  const formTypes = [{label: INPUT}, {label: SELECT_ONE}, {label: INPUT_WITH_EMOJI}];
+  const formTypes = [
+    {label: INPUT, type: FORM_TYPES.TEXT},
+    {label: SELECT_ONE, type: FORM_TYPES.RADIO},
+    {label: SELECT_MANY, type: FORM_TYPES.MULTIPLE},
+    {label: LINK, type: FORM_TYPES.LINK},
+    {label: INPUT_WITH_EMOJI, type: FORM_TYPES.EMOJI},
+  ];
   const DEFAULT_FORM_TYPE = formTypes[0].label;
 
   const [selectedFormType, setSelectedFormType] = useState<string>(DEFAULT_FORM_TYPE);
   const isRadio = selectedFormType === SELECT_ONE;
+  const isMultiple = selectedFormType === SELECT_MANY;
   const isEmoji = selectedFormType === INPUT_WITH_EMOJI;
 
   const addOneInputField = () => {
     if (isRadio) {
       const newItem = {id: uuidv4(), label: '', options: DEFAULT_OPTIONS};
       setRadioList([...radioList, newItem]);
+    } else if (isMultiple) {
+      const newItem = {id: uuidv4(), label: '', options: DEFAULT_OPTIONS};
+
+      setManyOptionList([...manyOptionList, newItem]);
     } else if (isEmoji) {
       const newItem = {id: uuidv4(), title: '', placeholder: ''};
       setEmojiInputList([...emojiInputList, newItem]);
@@ -175,24 +493,14 @@ const InputModalComponent = ({
     }
   };
 
-  const Checkbox = ({val}: {val: boolean}) => {
-    return (
-      <>
-        {val ? (
-          <BiCheckboxChecked className="w-auto text-3xl text-blue-600 cursor-pointer" />
-        ) : (
-          <BiCheckbox className="w-auto text-3xl text-blue-600 cursor-pointer" />
-        )}
-        <p className="w-auto cursor-pointer">textarea</p>
-      </>
-    );
-  };
-
   const onChange = (e: any, idx?: number, placeHolder: boolean = false) => {
     const {value} = e.target;
     if (isRadio) {
       update(radioList[idx], `label`, () => value);
       setRadioList([...radioList]);
+    } else if (isMultiple) {
+      update(manyOptionList[idx], `label`, () => value);
+      setManyOptionList([...manyOptionList]);
     } else if (isEmoji) {
       update(emojiInputList[idx], placeHolder ? `placeholder` : 'title', () => value);
       setRadioList([...radioList]);
@@ -203,222 +511,121 @@ const InputModalComponent = ({
   };
 
   const onOptionInputChange = (idx: number, idx2: number, e: any) => {
-    update(radioList[idx], `options[${idx2}].text`, () => e.target.value);
-    setRadioList([...radioList]);
+    if (isRadio) {
+      update(radioList[idx], `options[${idx2}].text`, () => e.target.value);
+      setRadioList([...radioList]);
+    } else {
+      update(manyOptionList[idx], `options[${idx2}].text`, () => e.target.value);
+      setManyOptionList([...manyOptionList]);
+    }
   };
 
   const onOptionAdd = (idx: number, idx2: number) => {
-    // adding new option field after selected options index.
-    const currentOptions = [...radioList[idx].options];
-    const newItem = {label: (idx2 + 2).toString(), text: '', id: uuidv4().toString()};
-    currentOptions.splice(idx2 + 1, 0, newItem);
-    let updatedOptions = currentOptions.map((item, i) => {
-      if (i > idx2 + 1) {
-        item.label = (i + 1).toString();
-        return item;
-      } else {
-        return item;
-      }
-    });
-
-    update(radioList[idx], `options`, () => updatedOptions);
-
-    setRadioList([...radioList]);
+    if (isRadio) {
+      const currentOptions = [...radioList[idx].options];
+      const newItem = {label: (idx2 + 2).toString(), text: '', id: uuidv4().toString()};
+      currentOptions.splice(idx2 + 1, 0, newItem);
+      let updatedOptions = currentOptions.map((item, i) => {
+        if (i > idx2 + 1) {
+          item.label = (i + 1).toString();
+          return item;
+        } else {
+          return item;
+        }
+      });
+      update(radioList[idx], `options`, () => updatedOptions);
+      setRadioList([...radioList]);
+    } else if (isMultiple) {
+      const currentOptions = [...manyOptionList[idx].options];
+      const newItem = {label: (idx2 + 2).toString(), text: '', id: uuidv4().toString()};
+      currentOptions.splice(idx2 + 1, 0, newItem);
+      let updatedOptions = currentOptions.map((item, i) => {
+        if (i > idx2 + 1) {
+          item.label = (i + 1).toString();
+          return item;
+        } else {
+          return item;
+        }
+      });
+      update(manyOptionList[idx], `options`, () => updatedOptions);
+      setManyOptionList([...manyOptionList]);
+    }
   };
 
   const onOptionRemove = (idx: number, id: string) => {
-    const options = radioList[idx].options;
-    if (options.length === 1) return;
-    else {
-      remove(options, (n) => n.id === id);
-      setRadioList([...radioList]);
+    if (isRadio) {
+      const options = radioList[idx].options;
+      if (options.length === 1) return;
+      else {
+        remove(options, (n) => n.id === id);
+        setRadioList([...radioList]);
+      }
+    } else if (isMultiple) {
+      const options = manyOptionList[idx].options;
+      if (options.length === 1) return;
+      else {
+        remove(options, (n) => n.id === id);
+        setManyOptionList([...manyOptionList]);
+      }
     }
   };
 
   const [numbered, setNumbered] = useState(false);
-
-  const getForm = (type: 'Input' | 'Select One' | 'Input With Emoji' | string) => {
+  const getColor = (color: string) => {
+    return `hover:bg-${color}-200 text-${color}-400 border-${color}-200 hover:text-${color}-600 focus:outline-none focus:bg-${color}-200 focus:border-transparent`;
+  };
+  const getForm = (type: string) => {
     switch (type) {
       case INPUT:
         return (
-          <div>
-            {map(inputList, (input: any, idx: number) => {
-              const shouldShowActions = idx !== inputList.length - 1;
-              return (
-                <div key={input.id} className="flex flex-col input-container">
-                  <div className="">
-                    <div className="mb-2">
-                      <FormInput
-                        onChange={(e) => onChange(e, idx, false)}
-                        label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
-                        isRequired
-                        value={input.title}
-                        id={`formFieldInput_${input.id}`}
-                        placeHolder={`Enter Form Field Title`}
-                      />
-                    </div>
-                    <div>
-                      <FormInput
-                        onChange={(e) => onChange(e, idx, true)}
-                        label={'Placeholder'}
-                        value={input.placeholder}
-                        id={`placeholder_${input.id}`}
-                        placeHolder={`Enter placeholder`}
-                      />
-                    </div>
-                    {idx !== 0 ? (
-                      <div className="flex my-2 items-center justify-end w-auto mx-3">
-                        <div
-                          onClick={() => changeCheckboxValue(idx, input.textArea)}
-                          className="flex items-center mr-2 justify-between self-end text-gray-500 font-medium w-auto">
-                          <Checkbox val={input.textArea} />
-                        </div>
-
-                        <button
-                          onClick={() => removeItemFromList(input.id)}
-                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-                          Remove
-                        </button>
-                      </div>
-                    ) : (
-                      <div
-                        onClick={() => changeCheckboxValue(idx, input.textArea)}
-                        className="flex cursor-pointer items-center justify-end text-gray-500 font-medium w-auto mx-3 self-end mt-2">
-                        <Checkbox val={input.textArea} />
-                      </div>
-                    )}
-                  </div>
-                  {shouldShowActions && (
-                    <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <TextInput
+            list={inputList}
+            numbered={numbered}
+            onChange={onChange}
+            removeItemFromList={removeItemFromList}
+            changeCheckboxValue={changeCheckboxValue}
+          />
         );
       case SELECT_ONE:
         return (
-          <div>
-            {map(radioList, (input: any, idx: number) => {
-              const shouldShowActions = idx !== radioList.length - 1;
-
-              return (
-                <div key={input.id} className="flex flex-col input-container">
-                  <div className="">
-                    <div className="mb-2">
-                      <FormInput
-                        onChange={(e) => onChange(e, idx)}
-                        label={`${numbered ? `${idx + 1}. ` : ''}Radio Input`}
-                        isRequired
-                        value={radioList[idx].label}
-                        id={`formFieldRadio_${input.id}`}
-                        placeHolder={`Enter Radio Input Title`}
-                      />
-                      {/* Options input fields */}
-                      {input.options?.length &&
-                        input.options?.map((item: any, index: number) => {
-                          // @ts-ignore
-
-                          return (
-                            <div
-                              key={index.toLocaleString()}
-                              className="flex w-9/10 mx-auto mt-4">
-                              <div className="w-8/10">
-                                <FormInput
-                                  value={item.text}
-                                  id={`formFieldRadioOption_${idx}_${index}`}
-                                  onChange={(e) => onOptionInputChange(idx, index, e)}
-                                  name={item.label}
-                                  placeHolder={`Option ${index + 1}`}
-                                />
-                              </div>
-                              <div className="w-1/10 ml-2 flex items-center">
-                                <span
-                                  className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
-                                  onClick={() => onOptionAdd(idx, index)}>
-                                  <IconContext.Provider
-                                    value={{
-                                      size: '2rem',
-                                      color: theme.iconColor[themeColor],
-                                    }}>
-                                    <IoMdAddCircleOutline />
-                                  </IconContext.Provider>
-                                </span>
-                                <span
-                                  className={`w-auto cursor-pointer ${theme.textColor[themeColor]} `}
-                                  onClick={() => onOptionRemove(idx, item.id)}>
-                                  <IconContext.Provider
-                                    value={{
-                                      size: '2rem',
-                                      color: theme.iconColor[themeColor],
-                                    }}>
-                                    <IoMdRemoveCircleOutline />
-                                  </IconContext.Provider>
-                                </span>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
-                    <RemoveInput
-                      idx={idx}
-                      inputId={input.id}
-                      removeItemFromList={removeItemFromList}
-                    />
-                  </div>
-                  {shouldShowActions && (
-                    <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <SelectOne
+            list={radioList}
+            numbered={numbered}
+            onOptionRemove={onOptionRemove}
+            onOptionAdd={onOptionAdd}
+            onOptionInputChange={onOptionInputChange}
+            getColor={getColor}
+            themeColor={themeColor}
+            onChange={onChange}
+            removeItemFromList={removeItemFromList}
+            changeCheckboxValue={changeCheckboxValue}
+          />
+        );
+      case SELECT_MANY:
+        return (
+          <SelectMany
+            list={manyOptionList}
+            numbered={numbered}
+            onOptionRemove={onOptionRemove}
+            onOptionAdd={onOptionAdd}
+            onOptionInputChange={onOptionInputChange}
+            getColor={getColor}
+            themeColor={themeColor}
+            onChange={onChange}
+            removeItemFromList={removeItemFromList}
+            changeCheckboxValue={changeCheckboxValue}
+          />
         );
 
       case INPUT_WITH_EMOJI:
         return (
-          <div>
-            {map(emojiInputList, (input: any, idx: number) => {
-              const shouldShowActions = idx !== emojiInputList.length - 1;
-              return (
-                <div key={input.id} className="flex flex-col input-container">
-                  <div className="mb-4">
-                    <div className="mb-2">
-                      <FormInput
-                        onChange={(e) => onChange(e, idx)}
-                        label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
-                        isRequired
-                        value={emojiInputList[idx].title}
-                        id={`formFieldInput_${input.id}`}
-                        placeHolder={`Enter Form Field Title`}
-                      />
-                    </div>
-                    <div>
-                      <FormInput
-                        onChange={(e) => onChange(e, idx, true)}
-                        label={'Placeholder'}
-                        value={emojiInputList[idx].placeholder}
-                        id={`placeholder_${input.id}`}
-                        placeHolder={`Enter placeholder`}
-                      />
-                    </div>
-                    {idx !== 0 && (
-                      <div className="flex my-2 items-center justify-end w-auto mx-3">
-                        <button
-                          onClick={() => removeItemFromList(input.id)}
-                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-                          Remove
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  {shouldShowActions && (
-                    <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <InputWithEmoji
+            list={emojiInputList}
+            numbered={numbered}
+            onChange={onChange}
+            removeItemFromList={removeItemFromList}
+            changeCheckboxValue={changeCheckboxValue}
+          />
         );
     }
   };

@@ -2,6 +2,7 @@ import EmojiPicker from 'emoji-picker-react';
 import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
 
 interface FormBlockProps extends RowWrapperProps {
@@ -88,7 +89,7 @@ export const FormBlock = (props: FormBlockProps) => {
 
   const composeInput = (inputID: string, type: string, label: string, value: any) => {
     switch (type) {
-      case 'text-input':
+      case FORM_TYPES.TEXT:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
@@ -105,7 +106,24 @@ export const FormBlock = (props: FormBlockProps) => {
             />
           </div>
         );
-      case 'text-area':
+      case FORM_TYPES.LINK:
+        return (
+          <div id={id} key={inputID} className={`mb-4 p-4`}>
+            <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
+              {label}
+            </label>
+            <input
+              id={inputID}
+              disabled={mode === 'building'}
+              className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
+              name="title"
+              type="text"
+              placeholder={value.length > 0 ? value : 'Please input...'}
+              value={''}
+            />
+          </div>
+        );
+      case FORM_TYPES.TEXTAREA:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
@@ -121,7 +139,7 @@ export const FormBlock = (props: FormBlockProps) => {
             />
           </div>
         );
-      case 'radio-input':
+      case FORM_TYPES.RADIO:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
@@ -130,7 +148,7 @@ export const FormBlock = (props: FormBlockProps) => {
             {generateCheckbox(value, false)}
           </div>
         );
-      case 'many-input':
+      case FORM_TYPES.MULTIPLE:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
@@ -139,9 +157,9 @@ export const FormBlock = (props: FormBlockProps) => {
             {generateCheckbox(value, true)}
           </div>
         );
-      case 'emoji-input':
+      case FORM_TYPES.EMOJI:
         return <EmojiInput inputID={inputID} value={value} label={label} />;
-      case 'rating-star':
+      case FORM_TYPES.RATING:
         return <StarRatingBlock id={id} inputID={inputID} label={label} />;
       default:
         return <p>No valid form input type</p>;
