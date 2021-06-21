@@ -309,8 +309,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         );
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
-          const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
           let activePagePartContentData = [...activePageContentData.partContent];
+          const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${activePagePartContentData.filter(
+            (item) => item.type === contentType
+          ).length}`;
           activePagePartContentData[addBlockAtPosition] = {
             id: partContentId,
             type: contentType,
