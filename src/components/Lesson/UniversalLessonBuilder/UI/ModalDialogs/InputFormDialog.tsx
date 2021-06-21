@@ -6,7 +6,6 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {map, remove, update} from 'lodash';
 import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
-import {label} from 'aws-amplify';
 import {IconContext} from 'react-icons';
 import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {getAsset} from '../../../../../assets';
@@ -443,7 +442,6 @@ const InputModalComponent = ({
             ))}
         </div>
         <button
-          key={label}
           onClick={() => setNumbered(!numbered)}
           className={`${
             numbered

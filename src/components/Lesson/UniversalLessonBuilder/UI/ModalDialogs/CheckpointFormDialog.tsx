@@ -23,9 +23,9 @@ interface InitialState {
   question: string;
   notes: string;
   label: string;
+  isRequired: boolean;
   type: InputValue;
   language: InputValue;
-  isRequired: boolean;
   options: {label: string; text: string}[] | null;
   otherOpt: boolean;
   noneOfAbove: boolean;
@@ -71,7 +71,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
 
   const [message, setMessage] = useState({
     msg: '',
-    isError: true,
+    isError: false,
   });
 
   const clearErrors = () => {
@@ -186,6 +186,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     type: {id: '', name: '', value: ''},
     language: {id: '1', name: 'English', value: 'EN'},
     isRequired: false,
+
     options: [
       {label: '1', text: ''},
       {label: '2', text: ''},
@@ -200,7 +201,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     label,
     options,
     language,
-    isRequired,
+
     otherOpt,
     noneOfAbove,
   } = questionData;
@@ -304,10 +305,8 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
               name="question"
               label={AddNewQuestionDict[userLanguage]['QUESTION']}
               isRequired
+              placeHolder={AddNewQuestionDict[userLanguage]['QUESTION']}
             />
-            {validation.question && (
-              <p className="text-red-600 text-sm">{validation.question}</p>
-            )}
           </div>
           <div>
             <FormInput
@@ -316,18 +315,11 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
               onChange={onInputChange}
               name="label"
               label={AddNewQuestionDict[userLanguage]['QUESTIONLABEL']}
+              placeHolder={AddNewQuestionDict[userLanguage]['QUESTIONLABEL']}
               isRequired
             />
-            {validation.label && (
-              <p className="text-red-600 text-sm">{validation.label}</p>
-            )}
           </div>
         </div>
-
-        {/* <TextArea value={""} rows={3} id='question' onChange={onInputChange} name='question' label="Question" isRequired />
-          <div>
-            <TextArea value={""} rows={3} id='notes' onChange={onInputChange} name='notes' label="Notes" />
-          </div> */}
 
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div>
@@ -355,8 +347,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
             />
           </div>
         </div>
-
-        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+        {/* <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
           <div className=" flex items-center">
             <CheckBox
               value={isRequired}
@@ -365,7 +356,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
               label={AddNewQuestionDict[userLanguage]['MAKEQUESTION']}
             />
           </div>
-        </div>
+        </div> */}
 
         {(type.value === 'selectOne' || type.value === 'selectMany') && (
           <div className="p-6">
@@ -436,13 +427,13 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
           </div>
         )}
 
-        <div className="mt-8 px-6 pb-4">
+        <div className="">
           {message.isError && (
-            <div className="py-4 m-auto mt-2 text-center">
+            <div className="m-auto my-2 text-center">
               <p className={`text-red-600`}>{message.msg}</p>
             </div>
           )}
-          <div className="flex justify-center my-6">
+          <div className="flex justify-center mt-6">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={AddNewQuestionDict[userLanguage]['BUTTON']['CANCEL']}
@@ -579,7 +570,7 @@ const ExistingQuestionList = ({checkpQuestions, changeStep, setCheckpQuestions}:
 
             <div
               className={`w-full m-auto max-h-120  ${
-                loading ? 'overflow-hidden' : 'overflow-y-auto'
+                loading ? 'overflow-hidden' : 'overflow-y-auto custom-scrollbar'
               }`}>
               {!loading ? (
                 <Fragment>
@@ -721,11 +712,11 @@ const QuestionLookup = ({
 
   const addToULBObject = () => {
     let valueArr = generateQuestionList();
-
+    const formType = numbered ? 'form-numbered' : 'form-default';
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'form-default', valueArr);
+      updateBlockContentULBHandler('', '', formType, valueArr);
     } else {
-      createNewBlockULBHandler('', '', 'form-default', valueArr);
+      createNewBlockULBHandler('', '', formType, valueArr);
     }
     closeAction();
   };
@@ -739,9 +730,23 @@ const QuestionLookup = ({
 
     setCheckpQuestions(items);
   };
+  const [numbered, setNumbered] = useState(false);
 
   return (
     <div className="overflow-y-hidden">
+      {checkpQuestions.length > 0 && (
+        <div className="w-auto flex item-center justify-end mb-4">
+          <button
+            onClick={() => setNumbered(!numbered)}
+            className={`${
+              numbered
+                ? 'border-indigo-500 text-white bg-indigo-400'
+                : 'border-gray-300 text-dark'
+            } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
+            {numbered ? 'Ordered Form' : 'Unordered Form'}
+          </button>
+        </div>
+      )}
       {checkpQuestions.length > 0 ? (
         <>
           <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
@@ -760,7 +765,7 @@ const QuestionLookup = ({
             <Droppable droppableId="droppable">
               {(provided) => (
                 <div
-                  className="overflow-y-auto max-h-132"
+                  className="overflow-y-auto custom-scrollbar max-h-132"
                   {...provided.droppableProps}
                   ref={provided.innerRef}>
                   {checkpQuestions.map((item: any, index: number) => (
@@ -801,14 +806,14 @@ const QuestionLookup = ({
           </DragDropContext>
         </>
       ) : (
-        <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-          <p className="mt-2 text-center text-lg text-gray-500">
+        <div className="py-6 text-center mx-auto flex justify-center items-center w-full">
+          <p className="text-center text-lg text-gray-500">
             {AddNewCheckPointDict[userLanguage]['NOQUESTION']}
           </p>
         </div>
       )}
 
-      <div className="flex w-full mx-auto p-8 justify-center ">
+      <div className="flex w-full mx-auto py-4 justify-center ">
         <Buttons
           btnClass="mr-4"
           onClick={() => changeStep('ExistingQuestionList')}
