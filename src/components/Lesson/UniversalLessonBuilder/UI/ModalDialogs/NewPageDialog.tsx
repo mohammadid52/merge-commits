@@ -1,12 +1,14 @@
 import React, {useContext, useState, Fragment} from 'react';
 import {VscNewFile} from 'react-icons/vsc';
 import PageTile from '../common/PageTile';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import { EditQuestionModalDict } from '../../../../../dictionary/dictionary.iconoclast';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
-import { FaCopy } from 'react-icons/fa';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {FaCopy} from 'react-icons/fa';
+import Tooltip from '../../../../Atoms/Tooltip';
+import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
 
 interface ILessonInputs {
   id: string;
@@ -15,15 +17,19 @@ interface ILessonInputs {
   description: string;
 }
 
-const NewPageDialog = ({universalLessonDetails}:any) => {
+interface INewPageDialog {
+  universalLessonDetails: UniversalLesson;
+  closeAction: () => void;
+}
+
+const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) => {
   const {addNewPageHandler} = useULBContext();
   const {userLanguage} = useContext(GlobalContext);
   const [focussed, setFocussed] = useState<
     'new_page' | 'existing_page' | 'template' | ''
   >('');
   const pages = universalLessonDetails?.lessonPlan;
-  console.log(pages, 'pages');
-  
+
   const [inputObj, setInputObj] = useState<ILessonInputs>({
     id: '',
     label: '',
@@ -50,6 +56,10 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
       ...prevInputs,
       [name]: value,
     }));
+    setErrors((errors: any) => ({
+      ...errors,
+      [name]: '',
+    }));
   };
 
   const handleSubmit = () => {
@@ -57,8 +67,25 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
     if (isValid) {
       addNewPageHandler({
         ...inputObj,
-        pageContent: copiedPageIndex > -1 ? pages[copiedPageIndex].pageContent : [],
+        pageContent:
+          copiedPageIndex > -1
+            ? pages[copiedPageIndex].pageContent.map((part: any, partIndex: number) => ({
+                ...part,
+                id: `${inputObj.id}_part_${partIndex}`,
+                partContent: part.partContent.map(
+                  (content: any, contentIndex: number) => ({
+                    ...content,
+                    id: `${inputObj.id}_part_${partIndex}_${content.type}_${
+                      part.partContent.filter(
+                        (c: any, i: number) => c.type === content.type && i < contentIndex
+                      ).length
+                    }`,
+                  })
+                ),
+              }))
+            : [],
       });
+      closeAction();
     } else {
       return;
     }
@@ -71,7 +98,14 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
     if (!id) {
       isValid = false;
       formErrors.id = 'Id is required';
+    } else if (pages.findIndex((page: any) => page.id === id) > -1) {
+      isValid = false;
+      formErrors.id = 'This id is already associated with different page';
+    } else {
+      isValid = true;
+      formErrors.id = '';
     }
+
     if (!label) {
       isValid = false;
       formErrors.label = 'Label is required';
@@ -89,8 +123,8 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
   };
 
   const onCopyPageContent = (selectedPageIndex: number) => {
-    setCopiedPageIndex(selectedPageIndex)
-  }
+    setCopiedPageIndex(selectedPageIndex);
+  };
 
   return (
     <>
@@ -107,7 +141,7 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
         }
         transition-all duration-400 ease-in-out m-2 
         flex flex-col bg-gray-200`}>
-          <div className="relative flex items-center mb-2">
+          <div className="relative flex items-center">
             <h2 className="w-full bg-white text-lg font-semibold text-gray-900 truncate">
               Create New Page
             </h2>
@@ -246,14 +280,18 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
               {pages && pages.length
                 ? pages.map((page: any, index: number) => (
                     <div key={page.id} className="flex flex-col">
-                      <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
+                      <PageTile whClass={`w-20 h-28 mt-1`} marginClass={`mx-auto`} />
                       <div className="flex mx-auto flex-col text-gray-400">
                         <div className="text-md text-center">{page.label}</div>
                         {index === copiedPageIndex ? (
                           <div className="text-center">Copied</div>
                         ) : (
                           <div className="cursor-pointer">
-                            <FaCopy onClick={() => onCopyPageContent(index)} />
+                            <Tooltip
+                              placement="top"
+                              text={`Click here to copy the content of this page`}>
+                              <FaCopy onClick={() => onCopyPageContent(index)} />
+                            </Tooltip>
                           </div>
                         )}
                       </div>
@@ -323,7 +361,7 @@ const NewPageDialog = ({universalLessonDetails}:any) => {
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            // onClick={closeAction}
+            onClick={closeAction}
             transparent
           />
           <Buttons

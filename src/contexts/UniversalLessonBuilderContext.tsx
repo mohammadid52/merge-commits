@@ -77,6 +77,23 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     setUniversalLessonDetails({...universalLessonDetails});
   };
 
+  const addNewPageHandler = (content: any) => {
+    setUniversalLessonDetails((prevDetails) => ({
+      ...prevDetails,
+      lessonPlan: [
+        ...prevDetails.lessonPlan,
+        {
+          enabled: true,
+          open: true,
+          active: true,
+          class: '',
+          displayMode: 'SELF',
+          ...content
+        },
+      ],
+    }));
+  }
+
   useEffect(() => {
     setUniversalLessonDetails(exampleUniversalLesson);
   }, []);
@@ -98,6 +115,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         enableDnD,
         setEnableDnD,
         addFromULBHandler: addULBHandler,
+        addNewPageHandler,
         updateMovableList,
         getPartContent,
         getPageContent,
