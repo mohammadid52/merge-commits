@@ -107,5 +107,17 @@
     "typescript": "^4.0.3",
     "uuid": "^8.3.2",
     "webpack-dev-server": "^3.11.0"
-  }
+  },
+  "main": "autoVerifyUser.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZOIQ/IconoclastArtistsReact_Base.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZOIQ/IconoclastArtistsReact_Base/issues"
+  },
+  "homepage": "https://github.com/ZOIQ/IconoclastArtistsReact_Base#readme"
 }
