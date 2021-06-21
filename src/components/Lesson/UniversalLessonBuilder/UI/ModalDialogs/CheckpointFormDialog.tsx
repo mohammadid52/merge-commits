@@ -15,9 +15,10 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import * as mutations from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
-import {debounce, isObject, map} from 'lodash';
+import {debounce, forEach, includes, isObject, map} from 'lodash';
 import SearchInput from '../../../../Atoms/Form/SearchInput';
 import Loader from '../../../../Atoms/Loader';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface InitialState {
   question: string;
@@ -69,6 +70,43 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     isError: true,
   });
 
+  const [message, setMessage] = useState({
+    msg: '',
+    isError: true,
+  });
+
+  const clearErrors = () => {
+    setMessage({
+      isError: false,
+      msg: '',
+    });
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!questionData.question?.trim().length) {
+      isValid = false;
+    } else if (!questionData.label?.trim().length) {
+      isValid = false;
+
+      setMessage({
+        isError: true,
+        msg: AddNewQuestionDict[userLanguage]['VALIDATION']['LABEL'],
+      });
+    } else if (!questionData.type.name?.trim().length) {
+      isValid = false;
+
+      setMessage({
+        isError: true,
+        msg: AddNewQuestionDict[userLanguage]['VALIDATION']['TYPE'],
+      });
+    } else {
+      clearErrors;
+    }
+
+    return isValid;
+  };
   const addQuestionsToDB = async () => {
     setLoading(true);
     try {
@@ -86,21 +124,26 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
           );
         })
       );
+      setValidation({
+        question: '',
+        type: '',
+        label: '',
+        options: '',
+        message: AddNewQuestionDict[userLanguage]['MESSAGES']['QUESTIONSAVE'],
+        isError: false,
+      });
     } catch {
       setValidation({
-        ...validation,
+        question: '',
+        type: '',
         label: '',
-        message: AddNewCheckPointDict[userLanguage]['MESSAGES']['UNABLESAVE'],
+        options: '',
+        message: AddNewQuestionDict[userLanguage]['MESSAGES']['UNABLESAVE'],
         isError: true,
       });
     } finally {
       setLoading(false);
     }
-  };
-
-  const saveQuestion = () => {
-    const addQuestion = debounce(() => addQuestionsToDB(), 500);
-    addQuestion();
   };
 
   const typeList: any = [
@@ -163,6 +206,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     noneOfAbove,
   } = questionData;
   const onInputChange = (e: any) => {
+    clearErrors();
     setQuestionData({
       ...questionData,
       [e.target.name]: e.target.value,
@@ -175,6 +219,8 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     });
   };
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
+    clearErrors();
+
     setQuestionData({
       ...questionData,
       [field]: {
@@ -190,10 +236,14 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
   };
 
   const onQuestionSave = () => {
-    setCheckpQuestions([...checkpQuestions, questionData]);
-    changeStep('QuestionLookup');
-    saveQuestion();
-    clearFields();
+    const isValid = validateForm();
+
+    if (isValid) {
+      setCheckpQuestions([...checkpQuestions, questionData]);
+      changeStep('QuestionLookup');
+      addQuestionsToDB();
+      clearFields();
+    }
   };
 
   const optionInputChange = (index: number, e: any) => {
@@ -388,11 +438,9 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
         )}
 
         <div className="mt-8 px-6 pb-4">
-          {validation.message && (
+          {message.isError && (
             <div className="py-4 m-auto mt-2 text-center">
-              <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
-                {validation.message}
-              </p>
+              <p className={`text-red-600`}>{message.msg}</p>
             </div>
           )}
           <div className="flex justify-center my-6">
@@ -611,6 +659,29 @@ const ExistingQuestionList = ({checkpQuestions, changeStep, setCheckpQuestions}:
   );
 };
 
+const parseType = (type: string) => {
+  switch (type) {
+    case 'text':
+      return 'text-area';
+    case 'input':
+      return 'text-input';
+    case 'selectMany':
+      return 'text-input'; // temparory
+    case 'selectOne':
+      return 'radio-input';
+    case 'datePicker':
+      return 'text-input'; // temparory
+    case 'link':
+      return 'text-input'; // temparory
+    case 'emoji':
+      return 'emoji-input';
+    case 'attachments':
+      return 'text-input'; // temparory
+    default:
+      return 'text-input';
+  }
+};
+
 const QuestionLookup = ({
   checkpQuestions,
   changeStep,
@@ -632,36 +703,14 @@ const QuestionLookup = ({
 
   const {AddNewCheckPointDict, EditQuestionModalDict} = useDictionary(clientKey);
 
-  const parseType = (type: string) => {
-    switch (type) {
-      case 'text':
-        return 'text-area';
-      case 'input':
-        return 'text-input';
-      case 'selectMany':
-        return 'text-input'; // temparory
-      case 'selectOne':
-        return 'radio-input';
-      case 'datePicker':
-        return 'text-input'; // temparory
-      case 'link':
-        return 'text-input'; // temparory
-      case 'emoji':
-        return 'emoji-input';
-      case 'attachments':
-        return 'text-input'; // temparory
-      default:
-        return 'text-input';
-    }
-  };
-
+  const uniqKey = 'questionID'; // this is temporary key to filter this questions from other questions
   const generateQuestionList = () => {
     let dataToSend = map(checkpQuestions, (question) => {
       const type = parseType(
         isObject(question.type) ? question.type.value : question.type
       );
       return {
-        id: uuidv4().toString(),
+        id: `${uniqKey}_${uuidv4().toString()}`,
         type,
 
         label: question.question,
@@ -753,8 +802,10 @@ const QuestionLookup = ({
           </DragDropContext>
         </>
       ) : (
-        <div className="py-12 my-6 text-center">
-          <p> {AddNewCheckPointDict[userLanguage]['NOQUESTION']}</p>
+        <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+          <p className="mt-2 text-center text-lg text-gray-500">
+            {AddNewCheckPointDict[userLanguage]['NOQUESTION']}
+          </p>
         </div>
       )}
 

@@ -54,6 +54,10 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }
   };
 
+  const theme = {
+    bg: 'bg-gray-800',
+  };
+
   const updateMovableList = (
     items: any,
     pageId: string,
@@ -93,7 +97,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         selectedPageID,
         setSelectedPageID,
         getCurrentPage,
-
+        theme,
         setUniversalLessonDetails,
         enableDnD,
         setEnableDnD,
