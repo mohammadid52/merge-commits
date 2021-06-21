@@ -15,10 +15,9 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import * as mutations from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
-import {debounce, forEach, includes, isObject, map} from 'lodash';
+import {isObject, map} from 'lodash';
 import SearchInput from '../../../../Atoms/Form/SearchInput';
 import Loader from '../../../../Atoms/Loader';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface InitialState {
   question: string;
@@ -47,7 +46,7 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
 const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) => {
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddNewQuestionDict, AddNewCheckPointDict} = useDictionary(clientKey);
+  const {AddNewQuestionDict} = useDictionary(clientKey);
 
   const [loading, setLoading] = useState(false);
 

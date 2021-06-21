@@ -241,16 +241,18 @@ const JumbotronModalDialog = ({
               );
             } else {
               return (
-                <FormInput
-                  key={`jumboform_${idx}`}
-                  onChange={onChange}
-                  label={inputFieldsArray[idx]?.label}
-                  isRequired
-                  value={inputFieldsArray[idx]?.value}
-                  id={inputFieldsArray[idx]?.id}
-                  placeHolder={inputFieldsArray[idx]?.value}
-                  type="text"
-                />
+                <div className="mb-2">
+                  <FormInput
+                    key={`jumboform_${idx}`}
+                    onChange={onChange}
+                    label={inputFieldsArray[idx]?.label}
+                    isRequired
+                    value={inputFieldsArray[idx]?.value}
+                    id={inputFieldsArray[idx]?.id}
+                    placeHolder={inputFieldsArray[idx]?.value}
+                    type="text"
+                  />
+                </div>
               );
             }
           })}

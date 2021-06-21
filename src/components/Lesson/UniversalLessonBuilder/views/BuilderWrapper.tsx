@@ -292,7 +292,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     switch (type) {
       case 'header':
       case 'header-section':
-        return <HeaderModalComponent {...commonProps} />;
+        return (
+          <HeaderModalComponent classString={selectedContentClass} {...commonProps} />
+        );
       case 'questions':
         return <CheckpointComponent {...commonProps} />;
       case 'image':

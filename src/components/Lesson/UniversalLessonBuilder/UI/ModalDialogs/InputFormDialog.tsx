@@ -12,6 +12,7 @@ import {IoMdAddCircleOutline, IoMdRemoveCircleOutline} from 'react-icons/io';
 import {getAsset} from '../../../../../assets';
 import {v4 as uuidv4} from 'uuid';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import RemoveInput from '../common/RemoveInput';
 
 interface InputModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -360,16 +361,11 @@ const InputModalComponent = ({
                           );
                         })}
                     </div>
-
-                    {idx !== 0 && (
-                      <div className="flex my-2 items-center justify-end w-auto mx-3">
-                        <button
-                          onClick={() => removeItemFromList(input.id)}
-                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-                          Remove
-                        </button>
-                      </div>
-                    )}
+                    <RemoveInput
+                      idx={idx}
+                      inputId={input.id}
+                      removeItemFromList={removeItemFromList}
+                    />
                   </div>
                   {shouldShowActions && (
                     <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
