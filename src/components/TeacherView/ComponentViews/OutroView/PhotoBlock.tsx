@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
 import { LessonControlContext } from '../../../../contexts/LessonControlContext';
 
 interface props {
