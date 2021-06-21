@@ -1,18 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {
-  EditQuestionModalDict,
-  UniversalBuilderDict,
-} from '../../../../../dictionary/dictionary.iconoclast';
+import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import Storage from '@aws-amplify/storage';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Loader from '../../../../Atoms/Loader';
 import {nanoid} from 'nanoid';
+import RemoveInput from '../common/RemoveInput';
+import {remove} from 'lodash';
 
 interface Links extends IContentTypeComponentProps {
   inputObj?: any;
@@ -94,10 +90,15 @@ const LinksModalDialog = ({
     setInputFieldsArray(shorterInputFieldsArray);
   };
 
+  const removeItemFromList = (id: string) => {
+    remove(inputFieldsArray, (n) => n.id === id);
+    setInputFieldsArray([...inputFieldsArray]);
+  };
+
   //////////////////////////
   //  FOR NORMAL INPUT    //
   //////////////////////////
-  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([])
+  const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([]);
   const onChange = (e: React.FormEvent, idx: number) => {
     const {id, value, name} = e.target as HTMLFormElement;
     // validateUrl(value, idx);
@@ -105,13 +106,17 @@ const LinksModalDialog = ({
   };
 
   const validateUrl = (inputUrl: string) => {
-    const isYoutubeLink = inputUrl.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/g);
+    const isYoutubeLink = inputUrl.match(
+      /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/g
+    );
     return isYoutubeLink === null;
-  }
+  };
 
   const onLinkCreate = async () => {
-    const validLinkArray = inputFieldsArray.map((field: PartContentSub, idx: number) => validateUrl(field.value));
-    if(!validLinkArray.includes(true)){
+    const validLinkArray = inputFieldsArray.map((field: PartContentSub, idx: number) =>
+      validateUrl(field.value)
+    );
+    if (!validLinkArray.includes(true)) {
       if (isEditingMode) {
         updateBlockContentULBHandler('', '', 'links', inputFieldsArray, 0);
       } else {
@@ -122,7 +127,7 @@ const LinksModalDialog = ({
       // clear fields
       setInputFieldsArray(initialInputFieldsState);
     } else {
-      setInputErrorArray(validLinkArray)
+      setInputErrorArray(validLinkArray);
     }
   };
 
@@ -132,43 +137,53 @@ const LinksModalDialog = ({
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
-              <React.Fragment key={`keyword_${idx}`}>
-                <p>
-                  Link {idx + 1}:{' '}
-                  <span
-                    onClick={() => handleDeleteLink(idx)}
-                    className={`font-semibold text-xs text-red-400 cursor-pointer`}>
-                    Delete?{' '}
-                  </span>
-                </p>
-                <input
-                  onChange={(e) => onChange(e, idx)}
-                  name={'label'}
-                  className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm`}
-                  value={inputFieldsArray[idx]?.label}
-                  placeholder={inputFieldsArray[idx]?.label}
+              <div className={'my-2'} key={`keyword_${idx}`}>
+                <label
+                  htmlFor={'Link'}
+                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                  Link {idx + 1}:
+                </label>
+                <div className="mb-2">
+                  <FormInput
+                    onChange={(e) => onChange(e, idx)}
+                    name={'label'}
+                    value={inputFieldsArray[idx]?.label}
+                    placeHolder={inputFieldsArray[idx]?.label}
+                  />
+                </div>
+                <div className="mb-2">
+                  <FormInput
+                    onChange={(e) => onChange(e, idx)}
+                    value={inputFieldsArray[idx]?.value}
+                    name={'value'}
+                    placeHolder={inputFieldsArray[idx]?.value}
+                  />
+                </div>
+                {!validateUrl(inputFieldsArray[idx]?.value) ? null : (
+                  <p className={`text-red-400 text-xs`}>
+                    Please enter a valid Youtube link :)
+                  </p>
+                )}
+                <RemoveInput
+                  idx={idx}
+                  inputId={inputObj.id}
+                  removeItemFromList={removeItemFromList}
                 />
-                <input
-                  onChange={(e) => onChange(e, idx)}
-                  name={'value'}
-                  className={`
-                  ${!validateUrl(inputFieldsArray[idx]?.value) ? 'border-0 border-gray-300' : 'border-2 border-red-400'} 
-                  mt-1 block w-full sm:text-sm sm:leading-5 
-                  py-2 px-3 rounded-md shadow-sm`}
-                  value={inputFieldsArray[idx]?.value}
-                  placeholder={inputFieldsArray[idx]?.value}
-                />
-                {
-                  !validateUrl(inputFieldsArray[idx]?.value) ? null : <p className={`text-red-400 text-xs`}>Please enter a valid Youtube link :)</p>
-                }
-              </React.Fragment>
+              </div>
             );
           })}
         </div>
       </div>
 
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-4 justify-between px-6 pb-4">
+        <div className="flex items-center w-auto">
+          <button
+            onClick={handleAddNewLink}
+            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+            + Add Field
+          </button>
+        </div>
+        <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
@@ -180,12 +195,6 @@ const LinksModalDialog = ({
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
             onClick={onLinkCreate}
-          />
-
-          <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={`ADD`}
-            onClick={handleAddNewLink}
           />
         </div>
       </div>

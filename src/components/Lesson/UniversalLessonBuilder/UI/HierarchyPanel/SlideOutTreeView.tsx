@@ -25,12 +25,12 @@ interface SlideOutTreeViewProps {
 export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
   const {
     selectedPageDetails,
-    editMode,
+
     setEditModal,
     setHierarchyVisible,
     setEditMode,
   } = props;
-  const {selectedPageID, updateMovableList, enableDnD} = useULBContext();
+  const {selectedPageID, updateMovableList, theme, enableDnD} = useULBContext();
 
   const getTreeIcon = (partType: string) => {
     switch (partType) {
@@ -78,7 +78,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                   }}
                   key={`hierarchy_parent_btn_${idx}`}
                   type="button"
-                  className={`bg-gray-700 text-white
+                  className={`${theme.bg} text-white
       hover:bg-white hover:bg-opacity-10
       group w-full flex
       items-center p-2 text-sm
@@ -133,9 +133,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                                         window.location.href = `#${partContent.id}`;
                                       }}
                                       className={`${
-                                        snapshot.isDragging
-                                          ? 'bg-gray-800'
-                                          : 'bg-gray-700'
+                                        snapshot.isDragging ? 'bg-gray-900' : theme.bg
                                       }  group w-full flex items-center p-2 text-sm font-medium rounded-md text-white hover:bg-white hover:bg-opacity-10  my-1`}>
                                       <div
                                         className={`ml-2 flex flex-row justify-start items-center `}>
@@ -185,7 +183,8 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
   };
 
   return (
-    <div className="min-w-72 max-w-96 flex flex-col flex-grow p-1 overflow-y-auto bg-gray-700 shadow-lg rounded-b-md">
+    <div
+      className={` ${theme.bg} min-w-72 max-w-96 flex flex-col flex-grow p-1 overflow-y-auto shadow-lg rounded-b-md`}>
       <div className="flex-grow flex flex-col">
         <nav className="flex-1" aria-label="Sidebar">
           {selectedPageDetails && selectedPageDetails.pageContent && (

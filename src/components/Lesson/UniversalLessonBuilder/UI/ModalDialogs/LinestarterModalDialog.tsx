@@ -6,6 +6,8 @@ import Buttons from '../../../../Atoms/Buttons';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {nanoid} from 'nanoid';
+import RemoveInput from '../common/RemoveInput';
+import {remove} from 'lodash';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -105,7 +107,7 @@ const LinestarterModalDialog = ({
     handleUpdateInputFields(id, value);
   };
 
-  const onJumbotronCreate = async () => {
+  const onLineCreate = async () => {
     if (isEditingMode) {
       updateBlockContentULBHandler('', '', 'poem', inputFieldsArray, 0);
     } else {
@@ -116,39 +118,52 @@ const LinestarterModalDialog = ({
     // clear fields
     setInputFieldsArray(initialInputFieldsState);
   };
-
+  const removeItemFromList = (id: string) => {
+    remove(inputFieldsArray, (n) => n.id === id);
+    setInputFieldsArray([...inputFieldsArray]);
+  };
   return (
     <>
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
-              <React.Fragment key={`linestarter_${idx}`}>
-                <p>
-                  Line-starter {idx + 1}:{' '}
-                  <span
-                    onClick={() => handleDeleteLinestarter(idx)}
-                    className={`font-semibold text-xs text-red-400 cursor-pointer`}>
-                    Delete?{' '}
-                  </span>
-                </p>
-                <FormInput
-                  key={`jumboform_${idx}`}
-                  onChange={onChange}
-                  isRequired
-                  value={inputFieldsArray[idx]?.value}
-                  id={inputFieldsArray[idx]?.id}
-                  placeHolder={inputFieldsArray[idx]?.value}
-                  type="text"
+              <div className="mb-2" key={`linestarter_${idx}`}>
+                <label
+                  htmlFor={'Link'}
+                  className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
+                  Line-starter {idx + 1}:
+                </label>
+                <div className="mb-2">
+                  <FormInput
+                    key={`jumboform_${idx}`}
+                    onChange={onChange}
+                    value={inputFieldsArray[idx]?.value}
+                    id={inputFieldsArray[idx]?.id}
+                    placeHolder={inputFieldsArray[idx]?.value}
+                    type="text"
+                  />
+                </div>
+                <RemoveInput
+                  idx={idx}
+                  inputId={inputObj.id}
+                  removeItemFromList={removeItemFromList}
                 />
-              </React.Fragment>
+              </div>
             );
           })}
         </div>
       </div>
 
-      <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+      <div className="flex mt-4 justify-between px-6 pb-4">
+        <div className="flex items-center w-auto">
+          <button
+            onClick={handleAddNewLinestarter}
+            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
+            + Add Field
+          </button>
+        </div>
+        <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
@@ -159,13 +174,7 @@ const LinestarterModalDialog = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={onJumbotronCreate}
-          />
-
-          <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
-            label={`ADD`}
-            onClick={handleAddNewLinestarter}
+            onClick={onLineCreate}
           />
         </div>
       </div>

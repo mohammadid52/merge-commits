@@ -3,6 +3,7 @@ import {Transition} from '@headlessui/react';
 import SlideOutBuilderMenu from './BuilderMenu/SlideOutBuilderMenu';
 import ClickAwayListener from 'react-click-away-listener';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 
 export interface BuilderMenuProps {
   galleryVisible?: boolean;
@@ -51,6 +52,7 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
     });
   };
 
+  const {theme} = useULBContext();
   const {message = '', show = false} = confirmationConfig;
   return (
     <>
@@ -59,7 +61,7 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
           builderMenuVisible ? 'relative w-56 h-0 mr-0 ml-auto bg-gray-400' : 'hidden'
         }`}
         style={{zIndex: 99999}}>
-        <div className="absolute" style={{top: '0.5rem', right: '2rem'}}>
+        <div className="absolute" style={{top: '0.5rem', right: '1.2rem'}}>
           <Transition
             show={builderMenuVisible}
             enter="transition duration-200"
@@ -71,7 +73,7 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
             {/* Header */}
             <ClickAwayListener onClickAway={() => setBuilderMenuVisible(false)}>
               <>
-                <div className="relative text-white bg-gray-700 py-2 rounded-t-lg ">
+                <div className={`${theme.bg} relative text-white py-2 rounded-t-lg `}>
                   <div className="absolute  flex items-center" aria-hidden="true">
                     <div className="w-full border-t border-gray-400"></div>
                   </div>

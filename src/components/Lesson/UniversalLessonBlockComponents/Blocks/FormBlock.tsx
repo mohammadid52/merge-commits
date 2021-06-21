@@ -1,7 +1,6 @@
 import EmojiPicker from 'emoji-picker-react';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {HiEmojiHappy} from 'react-icons/hi';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
 
@@ -13,13 +12,21 @@ interface FormBlockProps extends RowWrapperProps {
 export const FormBlock = (props: FormBlockProps) => {
   const {id, mode, dataIdAttribute, value, handleEditBlockToggle} = props;
 
-  const generateCheckbox = (values: {label: string; text: string}[]) => {
+  const generateCheckbox = (
+    values: {label: string; text: string}[],
+    selectMany: boolean
+  ) => {
     if (values && Array.isArray(values)) {
       return (
         <div className="mt-2 flex flex-wrap text-gray-300 bg-darker-gray py-2 px-4 rounded-xl">
           {values.map(({label, text}, idx: number) => (
             <div className="w-auto flex items-center mx-4" key={`${label}_${idx}`}>
-              <div className="h-2 w-2 border-gray-200 border-2 rounded-full mr-1" />
+              {/* */}
+              {selectMany ? (
+                <div className="h-4 w-4 border-gray-200 border-2 mr-2" />
+              ) : (
+                <div className="h-4 w-4 border-gray-200 border-2 rounded-full mr-2" />
+              )}
               {text}
             </div>
           ))}
@@ -120,7 +127,16 @@ export const FormBlock = (props: FormBlockProps) => {
             <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
               {label}
             </label>
-            {generateCheckbox(value)}
+            {generateCheckbox(value, false)}
+          </div>
+        );
+      case 'many-input':
+        return (
+          <div id={id} key={inputID} className={`mb-4 p-4`}>
+            <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
+              {label}
+            </label>
+            {generateCheckbox(value, true)}
           </div>
         );
       case 'emoji-input':

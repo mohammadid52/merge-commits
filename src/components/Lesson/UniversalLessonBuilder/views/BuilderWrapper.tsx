@@ -25,6 +25,8 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
+
+import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
 import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
 import ImageGallery from '../UI/ImageGallery';
@@ -299,9 +301,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
     switch (type) {
       case 'header':
+      case 'header-section':
         return (
-          <HeaderModalComponent {...commonProps} classString={selectedContentClass} />
+          <HeaderModalComponent classString={selectedContentClass} {...commonProps} />
         );
+      case 'questions':
+        return <CheckpointComponent {...commonProps} />;
       case 'image':
         return (
           <ImageFormComponent
@@ -455,7 +460,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       {addContentModal.show && (
         <Modal
           showHeader={true}
-          title={`Add ${capitalizeFirstLetter(addContentModal.type)}`}
+          title={`Add ${capitalizeFirstLetter(addContentModal.type)} ${
+            addContentModal.type === 'questions' ? 'To Lesson' : ''
+          }`}
           showHeaderBorder={true}
           showFooter={false}
           closeAction={closeAction}>
