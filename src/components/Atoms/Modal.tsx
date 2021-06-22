@@ -100,7 +100,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
         } fixed inset-0 z-40 bg-black`}></div>
       <div
         onClick={() => closeOnBackdrop && closeAction()}
-        className="absolute modal show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
+        className="fixed modal show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {

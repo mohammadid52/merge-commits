@@ -359,12 +359,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {name, type, languages, purposeHtml, objectiveHtml, institution} = formData;
 
   return (
-    <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+    <div className="bg-white shadow-5 overflow-hidden mb-4">
+      {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
         </h3>
-      </div>
+      </div> */}
 
       <div className="p-4">
         <div className="px-3 py-4 grid gap-x-6 grid-cols-2">

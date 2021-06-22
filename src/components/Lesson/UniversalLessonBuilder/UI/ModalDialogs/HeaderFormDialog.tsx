@@ -178,7 +178,7 @@ const HeaderModalComponent = ({
           </button>
           {colorPickerActive && (
             <ColorPicker
-              classString={''}
+              classString={classString}
               callbackColor={handleColorPickerSelect}
               isMainPage={true}
               styleString={{top: '100%'}}
