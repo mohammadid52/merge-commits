@@ -57,7 +57,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -424,13 +424,18 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         );
       case '2':
         return (
-          <UnitLookup
-            lessonName={formData.name}
-            lessonId={lessonId}
-            institution={formData.institution}
-            lessonType={formData.type?.value}
-            lessonPlans={savedLessonDetails.lessonPlans}
-          />
+          <div>
+            <UnitLookup
+              lessonName={formData.name}
+              lessonId={lessonId}
+              institution={formData.institution}
+              lessonType={formData.type?.value}
+              lessonPlans={savedLessonDetails.lessonPlans}
+            />
+            <div className="flex mb-8 mt-4 justify-center">
+              <Buttons btnClass="py-3 px-10" label={BUTTONS[userLanguage]['PUBLISH']} />
+            </div>
+          </div>
         );
     }
   };
@@ -540,13 +545,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       title: 'Builder',
       icon: <FaQuestionCircle />,
       content: currentTabComp(`${activeTab}`),
-      disabled: formData.institution ? false : true
+      disabled: formData.institution && formData.institution.id ? false : true,
     },
     {
       index: 2,
       title: 'Assign Units & Publish',
       icon: <FaUnity />,
       content: currentTabComp(`${activeTab}`),
+      disabled: formData.institution && formData.institution.id ? false : true,
     },
   ];
 
