@@ -39,14 +39,14 @@ export const FormBlock = (props: FormBlockProps) => {
         </label>
         <input
           id={inputID}
-          // disabled={mode === 'building'}
+          disabled={mode === 'building'}
           pattern="https://.*"
           className={`w-full py-2 px-4 mt-2 text-white rounded-xl bg-darker-gray`}
           name="url"
           type="text"
           placeholder={value.length > 0 ? value : 'Please input...'}
-          onChange={onChange}
-          value={fields[inputID]}
+          // onChange={onChange}
+          // value={fields[inputID]}
         />
       </div>
     );
@@ -185,13 +185,16 @@ export const FormBlock = (props: FormBlockProps) => {
   };
 
   const EmojiInput = ({inputID, label, value}: any) => {
-    let textValue = fields[inputID];
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
-
+    const [textValue, setTextValue] = useState('');
     const onEmojiSelect = (e: any) => {
-      let textWithEmoji = textValue.concat(`${e.emoji} `);
-      setFields({...fields, [inputID]: textWithEmoji});
-      setShowEmojiSelector(false);
+      try {
+        let textWithEmoji = value.concat(`${e.emoji} `);
+        setTextValue(textWithEmoji);
+        setShowEmojiSelector(false);
+      } catch (error) {
+        setShowEmojiSelector(false);
+      }
     };
 
     const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 `;
@@ -203,8 +206,8 @@ export const FormBlock = (props: FormBlockProps) => {
         <div className="flex items-center relative">
           <input
             id={inputID}
-            // disabled={mode === 'building'}
-            className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
+            disabled={mode === 'building'}
+            className={`w-full py-2 px-4 text-white rounded-xl bg-darker-gray`}
             name="emoji"
             onChange={onChange}
             type="text"
@@ -246,13 +249,13 @@ export const FormBlock = (props: FormBlockProps) => {
             </label>
             <input
               id={inputID}
-              // disabled={mode === 'building'}
-              className={`w-full py-2 px-4 text-gray-800 mt-2 rounded-xl bg-darker-gray`}
+              disabled={mode === 'building'}
+              className={`w-full py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               placeholder={value.length > 0 ? value : 'Please input...'}
-              onChange={onChange}
-              value={fields[inputID]}
+              // onChange={onChange}
+              // value={fields[inputID]}
             />
           </div>
         );
@@ -266,7 +269,7 @@ export const FormBlock = (props: FormBlockProps) => {
             <textarea
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full h-64 py-2 px-4 text-gray-800 mt-2 rounded-xl bg-darker-gray`}
+              className={`w-full h-64 py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
               name="story"
               placeholder={value.length > 0 ? value : 'Please input...'}
               value={''}

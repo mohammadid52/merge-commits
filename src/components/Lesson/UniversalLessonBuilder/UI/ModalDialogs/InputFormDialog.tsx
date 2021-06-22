@@ -202,22 +202,30 @@ const InputModalComponent = ({
 
   return (
     <div className="max-h-200 relative overflow-y-auto">
-      <div className="w-auto flex item-center justify-between mb-4">
-        <div className="flex items-center w-auto">
-          {!isEditingMode &&
-            map(formTypes, ({label}) => (
-              <button
-                key={label}
-                onClick={() => setSelectedFormType(label)}
-                className={`${
-                  label === selectedFormType
-                    ? 'border-indigo-500 text-white bg-indigo-400'
-                    : 'border-gray-300 text-dark'
-                } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-                {label}
-              </button>
-            ))}
-        </div>
+      <div className="flex flex-col w-auto">
+        {!isEditingMode && (
+          <>
+            <label
+              htmlFor={''}
+              className="block text-xs font-semibold leading-5 text-gray-700">
+              Select form type
+            </label>
+            <div className="w-auto flex item-center justify-start mb-4 mt-1">
+              {map(formTypes, ({label}) => (
+                <button
+                  key={label}
+                  onClick={() => setSelectedFormType(label)}
+                  className={`${
+                    label === selectedFormType
+                      ? 'border-indigo-500 text-white bg-indigo-400'
+                      : 'border-gray-300 text-dark'
+                  } w-auto focus:border-indigo-600 p-2 px-4 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-100 mr-4`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex flex-col my-2">{getForm(selectedFormType)}</div>
