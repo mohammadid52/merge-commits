@@ -65,11 +65,11 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
           <Transition
             show={builderMenuVisible}
             enter="transition duration-200"
-            enterFrom="opacity-0 transform translate-x-48"
+            enterFrom="opacity-0 transform translate-x-8"
             enterTo="opacity-100 transform translate-x-0"
             leave="transition duration-200"
             leaveFrom="opacity-100 transform translate-x-0"
-            leaveTo="opacity-0 transform translate-x-48">
+            leaveTo="opacity-0 transform translate-x-8">
             {/* Header */}
             <ClickAwayListener onClickAway={() => setBuilderMenuVisible(false)}>
               <>

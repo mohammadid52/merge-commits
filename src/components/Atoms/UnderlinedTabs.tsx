@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
@@ -12,6 +12,7 @@ interface TabsProps {
     content: React.ReactNode;
     title: string;
     icon?: React.ReactNode;
+    disabled?: boolean;
   }[];
 }
 
@@ -27,6 +28,11 @@ const UnderlinedTabs = (props: TabsProps) => {
       props.updateTab(tab, e);
     }
   };
+
+  useEffect(() => {
+    setOpenTab(activeTab);
+  }, [activeTab]);
+  
   return (
     <div className="flex flex-wrap flex-col w-full ">
       <div className="flex flex-nowrap overflow-hidden sm:overflow-x-auto flex-row mr-2 bg-white">
@@ -37,13 +43,16 @@ const UnderlinedTabs = (props: TabsProps) => {
                 changeActiveTab(tab.index, e);
               }}
               id={tab.id}
-              className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center hover:${
-                theme.borderColor[themeColor]
-              } ${theme.outlineNone} ${
-                openTab === tab.index
-                  ? `bg-gray-100 ${theme.borderColor[themeColor]}`
-                  : ''
+              className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center ${
+                tab.disabled
+                  ? 'cursor-not-allowed opacity-50 bg-gray-500 text-gray-200'
+                  : `hover:${theme.borderColor[themeColor]} ${theme.outlineNone} ${
+                      openTab === tab.index
+                        ? `bg-gray-100 ${theme.borderColor[themeColor]}`
+                        : ''
+                    }`
               }`}
+              disabled={tab.disabled}
               type="button">
               {tab.icon && (
                 <span className="w-8 h-8 flex items-center mr-4">
@@ -53,7 +62,6 @@ const UnderlinedTabs = (props: TabsProps) => {
                   </IconContext.Provider>
                 </span>
               )}
-
               {tab.title}
             </button>
           </div>

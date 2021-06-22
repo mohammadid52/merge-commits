@@ -1,12 +1,12 @@
-import React, {useContext, useState, Fragment} from 'react';
+import React, {useContext, useState} from 'react';
 import {VscNewFile} from 'react-icons/vsc';
+import {FaCopy} from 'react-icons/fa';
 import PageTile from '../common/PageTile';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {FaCopy} from 'react-icons/fa';
 import Tooltip from '../../../../Atoms/Tooltip';
 import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
 
@@ -67,29 +67,37 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
     if (isValid) {
       addNewPageHandler({
         ...inputObj,
-        pageContent:
-          copiedPageIndex > -1
-            ? pages[copiedPageIndex].pageContent.map((part: any, partIndex: number) => ({
-                ...part,
-                id: `${inputObj.id}_part_${partIndex}`,
-                partContent: part.partContent.map(
-                  (content: any, contentIndex: number) => ({
-                    ...content,
-                    id: `${inputObj.id}_part_${partIndex}_${content.type}_${
-                      part.partContent.filter(
-                        (c: any, i: number) => c.type === content.type && i < contentIndex
-                      ).length
-                    }`,
-                  })
-                ),
-              }))
-            : [],
+        pageContent:[],
       });
       closeAction();
     } else {
       return;
     }
   };
+
+  const addExistingPage = () => {
+    const id:string = `page_${pages.length + 1}`
+    addNewPageHandler({
+      ...pages[copiedPageIndex],
+      id,
+      pageContent:
+        copiedPageIndex > -1
+          ? pages[copiedPageIndex].pageContent.map((part: any, partIndex: number) => ({
+              ...part,
+              id: `${id}_part_${partIndex}`,
+              partContent: part.partContent.map((content: any, contentIndex: number) => ({
+                ...content,
+                id: `${id}_part_${partIndex}_${content.type}_${
+                  part.partContent.filter(
+                    (c: any, i: number) => c.type === content.type && i < contentIndex
+                  ).length
+                }`,
+              })),
+            }))
+          : [],
+    });
+    closeAction();
+  }
 
   const validateForm = () => {
     const {id = '', label = '', title = '', description = ''} = inputObj;
@@ -196,7 +204,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
         </div>
        */}
           <div className="py-2">
-            <div className="bg-gray-200 mb-4 p-2">
+            <div className="bg-gray-200 p-2">
               <FormInput
                 value={inputObj.id}
                 label={'Id'}
@@ -207,7 +215,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               />
             </div>
 
-            <div className="bg-gray-200 mb-4 p-2">
+            <div className="bg-gray-200 p-2">
               <FormInput
                 label={'Label'}
                 value={inputObj.label}
@@ -217,7 +225,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
                 error={errors.label}
               />
             </div>
-            <div className="bg-gray-200 mb-4 p-2">
+            <div className="bg-gray-200 p-2">
               <FormInput
                 label={'Title'}
                 value={inputObj.title}
@@ -227,7 +235,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
                 error={errors.title}
               />
             </div>
-            <div className="bg-gray-200 mb-4 p-2">
+            <div className="bg-gray-200 p-2">
               <FormInput
                 label={'Description'}
                 value={inputObj.description}
@@ -238,13 +246,16 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               />
             </div>
           </div>
-          {/* <div>
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-              onClick={handleSubmit}
-            />
-          </div> */}
+          <div className="flex mt-8 justify-center px-6 pb-4">
+            <div className="flex justify-end">
+              <Buttons
+                btnClass="py-1 px-8 text-xs ml-2"
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                type="submit"
+                onClick={handleSubmit}
+              />
+            </div>
+          </div>
         </div>
 
         {/* MIDDLE */}
@@ -276,9 +287,9 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
             <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
               This lesson
             </p>
-            <div className="mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200">
+            <div className={`mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200`}>
               {pages && pages.length
-                ? pages.map((page: any, index: number) => (
+                ? pages.slice(0,focussed === 'existing_page' ? pages.length : 3).map((page: any, index: number) => (
                     <div key={page.id} className="flex flex-col">
                       <PageTile whClass={`w-20 h-28 mt-1`} marginClass={`mx-auto`} />
                       <div className="flex mx-auto flex-col text-gray-400">
@@ -306,6 +317,17 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               <div className={`w-auto h-32 flex items-center bg-white shadow rounded`}>
                 <div className="text-center text-gray-400">Coming Soon</div>
               </div>
+            </div>
+          </div>
+          <div className="flex mt-8 justify-center px-6 pb-4">
+            <div className="flex justify-end">
+              <Buttons
+                btnClass="py-1 px-8 text-xs ml-2"
+                disabled={copiedPageIndex < 0}
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                type="submit"
+                onClick={addExistingPage}
+              />
             </div>
           </div>
         </div>
@@ -354,9 +376,19 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             </div>
           </div>
+          <div className="flex mt-8 justify-center px-6 pb-4">
+            <div className="flex justify-end">
+              <Buttons
+                btnClass="py-1 px-8 text-xs ml-2"
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                type="submit"
+                onClick={handleSubmit}
+              />
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex mt-8 justify-center px-6 pb-4">
+      {/* <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
@@ -371,7 +403,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
             onClick={handleSubmit}
           />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
