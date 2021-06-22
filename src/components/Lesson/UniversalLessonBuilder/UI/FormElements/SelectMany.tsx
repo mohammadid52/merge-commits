@@ -49,7 +49,7 @@ const SelectMany = ({
 
   const onManyOptionsCreate = () => {
     const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_`;
+    const partContentId: string = `${pageContentId}_optionInput`;
 
     const modifiedOptions = (opt: any) =>
       map(opt, (o) => ({

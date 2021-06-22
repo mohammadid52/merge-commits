@@ -1,4 +1,4 @@
-import {remove, update} from 'lodash';
+import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
 import FormInput from '../../../../Atoms/Form/FormInput';
@@ -7,6 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 import Buttons from '../../../../Atoms/Buttons';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {FORM_TYPES} from '../common/constants';
 
 const Link = ({
   numbered,
@@ -20,13 +21,6 @@ const Link = ({
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
 
-  const validateUrl = (inputUrl: string) => {
-    const isYoutubeLink = inputUrl.match(
-      /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/g
-    );
-    return isYoutubeLink === null;
-  };
-
   const onChange = (e: any, idx: number, label: boolean = true) => {
     update(list[idx], `${label ? 'label' : 'value'}`, () => e.target.value);
     setList([...list]);
@@ -37,73 +31,70 @@ const Link = ({
   };
 
   const addOneLinkField = () => {
-    setList([...list, {id: uuidv4(), title: '', placeholder: ''}]);
+    setList([...list, {id: uuidv4(), label: '', value: ''}]);
   };
 
   const onLinkCreate = () => {
-    const validLinkArray = list.map((field: PartContentSub, idx: number) =>
-      validateUrl(field.value)
-    );
-    if (!validLinkArray.includes(true)) {
-      if (isEditingMode) {
-        updateContent('', '', 'links', list, 0);
-      } else {
-        createNewContent('', '', 'links', list, 0);
-      }
-      // close modal after saving
-      closeAction();
-      // clear fields
-      // setInputFieldsArray(initialInputFieldsState);
+    const type: string = `form-${numbered ? 'numbered' : 'default'}`;
+    const pageContentId: string = `${uuidv4()}_`;
+    const partContentId: string = `${pageContentId}_link`;
+
+    const inputObjArray = map(list, (d: any) => {
+      return {
+        id: partContentId,
+        type: FORM_TYPES.LINK,
+        label: d.label,
+        value: d.value,
+      };
+    });
+
+    if (isEditingMode) {
+      updateContent('', '', type, inputObjArray, 0);
     } else {
-      // setInputErrorArray(validLinkArray);
+      createNewContent('', '', type, inputObjArray, 0);
     }
+    // close modal after saving
+    closeAction();
   };
 
   return (
     <>
-      <div className="grid grid-cols-2 my-2 gap-4">
-        <div className="col-span-2">
-          {list.map((inputObj: PartContentSub, idx: number) => {
-            const shouldShowActions = idx !== list.length - 1;
+      <div className="">
+        {list.map((inputObj: PartContentSub, idx: number) => {
+          const shouldShowActions = idx !== list.length - 1;
 
-            return (
-              <div className={'my-2 px-2'} key={`keyword_${idx}`}>
-                <div className="mb-2">
-                  <FormInput
-                    onChange={(e) => onChange(e, idx)}
-                    name={'label'}
-                    value={inputObj.label}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Link Title`}
-                    placeHolder={`My website`}
-                  />
-                </div>
-                <div className="mb-2">
-                  <FormInput
-                    onChange={(e) => onChange(e, idx, false)}
-                    value={inputObj?.value}
-                    label={`Link Url`}
-                    name={'value'}
-                    placeHolder={`www.mywebsite.com`}
-                  />
-                </div>
-                {/* {inputObj?.value && !validateUrl(inputObj?.value) ? null : (
-                <p className={`text-red-400 text-xs`}>
-                  Please enter a valid Youtube link :)
-                </p>
-              )} */}
-
-                <RemoveInput
-                  idx={idx}
-                  inputId={inputObj.id}
-                  removeItemFromList={removeItemFromList}
+          return (
+            <div className={'mb-2 px-2'} key={`keyword_${idx}`}>
+              <div className="mb-2">
+                <FormInput
+                  onChange={(e) => onChange(e, idx)}
+                  name={'label'}
+                  value={inputObj.label}
+                  label={`${numbered ? `${idx + 1}. ` : ''}Link Title`}
+                  placeHolder={`Enter link title`}
                 />
-                {shouldShowActions && (
-                  <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
-                )}
               </div>
-            );
-          })}
-        </div>
+              <div className="mb-2">
+                <FormInput
+                  onChange={(e) => onChange(e, idx, false)}
+                  value={inputObj?.value}
+                  label={`Link Placeholder`}
+                  name={'value'}
+                  placeHolder={`Enter link placeholder`}
+                />
+              </div>
+
+              <RemoveInput
+                idx={idx}
+                inputId={inputObj.id}
+                removeItemFromList={removeItemFromList}
+              />
+              {shouldShowActions && (
+                <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="flex mt-8 justify-between px-6 pb-4">
         <div className="flex items-center w-auto">

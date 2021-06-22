@@ -1,6 +1,6 @@
 export const FORM_TYPES = {
   TEXT: 'text-input',
-  LINK: 'links',
+  LINK: 'link-input',
   ATTACHMENTS: 'attachments',
   TEXTAREA: 'text-area',
   EMOJI: 'emoji-input',

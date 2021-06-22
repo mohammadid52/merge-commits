@@ -2,15 +2,10 @@ import React, {useContext, useState, useEffect} from 'react';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {map, remove, update} from 'lodash';
-import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
+import {map} from 'lodash';
 
-import {getAsset} from '../../../../../assets';
 import {v4 as uuidv4} from 'uuid';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import RemoveInput from '../common/RemoveInput';
 import {
   FORM_TYPES,
   INPUT,
@@ -24,8 +19,7 @@ import {
 import TextInput from '../FormElements/TextInput';
 import SelectOne from '../FormElements/SelectOne';
 import SelectMany from '../FormElements/SelectMany';
-import InputWithEmoji from '../FormElements/InputWithEmoji';
-import Link from '../FormElements/Link';
+import Attachments from '../FormElements/Attachments';
 
 interface InputModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -122,9 +116,12 @@ const InputModalComponent = ({
     },
   ]);
 
-  const [linkList, setLinkList] = useState([
-    {id: uuidv4(), title: '', placeholder: ''},
-    {id: uuidv4(), title: '', placeholder: ''},
+  const [linkList, setLinkList] = useState([{id: uuidv4(), label: '', value: ''}]);
+  const [attachmentList, setAttachmentList] = useState([
+    {id: uuidv4(), label: '', value: ''},
+  ]);
+  const [datePickerList, setDatePickerList] = useState([
+    {id: uuidv4(), label: '', value: ''},
   ]);
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST ENDS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -157,8 +154,7 @@ const InputModalComponent = ({
     switch (type) {
       case INPUT:
         return <TextInput {...commonFormProps} list={inputList} setList={setInputList} />;
-      case LINK:
-        return <Link {...commonFormProps} list={linkList} setList={setLinkList} />;
+
       case SELECT_ONE:
         return <SelectOne {...commonFormProps} list={radioList} setList={setRadioList} />;
       case SELECT_MANY:
@@ -169,13 +165,36 @@ const InputModalComponent = ({
             setList={setManyOptionList}
           />
         );
-
+      case ATTACHMENTS:
+      case LINK:
+      case DATE_PICKER:
       case INPUT_WITH_EMOJI:
         return (
-          <InputWithEmoji
+          <Attachments
             {...commonFormProps}
-            list={emojiInputList}
-            setList={setEmojiInputList}
+            selectedForm={type}
+            list={
+              type === ATTACHMENTS
+                ? attachmentList
+                : type === DATE_PICKER
+                ? datePickerList
+                : type === INPUT_WITH_EMOJI
+                ? emojiInputList
+                : type === LINK
+                ? linkList
+                : attachmentList
+            }
+            setList={
+              type === ATTACHMENTS
+                ? setAttachmentList
+                : type === DATE_PICKER
+                ? setDatePickerList
+                : type === INPUT_WITH_EMOJI
+                ? setEmojiInputList
+                : type === LINK
+                ? setLinkList
+                : setAttachmentList
+            }
           />
         );
     }

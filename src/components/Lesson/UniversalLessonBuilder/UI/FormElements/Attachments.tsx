@@ -5,9 +5,15 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {v4 as uuidv4} from 'uuid';
-import {FORM_TYPES} from '../common/constants';
+import {
+  ATTACHMENTS,
+  DATE_PICKER,
+  FORM_TYPES,
+  INPUT_WITH_EMOJI,
+  LINK,
+} from '../common/constants';
 
-const InputWithEmoji = ({
+const Attachments = ({
   closeAction,
   numbered,
   list,
@@ -15,17 +21,18 @@ const InputWithEmoji = ({
   isEditingMode,
   setNumbered,
   updateContent,
+  selectedForm,
   createNewContent,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
 
   const addOneInputField = () => {
-    setList([...list, {id: uuidv4(), title: '', placeholder: ''}]);
+    setList([...list, {id: uuidv4(), label: '', value: ''}]);
   };
 
-  const onChange = (e: any, idx: number, placeholder: boolean = false) => {
+  const onChange = (e: any, idx: number, label: boolean = true) => {
     const {value} = e.target;
-    update(list[idx], placeholder ? `placeholder` : 'title', () => value);
+    update(list[idx], label ? `label` : 'value', () => value);
     setList([...list]);
   };
 
@@ -36,14 +43,31 @@ const InputWithEmoji = ({
 
   const onFormCreate = () => {
     const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_emojiInput`;
+    const partContentId: string = `${pageContentId}_${
+      selectedForm === ATTACHMENTS
+        ? 'attachments'
+        : selectedForm === DATE_PICKER
+        ? 'datePicker'
+        : selectedForm === INPUT_WITH_EMOJI
+        ? 'emojiInput'
+        : selectedForm === LINK
+        ? 'linkInput'
+        : 'attachments'
+    }`;
 
     const inputObjArray = map(list, (d: any) => {
       return {
         id: partContentId,
-        type: FORM_TYPES.EMOJI,
-        label: d.title,
-        value: d.placeholder,
+        type:
+          selectedForm === ATTACHMENTS
+            ? FORM_TYPES.ATTACHMENTS
+            : selectedForm === INPUT_WITH_EMOJI
+            ? FORM_TYPES.EMOJI
+            : selectedForm === LINK
+            ? FORM_TYPES.LINK
+            : FORM_TYPES.DATE_PICKER,
+        label: d.label,
+        value: d.value,
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
@@ -56,6 +80,18 @@ const InputWithEmoji = ({
     // close modal after saving
     closeAction();
   };
+
+  const title =
+    selectedForm === ATTACHMENTS
+      ? ATTACHMENTS
+      : selectedForm === INPUT_WITH_EMOJI
+      ? INPUT_WITH_EMOJI
+      : selectedForm === DATE_PICKER
+      ? DATE_PICKER
+      : selectedForm === LINK
+      ? LINK
+      : '';
+
   return (
     <>
       <div>
@@ -63,24 +99,24 @@ const InputWithEmoji = ({
           const shouldShowActions = idx !== list.length - 1;
           return (
             <div key={input.id} className="flex flex-col input-container">
-              <div className="mb-4 px-2">
+              <div className="my-2 px-2">
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
+                    label={`${numbered ? `${idx + 1}. ` : ''}${title} Title`}
                     isRequired
-                    value={input.title}
+                    value={input.label}
                     id={`formFieldInput_${input.id}`}
-                    placeHolder={`Enter Form Field Title`}
+                    placeHolder={`Enter Title`}
                   />
                 </div>
                 <div>
                   <FormInput
-                    onChange={(e) => onChange(e, idx, true)}
-                    label={'Placeholder'}
-                    value={input.placeholder}
+                    onChange={(e) => onChange(e, idx, false)}
+                    label={`${title} Placeholder`}
+                    value={input.value}
                     id={`placeholder_${input.id}`}
-                    placeHolder={`Enter placeholder`}
+                    placeHolder={`Enter Placeholder`}
                   />
                 </div>
                 {idx !== 0 && (
@@ -135,4 +171,4 @@ const InputWithEmoji = ({
   );
 };
 
-export default InputWithEmoji;
+export default Attachments;

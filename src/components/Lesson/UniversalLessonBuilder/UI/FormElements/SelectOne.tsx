@@ -49,7 +49,7 @@ const SelectOne = ({
 
   const onRadioCreate = () => {
     const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_`;
+    const partContentId: string = `${pageContentId}_radioInput`;
 
     const modifiedOptions = (opt: any) =>
       map(opt, (o) => ({

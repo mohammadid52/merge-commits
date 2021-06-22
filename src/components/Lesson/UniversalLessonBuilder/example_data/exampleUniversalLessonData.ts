@@ -330,6 +330,24 @@ export const exampleUniversalLesson: UniversalLesson = {
                 },
               ],
             },
+            {
+              id: 'page_3_part_0_attachments-0',
+              type: 'attachments',
+              value: [
+                {
+                  id: 'attachments1',
+                  type: '',
+                  label: 'My Photo',
+                  value: 'my_photo_url.img',
+                },
+                {
+                  id: 'attachments2',
+                  type: '',
+                  label: 'My Photo',
+                  value: 'my_photo_url.img',
+                },
+              ],
+            },
           ],
         },
       ],
