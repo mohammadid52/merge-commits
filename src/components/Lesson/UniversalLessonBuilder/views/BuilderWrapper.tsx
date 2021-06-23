@@ -516,16 +516,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setBuilderMenuVisible={setBuilderMenuVisible}
       />
 
-      {/*<EditPanel*/}
-      {/*  selectedPageDetails={selectedPageDetails}*/}
-      {/*  setSelectedPageDetails={setSelectedPageDetails}*/}
-      {/*  selectedPagePartDetails={selectedPagePartDetails}*/}
-      {/*  setSelectedPagePartDetails={setSelectedPagePartDetails}*/}
-      {/*  selectedPartContentDetails={selectedPartContentDetails}*/}
-      {/*  setSelectedPartContentDetails={setSelectedPartContentDetails}*/}
-      {/*  initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}*/}
-      {/*/>*/}
-
       <CoreBuilder
         mode={mode}
         createNewBlockULBHandler={createNewBlockULBHandler}

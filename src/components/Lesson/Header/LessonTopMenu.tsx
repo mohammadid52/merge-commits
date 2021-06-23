@@ -64,6 +64,9 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
         className={` ${theme.toolbar.bg} shadow-1 h-16 w-full flex justify-center items-center content-center py-4 px-6`}>
         <div className="w-full flex flex-row items-center justify-between">
           <div className="flex flex-row justify-center">
+
+
+
             {/* BACK BUTTON */}
 
             <div

@@ -6,6 +6,8 @@ import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import Foot from './Foot/Foot';
+import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -62,20 +64,14 @@ const LessonApp = () => {
         />
         {/*<NotificationBar />*/}
 
-        <div
-          className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${
-            overlay === '' ? 'z-0' : 'z-50'
-          }`}>
-          <NotesForm overlay={overlay} setOverlay={setOverlay} />
-        </div>
 
         <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
           {/*{lessonDataLoaded && <Body />}*/}
           {/* ADD LESSONWRAPPER HERE */}
-          <h2>Lesson Wrapper goes hErE</h2>
+          <CoreUniversalLesson/>
         </ErrorBoundary>
 
-        {/*{lessonDataLoaded && <Foot />}*/}
+        {lessonDataLoaded && <Foot />}
       </div>
     </>
   );

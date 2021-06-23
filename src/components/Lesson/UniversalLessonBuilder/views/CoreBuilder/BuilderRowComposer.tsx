@@ -6,29 +6,30 @@ import {
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
-} from '../../../interfaces/UniversalLessonInterfaces';
-import {RowComposerProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
-import Buttons from '../../Atoms/Buttons';
-import {StringifyBlock} from './Blocks/StringifyBlock';
-import {RowWrapper} from './RowWrapper';
-import {HeaderBlock} from './Blocks/HeaderBlock';
-import {ParagraphBlock} from './Blocks/ParagraphBlock';
-import {FormBlock} from './Blocks/FormBlock';
-import {VideoBlock} from './Blocks/VideoBlock';
-import EditOverlayBlock from './UtilityBlocks/EditOverlayBlock';
-import {AddNewBlock} from './UtilityBlocks/AddNewBlock';
-import {AddNewBlockMini} from './UtilityBlocks/AddNewBlockMini';
-import TagBlock from './UtilityBlocks/TagBlock';
-import {JumbotronBlock} from './Blocks/JumbotronBlock';
-import {ImageBlock} from './Blocks/ImageBlock';
-import KeywordBlock from './Blocks/KeywordBlock';
-import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import PoemBlock from './Blocks/PoemBlock';
-import HighlighterBlock from './Blocks/HighlighterBlock';
-import LinksBlock from './Blocks/LinksBlock';
+} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {RowComposerProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import Buttons from '../../../../Atoms/Buttons';
+import {StringifyBlock} from '../../../UniversalLessonBlockComponents/Blocks/StringifyBlock';
+import {BuilderRowWrapper} from './BuilderRowWrapper';
+import {HeaderBlock} from '../../../UniversalLessonBlockComponents/Blocks/HeaderBlock';
+import {ParagraphBlock} from '../../../UniversalLessonBlockComponents/Blocks/ParagraphBlock';
+import {FormBlock} from '../../../UniversalLessonBlockComponents/Blocks/FormBlock';
+import {VideoBlock} from '../../../UniversalLessonBlockComponents/Blocks/VideoBlock';
+import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
+import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
+import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
+import TagBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/TagBlock';
+import {JumbotronBlock} from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock';
+import {ImageBlock} from '../../../UniversalLessonBlockComponents/Blocks/ImageBlock';
+import KeywordBlock from '../../../UniversalLessonBlockComponents/Blocks/KeywordBlock';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import PoemBlock from '../../../UniversalLessonBlockComponents/Blocks/PoemBlock';
+import HighlighterBlock from '../../../UniversalLessonBlockComponents/Blocks/HighlighterBlock';
+import LinksBlock from '../../../UniversalLessonBlockComponents/Blocks/LinksBlock';
 import {findIndex, update} from 'lodash';
+import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 
-const RowComposer = (props: RowComposerProps) => {
+const BuilderRowComposer = (props: RowComposerProps) => {
   const {
     mode,
     createNewBlockULBHandler,
@@ -74,74 +75,6 @@ const RowComposer = (props: RowComposerProps) => {
     setUniversalLessonDetails({...universalLessonDetails});
   };
 
-  const composePartContent = (
-    id: string,
-    type: string,
-    value: any,
-    inputKey: string,
-    classString: string = '',
-    pagePartId: string
-  ) => {
-    if (type.includes('jumbotron')) {
-      return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
-    } else if (type.includes('keyword')) {
-      return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
-    } else if (type.includes('highlighter')) {
-      return <HighlighterBlock id={id} type={type} value={value} mode={mode} />;
-    } else if (type.includes('poem')) {
-      return <PoemBlock id={id} type={type} value={value} mode={mode} />;
-    } else if (type.includes('links')) {
-      return <LinksBlock id={id} type={type} value={value} mode={mode} />;
-    } else if (type.includes('header')) {
-      return (
-        <HeaderBlock
-          id={id}
-          type={type}
-          classString={classString}
-          value={value}
-          mode={mode}
-          updateOnSave={updateOnSave}
-          pagePartId={pagePartId}
-        />
-      );
-    } else if (type.includes('paragraph')) {
-      return (
-        <ParagraphBlock
-          updateOnSave={updateOnSave}
-          id={id}
-          pagePartId={pagePartId}
-          type={type}
-          value={value || []}
-          mode={mode}
-        />
-      );
-    } else if (type.includes('form')) {
-      return <FormBlock id={id} value={value} mode={mode} />;
-    } else if (type.includes('image')) {
-      return (
-        <ImageBlock
-          key={inputKey}
-          id={id}
-          dataIdAttribute={inputKey}
-          value={value[0]}
-          mode={mode}
-        />
-      );
-    } else if (type.includes('video')) {
-      return (
-        <VideoBlock
-          key={inputKey}
-          id={id}
-          dataIdAttribute={inputKey}
-          value={value[0]}
-          mode={mode}
-        />
-      );
-    } else {
-      return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
-    }
-  };
-
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
@@ -156,7 +89,7 @@ const RowComposer = (props: RowComposerProps) => {
         handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
         createNewBlockULBHandler={createNewBlockULBHandler}
         updateFromULBHandler={updateFromULBHandler}>
-        <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+        <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
           <AddNewBlock
             idx={selectedPageDetails.pageContent.length - 1}
             mode={mode}
@@ -169,7 +102,7 @@ const RowComposer = (props: RowComposerProps) => {
               )
             }
           />
-        </RowWrapper>
+        </BuilderRowWrapper>
       </EditOverlayBlock>
     ) : (
       <div />
@@ -239,7 +172,7 @@ const RowComposer = (props: RowComposerProps) => {
                 editedID={editedID}
                 handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
                 section="pageContent">
-                <RowWrapper
+                <BuilderRowWrapper
                   mode={mode}
                   hasContent={pagePart.partContent.length > 0}
                   contentID={pagePart.id}
@@ -307,8 +240,10 @@ const RowComposer = (props: RowComposerProps) => {
                                                 content.value,
                                                 `pp_${idx}_pc_${idx2}`,
                                                 content.class,
-                                                pagePart.id
-                                              )}
+                                                pagePart.id,
+                                                mode,
+                                                updateOnSave)
+                                              }
                                             </div>
                                           ) : (
                                             <AddNewBlock
@@ -416,7 +351,7 @@ const RowComposer = (props: RowComposerProps) => {
                       />
                     </div>
                   )}
-                </RowWrapper>
+                </BuilderRowWrapper>
               </EditOverlayBlock>
 
               {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
@@ -445,13 +380,13 @@ const RowComposer = (props: RowComposerProps) => {
             handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
             createNewBlockULBHandler={createNewBlockULBHandler}
             updateFromULBHandler={updateFromULBHandler}>
-            <RowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+            <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
               <AddNewBlock
                 idx={-1}
                 mode={mode}
                 handleModalPopToggle={handleModalPopToggle}
               />
-            </RowWrapper>
+            </BuilderRowWrapper>
           </EditOverlayBlock>
         </>
       )}
@@ -459,4 +394,4 @@ const RowComposer = (props: RowComposerProps) => {
   );
 };
 
-export default RowComposer;
+export default BuilderRowComposer;
