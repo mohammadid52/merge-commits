@@ -109,7 +109,12 @@ const AddContentDialog = ({setAddContentModal, hideAllModals}: AddContentDialog)
           <h2 className={`${colHeaderTextClass}`}>User Interaction</h2>
           <div className={`h-full w-full`}>
             <div className={`grid grid-cols-1 gap-2 h-auto w-full`}>
-              <div className={`${buttonClass}`}>
+              <div
+                onClick={() => {
+                  hideAllModals();
+                  setAddContentModal({show: true, type: 'questions'});
+                }}
+                className={`${buttonClass}`}>
                 <RiSurveyLine className="text-gray-800 text-6xl" />
               </div>
               <p className={`text-center text-sm text-gray-600`}>Checkpoint</p>

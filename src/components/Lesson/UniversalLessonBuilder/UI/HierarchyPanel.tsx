@@ -9,6 +9,7 @@ import {
 } from '../../../../interfaces/UniversalLessonInterfaces';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import ClickAwayListener from 'react-click-away-listener';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 
 interface HierarchyPanelProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -47,6 +48,7 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
       setHierarchyVisible(false);
     }
   }, [selectedPageID]);
+  const {theme} = useULBContext();
 
   return (
     <div
@@ -64,7 +66,7 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
         <ClickAwayListener onClickAway={() => setHierarchyVisible(false)}>
           <div className="m-2 ">
             {/* Header */}
-            <div className="relative text-white bg-gray-700 py-2 rounded-t-md">
+            <div className={`${theme.bg} relative text-white  py-2 rounded-t-md`}>
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
                 <div className="w-full border-t border-gray-400"></div>
               </div>

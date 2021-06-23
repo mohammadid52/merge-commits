@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 
-import RowComposer from '../../UniversalLessonBlockComponents/RowComposer';
+import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {
   PartContent,
   UniversalLesson,
@@ -17,7 +17,7 @@ import ColorPicker from '../UI/ColorPicker/ColorPicker';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 
 interface CoreBuilderProps extends ULBSelectionProps {
-  mode: 'building' | 'viewing';
+  mode: 'building' | 'viewing' | 'lesson';
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -78,7 +78,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       }`}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
-          <RowComposer
+          <BuilderRowComposer
             mode={mode}
             createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}

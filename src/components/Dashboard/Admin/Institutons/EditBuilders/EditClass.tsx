@@ -133,7 +133,7 @@ const EditClass = (props: EditClassProps) => {
         authId: item.authId || '',
       }));
       setClassStudents(selectedStudents);
-      setStudents(students);
+      setStudents(sortStudents(students));
       setLoading(false);
     } catch (err) {
       console.log('err', err);
@@ -163,7 +163,11 @@ const EditClass = (props: EditClassProps) => {
       email: item.email || '',
       authId: item.authId || '',
     }));
-    setFilteredStudents(mappedStudents)
+    setFilteredStudents(sortStudents(mappedStudents))
+  }
+
+  const sortStudents = (studentList: any) => {
+    return studentList.sort((personA: any, personB: any) => personA.name[0] < personB.name[0] ? -1 : 1)
   }
 
   const clearFilteredStudents = () => {

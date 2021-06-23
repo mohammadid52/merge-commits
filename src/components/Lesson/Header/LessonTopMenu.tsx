@@ -5,34 +5,43 @@ import ProgressBar from './ProgressBar/ProgressBar';
 
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 const LessonTopMenu = (props: {handlePopup: () => void}) => {
-  const {state, dispatch, theme} = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
-  const userAtEnd = state.currentPage + 1 === state.pages.length;
 
-  const [barType, setBarType] = useState<string>('');
+  //  NAVIGATION CONSTANTS
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
 
+  //  ENABLE NAVIGATION DEPENDING ON PAGE POSITION
+  const [canContinue, setCanContinue] = useState<boolean>(false);
+  const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
   useEffect(() => {
-    state.data.lesson.type && setBarType(state.data.lesson.type);
-  }, [state.data.lesson.type]);
 
-  useEffect(() => {
-    if (state.pages[state.currentPage + 1]) {
-      if (state.pages[state.currentPage + 1].open) {
-        // console.log(state.pages);
-        return dispatch({type: 'CAN_CONTINUE'});
+    if (PAGES) {
+      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1].open;
+      const USER_AT_END = CURRENT_PAGE === PAGES.length - 1;
+
+      if (CAN_CONTINUE && !USER_AT_END) {
+        setCanContinue(true);
+      } else if (CAN_CONTINUE && USER_AT_END) {
+        setCanContinue(true);
+        setUserAtEnd(true);
       }
-      return dispatch({type: 'NO_CONTINUE'});
     }
-    return dispatch({type: 'NO_CONTINUE'});
-  }, [state.pages, state.currentPage]);
+  }, [lessonState.lessonData]);
 
+  //  NAVIGATION CONTROLS
   const handleForward = () => {
-    if (state.canContinue && state.currentPage < state.pages.length - 1) {
-      history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
-      dispatch({type: 'PAGE_FORWARD'});
+    if (canContinue && !userAtEnd) {
+      history.push(`${match.url}/${CURRENT_PAGE+1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: CURRENT_PAGE+1,
+      });
     }
     if (userAtEnd) {
       props.handlePopup();
@@ -40,9 +49,12 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
   };
 
   const handleBack = () => {
-    if (state.currentPage > 0) {
-      history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
-      dispatch({type: 'PAGE_BACK'});
+    if (CURRENT_PAGE > 0) {
+      history.push(`${match.url}/${CURRENT_PAGE-1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: CURRENT_PAGE-1,
+      });
     }
   };
 
@@ -52,11 +64,14 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
         className={` ${theme.toolbar.bg} shadow-1 h-16 w-full flex justify-center items-center content-center py-4 px-6`}>
         <div className="w-full flex flex-row items-center justify-between">
           <div className="flex flex-row justify-center">
+
+
+
             {/* BACK BUTTON */}
 
             <div
               className={`mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.currentPage > 0
+                lessonState.currentPage > 0
                   ? 'cursor-pointer bg-dark-red'
                   : 'cursor-default bg-darker-gray'
               } }`}
@@ -73,13 +88,13 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar barType={barType} />
+            <ProgressBar />
 
             {/* FORWARD BUTTON */}
 
             <div
               className={`ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.canContinue || userAtEnd
+                canContinue || userAtEnd
                   ? 'bg-sea-green cursor-pointer'
                   : 'bg-dark-gray cursor-default'
               } `}
@@ -98,7 +113,7 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
       </div>
 
       {/* ICON LABEL HOVER BAR */}
-      {barType === 'lesson' ? <div className={`w-full h-6 bg-darker-gray`} /> : null}
+      <div className={`w-full h-6 bg-darker-gray`} />
     </>
   );
 };

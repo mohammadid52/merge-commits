@@ -128,7 +128,7 @@ export const exampleUniversalLesson: UniversalLesson = {
     },
     {
       enabled: true,
-      open: false,
+      open: true,
       active: false,
       id: 'page_2',
       label: 'Story',

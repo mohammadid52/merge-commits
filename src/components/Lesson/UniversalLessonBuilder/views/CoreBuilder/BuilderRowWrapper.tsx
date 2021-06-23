@@ -1,8 +1,8 @@
-import React from 'react';
-import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import React, { useEffect } from 'react';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-export const RowWrapper = (props: RowWrapperProps) => {
+export const BuilderRowWrapper = (props: RowWrapperProps) => {
   const {
     mode,
     hasContent,
@@ -14,9 +14,11 @@ export const RowWrapper = (props: RowWrapperProps) => {
   } = props;
 
   const viewModeClass = ``;
-  const {previewMode} = useULBContext();
+  const {previewMode} = mode !== 'lesson' ? useULBContext() : true;
   const buildModeClass = `border-0 border-dashed border-gray-400`;
-  
+
+  useEffect(()=>{console.log('row wrappwer ---',children)},[children])
+
   return (
     <div
       id={contentID}
@@ -35,4 +37,4 @@ export const RowWrapper = (props: RowWrapperProps) => {
       </div>
     </div>
   );
-}
+};

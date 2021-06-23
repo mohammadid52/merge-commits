@@ -4,6 +4,8 @@ import {globalState} from '../state/GlobalState';
 import {getClientKey} from '../utilities/strings';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
+import {lessonReducer} from '../reducers/LessonReducer';
+import {lessonState as lessonStateObject} from '../state/LessonState';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -12,8 +14,7 @@ export const standardTheme = {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
-  banner:
-    '',
+  banner: '',
   section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',
@@ -139,15 +140,18 @@ interface GlobalProps {
 export const GlobalContext = React.createContext(null);
 
 export const GlobalContextProvider = ({children}: GlobalProps) => {
+  /**
+   * state,dispatch --> Used in dashboard etc.
+   * lessonState, lessonStateDispatch --> Used in lesson state
+   */
   const [state, dispatch] = useReducer(globalReducer, globalState);
+  const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
 
   const theme = standardTheme;
   const globalStateAccess = state;
   const userLanguage = state.user.language || 'EN';
   const uLang = userLanguage;
   const clientKey = getClientKey();
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     if (state.user && state.user.location && state.user.location.length > 0) {
@@ -182,6 +186,8 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         theme,
         state,
         dispatch,
+        lessonState,
+        lessonDispatch,
         globalStateAccess,
         userLanguage,
         uLang,
