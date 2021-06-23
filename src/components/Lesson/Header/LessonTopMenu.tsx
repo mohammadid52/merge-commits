@@ -5,34 +5,31 @@ import ProgressBar from './ProgressBar/ProgressBar';
 
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 const LessonTopMenu = (props: {handlePopup: () => void}) => {
-  const {state, dispatch, theme} = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
-  const userAtEnd = state.currentPage + 1 === state.pages.length;
 
-  const [barType, setBarType] = useState<string>('');
-
-  useEffect(() => {
-    state.data.lesson.type && setBarType(state.data.lesson.type);
-  }, [state.data.lesson.type]);
-
-  useEffect(() => {
-    if (state.pages[state.currentPage + 1]) {
-      if (state.pages[state.currentPage + 1].open) {
-        // console.log(state.pages);
-        return dispatch({type: 'CAN_CONTINUE'});
-      }
-      return dispatch({type: 'NO_CONTINUE'});
+  const [canContinue, setCanContinue] = useState<boolean>(false);
+  const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
+  useEffect(()=>{
+    if(lessonState.lessonData.currentPage){
+      const PAGES = lessonState.lessonData.lessonPlan;
+      const CURRENT_PAGE = lessonState.lessonData.currentPage;
+      const CAN_CONTINUE = PAGES && CURRENT_PAGE ? PAGES[CURRENT_PAGE+1].open : false;
+      const USER_AT_END = PAGES && CURRENT_PAGE ? CURRENT_PAGE < (PAGES.length-1) : false;
     }
-    return dispatch({type: 'NO_CONTINUE'});
-  }, [state.pages, state.currentPage]);
+  },[lessonState.lessonData])
+
+
+
 
   const handleForward = () => {
-    if (state.canContinue && state.currentPage < state.pages.length - 1) {
-      history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
-      dispatch({type: 'PAGE_FORWARD'});
+    if (canContinue && !userAtEnd) {
+      history.push(`${match.url}/${lessonState.lessonData.currentPage}`);
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: (lessonState.lessonData.currentPage+1)});
     }
     if (userAtEnd) {
       props.handlePopup();
@@ -73,13 +70,13 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar barType={barType} />
+            <ProgressBar />
 
             {/* FORWARD BUTTON */}
 
             <div
               className={`ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.canContinue || userAtEnd
+                canContinue || userAtEnd
                   ? 'bg-sea-green cursor-pointer'
                   : 'bg-dark-gray cursor-default'
               } `}
@@ -98,7 +95,7 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
       </div>
 
       {/* ICON LABEL HOVER BAR */}
-      {barType === 'lesson' ? <div className={`w-full h-6 bg-darker-gray`} /> : null}
+      <div className={`w-full h-6 bg-darker-gray`} />
     </>
   );
 };

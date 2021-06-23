@@ -5,7 +5,7 @@ import {getClientKey} from '../utilities/strings';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 import {lessonReducer} from '../reducers/LessonReducer';
-import {lessonState} from '../state/LessonState';
+import {lessonState as lessonStateObject} from '../state/LessonState';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -142,10 +142,10 @@ export const GlobalContext = React.createContext(null);
 export const GlobalContextProvider = ({children}: GlobalProps) => {
   /**
    * state,dispatch --> Used in dashboard etc.
-   * lState, lDispatch --> Used in lesson state
+   * lessonState, lessonStateDispatch --> Used in lesson state
    */
   const [state, dispatch] = useReducer(globalReducer, globalState);
-  const [lState, lDispatch] = useReducer(lessonReducer, lessonState);
+  const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
 
   const theme = standardTheme;
   const globalStateAccess = state;
@@ -186,8 +186,8 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         theme,
         state,
         dispatch,
-        lState,
-        lDispatch,
+        lessonState,
+        lessonDispatch,
         globalStateAccess,
         userLanguage,
         uLang,

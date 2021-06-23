@@ -6,11 +6,10 @@ import { GlobalContext } from '../../contexts/GlobalContext';
 
 type LabelProps = {
   label: string;
-  counter?: number;
 };
 
 const FooterLabels = (props: LabelProps) => {
-  const { label, counter } = props;
+  const { label } = props;
 
   const { clientKey, userLanguage } = useContext(GlobalContext);
   const { lessonPlannerDict } = useDictionary(clientKey);
@@ -31,7 +30,6 @@ const FooterLabels = (props: LabelProps) => {
   return (
     <div className='whitespace-pre'>
       {labelSwitch(label)}
-      {counter}
     </div>
   );
 };

@@ -19,6 +19,10 @@ export type LessonActions =
       payload: UniversalLessonStudentData;
     }
   | {
+      type: 'SET_CURRENT_PAGE';
+      payload: number;
+    }
+  | {
       type: 'CLEANUP';
       payload: '';
     };
@@ -38,6 +42,8 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         studentData: action.payload,
       };
+    case 'SET_CURRENT_PAGE':
+      return {...state, currentPage: action.payload};
     case 'CLEANUP':
       return lessonState;
     default:

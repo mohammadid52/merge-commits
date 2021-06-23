@@ -63,7 +63,7 @@ const useStudentTimer = (inputs?: inputs) => {
    */
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
-    const isLesson = state.data.lesson.type === 'lesson';
+    const isLesson = false;
     if (isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
@@ -98,7 +98,7 @@ const useStudentTimer = (inputs?: inputs) => {
   // COMPONENT CHANGE --> save after 60 secs
   // COMPONENT CHANGE --> checkpoint in lesson && lesson
   useEffect(() => {
-    const isLesson = state.data.lesson.type === 'lesson';
+    const isLesson = false;
     if (isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
