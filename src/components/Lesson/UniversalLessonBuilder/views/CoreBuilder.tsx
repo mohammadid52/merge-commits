@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 
-import RowComposer from '../../UniversalLessonBlockComponents/RowComposer';
+import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {
   PartContent,
   UniversalLesson,
@@ -79,7 +79,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       }`}>
       <div className={`w-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
-          <RowComposer
+          <BuilderRowComposer
             mode={mode}
             createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}

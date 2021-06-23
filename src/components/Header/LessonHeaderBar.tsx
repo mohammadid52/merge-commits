@@ -1,30 +1,29 @@
-import React, { SetStateAction, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
-import { LessonContext } from '../../contexts/LessonContext';
 import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
-import SurveyTopMenu from '../Lesson/Header/SurveyTopMenu';
 import { LessonHeaderBarProps } from '../../interfaces/LessonComponentsInterfaces';
-import ErrorBoundary from '../Error/ErrorBoundary';
+import { GlobalContext } from '../../contexts/GlobalContext';
+import NotificationBar from '../Lesson/Header/NotificationBar';
 
 const LessonHeaderBar = (props: LessonHeaderBarProps) => {
   const { lessonDataLoaded, checkpointsLoaded, overlay, setOverlay } = props;
   const history = useHistory();
-  const { theme, state, dispatch } = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
   const { visible, setVisible, ref } = useOutsideAlerter(false);
 
-  useEffect(() => {
-    if (lessonDataLoaded) {
-      const shouldDispatch = state.pages.length > 0;
-      if (shouldDispatch && !state.pages[0].active) {
-        dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress });
-      }
-    }
-  }, [lessonDataLoaded, state.pages, state.currentPage]);
+  // useEffect(() => {
+  //   if (lessonDataLoaded) {
+  //     const shouldDispatch = state.pages.length > 0;
+  //     if (shouldDispatch && !state.pages[0].active) {
+  //       dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress });
+  //     }
+  //   }
+  // }, [lessonDataLoaded, state.pages, state.currentPage]);
 
   useEffect(() => {
     if (cookies.lesson) {
@@ -46,9 +45,9 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
 
   return (
     <div
-      className={`z-40 relative center w-full ${
-        lessonDataLoaded && state.data.lesson.type === 'lesson' ? 'h-.7/10' : ''
-      } ${theme.toolbar.bg} text-gray-200 shadow-2xl`}>
+      className={`z-40 relative center w-full 
+        h-.7/10 text-gray-200 shadow-2xl
+        ${theme.toolbar.bg} `}>
       {/**
        *
        * Potentially need to fix html below
@@ -69,14 +68,15 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
         />
       </div>
 
-      {lessonDataLoaded ? (
-        state.data.lesson.type === 'lesson' ? (
-          <LessonTopMenu handlePopup={handlePopup} />
-        ) : (
-          <SurveyTopMenu lessonDataLoaded={lessonDataLoaded} checkpointsLoaded={checkpointsLoaded} />
-        )
-      ) : null}
-      {/*  */}
+      <LessonTopMenu handlePopup={handlePopup} />
+
+      {/*{lessonDataLoaded ? (*/}
+      {/*  state.data.lesson.type === 'lesson' ? (*/}
+      {/*    <LessonTopMenu handlePopup={handlePopup} />*/}
+      {/*  ) : (*/}
+      {/*    <SurveyTopMenu lessonDataLoaded={lessonDataLoaded} checkpointsLoaded={checkpointsLoaded} />*/}
+      {/*  )*/}
+      {/*) : null}*/}
 
       {/*<NotificationBar />*/}
 

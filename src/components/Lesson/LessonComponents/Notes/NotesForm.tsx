@@ -1,29 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
+import React, { useContext, useState } from 'react';
 import RichTextEditor from '../../../Atoms/RichTextEditor';
-import Banner from '../Banner';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaRegWindowMinimize } from 'react-icons/fa';
 import useDictionary from '../../../../customHooks/dictionary';
 import { FloatingSideMenuProps } from '../../../Dashboard/FloatingSideMenu/FloatingSideMenu';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 const NotesForm = (props: FloatingSideMenuProps) => {
   const { focusSection } = props;
-  const { theme, dispatch, clientKey, userLanguage } = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme, clientKey} = useContext(GlobalContext);
   const { lessonDict } = useDictionary(clientKey);
 
   const [notesData, setNotesData] = useState<{ content: string }>({ content: '' });
 
-  useEffect(() => {
-    dispatch({
-      type: 'UPDATE_COMPONENT_STATE',
-      payload: {
-        componentName: 'notes',
-        inputName: 'content',
-        content: notesData.content,
-      },
-    });
-  }, [notesData]);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'UPDATE_COMPONENT_STATE',
+  //     payload: {
+  //       componentName: 'notes',
+  //       inputName: 'content',
+  //       content: notesData.content,
+  //     },
+  //   });
+  // }, [notesData]);
 
   const setEditorContent = (html: string, text: string, fieldHtml: string) => {
     setNotesData({

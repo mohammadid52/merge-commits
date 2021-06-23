@@ -1,19 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineHome} from 'react-icons/ai';
-import {LessonContext} from '../../../contexts/LessonContext';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import React, { useContext, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
 import NotesWidget from './SideMenu/NotesWidget';
-import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
+import { LessonHeaderBarProps } from '../../../interfaces/LessonComponentsInterfaces';
 import HomeWidget from './SideMenu/HomeWidget';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 const SideMenu = (props: LessonHeaderBarProps) => {
   const {overlay, setOverlay} = props;
   const [cookies, setCookie] = useCookies(['lesson']);
-  const {theme, state, dispatch} = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const [isToggled, setIsToggled] = useState<string[]>(['']);
 
   /**
@@ -78,9 +76,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
   return (
     <>
       <div
-        className={`absolute w-16 content-end ${
-          state.data.lesson.type === 'survey' ? 'mt-20' : ''
-        }`}>
+        className={`absolute w-16 content-end`}>
         {/**
          * AUTOSAVE
          */}
@@ -107,7 +103,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * NOTES
          */}
-        {/*<NotesWidget overlay={overlay} setOverlay={setOverlay} />*/}
+        <NotesWidget overlay={overlay} setOverlay={setOverlay} />
       </div>
     </>
   );

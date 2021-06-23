@@ -39,11 +39,11 @@ export interface UniversalLessonPage {
   open?: boolean;
   active?: boolean;
   label?: string;
-  title: string;
-  description: string;
-  class: string;
+  title?: string;
+  description?: string;
+  class?: string;
   estTime?: number;
-  pageContent: PagePart[];
+  pageContent?: PagePart[];
   [key: string]:any;
 }
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import {RowWrapperProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {RowWrapperProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 
-export const RowWrapper = (props: RowWrapperProps) => {
+export const BuilderRowWrapper = (props: RowWrapperProps) => {
   const {
     mode,
     hasContent,
