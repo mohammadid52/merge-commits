@@ -12,24 +12,36 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
   const history = useHistory();
   const match = useRouteMatch();
 
+  //  NAVIGATION CONSTANTS
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
+
+  //  ENABLE NAVIGATION DEPENDING ON PAGE POSITION
   const [canContinue, setCanContinue] = useState<boolean>(false);
   const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
-  useEffect(()=>{
-    if(lessonState.lessonData.currentPage){
-      const PAGES = lessonState.lessonData.lessonPlan;
-      const CURRENT_PAGE = lessonState.lessonData.currentPage;
-      const CAN_CONTINUE = PAGES && CURRENT_PAGE ? PAGES[CURRENT_PAGE+1].open : false;
-      const USER_AT_END = PAGES && CURRENT_PAGE ? CURRENT_PAGE < (PAGES.length-1) : false;
+  useEffect(() => {
+
+    if (PAGES) {
+      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1].open;
+      const USER_AT_END = CURRENT_PAGE === PAGES.length - 1;
+
+      if (CAN_CONTINUE && !USER_AT_END) {
+        setCanContinue(true);
+      } else if (CAN_CONTINUE && USER_AT_END) {
+        setCanContinue(true);
+        setUserAtEnd(true);
+      }
     }
-  },[lessonState.lessonData])
+  }, [lessonState.lessonData]);
 
-
-
-
+  //  NAVIGATION CONTROLS
   const handleForward = () => {
     if (canContinue && !userAtEnd) {
-      history.push(`${match.url}/${lessonState.lessonData.currentPage}`);
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: (lessonState.lessonData.currentPage+1)});
+      history.push(`${match.url}/${CURRENT_PAGE+1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: CURRENT_PAGE+1,
+      });
     }
     if (userAtEnd) {
       props.handlePopup();
@@ -37,9 +49,12 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
   };
 
   const handleBack = () => {
-    if (state.currentPage > 0) {
-      history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
-      dispatch({type: 'PAGE_BACK'});
+    if (CURRENT_PAGE > 0) {
+      history.push(`${match.url}/${CURRENT_PAGE-1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: CURRENT_PAGE-1,
+      });
     }
   };
 
@@ -53,7 +68,7 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
 
             <div
               className={`mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                state.currentPage > 0
+                lessonState.currentPage > 0
                   ? 'cursor-pointer bg-dark-red'
                   : 'cursor-default bg-darker-gray'
               } }`}

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
-import {useParams} from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import NotesForm from './LessonComponents/Notes/NotesForm';
 import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -9,11 +9,15 @@ import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exam
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const history = useHistory();
+  const match = useRouteMatch();
   const urlParams: any = useParams();
 
-  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-
   const [overlay, setOverlay] = useState<string>('');
+
+  //  NAVIGATION CONSTANTS
+  const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
 
   /**
    *
@@ -32,22 +36,20 @@ const LessonApp = () => {
     }, 2000);
   }, []);
 
+  //  RESPONSE TO LOADING LESSON DATA FETCH
+  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
       setLessonDataLoaded(true);
     }
-  }, [lessonState.lessonData]);
-
-  useEffect(() => {
-    if (lessonState.lessonData) {
-      const CURRENT_PAGE = lessonState.lessonData.currentPage;
-      if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-      }
+    if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
+      history.push(`${match.url}/${CURRENT_PAGE}`);
+    } else {
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+      history.push(`${match.url}/${0}`);
     }
-  }, [lessonDataLoaded]);
+  }, [lessonState.lessonData]);
 
   return (
     <>
