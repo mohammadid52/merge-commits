@@ -1,7 +1,5 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 
-import FormInput from '../../../../Atoms/Form/FormInput';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import {map} from 'lodash';
 
 import {v4 as uuidv4} from 'uuid';
@@ -17,9 +15,8 @@ import {
   ATTACHMENTS,
 } from '../common/constants';
 import TextInput from '../FormElements/TextInput';
-import SelectOne from '../FormElements/SelectOne';
-import SelectMany from '../FormElements/SelectMany';
-import Attachments from '../FormElements/Attachments';
+import UniversalOption from '../FormElements/UniversalOption';
+import UniversalInput from '../FormElements/UniversalInput';
 
 interface InputModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -153,24 +150,32 @@ const InputModalComponent = ({
   const getForm = (type: string) => {
     switch (type) {
       case INPUT:
-        return <TextInput {...commonFormProps} list={inputList} setList={setInputList} />;
-
-      case SELECT_ONE:
-        return <SelectOne {...commonFormProps} list={radioList} setList={setRadioList} />;
-      case SELECT_MANY:
         return (
-          <SelectMany
+          <TextInput
             {...commonFormProps}
-            list={manyOptionList}
-            setList={setManyOptionList}
+            selectedForm={type}
+            list={inputList}
+            setList={setInputList}
           />
         );
+
+      case SELECT_ONE:
+      case SELECT_MANY:
+        return (
+          <UniversalOption
+            {...commonFormProps}
+            selectedForm={type}
+            list={radioList}
+            setList={setRadioList}
+          />
+        );
+
       case ATTACHMENTS:
       case LINK:
       case DATE_PICKER:
       case INPUT_WITH_EMOJI:
         return (
-          <Attachments
+          <UniversalInput
             {...commonFormProps}
             selectedForm={type}
             list={

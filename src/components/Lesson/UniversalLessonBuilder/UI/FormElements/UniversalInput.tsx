@@ -9,21 +9,23 @@ import {
   ATTACHMENTS,
   DATE_PICKER,
   FORM_TYPES,
+  INPUT,
   INPUT_WITH_EMOJI,
   LINK,
 } from '../common/constants';
 
-const Attachments = ({
-  closeAction,
-  numbered,
-  list,
-  setList,
-  isEditingMode,
-  setNumbered,
-  updateContent,
-  selectedForm,
-  createNewContent,
-}: any) => {
+const Attachments = (props: any) => {
+  const {
+    closeAction,
+    numbered,
+    list,
+    setList,
+    isEditingMode,
+    setNumbered,
+    updateContent,
+    selectedForm,
+    createNewContent,
+  } = props;
   const {userLanguage} = useContext(GlobalContext);
 
   const addOneInputField = () => {
@@ -52,7 +54,7 @@ const Attachments = ({
         ? 'emojiInput'
         : selectedForm === LINK
         ? 'linkInput'
-        : 'attachments'
+        : 'text-input'
     }`;
 
     const inputObjArray = map(list, (d: any) => {
@@ -65,7 +67,11 @@ const Attachments = ({
             ? FORM_TYPES.EMOJI
             : selectedForm === LINK
             ? FORM_TYPES.LINK
-            : FORM_TYPES.DATE_PICKER,
+            : selectedForm === DATE_PICKER
+            ? FORM_TYPES.DATE_PICKER
+            : selectedForm === INPUT
+            ? FORM_TYPES.TEXT
+            : FORM_TYPES.TEXT,
         label: d.label,
         value: d.value,
       };

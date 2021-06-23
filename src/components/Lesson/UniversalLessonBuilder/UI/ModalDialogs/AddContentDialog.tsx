@@ -6,6 +6,7 @@ import {
   AiOutlineFileImage,
   AiOutlineHighlight,
   AiOutlineLink,
+  AiOutlineQuestionCircle,
   AiOutlineSwapRight,
   AiOutlineYoutube,
 } from 'react-icons/ai';
@@ -148,6 +149,14 @@ const AddContentDialog = ({
       iconBackground: 'bg-purple-100',
     },
     {
+      name: 'Text',
+      subtitle: 'Add regular question',
+      type: FORM_TYPES.TEXT,
+      icon: AiOutlineQuestionCircle,
+      iconForeground: 'text-pink-700',
+      iconBackground: 'bg-pink-100',
+    },
+    {
       name: 'Checkbox',
       subtitle: 'Add multiple option field',
       type: FORM_TYPES.MULTIPLE,
@@ -176,8 +185,8 @@ const AddContentDialog = ({
       subtitle: 'Add other fields',
       type: 'input',
       icon: MdInput,
-      iconForeground: 'text-pink-700',
-      iconBackground: 'bg-pink-100',
+      iconForeground: 'text-red-700',
+      iconBackground: 'bg-red-100',
     },
   ];
 
