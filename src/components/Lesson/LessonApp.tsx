@@ -66,7 +66,7 @@ const LessonApp = () => {
           className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${
             overlay === '' ? 'z-0' : 'z-50'
           }`}>
-          {/*<NotesForm overlay={overlay} setOverlay={setOverlay} />*/}
+          <NotesForm overlay={overlay} setOverlay={setOverlay} />
         </div>
 
         <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>

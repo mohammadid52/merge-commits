@@ -1,15 +1,13 @@
-import React, { SetStateAction, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
-import { LessonContext } from '../../contexts/LessonContext';
 import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
-import SurveyTopMenu from '../Lesson/Header/SurveyTopMenu';
 import { LessonHeaderBarProps } from '../../interfaces/LessonComponentsInterfaces';
-import ErrorBoundary from '../Error/ErrorBoundary';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import NotificationBar from '../Lesson/Header/NotificationBar';
 
 const LessonHeaderBar = (props: LessonHeaderBarProps) => {
   const { lessonDataLoaded, checkpointsLoaded, overlay, setOverlay } = props;

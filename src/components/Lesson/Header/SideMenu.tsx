@@ -1,13 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineHome} from 'react-icons/ai';
-import {LessonContext} from '../../../contexts/LessonContext';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import React, { useContext, useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import API, { graphqlOperation } from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
 import NotesWidget from './SideMenu/NotesWidget';
-import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
+import { LessonHeaderBarProps } from '../../../interfaces/LessonComponentsInterfaces';
 import HomeWidget from './SideMenu/HomeWidget';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
@@ -106,7 +103,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * NOTES
          */}
-        {/*<NotesWidget overlay={overlay} setOverlay={setOverlay} />*/}
+        <NotesWidget overlay={overlay} setOverlay={setOverlay} />
       </div>
     </>
   );
