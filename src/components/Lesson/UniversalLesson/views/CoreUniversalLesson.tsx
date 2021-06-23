@@ -15,6 +15,7 @@ import Tooltip from '../../../Atoms/Tooltip';
 import Buttons from '../../../Atoms/Buttons';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import LessonRowComposer from './CoreUniversalLesson/LessonRowComposer';
 
 interface CoreUniversalLessonProps {
   universalLessonDetails?: UniversalLesson;
@@ -23,11 +24,16 @@ interface CoreUniversalLessonProps {
 const CoreUniversalLesson = ({universalLessonDetails}: CoreUniversalLessonProps) => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
 
-  const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
-  const SELECTED_PAGE_DETAILS = CURRENT_PAGE ? PAGES[CURRENT_PAGE] : undefined;
-
-  return SELECTED_PAGE_DETAILS ? <h1>Hello</h1> : null;
+  return (
+    <div
+      className={`h-full overflow-hidden overflow-y-scroll bg-dark-gray}`}>
+      <div className={`w-full flex flex-row mx-auto`}>
+        <LessonPageWrapper>
+          <LessonRowComposer/>
+        </LessonPageWrapper>
+      </div>
+    </div>
+  );
 };
 
 export default CoreUniversalLesson;

@@ -17,7 +17,7 @@ import ColorPicker from '../UI/ColorPicker/ColorPicker';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 
 interface CoreBuilderProps extends ULBSelectionProps {
-  mode: 'building' | 'viewing';
+  mode: 'building' | 'viewing' | 'lesson';
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;

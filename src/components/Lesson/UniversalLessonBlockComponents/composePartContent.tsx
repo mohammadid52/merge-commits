@@ -18,7 +18,7 @@ const composePartContent = (
   inputKey: string,
   classString: string = '',
   pagePartId: string,
-  mode?: 'building' | 'viewing',
+  mode?: 'building' | 'viewing' | 'lesson',
   updateOnSave?: (inputID: string, updatedText: string, pagePartId: string) => void
 ): JSX.Element => {
   if (type.includes('jumbotron')) {

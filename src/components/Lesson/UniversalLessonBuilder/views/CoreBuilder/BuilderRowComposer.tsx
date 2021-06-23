@@ -1,32 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {FaPlus} from 'react-icons/fa';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import {
-  PagePart,
-  PartContent,
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../../interfaces/UniversalLessonInterfaces';
-import {RowComposerProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import Buttons from '../../../../Atoms/Buttons';
-import {StringifyBlock} from '../../../UniversalLessonBlockComponents/Blocks/StringifyBlock';
-import {BuilderRowWrapper} from './BuilderRowWrapper';
-import {HeaderBlock} from '../../../UniversalLessonBlockComponents/Blocks/HeaderBlock';
-import {ParagraphBlock} from '../../../UniversalLessonBlockComponents/Blocks/ParagraphBlock';
-import {FormBlock} from '../../../UniversalLessonBlockComponents/Blocks/FormBlock';
-import {VideoBlock} from '../../../UniversalLessonBlockComponents/Blocks/VideoBlock';
+import React, { useState } from 'react';
+import { FaPlus } from 'react-icons/fa';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { PagePart, PartContent, UniversalLessonPage } from '../../../../../interfaces/UniversalLessonInterfaces';
+import { RowComposerProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { BuilderRowWrapper } from './BuilderRowWrapper';
 import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
-import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
+import { AddNewBlock } from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
+import { AddNewBlockMini } from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
 import TagBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/TagBlock';
-import {JumbotronBlock} from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock';
-import {ImageBlock} from '../../../UniversalLessonBlockComponents/Blocks/ImageBlock';
-import KeywordBlock from '../../../UniversalLessonBlockComponents/Blocks/KeywordBlock';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import PoemBlock from '../../../UniversalLessonBlockComponents/Blocks/PoemBlock';
-import HighlighterBlock from '../../../UniversalLessonBlockComponents/Blocks/HighlighterBlock';
-import LinksBlock from '../../../UniversalLessonBlockComponents/Blocks/LinksBlock';
-import {findIndex, update} from 'lodash';
+import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
+import { findIndex, update } from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
