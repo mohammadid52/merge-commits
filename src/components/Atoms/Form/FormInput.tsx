@@ -16,6 +16,7 @@ interface FormInputProps {
   textarea?: boolean;
   rows?: number;
   cols?: number;
+  maxLength?: number;
 }
 
 const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
@@ -33,9 +34,13 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     textarea = false,
     rows = 1,
     cols = 125,
+    maxLength = 0,
   } = inputProps;
   const {theme} = useContext(GlobalContext);
-
+  const otherInputProps: any = {}
+  if (maxLength) {
+    otherInputProps.maxLength = maxLength;
+  }
   return (
     <Fragment>
       <label htmlFor={id} className="block text-xs font-semibold leading-5 text-gray-700">
@@ -66,6 +71,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           className={`mt-1 block w-full sm:text-sm sm:leading-5  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${theme.outlineNone}`}
           value={value ? value : ''}
           placeholder={placeHolder}
+          {...otherInputProps}
         />
         <p className="text-red-500 text-xs">
         {error}

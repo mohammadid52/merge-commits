@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaTrash} from 'react-icons/fa';
-// import { v4 as uuidv4 } from 'uuid';
+import Storage from '@aws-amplify/storage';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
 
@@ -11,12 +9,13 @@ import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import Buttons from '../../../../Atoms/Buttons';
-import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 import {languageList} from '../../../../../utilities/staticData';
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import {IoImage} from 'react-icons/io5';
+import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -67,13 +66,17 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     languages: '',
     message: '',
     institution: '',
+    image: '',
     isError: true,
   });
+  const [showCropper, setShowCropper] = useState(false);
+  const [imageData, setImageData] = useState(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
   const typeList: any = [
     {id: '1', name: 'Lecture', value: 'lesson'},
-    {id: '2', name: 'Assessment', value: 'assessment'},
-    {id: '3', name: 'Survey', value: 'survey'},
+    {id: '2', name: 'Assessment', value: 'assessment', disabled: true},
+    {id: '3', name: 'Survey', value: 'survey', disabled: true},
   ];
 
   const onInputChange = (e: any) => {
@@ -168,45 +171,54 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     });
     setUnsavedChanges(true);
   };
-  const toggleModal = (id?: string) => {
-    setShowDeleteModal({
-      ...showDeleteModal,
-      id: id ? id : '',
-      state: !showDeleteModal.state,
-    });
-  };
 
-  const deleteMeasurement = async () => {
-    if (showDeleteModal?.id) {
-      const filteredRubrics = [...lessonMeasurements].filter(
-        (item) => item.id !== showDeleteModal?.id
-      );
-      setLessonMeasurements([...filteredRubrics]);
-    }
-    toggleModal();
-  };
-  const saveMeasurements = async (lessonId: string, rubricsId: string) => {
-    try {
-      const input = {
-        lessonID: lessonId,
-        rubricID: rubricsId,
-      };
-      const results: any = await API.graphql(
-        graphqlOperation(customMutations.createLessonRubrics, {input: input})
-      );
-      const lessonRubric = results.data.createLessonRubrics;
-    } catch {
-      setValidation({
-        name: '',
-        type: '',
-        languages: '',
-        institution: '',
-        message: AddNewLessonFormDict[userLanguage]['ADDERR'],
-        isError: true,
+    const cropSelecetedImage = async (e: any) => {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.onload = function () {
+          setImageData(fileReader.result);
+        };
+        fileReader.readAsDataURL(file);
+        toggleCropper();
+      }
+    };
+
+    const toggleCropper = () => {
+      setShowCropper(!showCropper);
+    };
+
+    const saveCroppedImage = async (image: string) => {
+      toggleCropper();
+      setImageData(image);
+      const imageUrl = URL.createObjectURL(image);
+      setImagePreviewUrl(imageUrl);
+      toggleCropper();
+    };
+
+    const uploadImageToS3 = async (file: any, fileName: string, type: string) => {
+      // Upload file to s3 bucket
+
+      return new Promise((resolve, reject) => {
+        Storage.put(`ULB/lesson_image_${fileName}`, file, {
+          contentType: type,
+          ContentEncoding: 'base64',
+        })
+          .then((result: any) => {
+            console.log('File successfully uploaded to s3', result);
+            resolve(true);
+          })
+          .catch((err: any) => {
+            setValidation((prevValidation) => ({
+              ...prevValidation,
+              isError: true,
+              image: 'Unable to upload image. Please try again later. ',
+            }));
+            console.log('Error in uploading file to s3', err);
+            reject(err);
+          });
       });
-    }
-    setUnsavedChanges(false);
-  };
+    };
 
   const validateForm = () => {
     let isValid = true;
@@ -246,7 +258,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       if (isValid) {
         try {
           setLoading(true);
-          const input = {
+          let input = {
             title: formData.name,
             type: formData.type?.value,
             purpose: formData.purposeHtml,
@@ -260,33 +272,41 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             coreLessonId: '0',
             activityId: '0',
             assessmentID: '0',
+            // image: ''
             // assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
           };
-
+          // if (imageData) {
+          //   const fileName = `${Date.now()}`;
+          //   await uploadImageToS3(imageData, fileName, 'image/jpeg');
+          //   input = {
+          //     ...input,
+          //     image: `ULB/lesson_image_${fileName}`,
+          //   };
+          // }
           const results: any = await API.graphql(
             graphqlOperation(customMutations.createLesson, {input: input})
           );
           const lessonsData = results?.data?.createLesson;
+          postLessonCreation(lessonsData?.id);
+          // if (lessonsData?.id) {
+          //   let rubrics = Promise.all(
+          //     lessonMeasurements.map(async (item: any) =>
+          //       saveMeasurements(lessonsData?.id, item.id)
+          //     )
+          //   );
+          //   setLoading(false);
+          //   postLessonCreation(lessonsData?.id);
+          //   setUnsavedChanges(false);
 
-          if (lessonsData?.id) {
-            let rubrics = Promise.all(
-              lessonMeasurements.map(async (item: any) =>
-                saveMeasurements(lessonsData?.id, item.id)
-              )
-            );
-            setLoading(false);
-            postLessonCreation(lessonsData?.id);
-            setUnsavedChanges(false);
-
-            setValidation({
-              name: '',
-              type: '',
-              institution: '',
-              languages: '',
-              message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVE'],
-              isError: false,
-            });
-          }
+          //   setValidation({
+          //     name: '',
+          //     type: '',
+          //     institution: '',
+          //     languages: '',
+          //     message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVE'],
+          //     isError: false,
+          //   });
+          // }
         } catch {
           setValidation({
             name: '',
@@ -294,6 +314,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             institution: '',
             languages: '',
             message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVEERR'],
+            image:'',
             isError: true,
           });
           setLoading(false);
@@ -327,6 +348,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               type: '',
               message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVE'],
               isError: false,
+              image:'',
               institution: '',
               languages: '',
             });
@@ -338,6 +360,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVEERR'],
             isError: true,
             institution: '',
+            image:'',
             languages: '',
           });
           setLoading(false);
@@ -356,222 +379,165 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     }
   }, [lessonMeasurements, allMeasurement]);
 
-  const {name, type, languages, purposeHtml, objectiveHtml, institution} = formData;
+  const {
+    name,
+    type,
+    languages,
+    purposeHtml,
+    objectiveHtml,
+    institution,
+    imageCaption,
+  } = formData;
 
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
-      {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
         </h3>
-      </div> */}
+      </div>
 
       <div className="p-4">
-        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
-              <span className="text-red-500"> * </span>
-            </label>
-            <FormInput value={name} id="name" onChange={onInputChange} name="name" />
-            {validation.name && <p className="text-red-600 text-sm">{validation.name}</p>}
-          </div>
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
-              <span className="text-red-500"> * </span>
-            </label>
-            <Selector
-              disabled={lessonId !== ''}
-              selectedItem={type.name}
-              placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
-              list={typeList}
-              onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
-            />
-            {validation.type && <p className="text-red-600 text-sm">{validation.type}</p>}
-          </div>
-        </div>
-
-        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
-              <span className="text-red-500"> * </span>
-            </label>
-            <Selector
-              disabled={lessonId !== ''}
-              selectedItem={institution.name}
-              placeholder={AddNewLessonFormDict[userLanguage]['INSTITUTION']}
-              list={institutionList}
-              onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')}
-            />
-            {validation.institution && (
-              <p className="text-red-600 text-sm">{validation.institution}</p>
-            )}
-          </div>
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-              <span className="text-red-500"> * </span>
-            </label>
-            <MultipleSelector
-              // disabled={lessonId !== ''}
-              selectedItems={languages}
-              placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
-              list={languageList}
-              onChange={selectLanguage}
-            />
-          </div>
-        </div>
-
-        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-              {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
-            </label>
-            <MultipleSelector
-              selectedItems={selectedDesigners}
-              placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
-              list={designersList}
-              onChange={selectDesigner}
-            />
-          </div>
-        </div>
-
-        <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              {AddNewLessonFormDict[userLanguage]['PURPOSE']}
-            </label>
-            <RichTextEditor
-              initialValue={purposeHtml}
-              onChange={(htmlContent, plainText) =>
-                setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
-              }
-            />
-          </div>
-          <div>
-            <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-              {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
-            </label>
-            <RichTextEditor
-              initialValue={objectiveHtml}
-              onChange={(htmlContent, plainText) =>
-                setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
-              }
-            />
-          </div>
-        </div>
-
-        {formData.type?.id === '1' && (
-          <div className="p-6 border-gray-400  border-0 my-4 border-dashed">
-            <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
-              {AddNewLessonFormDict[userLanguage]['MEASUREMENTLESSON']}
-            </p>
-
-            <div className="my-12 w-6/10 m-auto flex items-center justify-center">
-              <div className="mr-4">
-                <Selector
-                  selectedItem={selectedMeasu.name}
-                  list={measurementList}
-                  placeholder={AddNewLessonFormDict[userLanguage]['SELECTMEASURE']}
-                  onChange={selectMeasurement}
-                />
-              </div>
-              <div className="ml-4 w-auto">
-                <Buttons
-                  btnClass="ml-4 py-1"
-                  label="Add"
-                  onClick={addNewMeasurement}
-                  disabled={selectedMeasu.value ? false : true}
-                />
-              </div>
-            </div>
-            <div>
-              {lessonMeasurements?.length > 0 ? (
-                <div>
-                  {/* Table header */}
-                  <div className="flex justify-between w-full px-8 py-4 mx-auto whitespace-nowrap border-b-0 border-gray-200">
-                    <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{AddNewLessonFormDict[userLanguage]['NO']}</span>
-                    </div>
-                    <div className="w-4.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{AddNewLessonFormDict[userLanguage]['MEASUREMENT']}</span>
-                    </div>
-                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{AddNewLessonFormDict[userLanguage]['TOPIC']}</span>
-                    </div>
-                    <div className="w-2/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{AddNewLessonFormDict[userLanguage]['ACTION']}</span>
-                    </div>
-                    {/** <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>Action</span>
-                    </div> */}
+        <div className="h-9/10 flex flex-col md:flex-row">
+          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
+            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
+              <label className="cursor-pointer flex justify-center">
+                {imagePreviewUrl ? (
+                  <img
+                    className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                    src={imagePreviewUrl}
+                  />
+                ) : (
+                  <div
+                    className={`profile justify-center lign-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                    <IoImage className="fill-current text-gray-80" size={32} />
                   </div>
+                )}
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => cropSelecetedImage(e)}
+                  onClick={(e: any) => (e.target.value = '')}
+                  accept="image/*"
+                  multiple={false}
+                />
+              </label>
+            </button>
+            <p className="text-gray-600 my-4">Click to add lesson image</p>
 
-                  {/* Table column */}
-                  <div className="w-full m-auto max-h-88 overflow-auto">
-                    {lessonMeasurements.map((item: any, index: number) => (
-                      <div
-                        key={item.id}
-                        className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
-                        <div className="flex w-.5/10 items-center px-8 py-3 text-left text-s leading-4">
-                          {' '}
-                          {index + 1}.
-                        </div>
-                        <div className="flex w-4.5/10 px-8 py-3 items-center text-left text-s leading-4 font-medium whitespace-normal">
-                          {' '}
-                          {item.measurement}{' '}
-                        </div>
-                        <div className="flex w-3/10 px-8 py-3 text-left text-s leading-4 items-center whitespace-normal">
-                          {item.topic ? item.topic : '--'}
-                        </div>
-                        {/* <div className="flex w-2/10 px-6 py-3 text-s leading-4 items-center justify-center">
-                      <span className="cursor-pointer">
-                            <CheckBox value={item.required ? true : false} onChange={() => makeQuestionRequired(item.id)} name='isRequired' />
-                          </span>
-                          Remove
-                        </div> */}
-                        <div className="flex w-2/10 px-8 py-3 text-s leading-4 items-center justify-center">
-                          <div
-                            className="w-6 h-6 cursor-pointer"
-                            onClick={() => toggleModal(item.id)}>
-                            <IconContext.Provider
-                              value={{size: '1rem', color: '#B22222'}}>
-                              <FaTrash />
-                            </IconContext.Provider>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="py-12 my-6 text-center">
-                  <p className="text-gray-600 font-medium">
-                    {AddNewLessonFormDict[userLanguage]['MESSAGES']['LESSONNOTHAVE']}
-                  </p>
-                </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
+                {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
+                <span className="text-red-500"> * </span>
+              </label>
+              <FormInput
+                value={imageCaption}
+                id="imageCaption"
+                onChange={onInputChange}
+                name="imageCaption"
+              />
+              {validation.name && (
+                <p className="text-red-600 text-sm">{validation.name}</p>
               )}
             </div>
           </div>
-        )}
-
+          <div className="h-9/10 md:flex-row">
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
+                <span className="text-red-500"> * </span>
+              </label>
+              <FormInput value={name} id="name" onChange={onInputChange} name="name" />
+              {validation.name && (
+                <p className="text-red-600 text-sm">{validation.name}</p>
+              )}
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
+                <span className="text-red-500"> * </span>
+              </label>
+              <Selector
+                disabled={lessonId !== ''}
+                selectedItem={type.name}
+                placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
+                list={typeList}
+                onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+              />
+              {validation.type && (
+                <p className="text-red-600 text-sm">{validation.type}</p>
+              )}
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
+                <span className="text-red-500"> * </span>
+              </label>
+              <Selector
+                disabled={lessonId !== ''}
+                selectedItem={institution.name}
+                placeholder={AddNewLessonFormDict[userLanguage]['INSTITUTION']}
+                list={institutionList}
+                onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')}
+              />
+              {validation.institution && (
+                <p className="text-red-600 text-sm">{validation.institution}</p>
+              )}
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
+                <span className="text-red-500"> * </span>
+              </label>
+              <MultipleSelector
+                // disabled={lessonId !== ''}
+                selectedItems={languages}
+                placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
+                list={languageList}
+                onChange={selectLanguage}
+              />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
+              </label>
+              <MultipleSelector
+                selectedItems={selectedDesigners}
+                placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
+                list={designersList}
+                onChange={selectDesigner}
+              />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                {AddNewLessonFormDict[userLanguage]['PURPOSE']}
+              </label>
+              <RichTextEditor
+                initialValue={purposeHtml}
+                onChange={(htmlContent, plainText) =>
+                  setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
+                }
+              />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
+              </label>
+              <RichTextEditor
+                initialValue={objectiveHtml}
+                onChange={(htmlContent, plainText) =>
+                  setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
+                }
+              />
+            </div>
+          </div>
+        </div>
         {validation.message && (
           <div className="py-2 m-auto mt-2 text-center">
             <p className={`${validation.isError ? 'text-red-600' : 'text-green-600'}`}>
               {validation.message}
             </p>
           </div>
-        )}
-        {showDeleteModal.state && (
-          <ModalPopUp
-            deleteModal
-            deleteLabel="Remove"
-            closeAction={toggleModal}
-            saveAction={deleteMeasurement}
-            message={showDeleteModal.message}
-          />
         )}
         <div className="flex mb-8 mt-4 justify-center">
           <Buttons
@@ -586,6 +552,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           />
         </div>
       </div>
+      {/* Image cropper */}
+      {showCropper && (
+        <ProfileCropModal
+          upImg={imageData}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
     </div>
   );
 };

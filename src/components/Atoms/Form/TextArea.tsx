@@ -2,20 +2,25 @@ import React, { useContext, Fragment } from 'react'
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface TextAreaProps {
-  id?: string
-  name?: string
-  label?: string
-  isRequired?: boolean
-  onChange?: (e: any) => void
-  value?: string
-  placeHolder?: string
-  rows?: number
+  error?: string;
+  id?: string;
+  name?: string;
+  label?: string;
+  isRequired?: boolean;
+  onChange?: (e: any) => void;
+  value?: string;
+  placeHolder?: string;
+  rows?: number;
+  maxLength?: number;
 }
 
 const TextArea = (props: TextAreaProps) => {
-  const { id, name, label, isRequired, onChange, rows, value, placeHolder, } = props;
+  const { error, id, name, label, isRequired, onChange, rows, value, maxLength, placeHolder } = props;
   const { theme } = useContext(GlobalContext);
-
+  const otherInputProps: any = {};
+  if (maxLength) {
+    otherInputProps.maxLength = maxLength;
+  }
   return (
     <Fragment>
       <label htmlFor={id} className="block text-xs font-semibold leading-5 text-gray-700">
@@ -29,9 +34,11 @@ const TextArea = (props: TextAreaProps) => {
         value={value ? value : ''}
         placeholder={placeHolder}
         rows={rows ? rows : 5}
+        {...otherInputProps}
       />
+      <p className="text-red-500 text-xs">{error}</p>
     </Fragment>
-  )
+  );
 }
 
 export default TextArea

@@ -9,6 +9,8 @@ import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonEdit from './LessonEdit';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import { UniversalLessonBuilderProvider } from '../../../../contexts/UniversalLessonBuilderContext';
+import LessonTabView from './StepActionComponent/LessonTabView';
 
 const LessonsBuilderHome = () => {
   const {dispatch} = useContext(GlobalContext);
@@ -65,16 +67,22 @@ const LessonsBuilderHome = () => {
           exact
           path={`${match.url}/lesson/add`}
           render={() => (
-            <LessonBuilder
-              designersList={designersList}
-              institutionList={institutionList}
-            />
+            <UniversalLessonBuilderProvider>
+              <LessonBuilder
+                designersList={designersList}
+                institutionList={institutionList}
+              />
+            </UniversalLessonBuilderProvider>
           )} // Add new lesson form
         />
         <Route
           exact
           path={`${match.url}/lesson/edit`}
-          render={() => <LessonEdit designersList={designersList} />} // Edit lesson, assessment or survey form
+          render={() => 
+          // <LessonEdit designersList={designersList} />}
+            <UniversalLessonBuilderProvider>
+              <LessonTabView designersList={designersList} />
+            </UniversalLessonBuilderProvider>} // Edit lesson, assessment or survey form
         />
       </Switch>
     </div>
