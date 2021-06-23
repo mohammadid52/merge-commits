@@ -94,10 +94,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
    * Below classes will allow overlay control button to be
    * either in the middle of the row component, or to the side of the row
    */
-  const componentAlignmentToggleClass = 'w-full justify-center';
+  const componentAlignmentToggleClass = 'justify-center';
   const rowAlignmentToggleClass = 'w-auto';
-
-  const offsetClass = 'transform translate-x-6';
 
   const actionClass =
     'flex items-center justify-start w-auto hover:bg-white hover:bg-opacity-10 mx-2 px-4  my-2 py-1 font-bold uppercase text-xs text-white rounded-lg';
@@ -105,7 +103,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
   if (previewMode) return null;
-  const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-3rem'};
+  const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-2.5rem'};
   return (
     <div
       id="editControlsWrapper"
@@ -118,7 +116,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           ${overlayVisible ? 'z-100' : 'z-10'}
           h-auto w-auto
           ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
-          ${isComponent ? '' : offsetClass}
           `}>
       <ClickAwayListener
         onClickAway={() => {
@@ -131,7 +128,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           className={`flex ulb_action ${
             overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
-            isComponent ? 'left-2' : 'right-3.5'
+            isComponent ? 'left-2' : 'right-2'
           } bg-gray-800 rounded-lg shadow-lg `}>
           {section === 'pageContent' ? (
             <>
@@ -202,9 +199,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       /> */}
 
       <button
-        className={`bg-gray-700 rounded-full h-8 w-${
-          isComponent ? '8' : '16'
-        } hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
+        className={`bg-gray-700 rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
         onClick={() => {
           handleEditBlockToggle();
         }}>
@@ -214,8 +209,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           <HiPencil color={'#fff'} size={20} />
         )}
       </button>
-
-      <div></div>
     </div>
   );
 };
