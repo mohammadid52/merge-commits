@@ -102,13 +102,38 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const getPersonsList = async () => {
     try {
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
-          // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
-          filter: {role: {ne: 'ST'}},
+      // const list: any = await API.graphql(
+      //   graphqlOperation(customQueries.listPersons, {
+      //     // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
+      //     filter: {role: {ne: 'ST'}},
+      //   })
+      // );
+      let data: any = [];
+      const admins: any = await API.graphql(
+        graphqlOperation(queries.usersByRole, {
+          role: 'ADM'
         })
       );
-      const sortedList = list.data.listPersons.items.sort((a: any, b: any) =>
+      data = data.concat(admins.data.usersByRole.items)
+      const teachers: any = await API.graphql(
+        graphqlOperation(queries.usersByRole, {
+          role: 'TR'
+        })
+      );
+      data = data.concat(teachers.data.usersByRole.items)
+      const fellows: any = await API.graphql(
+        graphqlOperation(queries.usersByRole, {
+          role: 'FLW'
+        })
+      );
+      data = data.concat(fellows.data.usersByRole.items)
+      const builders: any = await API.graphql(
+        graphqlOperation(queries.usersByRole, {
+          role: 'BLD'
+        })
+      );
+      data = data.concat(builders.data.usersByRole.items)
+      const sortedList = data.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
       const personsList = sortedList.map((item: any, i: any) => ({
@@ -124,8 +149,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         avatar: item.image ? getImageFromS3(item.image) : '',
       }));
       return personsList;
-    } catch {
-      console.log('Error while fetching staff details');
+    } catch (err) {
+      console.log('Error while fetching staff details', err);
     }
   };
   const getStaffSequence = async () => {

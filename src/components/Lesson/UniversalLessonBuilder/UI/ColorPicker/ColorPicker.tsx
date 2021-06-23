@@ -52,7 +52,9 @@ const ColorPicker = (props: ColorPickerProps) => {
                   className={`relative bg-${color.value}-${code.value} w-12 h-12 rounded-full shadow-sm cursor-pointer mx-1 border-2 border-${color.value}-${code.value}`}
                   onClick={() => callbackColor(`${color.value}-${code.value}`)}>
                   {classString?.split(' ').indexOf(`bg-${color.value}-${code.value}`) >
-                  -1 ? (
+                    -1 ||
+                  classString?.split(' ').indexOf(`border-${color.value}-${code.value}`) >
+                    -1 ? (
                     <div
                       className={`absolute top-1/2 transform -translate-x-1/2 -translate-y-1/2 left-1/2`}>
                       <FaCheck color="white" />
