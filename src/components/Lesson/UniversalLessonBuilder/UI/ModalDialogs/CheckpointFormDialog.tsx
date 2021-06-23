@@ -19,6 +19,7 @@ import {isObject, map} from 'lodash';
 import SearchInput from '../../../../Atoms/Form/SearchInput';
 import Loader from '../../../../Atoms/Loader';
 import RemoveInput from '../common/RemoveInput';
+import {FORM_TYPES} from '../common/constants';
 
 interface InitialState {
   question: string;
@@ -633,23 +634,23 @@ const ExistingQuestionList = ({checkpQuestions, changeStep, setCheckpQuestions}:
 const parseType = (type: string) => {
   switch (type) {
     case 'text':
-      return 'text-area';
+      return FORM_TYPES.TEXTAREA;
     case 'input':
-      return 'text-input';
+      return FORM_TYPES.TEXT;
     case 'selectMany':
-      return 'many-input'; // temparory
+      return FORM_TYPES.MULTIPLE;
     case 'selectOne':
-      return 'radio-input';
+      return FORM_TYPES.RADIO;
     case 'datePicker':
-      return 'text-input'; // temparory
+      return FORM_TYPES.DATE_PICKER;
     case 'link':
-      return 'text-input'; // temparory
+      return FORM_TYPES.LINK;
     case 'emoji':
-      return 'emoji-input';
+      return FORM_TYPES.EMOJI;
     case 'attachments':
-      return 'text-input'; // temparory
+      return FORM_TYPES.ATTACHMENTS;
     default:
-      return 'text-input';
+      return FORM_TYPES.TEXT;
   }
 };
 
@@ -687,7 +688,7 @@ const QuestionLookup = ({
 
         label: question.question,
         value:
-          type === 'radio-input' || type === 'many-input'
+          type === FORM_TYPES.RADIO || type === FORM_TYPES.MULTIPLE
             ? question.options
             : question.label,
       };

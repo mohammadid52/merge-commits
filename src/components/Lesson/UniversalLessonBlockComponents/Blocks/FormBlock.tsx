@@ -154,24 +154,29 @@ export const FormBlock = (props: FormBlockProps) => {
         <div className="mt-2 flex flex-wrap text-gray-300 bg-darker-gray py-2 px-4 rounded-xl ">
           {values.map(({label, text, id}, idx: number) =>
             selectMany ? (
-              <label className={`flex justify-center items-center mr-8`}>
+              <div
+                key={`question_${id}_${idx}`}
+                className={`flex w-auto justify-center items-center mr-8`}>
                 <input
                   id={`${label}`}
                   data-key={id}
+                  data-value={label}
                   type="checkbox"
-                  className="form-checkbox h-5 w-5 text-pink-600"
-                  checked
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
+                  ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
+                  checked={false}
                 />
                 <span className={`ml-2 ${theme.elem.text}`}>{text}</span>
-              </label>
+              </div>
             ) : (
               <div
                 key={`question_${id}_${idx}`}
                 className={`w-auto flex justify-center items-center mr-8 `}>
                 <span
                   id={label}
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
-    ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 ${
+                    false ? 'bg-blueberry border-white' : 'bg-white border-black '
+                  }`}
                   data-value={label}
                   // onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}
                 />
