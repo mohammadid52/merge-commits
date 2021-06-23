@@ -1,8 +1,16 @@
 import EmojiPicker from 'emoji-picker-react';
-import React, {useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
+import {BiImageAdd} from 'react-icons/bi';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
+import {getImageFromS3} from '../../../../utilities/services';
+import Storage from '@aws-amplify/storage';
+import Loader from '../../../Atoms/Loader';
+import Tooltip from '../../../Atoms/Tooltip';
+import {AiOutlineCheckCircle} from 'react-icons/ai';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -11,38 +19,182 @@ interface FormBlockProps extends RowWrapperProps {
 
 export const FormBlock = (props: FormBlockProps) => {
   const {id, mode, dataIdAttribute, value, handleEditBlockToggle} = props;
+  const {theme} = useContext(GlobalContext);
+
+  const [fields, setFields] = useState<any>({});
+  const onChange = (e: any) => {
+    const {id, value} = e.target;
+    setFields({...fields, [id]: value});
+  };
+
+  const LinkInput = ({inputID, label, value}: any) => {
+    return (
+      <div id={id} key={inputID} className={`mb-4 p-4`}>
+        <label className={`text-sm text-gray-200`} htmlFor="label">
+          {label}{' '}
+          <span
+            className={`py-0.5 px-1 ml-2 text-xs  rounded bg-indigo-200  text-indigo-700`}>
+            Link
+          </span>
+        </label>
+        <input
+          id={inputID}
+          disabled={mode === 'building'}
+          pattern="https://.*"
+          className={`w-full py-2 px-4 mt-2 text-white rounded-xl bg-darker-gray`}
+          name="url"
+          type="text"
+          placeholder={value.length > 0 ? value : 'Please input...'}
+          // onChange={onChange}
+          // value={fields[inputID]}
+        />
+      </div>
+    );
+  };
+
+  const AttachmentBlock = ({inputID, label, value}: any) => {
+    const inputOther = useRef(null);
+
+    const openFilesExplorer = () => inputOther.current.click();
+    // For Attachments - 31
+
+    const uploadAttachment = async (file: any, id: string, type: string) => {
+      // Upload Attachments
+      return new Promise((resolve, reject) => {
+        Storage.put(id, file, {
+          contentType: type,
+        })
+          .then((result) => {
+            resolve(result);
+          })
+          .catch((err) => {
+            console.log('Error in uploading file to s3', err);
+            reject(err);
+          });
+      });
+    };
+
+    const UPLOAD_KEY = 'survey_attachments';
+    const [uploading, setUploading] = useState(false);
+    const [fileObject, setfileObject] = useState<any>({});
+    const [url, setUrl] = useState(value);
+
+    const addImageUrlToResponse = (url: string) => {
+      setUrl(url);
+    };
+    const wait = (timeout: number) => {
+      return new Promise((resolve) => setTimeout(resolve, timeout));
+    };
+    const handleFileSelection = async (e: any) => {
+      if (e.target.files && e.target.files.length > 0) {
+        const file = e.target.files[0];
+        setfileObject(file);
+        const id: string = `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
+        setUploading(true);
+
+        // await uploadAttachment(file, id, file.type);
+        // const imageUrl: any = await getImageFromS3(id);
+
+        wait(3000).then(() => {
+          // addImageUrlToResponse(imageUrl)
+          setUploading(false);
+        });
+        // if (imageUrl) addImageUrlToResponse(imageUrl);
+      }
+    };
+    return (
+      <div id={id} key={inputID} className={`mb-4 p-4`}>
+        <label className={`text-sm text-gray-200`} htmlFor="label">
+          {label}
+        </label>
+        <div className="mt-2">
+          <span
+            role="button"
+            tabIndex={-1}
+            onClick={openFilesExplorer}
+            className={`border-0 border-white relative z-100 flex items-center justify-center text-base px-4 py-2 text-white hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
+            <BiImageAdd className={`w-auto mr-2`} />
+            Upload Attachments
+          </span>
+          <input
+            ref={inputOther}
+            onChange={handleFileSelection}
+            type="file"
+            className="hidden"
+            multiple={false}
+          />
+        </div>
+        {fileObject.name && (
+          <Tooltip show={!uploading} placement="bottom" text={'View Attachments'}>
+            <div className="cursor-pointer flex items-center justify-between border-0 border-sea-green rounded-md shadow-sm mt-2 p-2 px-4">
+              <p className="text-center text-white w-auto truncate">
+                {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
+              </p>
+
+              {uploading ? (
+                <div className=" w-auto">
+                  <Loader color={`#fff`} />
+                </div>
+              ) : (
+                <AiOutlineCheckCircle className="w-auto text-white text-lg" />
+              )}
+            </div>
+          </Tooltip>
+        )}
+      </div>
+    );
+  };
 
   const generateCheckbox = (
-    values: {label: string; text: string}[],
+    values: {label: string; text: string; id: string}[],
     selectMany: boolean
   ) => {
     if (values && Array.isArray(values)) {
       return (
-        <div className="mt-2 flex flex-wrap text-gray-300 bg-darker-gray py-2 px-4 rounded-xl">
-          {values.map(({label, text}, idx: number) => (
-            <div className="w-auto flex items-center mx-4" key={`${label}_${idx}`}>
-              {/* */}
-              {selectMany ? (
-                <div className="h-4 w-4 border-gray-200 border-2 mr-2" />
-              ) : (
-                <div className="h-4 w-4 border-gray-200 border-2 rounded-full mr-2" />
-              )}
-              {text}
-            </div>
-          ))}
+        <div className="mt-2 flex flex-wrap text-gray-300 bg-darker-gray py-2 px-4 rounded-xl ">
+          {values.map(({label, text, id}, idx: number) =>
+            selectMany ? (
+              <label className={`flex justify-center items-center mr-8`}>
+                <input
+                  id={`${label}`}
+                  data-key={id}
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-pink-600"
+                  checked
+                />
+                <span className={`ml-2 ${theme.elem.text}`}>{text}</span>
+              </label>
+            ) : (
+              <div
+                key={`question_${id}_${idx}`}
+                className={`w-auto flex justify-center items-center mr-8 `}>
+                <span
+                  id={label}
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
+    ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
+                  data-value={label}
+                  // onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}
+                />
+                <span className={`w-auto`}>{text}</span>
+              </div>
+            )
+          )}
         </div>
       );
     }
   };
 
   const EmojiInput = ({inputID, label, value}: any) => {
-    const [textValue, setTextValue] = useState('');
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
-
+    const [textValue, setTextValue] = useState('');
     const onEmojiSelect = (e: any) => {
-      let textWithEmoji = textValue.concat(`${e.emoji} `);
-      setTextValue(textWithEmoji);
-      setShowEmojiSelector(false);
+      try {
+        let textWithEmoji = value.concat(`${e.emoji} `);
+        setTextValue(textWithEmoji);
+        setShowEmojiSelector(false);
+      } catch (error) {
+        setShowEmojiSelector(false);
+      }
     };
 
     const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 `;
@@ -55,9 +207,9 @@ export const FormBlock = (props: FormBlockProps) => {
           <input
             id={inputID}
             disabled={mode === 'building'}
-            className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
+            className={`w-full py-2 px-4 text-white rounded-xl bg-darker-gray`}
             name="emoji"
-            onChange={(e: any) => setTextValue(e.target.value)}
+            onChange={onChange}
             type="text"
             placeholder={value.length > 0 ? value : 'Please input...'}
             value={textValue}
@@ -88,61 +240,62 @@ export const FormBlock = (props: FormBlockProps) => {
 
   const composeInput = (inputID: string, type: string, label: string, value: any) => {
     switch (type) {
-      case 'text-input':
+      case FORM_TYPES.TEXT:
+      case FORM_TYPES.DATE_PICKER:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
+            <label className={`text-sm text-gray-200`} htmlFor="label">
               {label}
             </label>
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
+              className={`w-full py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
               name="title"
-              type="text"
+              type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               placeholder={value.length > 0 ? value : 'Please input...'}
-              value={''}
+              // onChange={onChange}
+              // value={fields[inputID]}
             />
           </div>
         );
-      case 'text-area':
+
+      case FORM_TYPES.TEXTAREA:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
+            <label className={`text-sm text-gray-200 `} htmlFor="label">
               {label}
             </label>
             <textarea
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full h-64 py-2 px-4 text-gray-800 rounded-xl bg-darker-gray`}
+              className={`w-full h-64 py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
               name="story"
               placeholder={value.length > 0 ? value : 'Please input...'}
               value={''}
             />
           </div>
         );
-      case 'radio-input':
+      case FORM_TYPES.RADIO:
+      case FORM_TYPES.MULTIPLE:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
+            <label className={`text-sm text-gray-200`} htmlFor="label">
               {label}
             </label>
-            {generateCheckbox(value, false)}
+            {generateCheckbox(value, type === FORM_TYPES.MULTIPLE ? true : false)}
           </div>
         );
-      case 'many-input':
-        return (
-          <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
-              {label}
-            </label>
-            {generateCheckbox(value, true)}
-          </div>
-        );
-      case 'emoji-input':
+
+      case FORM_TYPES.EMOJI:
         return <EmojiInput inputID={inputID} value={value} label={label} />;
-      case 'rating-star':
+      case FORM_TYPES.RATING:
         return <StarRatingBlock id={id} inputID={inputID} label={label} />;
+      case FORM_TYPES.LINK:
+        return <LinkInput id={id} value={value} inputID={inputID} label={label} />;
+      case FORM_TYPES.ATTACHMENTS:
+        return <AttachmentBlock id={id} value={value} inputID={inputID} label={label} />;
+
       default:
         return <p>No valid form input type</p>;
     }
