@@ -1,9 +1,8 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
-import {FaRegEye, FaQuestionCircle, FaUnity} from 'react-icons/fa';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
@@ -14,6 +13,7 @@ import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
+import Loader from '../../../Atoms/Loader';
 import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
@@ -27,8 +27,8 @@ import {
 } from './LessonEdit';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
-import UnitLookup from './StepActionComponent/UnitLookup';
+import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import {useQuery} from '../../../../customHooks/urlParam';
 
 export interface InitialData {
   name: string;
@@ -57,9 +57,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const {designersList, institutionList} = props;
   const history = useHistory();
   const match = useRouteMatch();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const params = useQuery(location.search);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
-  const {universalLessonDetails} = useULBContext();
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -86,7 +86,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     institution: {id: '', name: '', value: ''},
     language: [''],
     imageUrl: '',
-    imageCaption:''
+    imageCaption: '',
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -108,6 +108,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
   ];
 
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<InitialData>(initialData);
   const [measurementList, setMeasurementList] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState([]);
@@ -116,9 +117,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     lessonInstructions: instructionInitialState,
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [lessonId, setLessonId] = useState('');
+  const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
   const [activeStep, setActiveStep] = useState('Overview');
-  const [activeTab, setActiveTab] = useState(0);
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -165,6 +165,50 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [showModal, setShowModal] = useState(false);
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
   const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
+
+  const fetchLessonDetails = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getLesson, {
+          id: lessonId,
+        })
+      );
+      const savedData = result.data.getLesson;
+
+      setFormData({
+        ...formData,
+        name: savedData.title,
+        type:
+          savedData.type &&
+          lessonTypeList.find((item: any) => item.value === savedData.type),
+        purposeHtml: savedData?.purpose ? savedData.purpose : '',
+        objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
+        languages: savedData.language.map((it: any) =>
+          languageList.find((it2: any) => it2.value === it)
+        ),
+        institution: {
+          id: savedData?.institution?.id,
+          name: savedData?.institution?.name,
+          value: savedData?.institution?.name,
+        },
+      });
+      const designers = designersList.filter((item: any) =>
+        savedData?.designers?.includes(item.id)
+      );
+      setSelectedDesigners(designers);
+      setLoading(false);
+    } catch {
+      console.log('Error while fetching lesson data');
+      history.push(`/dashboard/lesson-builder`);
+    }
+  };
+
+  useEffect(() => {
+    if (lessonId) {
+      setLoading(true);
+      fetchLessonDetails();
+    }
+  }, []);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
@@ -400,9 +444,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  console.log(universalLessonDetails, 'universalLessonDetails');
-  
-
   const [historyList, setHistoryList] = useState(['Overview']);
 
   const goBack = () => {
@@ -464,8 +505,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
-    setActiveTab(1);
-    const redirectionUrl = `${match.url.replace('add', `edit?lessonId=${lessonId}`)}`;
+    const redirectionUrl = `${match.url.replace('add', `view?lessonId=${lessonId}`)}`;
     history.push(redirectionUrl);
     if (formData.type?.id === '1') {
       setActiveStep('Preview Details');
@@ -494,9 +534,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [formData.type?.id]);
 
-  useEffect(() => {
-    fetchMeasurementList();
-  }, []);
+  // useEffect(() => {
+  //   fetchMeasurementList();
+  // }, []);
 
   return (
     <div className="w-full h-full">
@@ -527,13 +567,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <div className="grid grid-cols-1 divide-x-0 divide-gray-400 p-4">
             {/* <div className="sm:col-span-1"> */}
-            {/* <UnderlinedTabs
-                tabs={tabs}
-                activeTab={activeTab}
-                updateTab={(tab: number) => {
-                    setActiveTab(tab);
-                }}
-              /> */}
             {/* <WizardScroller
                 stepsList={lessonBuilderSteps}
                 activeStep={activeStep}
@@ -562,7 +595,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
               /> */}
             {/* </div> */}
             <div>
-              <Fragment>
+              {loading ? (
+                <div className="h-100 flex justify-center items-center">
+                  <div className="w-5/10">
+                    <Loader />
+                    <p className="mt-2 text-center">
+                      Fetching lesson details please wait...
+                    </p>
+                  </div>
+                </div>
+              ) : (
                 <AddNewLessonForm
                   lessonId={lessonId}
                   changeLessonType={changeLessonType}
@@ -578,7 +620,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                   institutionList={institutionList}
                   setUnsavedChanges={setUnsavedChanges}
                 />
-              </Fragment>
+              )}
             </div>
           </div>
         </div>

@@ -3,6 +3,12 @@ export const languageList = [
   { id: '2', name: 'Spanish', value: 'ES' },
 ];
 
+export const lessonTypeList: any = [
+  {id: '1', name: 'Lesson', value: 'lesson'},
+  {id: '2', name: 'Assessment', value: 'assessment'},
+  {id: '3', name: 'Survey', value: 'survey'},
+];
+
 export const statusList = [
   { id: 1, name: 'Active', value: 'Active' },
   { id: 2, name: 'Inactive', value: 'Inactive' },

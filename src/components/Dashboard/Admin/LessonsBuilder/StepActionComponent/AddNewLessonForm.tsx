@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
-
-import * as customMutations from '../../../../../customGraphql/customMutations';
+import {IoImage} from 'react-icons/io5';
 
 import Selector from '../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
@@ -10,11 +9,12 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import Buttons from '../../../../Atoms/Buttons';
 
-import {languageList} from '../../../../../utilities/staticData';
-import {InitialData, InputValueObject} from '../LessonBuilder';
+import {languageList, lessonTypeList} from '../../../../../utilities/staticData';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
-import {IoImage} from 'react-icons/io5';
+import * as customMutations from '../../../../../customGraphql/customMutations';
+
+import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
 interface AddNewLessonFormProps {
@@ -53,13 +53,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const [selectedMeasu, setSelectedMeasu] = useState({id: '', name: '', value: ''});
   const [measurementList, setMeasurementList] = useState(allMeasurement);
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {AddNewLessonFormDict} = useDictionary(clientKey);
   const [loading, setLoading] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState({
-    id: '',
-    state: false,
-    message: AddNewLessonFormDict[userLanguage]['MESSAGES']['REMOVE'],
-  });
   const [validation, setValidation] = useState({
     name: '',
     type: '',
@@ -72,12 +67,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const [showCropper, setShowCropper] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
-
-  const typeList: any = [
-    {id: '1', name: 'Lecture', value: 'lesson'},
-    {id: '2', name: 'Assessment', value: 'assessment', disabled: true},
-    {id: '3', name: 'Survey', value: 'survey', disabled: true},
-  ];
 
   const onInputChange = (e: any) => {
     setFormData({
@@ -342,13 +331,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           setUnsavedChanges(false);
 
           if (lessonsData) {
-            postLessonCreation(lessonsData?.id);
+            // postLessonCreation(lessonsData?.id);
             setValidation({
               name: '',
               type: '',
-              message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVE'],
+              message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATE'],
               isError: false,
-              image:'',
+              image: '',
               institution: '',
               languages: '',
             });
@@ -357,10 +346,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           setValidation({
             name: '',
             type: '',
-            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVEERR'],
+            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
             isError: true,
             institution: '',
-            image:'',
+            image: '',
             languages: '',
           });
           setLoading(false);
@@ -461,7 +450,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 disabled={lessonId !== ''}
                 selectedItem={type.name}
                 placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
-                list={typeList}
+                list={lessonTypeList}
                 onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
               />
               {validation.type && (

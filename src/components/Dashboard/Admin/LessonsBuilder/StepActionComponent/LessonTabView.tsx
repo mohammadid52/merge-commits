@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useRouteMatch, useHistory} from 'react-router-dom';
-import {FaQuestionCircle, FaUnity} from 'react-icons/fa';
+import {FaQuestionCircle, FaUnity, FaEdit} from 'react-icons/fa';
 import {IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {graphqlOperation, API} from 'aws-amplify';
 
@@ -89,6 +89,11 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     checkValidUrl();
   }, []);
 
+  const handleEdit = () => {
+    const redirectionUrl = `${match.url.replace('view', `edit?lessonId=${lessonId}`)}`;
+    history.push(redirectionUrl);
+  }
+
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
@@ -176,6 +181,12 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
             btnClass="mr-4"
             // onClick={gobackToLessonsList}
             Icon={IoArrowUndoCircleOutline}
+          />
+          <Buttons
+            btnClass="mr-4 px-6"
+            label="Edit"
+            onClick={handleEdit}
+            Icon={FaEdit}
           />
         </div>
       </div>

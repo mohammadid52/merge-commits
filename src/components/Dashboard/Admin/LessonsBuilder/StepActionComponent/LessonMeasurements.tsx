@@ -30,8 +30,10 @@ const LessonMeasurements = ({lessonId}: any) => {
     state: false,
     message: AddNewLessonFormDict[userLanguage]['MESSAGES']['REMOVE'],
   });
-  const [errors, setErrors] = useState({
+  const [messages, setMessages] = useState({
+    measurementError: '',
     serverError: '',
+    addSuccess: '',
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -99,6 +101,23 @@ const LessonMeasurements = ({lessonId}: any) => {
   };
 
   const addNewMeasurement = () => {
+    // To prevent adding duplicate measurements
+    const isAlreadyAdded =
+      lessonMeasurements.findIndex(
+        (measurement) =>
+          measurement.rubricID === selectedMeasurement.id ||
+          (!measurement.rubricID && measurement.id === selectedMeasurement.id)
+      ) > -1;
+
+    if (isAlreadyAdded) {
+      setMessages({
+        measurementError:
+          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTALREADYADDED'],
+        serverError: '',
+        addSuccess: '',
+      });
+      return;
+    }
     setLessonMeasurements((prevLessonMeasurements: any) => [
       ...prevLessonMeasurements,
       {
@@ -110,6 +129,11 @@ const LessonMeasurements = ({lessonId}: any) => {
       },
     ]);
     setSelectedMeasurement({id: '', name: '', value: ''});
+    setMessages({
+      measurementError: '',
+      serverError: '',
+      addSuccess: '',
+    });
   };
 
   const toggleModal = (id?: string) => {
@@ -135,13 +159,20 @@ const LessonMeasurements = ({lessonId}: any) => {
         lessonID: lessonId,
         rubricID: rubricsId,
       };
-      const results: any = await API.graphql(
+      await API.graphql(
         graphqlOperation(customMutations.createLessonRubrics, {input: input})
       );
-      const lessonRubric = results.data.createLessonRubrics;
+      setMessages({
+        measurementError: '',
+        serverError: '',
+        addSuccess:
+          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
+      });
     } catch {
-      setErrors({
+      setMessages({
+        measurementError: '',
         serverError: AddNewLessonFormDict[userLanguage]['ADDERR'],
+        addSuccess: '',
       });
     }
   };
@@ -159,9 +190,9 @@ const LessonMeasurements = ({lessonId}: any) => {
 
   return (
     <div className="p-6 border-gray-400 my-4">
-      <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
+      {/* <p className="text-m font-medium leading-5 text-gray-700 my-2 text-center">
         {AddNewLessonFormDict[userLanguage]['MEASUREMENTLESSON']}
-      </p>
+      </p> */}
       {loading ? (
         <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
           <div className="w-5/10">
@@ -173,23 +204,28 @@ const LessonMeasurements = ({lessonId}: any) => {
         </div>
       ) : (
         <>
-          <div className="my-12 w-6/10 m-auto flex items-center justify-center">
-            <div className="mr-4">
-              <Selector
-                selectedItem={selectedMeasurement.name}
-                list={measurementList}
-                placeholder={AddNewLessonFormDict[userLanguage]['SELECTMEASURE']}
-                onChange={handleSelectMeasurement}
-              />
+          <div className="my-12">
+            <div className="w-6/10 m-auto flex items-center justify-center">
+              <div className="mr-4">
+                <Selector
+                  selectedItem={selectedMeasurement.name}
+                  list={measurementList}
+                  placeholder={AddNewLessonFormDict[userLanguage]['SELECTMEASURE']}
+                  onChange={handleSelectMeasurement}
+                />
+              </div>
+              <div className="ml-4 w-auto">
+                <Buttons
+                  btnClass="ml-4 py-1"
+                  label="Add"
+                  onClick={addNewMeasurement}
+                  disabled={selectedMeasurement.value ? false : true}
+                />
+              </div>
             </div>
-            <div className="ml-4 w-auto">
-              <Buttons
-                btnClass="ml-4 py-1"
-                label="Add"
-                onClick={addNewMeasurement}
-                disabled={selectedMeasurement.value ? false : true}
-              />
-            </div>
+            {messages.measurementError && (
+              <p className={'w-6/10 m-auto text-red-600'}>{messages.measurementError}</p>
+            )}
           </div>
           <div>
             {lessonMeasurements?.length > 0 ? (
@@ -264,6 +300,13 @@ const LessonMeasurements = ({lessonId}: any) => {
             />
           </div>
         </>
+      )}
+      {(messages.serverError || messages.addSuccess) && (
+        <div className="py-2 m-auto mt-2 text-center">
+          <p className={`${messages.serverError ? 'text-red-600' : 'text-green-600'}`}>
+            {messages.serverError || messages.addSuccess}
+          </p>
+        </div>
       )}
       {showDeleteModal.state && (
         <ModalPopUp

@@ -67,22 +67,31 @@ const LessonsBuilderHome = () => {
           exact
           path={`${match.url}/lesson/add`}
           render={() => (
-            <UniversalLessonBuilderProvider>
-              <LessonBuilder
-                designersList={designersList}
-                institutionList={institutionList}
-              />
-            </UniversalLessonBuilderProvider>
+            <LessonBuilder
+              designersList={designersList}
+              institutionList={institutionList}
+            />
           )} // Add new lesson form
         />
         <Route
           exact
           path={`${match.url}/lesson/edit`}
-          render={() => 
-          // <LessonEdit designersList={designersList} />}
+          render={() => (
+            // <LessonEdit designersList={designersList} />
+            <LessonBuilder
+              designersList={designersList}
+              institutionList={institutionList}
+            />
+          )} // Edit lesson, assessment or survey form
+        />
+        <Route
+          exact
+          path={`${match.url}/lesson/view`}
+          render={() => (
             <UniversalLessonBuilderProvider>
               <LessonTabView designersList={designersList} />
-            </UniversalLessonBuilderProvider>} // Edit lesson, assessment or survey form
+            </UniversalLessonBuilderProvider>
+          )}
         />
       </Switch>
     </div>
