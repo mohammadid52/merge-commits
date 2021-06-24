@@ -3083,6 +3083,7 @@ const LessonBuilderDict: any = {
 
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
+      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',
     },
     INFORMATION_HEADING: 'General Information',
     NAME: 'Lesson Name',

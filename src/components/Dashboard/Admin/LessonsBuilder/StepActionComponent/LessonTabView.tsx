@@ -4,10 +4,12 @@ import {FaQuestionCircle, FaUnity, FaEdit} from 'react-icons/fa';
 import {IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {graphqlOperation, API} from 'aws-amplify';
 
-import UnderlinedTabs from '../../../../Atoms/UnderlinedTabs';
 import Buttons from '../../../../Atoms/Buttons';
 import BreadCrums from '../../../../Atoms/BreadCrums';
+import Loader from '../../../../Atoms/Loader';
 import SectionTitle from '../../../../Atoms/SectionTitle';
+import Tooltip from '../../../../Atoms/Tooltip';
+import UnderlinedTabs from '../../../../Atoms/UnderlinedTabs';
 
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -18,7 +20,6 @@ import LessonSummaryForm from './LessonSummaryForm';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import {languageList} from '../../../../../utilities/staticData';
-import Loader from '../../../../Atoms/Loader';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -62,7 +63,6 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         })
       );
       const savedData = result.data.getLesson;
-      console.log(savedData, 'savedData++++++');
       setLessonData(savedData);
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
@@ -113,11 +113,13 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
               lessonPlans={''}
             />
             <div className="flex mb-8 mt-4 justify-center">
-              <Buttons
-                btnClass="py-3 px-10"
-                label={BUTTONS[userLanguage]['PUBLISH']}
-                disabled={true}
-              />
+              <Tooltip placement="top" text={LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO']}>
+                <Buttons
+                  btnClass="py-3 px-10"
+                  label={BUTTONS[userLanguage]['PUBLISH']}
+                  disabled={true}
+                />
+              </Tooltip>
             </div>
           </div>
         );
