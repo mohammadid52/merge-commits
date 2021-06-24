@@ -45,6 +45,7 @@ import {
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
+import useUnsavedChanges from '../hooks/useUnsavedChanges';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -313,6 +314,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputObj: inputObj,
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
+      setUnsavedChanges,
+      askBeforeClose,
     };
 
     switch (type) {
@@ -481,7 +484,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }
   };
-
+  const {
+    UnsavedModal,
+    askBeforeClose,
+    unsavedChanges,
+    setUnsavedChanges,
+  } = useUnsavedChanges(closeAction);
   return (
     <div
       id={`builderWrapper`}
@@ -526,15 +534,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           titleButton={
             <span
               onClick={() => {
-                hideAllModals();
-                handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                if (unsavedChanges) {
+                  askBeforeClose();
+                } else {
+                  hideAllModals();
+                  handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                }
               }}
               className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
               Go Back
             </span>
           }
-          closeAction={closeAction}>
-          <div className="min-w-256">{modalByType(addContentModal.type)}</div>
+          closeAction={askBeforeClose}>
+          <div className="min-w-256">
+            <>{modalByType(addContentModal.type)}</>
+          </div>
+          <UnsavedModal />
         </Modal>
       )}
 

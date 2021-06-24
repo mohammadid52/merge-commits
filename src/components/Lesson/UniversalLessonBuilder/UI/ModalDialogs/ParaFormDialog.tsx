@@ -5,23 +5,26 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
+  setUnsavedChanges: any;
+  askBeforeClose?: () => void;
 }
 
 const ParaModalComponent = ({
   selectedPageID,
   closeAction,
   inputObj,
+  setUnsavedChanges,
+  askBeforeClose,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: IParaModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const {addFromULBHandler} = useULBContext();
+
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const FIELD_ID = 'paragraph';
@@ -37,6 +40,7 @@ const ParaModalComponent = ({
   }, [inputObj]);
 
   const onChange = (e: any) => {
+    setUnsavedChanges(true);
     const {value, id} = e.target;
     setInputFields({
       ...inputFields,
@@ -99,7 +103,7 @@ const ParaModalComponent = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
           <Buttons
