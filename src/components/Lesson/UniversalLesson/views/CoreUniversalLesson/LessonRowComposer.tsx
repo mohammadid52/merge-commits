@@ -17,9 +17,10 @@ const LessonRowComposer = () => {
     if (PAGES) {
       const CURRENT_PAGE = lessonState.currentPage;
       const ACTIVE_PAGE_DATA = CURRENT_PAGE ? PAGES[CURRENT_PAGE] : undefined;
+      console.log('c')
       setActivePageData(ACTIVE_PAGE_DATA);
     }
-  }, [lessonState.currentPage]);
+  }, [lessonState.lessonData]);
 
   return (
     <>
