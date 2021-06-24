@@ -341,13 +341,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'video':
         return <YouTubeMediaDialog {...commonProps} />;
       case 'tag':
-        return (
-          <TagInputDialog
-            updateBlockContentULBHandler={updateBlockContent}
-            closeAction={closeAction}
-            inputObj={inputObj}
-          />
-        );
+        return <TagInputDialog {...commonProps} />;
       case 'jumbotron':
         return <JumbotronFormDialog {...commonProps} />;
       case 'highlighter':
@@ -370,6 +364,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
             updateContent={updateBlockContent}
+            setUnsavedChanges={setUnsavedChanges}
+            askBeforeClose={askBeforeClose}
             closeAction={closeAction}
             selectedForm={
               type === FORM_TYPES.ATTACHMENTS
@@ -395,6 +391,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
             updateContent={updateBlockContent}
+            setUnsavedChanges={setUnsavedChanges}
+            askBeforeClose={askBeforeClose}
             closeAction={closeAction}
             selectedForm={type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY}
           />
