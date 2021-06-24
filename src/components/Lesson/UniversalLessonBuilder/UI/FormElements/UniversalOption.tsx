@@ -1,20 +1,21 @@
 import {map, remove, update} from 'lodash';
 import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import RemoveInput from '../common/RemoveInput';
 import {v4 as uuidv4} from 'uuid';
-import {FORM_TYPES} from '../common/constants';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {getAsset} from '../../../../../assets';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
+import {getAsset} from '../../../../../assets';
+import {FORM_TYPES, SELECT_ONE} from '../common/constants';
 
-const SelectMany = ({
-  closeAction,
+const SelectOne = ({
   numbered,
+  closeAction,
   isEditingMode,
-  list,
   setNumbered,
+  selectedForm,
+  list,
   setList,
   updateContent,
   createNewContent,
@@ -47,9 +48,9 @@ const SelectMany = ({
     ]);
   };
 
-  const onManyOptionsCreate = () => {
+  const onRadioCreate = () => {
     const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_optionInput`;
+    const partContentId: string = `${pageContentId}_radioInput`;
 
     const modifiedOptions = (opt: any) =>
       map(opt, (o) => ({
@@ -60,7 +61,7 @@ const SelectMany = ({
     const inputObjArray = map(list, (d: any) => {
       return {
         id: partContentId,
-        type: FORM_TYPES.MULTIPLE,
+        type: selectedForm === SELECT_ONE ? FORM_TYPES.RADIO : FORM_TYPES.MULTIPLE,
         label: d.label,
         value: modifiedOptions(d.options),
       };
@@ -108,6 +109,7 @@ const SelectMany = ({
   const getColor = (color: string) => {
     return `hover:bg-${color}-200 text-${color}-400 border-${color}-200 hover:text-${color}-600 focus:outline-none focus:bg-${color}-200 focus:border-transparent`;
   };
+
   return (
     <>
       <div>
@@ -120,7 +122,7 @@ const SelectMany = ({
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Checkbox Input`}
+                    label={`${numbered ? `${idx + 1}. ` : ''}Radio Input`}
                     isRequired
                     value={input.label}
                     id={`formField_${input.id}`}
@@ -138,7 +140,7 @@ const SelectMany = ({
                           <div className="w-8/10">
                             <FormInput
                               value={item.text}
-                              id={`formFieldMultipleOption_${idx}_${index}`}
+                              id={`formFieldRadioOption_${idx}_${index}`}
                               onChange={(e) => onOptionInputChange(idx, index, e)}
                               name={item.label}
                               placeHolder={`Option ${index + 1}`}
@@ -206,12 +208,11 @@ const SelectMany = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={onManyOptionsCreate}
+            onClick={onRadioCreate}
           />
         </div>
       </div>
     </>
   );
 };
-
-export default SelectMany;
+export default SelectOne;

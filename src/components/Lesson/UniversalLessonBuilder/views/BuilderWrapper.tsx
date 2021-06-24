@@ -33,6 +33,18 @@ import ImageGallery from '../UI/ImageGallery';
 import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
 import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
 import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
+import {
+  FORM_TYPES,
+  LINK,
+  SELECT_MANY,
+  SELECT_ONE,
+  INPUT,
+  ATTACHMENTS,
+  DATE_PICKER,
+  INPUT_WITH_EMOJI,
+} from '../UI/common/constants';
+import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
+import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -116,6 +128,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const hideAllModals = () => {
     setModalPopVisible(false);
+    setAddContentModal({type: '', show: false});
     setCurrentModalDialog('');
   };
 
@@ -230,6 +243,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             setAddContentModal={setAddContentModal}
           />
         );
+
       default:
         return (
           <NewPageDialog
@@ -256,6 +270,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputObj = {},
       classString: selectedContentClass = '',
     } = blockConfig;
+
+    console.log(type);
 
     const updateBlockContent = (
       targetID: string,
@@ -386,6 +402,48 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             updateBlockContentULBHandler={updateBlockContent}
           />
         );
+
+      case FORM_TYPES.ATTACHMENTS:
+      case FORM_TYPES.LINK:
+      case FORM_TYPES.TEXT:
+      case FORM_TYPES.DATE_PICKER:
+      case FORM_TYPES.EMOJI:
+        return (
+          <UniversalInputDialog
+            inputObj={inputObj}
+            isEditingMode={blockConfig.isEditingMode}
+            createNewContent={createNewBlock}
+            updateContent={updateBlockContent}
+            closeAction={closeAction}
+            selectedForm={
+              type === FORM_TYPES.ATTACHMENTS
+                ? ATTACHMENTS
+                : type === FORM_TYPES.LINK
+                ? LINK
+                : type === FORM_TYPES.EMOJI
+                ? INPUT_WITH_EMOJI
+                : type === FORM_TYPES.DATE_PICKER
+                ? DATE_PICKER
+                : type === FORM_TYPES.TEXT
+                ? INPUT
+                : INPUT
+            }
+          />
+        );
+
+      case FORM_TYPES.RADIO:
+      case FORM_TYPES.MULTIPLE:
+        return (
+          <UniversalOptionDialog
+            inputObj={inputObj}
+            isEditingMode={blockConfig.isEditingMode}
+            createNewContent={createNewBlock}
+            updateContent={updateBlockContent}
+            closeAction={closeAction}
+            selectedForm={type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY}
+          />
+        );
+
       default:
         break;
     }
@@ -465,6 +523,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           }`}
           showHeaderBorder={true}
           showFooter={false}
+          titleButton={
+            <span
+              onClick={() => {
+                hideAllModals();
+                handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+              }}
+              className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
+              Go Back
+            </span>
+          }
           closeAction={closeAction}>
           <div className="min-w-256">{modalByType(addContentModal.type)}</div>
         </Modal>
