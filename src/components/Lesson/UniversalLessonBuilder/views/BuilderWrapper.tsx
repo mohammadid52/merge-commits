@@ -272,8 +272,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       classString: selectedContentClass = '',
     } = blockConfig;
 
-    console.log(type);
-
     const updateBlockContent = (
       targetID: string,
       propertyToTarget: string,
@@ -329,10 +327,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'image':
         return (
           <ImageFormComponent
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
+            {...commonProps}
             handleGalleryModal={handleGalleryModal}
             selectedImageFromGallery={selectedImageFromGallery}
           />
@@ -344,14 +339,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'form-default':
         return <InputModalComponent {...commonProps} contentType={type} />;
       case 'video':
-        return (
-          <YouTubeMediaDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <YouTubeMediaDialog {...commonProps} />;
       case 'tag':
         return (
           <TagInputDialog
@@ -361,50 +349,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
       case 'jumbotron':
-        return (
-          <JumbotronFormDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <JumbotronFormDialog {...commonProps} />;
       case 'highlighter':
-        return (
-          <HighlighterFormDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <HighlighterFormDialog {...commonProps} />;
       case 'poem':
-        return (
-          <LinestarterModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <LinestarterModalDialog {...commonProps} />;
       case 'keywords':
-        return (
-          <KeywordModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <KeywordModalDialog {...commonProps} />;
       case 'links':
-        return (
-          <LinksModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <LinksModalDialog {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
