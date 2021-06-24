@@ -12,10 +12,23 @@ interface TextAreaProps {
   placeHolder?: string;
   rows?: number;
   maxLength?: number;
+  showCharacterUsage?: boolean;
 }
 
 const TextArea = (props: TextAreaProps) => {
-  const { error, id, name, label, isRequired, onChange, rows, value, maxLength, placeHolder } = props;
+  const {
+    error,
+    id,
+    name,
+    label,
+    isRequired,
+    onChange,
+    rows,
+    value,
+    maxLength,
+    placeHolder,
+    showCharacterUsage,
+  } = props;
   const { theme } = useContext(GlobalContext);
   const otherInputProps: any = {};
   if (maxLength) {
@@ -36,7 +49,14 @@ const TextArea = (props: TextAreaProps) => {
         rows={rows ? rows : 5}
         {...otherInputProps}
       />
-      <p className="text-red-500 text-xs">{error}</p>
+      <div className="flex">
+        <p className="text-red-500 text-xs">{error}</p>
+        {showCharacterUsage ? (
+          <div className="text-right text-gray-400">
+            {value.length} of {maxLength}
+          </div>
+        ) : null}
+      </div>
     </Fragment>
   );
 }

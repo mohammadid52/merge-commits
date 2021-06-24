@@ -42,6 +42,7 @@ export interface InitialData {
   language: string[];
   imageCaption?: string;
   imageUrl?: string;
+  studentSummary?: string;
 }
 export interface InputValueObject {
   id: string;
@@ -87,6 +88,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     language: [''],
     imageUrl: '',
     imageCaption: '',
+    studentSummary: ''
   };
   const instructionInitialState = {
     introductionTitle: '',

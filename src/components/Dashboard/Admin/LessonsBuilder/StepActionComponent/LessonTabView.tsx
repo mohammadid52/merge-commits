@@ -8,18 +8,20 @@ import Buttons from '../../../../Atoms/Buttons';
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Loader from '../../../../Atoms/Loader';
 import SectionTitle from '../../../../Atoms/SectionTitle';
-import Tooltip from '../../../../Atoms/Tooltip';
+// import Tooltip from '../../../../Atoms/Tooltip';
 import UnderlinedTabs from '../../../../Atoms/UnderlinedTabs';
 
-import useDictionary from '../../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import UniversalLessonBuilder from '../../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import UnitLookup from './UnitLookup';
 import LessonMeasurements from './LessonMeasurements';
 import LessonSummaryForm from './LessonSummaryForm';
+import LessonPlansList from './LessonPlansList';
+
+import useDictionary from '../../../../../customHooks/dictionary';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import {languageList} from '../../../../../utilities/staticData';
+import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -38,6 +40,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict, LessonEditDict} = useDictionary(
     clientKey
   );
+  const {universalLessonDetails} = useULBContext();
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
 
@@ -99,7 +102,12 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       case '0':
         return <LessonSummaryForm />;
       case '1':
-        return <UniversalLessonBuilder />;
+        return (
+          <LessonPlansList
+            lessonId={lessonId}
+            universalLessonDetails={universalLessonDetails}
+          />
+        );
       case '2':
         return <LessonMeasurements lessonId={lessonId} />;
       case '3':
@@ -108,11 +116,11 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
             <UnitLookup
               lessonName={''}
               lessonId={lessonId}
-              institution={{id: '', name: '', value: ''}}
+              institution={lessonData.institution}
               lessonType={''}
               lessonPlans={''}
             />
-            <div className="flex mb-8 mt-4 justify-center">
+            {/* <div className="flex mb-8 mt-4 justify-center">
               <Tooltip placement="top" text={LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO']}>
                 <Buttons
                   btnClass="py-3 px-10"
@@ -120,7 +128,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
                   disabled={true}
                 />
               </Tooltip>
-            </div>
+            </div> */}
           </div>
         );
     }
@@ -149,7 +157,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     },
     {
       index: 3,
-      title: 'Assign Units & Publish',
+      title: 'Assign to Units',
       icon: <FaUnity />,
       content: currentTabComp(`${activeTab}`),
       // disabled: formData.institution && formData.institution.id ? false : true,

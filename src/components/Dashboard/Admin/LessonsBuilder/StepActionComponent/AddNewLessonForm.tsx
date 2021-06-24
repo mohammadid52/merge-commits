@@ -8,6 +8,7 @@ import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import Buttons from '../../../../Atoms/Buttons';
+import TextArea from '../../../../Atoms/Form/TextArea';
 
 import {languageList, lessonTypeList} from '../../../../../utilities/staticData';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -62,6 +63,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     message: '',
     institution: '',
     image: '',
+    studentSummary: '',
     isError: true,
   });
   const [showCropper, setShowCropper] = useState(false);
@@ -74,12 +76,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       [e.target.name]: e.target.value,
     });
     setUnsavedChanges(true);
-    if (validation.name) {
-      setValidation({
-        ...validation,
-        name: '',
-      });
-    }
+    setValidation({
+      ...validation,
+      [e.target.name]: '',
+    });
   };
 
   const onSelectOption = (val: string, name: string, id: string, field: string) => {
@@ -236,6 +236,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     } else {
       msgs.languages = '';
     }
+    if (!formData.studentSummary?.trim().length) {
+      isValid = false;
+      msgs.studentSummary =
+        AddNewLessonFormDict[userLanguage]['VALIDATION']['STUDENT_SUMMARY'];
+    } else {
+      msgs.studentSummary = '';
+    }
     // TODO: Add validation for repeating lesson names.
     setValidation({...msgs});
     return isValid;
@@ -252,6 +259,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             type: formData.type?.value,
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],
+            studentSummary: formData.studentSummary,
             language: formData.languages.map((item) => item.value),
             designers: selectedDesigners.map((item) => item.id),
             institutionID: formData.institution?.id,
@@ -303,8 +311,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             institution: '',
             languages: '',
             message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVEERR'],
-            image:'',
+            image: '',
             isError: true,
+            studentSummary: '',
           });
           setLoading(false);
         }
@@ -321,6 +330,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             objectives: [formData.objectiveHtml],
             designers: selectedDesigners.map((item) => item.id),
             language: formData.languages.map((item) => item.value),
+            // studentSummary: formData.studentSummary,
           };
           const results: any = await API.graphql(
             graphqlOperation(customMutations.updateLesson, {input: input})
@@ -340,6 +350,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               image: '',
               institution: '',
               languages: '',
+              studentSummary:'',
             });
           }
         } catch {
@@ -351,6 +362,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             institution: '',
             image: '',
             languages: '',
+            studentSummary: '',
           });
           setLoading(false);
         }
@@ -376,6 +388,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     objectiveHtml,
     institution,
     imageCaption,
+    studentSummary = '',
   } = formData;
 
   return (
@@ -424,10 +437,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 id="imageCaption"
                 onChange={onInputChange}
                 name="imageCaption"
+                maxLength={15}
               />
               {validation.name && (
                 <p className="text-red-600 text-sm">{validation.name}</p>
               )}
+              <div className="text-right text-gray-400">{imageCaption.length} of 15</div>
             </div>
           </div>
           <div className="h-9/10 md:flex-row">
@@ -517,6 +532,22 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 onChange={(htmlContent, plainText) =>
                   setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
                 }
+              />
+            </div>
+            <div className="px-3 py-4">
+              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                {AddNewLessonFormDict[userLanguage]['SUMMARY']}
+                <span className="text-red-500"> *</span>
+              </label>
+              <TextArea
+                rows={2}
+                id="studentSummary"
+                value={studentSummary}
+                onChange={onInputChange}
+                name="studentSummary"
+                maxLength={128}
+                showCharacterUsage
+                error={validation.studentSummary}
               />
             </div>
           </div>

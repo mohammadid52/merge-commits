@@ -2838,6 +2838,7 @@ const AddNewLessonFormDict: any = {
       TYPE: 'Lesson type is required',
       INSTITUTE: 'Institute is required field.',
       LANGUAGE: 'Language selection is required',
+      STUDENT_SUMMARY: 'Student summary is required',
     },
     MESSAGES: {
       REMOVE: 'Are you sure you want to remove this measurement?',
@@ -3080,7 +3081,18 @@ const LessonBuilderDict: any = {
   EN: {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
-
+    BUTTON: {
+      ADD_PLAN: 'Add new plan',
+      VIEW: 'View',
+    },
+    LESSON_PLAN_COLUMN: {
+      ID: 'id',
+      PAGE_TITLE: 'Page Title',
+      PLAN_LABEL: 'Plan Label',
+      DESCRIPTION: 'Description',
+      ESTIMATED_TIME: 'Estimated Time',
+      ACTION: 'Action',
+    },
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
       PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',

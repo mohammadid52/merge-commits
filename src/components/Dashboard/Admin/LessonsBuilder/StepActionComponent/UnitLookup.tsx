@@ -5,12 +5,15 @@ import isEqual from 'lodash/isEqual';
 
 import Buttons from '../../../../Atoms/Buttons';
 import Selector from '../../../../Atoms/Form/Selector';
+import Loader from '../../../../Atoms/Loader';
+
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {getAsset} from '../../../../../assets';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {statusList} from '../../../../../utilities/staticData';
+
+import {getAsset} from '../../../../../assets';
 
 interface UnitLookupProps {
   lessonName: string;
@@ -39,6 +42,7 @@ const UnitLookup = (props: UnitLookupProps) => {
   const [unitsList, setUnitsList] = useState([]);
   const [selectedUnitsList, setSelectedUnitsList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [editState, setEditState] = useState<{id: string; action?: string}>({
     id: '',
     action: '',
@@ -122,7 +126,7 @@ const UnitLookup = (props: UnitLookupProps) => {
         lessonPlan: lessonComponentPlan?.length > 0 ? lessonComponentPlan : [],
         status: 'Active',
       };
-
+      setSaving(true);
       const result: any = await API.graphql(
         graphqlOperation(customMutations.createSyllabusLesson, {input: input})
       );
@@ -160,6 +164,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           isError: false,
           msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDED'],
         });
+        setSaving(false);
       }
     } catch {
       setMessage({
@@ -171,6 +176,7 @@ const UnitLookup = (props: UnitLookupProps) => {
   };
 
   const fetchUnitsList = async () => {
+    setLoading(true);
     Promise.all([
       await API.graphql(
         graphqlOperation(customQueries.getInstitutionCurriculars, {
@@ -223,6 +229,7 @@ const UnitLookup = (props: UnitLookupProps) => {
         });
         setSelectedUnitsList([...selectedList]);
         setCurriclaList([...filteredList]);
+        setLoading(false);
       })
       .catch((err) => {
         setMessage({
@@ -260,11 +267,11 @@ const UnitLookup = (props: UnitLookupProps) => {
   const {curriculum, unit} = formState;
   return (
     <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
-      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+      {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {UnitLookupDict[userLanguage]['HEADING']} - {lessonName}
         </h3>
-      </div>
+      </div> */}
 
       <div className="p-4">
         <div className="px-4 py-4 grid gap-x-6 grid-cols-5">
@@ -282,6 +289,9 @@ const UnitLookup = (props: UnitLookupProps) => {
               list={unitsList}
               placeholder="Select Unit"
               onChange={(val, name, id) => onSelectorChange(val, name, id, 'unit')}
+              noOptionMessage={
+                curriculum.name ? 'No Results' : 'Please select curricular first'
+              }
             />
           </div>
           <div className="col-span-1 flex items-end">
@@ -289,14 +299,14 @@ const UnitLookup = (props: UnitLookupProps) => {
               btnClass="py-3 px-6"
               label="Add Unit"
               onClick={addLessonToSyllabusLesson}
-              disabled={loading || !formState.unit.id ? true : false}
+              disabled={saving || !formState.unit.id ? true : false}
             />
           </div>
         </div>
 
-        <p className="text-sm p-8 text-gray-700">
+        {/* <p className="text-sm p-8 text-gray-700">
           {UnitLookupDict[userLanguage]['NOTE']}
-        </p>
+        </p> */}
 
         <div className="px-4">
           <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
@@ -317,8 +327,12 @@ const UnitLookup = (props: UnitLookupProps) => {
             </div>
           </div>
           <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
-            {selectedUnitsList?.length > 0 ? (
-              selectedUnitsList?.map((item, index) => (
+            {loading ? (
+              <div className="mt-4">
+                <Loader />
+              </div>
+            ) : selectedUnitsList.length ? (
+              selectedUnitsList?.map((item: any, index: number) => (
                 <div
                   key={index}
                   className="flex justify-between items-center w-full px-8 py-4 whitespace-nowrap border-b-0 border-gray-200 cursor-pointer">

@@ -4,6 +4,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {IconContext} from 'react-icons/lib/cjs';
 import {FaTrash} from 'react-icons/fa';
 
+import {GeneralInformationDict} from '../../../../../dictionary/dictionary.curate';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -19,6 +20,7 @@ const LessonMeasurements = ({lessonId}: any) => {
   const {AddNewLessonFormDict} = useDictionary(clientKey);
 
   const [measurementList, setMeasurementList] = useState([]);
+  const [measurementOptions, setMeasurementOptions] = useState([]);
   const [lessonMeasurements, setLessonMeasurements] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState({
     id: '',
@@ -43,6 +45,18 @@ const LessonMeasurements = ({lessonId}: any) => {
     fetchMeasurementList();
     fetchRubricsList();
   }, []);
+
+  useEffect(() => {
+    if (measurementList.length && lessonMeasurements.length) {
+      const measurementIDs = lessonMeasurements.map(
+        (measurment: any) => measurment.rubricID
+      );
+      const temp = measurementList.filter(
+        (item: any) => !measurementIDs.includes(item.id)
+      );
+      setMeasurementOptions(temp);
+    }
+  }, [measurementList, lessonMeasurements]);
 
   const fetchRubricsList = async () => {
     try {
@@ -71,12 +85,11 @@ const LessonMeasurements = ({lessonId}: any) => {
       setLessonMeasurements([...lessonRubrics]);
       setLoading(false);
     } catch {
-      // setValidation({
-      //   name: '',
-      //   type: '',
-      //   message: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
-      //   isError: true,
-      // });
+      setMessages({
+        measurementError: '',
+        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
+        addSuccess: '',
+      });
     }
   };
 
@@ -100,40 +113,38 @@ const LessonMeasurements = ({lessonId}: any) => {
     }
   };
 
-  const addNewMeasurement = () => {
-    // To prevent adding duplicate measurements
-    const isAlreadyAdded =
-      lessonMeasurements.findIndex(
-        (measurement) =>
-          measurement.rubricID === selectedMeasurement.id ||
-          (!measurement.rubricID && measurement.id === selectedMeasurement.id)
-      ) > -1;
-
-    if (isAlreadyAdded) {
+  const addNewMeasurement = async() => {
+    try {
+      const input = {
+        lessonID: lessonId,
+        rubricID: selectedMeasurement.id,
+      };
+      setSaving(true);
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.createLessonRubrics, {input: input})
+      );
+      const lessonRubric = results.data.createLessonRubrics;
+      if (lessonRubric?.id) {
+        setLessonMeasurements((prevLessonMeasurements: any) => [
+          ...prevLessonMeasurements,
+          {
+            id: lessonRubric.id,
+            rubricID: lessonRubric.rubricID,
+            measurement: selectedMeasurement.name,
+            topic: lessonRubric?.rubric?.topic?.name,
+            curriculumId: lessonRubric?.rubric?.curriculumID,
+          },
+        ]);
+        setSelectedMeasurement({id: '', name: '', value: ''});
+      }
+      setSaving(false);
+    } catch {
       setMessages({
-        measurementError:
-          AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTALREADYADDED'],
-        serverError: '',
+        measurementError: '',
+        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['ADDERR'],
         addSuccess: '',
       });
-      return;
     }
-    setLessonMeasurements((prevLessonMeasurements: any) => [
-      ...prevLessonMeasurements,
-      {
-        id: selectedMeasurement.id,
-        measurement: selectedMeasurement.name,
-        topic:
-          measurementList.find((item) => item.id.toString() === selectedMeasurement.id)
-            ?.topic || '',
-      },
-    ]);
-    setSelectedMeasurement({id: '', name: '', value: ''});
-    setMessages({
-      measurementError: '',
-      serverError: '',
-      addSuccess: '',
-    });
   };
 
   const toggleModal = (id?: string) => {
@@ -145,13 +156,27 @@ const LessonMeasurements = ({lessonId}: any) => {
   };
 
   const deleteMeasurement = async () => {
-    if (showDeleteModal?.id) {
-      const filteredRubrics = [...lessonMeasurements].filter(
-        (item) => item.id !== showDeleteModal?.id
+    try {
+      const input = {
+        id: showDeleteModal.id,
+      };
+      const results: any = await API.graphql(
+        graphqlOperation(customMutations.deleteLessonRubrics, {input: input})
       );
-      setLessonMeasurements([...filteredRubrics]);
+      const lessonRubric = results.data.deleteLessonRubrics;
+      if (lessonRubric?.id) {
+        setLessonMeasurements((prevLessonMeasurements: any) =>
+          prevLessonMeasurements.filter((item: any) => item.id !== lessonRubric?.id)
+        );
+      }
+      toggleModal();
+    } catch {
+      setMessages({
+        measurementError: '',
+        serverError: GeneralInformationDict[userLanguage]['MESSAGES']['DELETEERR'],
+        addSuccess: '',
+      });
     }
-    toggleModal();
   };
   const saveMeasurements = async (lessonId: string, rubricsId: string) => {
     try {
@@ -181,12 +206,12 @@ const LessonMeasurements = ({lessonId}: any) => {
     setSelectedMeasurement({id, name, value: val});
   };
 
-  const handleSave = () => {
-    setSaving(true);
-    Promise.all(
-      lessonMeasurements.map(async (item: any) => saveMeasurements(lessonId, item.id))
-    ).then((res) => setSaving(false));
-  };
+  // const handleSave = () => {
+  //   setSaving(true);
+  //   Promise.all(
+  //     lessonMeasurements.map(async (item: any) => saveMeasurements(lessonId, item.id))
+  //   ).then((res) => setSaving(false));
+  // };
 
   return (
     <div className="p-6 border-gray-400 my-4">
@@ -209,7 +234,7 @@ const LessonMeasurements = ({lessonId}: any) => {
               <div className="mr-4">
                 <Selector
                   selectedItem={selectedMeasurement.name}
-                  list={measurementList}
+                  list={measurementOptions}
                   placeholder={AddNewLessonFormDict[userLanguage]['SELECTMEASURE']}
                   onChange={handleSelectMeasurement}
                 />
@@ -219,7 +244,7 @@ const LessonMeasurements = ({lessonId}: any) => {
                   btnClass="ml-4 py-1"
                   label="Add"
                   onClick={addNewMeasurement}
-                  disabled={selectedMeasurement.value ? false : true}
+                  disabled={saving || !measurementOptions.length}
                 />
               </div>
             </div>
@@ -270,7 +295,8 @@ const LessonMeasurements = ({lessonId}: any) => {
                         <div
                           className="w-6 h-6 cursor-pointer"
                           onClick={() => toggleModal(item.id)}>
-                          <IconContext.Provider value={{size: '1rem', color: '#B22222'}}>
+                          <IconContext.Provider
+                            value={{size: '1rem', className: 'text-red-700'}}>
                             <FaTrash />
                           </IconContext.Provider>
                         </div>
@@ -287,7 +313,7 @@ const LessonMeasurements = ({lessonId}: any) => {
               </div>
             )}
           </div>
-          <div className="flex mb-8 mt-4 justify-center">
+          {/* <div className="flex mb-8 mt-4 justify-center">
             <Buttons
               btnClass="py-3 px-10"
               label={
@@ -298,7 +324,7 @@ const LessonMeasurements = ({lessonId}: any) => {
               onClick={handleSave}
               disabled={saving || !lessonMeasurements?.length}
             />
-          </div>
+          </div> */}
         </>
       )}
       {(messages.serverError || messages.addSuccess) && (
