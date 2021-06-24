@@ -259,7 +259,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             type: formData.type?.value,
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],
-            studentSummary: formData.studentSummary,
+            // studentSummary: formData.studentSummary,
             language: formData.languages.map((item) => item.value),
             designers: selectedDesigners.map((item) => item.id),
             institutionID: formData.institution?.id,
