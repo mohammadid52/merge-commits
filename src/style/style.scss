@@ -957,3 +957,17 @@
     width: auto;
   }
 }
+
+.form-button {
+  &:hover .arrow-icon {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  & .arrow-icon {
+    transform: translateX(-5px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s linear, transform 0.3s linear;
+  }
+}

@@ -15,6 +15,7 @@ import Tooltip from '../../../Atoms/Tooltip';
 import Buttons from '../../../Atoms/Buttons';
 import ColorPicker from '../UI/ColorPicker/ColorPicker';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
+import {IoColorFill, IoColorFillOutline} from 'react-icons/io5';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -126,16 +127,19 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
       <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
         <div className={`absolute w-auto top-7 left-2 z-30`}>
-          <Tooltip
-            placement="right"
-            text={`Select background color`}>
-            <Buttons
+          <Tooltip placement="right" text={`Select background color`}>
+            {/* <Buttons
               onClick={onColorPickerToggle}
               label=""
               overrideClass={true}
               btnClass="flex items-center justify-center w-auto p-2 font-bold uppercase text-xs text-white bg-dark rounded-md"
               Icon={AiOutlineBgColors}
-            />
+            /> */}
+            <button
+              onClick={onColorPickerToggle}
+              className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+              {isColorPickerOpen ? <IoColorFill /> : <IoColorFillOutline />}
+            </button>
           </Tooltip>
           {isColorPickerOpen && (
             <div className="relative">
