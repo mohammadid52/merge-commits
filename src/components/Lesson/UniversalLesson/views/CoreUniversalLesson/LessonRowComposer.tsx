@@ -10,7 +10,7 @@ import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuild
 
 const LessonRowComposer = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
-  const [activePageData, setActivePageData] = useState<any>();
+  const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   useEffect(() => {
     const PAGES = lessonState.lessonData.lessonPlan;
@@ -19,7 +19,7 @@ const LessonRowComposer = () => {
       const ACTIVE_PAGE_DATA = PAGES[CURRENT_PAGE];
       setActivePageData(ACTIVE_PAGE_DATA);
     }
-  }, [lessonState.lessonData]);
+  }, [lessonState.lessonData, lessonState.currentPage]);
 
   return (
     <>
@@ -41,7 +41,7 @@ const LessonRowComposer = () => {
                   pagePart.partContent.map((content: PartContent, idx2: number) => {
                     if (content.value.length > 0) {
                       return (
-                        <div className={content.class} id={content.id}>
+                        <div key={`row_pagepart_${idx}_${idx2}`} className={content.class} id={content.id}>
                           {composePartContent(
                             content.id,
                             content.type,

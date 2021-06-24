@@ -35,7 +35,7 @@ const LessonApp = () => {
   useEffect(() => {
     setTimeout(() => {
       lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-    }, 2000);
+    }, 1000);
   }, []);
 
   //  RESPONSE TO LOADING LESSON DATA FETCH
@@ -56,7 +56,7 @@ const LessonApp = () => {
   return (
     <>
       <FloatingSideMenu />
-      <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
+      <div className={`${theme.bg} w-full flex flex-col items-start`}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
