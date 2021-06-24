@@ -13,44 +13,60 @@ import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
 import {awsFormatDate, dateString} from '../../utilities/time';
 import ErrorBoundary from '../Error/ErrorBoundary';
+import { GlobalContext } from '../../contexts/GlobalContext';
+import { exampleUniversalLesson } from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 
 const LessonControl = () => {
-  const {state, theme, dispatch, checkpointsItems} = useContext(LessonControlContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
   const [fullscreen, setFullscreen] = useState(false);
-  const [fullscreenInstructions, setFullscreenInstructions] = useState(false);
 
+  /**
+   *
+   * HELP SECTION:
+   *
+   *  On mount ->
+   *  1. setLessonDataLoaded -> true;
+   *
+   *
+   */
+  useEffect(() => {
+    setTimeout(() => {
+      lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+    }, 1000);
+  }, []);
+
+  //  RESPONSE TO LOADING LESSON DATA FETCH
+  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (lessonState.lessonData) {
+      setLessonDataLoaded(true);
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+      history.push(`${match.url}/${0}`);
+    }
+  }, [lessonState.lessonData]);
+
+
+
+  /**
+   *
+   * SHARING ETC.
+   *
+   *
+   */
   const [shareable, setShareable] = useState(false); // THIS ROW COPIED TO RosterRow.tsx, NEEDS TO BE REFACTORED
-
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
-  const [open, setOpen] = useState(state.open);
 
-  let pathParams: any = location.pathname.split('/');
-  pathParams = pathParams[pathParams.length - 1];
-
-  if (pathParams) {
-    // state.pages.map((p: any, index: number) => {
-    //   if (p.stage === pathParams) {
-    //     pViewed.pageID = index;
-    //     pViewed.stage = p.stage;
-    //   }
-    // });
-  }
-  const [pageViewed, setPageViewed] = useState({
-    pageID: 0,
-    stage: 'intro',
-  });
-
-  const handlePageChange = (pageID: number) => {
-    const lessonPlanStage = state.pages[pageID].stage;
-    setPageViewed({
-      pageID: pageID,
-      stage: lessonPlanStage,
-    });
-    dispatch({type: 'SET_CURRENT_PAGE', payload: pageID});
-  };
+  // const handlePageChange = (pageID: number) => {
+  //   const lessonPlanStage = state.pages[pageID].stage;
+  //   setPageViewed({
+  //     pageID: pageID,
+  //     stage: lessonPlanStage,
+  //   });
+  //   dispatch({type: 'SET_CURRENT_PAGE', payload: pageID});
+  // };
 
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
@@ -58,92 +74,92 @@ const LessonControl = () => {
     });
   };
 
-  useEffect(() => {
-    if (state.pages.length > 0 && state.unsavedChanges) {
-      handleUpdateSyllabusLesson();
-    }
-  }, [state.unsavedChanges]);
+  // useEffect(() => {
+  //   if (state.pages.length > 0 && state.unsavedChanges) {
+  //     handleUpdateSyllabusLesson();
+  //   }
+  // }, [state.unsavedChanges]);
 
-  useEffect(() => {
-    let result = /.+\/(breakdown)\/*.*/.test(location.pathname);
+  // useEffect(() => {
+  //   let result = /.+\/(breakdown)\/*.*/.test(location.pathname);
+  //
+  //   if (result) {
+  //     setShareable(true);
+  //   }
+  //
+  //   if (!result) {
+  //     setShareable(false);
+  //   }
+  // }, [location.pathname]);
 
-    if (result) {
-      setShareable(true);
-    }
+  // const getPageLabel = (locIndex: string) => {
+  //   return state.pages[parseInt(locIndex)].stage;
+  // };
 
-    if (!result) {
-      setShareable(false);
-    }
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   if (state.studentViewing.live) {
+  //     const hasCurrentLocation =
+  //       typeof state.studentViewing.studentInfo.currentLocation === 'string';
+  //     const currentLocationDefined =
+  //       typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !==
+  //       'undefined';
+  //     const lessonProgressDefined =
+  //       typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !==
+  //       'undefined';
+  //
+  //     if (hasCurrentLocation) {
+  //       if (currentLocationDefined) {
+  //         history.push(
+  //           `${match.url}/${
+  //             state.pages[state.studentViewing.studentInfo.currentLocation]?.stage
+  //           }`
+  //         );
+  //       }
+  //     } else if (!hasCurrentLocation) {
+  //       if (lessonProgressDefined) {
+  //         history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
+  //       }
+  //     }
+  //   }
+  // }, [state.studentViewing]);
 
-  const getPageLabel = (locIndex: string) => {
-    return state.pages[parseInt(locIndex)].stage;
-  };
-
-  useEffect(() => {
-    if (state.studentViewing.live) {
-      const hasCurrentLocation =
-        typeof state.studentViewing.studentInfo.currentLocation === 'string';
-      const currentLocationDefined =
-        typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !==
-        'undefined';
-      const lessonProgressDefined =
-        typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !==
-        'undefined';
-
-      if (hasCurrentLocation) {
-        if (currentLocationDefined) {
-          history.push(
-            `${match.url}/${
-              state.pages[state.studentViewing.studentInfo.currentLocation]?.stage
-            }`
-          );
-        }
-      } else if (!hasCurrentLocation) {
-        if (lessonProgressDefined) {
-          history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
-        }
-      }
-    }
-  }, [state.studentViewing]);
-
-  useEffect(() => {
-    if (
-      !state.displayData ||
-      !state.displayData.studentInfo ||
-      !state.studentViewing.studentInfo ||
-      !state.studentViewing.studentInfo.student
-    ) {
-      setIsSameStudentShared(false);
-    }
-
-    if (
-      state.displayData &&
-      state.displayData.studentInfo &&
-      state.studentViewing.studentInfo &&
-      state.studentViewing.studentInfo.student
-    ) {
-      if (
-        state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id
-      ) {
-        setIsSameStudentShared(true);
-      }
-
-      if (
-        state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id
-      ) {
-        setIsSameStudentShared(false);
-      }
-
-      if (
-        state.displayData.studentInfo.id ===
-          state.studentViewing.studentInfo.student.id &&
-        !state.studentViewing.live
-      ) {
-        setIsSameStudentShared(false);
-      }
-    }
-  }, [state.displayData, state.studentViewing]);
+  // useEffect(() => {
+  //   if (
+  //     !state.displayData ||
+  //     !state.displayData.studentInfo ||
+  //     !state.studentViewing.studentInfo ||
+  //     !state.studentViewing.studentInfo.student
+  //   ) {
+  //     setIsSameStudentShared(false);
+  //   }
+  //
+  //   if (
+  //     state.displayData &&
+  //     state.displayData.studentInfo &&
+  //     state.studentViewing.studentInfo &&
+  //     state.studentViewing.studentInfo.student
+  //   ) {
+  //     if (
+  //       state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id
+  //     ) {
+  //       setIsSameStudentShared(true);
+  //     }
+  //
+  //     if (
+  //       state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id
+  //     ) {
+  //       setIsSameStudentShared(false);
+  //     }
+  //
+  //     if (
+  //       state.displayData.studentInfo.id ===
+  //         state.studentViewing.studentInfo.student.id &&
+  //       !state.studentViewing.live
+  //     ) {
+  //       setIsSameStudentShared(false);
+  //     }
+  //   }
+  // }, [state.displayData, state.studentViewing]);
 
   /**
    * CLASSROOM DATE && STUDENT SHARING
@@ -272,13 +288,11 @@ const LessonControl = () => {
   const handleOpen = async () => {
     await handleOpenSyllabusLesson();
     dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
-    setOpen(true);
   };
 
   const handleComplete = async () => {
     await handleCompleteClassroom();
     dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
-    setOpen(true);
     handleHome();
   };
 
@@ -319,17 +333,13 @@ const LessonControl = () => {
     setLessonButton((prevState: any) => !prevState);
   };
 
-  if (state.status !== 'loaded') {
-    return <ComponentLoading />;
-  }
+  // if (state.status !== 'loaded') {
+  //   return <ComponentLoading />;
+  // }
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
-        {/**
-         * POPUPS SECTION:
-         * DEFINITELY NEEDS SOME RESTRUCTURING AND OPTIMIZATION
-         * /}
 
         {/* QUICK REGISTER */}
 
@@ -394,22 +404,27 @@ const LessonControl = () => {
         </div>
 
         {/* START TOP MENU */}
-        <TopMenu
-          shareable={shareable}
-          setShareable={setShareable}
-          isSameStudentShared={isSameStudentShared}
-          handleOpen={handleOpen}
-          handleComplete={handleComplete}
-          handleLessonButton={handleLessonButton}
-          handleQuitViewing={handleQuitViewing}
-          handleShareStudentData={handleShareStudentData}
-          handleQuitShare={handleQuitShare}
-          handleClick={handleClick}
-          handleHomePopup={handleHomePopup}
-          pageViewed={pageViewed}
-          handlePageChange={handlePageChange}
-          setQuickRegister={setQuickRegister}
-        />
+
+
+        {/*<TopMenu*/}
+        {/*  shareable={shareable}*/}
+        {/*  setShareable={setShareable}*/}
+        {/*  isSameStudentShared={isSameStudentShared}*/}
+        {/*  handleOpen={handleOpen}*/}
+        {/*  handleComplete={handleComplete}*/}
+        {/*  handleLessonButton={handleLessonButton}*/}
+        {/*  handleQuitViewing={handleQuitViewing}*/}
+        {/*  handleShareStudentData={handleShareStudentData}*/}
+        {/*  handleQuitShare={handleQuitShare}*/}
+        {/*  handleClick={handleClick}*/}
+        {/*  handleHomePopup={handleHomePopup}*/}
+        {/*  pageViewed={pageViewed}*/}
+        {/*  handlePageChange={handlePageChange}*/}
+        {/*  setQuickRegister={setQuickRegister}*/}
+        {/*/>*/}
+
+
+
         {/* END TOP MENU */}
 
         <div className={`w-full h-8.5/10 flex rounded-lg`}>
@@ -421,14 +436,15 @@ const LessonControl = () => {
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
-                  <ClassRoster
-                    handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
-                    handleShareStudentData={handleShareStudentData}
-                    isSameStudentShared={isSameStudentShared}
-                    handleQuitShare={handleQuitShare}
-                    handleQuitViewing={handleQuitViewing}
-                    handlePageChange={handlePageChange}
-                  />
+                  <h1>CLASSROSTER</h1>
+                  {/*<ClassRoster*/}
+                  {/*  handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}*/}
+                  {/*  handleShareStudentData={handleShareStudentData}*/}
+                  {/*  isSameStudentShared={isSameStudentShared}*/}
+                  {/*  handleQuitShare={handleQuitShare}*/}
+                  {/*  handleQuitViewing={handleQuitViewing}*/}
+                  {/*  handlePageChange={handlePageChange}*/}
+                  {/*/>*/}
                 </ErrorBoundary>
               </div>
             </div>
@@ -439,18 +455,17 @@ const LessonControl = () => {
             className={`relative 
             ${fullscreen ? 'w-full' : 'w-6/10'} relative 
             w-6/10 lg:w-full h-full flex flex-col items-center`}>
-            <StudentWindowTitleBar
-              setFullscreenInstructions={setFullscreenInstructions}
-              fullscreenInstructions={fullscreenInstructions}
-              handleFullscreen={handleFullscreen}
-              fullscreen={fullscreen}
-              pageViewed={pageViewed}
-              instructions={instructions}
-              setInstructions={setInstructions}
-            />
+            {/*<StudentWindowTitleBar*/}
+            {/*  setFullscreenInstructions={setFullscreenInstructions}*/}
+            {/*  fullscreenInstructions={fullscreenInstructions}*/}
+            {/*  handleFullscreen={handleFullscreen}*/}
+            {/*  fullscreen={fullscreen}*/}
+            {/*  pageViewed={pageViewed}*/}
+            {/*  instructions={instructions}*/}
+            {/*  setInstructions={setInstructions}*/}
+            {/*/>*/}
 
-            <div
-              className={`
+            <div className={`
                           ${fullscreen ? 'h-full' : 'h-full'}
                           ${theme.bg} 
                           relative w-full  
@@ -462,16 +477,12 @@ const LessonControl = () => {
                *
                * */}
               {instructions.visible && instructions.available ? (
-                <div
-                  className={`
-                            ${fullscreen ? 'h-full' : 'h-full'}
-                            absolute w-full
-                            border-t-2 border-black
-                            overflow-hidden bg-black bg-opacity-40 z-100`}>
-                  <div
-                    className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
-                    <div
-                      className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
+                <div className={`${fullscreen ? 'h-full' : 'h-full'}
+                              absolute w-full
+                              border-t-2 border-black
+                              overflow-hidden bg-black bg-opacity-40 z-100`}>
+                  <div className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
+                    <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
                       {instructions.content}
                     </div>
                   </div>
@@ -497,15 +508,14 @@ const LessonControl = () => {
                    *
                    *
                    */}
-                  {checkpointsItems && (
                     <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                      <Body
-                        fullscreenInstructions={fullscreenInstructions}
-                        setInstructions={setInstructions}
-                        checkpointsItems={checkpointsItems}
-                      />
+                      <h1>Body of the teacher lesson</h1>
+                      {/*<Body*/}
+                      {/*  fullscreenInstructions={fullscreenInstructions}*/}
+                      {/*  setInstructions={setInstructions}*/}
+                      {/*  checkpointsItems={checkpointsItems}*/}
+                      {/*/>*/}
                     </ErrorBoundary>
-                  )}
                 </Suspense>
               </div>
             </div>

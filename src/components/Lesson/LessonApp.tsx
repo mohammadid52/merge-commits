@@ -23,7 +23,6 @@ const LessonApp = () => {
 
   /**
    *
-   *  TODO: UPDATE THIS FOR THE UNIVERSALLESSONDATA STRUCTURE
    * HELP SECTION:
    *
    *  On mount ->
