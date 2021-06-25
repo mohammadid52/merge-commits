@@ -45,6 +45,7 @@ import {
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
+import LessonPlanNavigation from '../UI/LessonPlanNavigation';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -486,7 +487,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     <div
       id={`builderWrapper`}
       className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
-      <Toolbar
+      {/* <Toolbar
         universalLessonDetails={universalLessonDetails}
         deleteFromULBHandler={deleteFromULBHandler}
         selectedPageID={selectedPageID}
@@ -502,6 +503,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         hideAllModals={hideAllModals}
         currentModalDialog={currentModalDialog}
         handleModalPopToggle={handleModalPopToggle}
+      /> */}
+      <LessonPlanNavigation
+        selectedPageID={selectedPageID}
+        universalLessonDetails={universalLessonDetails}
       />
 
       {modalPopVisible && (
@@ -566,7 +571,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           </div>
         </Modal>
       )}
-      <HierarchyPanel
+      {/* <HierarchyPanel
         universalLessonDetails={universalLessonDetails}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
@@ -582,7 +587,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
         setBuilderMenuVisible={setBuilderMenuVisible}
-      />
+      /> */}
 
       <CoreBuilder
         mode={mode}
