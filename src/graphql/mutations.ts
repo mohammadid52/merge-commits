@@ -10604,3 +10604,147 @@ export const deletePlanner = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalLesson = /* GraphQL */ `
+  mutation CreateUniversalLesson(
+    $input: CreateUniversalLessonInput!
+    $condition: ModelUniversalLessonConditionInput
+  ) {
+    createUniversalLesson(input: $input, condition: $condition) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalLesson = /* GraphQL */ `
+  mutation UpdateUniversalLesson(
+    $input: UpdateUniversalLessonInput!
+    $condition: ModelUniversalLessonConditionInput
+  ) {
+    updateUniversalLesson(input: $input, condition: $condition) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalLesson = /* GraphQL */ `
+  mutation DeleteUniversalLesson(
+    $input: DeleteUniversalLessonInput!
+    $condition: ModelUniversalLessonConditionInput
+  ) {
+    deleteUniversalLesson(input: $input, condition: $condition) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

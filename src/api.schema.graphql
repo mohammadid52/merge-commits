@@ -117,11 +117,14 @@ type Room
   location: String
   startDate: AWSDate
   startTime: AWSTime
+  endDate: AWSDate
+  endTime: AWSTime
   length: Int
   repeat: String
   notes: String
   activeSyllabus: String
   coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
+  frequency: String
 }
 
 type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
@@ -650,6 +653,8 @@ type Lesson @model @key(fields: ["id"]) {
   institutionID: ID!
   institution: Institution @connection(fields: ["institutionID"])
   duration: Int
+  resources: String
+  notes: String
 }
 
 type LessonRubrics @model @key(name: "byLesson", fields: ["lessonID", "rubricID"]) {
@@ -875,6 +880,86 @@ type NoticeboardWidget @model {
   links: [Links]
   active: Boolean
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+}
+
+type Attendance @model {
+  id: ID!
+  studentID: ID!
+  curriculumID: ID
+  syllabusID: ID
+  lessonID: ID
+  time: AWSDateTime
+}
+
+type Planner @model {
+  id: ID!
+  type: String
+  lessonID: ID
+  lessonName: String
+  syllabusID: ID
+  roomID: ID
+  description: String
+  startDate: AWSDate
+  endDate: AWSDate
+  duration: Int
+}
+
+type UniversalLesson @model @key(fields: ["id"]) {
+  id: ID!
+  type: String!
+  label: String
+  title: String!
+  institutionID: ID!
+  language: [Language!]
+  designers: [String]
+  objectives: [String]
+  purpose: String
+  introduction: String
+  introductionTitle: String
+  instructions: [String]
+  instructionsTitle: String
+  summary: String
+  summaryTitle: String
+  duration: Int
+  resources: String
+  notes: String
+  cardImage: String
+  cardCaption: String
+  lessonPlan: [UniversalLessonPlan]
+}
+
+type UniversalLessonPlan {
+  id: String
+  title: String
+  label: String
+  description: String
+  class: String
+  active: Boolean
+  disabled: Boolean
+  displayMode: String
+  open: Boolean
+  pageContent: [UniversalpageContent]
+}
+
+type UniversalpageContent {
+  id: String
+  tags: [String]
+  partType: String
+  class: String
+  partContent: [UniversalPartContent]
+}
+
+type UniversalPartContent {
+  id: String
+  type: String
+  value: [UniversalContent]
+}
+
+type UniversalContent {
+  id: String
+  type: String
+  label: String
+  value: String
 }
 
 type Subscription {
