@@ -12,7 +12,8 @@ import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData'
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import {MovableListProvider} from './MovableListContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as queries from '../../../graphql/queries';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -310,9 +311,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
           let activePagePartContentData = [...activePageContentData.partContent];
-          const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${activePagePartContentData.filter(
-            (item) => item.type === contentType
-          ).length}`;
+          const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${
+            activePagePartContentData.filter((item) => item.type === contentType).length
+          }`;
           activePagePartContentData[addBlockAtPosition] = {
             id: partContentId,
             type: contentType,
@@ -403,6 +404,21 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     };
     setUniversalLessonDetails(temp);
   };
+
+  // const listLessons = async () => {
+  //   try {
+  //     const result: any = await API.graphql(
+  //       graphqlOperation(queries.listUniversalLessons)
+  //     );
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   listLessons();
+  // }, []);
 
   // console.log(universalLessonDetails, 'universalLessonDetails');
 
