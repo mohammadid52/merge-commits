@@ -10203,3 +10203,138 @@ export const onDeletePlanner = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUniversalLesson = /* GraphQL */ `
+  subscription OnCreateUniversalLesson {
+    onCreateUniversalLesson {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalLesson = /* GraphQL */ `
+  subscription OnUpdateUniversalLesson {
+    onUpdateUniversalLesson {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalLesson = /* GraphQL */ `
+  subscription OnDeleteUniversalLesson {
+    onDeleteUniversalLesson {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
