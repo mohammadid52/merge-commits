@@ -45,7 +45,7 @@ const ClassRoster = (props: classRosterProps) => {
     handleQuitViewing,
     handlePageChange,
   } = props;
-  const { state, dispatch } = useContext(LessonControlContext);
+  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(GlobalContext);
   const { clientKey, userLanguage } = useContext(GlobalContext);
   const { lessonPlannerDict } = useDictionary(clientKey);
 
@@ -111,7 +111,7 @@ const ClassRoster = (props: classRosterProps) => {
     try {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
-          filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
+          filter: { syllabusLessonID: { contains: lessonState.syllabusLessonID } },
         })
       );
       const syllabusLessonStudentList = syllabusLessonStudents.data.listPersonLocations.items;
@@ -120,7 +120,7 @@ const ClassRoster = (props: classRosterProps) => {
         if(findStudentInClasslist) return findStudentInClasslist;
       })
       setPersonLocationStudents(studentsFromThisClass);
-      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentsFromThisClass } });
+      controlDispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentsFromThisClass } });
       subscription = subscribeToPersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
@@ -130,14 +130,14 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   useEffect(() => {
-    if (state.syllabusLessonID && state.roster.length === 0) {
+    if (lessonState.syllabusLessonID && controlState.roster.length === 0) {
       getSyllabusLessonStudents();
     }
-  }, [state.syllabusLessonID]);
+  }, [lessonState.syllabusLessonID]);
 
   // Subscriptions and updating
   const subscribeToPersonLocations = () => {
-    const syllabusLessonID = state.syllabusLessonID;
+    const syllabusLessonID = lessonState.syllabusLessonID;
     // @ts-ignore
     const personLocationSubscription = API.graphql(
       graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })
@@ -157,7 +157,6 @@ const ClassRoster = (props: classRosterProps) => {
 
   // Update the student roster
   useEffect(() => {
-    console.log('current location: ', state.studentViewing?.studentInfo?.currentLocation);
     const updateStudentRoster = (newStudent: any) => {
       const studentExists =
         personLocationStudents.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
@@ -172,13 +171,13 @@ const ClassRoster = (props: classRosterProps) => {
           }
         });
         setPersonLocationStudents(existRoster);
-        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
+        controlDispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
         setUpdatedStudent({});
       } else {
         // console.log('student exists NO', ' --> update loc')
         const newRoster = [...personLocationStudents, newStudent];
         setPersonLocationStudents(newRoster);
-        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
+        controlDispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
         setUpdatedStudent({});
       }
     };
@@ -189,13 +188,13 @@ const ClassRoster = (props: classRosterProps) => {
 
   const handleSelect = async (e: any) => {
     const { id } = e.target;
-    const selected = state.roster.filter((student: any) => {
+    const selected = controlState.roster.filter((student: any) => {
       return student.personAuthID === id;
     });
 
     // console.log('row ID : ', id)
     setViewedStudent(id);
-    dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
+    controlDispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
   };
 
   const handleManualRefresh = () => {
@@ -205,7 +204,7 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   const inactiveStudents = classStudents.filter((student: any) => {
-    const isInStateRoster = state.roster.find(
+    const isInStateRoster = controlState.roster.find(
       (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
     );
     if (isInStateRoster === undefined) {
@@ -235,15 +234,15 @@ const ClassRoster = (props: classRosterProps) => {
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
-        {state.roster.length > 0 ? (
+        {controlState.roster.length > 0 ? (
           <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
             {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
           </div>
         ) : null}
 
         {/* STUDENTS - Active */}
-        {state.roster.length > 0
-          ? state.roster.map((student: any, key: number) => (
+        {controlState.roster.length > 0
+          ? controlState.roster.map((student: any, key: number) => (
               <RosterRow
                 key={key}
                 keyProp={key}

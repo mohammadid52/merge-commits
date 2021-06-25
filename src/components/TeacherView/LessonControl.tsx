@@ -59,14 +59,10 @@ const LessonControl = () => {
   const [shareable, setShareable] = useState(false); // THIS ROW COPIED TO RosterRow.tsx, NEEDS TO BE REFACTORED
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
 
-  // const handlePageChange = (pageID: number) => {
-  //   const lessonPlanStage = state.pages[pageID].stage;
-  //   setPageViewed({
-  //     pageID: pageID,
-  //     stage: lessonPlanStage,
-  //   });
-  //   dispatch({type: 'SET_CURRENT_PAGE', payload: pageID});
-  // };
+
+  const handlePageChange = (pageNr: number) => {
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
+  };
 
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
@@ -79,18 +75,6 @@ const LessonControl = () => {
   //     handleUpdateSyllabusLesson();
   //   }
   // }, [state.unsavedChanges]);
-
-  // useEffect(() => {
-  //   let result = /.+\/(breakdown)\/*.*/.test(location.pathname);
-  //
-  //   if (result) {
-  //     setShareable(true);
-  //   }
-  //
-  //   if (!result) {
-  //     setShareable(false);
-  //   }
-  // }, [location.pathname]);
 
   // const getPageLabel = (locIndex: string) => {
   //   return state.pages[parseInt(locIndex)].stage;
@@ -406,22 +390,21 @@ const LessonControl = () => {
         {/* START TOP MENU */}
 
 
-        {/*<TopMenu*/}
-        {/*  shareable={shareable}*/}
-        {/*  setShareable={setShareable}*/}
-        {/*  isSameStudentShared={isSameStudentShared}*/}
-        {/*  handleOpen={handleOpen}*/}
-        {/*  handleComplete={handleComplete}*/}
-        {/*  handleLessonButton={handleLessonButton}*/}
-        {/*  handleQuitViewing={handleQuitViewing}*/}
-        {/*  handleShareStudentData={handleShareStudentData}*/}
-        {/*  handleQuitShare={handleQuitShare}*/}
-        {/*  handleClick={handleClick}*/}
-        {/*  handleHomePopup={handleHomePopup}*/}
-        {/*  pageViewed={pageViewed}*/}
-        {/*  handlePageChange={handlePageChange}*/}
-        {/*  setQuickRegister={setQuickRegister}*/}
-        {/*/>*/}
+        <TopMenu
+          shareable={shareable}
+          setShareable={setShareable}
+          isSameStudentShared={isSameStudentShared}
+          handleOpen={handleOpen}
+          handleComplete={handleComplete}
+          handleLessonButton={handleLessonButton}
+          handleQuitViewing={handleQuitViewing}
+          handleShareStudentData={handleShareStudentData}
+          handleQuitShare={handleQuitShare}
+          handleClick={handleClick}
+          handleHomePopup={handleHomePopup}
+          handlePageChange={handlePageChange}
+          setQuickRegister={setQuickRegister}
+        />
 
 
 
@@ -437,14 +420,14 @@ const LessonControl = () => {
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
                   <h1>CLASSROSTER</h1>
-                  {/*<ClassRoster*/}
-                  {/*  handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}*/}
-                  {/*  handleShareStudentData={handleShareStudentData}*/}
-                  {/*  isSameStudentShared={isSameStudentShared}*/}
-                  {/*  handleQuitShare={handleQuitShare}*/}
-                  {/*  handleQuitViewing={handleQuitViewing}*/}
-                  {/*  handlePageChange={handlePageChange}*/}
-                  {/*/>*/}
+                  <ClassRoster
+                    handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
+                    handleShareStudentData={handleShareStudentData}
+                    isSameStudentShared={isSameStudentShared}
+                    handleQuitShare={handleQuitShare}
+                    handleQuitViewing={handleQuitViewing}
+                    handlePageChange={handlePageChange}
+                  />
                 </ErrorBoundary>
               </div>
             </div>
@@ -455,15 +438,12 @@ const LessonControl = () => {
             className={`relative 
             ${fullscreen ? 'w-full' : 'w-6/10'} relative 
             w-6/10 lg:w-full h-full flex flex-col items-center`}>
-            {/*<StudentWindowTitleBar*/}
-            {/*  setFullscreenInstructions={setFullscreenInstructions}*/}
-            {/*  fullscreenInstructions={fullscreenInstructions}*/}
-            {/*  handleFullscreen={handleFullscreen}*/}
-            {/*  fullscreen={fullscreen}*/}
-            {/*  pageViewed={pageViewed}*/}
-            {/*  instructions={instructions}*/}
-            {/*  setInstructions={setInstructions}*/}
-            {/*/>*/}
+            <StudentWindowTitleBar
+              handleFullscreen={handleFullscreen}
+              fullscreen={fullscreen}
+              instructions={instructions}
+              setInstructions={setInstructions}
+            />
 
             <div className={`
                           ${fullscreen ? 'h-full' : 'h-full'}
