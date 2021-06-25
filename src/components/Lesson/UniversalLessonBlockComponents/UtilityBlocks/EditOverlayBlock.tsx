@@ -1,36 +1,56 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 
-const EditOverlayBlock = (props: RowWrapperProps) => {
+interface IEditOverlayBlockProps extends RowWrapperProps {
+  handleEditBlockContent?: () => void;
+  section?: string;
+}
+
+const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
   const {
     mode,
+    createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     children,
+    classString,
     contentID,
     editedID,
     isComponent,
-    isLast,
+    // isLast,
+    handleEditBlockContent,
     handleEditBlockToggle,
+    isPagePart,
+    section
   } = props;
-
+  const {previewMode} = useULBContext();
   return (
-    <>
+    <Fragment key={`${contentID}`}>
       {mode === 'building' ? (
         <div
           className={`
         relative 
-        h-auto 
-        flex items-center
-        ${isComponent && !isLast ? 'border-b-0 border-dashed border-gray-400' : ''}
+        ${section === "partContent" ? 'h-full' : 'h-auto'} 
+        flex items-center rowWrapper
+        ${
+          isComponent && !previewMode
+            ? 'border-b-0 border-dashed border-gray-400 pb-1'
+            : ''
+        }
         `}>
           <EditOverlayControls
             mode={mode}
             contentID={contentID}
+            classString={classString}
             isActive={contentID === editedID}
             isComponent={isComponent}
+            isPagePart={isPagePart}
+            section={section}
+            handleEditBlockContent={handleEditBlockContent}
             handleEditBlockToggle={handleEditBlockToggle}
+            createNewBlockULBHandler={createNewBlockULBHandler}
             deleteFromULBHandler={deleteFromULBHandler}
             updateFromULBHandler={updateFromULBHandler}
           />
@@ -39,7 +59,7 @@ const EditOverlayBlock = (props: RowWrapperProps) => {
       ) : (
         children
       )}
-    </>
+    </Fragment>
   );
 };
 

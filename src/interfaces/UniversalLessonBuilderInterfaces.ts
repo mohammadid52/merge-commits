@@ -18,8 +18,28 @@ export interface ULBDialogComponent {
 
 export interface ULBSelectionProps {
   universalLessonDetails?: UniversalLesson;
-  deleteFromULBHandler?: (targetID:string) => void;
-  updateFromULBHandler?: (targetID:string, propertyToTarget: string, replacementValue?: string) => void;
+  deleteFromULBHandler?: (targetID: string) => void;
+  updateFromULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    replacementValue?: string
+  ) => void;
+  createNewBlockULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    replacementValue?: any,
+    addBlockAtPosition?: number,
+    classString?: string
+  ) => void;
+  updateBlockContentULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputObj?: any,
+    addBlockAtPosition?: number,
+    classString?:string
+  ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
   targetID?: string;
@@ -28,13 +48,15 @@ export interface ULBSelectionProps {
   setSelectedPagePartID?: React.Dispatch<React.SetStateAction<string>>;
   selectedPartContentID?: string;
   setSelectedPartContentID?: React.Dispatch<React.SetStateAction<string>>;
+  handleTagModalOpen?: (targetID: string, inputObj:any) => void;
 }
 
 export interface RowComposerProps extends ULBSelectionProps {
-  mode: 'building' | 'viewing';
+  mode: 'building' | 'viewing' | 'lesson';
   contentID?: string;
   dataIdAttribute?: string;
-  handleModalPopToggle?: (dialogToToggle: string) => void;
+  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number, classString?:string) => void;
+  handleModalPopToggle?: (dialogToToggle: string, position?: Number, section?:string, targetID?:string) => void;
 }
 
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
@@ -49,4 +71,26 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   isComponent?: boolean;
   isLast?: boolean;
   handleEditBlockToggle?: () => void;
+  idx?: number;
+  isPagePart?: boolean;
+}
+
+export interface IContentTypeComponentProps {
+  closeAction: () => void;
+  createNewBlockULBHandler: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any,
+    position?:number,
+    classString?:string
+  ) => void;
+  updateBlockContentULBHandler: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any,
+    addBlockAtPosition?: number,
+    classString?: string
+  ) => void;
 }

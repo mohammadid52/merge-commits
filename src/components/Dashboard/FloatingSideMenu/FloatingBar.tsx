@@ -1,17 +1,13 @@
-import React, {useContext} from 'react';
-import ButtonsRound from '../../Atoms/ButtonsRound';
-import {AiOutlineSearch} from 'react-icons/ai';
-import {IoChatbubble, IoDocument} from 'react-icons/io5';
-import {CallLinkLauncher} from './Launchers/CallLinkLauncher';
-import {FloatingSideMenuProps} from './FloatingSideMenu';
-import {BsPencilSquare} from 'react-icons/bs';
-import {LessonContext} from '../../../contexts/LessonContext';
+import React, { useContext } from 'react';
+import { CallLinkLauncher } from './Launchers/CallLinkLauncher';
+import { FloatingSideMenuProps } from './FloatingSideMenu';
 import { NotesLauncher } from './Launchers/NotesLauncher';
 import { ChatroomListLauncher } from './Launchers/ChatroomListLauncher';
 import { FilesListLauncher } from './Launchers/FilesListLauncher';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 export const FloatingBar = (props: FloatingSideMenuProps) => {
-  const LessonCTX = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const {menuState, setMenuState, focusSection, setFocusSection, chatroom} = props;
 
   const handleSectionButtons = (section: string, callback?: any, callbackArg?: any) => {
@@ -129,7 +125,7 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
       {/*  />*/}
       {/*</div>*/}
 
-      {LessonCTX !== null ? <NotesLauncher callback={handleSectionButtons} /> : null}
+      {lessonState !== null ? <NotesLauncher callback={handleSectionButtons} /> : null}
 
       <div
         onClick={() => handleSectionButtons(focusSection)}

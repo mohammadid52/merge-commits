@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {LessonActions} from '../reducers/LessonReducer';
+import {LessonActions} from '../reducers/LessonReducerOLD';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
 import {AnthologyContentInterface} from '../components/Dashboard/Anthology/Anthology';
 import * as mutations from '../graphql/mutations';
 import {useParams} from 'react-router-dom';
-import {lessonState} from '../state/LessonState';
+import {lessonStateOLD} from '../state/LessonStateOLD';
 
 interface inputs {
   subscription?: any;
@@ -31,7 +31,7 @@ const timerInitialParams: timerStateType = {
   subscribeFunc: null,
   dispatch: null,
   callback: null,
-  state: lessonState,
+  state: lessonStateOLD,
   activeTimer: null,
   idleTimer: null,
   autoSaveInterval: null,
@@ -63,7 +63,7 @@ const useStudentTimer = (inputs?: inputs) => {
    */
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
-    const isLesson = state.data.lesson.type === 'lesson';
+    const isLesson = false;
     if (isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);
@@ -98,7 +98,7 @@ const useStudentTimer = (inputs?: inputs) => {
   // COMPONENT CHANGE --> save after 60 secs
   // COMPONENT CHANGE --> checkpoint in lesson && lesson
   useEffect(() => {
-    const isLesson = state.data.lesson.type === 'lesson';
+    const isLesson = false;
     if (isLesson) {
       if (state.viewing) {
         clearTimeout(activityTimeout);

@@ -4,13 +4,20 @@ interface TooltipProps {
   children: any;
   show?: boolean;
   placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
+  additionalClass?: string;
 }
 
-const Tooltip = ({text, show = true, placement = 'right', children}: TooltipProps) => {
+const Tooltip = ({
+  text,
+  show = true,
+  placement = 'right',
+  children,
+  additionalClass = '',
+}: TooltipProps) => {
   if (show) {
     return (
       <div
-        className="font-medium w-auto absolute"
+        className={`font-medium w-auto absolute ${additionalClass}`}
         data-tooltip={text}
         data-tooltip-location={placement}>
         {children}

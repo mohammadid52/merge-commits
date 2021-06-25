@@ -10,13 +10,12 @@ interface StringifyBlockProps extends RowWrapperProps {
 }
 
 export const StringifyBlock = (props: StringifyBlockProps) => {
-  const {mode, id, dataIdAttribute, anyObj, handleEditBlockToggle} = props;
+  const {mode, id, anyObj, handleEditBlockToggle} = props;
   return (
-    <p
-      id={id}
-      data-id={dataIdAttribute}
-      className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}>
-      {JSON.stringify(anyObj)}
-    </p>
+    <div id={id} className="">
+      <p className={`bg-white bg-opacity-20 px-4 py-5 sm:p-6`}>
+        {JSON.stringify(anyObj)}
+      </p>
+    </div>
   );
 };

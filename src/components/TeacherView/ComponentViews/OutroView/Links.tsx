@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { IconContext } from "react-icons/lib/esm/iconContext";
 import { FaRegSave, FaHome } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
-import { LessonContext } from '../../../../contexts/LessonContext';
 
 interface props {
         fullscreen: boolean

@@ -1,3 +1,8 @@
+/**
+ * THIS WILL CHANGE BECAUSE OF
+ * TYPE DEFINITION UPDATES
+ */
+
 const exampleFinalStudentContext = {
   status: 'loaded',
   universalLessonID: '7ad8e2ce-2882-4d8c-9b03-383310a56482', // formerly: syllabusLessonID
@@ -24,7 +29,7 @@ const exampleFinalStudentContext = {
       { enabled: true, open: false, active: false, label: 'Checkpoint', displayMode: 'SELF' },
       { enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF' },
     ],
-    universalLessonPages: [
+    lessonPlan: [
       {
         id: 'page_1',
         title: '',

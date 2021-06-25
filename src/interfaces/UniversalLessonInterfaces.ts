@@ -6,7 +6,7 @@ export interface UniversalLesson{
   id: string;
   isDraft?: boolean; //will determine if curriculum builder can see lesson to add to syllabus
   institute?: string;
-  designers: string[];
+  designers?: string[];
   teachers?: string[];
   summary?: string;
   purpose?: string; //input this information on LESSON
@@ -15,8 +15,7 @@ export interface UniversalLesson{
   unit?: string; //get this information from LESSON PLAN BUILDER
   categories?: string[];
   additionalFiles?: string[];
-  universalLessonPlan: UniversalLessonPlanStage[];
-  universalLessonPages: UniversalLessonPage[];
+  lessonPlan: UniversalLessonPage[];
 }
 
 export interface UniversalLessonPlanStage {
@@ -36,11 +35,15 @@ interface UniversalLessonPages {
 //
 export interface UniversalLessonPage {
   id: string;
-  title: string;
-  description: string;
-  class: string;
-  pageContent: PagePart[];
-  dataLifecycleManagements?: boolean; //will determine if cleanup happens for page
+  enabled?: boolean;
+  open?: boolean;
+  active?: boolean;
+  label?: string;
+  title?: string;
+  description?: string;
+  class?: string;
+  estTime?: number;
+  pageContent?: PagePart[];
   [key: string]:any;
 }
 
@@ -57,6 +60,13 @@ export interface PartContent {
   type?: string;
   value: any[];
   [key: string]:any;
+}
+
+export interface PartContentSub {
+  id?: string;
+  type?: string;
+  label?: string;
+  value?: string;
 }
 
 /**************************************
@@ -81,5 +91,5 @@ export interface StudentDataPageData {
 
 export interface PagePartInput {
   domID: string;
-  input: string;
+  input: string[];
 }

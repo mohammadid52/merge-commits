@@ -24,8 +24,9 @@ import { handleFetchAndCache } from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
-import { useParams } from 'react-router';
+import {useParams} from 'react-router';
 import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
 import axios from 'axios';
@@ -1048,11 +1049,14 @@ const Dashboard = (props: DashboardProps) => {
               render={() => <LessonsBuilderHome />}
             />
 
-            {/* <Route
+            <Route
               path={`${match.url}/universal-lesson-builder`}
-              render={() => <UniversalLessonBuilder />}
-            /> */}
-
+              render={() => (
+                <UniversalLessonBuilderProvider>
+                  <UniversalLessonBuilder />
+                </UniversalLessonBuilderProvider>
+              )}
+            />
           </Switch>
         </Suspense>
       </div>

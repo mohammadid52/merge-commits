@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { LessonContext } from '../../../../../contexts/LessonContext';
 // import { useCookies } from 'react-cookie';
 import { LessonControlContext } from '../../../../../contexts/LessonControlContext';
 

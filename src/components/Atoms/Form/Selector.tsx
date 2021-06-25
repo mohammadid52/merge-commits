@@ -13,10 +13,12 @@ interface SelectorProps {
   onChange: (c: string, n: string, id: string) => void;
   disabled?: boolean;
   loading?: boolean;
+  label?: string;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   const {
+    label,
     list,
     selectedItem,
     btnClass,
@@ -70,6 +72,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   return (
     <div className="relative" ref={currentRef}>
+      {label && (
+        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+          {label}
+        </label>
+      )}
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           disabled={disabled || loading}
@@ -80,7 +87,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           aria-labelledby="listbox-label"
           className={`${
             disabled || loading ? 'bg-gray-100' : ''
-          } flex relative items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          } flex focus:outline-none focus:ring-2 focus:ring-${
+            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+          }-600 focus:border-transparent  relative items-center cursor-pointer  w-full h-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">
@@ -132,8 +141,13 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   key={key}
                   onClick={() => updateSelectedItem(item.value, item.name, item.id)}
                   id={item.id}
+                  tabIndex={-1}
                   role="option"
-                  className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
+                  className={`hover:${
+                    theme.backGroundLight[themeColor]
+                  } hover:text-white flex cursor-pointer select-none relative py-2 px-4 focus:outline-none focus:ring-2 focus:ring-${
+                    themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                  }-600 focus:border-transparent`}>
                   <span
                     className={`${selectedItem === item.name ? 'display' : 'hidden'} ${
                       theme.textColor[themeColor]
