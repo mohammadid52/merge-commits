@@ -37,22 +37,6 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
 
-  /**
-   * Function for getting the object from state of
-   * currently viewed page
-   */
-  // const getCurrentPage = () => {
-  //   if (pageViewed.pageID !== null) {
-  //     return state.pages[pageViewed.pageID];
-  //   }
-  // };
-  // const getPreviousPage = () => {
-  //   if (pageViewed.pageID !== null) {
-  //     return state.pages[pageViewed.pageID - 1];
-  //   }
-  // };
-
-
 
   /**
    * Variable referring to ^ function above
@@ -60,25 +44,14 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   const isOpen = activePageData ? activePageData.open : false;
 
   /**
-   * Functioon for disabling lessons
-   * @param type - Context action e.g. 'DISABLE_LESSON'
-   */
-  const handleStateChange = (type: string) => {
-    // dispatch({
-    //   type: type,
-    //   payload: {stage: pageViewed.stage, pageIndex: pageViewed.pageID},
-    // });
-  };
-
-  /**
    * Function for opening/closing components for students
-   * @param open - if boolean value is true, close, else open
+   * @param pageNr
    */
-  const handleOpenCloseComponent = (open: boolean) => {
-    if (open) {
-      return handleStateChange('CLOSE_LESSON');
-    }
-    return handleStateChange('OPEN_LESSON');
+  const handleOpenCloseComponent = (pageNr: number) => {
+    lessonDispatch({
+      type: 'TOGGLE_OPEN_PAGE',
+      payload: pageNr,
+    });
   };
 
   return (
@@ -97,17 +70,17 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
          *
          */}
         {lessonState.currentPage !== 0 &&
-        (activePageData && activePageData.disabled === false) ? (
+        (activePageData && activePageData.enabled === true) ? (
           activePageData.open ? (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
-              onClick={() => handleOpenCloseComponent(isOpen)}>
+              onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>
               Close Component
             </span>
           ) : (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
-              onClick={() => handleOpenCloseComponent(isOpen)}>
+              onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>
               Open Component
             </span>
           )

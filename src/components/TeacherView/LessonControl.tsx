@@ -47,7 +47,7 @@ const LessonControl = () => {
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
     }
-  }, [lessonState.lessonData]);
+  }, [lessonState.lessonData.id]);
 
 
 
@@ -489,11 +489,6 @@ const LessonControl = () => {
                    *
                    */}
                     <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                      {/*<Body*/}
-                      {/*  fullscreenInstructions={fullscreenInstructions}*/}
-                      {/*  setInstructions={setInstructions}*/}
-                      {/*  checkpointsItems={checkpointsItems}*/}
-                      {/*/>*/}
                       <CoreUniversalLesson/>
                     </ErrorBoundary>
                 </Suspense>

@@ -1,6 +1,7 @@
 import {lessonState} from '../state/LessonState';
 import {
   UniversalLesson,
+  UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
 // import { useStudentTimer } from '../customHooks/timer'
@@ -20,6 +21,10 @@ export type LessonActions =
     }
   | {
       type: 'SET_CURRENT_PAGE';
+      payload: number;
+    }
+  | {
+      type: 'TOGGLE_OPEN_PAGE';
       payload: number;
     }
   | {
@@ -44,6 +49,17 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       };
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
+    case 'TOGGLE_OPEN_PAGE':
+      const mappedPages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (idx !== action.payload) {
+            return page;
+          } else {
+            return {...page, open: !page.open};
+          }
+        }
+      );
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedPages}};
     case 'CLEANUP':
       return lessonState;
     default:
