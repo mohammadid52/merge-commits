@@ -1,12 +1,13 @@
-import React, {lazy, Suspense, useContext, useEffect, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
+import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import Auth from '@aws-amplify/auth';
+import { GlobalContext } from '../../contexts/GlobalContext';
+import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 
-import {getArrayOfUniqueValueByProperty} from '../../utilities/arrays';
-import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
+import { getArrayOfUniqueValueByProperty } from '../../utilities/arrays';
+import { createFilterToFetchSpecificItemsOnly } from '../../utilities/strings';
 import SideMenu from './Menu/SideMenu';
-import {useCookies} from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
@@ -19,7 +20,7 @@ import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
-import {handleFetchAndCache} from '../../utilities/sessionData';
+import { handleFetchAndCache } from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
@@ -28,6 +29,7 @@ import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLe
 import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
+import axios from 'axios';
 // const happyEmoji = require('')
 
 // import ClassroomControl from './ClassroomControl/ClassroomControl';
@@ -112,14 +114,14 @@ const EmojiFeedback = ({
 }: {
   justLoggedIn: boolean;
   onSave: (response: string) => void;
-  greetQuestion: {question: string};
+  greetQuestion: { question: string };
 }) => {
   const onSubmit = () => {
     setShowGreetings(false);
     onSave(selectedEmoji.emoji);
   };
 
-  const [selectedEmoji, setSelectedEmoji] = useState({id: '', emoji: '', name: ''});
+  const [selectedEmoji, setSelectedEmoji] = useState({ id: '', emoji: '', name: '' });
   const [showGreetings, setShowGreetings] = useState(justLoggedIn);
   // const [range, setRange] = useState(5);
   // const showRangeSlider = selectedEmoji.name !== '';
@@ -135,7 +137,7 @@ const EmojiFeedback = ({
         showHeaderBorder={false}
         showFooter={false}>
         <div
-          style={{minHeight: '10rem'}}
+          style={{ minHeight: '10rem' }}
           className={` flex relative items-center min-w-132 justify-center flex-col`}>
           <p className="w-auto mb-6 text-2xl font-semibold">
             {greetQuestion?.question || DEFAULT_QUESTION}
@@ -156,10 +158,9 @@ const EmojiFeedback = ({
                 <Tooltip key={id} text={name} placement="bottom">
                   {link ? (
                     <div
-                      onClick={() => setSelectedEmoji({emoji, id, name})}
-                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center feedback-emoji ${
-                        selectedEmoji.id === id ? 'selected' : ''
-                      }`}>
+                      onClick={() => setSelectedEmoji({ emoji, id, name })}
+                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center feedback-emoji ${selectedEmoji.id === id ? 'selected' : ''
+                        }`}>
                       <img
                         src={`/media/src/assets/images/emojis/${link}.gif`}
                         alt={name}
@@ -168,10 +169,9 @@ const EmojiFeedback = ({
                     </div>
                   ) : (
                     <div
-                      onClick={() => setSelectedEmoji({emoji, id, name})}
-                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${
-                        selectedEmoji.id === id ? 'selected' : ''
-                      }`}>
+                      onClick={() => setSelectedEmoji({ emoji, id, name })}
+                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${selectedEmoji.id === id ? 'selected' : ''
+                        }`}>
                       {emoji}
                     </div>
                   )}
@@ -221,14 +221,13 @@ const EmojiFeedback = ({
           )} */}
 
           <div
-            style={{bottom: '-1.7rem'}}
+            style={{ bottom: '-1.7rem' }}
             className="flex items-center justify-center absolute right-0 left-0">
             <button
               onClick={() => onSubmit()}
-              style={{background: '#333333'}}
-              className={`h-8 w-24 rounded text-white  p-1 py-0.5 mt-2 transition-all continue_btn ${
-                showContinueButton ? 'show' : 'hide'
-              }`}>
+              style={{ background: '#333333' }}
+              className={`h-8 w-24 rounded text-white  p-1 py-0.5 mt-2 transition-all continue_btn ${showContinueButton ? 'show' : 'hide'
+                }`}>
               Submit
             </button>
           </div>
@@ -239,7 +238,7 @@ const EmojiFeedback = ({
 };
 
 const Dashboard = (props: DashboardProps) => {
-  const {updateAuthState, justLoggedIn} = props;
+  const { updateAuthState, justLoggedIn } = props;
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
@@ -249,7 +248,7 @@ const Dashboard = (props: DashboardProps) => {
     role: '',
     image: '',
   });
-  const {state, dispatch} = useContext(GlobalContext);
+  const { state, dispatch } = useContext(GlobalContext);
   // For controlling loading transitions
   const [lessonLoading, setLessonLoading] = useState<boolean>(false);
   const [syllabusLoading, setSyllabusLoading] = useState<boolean>(false);
@@ -267,12 +266,12 @@ const Dashboard = (props: DashboardProps) => {
   // TODO: Add @thereAreSideWidgets boolean to not show side widget bar if the length is 0;
 
   // Fetching results
-  const [homeData, setHomeData] = useState<{class: any}[]>();
+  const [homeData, setHomeData] = useState<{ class: any }[]>();
   const [classList, setClassList] = useState<any[]>();
 
   //updateQuestion
 
-  const [greetQuestion, setGreetQuestion] = useState({question: ''});
+  const [greetQuestion, setGreetQuestion] = useState({ question: '' });
   const DEFAULT_CHECKPOINT_ID: string = '5372952f-ad80-4677-985a-e798c89d6bb7';
   const DEFAULT_QUESTION_ID: string = '6867fd8e-2457-409c-ba34-f2ffabdf7385'; // THIS IS STATIC -- @key5: Change this
 
@@ -297,7 +296,7 @@ const Dashboard = (props: DashboardProps) => {
         graphqlOperation(mutations.updateQuestionData, {
           input: {
             id: DEFAULT_CHECKPOINT_ID,
-            responseObject: [{qid: DEFAULT_QUESTION_ID, response}],
+            responseObject: [{ qid: DEFAULT_QUESTION_ID, response }],
           },
         })
       );
@@ -344,8 +343,8 @@ const Dashboard = (props: DashboardProps) => {
 
     setCookie(
       'auth',
-      {...cookies.auth, role: user.role, firstName: firstName, id: user.id},
-      {path: '/'}
+      { ...cookies.auth, role: user.role, firstName: firstName, id: user.id },
+      { path: '/' }
     );
   };
 
@@ -360,7 +359,7 @@ const Dashboard = (props: DashboardProps) => {
       (state.activeRoom !== id && state.currentPage !== 'classroom')
     ) {
       setActiveRoomName(name);
-      dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: id}});
+      dispatch({ type: 'UPDATE_ACTIVEROOM', payload: { data: id } });
       setSyllabusLoading(true);
       setLessonLoading(true);
       setActiveRoomSyllabus(state.roomData.rooms[i].activeSyllabus);
@@ -374,7 +373,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'queries.getPerson',
-        valueObj: {email: userEmail, authId: userAuthId},
+        valueObj: { email: userEmail, authId: userAuthId },
       };
 
       const user: any = await API.graphql(
@@ -383,8 +382,8 @@ const Dashboard = (props: DashboardProps) => {
       setUser(user.data.getPerson);
     } catch (error) {
       if (!userEmail && !userAuthId) {
-        removeCookie('auth', {path: '/'});
-        dispatch({type: 'CLEANUP'});
+        removeCookie('auth', { path: '/' });
+        dispatch({ type: 'CLEANUP' });
         sessionStorage.removeItem('accessToken');
         updateAuthState(false);
       }
@@ -452,14 +451,14 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const dashboardDataFetch: any = await API.graphql(
         graphqlOperation(customQueries.getDashboardDataForTeachers, {
-          filter: {teacherAuthID: {eq: teacherAuthID}},
+          filter: { teacherAuthID: { eq: teacherAuthID } },
         })
       );
 
       const response = await dashboardDataFetch;
       let arrayOfResponseObjects = response?.data?.listRooms?.items;
       arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
-        return {class: {rooms: {items: arrayOfResponseObjects}}};
+        return { class: { rooms: { items: arrayOfResponseObjects } } };
       });
 
       setHomeDataForTeachers(arrayOfResponseObjects);
@@ -486,15 +485,15 @@ const Dashboard = (props: DashboardProps) => {
   const getClassList =
     homeData && homeData.length > 0
       ? homeData.reduce((acc: any[], dataObj: any) => {
-          return [
-            ...acc,
-            {
-              name: dataObj?.class?.name,
-              rooms: dataObj?.class?.rooms,
-              students: dataObj?.class?.students,
-            },
-          ];
-        }, [])
+        return [
+          ...acc,
+          {
+            name: dataObj?.class?.name,
+            rooms: dataObj?.class?.rooms,
+            students: dataObj?.class?.students,
+          },
+        ];
+      }, [])
       : [];
 
   useEffect(() => {
@@ -506,12 +505,12 @@ const Dashboard = (props: DashboardProps) => {
   const getRoomsFromClassList =
     classList && classList.length > 0
       ? classList.reduce((acc: any[], classObj: any) => {
-          if (classObj.rooms.items.length > 0) {
-            return [...acc, classObj.rooms.items[0]];
-          } else {
-            return acc;
-          }
-        }, [])
+        if (classObj.rooms.items.length > 0) {
+          return [...acc, classObj.rooms.items[0]];
+        } else {
+          return acc;
+        }
+      }, [])
       : [];
 
   useEffect(() => {
@@ -531,7 +530,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'customQueries.listRooms',
-        valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
+        valueObj: { filter: { teacherAuthID: { eq: teacherAuthID } } },
       };
 
       // const classIdFromRoomsFetch = await handleFetchAndCache(queryObj);
@@ -572,7 +571,7 @@ const Dashboard = (props: DashboardProps) => {
       try {
         const queryObj = {
           name: 'queries.listNoticeboardWidgets',
-          valueObj: {filter: {roomID: {eq: state.activeRoom}}},
+          valueObj: { filter: { roomID: { eq: state.activeRoom } } },
         };
 
         const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
@@ -607,7 +606,7 @@ const Dashboard = (props: DashboardProps) => {
           const queryObj = {
             name: 'customQueries.listRoomCurriculums',
             valueObj: {
-              roomID: {eq: state.activeRoom},
+              roomID: { eq: state.activeRoom },
             },
           };
 
@@ -622,7 +621,7 @@ const Dashboard = (props: DashboardProps) => {
           const roomCurriculumsFetch = await API.graphql(
             graphqlOperation(queries.listRoomCurriculums, {
               filter: {
-                roomID: {eq: state.activeRoom},
+                roomID: { eq: state.activeRoom },
               },
             })
           );
@@ -709,26 +708,26 @@ const Dashboard = (props: DashboardProps) => {
           // IF A SEQUENCE WAS RETURNED, REORDER, ELSE DO NOT REORDER
           const roomSyllabusReordered = arrayOfRoomSyllabusSequence
             ? arrayOfRoomSyllabusSequence.reduce(
-                (acc: any[], syllabusID: string, idx: number) => {
-                  const matchedSyllabus = arrayOfRoomSyllabus.find(
-                    (responseObj: any) => responseObj.id === syllabusID
-                  );
-                  if (matchedSyllabus) {
-                    return [...acc, matchedSyllabus];
-                  } else {
-                    return acc;
-                  }
-                },
-                []
-              )
+              (acc: any[], syllabusID: string, idx: number) => {
+                const matchedSyllabus = arrayOfRoomSyllabus.find(
+                  (responseObj: any) => responseObj.id === syllabusID
+                );
+                if (matchedSyllabus) {
+                  return [...acc, matchedSyllabus];
+                } else {
+                  return acc;
+                }
+              },
+              []
+            )
             : arrayOfRoomSyllabus;
 
           const mappedResponseObjects = roomSyllabusReordered.map(
             (responseObject: any, idx: number) => {
               if (activeRoomSyllabus === responseObject.id) {
-                return {...responseObject, active: true};
+                return { ...responseObject, active: true };
               } else {
-                return {...responseObject, active: false};
+                return { ...responseObject, active: false };
               }
             }
           );
@@ -762,7 +761,7 @@ const Dashboard = (props: DashboardProps) => {
     try {
       const queryObj = {
         name: 'queries.getCSequences',
-        valueObj: {id: `lesson_${syllabusID}`},
+        valueObj: { id: `lesson_${syllabusID}` },
       };
 
       // const syllabusLessonCSequenceFetch = handleFetchAndCache(queryObj);
@@ -859,16 +858,16 @@ const Dashboard = (props: DashboardProps) => {
   const lessonPlannerSyllabus =
     state.roomData.syllabus.length > 0
       ? state.roomData.syllabus.filter((syllabusObject: any) => {
-          if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
-            return syllabusObject;
-          }
-        })
+        if (syllabusObject.hasOwnProperty('active') && syllabusObject.active) {
+          return syllabusObject;
+        }
+      })
       : [];
 
   const classRoomActiveSyllabus = state.roomData.rooms
     .filter((room: any) => room.id === state.activeRoom)
     .map((room: any) => {
-      return {id: room.activeSyllabus};
+      return { id: room.activeSyllabus };
     });
 
   useEffect(() => {
@@ -975,8 +974,8 @@ const Dashboard = (props: DashboardProps) => {
               userData.role === 'TR' ||
               userData.role === 'FLW' ||
               userData.role === 'BLD') && (
-              <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
-            )}
+                <Route exact path={`${match.url}/csv`} render={() => <Csv />} />
+              )}
 
             <Route
               exact
