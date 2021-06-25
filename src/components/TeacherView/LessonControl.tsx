@@ -15,6 +15,7 @@ import {awsFormatDate, dateString} from '../../utilities/time';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import { GlobalContext } from '../../contexts/GlobalContext';
 import { exampleUniversalLesson } from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 
 const LessonControl = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -419,7 +420,6 @@ const LessonControl = () => {
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
-                  <h1>CLASSROSTER</h1>
                   <ClassRoster
                     handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
                     handleShareStudentData={handleShareStudentData}
@@ -489,12 +489,12 @@ const LessonControl = () => {
                    *
                    */}
                     <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                      <h1>Body of the teacher lesson</h1>
                       {/*<Body*/}
                       {/*  fullscreenInstructions={fullscreenInstructions}*/}
                       {/*  setInstructions={setInstructions}*/}
                       {/*  checkpointsItems={checkpointsItems}*/}
                       {/*/>*/}
+                      <CoreUniversalLesson/>
                     </ErrorBoundary>
                 </Suspense>
               </div>

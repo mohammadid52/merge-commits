@@ -8,7 +8,7 @@ import { LessonInfoTitleBarProps } from '../TopMenu';
 
 const PlayComplete: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleBarProps) => {
   const { handleOpen, handleLessonButton } = props;
-  const { state, theme, dispatch } = useContext(LessonControlContext);
+  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(GlobalContext);
   const { clientKey, userLanguage } = useContext(GlobalContext);
   const { lessonPlannerDict } = useDictionary(clientKey);
 

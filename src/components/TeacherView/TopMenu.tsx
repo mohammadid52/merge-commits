@@ -101,7 +101,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}:{' '}
               {/*{formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}*/}
             </p>
-            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: 1 hr 15 mins</p>
+            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: t.b.d.</p>
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import StageButton from './StageButton';
 import LessonControl from '../LessonControl';
 import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import { UniversalLessonPage } from '../../../interfaces/UniversalLessonInterfaces';
 
 interface LessonControlBarProps {
   pageViewed?: {pageID: number; stage: string};
@@ -35,27 +36,18 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (
         {PAGES &&
           PAGES.map(
             (
-              page: {
-                stage: string;
-                type: string;
-                breakdown: boolean;
-                open: boolean;
-                disabled: boolean;
-              },
+              page: UniversalLessonPage,
               key: number
             ) => (
               <StageButton
                 iconID={key}
                 key={key}
                 open={page.open}
-                stage={page.stage}
-                type={page.type}
-                disabled={page.disabled}
-                active={PAGES[key].active}
-                breakdown={page.breakdown ? page.breakdown : null}
+                disabled={!page.enabled}
+                active={page.active}
+                label={page.label}
                 menuOpen={menuOpen === page.stage}
                 handleOpenMenu={handleOpenMenu}
-                pageViewed={pageViewed}
                 handlePageChange={handlePageChange}
               />
             )

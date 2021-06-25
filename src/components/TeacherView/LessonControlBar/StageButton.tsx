@@ -6,32 +6,28 @@ import StageLabels from '../../General/LabelSwitch';
 import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface StageButtonProps {
-  iconID: number;
-  stage: string;
-  type: string;
-  active: boolean;
-  open: boolean;
-  disabled: boolean;
-  breakdown: boolean;
-  menuOpen: boolean;
-  handleOpenMenu: (stage: string) => void;
-  pageViewed: { pageID: number; stage: string };
-  handlePageChange: any;
+  iconID?: number;
+  active?: boolean;
+  open?: boolean;
+  disabled?: boolean;
+  label?: string;
+  breakdown?: boolean;
+  menuOpen?: boolean;
+  handleOpenMenu?: (stage: string) => void;
+  handlePageChange?: any;
   counter?: number;
 }
 
 const StageButton = (props: StageButtonProps) => {
   const {
     iconID,
-    stage,
-    type,
     active,
     breakdown,
     open,
     menuOpen,
     handleOpenMenu,
     disabled,
-    pageViewed,
+    label,
     handlePageChange,
     counter,
   } = props;
@@ -57,11 +53,7 @@ const StageButton = (props: StageButtonProps) => {
 
     handlePageChange(iconID);
 
-    return history.push(`${match.url}/${stage}`);
-  };
-
-  const buttonLabel = (idx: number): string => {
-    return PAGES[idx].label;
+    return history.push(`${match.url}/${iconID}`);
   };
 
   const stageButtonChoice = () => {
@@ -76,7 +68,7 @@ const StageButton = (props: StageButtonProps) => {
             ${stageIsDisabled ? null : 'hover:font-bold hover:underline hover:text-sea-green'} 
             ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold' : null}`}>
             <div className="text-blueberry text-center flex flex-row">
-              <StageLabels label={PAGES ? buttonLabel(iconID) : 'n/a'} />
+              <StageLabels label={PAGES ? label : 'n/a'} />
             </div>
           </a>
         </div>
@@ -105,7 +97,7 @@ const StageButton = (props: StageButtonProps) => {
             ${!stageIsClosed && !stageIsDisabled ? 'hover:text-sea-green hover:underline' : null}
             ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold text-sea-green underline' : null}`}>
             <div className={`pl-2 text-center flex flex-row`}>
-              <StageLabels label={PAGES ? buttonLabel(iconID) : 'n/a'} />
+              <StageLabels label={PAGES ? label : 'n/a'} />
             </div>
           </a>
         </div>
@@ -133,7 +125,7 @@ const StageButton = (props: StageButtonProps) => {
               className={`text-ketchup pl-2 text-center  flex flex-row ${
                 stageIsDisabled ? 'line-through text-gray-500' : null
               }`}>
-              <StageLabels label={PAGES ? buttonLabel(iconID) : 'n/a'} />
+              <StageLabels label={PAGES ? label : 'n/a'} />
             </div>
           </a>
         </div>
