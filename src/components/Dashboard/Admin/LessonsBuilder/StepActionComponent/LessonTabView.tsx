@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useRouteMatch, useHistory} from 'react-router-dom';
-import {FaQuestionCircle, FaUnity, FaEdit} from 'react-icons/fa';
+import {FaQuestionCircle, FaUnity, FaEdit, FaChartLine} from 'react-icons/fa';
 import {IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {graphqlOperation, API} from 'aws-amplify';
 
@@ -151,7 +151,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     {
       index: 2,
       title: 'Lesson Measurements',
-      icon: <FaUnity />,
+      icon: <FaChartLine />,
       content: currentTabComp(`${activeTab}`),
       // disabled: formData.institution && formData.institution.id ? false : true,
     },

@@ -80,6 +80,7 @@ const LessonSummaryForm = () => {
               onChange={onInputChange}
               name="lessonPlanLabel"
               maxLength={12}
+              showCharacterUsage={true}
             />
           </div>
           <div>
@@ -103,8 +104,8 @@ const LessonSummaryForm = () => {
             </label>
             <RichTextEditor
               initialValue={''}
-              onChange={
-                (htmlContent, plainText) => onEditorStateChange(htmlContent, plainText, 'resourceHtml', 'resource')
+              onChange={(htmlContent, plainText) =>
+                onEditorStateChange(htmlContent, plainText, 'resourceHtml', 'resource')
               }
             />
           </div>
@@ -114,8 +115,8 @@ const LessonSummaryForm = () => {
             </label>
             <RichTextEditor
               initialValue={''}
-              onChange={
-                (htmlContent, plainText) => onEditorStateChange(htmlContent, plainText, 'noteHtml', 'note')
+              onChange={(htmlContent, plainText) =>
+                onEditorStateChange(htmlContent, plainText, 'noteHtml', 'note')
               }
             />
           </div>

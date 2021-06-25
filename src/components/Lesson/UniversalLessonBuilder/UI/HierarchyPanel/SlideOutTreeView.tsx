@@ -60,7 +60,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
       const [reorderedItem] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, reorderedItem);
 
-      updateMovableList(items, selectedPageID, pageContentId);
+      updateMovableList(items, 'pageContent', selectedPageID, pageContentId);
     };
 
     if (pagePartArr.length > 0) {

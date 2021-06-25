@@ -60,22 +60,30 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const updateMovableList = (
     items: any,
-    pageId: string,
-    pageContentId: string,
-    partContentId: string
+    section: string = 'pageContent',
+    pageId?: string,
+    pageContentId?: string,
+    partContentId?: string
   ) => {
-    const pageIdx = findIndex(
-      universalLessonDetails.lessonPlan,
-      (item: any) => item.id === pageId
-    );
-    const pageContentIdx = findIndex(
-      universalLessonDetails.lessonPlan[pageIdx].pageContent,
-      (item: any) => item.id === pageContentId
-    );
-
-    const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
-
-    update(universalLessonDetails, PATH, () => items);
+    switch(section){
+      case 'page':
+        update(universalLessonDetails, 'lessonPlan', () => items);
+        break;
+      case 'pageContent':
+        const pageIdx = findIndex(
+          universalLessonDetails.lessonPlan,
+          (item: any) => item.id === pageId
+        );
+        const pageContentIdx = findIndex(
+          universalLessonDetails.lessonPlan[pageIdx].pageContent,
+          (item: any) => item.id === pageContentId
+        );
+    
+        const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
+    
+        update(universalLessonDetails, PATH, () => items);
+        break;
+    }
     console.log('universalLessonDetails: ----> ', universalLessonDetails.lessonPlan);
 
     setUniversalLessonDetails({...universalLessonDetails});

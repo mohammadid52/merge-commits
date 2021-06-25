@@ -3082,8 +3082,10 @@ const LessonBuilderDict: any = {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
     BUTTON: {
-      ADD_PLAN: 'Add new plan',
+      ADD_PLAN: 'Add new page',
+      EDIT: 'Edit',
       VIEW: 'View',
+      PREVIEW: 'Preview'
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',

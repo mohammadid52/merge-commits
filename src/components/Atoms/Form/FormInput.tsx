@@ -18,6 +18,7 @@ interface FormInputProps {
   rows?: number;
   cols?: number;
   maxLength?: number;
+  showCharacterUsage?: boolean;
 }
 
 const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
@@ -25,7 +26,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     label,
     disabled,
     isRequired,
-    value,
+    value = '',
     onChange,
     id,
     name,
@@ -36,6 +37,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     rows = 1,
     cols = 125,
     maxLength = 0,
+    showCharacterUsage,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -84,7 +86,14 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
             placeholder={placeHolder}
             {...otherInputProps}
           />
-          <p className="text-red-500 text-xs">{error}</p>
+          <div className="flex">
+            <p className="text-red-500 text-xs">{error}</p>
+            {showCharacterUsage ? (
+              <div className="text-right text-gray-400">
+                {value.length} of {maxLength}
+              </div>
+            ) : null}
+          </div>
         </>
       )}
     </Fragment>
