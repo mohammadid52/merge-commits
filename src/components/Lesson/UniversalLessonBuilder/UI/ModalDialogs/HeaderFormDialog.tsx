@@ -12,12 +12,16 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
   classString?: string;
   selectedPageID?: string;
+  setUnsavedChanges: any;
+  askBeforeClose?: () => void;
 }
 
 const HeaderModalComponent = ({
   closeAction,
   inputObj,
   classString,
+  setUnsavedChanges,
+  askBeforeClose,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: IHeaderModalComponentProps) => {
@@ -25,6 +29,7 @@ const HeaderModalComponent = ({
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
+    setUnsavedChanges(true);
     const {value, id} = e.target;
     setInputFields({
       ...inputFields,
@@ -82,13 +87,13 @@ const HeaderModalComponent = ({
         sizeName = 'large';
       } else if (classString.includes('text-3xl')) {
         sizeName = 'largest';
-      }else{
+      } else {
         sizeName = 'medium';
       }
     }
     return sizeName;
   };
-  
+
   const onHeaderCreate = () => {
     const value: string = inputFields[FIELD_ID];
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
@@ -96,25 +101,13 @@ const HeaderModalComponent = ({
     const classValue = [
       fontSizeClass,
       `${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`,
-    ].filter(Boolean).join(' ');
+    ]
+      .filter(Boolean)
+      .join(' ');
     if (isEditingMode) {
-      updateBlockContentULBHandler(
-        '',
-        '',
-        'header',
-        [value],
-        0,
-        classValue
-      );
+      updateBlockContentULBHandler('', '', 'header', [value], 0, classValue);
     } else {
-      createNewBlockULBHandler(
-        '',
-        '',
-        'header',
-        [value],
-        0,
-        classValue
-      );
+      createNewBlockULBHandler('', '', 'header', [value], 0, classValue);
     }
     // close modal after saving
     closeAction();
@@ -143,6 +136,7 @@ const HeaderModalComponent = ({
     setSelectedValues({...selectedValues, color: pickedColor});
     setColorPickerActive(false);
   };
+
   return (
     <div>
       <div className="grid grid-cols-2 my-2 gap-4">
@@ -191,7 +185,7 @@ const HeaderModalComponent = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
           <Buttons

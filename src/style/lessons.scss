@@ -133,11 +133,18 @@
 }
 
 .custom-tagsinput-tag a::before {
-  content: " ×";
+  content: ' ×';
 }
-.react-tagsinput .react-tagsinput-input{
-  font-size: 16px
+.react-tagsinput .react-tagsinput-input {
+  font-size: 16px;
+  width: 14rem;
+  font-family: 'Poppins', sans-serif;
 }
 .react-tagsinput.react-tagsinput--focused {
   border-color: #bee3f8;
+}
+.react-tagsinput {
+  border-radius: 8px;
+  box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  max-width: 64rem;
 }

@@ -42,6 +42,8 @@ const LinksModalDialog = ({
   inputObj,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
+  askBeforeClose,
+  setUnsavedChanges,
 }: Links) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -100,6 +102,7 @@ const LinksModalDialog = ({
   //////////////////////////
   const [inputErrorArray, setInputErrorArray] = useState<boolean[]>([]);
   const onChange = (e: React.FormEvent, idx: number) => {
+    setUnsavedChanges(true);
     const {id, value, name} = e.target as HTMLFormElement;
     // validateUrl(value, idx);
     handleUpdateInputFields(value, name, idx);
@@ -126,6 +129,7 @@ const LinksModalDialog = ({
       closeAction();
       // clear fields
       setInputFieldsArray(initialInputFieldsState);
+      setUnsavedChanges(false);
     } else {
       setInputErrorArray(validLinkArray);
     }
@@ -187,7 +191,7 @@ const LinksModalDialog = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
 
