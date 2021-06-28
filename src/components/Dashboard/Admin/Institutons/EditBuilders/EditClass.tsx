@@ -114,12 +114,13 @@ const EditClass = (props: EditClassProps) => {
         };
       });
       let students: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
+        graphqlOperation(customQueries.fetchPersons, {
           filter: {
             role: { eq: 'ST' },
             status: { eq: 'ACTIVE' },
             ...createFilterToFetchAllItemsExcept(selectedStudentsIds, 'id'),
           },
+          limit: 500
         })
       );
       students = students.data.listPersons.items;

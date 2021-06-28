@@ -152,11 +152,12 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     try {
       // Fetch persons with student role and active status.
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
+        graphqlOperation(customQueries.fetchPersons, {
           filter: {
             role: { eq: 'ST' },
             status: { eq: 'ACTIVE' },
           },
+          limit: 300
         })
       );
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) =>
@@ -165,11 +166,11 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       const personsList = Promise.all(
         sortedList.map(async (item: any, i: any) => ({
           id: item.id,
-          name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
-          value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
+          name: `${item.firstName || ''} ${item.lastName || ''}`,
+          value: `${item.firstName || ''} ${item.lastName || ''}`,
           avatar: item.image ? await getImageURL(item.image) : '',
-          email: item.email ? item.email : '',
-          authId: item.authId ? item.authId : '',
+          email: item.email || '',
+          authId: item.authId || '',
         }))
       );
       personsList.then((res) => {
