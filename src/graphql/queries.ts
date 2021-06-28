@@ -144,13 +144,10 @@ export const getInstitution = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -461,8 +458,6 @@ export const getRoom = /* GraphQL */ `
       location
       startDate
       startTime
-      endDate
-      endTime
       length
       repeat
       notes
@@ -479,7 +474,6 @@ export const getRoom = /* GraphQL */ `
         }
         nextToken
       }
-      frequency
       createdAt
       updatedAt
     }
@@ -557,8 +551,6 @@ export const listRooms = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -566,7 +558,6 @@ export const listRooms = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -647,8 +638,6 @@ export const getRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -656,7 +645,6 @@ export const getRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -717,13 +705,10 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -814,13 +799,10 @@ export const getClass = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -2660,8 +2642,6 @@ export const getLesson = /* GraphQL */ `
         updatedAt
       }
       duration
-      resources
-      notes
       createdAt
       updatedAt
     }
@@ -2811,8 +2791,6 @@ export const listLessons = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -2955,8 +2933,6 @@ export const getLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -3027,8 +3003,6 @@ export const listLessonRubricss = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -3262,8 +3236,6 @@ export const getSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -3376,8 +3348,6 @@ export const listSyllabusLessons = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -3456,8 +3426,6 @@ export const getStudentData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -3878,8 +3846,6 @@ export const getQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -4024,8 +3990,6 @@ export const getFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -4167,8 +4131,6 @@ export const getPersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -4263,8 +4225,6 @@ export const getPersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -4272,7 +4232,6 @@ export const getPersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -4357,13 +4316,10 @@ export const listPersonLocations = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -4486,183 +4442,6 @@ export const listNoticeboardWidgets = /* GraphQL */ `
           lastLoggedOut
           createdAt
           updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getAttendance = /* GraphQL */ `
-  query GetAttendance($id: ID!) {
-    getAttendance(id: $id) {
-      id
-      studentID
-      curriculumID
-      syllabusID
-      lessonID
-      time
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listAttendances = /* GraphQL */ `
-  query ListAttendances(
-    $filter: ModelAttendanceFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listAttendances(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        studentID
-        curriculumID
-        syllabusID
-        lessonID
-        time
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getPlanner = /* GraphQL */ `
-  query GetPlanner($id: ID!) {
-    getPlanner(id: $id) {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listPlanners = /* GraphQL */ `
-  query ListPlanners(
-    $filter: ModelPlannerFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listPlanners(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        type
-        lessonID
-        lessonName
-        syllabusID
-        roomID
-        description
-        startDate
-        endDate
-        duration
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getUniversalLesson = /* GraphQL */ `
-  query GetUniversalLesson($id: ID!) {
-    getUniversalLesson(id: $id) {
-      id
-      type
-      label
-      title
-      institutionID
-      language
-      designers
-      objectives
-      purpose
-      introduction
-      introductionTitle
-      instructions
-      instructionsTitle
-      summary
-      summaryTitle
-      duration
-      resources
-      notes
-      cardImage
-      cardCaption
-      lessonPlan {
-        id
-        title
-        label
-        description
-        class
-        active
-        disabled
-        displayMode
-        open
-        pageContent {
-          id
-          tags
-          partType
-          class
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listUniversalLessons = /* GraphQL */ `
-  query ListUniversalLessons(
-    $id: ID
-    $filter: ModelUniversalLessonFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listUniversalLessons(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        id
-        type
-        label
-        title
-        institutionID
-        language
-        designers
-        objectives
-        purpose
-        introduction
-        introductionTitle
-        instructions
-        instructionsTitle
-        summary
-        summaryTitle
-        duration
-        resources
-        notes
-        cardImage
-        cardCaption
-        lessonPlan {
-          id
-          title
-          label
-          description
-          class
-          active
-          disabled
-          displayMode
-          open
         }
         createdAt
         updatedAt
@@ -4917,13 +4696,10 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }

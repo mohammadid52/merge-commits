@@ -75,8 +75,6 @@ export const onChangePersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -171,8 +169,6 @@ export const onChangePersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -180,7 +176,6 @@ export const onChangePersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -234,8 +229,6 @@ export const onChangeStudentData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -514,8 +507,6 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -761,13 +752,10 @@ export const onCreateInstitution = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -871,13 +859,10 @@ export const onUpdateInstitution = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -981,13 +966,10 @@ export const onDeleteInstitution = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -1424,8 +1406,6 @@ export const onCreateRoom = /* GraphQL */ `
       location
       startDate
       startTime
-      endDate
-      endTime
       length
       repeat
       notes
@@ -1442,7 +1422,6 @@ export const onCreateRoom = /* GraphQL */ `
         }
         nextToken
       }
-      frequency
       createdAt
       updatedAt
     }
@@ -1567,8 +1546,6 @@ export const onUpdateRoom = /* GraphQL */ `
       location
       startDate
       startTime
-      endDate
-      endTime
       length
       repeat
       notes
@@ -1585,7 +1562,6 @@ export const onUpdateRoom = /* GraphQL */ `
         }
         nextToken
       }
-      frequency
       createdAt
       updatedAt
     }
@@ -1710,8 +1686,6 @@ export const onDeleteRoom = /* GraphQL */ `
       location
       startDate
       startTime
-      endDate
-      endTime
       length
       repeat
       notes
@@ -1728,7 +1702,6 @@ export const onDeleteRoom = /* GraphQL */ `
         }
         nextToken
       }
-      frequency
       createdAt
       updatedAt
     }
@@ -1807,8 +1780,6 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -1816,7 +1787,6 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -1925,8 +1895,6 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -1934,7 +1902,6 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -2043,8 +2010,6 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -2052,7 +2017,6 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -2144,13 +2108,10 @@ export const onCreateClass = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -2230,13 +2191,10 @@ export const onUpdateClass = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -2316,13 +2274,10 @@ export const onDeleteClass = /* GraphQL */ `
           location
           startDate
           startTime
-          endDate
-          endTime
           length
           repeat
           notes
           activeSyllabus
-          frequency
           createdAt
           updatedAt
         }
@@ -5499,8 +5454,6 @@ export const onCreateLesson = /* GraphQL */ `
         updatedAt
       }
       duration
-      resources
-      notes
       createdAt
       updatedAt
     }
@@ -5755,8 +5708,6 @@ export const onUpdateLesson = /* GraphQL */ `
         updatedAt
       }
       duration
-      resources
-      notes
       createdAt
       updatedAt
     }
@@ -6011,8 +5962,6 @@ export const onDeleteLesson = /* GraphQL */ `
         updatedAt
       }
       duration
-      resources
-      notes
       createdAt
       updatedAt
     }
@@ -6153,8 +6102,6 @@ export const onCreateLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -6320,8 +6267,6 @@ export const onUpdateLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -6487,8 +6432,6 @@ export const onDeleteLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -6655,8 +6598,6 @@ export const onCreateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -6822,8 +6763,6 @@ export const onUpdateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -6989,8 +6928,6 @@ export const onDeleteLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -7162,8 +7099,6 @@ export const onCreateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -7314,8 +7249,6 @@ export const onUpdateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -7466,8 +7399,6 @@ export const onDeleteLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -7728,8 +7659,6 @@ export const onCreateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -7937,8 +7866,6 @@ export const onUpdateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -8146,8 +8073,6 @@ export const onDeleteSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
-        resources
-        notes
         createdAt
         updatedAt
       }
@@ -8434,8 +8359,6 @@ export const onCreateQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -8549,8 +8472,6 @@ export const onUpdateQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -8664,8 +8585,6 @@ export const onDeleteQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9184,8 +9103,6 @@ export const onCreateFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9263,8 +9180,6 @@ export const onUpdateFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9342,8 +9257,6 @@ export const onDeleteFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9451,8 +9364,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9547,8 +9458,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -9556,7 +9465,6 @@ export const onCreatePersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -9638,8 +9546,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9734,8 +9640,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -9743,7 +9647,6 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -9825,8 +9728,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
-          resources
-          notes
           createdAt
           updatedAt
         }
@@ -9921,8 +9822,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
-        endDate
-        endTime
         length
         repeat
         notes
@@ -9930,7 +9829,6 @@ export const onDeletePersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
-        frequency
         createdAt
         updatedAt
       }
@@ -10101,237 +9999,6 @@ export const onDeleteNoticeboardWidget = /* GraphQL */ `
         }
         createdAt
         updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateAttendance = /* GraphQL */ `
-  subscription OnCreateAttendance {
-    onCreateAttendance {
-      id
-      studentID
-      curriculumID
-      syllabusID
-      lessonID
-      time
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateAttendance = /* GraphQL */ `
-  subscription OnUpdateAttendance {
-    onUpdateAttendance {
-      id
-      studentID
-      curriculumID
-      syllabusID
-      lessonID
-      time
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteAttendance = /* GraphQL */ `
-  subscription OnDeleteAttendance {
-    onDeleteAttendance {
-      id
-      studentID
-      curriculumID
-      syllabusID
-      lessonID
-      time
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreatePlanner = /* GraphQL */ `
-  subscription OnCreatePlanner {
-    onCreatePlanner {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdatePlanner = /* GraphQL */ `
-  subscription OnUpdatePlanner {
-    onUpdatePlanner {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeletePlanner = /* GraphQL */ `
-  subscription OnDeletePlanner {
-    onDeletePlanner {
-      id
-      type
-      lessonID
-      lessonName
-      syllabusID
-      roomID
-      description
-      startDate
-      endDate
-      duration
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateUniversalLesson = /* GraphQL */ `
-  subscription OnCreateUniversalLesson {
-    onCreateUniversalLesson {
-      id
-      type
-      label
-      title
-      institutionID
-      language
-      designers
-      objectives
-      purpose
-      introduction
-      introductionTitle
-      instructions
-      instructionsTitle
-      summary
-      summaryTitle
-      duration
-      resources
-      notes
-      cardImage
-      cardCaption
-      lessonPlan {
-        id
-        title
-        label
-        description
-        class
-        active
-        disabled
-        displayMode
-        open
-        pageContent {
-          id
-          tags
-          partType
-          class
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateUniversalLesson = /* GraphQL */ `
-  subscription OnUpdateUniversalLesson {
-    onUpdateUniversalLesson {
-      id
-      type
-      label
-      title
-      institutionID
-      language
-      designers
-      objectives
-      purpose
-      introduction
-      introductionTitle
-      instructions
-      instructionsTitle
-      summary
-      summaryTitle
-      duration
-      resources
-      notes
-      cardImage
-      cardCaption
-      lessonPlan {
-        id
-        title
-        label
-        description
-        class
-        active
-        disabled
-        displayMode
-        open
-        pageContent {
-          id
-          tags
-          partType
-          class
-        }
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteUniversalLesson = /* GraphQL */ `
-  subscription OnDeleteUniversalLesson {
-    onDeleteUniversalLesson {
-      id
-      type
-      label
-      title
-      institutionID
-      language
-      designers
-      objectives
-      purpose
-      introduction
-      introductionTitle
-      instructions
-      instructionsTitle
-      summary
-      summaryTitle
-      duration
-      resources
-      notes
-      cardImage
-      cardCaption
-      lessonPlan {
-        id
-        title
-        label
-        description
-        class
-        active
-        disabled
-        displayMode
-        open
-        pageContent {
-          id
-          tags
-          partType
-          class
-        }
       }
       createdAt
       updatedAt
