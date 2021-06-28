@@ -405,20 +405,20 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  // const listLessons = async () => {
-  //   try {
-  //     const result: any = await API.graphql(
-  //       graphqlOperation(queries.listUniversalLessons)
-  //     );
-  //     console.log(result);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const testFunction = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessons)
+      );
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  // useEffect(() => {
-  //   listLessons();
-  // }, []);
+  useEffect(() => {
+    testFunction();
+  }, []);
 
   // console.log(universalLessonDetails, 'universalLessonDetails');
 
