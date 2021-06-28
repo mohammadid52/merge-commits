@@ -81,6 +81,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     setUniversalLessonDetails({...universalLessonDetails});
   };
 
+  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
+
   const addNewPageHandler = (content: any) => {
     setUniversalLessonDetails((prevDetails) => ({
       ...prevDetails,
@@ -92,11 +94,11 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           active: true,
           class: '',
           displayMode: 'SELF',
-          ...content
+          ...content,
         },
       ],
     }));
-  }
+  };
 
   useEffect(() => {
     setUniversalLessonDetails(exampleUniversalLesson);
@@ -116,13 +118,15 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getCurrentPage,
         theme,
         setUniversalLessonDetails,
-        enableDnD,
         setEnableDnD,
         addFromULBHandler: addULBHandler,
         addNewPageHandler,
         updateMovableList,
         getPartContent,
         getPageContent,
+        enableDnD,
+        universalLessonsList,
+        setUniversalLessonsList,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>
