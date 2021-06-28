@@ -226,24 +226,10 @@ const UserLookup = () => {
   };
 
   const fetchAllPerson = async () => {
-    let users: any = [];
-    let resp: any = await API.graphql(graphqlOperation(queries.listPersons));
-    users = users.concat(resp?.data?.listPersons?.items);
-    let nextToken = resp?.data?.listPersons?.nextToken
-    if (nextToken) {
-      let resp: any = await API.graphql(graphqlOperation(queries.listPersons, {
-				nextToken: nextToken
-			}))
-      users = users.concat(resp?.data?.listPersons?.items);
-      nextToken = resp?.data?.listPersons?.nextToken;
-      if (nextToken) {
-        let resp: any = await API.graphql(graphqlOperation(queries.listPersons, {
-          nextToken: nextToken
-        }))
-        users = users.concat(resp?.data?.listPersons?.items);
-        nextToken = resp?.data?.listPersons?.nextToken;
-      }
-    }
+    let resp: any = await API.graphql(graphqlOperation(queries.listPersons, {
+      limit: 500
+    }));
+    const users = resp?.data?.listPersons?.items
     return users;
   }
 
@@ -302,7 +288,6 @@ const UserLookup = () => {
           response = users?.data?.listPersons?.items;
         } else {
           users = await fetchAllPerson();
-          console.log('users', users)
           response = users;
         }
         const usersList =

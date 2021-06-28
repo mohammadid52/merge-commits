@@ -1177,7 +1177,7 @@ const RoomBuilderdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Curriculum',
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
-    MAXSTUDENT_LABEL: 'Max.Students (Add number between 1 to 30)',
+    MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     BUTTON: {
       SAVE: 'Save',
@@ -1334,7 +1334,7 @@ const RoomEDITdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Class',
     CURRICULUM_LABEL: 'Curriculum',
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
-    MAXSTUDENT_LABEL: 'Max.Students (Add number between 1 to 30)',
+    MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max students',
     messages: {
       institutebefor: 'Please create an institute before creating Classroom.',
