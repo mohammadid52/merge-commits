@@ -190,10 +190,13 @@ export const createInstitution = /* GraphQL */ `
           location
           startDate
           startTime
+          endDate
+          endTime
           length
           repeat
           notes
           activeSyllabus
+          frequency
           createdAt
           updatedAt
         }
@@ -300,10 +303,13 @@ export const updateInstitution = /* GraphQL */ `
           location
           startDate
           startTime
+          endDate
+          endTime
           length
           repeat
           notes
           activeSyllabus
+          frequency
           createdAt
           updatedAt
         }
@@ -410,10 +416,13 @@ export const deleteInstitution = /* GraphQL */ `
           location
           startDate
           startTime
+          endDate
+          endTime
           length
           repeat
           notes
           activeSyllabus
+          frequency
           createdAt
           updatedAt
         }
@@ -871,6 +880,8 @@ export const createRoom = /* GraphQL */ `
       location
       startDate
       startTime
+      endDate
+      endTime
       length
       repeat
       notes
@@ -887,6 +898,7 @@ export const createRoom = /* GraphQL */ `
         }
         nextToken
       }
+      frequency
       createdAt
       updatedAt
     }
@@ -1014,6 +1026,8 @@ export const updateRoom = /* GraphQL */ `
       location
       startDate
       startTime
+      endDate
+      endTime
       length
       repeat
       notes
@@ -1030,6 +1044,7 @@ export const updateRoom = /* GraphQL */ `
         }
         nextToken
       }
+      frequency
       createdAt
       updatedAt
     }
@@ -1157,6 +1172,8 @@ export const deleteRoom = /* GraphQL */ `
       location
       startDate
       startTime
+      endDate
+      endTime
       length
       repeat
       notes
@@ -1173,6 +1190,7 @@ export const deleteRoom = /* GraphQL */ `
         }
         nextToken
       }
+      frequency
       createdAt
       updatedAt
     }
@@ -1254,6 +1272,8 @@ export const createRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
+        endDate
+        endTime
         length
         repeat
         notes
@@ -1261,6 +1281,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
+        frequency
         createdAt
         updatedAt
       }
@@ -1372,6 +1393,8 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
+        endDate
+        endTime
         length
         repeat
         notes
@@ -1379,6 +1402,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
+        frequency
         createdAt
         updatedAt
       }
@@ -1490,6 +1514,8 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         location
         startDate
         startTime
+        endDate
+        endTime
         length
         repeat
         notes
@@ -1497,6 +1523,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         coTeachers {
           nextToken
         }
+        frequency
         createdAt
         updatedAt
       }
@@ -1591,10 +1618,13 @@ export const createClass = /* GraphQL */ `
           location
           startDate
           startTime
+          endDate
+          endTime
           length
           repeat
           notes
           activeSyllabus
+          frequency
           createdAt
           updatedAt
         }
@@ -1677,10 +1707,13 @@ export const updateClass = /* GraphQL */ `
           location
           startDate
           startTime
+          endDate
+          endTime
           length
           repeat
           notes
           activeSyllabus
+          frequency
           createdAt
           updatedAt
         }
@@ -1763,10 +1796,13 @@ export const deleteClass = /* GraphQL */ `
           location
           startDate
           startTime
+          endDate
+          endTime
           length
           repeat
           notes
           activeSyllabus
+          frequency
           createdAt
           updatedAt
         }
@@ -5171,6 +5207,8 @@ export const createLesson = /* GraphQL */ `
         updatedAt
       }
       duration
+      resources
+      notes
       createdAt
       updatedAt
     }
@@ -5428,6 +5466,8 @@ export const updateLesson = /* GraphQL */ `
         updatedAt
       }
       duration
+      resources
+      notes
       createdAt
       updatedAt
     }
@@ -5685,6 +5725,8 @@ export const deleteLesson = /* GraphQL */ `
         updatedAt
       }
       duration
+      resources
+      notes
       createdAt
       updatedAt
     }
@@ -5828,6 +5870,8 @@ export const createLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -5996,6 +6040,8 @@ export const updateLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -6164,6 +6210,8 @@ export const deleteLessonRubrics = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -6333,6 +6381,8 @@ export const createLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -6501,6 +6551,8 @@ export const updateLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -6669,6 +6721,8 @@ export const deleteLessonCheckpoint = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -6843,6 +6897,8 @@ export const createLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -6996,6 +7052,8 @@ export const updateLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -7149,6 +7207,8 @@ export const deleteLessonKeyWord = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -7421,6 +7481,8 @@ export const createSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -7631,6 +7693,8 @@ export const updateSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -7841,6 +7905,8 @@ export const deleteSyllabusLesson = /* GraphQL */ `
           updatedAt
         }
         duration
+        resources
+        notes
         createdAt
         updatedAt
       }
@@ -7958,6 +8024,8 @@ export const createStudentData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -8146,6 +8214,8 @@ export const updateStudentData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -8334,6 +8404,8 @@ export const deleteStudentData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -8703,6 +8775,8 @@ export const createQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -8819,6 +8893,8 @@ export const updateQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -8935,6 +9011,8 @@ export const deleteQuestionData = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -9465,6 +9543,8 @@ export const createFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -9545,6 +9625,8 @@ export const updateFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -9625,6 +9707,8 @@ export const deleteFeedback = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -9735,6 +9819,8 @@ export const createPersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -9829,6 +9915,8 @@ export const createPersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
+        endDate
+        endTime
         length
         repeat
         notes
@@ -9836,6 +9924,7 @@ export const createPersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
+        frequency
         createdAt
         updatedAt
       }
@@ -9920,6 +10009,8 @@ export const updatePersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -10014,6 +10105,8 @@ export const updatePersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
+        endDate
+        endTime
         length
         repeat
         notes
@@ -10021,6 +10114,7 @@ export const updatePersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
+        frequency
         createdAt
         updatedAt
       }
@@ -10105,6 +10199,8 @@ export const deletePersonLocation = /* GraphQL */ `
           connectionTitle
           institutionID
           duration
+          resources
+          notes
           createdAt
           updatedAt
         }
@@ -10199,6 +10295,8 @@ export const deletePersonLocation = /* GraphQL */ `
         location
         startDate
         startTime
+        endDate
+        endTime
         length
         repeat
         notes
@@ -10206,6 +10304,7 @@ export const deletePersonLocation = /* GraphQL */ `
         coTeachers {
           nextToken
         }
+        frequency
         createdAt
         updatedAt
       }
@@ -10385,6 +10484,264 @@ export const deleteNoticeboardWidget = /* GraphQL */ `
         }
         createdAt
         updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createAttendance = /* GraphQL */ `
+  mutation CreateAttendance(
+    $input: CreateAttendanceInput!
+    $condition: ModelAttendanceConditionInput
+  ) {
+    createAttendance(input: $input, condition: $condition) {
+      id
+      studentID
+      curriculumID
+      syllabusID
+      lessonID
+      time
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateAttendance = /* GraphQL */ `
+  mutation UpdateAttendance(
+    $input: UpdateAttendanceInput!
+    $condition: ModelAttendanceConditionInput
+  ) {
+    updateAttendance(input: $input, condition: $condition) {
+      id
+      studentID
+      curriculumID
+      syllabusID
+      lessonID
+      time
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteAttendance = /* GraphQL */ `
+  mutation DeleteAttendance(
+    $input: DeleteAttendanceInput!
+    $condition: ModelAttendanceConditionInput
+  ) {
+    deleteAttendance(input: $input, condition: $condition) {
+      id
+      studentID
+      curriculumID
+      syllabusID
+      lessonID
+      time
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPlanner = /* GraphQL */ `
+  mutation CreatePlanner(
+    $input: CreatePlannerInput!
+    $condition: ModelPlannerConditionInput
+  ) {
+    createPlanner(input: $input, condition: $condition) {
+      id
+      type
+      lessonID
+      lessonName
+      syllabusID
+      roomID
+      description
+      startDate
+      endDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePlanner = /* GraphQL */ `
+  mutation UpdatePlanner(
+    $input: UpdatePlannerInput!
+    $condition: ModelPlannerConditionInput
+  ) {
+    updatePlanner(input: $input, condition: $condition) {
+      id
+      type
+      lessonID
+      lessonName
+      syllabusID
+      roomID
+      description
+      startDate
+      endDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePlanner = /* GraphQL */ `
+  mutation DeletePlanner(
+    $input: DeletePlannerInput!
+    $condition: ModelPlannerConditionInput
+  ) {
+    deletePlanner(input: $input, condition: $condition) {
+      id
+      type
+      lessonID
+      lessonName
+      syllabusID
+      roomID
+      description
+      startDate
+      endDate
+      duration
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUniversalLesson = /* GraphQL */ `
+  mutation CreateUniversalLesson(
+    $input: CreateUniversalLessonInput!
+    $condition: ModelUniversalLessonConditionInput
+  ) {
+    createUniversalLesson(input: $input, condition: $condition) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalLesson = /* GraphQL */ `
+  mutation UpdateUniversalLesson(
+    $input: UpdateUniversalLessonInput!
+    $condition: ModelUniversalLessonConditionInput
+  ) {
+    updateUniversalLesson(input: $input, condition: $condition) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalLesson = /* GraphQL */ `
+  mutation DeleteUniversalLesson(
+    $input: DeleteUniversalLessonInput!
+    $condition: ModelUniversalLessonConditionInput
+  ) {
+    deleteUniversalLesson(input: $input, condition: $condition) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
       }
       createdAt
       updatedAt
