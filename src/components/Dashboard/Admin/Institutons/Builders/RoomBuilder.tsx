@@ -13,7 +13,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
-import { getFilterORArray } from '../../../../../utilities/strings';
+import { createFilterToFetchSpecificItemsOnly, getFilterORArray } from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import { getImageFromS3 } from '../../../../../utilities/services';
@@ -157,6 +157,21 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     });
     removeErrorMsg();
   };
+
+  const getFirstSyllabus = async (curriculumID: string) => {
+    if(curriculumID){
+      const syllabusCSequenceFetch = await API.graphql(
+        graphqlOperation(queries.getCSequences, {
+          id: `s_${curriculumID}`,
+        })
+      );
+      //@ts-ignore
+      const syllabusSequenceArray = syllabusCSequenceFetch.data.getCSequences;
+      //@ts-ignore
+      const firstSyllabusID = syllabusSequenceArray.sequence.length > 0 ? syllabusCSequenceFetch.data.getCSequences.sequence[0] : '';
+      return firstSyllabusID;
+    }
+  }
 
   const removeErrorMsg = () => {
     if (messages.show) {
@@ -486,13 +501,20 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   };
 
+  const test = async () => {
+    const activeSyllabus = await getFirstSyllabus(roomData.curricular.id);
+    console.log(activeSyllabus);
+  }
+
   const createNewRoom = async () => {
     setLoading(true);
     const isValid = await validateForm();
     if (isValid) {
       try {
+
         const input = {
           institutionID: roomData.institute.id,
+          activeSyllabus: roomData.curricular.id ? await getFirstSyllabus(roomData.curricular.id) : '',
           classID: roomData.classRoom.id,
           teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id).authId,
           teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
