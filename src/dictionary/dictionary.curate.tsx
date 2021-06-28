@@ -1182,7 +1182,7 @@ const RoomBuilderdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Cohort',
     CURRICULUM_LABEL: 'Curriculum',
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
-    MAXSTUDENT_LABEL: 'Max.Students (Add number between 1 to 30)',
+    MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max participants',
     BUTTON: {
       SAVE: 'Save',
