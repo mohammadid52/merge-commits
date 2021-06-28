@@ -400,14 +400,16 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         isError: true,
       });
       return false;
-    } else if (parseInt(roomData.maxPersons) < 1 || parseInt(roomData.maxPersons) > 30) {
-      setMessages({
-        show: true,
-        message: RoomBuilderdict[userLanguage]['messages']['validation']['allowstudent'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData.name.trim() !== '') {
+    }
+    // else if (parseInt(roomData.maxPersons) < 1 || parseInt(roomData.maxPersons) > 30) {
+    //   setMessages({
+    //     show: true,
+    //     message: RoomBuilderdict[userLanguage]['messages']['validation']['allowstudent'],
+    //     isError: true,
+    //   });
+    //   return false;
+    // }
+    else if (roomData.name.trim() !== '') {
       const isUniq = await checkUniqRoomName();
       if (!isUniq) {
         setMessages({
