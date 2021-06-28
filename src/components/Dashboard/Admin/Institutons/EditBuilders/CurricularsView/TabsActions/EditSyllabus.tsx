@@ -604,9 +604,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (unsavedChanges) {
       setWarnModal({
         ...warnModal,
-        lessonPlan: false,
-        show: !warnModal.show,
-        lessonEdit: false,
+        show: true,
+        lessonEdit: true,
       });
     } else {
       history.goBack();
@@ -648,26 +647,19 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       toggleModal();
     }
   };
-  const saveAndEditLesson = async () => {
-    const result: boolean = await saveSyllabusDetails();
-    if (result) {
-      if (editLesson.type === 'lesson') {
-        history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${editLesson.id}`);
-      } else {
-        history.push(
-          `/dashboard/lesson-builder/lesson/edit?assessmentId=${editLesson.id}`
-        );
-      }
-    } else {
-      toggleModal();
-    }
-  };
+
+  const PATH = `http://localhost:8085/dashboard/manage-institutions/${institutionId}/syllabus/edit?id=${curricularId}`;
   const cancelSaveAction = () => {
-    if (editLesson.type === 'lesson') {
-      history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${editLesson.id}`);
-    } else {
-      history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${editLesson.id}`);
-    }
+    history.push(PATH);
+    // if (editLesson.type === 'lesson') {
+    //   history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${editLesson.id}`);
+    // } else {
+    //   history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${editLesson.id}`);
+    // }
+  };
+
+  const closeModal = () => {
+    setWarnModal({...warnModal, show: false});
   };
 
   useEffect(() => {
@@ -1046,22 +1038,18 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                             saveAction={saveAndCreateNew}
                             saveLabel="SAVE"
                             message={warnModal.message}
+                            loading={loading}
                             cancelLabel="DISCARD"
-                          />
-                        ) : warnModal.lessonEdit ? (
-                          <ModalPopUp
-                            closeAction={cancelSaveAction}
-                            saveAction={saveAndEditLesson}
-                            saveLabel="SAVE"
-                            cancelLabel="DISCARD"
-                            message={warnModal.message}
                           />
                         ) : (
                           <ModalPopUp
-                            closeAction={history.goBack}
                             saveAction={saveAndGoback}
                             saveLabel="SAVE"
-                            cancelLabel="DISCARD"
+                            closeAction={closeModal}
+                            cancelLabel="CANCEL"
+                            loading={loading}
+                            noButton="DISCARD"
+                            noButtonAction={cancelSaveAction}
                             message={warnModal.message}
                           />
                         ))}
@@ -1084,6 +1072,17 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             message={warnModal2.message}
           />
         )}
+        {/* {warnModal.show && warnModal.lessonEdit && (
+          <ModalPopUp
+            closeAction={closeModal}
+            saveAction={saveAndGoback}
+            saveLabel="SAVE"
+            cancelLabel="CANCEL"
+            noButton="DISCARD"
+            noButtonAction={cancelSaveAction}
+            message={warnModal.message}
+          />
+        )} */}
       </PageWrapper>
     </div>
   );

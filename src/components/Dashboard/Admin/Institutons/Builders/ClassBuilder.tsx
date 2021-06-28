@@ -15,12 +15,19 @@ import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import { IconContext } from 'react-icons';
-import { stringToHslColor, getInitialsFromString, initials } from '../../../../../utilities/strings';
+import {
+  stringToHslColor,
+  getInitialsFromString,
+  initials,
+  createFilterToFetchAllItemsExcept,
+} from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import { getImageFromS3 } from '../../../../../utilities/services';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import { goBackBreadCrumb } from '../../../../../utilities/functions';
+import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
+import dictionary from '../../../../../customHooks/dictionary';
 
 interface ClassBuilderProps {}
 
@@ -44,7 +51,10 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     value: '',
     avatar: '',
   });
+
   const [studentList, setStudentList] = useState([]);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [institutionList, setInstitutionList] = useState([]);
   const [selectedStudents, setSelectedStudent] = useState([]);
@@ -152,11 +162,12 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     try {
       // Fetch persons with student role and active status.
       const list: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
+        graphqlOperation(customQueries.fetchPersons, {
           filter: {
             role: { eq: 'ST' },
             status: { eq: 'ACTIVE' },
           },
+          limit: 300
         })
       );
       const sortedList = list.data.listPersons.items.sort((a: any, b: any) =>
@@ -165,11 +176,11 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       const personsList = Promise.all(
         sortedList.map(async (item: any, i: any) => ({
           id: item.id,
-          name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
-          value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''}`,
+          name: `${item.firstName || ''} ${item.lastName || ''}`,
+          value: `${item.firstName || ''} ${item.lastName || ''}`,
           avatar: item.image ? await getImageURL(item.image) : '',
-          email: item.email ? item.email : '',
-          authId: item.authId ? item.authId : '',
+          email: item.email || '',
+          authId: item.authId || '',
         }))
       );
       personsList.then((res) => {
@@ -184,6 +195,53 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       });
     }
   };
+
+
+//####################################
+//  FOR SEARCHING THROUGH STUDENTS   #
+//####################################
+  const fetchStudentList = async (searchQuery: string) => {
+    // const result: any = await API.graphql(
+    //   graphqlOperation(customQueries.listPersons, {
+    //     filter: { role: { eq: 'ST' },
+    //       status: { eq: 'ACTIVE' }, or: [{ firstName: { contains: searchQuery} }, { lastName: { contains: searchQuery } }] },
+    //   })
+    // );
+    let result: any = await API.graphql(
+      graphqlOperation(customQueries.fetchPersons, {
+        filter: {
+          role: { eq: 'ST' },
+          status: { eq: 'ACTIVE' },
+          or: [{ firstName: { contains: searchQuery} }, { lastName: { contains: searchQuery } }],
+        },
+        limit: 300
+      })
+    );
+    const students = result.data.listPersons.items;
+    const mappedStudents = students.map((item: any, i: any) => ({
+      id: item.id,
+      name: `${item.firstName || ''} ${item.lastName || ''}`,
+      value: `${item.firstName || ''} ${item.lastName || ''}`,
+      avatar: item.image ? getImageFromS3(item.image) : '',
+      status: item.status || 'Inactive',
+      email: item.email || '',
+      authId: item.authId || '',
+    }));
+    setFilteredStudents(sortStudents(mappedStudents))
+  }
+
+  const sortStudents = (studentList: any) => {
+    return studentList.sort((personA: any, personB: any) => personA.name[0] < personB.name[0] ? -1 : 1)
+  }
+
+  const clearFilteredStudents = () => {
+    setFilteredStudents([])
+  }
+
+
+
+
+
 
   const getInstitutionList = async () => {
     try {
@@ -421,11 +479,28 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           </div>
         </div>
         <div className="flex items-center w-6/10 m-auto px-3">
-          <SelectorWithAvatar
+
+
+          {/*<SelectorWithAvatar*/}
+          {/*  selectedItem={newMember}*/}
+          {/*  list={studentList}*/}
+          {/*  placeholder={classBuilderdict[userLanguage]['MEMBER_PLACEHOLDER']}*/}
+          {/*  onChange={onStudentSelect}*/}
+          {/*  imageFromS3={false}*/}
+          {/*/>*/}
+
+          {/*
+              REPLACED STANDARD DROPDOWN WITH SEARCH
+          */}
+          <SearchSelectorWithAvatar
             selectedItem={newMember}
-            list={studentList}
+            list={searching ? filteredStudents : studentList}
             placeholder={classBuilderdict[userLanguage]['MEMBER_PLACEHOLDER']}
             onChange={onStudentSelect}
+            fetchStudentList={fetchStudentList}
+            clearFilteredStudents={clearFilteredStudents}
+            searchStatus={searching}
+            searchCallback={setSearching}
             imageFromS3={false}
           />
           <Buttons
