@@ -4572,6 +4572,105 @@ export const listPlanners = /* GraphQL */ `
     }
   }
 `;
+export const getUniversalLesson = /* GraphQL */ `
+  query GetUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      introduction
+      introductionTitle
+      instructions
+      instructionsTitle
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalLessons = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
