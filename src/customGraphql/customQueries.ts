@@ -1809,14 +1809,6 @@ export const getClassDetails = /* GraphQL */ `
         id
         name
         type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
         image
         isServiceProvider
         serviceProviders {
