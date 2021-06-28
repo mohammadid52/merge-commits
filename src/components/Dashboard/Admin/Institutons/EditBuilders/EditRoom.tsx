@@ -432,14 +432,16 @@ const EditRoom = (props: EditRoomProps) => {
         isError: true,
       });
       return false;
-    } else if (roomData.maxPersons > '30') {
-      setMessages({
-        show: true,
-        message: RoomEDITdict[userLanguage]['messages']['oneclass'],
-        isError: true,
-      });
-      return false;
-    } else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
+    }
+    // else if (roomData.maxPersons > '256') {
+    //   setMessages({
+    //     show: true,
+    //     message: RoomEDITdict[userLanguage]['messages']['oneclass'],
+    //     isError: true,
+    //   });
+    //   return false;
+    // }
+    else if (roomData.name.trim() !== '' && prevName !== roomData.name) {
       const isUniq = await checkUniqRoomName();
       if (!isUniq) {
         setMessages({
