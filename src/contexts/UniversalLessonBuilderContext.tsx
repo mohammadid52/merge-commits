@@ -17,12 +17,14 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
+  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
   );
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
+  const [selectedLessonID, setSelectedLessonID] = useState<string>('');
 
   // Getters
 
@@ -58,12 +60,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     bg: 'bg-gray-800',
   };
 
-  const updateMovableList = (
-    items: any,
-    pageId: string,
-    pageContentId: string,
-    partContentId: string
-  ) => {
+  const updateMovableList = (items: any, pageId: string, pageContentId: string) => {
     const pageIdx = findIndex(
       universalLessonDetails.lessonPlan,
       (item: any) => item.id === pageId
@@ -76,12 +73,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
 
     update(universalLessonDetails, PATH, () => items);
-    console.log('universalLessonDetails: ----> ', universalLessonDetails.lessonPlan);
 
     setUniversalLessonDetails({...universalLessonDetails});
   };
-
-  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
   const addNewPageHandler = (content: any) => {
     setUniversalLessonDetails((prevDetails) => ({
@@ -100,15 +94,26 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }));
   };
 
+  const setCurrentLessonDataToState = () => {
+    const id = selectedLessonID;
+
+    const currentLesson = find(universalLessonsList, (item) => item.id === id);
+    if (currentLesson) {
+      setUniversalLessonDetails(currentLesson);
+    }
+  };
+
   useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
-  }, []);
+    setCurrentLessonDataToState();
+  }, [selectedLessonID]);
 
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
+        selectedLessonID,
+        setSelectedLessonID,
         newBlockSeqId,
         setNewBlockSeqId,
         getCurrentPageIdx,

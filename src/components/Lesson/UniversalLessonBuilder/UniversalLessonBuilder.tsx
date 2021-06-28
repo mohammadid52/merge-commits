@@ -20,6 +20,7 @@ import Buttons from '../../Atoms/Buttons';
 import Modal from '../../Atoms/Modal';
 import FormInput from '../../Atoms/Form/FormInput';
 import useDictionary from '../../../customHooks/dictionary';
+import {map} from 'lodash';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -90,6 +91,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails,
     selectedPageID,
     setSelectedPageID,
+    setSelectedLessonID,
     universalLessonsList,
     setUniversalLessonsList,
   } = useULBContext();
@@ -112,12 +114,12 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    **********************************************/
 
   // in this area ^
-  useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
-    if (exampleUniversalLesson.lessonPlan.length > 0) {
-      setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
-    }
-  }, []);
+  // useEffect(() => {
+  //   setUniversalLessonDetails(exampleUniversalLesson);
+  //   if (exampleUniversalLesson.lessonPlan.length > 0) {
+  //     setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
+  //   }
+  // }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
   // const currentStepComp = (currentStep: string) => {
@@ -242,7 +244,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
   };
-  const {newBlockSeqId} = useULBContext();
 
   const updateULBHandler = (
     targetID: string,
@@ -446,10 +447,16 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         graphqlOperation(mutations.createUniversalLesson, {input})
       );
 
+      const newLesson = result.data.createUniversalLesson;
+
       setUniversalLessonsList([
         ...universalLessonsList,
-        result.data.createUniversalLesson,
+        {...newLesson, lessonPlan: [{pageContent: []}]},
       ]);
+
+      if (newLesson.id) {
+        setSelectedLessonID(newLesson.id);
+      }
     } catch (error) {
       console.error(error.message);
     } finally {
@@ -467,7 +474,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       const data = result?.data?.listUniversalLessons.items;
 
       setUniversalLessonsList(data);
-      console.log(data);
+
+      // setting first lesson id as initial id
+      setSelectedLessonID(data[0].id);
     } catch (error) {
       console.error(error);
     } finally {
@@ -475,11 +484,11 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     }
   };
 
-  const deleteLesson = async () => {
+  const deleteLesson = async (id: string) => {
     try {
       const result = await API.graphql(
         graphqlOperation(mutations.deleteUniversalLesson, {
-          input: {id: '4f0807b5-5607-4635-9a50-961ba9c12b44'},
+          input: {id},
         })
       );
     } catch (error) {
@@ -489,12 +498,13 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   useEffect(() => {
     fetchUniversalLessonsList();
-    // deleteLesson();
+    // deleteLesson('580aa496-b5bc-4251-b7ca-75848ee25421');
   }, []);
 
   const NO_LESSONS = universalLessonsList.length <= 0;
 
   const [newLessonModal, setNewLessonModal] = useState(false);
+
   const closeAction = () => setNewLessonModal(false);
 
   const [newLessonData, setNewLessonData] = useState(intitalLessonData);

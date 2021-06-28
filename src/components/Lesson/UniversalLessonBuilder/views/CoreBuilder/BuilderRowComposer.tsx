@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { PagePart, PartContent, UniversalLessonPage } from '../../../../../interfaces/UniversalLessonInterfaces';
-import { RowComposerProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { BuilderRowWrapper } from './BuilderRowWrapper';
+import React, {useState} from 'react';
+import {FaPlus} from 'react-icons/fa';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {
+  PagePart,
+  PartContent,
+  UniversalLessonPage,
+} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {RowComposerProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {BuilderRowWrapper} from './BuilderRowWrapper';
 import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
-import { AddNewBlock } from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
-import { AddNewBlockMini } from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
+import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
+import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
 import TagBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/TagBlock';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
-import { findIndex, update } from 'lodash';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
@@ -225,8 +229,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                 content.class,
                                                 pagePart.id,
                                                 mode,
-                                                updateOnSave)
-                                              }
+                                                updateOnSave
+                                              )}
                                             </div>
                                           ) : (
                                             <AddNewBlock
@@ -363,7 +367,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
             handleEditBlockToggle={() => handleEditBlockToggle(`addNewRow`)}
             createNewBlockULBHandler={createNewBlockULBHandler}
             updateFromULBHandler={updateFromULBHandler}>
-            <BuilderRowWrapper mode={mode} hasContent={false} dataIdAttribute={`addNewRow`}>
+            <BuilderRowWrapper
+              mode={mode}
+              hasContent={false}
+              dataIdAttribute={`addNewRow`}>
               <AddNewBlock
                 idx={-1}
                 mode={mode}
