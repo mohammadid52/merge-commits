@@ -776,7 +776,7 @@ const EditRoom = (props: EditRoomProps) => {
                   value={maxPersons}
                   placeholder={RoomEDITdict[userLanguage]['MAXSTUDENT_PLACEHOLDER']}
                   min="1"
-                  max="30"
+                  max="256"
                 />
               </div>
             </div>
