@@ -79,9 +79,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const pageId = params.get('pageId');
   const {state, dispatch} = useContext(GlobalContext);
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonEditDict} = useDictionary(
-    clientKey
-  );
+  const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
     universalLessonDetails,
@@ -436,24 +434,14 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     };
     setUniversalLessonDetails(temp);
   };
-  
+
   const onBack = () => {
     history.goBack();
-  }
+  };
 
   console.log(universalLessonDetails, 'universalLessonDetails');
 
   return (
-    /**
-     *
-     *  Pages:
-     *    1. lesson overview page
-     *    2. create new & edit page (similar)
-     *    3. add a page part dialog
-     *    4. apply a template dialog
-     *    5. builder body
-     *
-     */
     <div className="w-full h-full">
       {/* Section Header */}
       <BreadCrums items={breadCrumsList} />
