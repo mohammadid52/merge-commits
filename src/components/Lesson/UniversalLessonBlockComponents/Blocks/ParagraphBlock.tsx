@@ -119,7 +119,11 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
     <div className="w-auto">
       {value &&
         value.length > 0 &&
-        value.map((v: any, i: number) => composeParagraph(id, v, type))}
+        value.map((v: any, i: number) => (
+          <React.Fragment key={`paragraphBlock_${i}`}>
+            {composeParagraph(id, v, type)}
+          </React.Fragment>
+        ))}
     </div>
   );
 };
