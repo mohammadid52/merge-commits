@@ -13,7 +13,7 @@ import {AiOutlineSave} from 'react-icons/ai';
 import Tooltip from '../../../Atoms/Tooltip';
 import {BsArrowLeft} from 'react-icons/bs';
 import findIndex from 'lodash/findIndex';
-// import useStudentTimer from '../../../../customHooks/timer';
+import useStudentTimer from '../../../../customHooks/timer';
 
 interface SaveQuitProps {
   id?: string;

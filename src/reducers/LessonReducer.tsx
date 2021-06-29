@@ -28,6 +28,10 @@ export type LessonActions =
       payload: number;
     }
   | {
+      type: 'INCREMENT_SAVE_COUNT';
+      payload: any;
+    }
+  | {
       type: 'CLEANUP';
       payload: '';
     };
@@ -60,6 +64,8 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
       return {...state, lessonData: {...state.lessonData, lessonPlan: mappedPages}};
+    case 'INCREMENT_SAVE_COUNT':
+      return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
       return lessonState;
     default:
