@@ -37,8 +37,10 @@ const DropdownForm = (props: DropdownProps) => {
       return 'Teacher';
     } else if (userInfo === 'ST') {
       return 'Student';
-    } else {
+    } else if (userInfo === '') {
       return 'Choose One';
+    } else {
+      return userInfo;
     }
   };
 

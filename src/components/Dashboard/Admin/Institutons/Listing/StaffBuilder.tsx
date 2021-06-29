@@ -102,37 +102,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const getPersonsList = async () => {
     try {
-      // const list: any = await API.graphql(
-      //   graphqlOperation(customQueries.listPersons, {
-      //     // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
-      //     filter: {role: {ne: 'ST'}},
-      //   })
-      // );
-      let data: any = [];
-      const admins: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'ADM'
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.fetchPersons, {
+          filter: {role: {ne: 'ST'}},
+          limit: 500
         })
       );
-      data = data.concat(admins.data.usersByRole.items)
-      const teachers: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'TR'
-        })
-      );
-      data = data.concat(teachers.data.usersByRole.items)
-      const fellows: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'FLW'
-        })
-      );
-      data = data.concat(fellows.data.usersByRole.items)
-      const builders: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'BLD'
-        })
-      );
-      data = data.concat(builders.data.usersByRole.items)
+      let data = list.data.listPersons.items;
       const sortedList = data.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
@@ -157,9 +133,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     let sequence: any = await API.graphql(
       graphqlOperation(queries.getCSequences, {id: `staff_${instituteId}`})
     );
-    sequence = sequence?.data?.getCSequences?.sequence;
-    return sequence ? [...sequence] : [];
+    let sequenceData = sequence?.data?.getCSequences;
+    return sequenceData;
   };
+
   const updateStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
       graphqlOperation(mutations.updateCSequences, {
@@ -171,7 +148,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const createStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
       graphqlOperation(mutations.createCSequences, {
-        input: {id: `staff_${instituteId}`, sequence: newList},
+        input: {id: `staff_${instituteId}`, sequence: [...newList]},
       })
     );
   };
@@ -280,12 +257,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const fetchStaffData = async () => {
     // const staffMembers = await getStaff()
-    let [staffLists, staffSequence]: any = await Promise.all([
+    let [staffLists, sequenceData]: any = await Promise.all([
       await getStaff(),
       await getStaffSequence(),
     ]);
+    let staffSequence = sequenceData.sequence;
     const staffMembersIds = staffLists.map((item: any) => item.userId);
-    if (staffSequence?.length === 0) {
+    if (!sequenceData.id && staffSequence?.length === 0) {
       createStaffSequence(staffMembersIds);
     } else if (staffLists?.length !== staffSequence?.length) {
       updateStaffSequence(staffMembersIds);
