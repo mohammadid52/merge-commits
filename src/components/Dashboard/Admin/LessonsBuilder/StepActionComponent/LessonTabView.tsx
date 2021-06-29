@@ -75,13 +75,34 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
+
+      if (savedData.duration !== null) {
+        setFormData({
+          ...formData,
+          duration: savedData.duration.toString(),
+        });
+      }
+      if (savedData.label) {
+        setFormData({
+          ...formData,
+          label: savedData.label,
+        });
+      }
+      if (savedData.notes) {
+        setFormData({
+          ...formData,
+          notes: savedData.notes,
+        });
+      }
+      if (savedData.resources) {
+        setFormData({
+          ...formData,
+          resources: savedData.resources,
+        });
+      }
+
       setLessonData(savedData);
-      setFormData({
-        label: savedData.label,
-        duration: savedData.duration.toString(),
-        resources: savedData.resources,
-        notes: savedData.notes,
-      });
+
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
