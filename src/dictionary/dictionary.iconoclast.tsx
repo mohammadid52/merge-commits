@@ -2177,6 +2177,7 @@ const RegistrationDict: any = {
       emailaddress: "User's email is not in the expected email address format",
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
+      institution: 'Institution cannot be blank'
     },
   },
   ES: {
@@ -2201,6 +2202,7 @@ const RegistrationDict: any = {
       emailaddress: 'TBD',
       userrol: 'TBD',
       loading: 'TBD',
+      institution: 'TBD'
     },
   },
 };
