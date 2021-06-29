@@ -3,9 +3,8 @@ import {
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import {VscFileMedia, VscNewFile} from 'react-icons/vsc';
+import {VscNewFile} from 'react-icons/vsc';
 import Buttons from '../../../Atoms/Buttons';
-import {IconContext} from 'react-icons';
 import PageTile from './common/PageTile';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {HiPencil} from 'react-icons/hi';
@@ -159,7 +158,9 @@ const PageSelector = (props: PageSelectorProps) => {
                           </Tooltip>
                         </div>
                         <PageTile />
-                        <p className={`text-center text-sm text-gray-600 cursor-pointer`}>{page.id}</p>
+                        <p className={`text-center text-sm text-gray-600 cursor-pointer`}>
+                          {page.id}
+                        </p>
                         <div className="flex items-center justify-between">
                           <button
                             onClick={() => deleteFromULBHandler(page.id)}

@@ -17,12 +17,14 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
+  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
   );
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
+  const [selectedLessonID, setSelectedLessonID] = useState<string>('');
 
   // Getters
 
@@ -65,7 +67,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     pageContentId?: string,
     partContentId?: string
   ) => {
-    switch(section){
+    switch (section) {
       case 'page':
         update(universalLessonDetails, 'lessonPlan', () => items);
         break;
@@ -78,9 +80,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           universalLessonDetails.lessonPlan[pageIdx].pageContent,
           (item: any) => item.id === pageContentId
         );
-    
+
         const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
-    
+
         update(universalLessonDetails, PATH, () => items);
         break;
     }
@@ -100,23 +102,32 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           active: true,
           class: '',
           displayMode: 'SELF',
-          ...content
+          ...content,
         },
       ],
     }));
-  }
+  };
+
+  const setCurrentLessonDataToState = () => {
+    const id = selectedLessonID;
+
+    const currentLesson = find(universalLessonsList, (item) => item.id === id);
+    if (currentLesson) {
+      setUniversalLessonDetails(currentLesson);
+    }
+  };
 
   useEffect(() => {
-    if (!universalLessonDetails.lessonPlan.length) {
-      setUniversalLessonDetails(exampleUniversalLesson);
-    }
-  }, []);
+    setCurrentLessonDataToState();
+  }, [selectedLessonID]);
 
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
+        selectedLessonID,
+        setSelectedLessonID,
         newBlockSeqId,
         setNewBlockSeqId,
         getCurrentPageIdx,
@@ -126,13 +137,15 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getCurrentPage,
         theme,
         setUniversalLessonDetails,
-        enableDnD,
         setEnableDnD,
         addFromULBHandler: addULBHandler,
         addNewPageHandler,
         updateMovableList,
         getPartContent,
         getPageContent,
+        enableDnD,
+        universalLessonsList,
+        setUniversalLessonsList,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

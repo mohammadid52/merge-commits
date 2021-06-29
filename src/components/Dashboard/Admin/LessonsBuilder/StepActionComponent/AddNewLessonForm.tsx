@@ -14,6 +14,7 @@ import {languageList, lessonTypeList} from '../../../../../utilities/staticData'
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import * as customMutations from '../../../../../customGraphql/customMutations';
+import * as mutations from '../../../../../graphql/mutations';
 
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
@@ -161,53 +162,53 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setUnsavedChanges(true);
   };
 
-    const cropSelecetedImage = async (e: any) => {
-      if (e.target.files && e.target.files.length > 0) {
-        const file = e.target.files[0];
-        const fileReader = new FileReader();
-        fileReader.onload = function () {
-          setImageData(fileReader.result);
-        };
-        fileReader.readAsDataURL(file);
-        toggleCropper();
-      }
-    };
-
-    const toggleCropper = () => {
-      setShowCropper(!showCropper);
-    };
-
-    const saveCroppedImage = async (image: string) => {
+  const cropSelecetedImage = async (e: any) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = function () {
+        setImageData(fileReader.result);
+      };
+      fileReader.readAsDataURL(file);
       toggleCropper();
-      setImageData(image);
-      const imageUrl = URL.createObjectURL(image);
-      setImagePreviewUrl(imageUrl);
-      toggleCropper();
-    };
+    }
+  };
 
-    const uploadImageToS3 = async (file: any, fileName: string, type: string) => {
-      // Upload file to s3 bucket
+  const toggleCropper = () => {
+    setShowCropper(!showCropper);
+  };
 
-      return new Promise((resolve, reject) => {
-        Storage.put(`ULB/lesson_image_${fileName}`, file, {
-          contentType: type,
-          ContentEncoding: 'base64',
+  const saveCroppedImage = async (image: string) => {
+    toggleCropper();
+    setImageData(image);
+    const imageUrl = URL.createObjectURL(image);
+    setImagePreviewUrl(imageUrl);
+    toggleCropper();
+  };
+
+  const uploadImageToS3 = async (file: any, fileName: string, type: string) => {
+    // Upload file to s3 bucket
+
+    return new Promise((resolve, reject) => {
+      Storage.put(`ULB/lesson_image_${fileName}`, file, {
+        contentType: type,
+        ContentEncoding: 'base64',
+      })
+        .then((result: any) => {
+          console.log('File successfully uploaded to s3', result);
+          resolve(true);
         })
-          .then((result: any) => {
-            console.log('File successfully uploaded to s3', result);
-            resolve(true);
-          })
-          .catch((err: any) => {
-            setValidation((prevValidation) => ({
-              ...prevValidation,
-              isError: true,
-              image: 'Unable to upload image. Please try again later. ',
-            }));
-            console.log('Error in uploading file to s3', err);
-            reject(err);
-          });
-      });
-    };
+        .catch((err: any) => {
+          setValidation((prevValidation) => ({
+            ...prevValidation,
+            isError: true,
+            image: 'Unable to upload image. Please try again later. ',
+          }));
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
 
   const validateForm = () => {
     let isValid = true;
@@ -247,6 +248,114 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setValidation({...msgs});
     return isValid;
   };
+
+  // DataBase Related
+
+  const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
+
+  const createNewLesson = async () => {
+    if (!lessonId) {
+      const isValid = true; // replace static boolean with validateForm
+      if (isValid) {
+        setCreatingLessons(true);
+        try {
+          const input: any = {
+            type: formData.type.value,
+            title: formData.name,
+            institutionID: formData.institution.id,
+            purpose: formData.purposeHtml,
+            objectives: [formData.objectiveHtml],
+            language: formData.languages.map((item) => item.value),
+            designers: selectedDesigners.map((item) => item.id),
+            lessonPlan: [],
+            summary: formData.studentSummary,
+            cardImage: formData.imageUrl,
+            cardCaption: formData.imageCaption,
+          };
+
+          const result: any = await API.graphql(
+            graphqlOperation(mutations.createUniversalLesson, {input})
+          );
+
+          const newLesson = result.data.createUniversalLesson;
+          postLessonCreation(newLesson?.id);
+        } catch (error) {
+          console.error(error.message);
+        } finally {
+          setCreatingLessons(false);
+        }
+      }
+    } else {
+      const isValid = true; // replace static boolean with validateForm
+
+      if (isValid) {
+        try {
+          setLoading(true);
+          const input = {
+            id: lessonId,
+            type: formData.type.value,
+            title: formData.name,
+            institutionID: formData.institution.id,
+            purpose: formData.purposeHtml,
+            objectives: [formData.objectiveHtml],
+            language: formData.languages.map((item) => item.value),
+            designers: selectedDesigners.map((item) => item.id),
+            summary: formData.studentSummary,
+            cardImage: formData.imageUrl,
+            cardCaption: formData.imageCaption,
+          };
+          const results: any = await API.graphql(
+            graphqlOperation(mutations.updateUniversalLesson, {input: input})
+          );
+          const lessonsData = results?.data?.updateUniversalLesson;
+
+          setLoading(false);
+          setUnsavedChanges(false);
+
+          if (lessonsData) {
+            // postLessonCreation(lessonsData?.id);
+            setValidation({
+              name: '',
+              type: '',
+              message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATE'],
+              isError: false,
+              image: '',
+              institution: '',
+              languages: '',
+              studentSummary: '',
+            });
+          }
+        } catch {
+          setValidation({
+            name: '',
+            type: '',
+            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+            isError: true,
+            institution: '',
+            image: '',
+            languages: '',
+            studentSummary: '',
+          });
+          setLoading(false);
+        }
+      }
+    }
+  };
+  const deleteLesson = async (id: string) => {
+    try {
+      const result = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalLesson, {
+          input: {id},
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   deleteLesson('696bb72f-0209-4de3-a05c-722dae9cf8e4');
+  // }, []);
 
   const saveFormData = async () => {
     if (!lessonId) {
@@ -350,7 +459,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               image: '',
               institution: '',
               languages: '',
-              studentSummary:'',
+              studentSummary: '',
             });
           }
         } catch {
@@ -563,12 +672,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           <Buttons
             btnClass="py-3 px-10"
             label={
-              loading
+              creatingLessons
                 ? AddNewLessonFormDict[userLanguage]['SAVING']
                 : AddNewLessonFormDict[userLanguage]['SAVE']
             }
-            onClick={saveFormData}
-            disabled={loading}
+            // onClick={saveFormData}
+            onClick={createNewLesson}
+            disabled={creatingLessons}
           />
         </div>
       </div>

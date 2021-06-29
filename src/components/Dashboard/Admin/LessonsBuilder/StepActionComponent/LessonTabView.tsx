@@ -20,8 +20,10 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 import {languageList} from '../../../../../utilities/staticData';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -58,19 +60,32 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     },
   ];
 
-  const fetchLessonDetails = async () => {
+  const [formData, setFormData] = useState({
+    label: '',
+    duration: '1',
+    resources: '',
+    notes: '',
+  });
+
+  const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getLesson, {
+        graphqlOperation(queries.getUniversalLesson, {
           id: lessonId,
         })
       );
-      const savedData = result.data.getLesson;
+      const savedData = result.data.getUniversalLesson;
       setLessonData(savedData);
+      setFormData({
+        label: savedData.label,
+        duration: savedData.duration.toString(),
+        resources: savedData.resources,
+        notes: savedData.notes,
+      });
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
-      setSelectedDesigners(designers);
+      setSelectedDesigners(designers || []);
       setLoading(false);
     } catch {
       console.log('Error while fetching lesson data');
@@ -84,7 +99,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);
-      fetchLessonDetails();
+      fetchUniversalLessonDetails();
     }
   };
 
@@ -95,12 +110,18 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const handleEdit = () => {
     const redirectionUrl = `${match.url.replace('view', `edit?lessonId=${lessonId}`)}`;
     history.push(redirectionUrl);
-  }
+  };
 
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
-        return <LessonSummaryForm />;
+        return (
+          <LessonSummaryForm
+            lessonId={lessonId}
+            setFormData={setFormData}
+            formData={formData}
+          />
+        );
       case '1':
         return (
           <LessonPlansList
@@ -168,13 +189,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     setActiveTab(tab);
   };
 
-  const {
-    institution = {},
-    language = [],
-    objectives = [],
-    purpose = '',
-    title = '',
-  } = lessonData || {};
+  const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
+    lessonData || {};
 
   return (
     <div className="w-full h-full">

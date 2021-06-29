@@ -6,7 +6,8 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Selector from '../../../../Atoms/Form/Selector';
-
+import * as mutations from '../../../../../graphql/mutations';
+import {graphqlOperation, API} from 'aws-amplify';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
@@ -66,7 +67,7 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
       addNewPageHandler({
         ...inputObj,
         id: pageId,
-        estTime: estimatedTimeList.find(item => item.name === inputObj.estTime)?.value,
+        estTime: estimatedTimeList.find((item) => item.name === inputObj.estTime)?.value,
         pageContent: [],
       });
       history.push(
@@ -74,6 +75,19 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
       );
     } else {
       return;
+    }
+  };
+
+  const createPage = async () => {
+    try {
+      const input = {
+        lessonPlan: [{}],
+      };
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLesson, {input})
+      );
+    } catch (error) {
+      console.error(error.message);
     }
   };
 

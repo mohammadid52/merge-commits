@@ -29,6 +29,8 @@ const TextInput = ({
   setNumbered,
   isEditingMode,
   updateContent,
+  setUnsavedChanges,
+  askBeforeClose,
   createNewContent,
 }: any) => {
   const {userLanguage} = useContext(GlobalContext);
@@ -44,6 +46,7 @@ const TextInput = ({
   };
 
   const onChange = (e: any, idx: number, placeholder: boolean = false) => {
+    setUnsavedChanges(true);
     const {value} = e.target;
     update(list[idx], placeholder ? `placeholder` : 'title', () => value);
     setList([...list]);
@@ -72,9 +75,9 @@ const TextInput = ({
     } else {
       createNewContent('', '', type, inputObjArray);
     }
-
     // close modal after saving
     closeAction();
+    setUnsavedChanges(false);
   };
 
   return (
@@ -154,7 +157,7 @@ const TextInput = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
           <Buttons

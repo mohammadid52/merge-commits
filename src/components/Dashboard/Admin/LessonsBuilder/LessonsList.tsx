@@ -16,11 +16,12 @@ import PageCountSelector from '../../../Atoms/PageCountSelector';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as customQueries from '../../../../customGraphql/customQueries';
+import * as queries from '../../../../graphql/queries';
+import * as mutations from '../../../../graphql/mutations';
 import LessonsListRow from './LessonsListRow';
 import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
-import {times} from 'lodash';
 
 const LessonsList = () => {
   const match = useRouteMatch();
@@ -143,15 +144,21 @@ const LessonsList = () => {
       const fetchLessonsData: any = await API.graphql(
         graphqlOperation(customQueries.listLessonsTitles)
       );
+      const fetchUList: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessons)
+      );
       if (!fetchLessonsData) {
         throw new Error('fail!');
       } else {
         const LessonsListData = fetchLessonsData.data?.listLessons?.items;
-        const filteredList = getFilteredList(LessonsListData, state.user.id);
+        const data = fetchUList?.data?.listUniversalLessons.items;
+        const mixedData: any = [...LessonsListData, ...data];
 
-        setLessonsData(isTeacher ? filteredList : LessonsListData);
+        const filteredList = getFilteredList(mixedData, state.user.id);
+
+        setLessonsData(isTeacher ? filteredList : mixedData);
         const totalListPages = Math.floor(
-          (isTeacher ? filteredList.length : LessonsListData.length) / pageCount
+          (isTeacher ? filteredList.length : mixedData.length) / pageCount
         );
 
         setTotalPages(
@@ -159,12 +166,12 @@ const LessonsList = () => {
             ? totalListPages * pageCount === filteredList.length
               ? totalListPages
               : totalListPages + 1
-            : totalListPages * pageCount === LessonsListData.length
+            : totalListPages * pageCount === mixedData.length
             ? totalListPages
             : totalListPages + 1
         );
 
-        setTotalLessonNum(isTeacher ? filteredList.length : LessonsListData.length);
+        setTotalLessonNum(isTeacher ? filteredList.length : mixedData.length);
 
         setStatus('done');
       }
@@ -224,7 +231,20 @@ const LessonsList = () => {
       name: name,
     });
   };
+  const deleteLesson = async (id: string) => {
+    try {
+      const result = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalLesson, {
+          input: {id},
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
+    // deleteLesson('9483b334-5893-465a-b64b-baccff16a902');
     getLessonsList();
   }, []);
 
