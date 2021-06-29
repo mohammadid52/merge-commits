@@ -17,12 +17,14 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
+  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
   );
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
+  const [selectedLessonID, setSelectedLessonID] = useState<string>('');
 
   // Getters
 
@@ -60,22 +62,30 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const updateMovableList = (
     items: any,
-    pageId: string,
-    pageContentId: string,
-    partContentId: string
+    section: string = 'pageContent',
+    pageId?: string,
+    pageContentId?: string,
+    partContentId?: string
   ) => {
-    const pageIdx = findIndex(
-      universalLessonDetails.lessonPlan,
-      (item: any) => item.id === pageId
-    );
-    const pageContentIdx = findIndex(
-      universalLessonDetails.lessonPlan[pageIdx].pageContent,
-      (item: any) => item.id === pageContentId
-    );
+    switch (section) {
+      case 'page':
+        update(universalLessonDetails, 'lessonPlan', () => items);
+        break;
+      case 'pageContent':
+        const pageIdx = findIndex(
+          universalLessonDetails.lessonPlan,
+          (item: any) => item.id === pageId
+        );
+        const pageContentIdx = findIndex(
+          universalLessonDetails.lessonPlan[pageIdx].pageContent,
+          (item: any) => item.id === pageContentId
+        );
 
-    const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
+        const PATH = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
 
-    update(universalLessonDetails, PATH, () => items);
+        update(universalLessonDetails, PATH, () => items);
+        break;
+    }
     console.log('universalLessonDetails: ----> ', universalLessonDetails.lessonPlan);
 
     setUniversalLessonDetails({...universalLessonDetails});
@@ -92,21 +102,32 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
           active: true,
           class: '',
           displayMode: 'SELF',
-          ...content
+          ...content,
         },
       ],
     }));
-  }
+  };
+
+  const setCurrentLessonDataToState = () => {
+    const id = selectedLessonID;
+
+    const currentLesson = find(universalLessonsList, (item) => item.id === id);
+    if (currentLesson) {
+      setUniversalLessonDetails(currentLesson);
+    }
+  };
 
   useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
-  }, []);
+    setCurrentLessonDataToState();
+  }, [selectedLessonID]);
 
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
+        selectedLessonID,
+        setSelectedLessonID,
         newBlockSeqId,
         setNewBlockSeqId,
         getCurrentPageIdx,
@@ -116,13 +137,15 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getCurrentPage,
         theme,
         setUniversalLessonDetails,
-        enableDnD,
         setEnableDnD,
         addFromULBHandler: addULBHandler,
         addNewPageHandler,
         updateMovableList,
         getPartContent,
         getPageContent,
+        enableDnD,
+        universalLessonsList,
+        setUniversalLessonsList,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

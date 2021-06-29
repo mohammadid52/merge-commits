@@ -1,18 +1,34 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useRouteMatch, useHistory} from 'react-router';
+
+import Buttons from '../../Atoms/Buttons';
+import SectionTitle from '../../Atoms/SectionTitle';
+import BreadCrums from '../../Atoms/BreadCrums';
+
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
-import BuilderWrapper from './views/BuilderWrapper';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import useDictionary from '../../../customHooks/dictionary';
+import {useQuery} from '../../../customHooks/urlParam';
 import {
   PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+
+import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
+import BuilderWrapper from './views/BuilderWrapper';
+import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
-import {MovableListProvider} from './MovableListContext';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as queries from '../../../graphql/queries';
+import * as mutations from '../../../graphql/mutations';
+import Loader from '../../Atoms/Loader';
+import Modal from '../../Atoms/Modal';
+import FormInput from '../../Atoms/Form/FormInput';
+import {map} from 'lodash';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -23,6 +39,15 @@ interface UniversalLessonBuilderProps extends ULBSelectionProps {
   activeStep?: string;
   lessonName?: string;
   lessonType?: string;
+}
+
+interface NewLessonDataInterface {
+  title: string;
+  label: string;
+  summary: string;
+  lessonPlan?: any[];
+  type?: string;
+  institutionID?: string;
 }
 
 /*******************************************
@@ -44,6 +69,11 @@ const initialUniversalLessonPage: UniversalLessonPage = {
   class: '',
   pageContent: [],
 };
+const intitalLessonData: NewLessonDataInterface = {
+  title: '',
+  summary: '',
+  label: '',
+};
 
 const initialUniversalLessonPagePart: PagePart = {
   id: '',
@@ -62,14 +92,39 @@ const initialUniversalLessonPagePartContent: PartContent = {
  * THE BUILDER PARENT                      *
  *******************************************/
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
+  const match = useRouteMatch();
+  const history = useHistory();
+  const params = useQuery(location.search);
+  const lessonId = params.get('lessonId');
+  const pageId = params.get('pageId');
   const {state, dispatch} = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
     universalLessonDetails,
     setUniversalLessonDetails,
     selectedPageID,
     setSelectedPageID,
+    setSelectedLessonID,
+    universalLessonsList,
+    setUniversalLessonsList,
   } = useULBContext();
+
+  const {EditQuestionModalDict} = useDictionary(clientKey);
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
+      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      last: true,
+    },
+  ];
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -87,12 +142,12 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    **********************************************/
 
   // in this area ^
-  useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
-    if (exampleUniversalLesson.lessonPlan.length > 0) {
-      setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
-    }
-  }, []);
+  // useEffect(() => {
+  //   setUniversalLessonDetails(exampleUniversalLesson);
+  //   if (exampleUniversalLesson.lessonPlan.length > 0) {
+  //     setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
+  //   }
+  // }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
   // const currentStepComp = (currentStep: string) => {
@@ -217,7 +272,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
   };
-  const {newBlockSeqId} = useULBContext();
 
   const updateULBHandler = (
     targetID: string,
@@ -310,9 +364,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
           let activePagePartContentData = [...activePageContentData.partContent];
-          const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${activePagePartContentData.filter(
-            (item) => item.type === contentType
-          ).length}`;
+          const partContentId: string = `${selectedPageID}_part_${activePageContentIndex}_${contentType}_${
+            activePagePartContentData.filter((item) => item.type === contentType).length
+          }`;
           activePagePartContentData[addBlockAtPosition] = {
             id: partContentId,
             type: contentType,
@@ -404,7 +458,93 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
-  // console.log(universalLessonDetails, 'universalLessonDetails');
+  const onBack = () => {
+    history.goBack();
+  };
+
+  // DataBase Related
+  const [fetchingLessons, setFetchingLessons] = useState(false); // loader for loading lessons
+
+  const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
+
+  const createNewLesson = async () => {
+    setCreatingLessons(true);
+    try {
+      const input: NewLessonDataInterface = {
+        ...newLessonData,
+        type: 'lesson',
+        institutionID: 'f3aef681-6fff-4795-8fde-67cb159bd275', // temporary -- remove this
+        lessonPlan: [],
+      };
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalLesson, {input})
+      );
+
+      const newLesson = result.data.createUniversalLesson;
+
+      setUniversalLessonsList([
+        ...universalLessonsList,
+        {...newLesson, lessonPlan: [{pageContent: []}]},
+      ]);
+
+      if (newLesson.id) {
+        setSelectedLessonID(newLesson.id);
+      }
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      closeAction();
+      setCreatingLessons(false);
+    }
+  };
+
+  const fetchUniversalLessonsList = async () => {
+    setFetchingLessons(true);
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessons)
+      );
+      const data = result?.data?.listUniversalLessons.items;
+
+      setUniversalLessonsList(data);
+
+      // setting first lesson id as initial id
+      setSelectedLessonID(data[0].id);
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setFetchingLessons(false);
+    }
+  };
+
+  const deleteLesson = async (id: string) => {
+    try {
+      const result = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalLesson, {
+          input: {id},
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    deleteLesson('9483b334-5893-465a-b64b-baccff16a902');
+  }, []);
+
+  const NO_LESSONS = universalLessonsList.length <= 0;
+
+  const [newLessonModal, setNewLessonModal] = useState(false);
+
+  const closeAction = () => setNewLessonModal(false);
+
+  const [newLessonData, setNewLessonData] = useState(intitalLessonData);
+  const onChange = (e: any) => {
+    const {id, value} = e.target;
+    setNewLessonData({...newLessonData, [id]: value});
+  };
 
   return (
     /**
@@ -419,22 +559,129 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      */
     <div
       id={`universalLessonBuilder`}
-      className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden">
+      className="h-full bg-dark-gray flex overflow-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
+      {newLessonModal && (
+        <Modal
+          showHeader={true}
+          title={`Create New Lesson`}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={() => setNewLessonModal(false)}>
+          <div className="min-w-256">
+            <div className="mb-4">
+              <FormInput
+                isRequired
+                value={newLessonData.title}
+                label={'Add Title'}
+                onChange={onChange}
+                id={'title'}
+              />
+            </div>
 
-      <BuilderWrapper
-        mode={`building`}
-        deleteFromULBHandler={deleteULBHandler}
-        updateFromULBHandler={updateULBHandler}
-        createNewBlockULBHandler={createNewBlockULBHandler}
-        updateBlockContentULBHandler={updateBlockContentULBHandler}
-        universalLessonDetails={universalLessonDetails}
-        universalBuilderStep={universalBuilderStep}
-        setUniversalBuilderStep={setUniversalBuilderStep}
-        selectedPageID={selectedPageID}
-        setSelectedPageID={setSelectedPageID}
-        initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
-      />
+            <div className="mb-4">
+              <FormInput
+                label={'Add Label'}
+                value={newLessonData.label}
+                onChange={onChange}
+                id={'label'}
+              />
+            </div>
+            <div className="mb-4">
+              <FormInput
+                label={'Edit Summary'}
+                value={newLessonData.summary}
+                onChange={onChange}
+                id={'summary'}
+              />
+            </div>
+            {/* <div className="mb-4">
+             <Selector />
+            </div> */}
+            <div className="flex mt-8 justify-center px-6 pb-4">
+              <div className="flex justify-end">
+                <Buttons
+                  btnClass="py-1 px-4 text-xs mr-2"
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                  onClick={closeAction}
+                  transparent
+                />
+                <Buttons
+                  btnClass="py-1 px-8 text-xs ml-2"
+                  disabled={creatingLessons}
+                  label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                  onClick={createNewLesson}
+                />
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
+      {fetchingLessons ? (
+        <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
+          <div className="items-center flex justify-center flex-col">
+            <Loader color="rgba(160, 174, 192, 1)" />
+            <p className="mt-2 text-center text-lg text-gray-500">
+              {/* @Mohammad TODO: Add this to dictionary  */}
+              Loading Lessons
+            </p>
+          </div>
+        </div>
+      ) : NO_LESSONS ? (
+        <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
+          <div className="items-center flex justify-center flex-col">
+            {/* <img src="/assets/images/icons/empty.png" alt="no data" /> */}
+            <p className="mt-2 text-center text-lg text-gray-500 mb-4">
+              {/* @Mohammad TODO: Add this to dictionary  */}
+              Oops, You don't have any lessons
+            </p>
+            <Buttons onClick={() => setNewLessonModal(true)} label="Create New Lesson" />
+          </div>
+        </div>
+      ) : (
+        <div className="w-full overflow-y-auto h-full bg-gray-200">
+          {/* Section Header */}
+          <BreadCrums items={breadCrumsList} />
+          <div className="flex justify-between">
+            <SectionTitle
+              title={LessonEditDict[userLanguage]['TITLE']}
+              subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
+            />
+            <div className="flex justify-end py-4 mb-4 w-5/10">
+              <Buttons
+                label="Go back"
+                btnClass="mr-4"
+                onClick={onBack}
+                Icon={IoArrowUndoCircleOutline}
+              />
+            </div>
+          </div>
+          {/* Body */}
+          <div className="w-full pb-8 m-auto">
+            <div
+              id={`universalLessonBuilder`}
+              className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
+              {/*{currentStepComp(universalBuilderStep)}*/}
+
+              <BuilderWrapper
+                mode={`building`}
+                deleteFromULBHandler={deleteULBHandler}
+                updateFromULBHandler={updateULBHandler}
+                createNewBlockULBHandler={createNewBlockULBHandler}
+                updateBlockContentULBHandler={updateBlockContentULBHandler}
+                universalLessonDetails={universalLessonDetails}
+                universalBuilderStep={universalBuilderStep}
+                setUniversalBuilderStep={setUniversalBuilderStep}
+                selectedPageID={selectedPageID}
+                setSelectedPageID={setSelectedPageID}
+                initialUniversalLessonPagePartContent={
+                  initialUniversalLessonPagePartContent
+                }
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

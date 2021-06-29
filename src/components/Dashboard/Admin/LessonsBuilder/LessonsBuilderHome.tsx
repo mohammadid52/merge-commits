@@ -9,6 +9,10 @@ import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
 import LessonEdit from './LessonEdit';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import { UniversalLessonBuilderProvider } from '../../../../contexts/UniversalLessonBuilderContext';
+import LessonTabView from './StepActionComponent/LessonTabView';
+import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
 
 const LessonsBuilderHome = () => {
   const {dispatch} = useContext(GlobalContext);
@@ -55,28 +59,50 @@ const LessonsBuilderHome = () => {
 
   return (
     <div className={`w-full h-full p-8 flex justify-center`}>
-      <Switch>
-        <Route
-          exact
-          path={`${match.url}`}
-          render={() => <LessonsList />} // Lessons builder List Home
-        />
-        <Route
-          exact
-          path={`${match.url}/lesson/add`}
-          render={() => (
-            <LessonBuilder
-              designersList={designersList}
-              institutionList={institutionList}
-            />
-          )} // Add new lesson form
-        />
-        <Route
-          exact
-          path={`${match.url}/lesson/edit`}
-          render={() => <LessonEdit designersList={designersList} />} // Edit lesson, assessment or survey form
-        />
-      </Switch>
+      <UniversalLessonBuilderProvider>
+        <Switch>
+          <Route
+            exact
+            path={`${match.url}`}
+            render={() => <LessonsList />} // Lessons builder List Home
+          />
+          <Route
+            exact
+            path={`${match.url}/lesson/add`}
+            render={() => (
+              <LessonBuilder
+                designersList={designersList}
+                institutionList={institutionList}
+              />
+            )} // Add new lesson form
+          />
+          <Route
+            exact
+            path={`${match.url}/lesson/edit`}
+            render={() => (
+              // <LessonEdit designersList={designersList} />
+              <LessonBuilder
+                designersList={designersList}
+                institutionList={institutionList}
+              />
+            )} // Edit lesson, assessment or survey form
+          />
+          <Route
+            exact
+            path={`${match.url}/lesson/view`}
+            render={() => <LessonTabView designersList={designersList} />}
+          />
+          <Route
+            exact
+            path={`${match.url}/lesson/add/lesson-plan`}
+            render={() => <LessonPlan />}
+          />
+          <Route
+            path={`${match.url}/lesson/page-builder`}
+            render={() => <UniversalLessonBuilder />}
+          />
+        </Switch>
+      </UniversalLessonBuilderProvider>
     </div>
   );
 };

@@ -1,5 +1,8 @@
-import { PagePart, UniversalLesson, UniversalLessonPage } from './UniversalLessonInterfaces';
-import React from 'react';
+import {
+  PagePart,
+  UniversalLesson,
+  UniversalLessonPage,
+} from './UniversalLessonInterfaces';
 
 export interface ModalProps {
   saveAction?: () => void;
@@ -38,7 +41,7 @@ export interface ULBSelectionProps {
     contentType: string,
     inputObj?: any,
     addBlockAtPosition?: number,
-    classString?:string
+    classString?: string
   ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
@@ -48,15 +51,27 @@ export interface ULBSelectionProps {
   setSelectedPagePartID?: React.Dispatch<React.SetStateAction<string>>;
   selectedPartContentID?: string;
   setSelectedPartContentID?: React.Dispatch<React.SetStateAction<string>>;
-  handleTagModalOpen?: (targetID: string, inputObj:any) => void;
+  handleTagModalOpen?: (targetID: string, inputObj: any) => void;
 }
 
 export interface RowComposerProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
   contentID?: string;
   dataIdAttribute?: string;
-  handleEditBlockContent?: (type: string, section: string, inputObj: any, targetId: string, indexToUpdate: number, classString?:string) => void;
-  handleModalPopToggle?: (dialogToToggle: string, position?: Number, section?:string, targetID?:string) => void;
+  handleEditBlockContent?: (
+    type: string,
+    section: string,
+    inputObj: any,
+    targetId: string,
+    indexToUpdate: number,
+    classString?: string
+  ) => void;
+  handleModalPopToggle?: (
+    dialogToToggle: string,
+    position?: Number,
+    section?: string,
+    targetID?: string
+  ) => void;
 }
 
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
@@ -82,8 +97,8 @@ export interface IContentTypeComponentProps {
     propertyToTarget: string,
     contentType: string,
     inputValue: any,
-    position?:number,
-    classString?:string
+    position?: number,
+    classString?: string
   ) => void;
   updateBlockContentULBHandler: (
     targetID: string,
@@ -93,4 +108,6 @@ export interface IContentTypeComponentProps {
     addBlockAtPosition?: number,
     classString?: string
   ) => void;
+  setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  askBeforeClose: () => void;
 }

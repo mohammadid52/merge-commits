@@ -29,6 +29,8 @@ const InputModalComponent = ({
   inputObj,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
+  setUnsavedChanges,
+  askBeforeClose,
 }: InputModalComponentProps) => {
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
@@ -145,6 +147,8 @@ const InputModalComponent = ({
     numbered,
     setNumbered,
     closeAction,
+    askBeforeClose,
+    setUnsavedChanges,
   };
 
   const getForm = (type: string) => {

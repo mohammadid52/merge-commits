@@ -14,6 +14,7 @@ interface SelectorProps {
   disabled?: boolean;
   loading?: boolean;
   label?: string;
+  noOptionMessage?: string;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -27,6 +28,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     placeholder,
     onChange,
     loading = false,
+    noOptionMessage = '',
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -172,7 +174,9 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               ))
             ) : (
               <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal">No Results</span>
+                <span className="font-normal">
+                  {noOptionMessage || 'No Results'}
+                </span>
               </li>
             )}
           </ul>

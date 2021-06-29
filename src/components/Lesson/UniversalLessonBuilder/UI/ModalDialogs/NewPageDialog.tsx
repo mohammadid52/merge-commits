@@ -9,7 +9,8 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import Tooltip from '../../../../Atoms/Tooltip';
 import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
-
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../../../../graphql/mutations';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -23,7 +24,7 @@ interface INewPageDialog {
 }
 
 const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) => {
-  const {addNewPageHandler} = useULBContext();
+  const {addNewPageHandler, selectedLessonID, setSelectedPageID} = useULBContext();
   const {userLanguage} = useContext(GlobalContext);
   const [focussed, setFocussed] = useState<
     'new_page' | 'existing_page' | 'template' | ''
@@ -62,21 +63,46 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
     }));
   };
 
+  const addLessonToDatabase = async (id: string) => {
+    try {
+      const input: any = {
+        id,
+        lessonPlan: [
+          ...universalLessonDetails.lessonPlan,
+          {
+            ...inputObj,
+            pageContent: [],
+          },
+        ],
+      };
+      const result = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLesson, {input})
+      );
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const handleSubmit = () => {
     const isValid = validateForm();
     if (isValid) {
       addNewPageHandler({
         ...inputObj,
-        pageContent:[],
+        pageContent: [],
       });
+
+      if (selectedLessonID) {
+        addLessonToDatabase(selectedLessonID);
+      }
       closeAction();
+      setSelectedPageID(inputObj.id);
     } else {
       return;
     }
   };
 
   const addExistingPage = () => {
-    const id:string = `page_${pages.length + 1}`
+    const id: string = `page_${pages.length + 1}`;
     addNewPageHandler({
       ...pages[copiedPageIndex],
       id,
@@ -97,7 +123,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
           : [],
     });
     closeAction();
-  }
+  };
 
   const validateForm = () => {
     const {id = '', label = '', title = '', description = ''} = inputObj;
@@ -148,7 +174,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
             : 'w-0 overflow-hidden opacity-0'
         }
         transition-all duration-400 ease-in-out m-2 
-        flex flex-col bg-gray-200`}>
+        flex flex-col`}>
           <div className="relative flex items-center">
             <h2 className="w-full bg-white text-lg font-semibold text-gray-900 truncate">
               Create New Page
@@ -203,8 +229,8 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
           </div>
         </div>
        */}
-          <div className="py-2">
-            <div className="bg-gray-200 p-2">
+          <div className="bg-gray-200 py-2">
+            <div className="p-2">
               <FormInput
                 value={inputObj.id}
                 label={'Id'}
@@ -215,7 +241,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               />
             </div>
 
-            <div className="bg-gray-200 p-2">
+            <div className="p-2">
               <FormInput
                 label={'Label'}
                 value={inputObj.label}
@@ -225,7 +251,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
                 error={errors.label}
               />
             </div>
-            <div className="bg-gray-200 p-2">
+            <div className="p-2">
               <FormInput
                 label={'Title'}
                 value={inputObj.title}
@@ -235,7 +261,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
                 error={errors.title}
               />
             </div>
-            <div className="bg-gray-200 p-2">
+            <div className="p-2">
               <FormInput
                 label={'Description'}
                 value={inputObj.description}
@@ -246,7 +272,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               />
             </div>
           </div>
-          <div className="flex mt-8 justify-center px-6 pb-4">
+          <div className="flex mt-4 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
@@ -289,25 +315,27 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
             </p>
             <div className={`mt-2 p-4 py-2 grid grid-cols-3 bg-gray-200`}>
               {pages && pages.length
-                ? pages.slice(0,focussed === 'existing_page' ? pages.length : 3).map((page: any, index: number) => (
-                    <div key={page.id} className="flex flex-col">
-                      <PageTile whClass={`w-20 h-28 mt-1`} marginClass={`mx-auto`} />
-                      <div className="flex mx-auto flex-col text-gray-400">
-                        <div className="text-md text-center">{page.label}</div>
-                        {index === copiedPageIndex ? (
-                          <div className="text-center">Copied</div>
-                        ) : (
-                          <div className="cursor-pointer">
-                            <Tooltip
-                              placement="top"
-                              text={`Click here to copy the content of this page`}>
-                              <FaCopy onClick={() => onCopyPageContent(index)} />
-                            </Tooltip>
-                          </div>
-                        )}
+                ? pages
+                    .slice(0, focussed === 'existing_page' ? pages.length : 3)
+                    .map((page: any, index: number) => (
+                      <div key={page.id} className="flex flex-col">
+                        <PageTile whClass={`w-20 h-28 mt-1`} marginClass={`mx-auto`} />
+                        <div className="flex mx-auto flex-col text-gray-400">
+                          <div className="text-md text-center">{page.label}</div>
+                          {index === copiedPageIndex ? (
+                            <div className="text-center">Copied</div>
+                          ) : (
+                            <div className="cursor-pointer">
+                              <Tooltip
+                                placement="top"
+                                text={`Click here to copy the content of this page`}>
+                                <FaCopy onClick={() => onCopyPageContent(index)} />
+                              </Tooltip>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))
                 : null}
             </div>
             <p className={`px-2 text-left block text-xs font-medium text-gray-700`}>
@@ -319,7 +347,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               </div>
             </div>
           </div>
-          <div className="flex mt-8 justify-center px-6 pb-4">
+          <div className="flex mt-4 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
@@ -376,7 +404,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
               <PageTile whClass={`w-20 h-28`} marginClass={`mx-auto`} />
             </div>
           </div>
-          <div className="flex mt-8 justify-center px-6 pb-4">
+          <div className="flex mt-4 justify-center px-6 pb-4">
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
@@ -388,7 +416,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
           </div>
         </div>
       </div>
-      {/* <div className="flex mt-8 justify-center px-6 pb-4">
+      {/* <div className="flex mt-4 justify-center px-6 pb-4">
         <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
