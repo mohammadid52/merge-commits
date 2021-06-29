@@ -189,15 +189,10 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
           <Buttons
             label="Go back"
             btnClass="mr-4"
-            // onClick={gobackToLessonsList}
+            onClick={history.goBack}
             Icon={IoArrowUndoCircleOutline}
           />
-          <Buttons
-            btnClass="mr-4 px-6"
-            label="Edit"
-            onClick={handleEdit}
-            Icon={FaEdit}
-          />
+          <Buttons btnClass="mr-4 px-6" label="Edit" onClick={handleEdit} Icon={FaEdit} />
         </div>
       </div>
       <div className="flex px-4 flex-col">

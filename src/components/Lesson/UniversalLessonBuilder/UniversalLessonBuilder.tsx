@@ -121,7 +121,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   // in this area ^
   useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
+    // setUniversalLessonDetails(exampleUniversalLesson);
     if (exampleUniversalLesson.lessonPlan.length > 0) {
       setSelectedPageID(pageId || exampleUniversalLesson.lessonPlan[0].id);
     }

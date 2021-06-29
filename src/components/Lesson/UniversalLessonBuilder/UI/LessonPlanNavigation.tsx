@@ -12,9 +12,10 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 interface ILessonPlanNavigationProps {
   selectedPageID: string;
   universalLessonDetails: UniversalLesson;
+  setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const LessonPlanNavigation = ({selectedPageID, universalLessonDetails}: ILessonPlanNavigationProps) => {
+const LessonPlanNavigation = ({selectedPageID,setSelectedPageID, universalLessonDetails}: ILessonPlanNavigationProps) => {
   const {lessonPlan = []} = universalLessonDetails || {};
   const {updateMovableList} = useULBContext();
 
@@ -42,13 +43,17 @@ const LessonPlanNavigation = ({selectedPageID, universalLessonDetails}: ILessonP
                     {(provided) => (
                       <div
                         key={index}
-                        className={`my-2 flex items-center justify-between ${
+                        className={`my-2 flex items-center justify-between cursor-pointer ${
                           lessonPlan.length < 5 ? '' : 'w-1/4 flex-none'
                         }`}
+                        onClick={() => setSelectedPageID(page.id)}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
-                        <span className={`inline-flex pl-5 items-center justify-center w-auto ${selectedPageID === page.id ? 'text-blue-700' : ''}`}>
+                        <span
+                          className={`inline-flex pl-5 items-center justify-center w-auto ${
+                            selectedPageID === page.id ? 'text-blue-700' : ''
+                          }`}>
                           {page.label}
                         </span>
                         {index !== lessonPlan.length - 1 ? (

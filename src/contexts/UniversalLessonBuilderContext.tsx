@@ -107,7 +107,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   }
 
   useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
+    if (!universalLessonDetails.lessonPlan.length) {
+      setUniversalLessonDetails(exampleUniversalLesson);
+    }
   }, []);
 
   return (

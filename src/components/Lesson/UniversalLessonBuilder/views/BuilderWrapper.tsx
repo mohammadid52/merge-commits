@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
@@ -46,6 +46,7 @@ import {
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
+import { useQuery } from '../../../../customHooks/urlParam';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -75,6 +76,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
+  const params = useQuery(location.search);
+  const isNewPage = params.get('isNewPage');
 
   const [loading] = useState(false);
 
@@ -101,6 +104,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   // Manage image gallery component
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
+
+  useEffect(() => {
+    if (isNewPage === 'true') {
+      handleModalPopToggle(dialogLabelList.NEW_PAGE);
+    }
+  },[]);
 
   const handleGalleryModal = () => {
     setOpenGallery((prevShow) => !prevShow);
@@ -506,6 +515,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       /> */}
       <LessonPlanNavigation
         selectedPageID={selectedPageID}
+        setSelectedPageID={setSelectedPageID}
         universalLessonDetails={universalLessonDetails}
       />
 

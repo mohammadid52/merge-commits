@@ -53,6 +53,7 @@ const BreadcrumsTitles: any = {
     LESSONPLANBUILDER: 'Lesson Plan Builder',
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
+    ADD_NEW_LESSON_PLAN: 'Add new lesson plan'
   },
   ES: {
     HOME: 'CASA',
@@ -3085,7 +3086,8 @@ const LessonBuilderDict: any = {
       ADD_PLAN: 'Add new page',
       EDIT: 'Edit',
       VIEW: 'View',
-      PREVIEW: 'Preview'
+      PREVIEW: 'Preview',
+      SAVE: 'Save'
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
@@ -3094,6 +3096,14 @@ const LessonBuilderDict: any = {
       DESCRIPTION: 'Description',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Action',
+    },
+    LESSON_PLAN_FORM: {
+      DESCRIPTION: 'Description',
+      ESTIMATED_TIME: 'Estimated Time',
+      HEADING: 'Create new lesson plan',
+      ID: 'Id',
+      LABEL: 'Lesson plan label',
+      TITLE: 'Page title',
     },
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',

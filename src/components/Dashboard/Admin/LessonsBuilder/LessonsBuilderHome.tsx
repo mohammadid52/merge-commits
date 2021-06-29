@@ -12,6 +12,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import { UniversalLessonBuilderProvider } from '../../../../contexts/UniversalLessonBuilderContext';
 import LessonTabView from './StepActionComponent/LessonTabView';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
+import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
 
 const LessonsBuilderHome = () => {
   const {dispatch} = useContext(GlobalContext);
@@ -89,9 +90,12 @@ const LessonsBuilderHome = () => {
           <Route
             exact
             path={`${match.url}/lesson/view`}
-            render={() => (
-                <LessonTabView designersList={designersList} />
-            )}
+            render={() => <LessonTabView designersList={designersList} />}
+          />
+          <Route
+            exact
+            path={`${match.url}/lesson/add/lesson-plan`}
+            render={() => <LessonPlan />}
           />
           <Route
             path={`${match.url}/lesson/page-builder`}

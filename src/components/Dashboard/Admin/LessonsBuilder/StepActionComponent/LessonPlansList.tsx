@@ -22,16 +22,24 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {setPreviewMode, updateMovableList} = useULBContext();
-
-  const pages = universalLessonDetails?.lessonPlan || [];
+  console.log(universalLessonDetails, 'universalLessonDetails', 'lessonId', lessonId);
+  
+  const pages =
+    universalLessonDetails.id === lessonId
+      ? universalLessonDetails?.lessonPlan || []
+      : [];
 
   const addNewLessonPage = () => {
-    history.push(`/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}`);
+    history.push(
+      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&isNewPage=${true}`
+    );
   };
 
   const editLessonPage = (id: string) => {
     setPreviewMode(false);
-    history.push(`/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`);
+    history.push(
+      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
+    );
   };
 
   const lessonPagePreview = (id: string) => {
