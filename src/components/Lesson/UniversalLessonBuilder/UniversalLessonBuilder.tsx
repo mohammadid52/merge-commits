@@ -464,6 +464,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   // DataBase Related
   const [fetchingLessons, setFetchingLessons] = useState(false); // loader for loading lessons
+
   const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
 
   const createNewLesson = async () => {
@@ -509,6 +510,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
       // setting first lesson id as initial id
       setSelectedLessonID(data[0].id);
+      console.log(data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -529,8 +531,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   };
 
   useEffect(() => {
-    fetchUniversalLessonsList();
-    // deleteLesson('580aa496-b5bc-4251-b7ca-75848ee25421');
+    deleteLesson('9483b334-5893-465a-b64b-baccff16a902');
   }, []);
 
   const NO_LESSONS = universalLessonsList.length <= 0;

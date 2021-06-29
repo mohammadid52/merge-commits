@@ -1,6 +1,8 @@
 import React, {Fragment, useContext} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import * as mutations from '../../../../../graphql/mutations';
+import {graphqlOperation, API} from 'aws-amplify';
 
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
@@ -22,8 +24,7 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {setPreviewMode, updateMovableList} = useULBContext();
-  console.log(universalLessonDetails, 'universalLessonDetails', 'lessonId', lessonId);
-  
+
   const pages =
     universalLessonDetails.id === lessonId
       ? universalLessonDetails?.lessonPlan || []
@@ -183,9 +184,7 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
               <div className="flex justify-center my-4">
                 <Buttons
                   btnClass="mx-4"
-                  label={
-                    LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['BUTTON']
-                  }
+                  label={LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['BUTTON']}
                   onClick={addNewLessonPlan}
                 />
               </div>
