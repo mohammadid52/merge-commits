@@ -14,6 +14,7 @@ import axios from 'axios';
 import { createUserUrl } from '../../../../utilities/urls';
 import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../customGraphql/customMutations';
 interface newUserInput {
   key: number
   authId: string
@@ -34,6 +35,10 @@ interface newUserInput {
   institution: {
     id: string,
     name: string
+  },
+  class: {
+    id: string,
+    name: string
   }
 }
 
@@ -42,7 +47,8 @@ const initialState: newUserInput = {
   firstName: '', lastName: '', phone: '', birthdate: '',
   grade: '', role: '', externalId: '',
   message: { show: false, text: '', type: '' },
-  institution: { id: '', name: '' }
+  institution: { id: '', name: '' },
+  class: { id: '', name: '' }
 }
 
 
@@ -50,6 +56,8 @@ const Registration = () => {
   const history = useHistory();
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState)
   const [institutions, setInstitutions] = useState([]);
+  const [institutionsData, setInstitutionsData] = useState([]);
+  const [instClasses, setInstClasses] = useState([]);
   const [message, setMessage] = useState<{ show: boolean, type: string, message: string, }>({
     show: false, type: '', message: ''
   })
@@ -100,8 +108,9 @@ const Registration = () => {
     }
 
     try {
-      const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
-      if (newUserInputs.role !== 'ADM' && newUserInputs.role !== 'ST') {
+      const newPerson: any = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
+      let person = newPerson.data.createPerson;
+      if (newUserInputs.role !== 'ST') {
         const input = {
           institutionID: newUserInputs.institution.id,
           staffAuthID: authId,
@@ -110,10 +119,23 @@ const Registration = () => {
           statusChangeDate: new Date().toISOString().split('T')[0],
         };
         const staff: any = await API.graphql(
-          graphqlOperation(mutations.createStaff, {input: input})
+          graphqlOperation(mutations.createStaff, { input: input })
+        );
+      } else {
+        // add the student in the class
+        // need to get the user id from new person object
+        const input = {
+          classID: newUserInputs.class.id,
+          studentID: person.id,
+          studentAuthID: authId,
+          studentEmail: newUserInputs.email,
+          status: 'Active',
+        };
+        let newStudent: any = await API.graphql(
+          graphqlOperation(customMutations.createClassStudent, {input})
         );
       }
-      handleMessage('success', 'User registered successfully and added as staff of the institution');
+      handleMessage('success', 'User registered successfully');
       setNewUserInputs(prev => {
         return {
           ...prev, key: 0, authId: '', email: '', password: 'xIconoclast.5x',
@@ -203,11 +225,18 @@ const Registration = () => {
           message: RegistrationDict[userLanguage]['messages']['userrol'],
         }
       }
-      if (newUserInputs.role !== 'ADM' && newUserInputs.role !== 'ST' && !newUserInputs.institution.id) {
+      if (!newUserInputs.institution.id) {
         return {
           show: true,
           type: 'error',
           message: RegistrationDict[userLanguage]['messages']['institution'],
+        }
+      }
+      if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
+        return {
+          show: true,
+          type: 'error',
+          message: 'class is required',
         }
       }
       validated = true;
@@ -253,27 +282,39 @@ const Registration = () => {
     validation();
   }
 
-  const handleInstituteChange = (item: {name: string, code: string }) => {
+  const handleInstituteChange = (item: { name: string, code: string }) => {
+    const selectedInst = institutionsData.filter(inst => inst.id === item.code)[0]
+    let classes = selectedInst.classes.items;
+    let classList = classes.map((cl: any) => {
+      return { code: cl.id, name: cl.name };
+    });
+    setInstClasses(classList);
     setNewUserInputs(() => {
       return {
         ...newUserInputs,
-        institution: {id: item.code, name: item.name }
+        institution: { id: item.code, name: item.name }
       }
     })
   }
 
+  const handleClassChange = (item: { name: string, code: string }) => {
+    setNewUserInputs(() => {
+      return {
+        ...newUserInputs,
+        class: { id: item.code, name: item.name }
+      }
+    })
+  }
   const fetchInstitutions = async () => {
     let institutions: any = await API.graphql(
       graphqlOperation(customQueries.getInstitutionsList)
     );
     institutions = institutions?.data.listInstitutions?.items || [];
-    institutions = institutions.map((inst: any) => {
-      return {
-        code: inst.id,
-        name: inst.name
-      };
+    let list = institutions.map((inst: any) => {
+      return { code: inst.id, name: inst.name };
     });
-    setInstitutions(institutions);
+    setInstitutions(list);
+    setInstitutionsData(institutions);
   }
 
   useEffect(() => {
@@ -362,7 +403,7 @@ const Registration = () => {
                       />
                     </div>
                     {
-                      (newUserInputs.role && newUserInputs.role !== 'ADM' && newUserInputs.role !== 'ST') &&
+                      (newUserInputs.role) &&
                       <div className="sm:col-span-3 p-2">
                         <DropdownForm
                           style={true}
@@ -372,6 +413,20 @@ const Registration = () => {
                           id='institution'
                           items={institutions}
                           value={`${newUserInputs.institution.id}`}
+                        />
+                      </div>
+                    }
+                    {
+                      (newUserInputs.role && newUserInputs.role === 'ST' && newUserInputs.institution.id) &&
+                      <div className="sm:col-span-3 p-2">
+                        <DropdownForm
+                          style={true}
+                          handleChange={handleClassChange}
+                          userInfo={`${newUserInputs.class.name}`}
+                          label='Class'
+                          id='class'
+                          items={instClasses}
+                          value={`${newUserInputs.class.id}`}
                         />
                       </div>
                     }

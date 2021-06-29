@@ -1738,19 +1738,6 @@ export const GetInstitutionDetails = /* GraphQL */ `
         }
         nextToken
       }
-      staff {
-        items {
-          id
-          institutionID
-          staffAuthID
-          staffEmail
-          status
-          statusChangeDate
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       rooms {
         items {
           id
@@ -2772,6 +2759,14 @@ export const getInstitutionsList = /* GraphQL */ `
       items {
         id
         name
+        classes {
+          items {
+            id
+            type
+            name
+          }
+          nextToken
+        }
       }
       nextToken
     }
