@@ -613,6 +613,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}
+        setEditModal={setEditModal}
       />
     </div>
   );

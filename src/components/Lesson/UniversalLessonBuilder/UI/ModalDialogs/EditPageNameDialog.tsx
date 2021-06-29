@@ -109,11 +109,13 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
           label={'Edit Id'}
           value={updatedID}
           onChange={(e) => setUpdatedID(e.target.value)}
+          disabled={true}
         />
       ) : (
         <div>
           <div className="mb-4">
             <FormInput
+              disabled={true}
               value={updatedValues.id}
               label={'Edit Id'}
               onChange={onChange}

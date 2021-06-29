@@ -23,9 +23,10 @@ export const exampleUniversalLesson: UniversalLesson = {
       id: 'page_1',
       label: 'Introduction',
       displayMode: 'SELF',
-      title: '',
+      title: 'Introduction',
       description: '',
       class: '',
+      estTime: 15,
       pageContent: [
         {
           id: 'page_1_part_0',
@@ -237,7 +238,7 @@ export const exampleUniversalLesson: UniversalLesson = {
       id: 'page_3',
       label: 'Activity',
       displayMode: 'SELF',
-      title: '',
+      title: 'Activity',
       description: '',
       class: '',
       pageContent: [
