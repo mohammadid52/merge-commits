@@ -20,6 +20,10 @@ export type LessonActions =
       payload: UniversalLessonStudentData;
     }
   | {
+      type: 'SET_INITIAL_STUDENT_DATA';
+      payload: UniversalLessonStudentData[];
+    }
+  | {
       type: 'SET_CURRENT_PAGE';
       payload: number;
     }
@@ -51,6 +55,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         studentData: action.payload,
       };
+    case 'SET_INITIAL_STUDENT_DATA':
+      return {
+        ...state,
+        studentData: action.payload
+      }
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
     case 'TOGGLE_OPEN_PAGE':

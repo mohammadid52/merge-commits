@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import NotesForm from './LessonComponents/Notes/NotesForm';
 import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
@@ -8,7 +8,11 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import Foot from './Foot/Foot';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
-import { PagePart, PartContent, UniversalLessonPage } from '../../interfaces/UniversalLessonInterfaces';
+import {
+  PagePart,
+  PartContent,
+  UniversalLessonPage,
+} from '../../interfaces/UniversalLessonInterfaces';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -53,15 +57,29 @@ const LessonApp = () => {
   //  INITIALIZE STUDENTDATA
   //  INITIALIZE STUDENTDATA
   //  INITIALIZE STUDENTDATA
-  useEffect(()=>{
-    if(PAGES){
-      const allFormObjects = PAGES.reduce((acc: PartContent[], page: UniversalLessonPage)=>{
-        const allFormParts = page.partContent.filter((part:PagePart)=>part.type.includes('form'))
-        return [...acc, ...allFormParts]
-      },[])
-      console.log('allFormObjects - ',allFormObjects)
+  useEffect(() => {
+    if (PAGES) {
+      const mappedPages = PAGES.map((page: UniversalLessonPage) => {
+        const allPageParts = page.pageContent;
+
+        const initialPageData = allPageParts.map((pagePart: PagePart) => {
+          const pagePartContent = pagePart.partContent.map((partContent: PartContent) => {
+            return {
+              domID: partContent.id,
+              input: [''],
+            };
+          });
+          return {
+            pagePartID: `${pagePart.id}`,
+            pagePartInput: pagePartContent,
+          };
+        });
+        return initialPageData;
+      });
+
+      lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
     }
-  },[lessonState.lessonData.lessonPlan])
+  }, [lessonState.lessonData.lessonPlan]);
 
   /**
    *
@@ -81,11 +99,10 @@ const LessonApp = () => {
         />
         {/*<NotificationBar />*/}
 
-
         <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
           {/*{lessonDataLoaded && <Body />}*/}
           {/* ADD LESSONWRAPPER HERE */}
-          <CoreUniversalLesson/>
+          <CoreUniversalLesson />
         </ErrorBoundary>
 
         {lessonDataLoaded && <Foot />}
