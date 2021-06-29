@@ -17,7 +17,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
   const {previewMode} = mode !== 'lesson' ? useULBContext() : true;
   const buildModeClass = `border-0 border-dashed border-gray-400`;
 
-  useEffect(()=>{console.log('row wrappwer ---',children)},[children])
+  // useEffect(()=>{console.log('row wrappwer ---',children)},[children])
 
   return (
     <div

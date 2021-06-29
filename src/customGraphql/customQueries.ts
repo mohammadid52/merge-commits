@@ -567,7 +567,7 @@ export const getClassroomStudent = /* GraphQL */ `
 `;
 
 export const listPersons = /* GraphQL */ `
-  query ListPersons($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
+  query ListPersons($filter: ModelPersonFilterInput, $limit: Int, $sortDirection: ModelSortDirection) {
     listPersons(filter: $filter, sortDirection: $sortDirection) {
       items {
         id
@@ -584,8 +584,39 @@ export const listPersons = /* GraphQL */ `
     }
   }
 `;
-
-export const listClassStudents = /* Graph QL */ `
+export const fetchPersons = /* GraphQL */ `
+  query ListPersons(
+    $email: String
+    $authId: ModelStringKeyConditionInput
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersons(
+      email: $email
+      authId: $authId
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        authId
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        image
+      }
+      nextToken
+    }
+  }
+`;
+export const listClassStudents = /* GraphQL */ `
   query ListClassStudents($studentID: ID) {
     listClassStudents(filter: {studentID: {contains: $studentID}}) {
       items {
@@ -1778,14 +1809,6 @@ export const getClassDetails = /* GraphQL */ `
         id
         name
         type
-        district
-        address
-        addressLine2
-        city
-        state
-        zip
-        phone
-        website
         image
         isServiceProvider
         serviceProviders {
