@@ -99,7 +99,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    updateMovableList(items, selectedPageID, pageContentId);
+    updateMovableList(items, 'pageContent', selectedPageID, pageContentId);
   };
 
   return (

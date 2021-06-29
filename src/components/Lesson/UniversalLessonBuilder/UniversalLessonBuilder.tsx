@@ -1,25 +1,33 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {useRouteMatch, useHistory} from 'react-router';
+
+import Buttons from '../../Atoms/Buttons';
+import SectionTitle from '../../Atoms/SectionTitle';
+import BreadCrums from '../../Atoms/BreadCrums';
+
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
-import BuilderWrapper from './views/BuilderWrapper';
+import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
+import useDictionary from '../../../customHooks/dictionary';
+import {useQuery} from '../../../customHooks/urlParam';
 import {
   PagePart,
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
-import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInterfaces';
+
+import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
+import BuilderWrapper from './views/BuilderWrapper';
+import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
 import Loader from '../../Atoms/Loader';
-import Buttons from '../../Atoms/Buttons';
 import Modal from '../../Atoms/Modal';
 import FormInput from '../../Atoms/Form/FormInput';
-import useDictionary from '../../../customHooks/dictionary';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -83,7 +91,14 @@ const initialUniversalLessonPagePartContent: PartContent = {
  * THE BUILDER PARENT                      *
  *******************************************/
 const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
-  const {state, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
+  const match = useRouteMatch();
+  const history = useHistory();
+  const params = useQuery(location.search);
+  const lessonId = params.get('lessonId');
+  const pageId = params.get('pageId');
+  const {state, dispatch} = useContext(GlobalContext);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
     universalLessonDetails,
@@ -95,6 +110,19 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   } = useULBContext();
 
   const {EditQuestionModalDict} = useDictionary(clientKey);
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
+      url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
+      last: true,
+    },
+  ];
 
   //  INITIALIZE CURRENT PAGE LOCATION
   useEffect(() => {
@@ -113,9 +141,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   // in this area ^
   useEffect(() => {
-    setUniversalLessonDetails(exampleUniversalLesson);
+    // setUniversalLessonDetails(exampleUniversalLesson);
     if (exampleUniversalLesson.lessonPlan.length > 0) {
-      setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
+      setSelectedPageID(pageId || exampleUniversalLesson.lessonPlan[0].id);
     }
   }, []);
 
@@ -429,6 +457,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     setUniversalLessonDetails(temp);
   };
 
+  const onBack = () => {
+    history.goBack();
+  };
+
   // DataBase Related
   const [fetchingLessons, setFetchingLessons] = useState(false); // loader for loading lessons
   const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
@@ -596,19 +628,48 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           </div>
         </div>
       ) : (
-        <BuilderWrapper
-          mode={`building`}
-          deleteFromULBHandler={deleteULBHandler}
-          updateFromULBHandler={updateULBHandler}
-          createNewBlockULBHandler={createNewBlockULBHandler}
-          updateBlockContentULBHandler={updateBlockContentULBHandler}
-          universalLessonDetails={universalLessonDetails}
-          universalBuilderStep={universalBuilderStep}
-          setUniversalBuilderStep={setUniversalBuilderStep}
-          selectedPageID={selectedPageID}
-          setSelectedPageID={setSelectedPageID}
-          initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
-        />
+        <div className="w-full h-full">
+          {/* Section Header */}
+          <BreadCrums items={breadCrumsList} />
+          <div className="flex justify-between">
+            <SectionTitle
+              title={LessonEditDict[userLanguage]['TITLE']}
+              subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
+            />
+            <div className="flex justify-end py-4 mb-4 w-5/10">
+              <Buttons
+                label="Go back"
+                btnClass="mr-4"
+                onClick={onBack}
+                Icon={IoArrowUndoCircleOutline}
+              />
+            </div>
+          </div>
+          {/* Body */}
+          <div className="w-full pb-8 m-auto">
+            <div
+              id={`universalLessonBuilder`}
+              className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
+              {/*{currentStepComp(universalBuilderStep)}*/}
+
+              <BuilderWrapper
+                mode={`building`}
+                deleteFromULBHandler={deleteULBHandler}
+                updateFromULBHandler={updateULBHandler}
+                createNewBlockULBHandler={createNewBlockULBHandler}
+                updateBlockContentULBHandler={updateBlockContentULBHandler}
+                universalLessonDetails={universalLessonDetails}
+                universalBuilderStep={universalBuilderStep}
+                setUniversalBuilderStep={setUniversalBuilderStep}
+                selectedPageID={selectedPageID}
+                setSelectedPageID={setSelectedPageID}
+                initialUniversalLessonPagePartContent={
+                  initialUniversalLessonPagePartContent
+                }
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

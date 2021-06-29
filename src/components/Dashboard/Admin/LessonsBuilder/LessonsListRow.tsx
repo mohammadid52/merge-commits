@@ -23,9 +23,9 @@ const LessonsListRow = (props: LessonsListRow) => {
 
   const handleLessonsEdit = (type: string) => {
     if (type === 'Lesson') {
-      history.push(`${match.url}/lesson/edit?lessonId=${id}`);
+      history.push(`${match.url}/lesson/view?lessonId=${id}`);
     } else {
-      history.push(`${match.url}/lesson/edit?assessmentId=${id}`);
+      history.push(`${match.url}/lesson/view?assessmentId=${id}`);
     }
   };
 

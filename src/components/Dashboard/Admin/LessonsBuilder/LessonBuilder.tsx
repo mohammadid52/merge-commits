@@ -1,8 +1,8 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
 import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
-import {FaRegEye, FaQuestionCircle, FaUnity} from 'react-icons/fa';
+import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
@@ -13,6 +13,7 @@ import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
+import Loader from '../../../Atoms/Loader';
 import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
@@ -26,10 +27,8 @@ import {
 } from './LessonEdit';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
-import { UniversalLessonBuilderProvider } from '../../../../contexts/UniversalLessonBuilderContext';
-import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
-import UnitLookup from './StepActionComponent/UnitLookup';
+import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import {useQuery} from '../../../../customHooks/urlParam';
 
 export interface InitialData {
   name: string;
@@ -41,6 +40,9 @@ export interface InitialData {
   languages: {id: string; name: string; value: string}[];
   institution?: InputValueObject;
   language: string[];
+  imageCaption?: string;
+  imageUrl?: string;
+  studentSummary?: string;
 }
 export interface InputValueObject {
   id: string;
@@ -56,7 +58,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const {designersList, institutionList} = props;
   const history = useHistory();
   const match = useRouteMatch();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const params = useQuery(location.search);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
 
   const breadCrumsList = [
@@ -83,6 +86,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     languages: [{id: '1', name: 'English', value: 'EN'}],
     institution: {id: '', name: '', value: ''},
     language: [''],
+    imageUrl: '',
+    imageCaption: '',
+    studentSummary: ''
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -104,6 +110,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
   ];
 
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<InitialData>(initialData);
   const [measurementList, setMeasurementList] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState([]);
@@ -112,9 +119,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     lessonInstructions: instructionInitialState,
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [lessonId, setLessonId] = useState('');
+  const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
   const [activeStep, setActiveStep] = useState('Overview');
-  const [activeTab, setActiveTab] = useState(0);
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -161,6 +167,50 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [showModal, setShowModal] = useState(false);
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
   const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
+
+  const fetchLessonDetails = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getLesson, {
+          id: lessonId,
+        })
+      );
+      const savedData = result.data.getLesson;
+
+      setFormData({
+        ...formData,
+        name: savedData.title,
+        type:
+          savedData.type &&
+          lessonTypeList.find((item: any) => item.value === savedData.type),
+        purposeHtml: savedData?.purpose ? savedData.purpose : '',
+        objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
+        languages: savedData.language.map((it: any) =>
+          languageList.find((it2: any) => it2.value === it)
+        ),
+        institution: {
+          id: savedData?.institution?.id,
+          name: savedData?.institution?.name,
+          value: savedData?.institution?.name,
+        },
+      });
+      const designers = designersList.filter((item: any) =>
+        savedData?.designers?.includes(item.id)
+      );
+      setSelectedDesigners(designers);
+      setLoading(false);
+    } catch {
+      console.log('Error while fetching lesson data');
+      history.push(`/dashboard/lesson-builder`);
+    }
+  };
+
+  useEffect(() => {
+    if (lessonId) {
+      setLoading(true);
+      fetchLessonDetails();
+    }
+  }, []);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
@@ -396,50 +446,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const currentTabComp = (activeTab: string) => {
-    switch (activeTab) {
-      case '0':
-        return (
-          <AddNewLessonForm
-            lessonId={lessonId}
-            changeLessonType={changeLessonType}
-            formData={formData}
-            setFormData={setFormData}
-            designersList={designersList}
-            selectedDesigners={selectedDesigners}
-            setSelectedDesigners={setSelectedDesigners}
-            postLessonCreation={postLessonCreation}
-            allMeasurement={measurementList}
-            lessonMeasurements={selectedMeasurement}
-            setLessonMeasurements={setSelectedMeasurement}
-            institutionList={institutionList}
-            setUnsavedChanges={setUnsavedChanges}
-          />
-        );
-      case '1':
-        return (
-          <UniversalLessonBuilderProvider>
-            <UniversalLessonBuilder />
-          </UniversalLessonBuilderProvider>
-        );
-      case '2':
-        return (
-          <div>
-            <UnitLookup
-              lessonName={formData.name}
-              lessonId={lessonId}
-              institution={formData.institution}
-              lessonType={formData.type?.value}
-              lessonPlans={savedLessonDetails.lessonPlans}
-            />
-            <div className="flex mb-8 mt-4 justify-center">
-              <Buttons btnClass="py-3 px-10" label={BUTTONS[userLanguage]['PUBLISH']} />
-            </div>
-          </div>
-        );
-    }
-  };
-
   const [historyList, setHistoryList] = useState(['Overview']);
 
   const goBack = () => {
@@ -501,7 +507,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
-    setActiveTab(1);
+    const redirectionUrl = `${match.url.replace('add', `view?lessonId=${lessonId}`)}`;
+    history.push(redirectionUrl);
     if (formData.type?.id === '1') {
       setActiveStep('Preview Details');
     } else {
@@ -529,32 +536,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [formData.type?.id]);
 
-  useEffect(() => {
-    fetchMeasurementList();
-  }, []);
-
-  const tabs = [
-    {
-      index: 0,
-      title: 'Overview',
-      icon: <IoCardSharp />,
-      content: currentTabComp(`${activeTab}`),
-    },
-    {
-      index: 1,
-      title: 'Builder',
-      icon: <FaQuestionCircle />,
-      content: currentTabComp(`${activeTab}`),
-      disabled: formData.institution && formData.institution.id ? false : true,
-    },
-    {
-      index: 2,
-      title: 'Assign Units & Publish',
-      icon: <FaUnity />,
-      content: currentTabComp(`${activeTab}`),
-      disabled: formData.institution && formData.institution.id ? false : true,
-    },
-  ];
+  // useEffect(() => {
+  //   fetchMeasurementList();
+  // }, []);
 
   return (
     <div className="w-full h-full">
@@ -585,34 +569,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <div className="grid grid-cols-1 divide-x-0 divide-gray-400 p-4">
             {/* <div className="sm:col-span-1"> */}
-              <UnderlinedTabs
-                tabs={tabs}
-                activeTab={activeTab}
-                updateTab={(tab: number) => {
-                    setActiveTab(tab);
-                  // if (individualFieldEmpty) {
-                  //   setWarnModal2({
-                  //     stepOnHold: step,
-                  //     show: true,
-                  //     message: 'Please fill all required fields to save this checkpoint',
-                  //   });
-                  // } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
-                  //   setIndividualFieldEmpty(false);
-                  //   setWarnModal2({
-                  //     ...warnModal2,
-                  //     stepOnHold: step,
-                  //     show: true,
-                  //     message: 'You have unsaved checkpoint. Do you want to save it?',
-                  //   });
-                  // } else {
-                  //   setIndividualFieldEmpty(false);
-
-                  //   setActiveStep(step);
-                  //   setHistoryList([...historyList, step]);
-                  // }
-                }}
-              />
-              {/* <WizardScroller
+            {/* <WizardScroller
                 stepsList={lessonBuilderSteps}
                 activeStep={activeStep}
                 setActiveStep={(step) => {
@@ -639,11 +596,34 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 }}
               /> */}
             {/* </div> */}
-            {/* <div>
-              <Fragment>
-                <div className="mx-6">{currentStepComp(activeStep)}</div>
-              </Fragment>
-            </div> */}
+            <div>
+              {loading ? (
+                <div className="h-100 flex justify-center items-center">
+                  <div className="w-5/10">
+                    <Loader />
+                    <p className="mt-2 text-center">
+                      Fetching lesson details please wait...
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <AddNewLessonForm
+                  lessonId={lessonId}
+                  changeLessonType={changeLessonType}
+                  formData={formData}
+                  setFormData={setFormData}
+                  designersList={designersList}
+                  selectedDesigners={selectedDesigners}
+                  setSelectedDesigners={setSelectedDesigners}
+                  postLessonCreation={postLessonCreation}
+                  allMeasurement={measurementList}
+                  lessonMeasurements={selectedMeasurement}
+                  setLessonMeasurements={setSelectedMeasurement}
+                  institutionList={institutionList}
+                  setUnsavedChanges={setUnsavedChanges}
+                />
+              )}
+            </div>
           </div>
         </div>
         {warnModal.show && (

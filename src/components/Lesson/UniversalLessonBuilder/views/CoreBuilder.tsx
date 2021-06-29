@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
+import {AiOutlineEye, AiOutlineEyeInvisible, AiOutlineBgColors} from 'react-icons/ai';
+import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
+import {IoColorFill, IoColorFillOutline} from 'react-icons/io5';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {
@@ -10,12 +13,10 @@ import {
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import {AiOutlineEye, AiOutlineEyeInvisible, AiOutlineBgColors} from 'react-icons/ai';
 import Tooltip from '../../../Atoms/Tooltip';
 import Buttons from '../../../Atoms/Buttons';
 import ColorPicker from '../UI/ColorPicker/ColorPicker';
-import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
-import {IoColorFill, IoColorFillOutline} from 'react-icons/io5';
+import LessonPlanDescription from '../UI/LessonPlanDescription';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -100,33 +101,37 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         </LessonPageWrapper>
       </div>
 
-      <div className="absolute top-7 right-2 w-auto flex flex-col items-center">
-        <div className=" w-auto my-2">
+      <div className="absolute top-7 right-2 w-auto flex flex-col items-center z-30">
+        <div className="bg-dark w-32 p-2">
           <Tooltip
             placement="left"
             text={`${previewMode ? 'Show pencil' : 'Hide Pencil'}`}>
             <button
               onClick={() => setPreviewMode(!previewMode)}
-              className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+              className="text-white bg-indigo-500 h-auto py-2 my-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
               {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </button>
           </Tooltip>
-        </div>
-        <div className="w-auto my-2">
           <Tooltip
             placement="left"
             text={`${enableDnD ? 'Disable Drag' : 'Enable Drag'}`}>
             <button
               onClick={() => setEnableDnD(!enableDnD)}
-              className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+              className="text-white bg-indigo-500 h-auto py-2 my-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
               {enableDnD ? <RiDragDropFill /> : <RiDragDropLine />}
             </button>
           </Tooltip>
+          <button
+            onClick={() => handleModalPopToggle('NEW_PAGE')}
+            className="text-white bg-indigo-500 h-auto py-2 my-2 w-full px-2 rounded-md shadow hover:shadow-lg text-base">
+            Add page
+          </button>
         </div>
       </div>
 
-      <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
-        <div className={`absolute w-auto top-7 left-2 z-30`}>
+      <div className={`absolute w-auto top-7 left-2 z-30`}>
+        <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
+          <>
           <Tooltip placement="right" text={`Select background color`}>
             {/* <Buttons
               onClick={onColorPickerToggle}
@@ -152,8 +157,12 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               />
             </div>
           )}
-        </div>
-      </ClickAwayListener>
+          </>
+        </ClickAwayListener>
+        {/* <div className="mt-10 w-36">
+          <LessonPlanDescription />
+        </div> */}
+      </div>
     </div>
   );
 };
