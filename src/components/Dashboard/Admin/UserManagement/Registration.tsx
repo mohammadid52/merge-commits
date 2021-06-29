@@ -1,14 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-// import { Auth, API, graphqlOperation } from 'aws-amplify';
-import { Auth } from '@aws-amplify/auth';
 import API, { graphqlOperation } from '@aws-amplify/api';
-import * as mutations from '../../../../graphql/mutations';
 import SuccessNote from '../../../../standard/Alert/SuccessNote';
 import ErrorNote from './ErrorNote';
 import DropdownForm from './DropdownForm';
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { FaPlus } from 'react-icons/fa';
 import { IoArrowUndoCircleOutline } from 'react-icons/io5';
 import Buttons from '../../../Atoms/Buttons';
 import SectionTitle from '../../../Atoms/SectionTitle';
@@ -17,6 +12,9 @@ import useDictionary from '../../../../customHooks/dictionary';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import axios from 'axios';
 import { createUserUrl } from '../../../../utilities/urls';
+import * as mutations from '../../../../graphql/mutations';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../customGraphql/customMutations';
 interface newUserInput {
   key: number
   authId: string
@@ -33,65 +31,43 @@ interface newUserInput {
     show: boolean
     text: string
     type: string
+  },
+  institution: {
+    id: string,
+    name: string
+  },
+  class: {
+    id: string,
+    name: string
   }
 }
 
 const initialState: newUserInput = {
-  key: 0,
-  authId: '',
-  email: '',
-  password: 'xIconoclast.5x',
-  firstName: '',
-  lastName: '',
-  phone: '',
-  birthdate: '',
-  grade: '',
-  role: '',
-  externalId: '',
-  message: {
-    show: false,
-    text: '',
-    type: '',
-  },
+  key: 0, authId: '', email: '', password: 'xIconoclast.5x',
+  firstName: '', lastName: '', phone: '', birthdate: '',
+  grade: '', role: '', externalId: '',
+  message: { show: false, text: '', type: '' },
+  institution: { id: '', name: '' },
+  class: { id: '', name: '' }
 }
 
 
 const Registration = () => {
   const history = useHistory();
-
   const [newUserInputs, setNewUserInputs] = useState<newUserInput>(initialState)
-
+  const [institutions, setInstitutions] = useState([]);
+  const [institutionsData, setInstitutionsData] = useState([]);
+  const [instClasses, setInstClasses] = useState([]);
   const [message, setMessage] = useState<{ show: boolean, type: string, message: string, }>({
-    show: false,
-    type: '',
-    message: '',
+    show: false, type: '', message: ''
   })
-
-  const Role = [
-    {
-      code: 'ADM',
-      name: 'Admin',
-    },
-    {
-      code: 'BLD',
-      name: 'Builder',
-    },
-    {
-      code: 'FLW',
-      name: 'Fellow',
-    },
-    {
-      code: 'CRD',
-      name: 'Coordinator',
-    },
-    {
-      code: 'TR',
-      name: 'Teacher',
-    },
-    {
-      code: 'ST',
-      name: 'Student',
-    },
+  const Roles = [
+    { code: 'ADM', name: 'Admin' },
+    { code: 'BLD', name: 'Builder' },
+    { code: 'FLW', name: 'Fellow' },
+    { code: 'CRD', name: 'Coordinator' },
+    { code: 'TR', name: 'Teacher' },
+    { code: 'ST', name: 'Student' }
   ];
 
   const { theme, clientKey, userLanguage } = useContext(GlobalContext);
@@ -124,7 +100,6 @@ const Registration = () => {
       email: newUserInputs.email,
       firstName: newUserInputs.firstName,
       lastName: newUserInputs.lastName,
-      // insitution: '1',
       phone: newUserInputs.phone,
       birthdate: '1960-01-01',
       externalId: newUserInputs.externalId,
@@ -133,53 +108,54 @@ const Registration = () => {
     }
 
     try {
-      const newPerson = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
-      handleMessage('success', 'User registered successfully')
+      const newPerson: any = await API.graphql(graphqlOperation(mutations.createPerson, { input: userData }))
+      let person = newPerson.data.createPerson;
+      if (newUserInputs.role !== 'ST') {
+        const input = {
+          institutionID: newUserInputs.institution.id,
+          staffAuthID: authId,
+          staffEmail: newUserInputs.email,
+          status: 'Active',
+          statusChangeDate: new Date().toISOString().split('T')[0],
+        };
+        const staff: any = await API.graphql(
+          graphqlOperation(mutations.createStaff, { input: input })
+        );
+      } else {
+        // add the student in the class
+        // need to get the user id from new person object
+        const input = {
+          classID: newUserInputs.class.id,
+          studentID: person.id,
+          studentAuthID: authId,
+          studentEmail: newUserInputs.email,
+          status: 'Active',
+        };
+        let newStudent: any = await API.graphql(
+          graphqlOperation(customMutations.createClassStudent, {input})
+        );
+      }
+      handleMessage('success', 'User registered successfully');
       setNewUserInputs(prev => {
         return {
-          ...prev,
-          key: 0,
-          authId: '',
-          email: '',
-          password: 'xIconoclast.5x',
-          firstName: '',
-          lastName: '',
-          phone: '00',
-          birthdate: '10-10-2020',
-          grade: '1',
-          role: '',
-          externalId: '3',
+          ...prev, key: 0, authId: '', email: '', password: 'xIconoclast.5x',
+          firstName: '', lastName: '', phone: '00', birthdate: '10-10-2020', grade: '1',
+          role: '', externalId: '3',
         }
       })
     } catch (error) {
       console.error('error registering user:', error)
       handleMessage('error', error.message)
-
     }
   }
 
   async function signUp() {
     let username = newUserInputs.email;
-    let password = newUserInputs.password
     try {
-      // const user = await Auth.signUp({
-      //   username,
-      //   password
-      // });
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: username })
-      };
-      const response = await axios.post(createUserUrl, {
-        email: username
-      })
+      const response = await axios.post(createUserUrl, { email: username });
       const user = response.data.User;
       setNewUserInputs(() => {
-        return {
-          ...newUserInputs,
-          authId: user.Username
-        }
+        return { ...newUserInputs, authId: user.Username }
       })
       registerUser(user.Username)
     } catch (error) {
@@ -217,7 +193,6 @@ const Registration = () => {
 
     setMessage(() => {
       let username = newUserInputs.email
-      let password = newUserInputs.password
       if (!newUserInputs.firstName) {
         return {
           show: true,
@@ -243,18 +218,25 @@ const Registration = () => {
           message: RegistrationDict[userLanguage]['messages']['emailaddress'],
         }
       }
-      // if (!newUserInputs.birthdate) {
-      //   return {
-      //     show: true,
-      //     type: 'error',
-      //     message: 'User\'s birthday cannot be blank',
-      //   }
-      // } 
       if (!newUserInputs.role) {
         return {
           show: true,
           type: 'error',
           message: RegistrationDict[userLanguage]['messages']['userrol'],
+        }
+      }
+      if (!newUserInputs.institution.id) {
+        return {
+          show: true,
+          type: 'error',
+          message: RegistrationDict[userLanguage]['messages']['institution'],
+        }
+      }
+      if (newUserInputs.role === 'ST' && !newUserInputs.class.id) {
+        return {
+          show: true,
+          type: 'error',
+          message: 'class is required',
         }
       }
       validated = true;
@@ -267,34 +249,7 @@ const Registration = () => {
         message: RegistrationDict[userLanguage]['messages']['loading'],
       }
     })
-    // handleMessage('error', message.message)
   }
-
-  // const handleAddInput = () => {
-  //     setNewUserInputs(prev => {
-  //         return [
-  //             ...prev,
-  //             {   
-  //                 key: newUserInputs.length,
-  //                 authId: '',
-  //                 email: '',
-  //                 password: 'xIconoclast.5x',
-  //                 firstName: '',
-  //                 lastName: '',
-  //                 phone: '',
-  //                 birthdate: '',
-  //                 grade: '',
-  //                 role: '',
-  //                 externalId: '',
-  //                 message: {
-  //                     show: false,
-  //                     text: '',
-  //                     type: '',
-  //                 },
-  //             },
-  //         ]
-  //     })
-  // }
 
   const handleChange = (e: { target: { id: any; value: any } }) => {
     const { id, value } = e.target;
@@ -326,6 +281,45 @@ const Registration = () => {
   const handleSubmit = () => {
     validation();
   }
+
+  const handleInstituteChange = (item: { name: string, code: string }) => {
+    const selectedInst = institutionsData.filter(inst => inst.id === item.code)[0]
+    let classes = selectedInst.classes.items;
+    let classList = classes.map((cl: any) => {
+      return { code: cl.id, name: cl.name };
+    });
+    setInstClasses(classList);
+    setNewUserInputs(() => {
+      return {
+        ...newUserInputs,
+        institution: { id: item.code, name: item.name }
+      }
+    })
+  }
+
+  const handleClassChange = (item: { name: string, code: string }) => {
+    setNewUserInputs(() => {
+      return {
+        ...newUserInputs,
+        class: { id: item.code, name: item.name }
+      }
+    })
+  }
+  const fetchInstitutions = async () => {
+    let institutions: any = await API.graphql(
+      graphqlOperation(customQueries.getInstitutionsList)
+    );
+    institutions = institutions?.data.listInstitutions?.items || [];
+    let list = institutions.map((inst: any) => {
+      return { code: inst.id, name: inst.name };
+    });
+    setInstitutions(list);
+    setInstitutionsData(institutions);
+  }
+
+  useEffect(() => {
+    fetchInstitutions()
+  }, [])
 
   return (
 
@@ -397,22 +391,6 @@ const Registration = () => {
                       </div>
                     </div>
 
-                    {/* <div className="sm:col-span-3 p-2">
-                      <label htmlFor="birthdate" className="block text-m font-medium leading-5 text-gray-700">
-                        <span className="text-red-500">*</span> Birthday
-                      </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          type="date"
-                          id="birthdate"
-                          name="birthdate"
-                          onChange={handleChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          value={`${newUserInputs.birthdate}`}
-                          placeholder="01/01/2010" />
-                      </div>
-                    </div> */}
-
                     <div className="sm:col-span-3 p-2">
                       <DropdownForm
                         style={true}
@@ -420,60 +398,38 @@ const Registration = () => {
                         userInfo={`${newUserInputs.role}`}
                         label='Role'
                         id='role'
-                        items={Role}
+                        items={Roles}
                         value={`${newUserInputs.role}`}
                       />
                     </div>
-
-                    {/* <div className="sm:col-span-3 p-2">
-                      <label htmlFor="externalId" className="block text-m font-medium leading-5 text-gray-700">
-                        Student ID
-                                        </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          type="text"
-                          id="externalId"
-                          name="externalId"
-                          onChange={handleChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          value={`${newUserInputs.externalId}`}
-                          placeholder="student ID" />
+                    {
+                      (newUserInputs.role) &&
+                      <div className="sm:col-span-3 p-2">
+                        <DropdownForm
+                          style={true}
+                          handleChange={handleInstituteChange}
+                          userInfo={`${newUserInputs.institution.name}`}
+                          label='Institution'
+                          id='institution'
+                          items={institutions}
+                          value={`${newUserInputs.institution.id}`}
+                        />
                       </div>
-                    </div>
-
-
-                    <div className="sm:col-span-3 p-2">
-                      <label htmlFor="grade" className="block text-m font-medium leading-5 text-gray-700">
-                        Grade
-                                        </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          type="text"
-                          id="grade"
-                          name="grade"
-                          onChange={handleChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          value={`${newUserInputs.grade}`}
-                          placeholder="9" />
+                    }
+                    {
+                      (newUserInputs.role && newUserInputs.role === 'ST' && newUserInputs.institution.id) &&
+                      <div className="sm:col-span-3 p-2">
+                        <DropdownForm
+                          style={true}
+                          handleChange={handleClassChange}
+                          userInfo={`${newUserInputs.class.name}`}
+                          label='Class'
+                          id='class'
+                          items={instClasses}
+                          value={`${newUserInputs.class.id}`}
+                        />
                       </div>
-                    </div>
-
-                    <div className="sm:col-span-3 p-2">
-                      <label htmlFor="phone" className="block text-m font-medium leading-5 text-gray-700">
-                        Phone Number
-                                        </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
-                        <input
-                          type="text"
-                          id="phone"
-                          name="phone"
-                          onChange={handleChange}
-                          className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                          value={`${newUserInputs.phone}`}
-                          placeholder="5551234567" />
-                      </div>
-                    </div> */}
-
+                    }
                   </div>
                 </div>
               </form>
@@ -489,9 +445,6 @@ const Registration = () => {
                           : null
                   }
                 </div>
-                // <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${  newUserInputs[key].message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' :  newUserInputs[key].message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
-                //     <p>{newUserInputs[key].message.text}</p>
-                // </div>
               ) : null
               }
             </div>
@@ -499,12 +452,6 @@ const Registration = () => {
         </div>
 
         <div className="w-1.5/10 ml-auto">
-          {/* <span className="w-2/10 inline-flex rounded-md shadow-sm">
-            <button type="submit" onClick={handleSubmit}
-              className="text-white bg-indigo-600 hover:bg-indigo-500 focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 h-10 inline-flex justify-center py-2 px-4  border-0 border-transparent text-m leading-5 font-medium rounded-md focus:outline-none transition duration-150 ease-in-out">
-              Submit
-            </button>
-          </span> */}
           <Buttons
             btnClass="py-2 px-4 text-xs w-full"
             label={RegistrationDict[userLanguage]['button']['submit']}
@@ -517,41 +464,3 @@ const Registration = () => {
 }
 
 export default Registration;
-
-{/* <div className="w-full flex">
-                        <div className="w-3/4 flex flex-col">
-                            <div className="flex my-2">
-                                <div className="w-1/3 flex flex-col px-2">
-                                    <label htmlFor="email">Email</label>
-                                    <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="email" name="email" value={input.email} onChange={handleChange}/>
-                                    </div>
-                                <div className="w-1/4 flex flex-col px-2">
-                                    <label htmlFor="firstName">First name</label>
-                                    <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="firstName" name="firstName" value={input.firstName} onChange={handleChange}/>
-                                </div>
-                                <div className="w-1/4 flex flex-col px-2">
-                                    <label htmlFor="lastName">Last name</label>
-                                    <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="lastName" name="lastName" value={input.lastName} onChange={handleChange}/>
-                                </div>
-                            </div>
-                            <div className="flex my-2">
-                                <div className="w-1/3 flex flex-col px-2">
-                                    <label htmlFor="phone">Phone number</label>
-                                    <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="phone" name="phone" value={input.phone} onChange={handleChange}/>
-                                </div>
-                                <div className="w-1/3 flex flex-col px-2">
-                                    <label htmlFor="dob">Date of birth</label>
-                                    <input className="border-b border-gray-400 bg-gray-200 px-2 py-1" type="text" id="dob" name="dob" value={input.dob} onChange={handleChange}/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-1/4 h-full flex justify-center items-center">
-                        {
-                            message.show ? (
-                                    <div className={`h-1/10 w-6/10 flex justify-center items-center text-sm border-2 ${ message.type === 'success' ? 'text-green-500 bg-green-300  border-green-500' : message.type === 'error' ? 'text-red-500 bg-red-300  border-red-500' : 'text-gray-200'} py-8 px-4 rounded shadow-elem-light text-center`}>
-                                        <p>{message.message}</p>
-                                    </div>
-                            ) : null
-                        }
-                        </div> */}
-                    // </div>
