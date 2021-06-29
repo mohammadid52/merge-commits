@@ -8,12 +8,12 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import Foot from './Foot/Foot';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import { PagePart, PartContent, UniversalLessonPage } from '../../interfaces/UniversalLessonInterfaces';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
-  const urlParams: any = useParams();
 
   const [overlay, setOverlay] = useState<string>('');
 
@@ -22,14 +22,10 @@ const LessonApp = () => {
   const CURRENT_PAGE = lessonState.currentPage;
 
   /**
-   *
    * HELP SECTION:
-   *
    *  On mount ->
    *  1. setLessonDataLoaded -> true;
    *  2. set current page
-   *
-   *
    */
   useEffect(() => {
     setTimeout(() => {
@@ -37,6 +33,8 @@ const LessonApp = () => {
     }, 1000);
   }, []);
 
+  //  RESPONSE TO LOADING LESSON DATA FETCH
+  //  RESPONSE TO LOADING LESSON DATA FETCH
   //  RESPONSE TO LOADING LESSON DATA FETCH
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
@@ -51,6 +49,26 @@ const LessonApp = () => {
       history.push(`${match.url}/${0}`);
     }
   }, [lessonState.lessonData]);
+
+  //  INITIALIZE STUDENTDATA
+  //  INITIALIZE STUDENTDATA
+  //  INITIALIZE STUDENTDATA
+  useEffect(()=>{
+    if(PAGES){
+      const allFormObjects = PAGES.reduce((acc: PartContent[], page: UniversalLessonPage)=>{
+        const allFormParts = page.partContent.filter((part:PagePart)=>part.type.includes('form'))
+        return [...acc, ...allFormParts]
+      },[])
+      console.log('allFormObjects - ',allFormObjects)
+    }
+  },[lessonState.lessonData.lessonPlan])
+
+  /**
+   *
+   * COPY NAMES OF ALL REMAINING FUNCTIONS/PROCESSES
+   * FROM LESSONCONTEXT.tsx
+   *
+   */
 
   return (
     <>
