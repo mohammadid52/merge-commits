@@ -131,7 +131,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         </div>
       </div>
 
-      <div className={`absolute w-auto top-7 left-2 z-30`}>
+      <div className={`absolute w-auto top-7 left-1`}>
         <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
           <>
             <Tooltip placement="right" text={`Select background color`}>
@@ -161,7 +161,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             )}
           </>
         </ClickAwayListener>
-        <div className="mt-10 w-full">
+        <div className="mt-10 w-4/5">
           <LessonPlanDescription
             activePageData={activePageData}
             setEditModal={setEditModal}

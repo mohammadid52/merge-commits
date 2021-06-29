@@ -47,7 +47,9 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
   return (
     <div>
       <div className="flex">
-        <h3 className="text-lg leading-6 font-medium text-white pb-4 ">Page Overview</h3>
+        <h3 className="text-base leading-6 font-medium text-white pb-4 ">
+          Page Overview
+        </h3>
         <div className="inline-flex justify-end">
           <FaEdit
             className="w-6 h-6 mr-2 cursor-pointer"
@@ -61,37 +63,37 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
           />
         </div>
       </div>
-      <div className="rounded-lg bg-light-gray border-light-gray p-4">
+      <div className="rounded-lg bg-light-gray border-light-gray p-2">
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-          <div className="text-gray-900 mr-2">
+          <div className="text-gray-900 mr-1">
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}:
           </div>
-          <div className="w-auto">{activePageData.id}</div>
+          <div className="w-auto whitespace-nowrap overflow-ellipsis overflow-hidden">{activePageData.id}</div>
         </p>
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-          <div className="text-gray-900 mr-2">
+          <div className="text-gray-900 mr-1">
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['PAGE_TITLE']}:
           </div>
-          <div className="w-auto">{activePageData.title}</div>
+          <div className="w-auto whitespace-nowrap overflow-ellipsis overflow-hidden">{activePageData.title}</div>
         </p>
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-          <div className="text-gray-900 mr-2">
+          <div className="text-gray-900 mr-1">
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['PLAN_LABEL']}:
           </div>
-          <div className="w-auto">{activePageData.label}</div>
+          <div className="w-auto whitespace-nowrap overflow-ellipsis overflow-hidden">{activePageData.label}</div>
         </p>
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-          <div className="text-gray-900 mr-2">
+          <div className="text-gray-900 mr-1">
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['DESCRIPTION']}:
           </div>
-          <div className="w-auto">{activePageData.description || '-'}</div>
+          <div className="w-auto whitespace-nowrap overflow-ellipsis overflow-hidden">{activePageData.description || '-'}</div>
         </p>
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
-          <div className="text-gray-900 mr-2">
+          <div className="text-gray-900 mr-1">
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ESTIMATED_TIME']}:
           </div>
