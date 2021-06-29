@@ -472,7 +472,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         </div>
       </div>
       {/* Body */}
-      <div className="w-full pb-8 m-auto">
+      <div className="w-full h-full pb-8 m-auto">
         <div
           id={`universalLessonBuilder`}
           className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">

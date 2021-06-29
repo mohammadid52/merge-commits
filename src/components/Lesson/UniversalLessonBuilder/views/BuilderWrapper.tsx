@@ -78,6 +78,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
   const isNewPage = params.get('isNewPage');
+  const lessonId = params.get('lessonId');
 
   const [loading] = useState(false);
 
@@ -607,6 +608,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         universalLessonDetails={universalLessonDetails}
         galleryVisible={galleryVisible}
         hierarchyVisible={hierarchyVisible}
+        lessonId={lessonId}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
