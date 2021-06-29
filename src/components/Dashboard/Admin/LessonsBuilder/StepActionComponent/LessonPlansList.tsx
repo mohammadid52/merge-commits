@@ -35,6 +35,12 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
     );
   };
 
+  const addNewLessonPlan = () => {
+    history.push(
+      `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}&isNewPage=${true}`
+    );
+  };
+
   const editLessonPage = (id: string) => {
     setPreviewMode(false);
     history.push(
@@ -59,7 +65,7 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
   };
 
   return (
-    <div className="pt-4 flex m-auto justify-center">
+    <div className="flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
@@ -174,17 +180,15 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
             </Fragment>
           ) : (
             <Fragment>
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-center my-4">
                 <Buttons
                   btnClass="mx-4"
-                  label={LessonBuilderDict[userLanguage]['BUTTON']['ADD']}
-                  onClick={addNewLessonPage}
+                  label={
+                    LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['BUTTON']
+                  }
+                  onClick={addNewLessonPlan}
                 />
               </div>
-              <p className="text-center p-16">
-                {' '}
-                {/* {InstitueCurriculam[userLanguage]['INFO']} */}
-              </p>
             </Fragment>
           )}
         </PageWrapper>

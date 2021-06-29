@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react';
 import {useHistory} from 'react-router';
+import {uniqueId} from 'lodash';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
@@ -10,7 +11,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {getAsset} from '../../../../../assets';
-import { ILessonPlan } from './LessonPlan';
+import {ILessonPlan} from './LessonPlan';
 
 interface ILessonInputs {
   id: string;
@@ -20,11 +21,13 @@ interface ILessonInputs {
   estTime: string;
 }
 
-const estimatedTimeList = Array(30).fill({}).map((_, index:number) => ({
-  id: index + 1,
-  name: `${index+1} min`,
-  value: index+1
-});
+const estimatedTimeList = Array(30)
+  .fill({})
+  .map((_, index: number) => ({
+    id: index + 1,
+    name: `${index + 1} min`,
+    value: index + 1,
+  }));
 
 const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan) => {
   const history = useHistory();
@@ -36,7 +39,7 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
     label: '',
     title: '',
     description: '',
-    estTime: '',
+    estTime: '1 min',
   });
   const [errors, setErrors] = useState<any>({});
   const params = useQuery(location.search);
@@ -59,12 +62,15 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
   const handleSubmit = () => {
     const isValid = validateForm();
     if (isValid) {
+      const pageId = uniqueId();
       addNewPageHandler({
         ...inputObj,
+        id: pageId,
+        estTime: estimatedTimeList.find(item => item.name === inputObj.estTime)?.value,
         pageContent: [],
       });
       history.push(
-        `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${inputObj.id}`
+        `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
       );
     } else {
       return;
@@ -75,16 +81,16 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
     const {id = '', label = '', title = ''} = inputObj;
     let isValid = true,
       formErrors: any = {};
-    if (!id) {
-      isValid = false;
-      formErrors.id = 'Id is required';
-    } else if (pages.findIndex((page: any) => page.id === id) > -1) {
-      isValid = false;
-      formErrors.id = 'This id is already associated with different page';
-    } else {
-      isValid = true;
-      formErrors.id = '';
-    }
+    // if (!id) {
+    //   isValid = false;
+    //   formErrors.id = 'Id is required';
+    // } else if (pages.findIndex((page: any) => page.id === id) > -1) {
+    //   isValid = false;
+    //   formErrors.id = 'This id is already associated with different page';
+    // } else {
+    //   isValid = true;
+    //   formErrors.id = '';
+    // }
 
     if (!label) {
       isValid = false;
@@ -103,7 +109,7 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
       ...prevInputs,
       estTime: name,
     }));
-  }
+  };
 
   return (
     <div className="w-full m-auto">
@@ -111,17 +117,6 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
         <div className="p-4">
           <div className="py-2">
             <div className="grid grid-cols-3">
-              <div className="p-2">
-                <FormInput
-                  value={inputObj.id}
-                  label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ID}
-                  onChange={onInputChange}
-                  name={'id'}
-                  isRequired={true}
-                  error={errors.id}
-                />
-              </div>
-
               <div className="p-2">
                 <FormInput
                   label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].LABEL}
@@ -144,24 +139,13 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
                   error={errors.title}
                 />
               </div>
-            </div>
-            <div className="p-2">
-              <TextArea
-                error={errors.description}
-                label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].DESCRIPTION}
-                name={'description'}
-                onChange={onInputChange}
-                rows={2}
-                value={inputObj.description}
-              />
-            </div>
-            <div className="p-2">
-              {/* <label
+              <div className="p-2">
+                {/* <label
                 htmlFor={'estTime'}
                 className="block text-xs font-semibold leading-5 text-gray-700">
                 {LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME}{' '}
               </label> */}
-              {/* <InputMask
+                {/* <InputMask
                 className={`mt-1 block w-full sm:text-sm sm:leading-5 focus:outline-none focus:ring-2 focus:ring-${
                   themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
                 }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
@@ -173,12 +157,25 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
                 value={fullCourseTime}
                 onChange={this.handleChange}
               /> */}
-              <Selector
-                label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME}
-                placeholder={'Select estimate time'}
-                list={estimatedTimeList}
-                selectedItem={inputObj.estTime}
-                onChange={onSelectOption}
+                <Selector
+                  label={
+                    LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME
+                  }
+                  placeholder={'Select estimate time'}
+                  list={estimatedTimeList}
+                  selectedItem={inputObj.estTime}
+                  onChange={onSelectOption}
+                />
+              </div>
+            </div>
+            <div className="p-2">
+              <TextArea
+                error={errors.description}
+                label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].DESCRIPTION}
+                name={'description'}
+                onChange={onInputChange}
+                rows={2}
+                value={inputObj.description}
               />
             </div>
           </div>

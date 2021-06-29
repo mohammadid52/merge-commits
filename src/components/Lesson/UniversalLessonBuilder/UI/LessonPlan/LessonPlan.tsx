@@ -19,6 +19,7 @@ import { UniversalLesson } from '../../../../../interfaces/UniversalLessonInterf
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
+  lessonId: string;
   universalLessonDetails: UniversalLesson;
 }
 
@@ -68,7 +69,13 @@ const LessonPlan = () => {
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
-        return <LessonPlanForm />;
+        return (
+          <LessonPlanForm
+            addNewPageHandler={addNewPageHandler}
+            lessonId={lessonId}
+            universalLessonDetails={universalLessonDetails}
+          />
+        );
       case '1':
         return (
           <ExistingPageView
