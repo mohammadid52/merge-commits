@@ -15,7 +15,9 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import LessonPlanForm from './LessonPlanForm';
 import ExistingPageView from './ExistingPageView';
 import TemplateView from './TemplateView';
-import { UniversalLesson } from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {graphqlOperation, API} from 'aws-amplify';
+import * as queries from '../../../../../graphql/queries';
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
@@ -27,13 +29,17 @@ const LessonPlan = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
+  // this is nested tab state holder
   const [activeTab, setActiveTab] = useState<number>(0);
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(
-    clientKey
-  );
-  const {addNewPageHandler, universalLessonDetails} = useULBContext();
+  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(clientKey);
+  const {
+    addNewPageHandler,
+    universalLessonDetails,
+    setUniversalLessonDetails,
+  } = useULBContext();
+
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
 
@@ -55,6 +61,22 @@ const LessonPlan = () => {
       last: true,
     },
   ];
+
+  const fetchUniversalLessonDetails = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(queries.getUniversalLesson, {
+          id: lessonId,
+        })
+      );
+      const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
+    } catch {
+      console.log('Error while fetching lesson data');
+      history.push(`/dashboard/lesson-builder`);
+    }
+  };
+
   const checkValidUrl = async () => {
     if (!lessonId) {
       console.log('Invalid url');
@@ -64,18 +86,14 @@ const LessonPlan = () => {
 
   useEffect(() => {
     checkValidUrl();
+
+    fetchUniversalLessonDetails();
   }, []);
 
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
-        return (
-          <LessonPlanForm
-            addNewPageHandler={addNewPageHandler}
-            lessonId={lessonId}
-            universalLessonDetails={universalLessonDetails}
-          />
-        );
+        return <LessonPlanForm />;
       case '1':
         return (
           <ExistingPageView

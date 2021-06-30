@@ -10,8 +10,10 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {getAsset} from '../../../../../assets';
 import PageTile from '../common/PageTile';
-
-import { ILessonPlan } from './LessonPlan';
+import * as mutations from '../../../../../graphql/mutations';
+import {graphqlOperation, API} from 'aws-amplify';
+import {ILessonPlan} from './LessonPlan';
+import {v4 as uuidV4} from 'uuid';
 
 const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPlan) => {
   const history = useHistory();
@@ -21,7 +23,33 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
   const [copiedPageIndex, setCopiedPageIndex] = useState<number>(-1);
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
+
   const pages = universalLessonDetails?.lessonPlan;
+
+  const addExistingPageToDB = async () => {
+    const currentPage = pages[copiedPageIndex];
+    try {
+      const input = {
+        id: lessonId,
+        lessonPlan: [
+          ...pages,
+          {
+            id: uuidV4().toString(),
+            title: currentPage.title,
+            label: currentPage.label,
+            description: currentPage.description,
+            pageContent: currentPage.pageContent || [],
+          },
+        ],
+      };
+      const result = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLesson, {input})
+      );
+    } catch (error) {
+      console.error(error.message);
+      console.log('Error adding existing_page');
+    }
+  };
 
   const addExistingPage = () => {
     const id: string = `page_${pages.length + 1}`;
@@ -44,6 +72,8 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
             }))
           : [],
     });
+    // add to database
+    addExistingPageToDB();
     history.push(
       `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${id}`
     );

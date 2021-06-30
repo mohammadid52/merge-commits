@@ -32,8 +32,13 @@ interface ILessonTabViewProps {
 const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const match = useRouteMatch();
   const history = useHistory();
+  const {
+    setUniversalLessonDetails,
+    universalLessonDetails,
+    activeTab,
+    setActiveTab,
+  } = useULBContext();
 
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -42,9 +47,10 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict, LessonEditDict} = useDictionary(
     clientKey
   );
-  const {universalLessonDetails} = useULBContext();
+
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
+  const tab = params.get('tab');
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -60,13 +66,6 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     },
   ];
 
-  const [formData, setFormData] = useState({
-    label: '',
-    duration: '1',
-    resources: '',
-    notes: '',
-  });
-
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
@@ -75,13 +74,9 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
       setLessonData(savedData);
-      setFormData({
-        label: savedData.label,
-        duration: savedData.duration.toString(),
-        resources: savedData.resources,
-        notes: savedData.notes,
-      });
+
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
@@ -107,6 +102,12 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     checkValidUrl();
   }, []);
 
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(parseInt(tab));
+    }
+  }, [tab]);
+
   const handleEdit = () => {
     const redirectionUrl = `${match.url.replace('view', `edit?lessonId=${lessonId}`)}`;
     history.push(redirectionUrl);
@@ -118,8 +119,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         return (
           <LessonSummaryForm
             lessonId={lessonId}
-            setFormData={setFormData}
-            formData={formData}
+            setFormData={setLessonData}
+            formData={lessonData}
           />
         );
       case '1':
@@ -186,7 +187,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   ];
 
   const updateTab = (tab: number) => {
-    setActiveTab(tab);
+    // setActiveTab(tab);
+    history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
   };
 
   const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =

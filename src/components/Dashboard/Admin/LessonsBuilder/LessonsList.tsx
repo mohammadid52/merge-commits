@@ -22,6 +22,7 @@ import LessonsListRow from './LessonsListRow';
 import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
+import {remove} from 'lodash';
 
 const LessonsList = () => {
   const match = useRouteMatch();
@@ -141,24 +142,22 @@ const LessonsList = () => {
 
   const getLessonsList = async () => {
     try {
-      const fetchLessonsData: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonsTitles)
-      );
+      // const fetchLessonsData: any = await API.graphql(
+      //   graphqlOperation(customQueries.listLessonsTitles)
+      // );
       const fetchUList: any = await API.graphql(
         graphqlOperation(queries.listUniversalLessons)
       );
-      if (!fetchLessonsData) {
+      if (!fetchUList) {
         throw new Error('fail!');
       } else {
-        const LessonsListData = fetchLessonsData.data?.listLessons?.items;
         const data = fetchUList?.data?.listUniversalLessons.items;
-        const mixedData: any = [...LessonsListData, ...data];
 
-        const filteredList = getFilteredList(mixedData, state.user.id);
+        const filteredList = getFilteredList(data, state.user.id);
 
-        setLessonsData(isTeacher ? filteredList : mixedData);
+        setLessonsData(isTeacher ? filteredList : data);
         const totalListPages = Math.floor(
-          (isTeacher ? filteredList.length : mixedData.length) / pageCount
+          (isTeacher ? filteredList.length : data.length) / pageCount
         );
 
         setTotalPages(
@@ -166,12 +165,12 @@ const LessonsList = () => {
             ? totalListPages * pageCount === filteredList.length
               ? totalListPages
               : totalListPages + 1
-            : totalListPages * pageCount === mixedData.length
+            : totalListPages * pageCount === data.length
             ? totalListPages
             : totalListPages + 1
         );
 
-        setTotalLessonNum(isTeacher ? filteredList.length : mixedData.length);
+        setTotalLessonNum(isTeacher ? filteredList.length : data.length);
 
         setStatus('done');
       }
@@ -233,6 +232,8 @@ const LessonsList = () => {
   };
   const deleteLesson = async (id: string) => {
     try {
+      remove(lessonsData, (lesson) => lesson.id === id);
+      setLessonsData([...lessonsData]);
       const result = await API.graphql(
         graphqlOperation(mutations.deleteUniversalLesson, {
           input: {id},
@@ -244,7 +245,6 @@ const LessonsList = () => {
   };
 
   useEffect(() => {
-    // deleteLesson('9483b334-5893-465a-b64b-baccff16a902');
     getLessonsList();
   }, []);
 
@@ -369,6 +369,7 @@ const LessonsList = () => {
                 {currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
+                      deleteLesson={deleteLesson}
                       key={`lessonsRows${i}`}
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}

@@ -1,9 +1,9 @@
-import React, {Fragment, useContext} from 'react';
+import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import * as mutations from '../../../../../graphql/mutations';
 import {graphqlOperation, API} from 'aws-amplify';
-
+import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
 import Tooltip from '../../../../Atoms/Tooltip';
@@ -12,10 +12,15 @@ import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import Loader from '../../../../Atoms/Loader';
+import {truncate} from 'lodash';
 
 interface LessonPlansListProps {
   lessonId: string;
-  universalLessonDetails: any;
+
+  universalLessonDetails: {
+    lessonPlan: UniversalLessonPage[];
+  };
 }
 
 const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProps) => {
@@ -25,10 +30,7 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {setPreviewMode, updateMovableList} = useULBContext();
 
-  const pages =
-    universalLessonDetails.id === lessonId
-      ? universalLessonDetails?.lessonPlan || []
-      : [];
+  const pages = universalLessonDetails.lessonPlan;
 
   const addNewLessonPage = () => {
     history.push(
@@ -65,6 +67,8 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
     updateMovableList(items, 'page');
   };
 
+  const [fetchingLessons, setFetchingLessons] = useState(false);
+
   return (
     <div className="flex m-auto justify-center">
       <div className="">
@@ -72,13 +76,23 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             Lesson Plans
           </h3> */}
-          {pages.length > 0 ? (
+          {fetchingLessons ? (
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
+              <div className="items-center flex justify-center flex-col">
+                <Loader color="rgba(160, 174, 192, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">
+                  {/* @Mohammad TODO: Add this to dictionary  */}
+                  Loading Lessons
+                </p>
+              </div>
+            </div>
+          ) : pages.length > 0 ? (
             <Fragment>
               <div className="flex justify-end w-full m-auto ">
                 <Buttons
                   btnClass="mx-4"
                   label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
-                  onClick={addNewLessonPage}
+                  onClick={addNewLessonPlan}
                 />
               </div>
               <div className="flex justify-between w-full m-auto px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
@@ -136,17 +150,19 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}>
                                 <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
-                                  {page.id}
+                                  {'-'}
                                 </div>
-                                <div className="flex w-6/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
+                                <div className="flex w-6/10 truncate items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                                   {page.title || '-'}
                                 </div>
                                 <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                                   {page.label || '-'}
                                 </div>
+
                                 <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                                  -
+                                  {'-'}
                                 </div>
+
                                 <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
                                   45 Min
                                 </div>
@@ -181,10 +197,13 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
             </Fragment>
           ) : (
             <Fragment>
+              <div className="text-center text-lg text-gray-600 font-medium">
+                <p>You don't have any pages</p>
+              </div>
               <div className="flex justify-center my-4">
                 <Buttons
                   btnClass="mx-4"
-                  label={LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['BUTTON']}
+                  label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_PLAN']}
                   onClick={addNewLessonPlan}
                 />
               </div>
