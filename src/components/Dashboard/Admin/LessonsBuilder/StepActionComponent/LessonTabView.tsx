@@ -28,18 +28,17 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 interface ILessonTabViewProps {
   designersList: any[];
 }
-interface FormDataInterface {
-  label: string;
-  duration: string;
-  resources: string;
-  notes: string;
-}
 
 const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const match = useRouteMatch();
   const history = useHistory();
+  const {
+    setUniversalLessonDetails,
+    universalLessonDetails,
+    activeTab,
+    setActiveTab,
+  } = useULBContext();
 
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -48,7 +47,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict, LessonEditDict} = useDictionary(
     clientKey
   );
-  const {universalLessonDetails} = useULBContext();
+
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
 
@@ -74,7 +73,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-
+      setUniversalLessonDetails(savedData);
       setLessonData(savedData);
 
       const designers = designersList.filter((item: any) =>

@@ -53,7 +53,7 @@ const BreadcrumsTitles: any = {
     LESSONPLANBUILDER: 'Lesson Plan Builder',
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
-    ADD_NEW_LESSON_PLAN: 'Add new lesson plan'
+    ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
   },
   ES: {
     HOME: 'CASA',
@@ -3087,7 +3087,7 @@ const LessonBuilderDict: any = {
       EDIT: 'Edit',
       VIEW: 'View',
       PREVIEW: 'Preview',
-      SAVE: 'Save'
+      SAVE: 'Save',
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
@@ -3126,10 +3126,46 @@ const LessonBuilderDict: any = {
   ES: {
     TITLE: 'TBD',
     SUBTITLE: 'TBD',
-
+    BUTTON: {
+      ADD_PLAN: 'TBD',
+      EDIT: 'TBD',
+      VIEW: 'TBD',
+      PREVIEW: 'TBD',
+      SAVE: 'TBD',
+    },
+    LESSON_PLAN_COLUMN: {
+      ID: 'TBD',
+      PAGE_TITLE: 'TBD',
+      PLAN_LABEL: 'TBD',
+      DESCRIPTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      ACTION: 'TBD',
+    },
+    LESSON_PLAN_FORM: {
+      DESCRIPTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      HEADING: 'TBD',
+      ID: 'TBD',
+      LABEL: 'TBD',
+      TITLE: 'TBD',
+    },
     MESSAGES: {
       UNSAVE: 'TBD',
+      PUBLISH_DISABLED_INFO: 'TBD',
     },
+    INFORMATION_HEADING: 'TBD',
+    NAME: 'TBD',
+    OWNER: 'TBD',
+    DESCRIPTION: 'TBD',
+    DESIGNER: 'TBD',
+    DURATION: 'TBD',
+    LANGUAGE: 'TBD',
+    LESSON_PLAN_LABEL: 'TBD',
+    OBJECTIVE: 'TBD',
+    PURPOSE: 'TBD',
+    RESOURCES: 'TBD',
+    NOTES: 'TBD',
+    SUMMARY: 'TBD',
   },
 };
 
@@ -3180,7 +3216,6 @@ const LessonsListDict: any = {
     },
   },
 };
-
 
 const UniversalBuilderDict: any = {
   EN: {

@@ -255,6 +255,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const createNewLesson = async () => {
     if (!lessonId) {
+      // Creating New Lesson
       const isValid = true; // replace static boolean with validateForm
       if (isValid) {
         setCreatingLessons(true);
@@ -271,6 +272,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             summary: formData.studentSummary,
             cardImage: formData.imageUrl,
             cardCaption: formData.imageCaption,
+            // adding defaults to prevent errors
+            duration: 1,
+            notes: '',
+            resources: '',
+            label: '',
           };
 
           const result: any = await API.graphql(
@@ -286,6 +292,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         }
       }
     } else {
+      // Updating existing Lesson
+
       const isValid = true; // replace static boolean with validateForm
 
       if (isValid) {

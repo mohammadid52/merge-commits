@@ -15,7 +15,7 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import LessonPlanForm from './LessonPlanForm';
 import ExistingPageView from './ExistingPageView';
 import TemplateView from './TemplateView';
-import { UniversalLesson } from '../../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
@@ -27,13 +27,13 @@ const LessonPlan = () => {
   const match = useRouteMatch();
   const history = useHistory();
 
+  // this is nested tab state holder
   const [activeTab, setActiveTab] = useState<number>(0);
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(
-    clientKey
-  );
+  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(clientKey);
   const {addNewPageHandler, universalLessonDetails} = useULBContext();
+
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
 
@@ -69,13 +69,7 @@ const LessonPlan = () => {
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
-        return (
-          <LessonPlanForm
-            addNewPageHandler={addNewPageHandler}
-            lessonId={lessonId}
-            universalLessonDetails={universalLessonDetails}
-          />
-        );
+        return <LessonPlanForm />;
       case '1':
         return (
           <ExistingPageView

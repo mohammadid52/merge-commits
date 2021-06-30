@@ -108,18 +108,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }));
   };
 
-  const setCurrentLessonDataToState = () => {
-    const id = selectedLessonID;
-
-    const currentLesson = find(universalLessonsList, (item) => item.id === id);
-    if (currentLesson) {
-      setUniversalLessonDetails(currentLesson);
-    }
-  };
-
-  useEffect(() => {
-    setCurrentLessonDataToState();
-  }, [selectedLessonID]);
+  const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -133,6 +122,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getCurrentPageIdx,
         universalLessonDetails,
         selectedPageID,
+        activeTab,
+        setActiveTab,
         setSelectedPageID,
         getCurrentPage,
         theme,
