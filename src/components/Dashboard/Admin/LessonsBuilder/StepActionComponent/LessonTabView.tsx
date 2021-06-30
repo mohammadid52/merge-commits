@@ -134,6 +134,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       case '1':
         return (
           <LessonPlansList
+            loading={loading}
             lessonId={lessonId}
             universalLessonDetails={universalLessonDetails}
           />

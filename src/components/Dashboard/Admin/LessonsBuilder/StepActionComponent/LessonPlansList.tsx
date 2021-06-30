@@ -17,13 +17,13 @@ import {truncate} from 'lodash';
 
 interface LessonPlansListProps {
   lessonId: string;
-
+  loading: boolean;
   universalLessonDetails: {
     lessonPlan: UniversalLessonPage[];
   };
 }
 
-const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProps) => {
+const LessonPlansList = ({lessonId, loading, universalLessonDetails}: LessonPlansListProps) => {
   const history = useHistory();
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -67,8 +67,6 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
     updateMovableList(items, 'page');
   };
 
-  const [fetchingLessons, setFetchingLessons] = useState(false);
-
   return (
     <div className="flex m-auto justify-center">
       <div className="">
@@ -76,7 +74,7 @@ const LessonPlansList = ({lessonId, universalLessonDetails}: LessonPlansListProp
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             Lesson Plans
           </h3> */}
-          {fetchingLessons ? (
+          {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
               <div className="items-center flex justify-center flex-col">
                 <Loader color="rgba(160, 174, 192, 1)" />
