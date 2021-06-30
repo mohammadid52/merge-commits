@@ -90,6 +90,7 @@ const LessonMeasurements = ({lessonId}: any) => {
         serverError: GeneralInformationDict[userLanguage]['MESSAGES']['FETCHERR'],
         addSuccess: '',
       });
+      setLoading(false);
     }
   };
 
