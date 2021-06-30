@@ -1,5 +1,6 @@
 import {lessonState} from '../state/LessonState';
 import {
+  PagePartInput,
   UniversalLesson,
   UniversalLessonPage,
   UniversalLessonStudentData,
@@ -22,6 +23,10 @@ export type LessonActions =
   | {
       type: 'SET_INITIAL_STUDENT_DATA';
       payload: UniversalLessonStudentData[];
+    }
+  | {
+      type: 'UPDATE_STUDENT_DATA';
+      payload: {pageIdx: number; data: PagePartInput};
     }
   | {
       type: 'SET_CURRENT_PAGE';
@@ -58,8 +63,25 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'SET_INITIAL_STUDENT_DATA':
       return {
         ...state,
-        studentData: action.payload
-      }
+        studentData: action.payload,
+      };
+    case 'UPDATE_STUDENT_DATA':
+      const pageIdx = action.payload.pageIdx;
+      const domID = action.payload.data.domID;
+      const newInput = action.payload.data.input;
+      const mappedStudentData = state.studentData[pageIdx].map((pagePart: any, idx: number)=>{
+        return {
+          pagePartID: pagePart.pagePartID,
+          pagePartInput: pagePart.pagePartInput.map((pagePartInput: any, idx2: number)=>{
+            return {
+              ...pagePartInput,
+              input: pagePartInput.domID === domID ? newInput : pagePartInput.input
+            }
+          })
+        }
+      });
+      console.log('mapped student data 000', state.studentData)
+      return state;
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
     case 'TOGGLE_OPEN_PAGE':

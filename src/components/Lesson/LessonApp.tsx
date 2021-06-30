@@ -78,8 +78,15 @@ const LessonApp = () => {
       });
 
       lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
+
     }
   }, [lessonState.lessonData.lessonPlan]);
+
+  useEffect(()=>{
+   if(lessonState.studentData.length > 0){
+     lessonDispatch({type: 'UPDATE_STUDENT_DATA', payload: { pageIdx: 1, data: {} }});
+   }
+  },[lessonState.studentData])
 
   /**
    *

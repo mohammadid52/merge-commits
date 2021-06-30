@@ -271,13 +271,16 @@ const useStudentTimer = (inputs?: inputs) => {
   const updateStudentData = async (saveType?: string) => {
     let data = {
       id: params.lessonState.studentDataID,
-      lessonProgress: params.lessonState.lessonProgress,
-      currentLocation: params.lessonState.currentPage,
+      universalLessonID: params.lessonState.id,
+      // universalLessonPageID: params.lessonState.lessonPlan[params.lessonState.currentPage]?.id,
       saveType: saveType,
       status: 'ACTIVE',
       syllabusLessonID: params.lessonState.syllabusLessonID,
-      studentID: params.state.user.email,
       studentAuthID: params.state.user.authId,
+      studentID: params.state.user.email,
+      currentLocation: params.lessonState.currentPage,
+      lessonProgress: params.lessonState.lessonProgress,
+      pageData: params.lessonState.studentData[params.lessonState.currentPage]
     };
 
     console.log('updateStudentData - data - ', data);
