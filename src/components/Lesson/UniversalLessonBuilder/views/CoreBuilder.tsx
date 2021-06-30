@@ -152,7 +152,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </>
         </ClickAwayListener> */}
 
-        <div className="w-3/4 min-w-64">
+        <div className="w-4/6 min-w-64">
           <LessonPlanDescription
             activePageData={activePageData}
             setEditModal={setEditModal}

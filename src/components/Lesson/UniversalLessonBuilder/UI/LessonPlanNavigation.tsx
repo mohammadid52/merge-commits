@@ -43,16 +43,20 @@ const LessonPlanNavigation = ({selectedPageID,setSelectedPageID, universalLesson
                     {(provided) => (
                       <div
                         key={index}
-                        className={`my-2 flex items-center justify-between cursor-pointer ${
-                          lessonPlan.length < 5 ? '' : 'w-1/4 flex-none'
-                        }`}
+                        className={`my-2 flex items-center justify-between cursor-pointer`}
                         onClick={() => setSelectedPageID(page.id)}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <span
-                          className={`inline-flex pl-5 items-center justify-center w-auto ${
-                            selectedPageID === page.id ? 'text-blue-700' : ''
+                          className={`inline-flex items-center justify-center font-bold ${
+                            selectedPageID === page.id ? 'underline font-bold' : ''
+                          }${
+                            index == 0
+                              ? ' text-blue-500'
+                              : index === lessonPlan.length - 1
+                              ? ' text-red-600'
+                              : ''
                           }`}>
                           {page.label}
                         </span>
