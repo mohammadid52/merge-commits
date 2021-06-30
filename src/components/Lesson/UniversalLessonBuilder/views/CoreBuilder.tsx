@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
-import { useHistory } from 'react-router';
-import ClickAwayListener from 'react-click-away-listener';
-import {AiOutlineEye, AiOutlineEyeInvisible, AiOutlineBgColors} from 'react-icons/ai';
+import React from 'react';
+import {useHistory} from 'react-router';
+
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
-import {IoColorFill, IoColorFillOutline} from 'react-icons/io5';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {
@@ -14,9 +13,7 @@ import {
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import Tooltip from '../../../Atoms/Tooltip';
-import Buttons from '../../../Atoms/Buttons';
-import ColorPicker from '../UI/ColorPicker/ColorPicker';
+
 import LessonPlanDescription from '../UI/LessonPlanDescription';
 
 interface CoreBuilderProps extends ULBSelectionProps {
@@ -40,7 +37,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const history = useHistory();
-  const [isColorPickerOpen, setIsColorPickerOpen] = useState<Boolean>(false);
+
   const {
     mode,
     createNewBlockULBHandler,
@@ -64,32 +61,16 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
 
   const handleAddNewPage = () => {
-    history.push(
-      `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`
-    );
+    history.push(`/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`);
   };
 
   const goToLessonPlan = () => {
-    history.push(
-      `/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}&tab=1`
-    );
-  };
-
-  const handleColorPickerSelect = (pickedColor: string) => {
-    updateFromULBHandler(selectedPageID, 'class', `bg-${pickedColor}`);
+    history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}&tab=1`);
   };
 
   const activePageData = universalLessonDetails.lessonPlan.find(
     (lessonPage) => lessonPage.id === selectedPageID
   );
-
-  const onColorPickerToggle = () => {
-    setIsColorPickerOpen((prevValue) => !prevValue);
-  };
-
-  const onClickAwayFromColorPicker = () => {
-    setIsColorPickerOpen(false);
-  };
 
   return (
     <div
@@ -120,25 +101,19 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       </div>
 
       <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
-        <div className="bg-dark w-32 p-2">
-          <Tooltip
-            placement="left"
-            text={`${previewMode ? 'Show pencil' : 'Hide Pencil'}`}>
-            <button
-              onClick={() => setPreviewMode(!previewMode)}
-              className="text-white bg-indigo-500 h-auto py-2 my-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
-              {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-            </button>
-          </Tooltip>
-          <Tooltip
-            placement="left"
-            text={`${enableDnD ? 'Disable Drag' : 'Enable Drag'}`}>
-            <button
-              onClick={() => setEnableDnD(!enableDnD)}
-              className="text-white bg-indigo-500 h-auto py-2 my-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
-              {enableDnD ? <RiDragDropFill /> : <RiDragDropLine />}
-            </button>
-          </Tooltip>
+        <div className="bg-dark flex flex-col items-center justify-center w-32 p-2">
+          <button
+            onClick={() => setPreviewMode(!previewMode)}
+            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
+            {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+          </button>
+
+          <button
+            onClick={() => setEnableDnD(!enableDnD)}
+            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
+            {enableDnD ? <RiDragDropFill /> : <RiDragDropLine />}
+          </button>
+
           <button
             // onClick={() => handleModalPopToggle('NEW_PAGE')}
             onClick={handleAddNewPage}
@@ -176,7 +151,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             )}
           </>
         </ClickAwayListener> */}
-        
+
         <div className="w-3/4 min-w-64">
           <LessonPlanDescription
             activePageData={activePageData}

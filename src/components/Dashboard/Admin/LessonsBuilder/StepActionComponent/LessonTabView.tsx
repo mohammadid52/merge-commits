@@ -9,7 +9,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Loader from '../../../../Atoms/Loader';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 // import Tooltip from '../../../../Atoms/Tooltip';
-import UnderlinedTabs, { ITabElementProps } from '../../../../Atoms/UnderlinedTabs';
+import UnderlinedTabs, {ITabElementProps} from '../../../../Atoms/UnderlinedTabs';
 
 import UnitLookup from './UnitLookup';
 import LessonMeasurements from './LessonMeasurements';
@@ -20,8 +20,10 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 import {languageList} from '../../../../../utilities/staticData';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -30,8 +32,13 @@ interface ILessonTabViewProps {
 const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const match = useRouteMatch();
   const history = useHistory();
+  const {
+    setUniversalLessonDetails,
+    universalLessonDetails,
+    activeTab,
+    setActiveTab,
+  } = useULBContext();
 
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -40,7 +47,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict, LessonEditDict} = useDictionary(
     clientKey
   );
-  const {universalLessonDetails} = useULBContext();
+
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
   const tab = params.get('tab');
@@ -59,19 +66,21 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     },
   ];
 
-  const fetchLessonDetails = async () => {
+  const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getLesson, {
+        graphqlOperation(queries.getUniversalLesson, {
           id: lessonId,
         })
       );
-      const savedData = result.data.getLesson;
+      const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
       setLessonData(savedData);
+
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
-      setSelectedDesigners(designers);
+      setSelectedDesigners(designers || []);
       setLoading(false);
     } catch {
       console.log('Error while fetching lesson data');
@@ -85,7 +94,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);
-      fetchLessonDetails();
+      fetchUniversalLessonDetails();
     }
   };
 
@@ -102,20 +111,26 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const handleEdit = () => {
     const redirectionUrl = `${match.url.replace('view', `edit?lessonId=${lessonId}`)}`;
     history.push(redirectionUrl);
-  }
+  };
 
   const updateTab = (tab: number) => {
     // setActiveTab(tab);
     history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
   };
 
-    const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
-      lessonData || {};
+  const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
+    lessonData || {};
 
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
-        return <LessonSummaryForm />;
+        return (
+          <LessonSummaryForm
+            lessonId={lessonId}
+            setFormData={setLessonData}
+            formData={lessonData}
+          />
+        );
       case '1':
         return (
           <LessonPlansList

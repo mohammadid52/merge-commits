@@ -20,21 +20,19 @@ const SideMenu = (props: LessonHeaderBarProps) => {
    */
   const updateStudentData = async (saveType?: string) => {
     let lessonProgress =
-      state.pages[state.lessonProgress].stage === ''
-        ? 'intro'
-        : state.pages[state.lessonProgress].stage;
+      lessonState.currentPage > lessonState.lessonProgress ? lessonState.currentPage : lessonState.lessonProgress;
 
     let data = {
-      id: state.studentDataID,
+      id: lessonState.studentDataID,
       lessonProgress: lessonProgress,
-      status: state.studentStatus,
+      status: lessonState.studentStatus,
       saveType: saveType,
-      syllabusLessonID: state.syllabusLessonID,
-      studentID: state.studentUsername,
-      studentAuthID: state.studentAuthID,
-      warmupData: state.componentState.story ? state.componentState.story : null,
-      corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
-      activityData: state.componentState.poem ? state.componentState.poem : null,
+      syllabusLessonID: lessonState.syllabusLessonID,
+      studentID: lessonState.studentUsername,
+      studentAuthID: lessonState.studentAuthID,
+      // warmupData: lessonState.componentlessonState.story ? state.componentState.story : null,
+      // corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
+      // activityData: state.componentState.poem ? state.componentState.poem : null,
     };
 
     try {
@@ -42,34 +40,34 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         graphqlOperation(customMutations.updateStudentData, {input: data})
       );
       console.log(dataObject);
-      dispatch({type: 'SAVED_CHANGES'});
-      console.log('state', state);
+      lessonDispatch({type: 'SAVED_CHANGES'});
+      console.log('lessonState', lessonState);
     } catch (error) {
       console.error(error);
     }
   };
 
   const {changeParams, resetParams} = useStudentTimer({
-    dispatch: dispatch,
-    subscription: state.subscription,
-    subscribeFunc: state.subscribeFunc,
+    dispatch: lessonDispatch,
+    subscription: lessonState.subscription,
+    subscribeFunc: lessonState.subscribeFunc,
     callback: updateStudentData,
     state: state,
+    lessonState: lessonState,
   });
 
   useEffect((): any => {
-    if (state) {
-      changeParams('state', state);
+    if (lessonState) {
+      changeParams('lessonState', lessonState);
     }
-
     return () => resetParams();
   }, [
-    state.studentStatus,
-    state.currentPage,
-    state.currentLocation,
-    state.viewing,
-    state.saveCount,
-    state.subscription,
+    lessonState.studentStatus,
+    lessonState.currentPage,
+    lessonState.currentLocation,
+    lessonState.viewing,
+    lessonState.saveCount,
+    lessonState.subscription,
   ]);
 
   // @ts-ignore
@@ -80,7 +78,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * AUTOSAVE
          */}
-        {state.viewing ? (
+        {lessonState.viewing ? (
           <div
             className={`cursor-default flex flex-col justify-center items-center mb-4`}>
             <div className="relative flex items-center justify-center h-4 w-4 m-1">

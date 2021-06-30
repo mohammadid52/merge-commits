@@ -23,6 +23,8 @@ const Attachments = (props: any) => {
     isEditingMode,
     setNumbered,
     updateContent,
+    askBeforeClose,
+    setUnsavedChanges,
     selectedForm,
     createNewContent,
   } = props;
@@ -33,6 +35,7 @@ const Attachments = (props: any) => {
   };
 
   const onChange = (e: any, idx: number, label: boolean = true) => {
+    setUnsavedChanges(true);
     const {value} = e.target;
     update(list[idx], label ? `label` : 'value', () => value);
     setList([...list]);
@@ -85,6 +88,7 @@ const Attachments = (props: any) => {
 
     // close modal after saving
     closeAction();
+    setUnsavedChanges(false);
   };
 
   const title =
@@ -163,7 +167,7 @@ const Attachments = (props: any) => {
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
           <Buttons

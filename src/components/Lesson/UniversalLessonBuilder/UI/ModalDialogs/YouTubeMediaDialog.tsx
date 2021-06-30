@@ -32,6 +32,8 @@ interface IVideoDialogProps extends IContentTypeComponentProps {
 const YouTubeMediaDialog = ({
   inputObj,
   closeAction,
+  setUnsavedChanges,
+  askBeforeClose,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
 }: IVideoDialogProps) => {
@@ -50,6 +52,7 @@ const YouTubeMediaDialog = ({
     }
   }, [inputObj]);
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUnsavedChanges(true);
     const name: string = (event.target as HTMLInputElement).name;
     const value: string = (event.target as HTMLInputElement).value;
     setVideoInputs((prevValues) => ({...prevValues, [name]: value}));
@@ -69,6 +72,7 @@ const YouTubeMediaDialog = ({
         createNewBlockULBHandler('', '', 'video', [videoInputs]);
       }
       closeAction();
+      setUnsavedChanges(false);
     }
   };
   const checkUrl = () => {
@@ -118,7 +122,7 @@ const YouTubeMediaDialog = ({
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-              onClick={closeAction}
+              onClick={askBeforeClose}
               transparent
             />
             <Buttons

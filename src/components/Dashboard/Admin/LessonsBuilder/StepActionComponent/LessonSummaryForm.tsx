@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -7,6 +7,8 @@ import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
+import {graphqlOperation, API} from 'aws-amplify';
+import * as mutations from '../../../../../graphql/mutations';
 
 const periodOptions = [
   {id: 1, name: '1'},
@@ -16,18 +18,47 @@ const periodOptions = [
   {id: 5, name: '5'},
 ];
 
-const LessonSummaryForm = () => {
-  const [formData, setFormData] = useState({
-    lessonPlanLabel: '',
-    duration: '1',
-      resource: '',
-  resourceHtml: '',
-  note: '',
-  noteHtml: '',
-  });
+interface FormDataInterface {
+  label: string;
+  duration: string;
+  resources: string;
+  notes: string;
+}
+
+interface LessonSummaryFormInterface {
+  formData: FormDataInterface;
+  setFormData: React.Dispatch<React.SetStateAction<FormDataInterface>>;
+  lessonId: string;
+}
+
+const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
+  const {formData, setFormData, lessonId} = props;
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {AddNewLessonFormDict, LessonBuilderDict} = useDictionary(clientKey);
+
+  const [loading, setLoading] = useState(false);
+
+  const saveFormData = async () => {
+    setLoading(true);
+    try {
+      const input = {
+        id: lessonId,
+        label: formData.label,
+        resources: formData.resources,
+        notes: formData.notes,
+        duration: Number(formData.duration),
+      };
+      const res: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLesson, {input})
+      );
+    } catch (error) {
+      console.error(error.message);
+      console.log('error saving data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onInputChange = (e: any) => {
     const {
@@ -48,7 +79,7 @@ const LessonSummaryForm = () => {
       ...prevFormData,
       duration: name,
     }));
-  }
+  };
 
   const onEditorStateChange = (
     html: string,
@@ -58,13 +89,11 @@ const LessonSummaryForm = () => {
   ) => {
     setFormData({
       ...formData,
-      [fieldHtml]: html,
+      // [fieldHtml]: html,
       [field]: text,
     });
   };
-
-  const {lessonPlanLabel = '', duration = '1'} = formData;
-
+  const {label = '', duration = '1', resources = '', notes = ''} = formData || {};
   return (
     <div>
       <div className="p-4">
@@ -75,10 +104,10 @@ const LessonSummaryForm = () => {
               <span className="text-red-500"> * </span>
             </label>
             <FormInput
-              value={lessonPlanLabel}
-              id="lessonPlanLabel"
+              value={label}
+              id="label"
               onChange={onInputChange}
-              name="lessonPlanLabel"
+              name="label"
               maxLength={12}
               showCharacterUsage={true}
             />
@@ -89,7 +118,7 @@ const LessonSummaryForm = () => {
               <span className="text-red-500"> * </span>
             </label>
             <Selector
-              selectedItem={duration}
+              selectedItem={duration.toString() || ''}
               placeholder={LessonBuilderDict[userLanguage]['DURATION']}
               list={periodOptions}
               onChange={onSelectOption}
@@ -103,9 +132,9 @@ const LessonSummaryForm = () => {
               {LessonBuilderDict[userLanguage]['RESOURCES']}
             </label>
             <RichTextEditor
-              initialValue={''}
+              initialValue={resources}
               onChange={(htmlContent, plainText) =>
-                onEditorStateChange(htmlContent, plainText, 'resourceHtml', 'resource')
+                onEditorStateChange(htmlContent, plainText, 'resourceHtml', 'resources')
               }
             />
           </div>
@@ -114,9 +143,9 @@ const LessonSummaryForm = () => {
               {LessonBuilderDict[userLanguage]['NOTES']}
             </label>
             <RichTextEditor
-              initialValue={''}
+              initialValue={notes}
               onChange={(htmlContent, plainText) =>
-                onEditorStateChange(htmlContent, plainText, 'noteHtml', 'note')
+                onEditorStateChange(htmlContent, plainText, 'noteHtml', 'notes')
               }
             />
           </div>
@@ -129,8 +158,8 @@ const LessonSummaryForm = () => {
                 ? AddNewLessonFormDict[userLanguage]['SAVING']
                 : AddNewLessonFormDict[userLanguage]['SAVE']
             }
-            // onClick={saveFormData}
-            // disabled={loading}
+            onClick={saveFormData}
+            disabled={loading}
           />
         </div>
       </div>

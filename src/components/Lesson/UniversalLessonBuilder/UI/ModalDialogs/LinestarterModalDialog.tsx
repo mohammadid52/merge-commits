@@ -53,6 +53,8 @@ const LinestarterModalDialog = ({
   inputObj,
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
+  askBeforeClose,
+  setUnsavedChanges,
 }: ILinestarterModalDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
@@ -103,6 +105,7 @@ const LinestarterModalDialog = ({
   //  FOR NORMAL INPUT    //
   //////////////////////////
   const onChange = (e: React.FormEvent) => {
+    setUnsavedChanges(true);
     const {id, value} = e.target as HTMLFormElement;
     handleUpdateInputFields(id, value);
   };
@@ -117,6 +120,7 @@ const LinestarterModalDialog = ({
     closeAction();
     // clear fields
     setInputFieldsArray(initialInputFieldsState);
+    setUnsavedChanges(false);
   };
   const removeItemFromList = (id: string) => {
     remove(inputFieldsArray, (n) => n.id === id);
@@ -167,7 +171,7 @@ const LinestarterModalDialog = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
 

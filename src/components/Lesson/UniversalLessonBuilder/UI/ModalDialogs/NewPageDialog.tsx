@@ -9,7 +9,8 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import Tooltip from '../../../../Atoms/Tooltip';
 import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
-
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../../../../graphql/mutations';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -23,7 +24,7 @@ interface INewPageDialog {
 }
 
 const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) => {
-  const {addNewPageHandler} = useULBContext();
+  const {addNewPageHandler, selectedLessonID, setSelectedPageID} = useULBContext();
   const {userLanguage} = useContext(GlobalContext);
   const [focussed, setFocussed] = useState<
     'new_page' | 'existing_page' | 'template' | ''
@@ -62,21 +63,46 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
     }));
   };
 
+  const addLessonToDatabase = async (id: string) => {
+    try {
+      const input: any = {
+        id,
+        lessonPlan: [
+          ...universalLessonDetails.lessonPlan,
+          {
+            ...inputObj,
+            pageContent: [],
+          },
+        ],
+      };
+      const result = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLesson, {input})
+      );
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const handleSubmit = () => {
     const isValid = validateForm();
     if (isValid) {
       addNewPageHandler({
         ...inputObj,
-        pageContent:[],
+        pageContent: [],
       });
+
+      if (selectedLessonID) {
+        addLessonToDatabase(selectedLessonID);
+      }
       closeAction();
+      setSelectedPageID(inputObj.id);
     } else {
       return;
     }
   };
 
   const addExistingPage = () => {
-    const id:string = `page_${pages.length + 1}`
+    const id: string = `page_${pages.length + 1}`;
     addNewPageHandler({
       ...pages[copiedPageIndex],
       id,
@@ -97,7 +123,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
           : [],
     });
     closeAction();
-  }
+  };
 
   const validateForm = () => {
     const {id = '', label = '', title = '', description = ''} = inputObj;

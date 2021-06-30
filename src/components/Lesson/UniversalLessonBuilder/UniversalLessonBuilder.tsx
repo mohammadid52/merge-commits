@@ -20,9 +20,7 @@ import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInter
 
 import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import BuilderWrapper from './views/BuilderWrapper';
-import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import {MovableListProvider} from './MovableListContext';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -33,6 +31,15 @@ interface UniversalLessonBuilderProps extends ULBSelectionProps {
   activeStep?: string;
   lessonName?: string;
   lessonType?: string;
+}
+
+interface NewLessonDataInterface {
+  title: string;
+  label: string;
+  summary: string;
+  lessonPlan?: any[];
+  type?: string;
+  institutionID?: string;
 }
 
 /*******************************************
@@ -53,6 +60,11 @@ const initialUniversalLessonPage: UniversalLessonPage = {
   description: '',
   class: '',
   pageContent: [],
+};
+const intitalLessonData: NewLessonDataInterface = {
+  title: '',
+  summary: '',
+  label: '',
 };
 
 const initialUniversalLessonPagePart: PagePart = {
@@ -76,12 +88,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const history = useHistory();
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
-  const pageId = params.get('pageId');
-  const {state, dispatch} = useContext(GlobalContext);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonEditDict} = useDictionary(
-    clientKey
-  );
+  const {state, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
+
+  const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
     universalLessonDetails,
@@ -120,12 +129,12 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    **********************************************/
 
   // in this area ^
-  useEffect(() => {
-    // setUniversalLessonDetails(exampleUniversalLesson);
-    if (exampleUniversalLesson.lessonPlan.length > 0) {
-      setSelectedPageID(pageId || exampleUniversalLesson.lessonPlan[0].id);
-    }
-  }, []);
+  // useEffect(() => {
+  //   setUniversalLessonDetails(exampleUniversalLesson);
+  //   if (exampleUniversalLesson.lessonPlan.length > 0) {
+  //     setSelectedPageID(exampleUniversalLesson.lessonPlan[0].id);
+  //   }
+  // }, []);
 
   //  WHICH COMPONENT DO WE RETURN?
   // const currentStepComp = (currentStep: string) => {
@@ -250,7 +259,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
   };
-  const {newBlockSeqId} = useULBContext();
 
   const updateULBHandler = (
     targetID: string,
@@ -436,12 +444,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     };
     setUniversalLessonDetails(temp);
   };
-  
+
   const onBack = () => {
     history.goBack();
-  }
-
-  console.log(universalLessonDetails, 'universalLessonDetails');
+  };
 
   return (
     /**
@@ -454,43 +460,51 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div className="w-full h-full">
-      {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
-      <div className="flex justify-between">
-        <SectionTitle
-          title={LessonEditDict[userLanguage]['TITLE']}
-          subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
-        />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={onBack}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div>
-      </div>
-      {/* Body */}
-      <div className="w-full h-full pb-8 m-auto">
-        <div
-          id={`universalLessonBuilder`}
-          className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
-          {/*{currentStepComp(universalBuilderStep)}*/}
+    <div
+      id={`universalLessonBuilder`}
+      className="h-full bg-dark-gray flex overflow-hidden">
+      {/*{currentStepComp(universalBuilderStep)}*/}
 
-          <BuilderWrapper
-            mode={`building`}
-            deleteFromULBHandler={deleteULBHandler}
-            updateFromULBHandler={updateULBHandler}
-            createNewBlockULBHandler={createNewBlockULBHandler}
-            updateBlockContentULBHandler={updateBlockContentULBHandler}
-            universalLessonDetails={universalLessonDetails}
-            universalBuilderStep={universalBuilderStep}
-            setUniversalBuilderStep={setUniversalBuilderStep}
-            selectedPageID={selectedPageID}
-            setSelectedPageID={setSelectedPageID}
-            initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
+      <div className="w-full overflow-y-auto h-full bg-gray-200">
+        {/* Section Header */}
+        <BreadCrums items={breadCrumsList} />
+        <div className="flex justify-between">
+          <SectionTitle
+            title={LessonEditDict[userLanguage]['TITLE']}
+            subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
           />
+          <div className="flex justify-end py-4 mb-4 w-5/10">
+            <Buttons
+              label="Go back"
+              btnClass="mr-4"
+              onClick={onBack}
+              Icon={IoArrowUndoCircleOutline}
+            />
+          </div>
+        </div>
+        {/* Body */}
+        <div className="w-full h-full pb-8 m-auto">
+          <div
+            id={`universalLessonBuilder`}
+            className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
+            {/*{currentStepComp(universalBuilderStep)}*/}
+
+            <BuilderWrapper
+              mode={`building`}
+              deleteFromULBHandler={deleteULBHandler}
+              updateFromULBHandler={updateULBHandler}
+              createNewBlockULBHandler={createNewBlockULBHandler}
+              updateBlockContentULBHandler={updateBlockContentULBHandler}
+              universalLessonDetails={universalLessonDetails}
+              universalBuilderStep={universalBuilderStep}
+              setUniversalBuilderStep={setUniversalBuilderStep}
+              selectedPageID={selectedPageID}
+              setSelectedPageID={setSelectedPageID}
+              initialUniversalLessonPagePartContent={
+                initialUniversalLessonPagePartContent
+              }
+            />
+          </div>
         </div>
       </div>
     </div>

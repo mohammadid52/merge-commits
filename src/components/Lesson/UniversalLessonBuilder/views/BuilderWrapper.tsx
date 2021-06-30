@@ -46,6 +46,7 @@ import {
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
+import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
@@ -110,7 +111,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     if (isNewPage === 'true') {
       handleModalPopToggle(dialogLabelList.NEW_PAGE);
     }
-  },[]);
+  }, []);
 
   const handleGalleryModal = () => {
     setOpenGallery((prevShow) => !prevShow);
@@ -282,8 +283,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       classString: selectedContentClass = '',
     } = blockConfig;
 
-    console.log(type);
-
     const updateBlockContent = (
       targetID: string,
       propertyToTarget: string,
@@ -324,6 +323,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputObj: inputObj,
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
+      setUnsavedChanges,
+      askBeforeClose,
     };
 
     switch (type) {
@@ -337,10 +338,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'image':
         return (
           <ImageFormComponent
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
+            {...commonProps}
             handleGalleryModal={handleGalleryModal}
             selectedImageFromGallery={selectedImageFromGallery}
           />
@@ -352,67 +350,19 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'form-default':
         return <InputModalComponent {...commonProps} contentType={type} />;
       case 'video':
-        return (
-          <YouTubeMediaDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <YouTubeMediaDialog {...commonProps} />;
       case 'tag':
-        return (
-          <TagInputDialog
-            updateBlockContentULBHandler={updateBlockContent}
-            closeAction={closeAction}
-            inputObj={inputObj}
-          />
-        );
+        return <TagInputDialog {...commonProps} />;
       case 'jumbotron':
-        return (
-          <JumbotronFormDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <JumbotronFormDialog {...commonProps} />;
       case 'highlighter':
-        return (
-          <HighlighterFormDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <HighlighterFormDialog {...commonProps} />;
       case 'poem':
-        return (
-          <LinestarterModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <LinestarterModalDialog {...commonProps} />;
       case 'keywords':
-        return (
-          <KeywordModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <KeywordModalDialog {...commonProps} />;
       case 'links':
-        return (
-          <LinksModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <LinksModalDialog {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
@@ -425,6 +375,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
             updateContent={updateBlockContent}
+            setUnsavedChanges={setUnsavedChanges}
+            askBeforeClose={askBeforeClose}
             closeAction={closeAction}
             selectedForm={
               type === FORM_TYPES.ATTACHMENTS
@@ -450,6 +402,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
             updateContent={updateBlockContent}
+            setUnsavedChanges={setUnsavedChanges}
+            askBeforeClose={askBeforeClose}
             closeAction={closeAction}
             selectedForm={type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY}
           />
@@ -492,7 +446,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }
   };
-
+  const {
+    UnsavedModal,
+    askBeforeClose,
+    unsavedChanges,
+    setUnsavedChanges,
+  } = useUnsavedChanges(closeAction);
   return (
     <div
       id={`builderWrapper`}
@@ -547,15 +506,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           titleButton={
             <span
               onClick={() => {
-                hideAllModals();
-                handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                if (unsavedChanges) {
+                  askBeforeClose();
+                } else {
+                  hideAllModals();
+                  handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                }
               }}
               className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
               Go Back
             </span>
           }
-          closeAction={closeAction}>
-          <div className="min-w-256">{modalByType(addContentModal.type)}</div>
+          closeAction={askBeforeClose}>
+          <div className="min-w-256">
+            <>{modalByType(addContentModal.type)}</>
+          </div>
+          <UnsavedModal />
         </Modal>
       )}
 

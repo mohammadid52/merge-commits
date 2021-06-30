@@ -18,6 +18,8 @@ const SelectOne = ({
   list,
   setList,
   updateContent,
+  setUnsavedChanges,
+  askBeforeClose,
   createNewContent,
 }: any) => {
   const {userLanguage, clientKey} = useContext(GlobalContext);
@@ -29,6 +31,7 @@ const SelectOne = ({
   };
 
   const onChange = (e: any, idx: number) => {
+    setUnsavedChanges(true);
     const {value} = e.target;
     update(list[idx], 'label', () => value);
     setList([...list]);
@@ -75,6 +78,7 @@ const SelectOne = ({
 
     // // close modal after saving
     closeAction();
+    setUnsavedChanges(false);
   };
 
   const removeItemFromList = (id: string) => {
@@ -202,7 +206,7 @@ const SelectOne = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
           <Buttons

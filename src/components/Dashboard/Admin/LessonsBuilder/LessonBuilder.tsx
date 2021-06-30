@@ -6,6 +6,7 @@ import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
+import * as queries from '../../../../graphql/queries';
 import * as customQueries from '../../../../customGraphql/customQueries';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
@@ -88,7 +89,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     language: [''],
     imageUrl: '',
     imageCaption: '',
-    studentSummary: ''
+    studentSummary: '',
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -168,17 +169,19 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
   const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
 
-  const fetchLessonDetails = async () => {
+  const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getLesson, {
+        graphqlOperation(queries.getUniversalLesson, {
           id: lessonId,
         })
       );
-      const savedData = result.data.getLesson;
-
+      const savedData = result.data.getUniversalLesson;
       setFormData({
         ...formData,
+        ...savedData,
+        imageCaption: savedData.cardCaption,
+        imageUrl: savedData.cardUrl,
         name: savedData.title,
         type:
           savedData.type &&
@@ -188,6 +191,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         languages: savedData.language.map((it: any) =>
           languageList.find((it2: any) => it2.value === it)
         ),
+        studentSummary: savedData.summary,
         institution: {
           id: savedData?.institution?.id,
           name: savedData?.institution?.name,
@@ -199,16 +203,24 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       );
       setSelectedDesigners(designers);
       setLoading(false);
-    } catch {
+    } catch (error) {
+      console.error(error.message);
       console.log('Error while fetching lesson data');
       history.push(`/dashboard/lesson-builder`);
     }
   };
 
+  // old query
+  // const result: any = await API.graphql(
+  //   graphqlOperation(customQueries.getLesson, {
+  //     id: lessonId,
+  //   })
+  // );
+
   useEffect(() => {
     if (lessonId) {
       setLoading(true);
-      fetchLessonDetails();
+      fetchUniversalLessonDetails();
     }
   }, []);
 
