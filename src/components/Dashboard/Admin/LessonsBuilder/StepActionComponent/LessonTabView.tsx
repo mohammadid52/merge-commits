@@ -50,6 +50,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
 
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
+  const tab = params.get('tab');
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -100,6 +101,12 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   useEffect(() => {
     checkValidUrl();
   }, []);
+
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(parseInt(tab));
+    }
+  }, [tab]);
 
   const handleEdit = () => {
     const redirectionUrl = `${match.url.replace('view', `edit?lessonId=${lessonId}`)}`;
@@ -180,7 +187,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   ];
 
   const updateTab = (tab: number) => {
-    setActiveTab(tab);
+    // setActiveTab(tab);
+    history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
   };
 
   const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =

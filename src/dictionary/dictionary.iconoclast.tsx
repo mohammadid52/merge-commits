@@ -3088,6 +3088,7 @@ const LessonBuilderDict: any = {
       VIEW: 'View',
       PREVIEW: 'Preview',
       SAVE: 'Save',
+      DELETE: 'Delete',
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
@@ -3096,6 +3097,7 @@ const LessonBuilderDict: any = {
       DESCRIPTION: 'Description',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Action',
+      BUTTON: 'Create lesson plan',
     },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'Description',

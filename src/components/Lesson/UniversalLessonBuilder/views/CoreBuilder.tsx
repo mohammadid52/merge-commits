@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router';
 import ClickAwayListener from 'react-click-away-listener';
 import {AiOutlineEye, AiOutlineEyeInvisible, AiOutlineBgColors} from 'react-icons/ai';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
@@ -25,6 +26,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
   galleryVisible?: boolean;
   hierarchyVisible?: boolean;
   initialUniversalLessonPagePartContent: PartContent;
+  lessonId: string;
   handleModalPopToggle?: (dialogToToggle: string) => void;
   handleEditBlockContent?: (
     type: string,
@@ -33,9 +35,11 @@ interface CoreBuilderProps extends ULBSelectionProps {
     targetId: string,
     indexToUpdate: number
   ) => void;
+  setEditModal: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
+  const history = useHistory();
   const [isColorPickerOpen, setIsColorPickerOpen] = useState<Boolean>(false);
   const {
     mode,
@@ -43,6 +47,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     deleteFromULBHandler,
     updateFromULBHandler,
     universalLessonDetails,
+    lessonId,
     selectedPageID,
     setSelectedPageID,
     targetID,
@@ -54,8 +59,21 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleEditBlockContent,
     handleModalPopToggle,
     handleTagModalOpen,
+    setEditModal,
   } = props;
   const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
+
+  const handleAddNewPage = () => {
+    history.push(
+      `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`
+    );
+  };
+
+  const goToLessonPlan = () => {
+    history.push(
+      `/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}&tab=1`
+    );
+  };
 
   const handleColorPickerSelect = (pickedColor: string) => {
     updateFromULBHandler(selectedPageID, 'class', `bg-${pickedColor}`);
@@ -78,7 +96,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       className={`h-full overflow-hidden overflow-y-scroll ${
         activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'
       }`}>
-      <div className={`w-full flex flex-row mx-auto`}>
+      <div className={`w-full h-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <BuilderRowComposer
             mode={mode}
@@ -122,46 +140,49 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             </button>
           </Tooltip>
           <button
-            onClick={() => handleModalPopToggle('NEW_PAGE')}
+            // onClick={() => handleModalPopToggle('NEW_PAGE')}
+            onClick={handleAddNewPage}
             className="text-white bg-indigo-500 h-auto py-2 my-2 w-full px-2 rounded-md shadow hover:shadow-lg text-base">
             Add page
+          </button>
+          <button
+            onClick={goToLessonPlan}
+            className="text-white bg-indigo-500 h-auto py-2 my-2 w-full px-2 rounded-md shadow hover:shadow-lg text-base">
+            Lesson Plan
           </button>
         </div>
       </div>
 
-      <div className={`absolute w-auto top-7 left-2 z-30`}>
-        <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
+      <div className={`absolute w-auto top-7 left-1`}>
+        {/* <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
           <>
-          <Tooltip placement="right" text={`Select background color`}>
-            {/* <Buttons
-              onClick={onColorPickerToggle}
-              label=""
-              overrideClass={true}
-              btnClass="flex items-center justify-center w-auto p-2 font-bold uppercase text-xs text-white bg-dark rounded-md"
-              Icon={AiOutlineBgColors}
-            /> */}
-            <button
-              onClick={onColorPickerToggle}
-              className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
-              {isColorPickerOpen ? <IoColorFill /> : <IoColorFillOutline />}
-            </button>
-          </Tooltip>
-          {isColorPickerOpen && (
-            <div className="relative">
-              <ColorPicker
-                callbackColor={handleColorPickerSelect}
-                classString={
-                  activePageData && activePageData.class ? activePageData.class : ''
-                }
-                isMainPage={true}
-              />
-            </div>
-          )}
+            <Tooltip placement="right" text={`Select background color`}>
+              <button
+                onClick={onColorPickerToggle}
+                className="text-white bg-dark h-auto py-2 w-auto px-2 rounded-md shadow hover:shadow-lg text-2xl">
+                {isColorPickerOpen ? <IoColorFill /> : <IoColorFillOutline />}
+              </button>
+            </Tooltip>
+            {isColorPickerOpen && (
+              <div className="relative">
+                <ColorPicker
+                  callbackColor={handleColorPickerSelect}
+                  classString={
+                    activePageData && activePageData.class ? activePageData.class : ''
+                  }
+                  isMainPage={true}
+                />
+              </div>
+            )}
           </>
-        </ClickAwayListener>
-        {/* <div className="mt-10 w-36">
-          <LessonPlanDescription />
-        </div> */}
+        </ClickAwayListener> */}
+        
+        <div className="w-3/4 min-w-64">
+          <LessonPlanDescription
+            activePageData={activePageData}
+            setEditModal={setEditModal}
+          />
+        </div>
       </div>
     </div>
   );

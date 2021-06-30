@@ -20,15 +20,7 @@ import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInter
 
 import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import BuilderWrapper from './views/BuilderWrapper';
-import {exampleUniversalLesson} from './example_data/exampleUniversalLessonData';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as queries from '../../../graphql/queries';
-import * as mutations from '../../../graphql/mutations';
-import Loader from '../../Atoms/Loader';
-import Modal from '../../Atoms/Modal';
-import FormInput from '../../Atoms/Form/FormInput';
-import {map} from 'lodash';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -491,7 +483,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           </div>
         </div>
         {/* Body */}
-        <div className="w-full pb-8 m-auto">
+        <div className="w-full h-full pb-8 m-auto">
           <div
             id={`universalLessonBuilder`}
             className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
