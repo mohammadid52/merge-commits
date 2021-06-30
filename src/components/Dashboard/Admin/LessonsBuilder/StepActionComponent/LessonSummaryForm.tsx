@@ -94,8 +94,6 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
     });
   };
 
-  const {label = '', duration = '1', resources, notes} = formData;
-
   return (
     <div>
       <div className="p-4">
@@ -106,7 +104,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
               <span className="text-red-500"> * </span>
             </label>
             <FormInput
-              value={label}
+              value={formData?.label}
               id="label"
               onChange={onInputChange}
               name="label"
@@ -120,7 +118,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
               <span className="text-red-500"> * </span>
             </label>
             <Selector
-              selectedItem={duration}
+              selectedItem={formData?.duration.toString()}
               placeholder={LessonBuilderDict[userLanguage]['DURATION']}
               list={periodOptions}
               onChange={onSelectOption}
@@ -134,7 +132,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
               {LessonBuilderDict[userLanguage]['RESOURCES']}
             </label>
             <RichTextEditor
-              initialValue={resources}
+              initialValue={formData?.resources}
               onChange={(htmlContent, plainText) =>
                 onEditorStateChange(htmlContent, plainText, 'resourceHtml', 'resources')
               }
@@ -145,7 +143,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
               {LessonBuilderDict[userLanguage]['NOTES']}
             </label>
             <RichTextEditor
-              initialValue={notes}
+              initialValue={formData?.notes}
               onChange={(htmlContent, plainText) =>
                 onEditorStateChange(htmlContent, plainText, 'noteHtml', 'notes')
               }

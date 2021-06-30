@@ -28,6 +28,12 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 interface ILessonTabViewProps {
   designersList: any[];
 }
+interface FormDataInterface {
+  label: string;
+  duration: string;
+  resources: string;
+  notes: string;
+}
 
 const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const match = useRouteMatch();
@@ -60,13 +66,6 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     },
   ];
 
-  const [formData, setFormData] = useState({
-    label: '',
-    duration: '1',
-    resources: '',
-    notes: '',
-  });
-
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
@@ -75,31 +74,6 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-
-      if (savedData.duration !== null) {
-        setFormData({
-          ...formData,
-          duration: savedData.duration.toString(),
-        });
-      }
-      if (savedData.label) {
-        setFormData({
-          ...formData,
-          label: savedData.label,
-        });
-      }
-      if (savedData.notes) {
-        setFormData({
-          ...formData,
-          notes: savedData.notes,
-        });
-      }
-      if (savedData.resources) {
-        setFormData({
-          ...formData,
-          resources: savedData.resources,
-        });
-      }
 
       setLessonData(savedData);
 
@@ -139,8 +113,8 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
         return (
           <LessonSummaryForm
             lessonId={lessonId}
-            setFormData={setFormData}
-            formData={formData}
+            setFormData={setLessonData}
+            formData={lessonData}
           />
         );
       case '1':
