@@ -59,7 +59,6 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
       setLoading(false);
     }
   };
-  console.log(formData);
 
   const onInputChange = (e: any) => {
     const {
@@ -119,7 +118,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
               <span className="text-red-500"> * </span>
             </label>
             <Selector
-              selectedItem={formData?.duration.toString() || ''}
+              selectedItem={duration.toString() || ''}
               placeholder={LessonBuilderDict[userLanguage]['DURATION']}
               list={periodOptions}
               onChange={onSelectOption}
