@@ -6,7 +6,6 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Selector from '../../../../Atoms/Form/Selector';
-import SelectTextBox from '../../../../Atoms/Form/SelectTextBox';
 
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
@@ -165,8 +164,7 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
                 value={fullCourseTime}
                 onChange={this.handleChange}
               /> */}
-                <SelectTextBox optionsList={estimatedTimeList} onChange={handleEstimationTime}/>
-                {/* <Selector
+                <Selector
                   label={
                     LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME
                   }
@@ -174,7 +172,7 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
                   list={estimatedTimeList}
                   selectedItem={inputObj.estTime}
                   onChange={onSelectOption}
-                /> */}
+                />
               </div>
             </div>
             <div className="p-2">
