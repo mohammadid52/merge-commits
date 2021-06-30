@@ -119,7 +119,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         </LessonPageWrapper>
       </div>
 
-      <div className="absolute top-7 right-2 w-auto flex flex-col items-center z-30">
+      <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
         <div className="bg-dark w-32 p-2">
           <Tooltip
             placement="left"
@@ -153,7 +153,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         </div>
       </div>
 
-      <div className={`absolute w-auto top-7 left-1`}>
+      <div className={`absolute w-auto top-10 left-1`}>
         {/* <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
           <>
             <Tooltip placement="right" text={`Select background color`}>
