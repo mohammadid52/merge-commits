@@ -6,12 +6,10 @@ import Keyword from './Keyword';
 import DoFirst from './DoFirst';
 import Connect from './Connect';
 import InstructionBlock from '../InstructionBlock';
-import useDictionary from '../../../../customHooks/dictionary';
 import {stripStyleFromHTML} from '../../../../utilities/strings';
 import {LessonComponentsInterface} from '../../../../interfaces/LessonComponentsInterfaces';
 import findIndex from 'lodash/findIndex';
 import Checkpoint from '../../AssessmentComponents/Checkpoint';
-import {useLocation} from 'react-router';
 import SurveyOutro from '../../AssessmentComponents/SurveyOutro';
 import SaveQuit from '../Outro/SaveQuit';
 import useUrlState from '@ahooksjs/use-url-state';
@@ -24,14 +22,11 @@ const Intro = (props: LessonComponentsInterface) => {
     state,
     theme,
     dispatch,
-    clientKey,
-    userLanguage,
+
     pageList,
     currentPage,
     setCurrentPage,
   } = useContext(LessonContext);
-  const {lessonDict} = useDictionary(clientKey);
-  const location = useLocation();
 
   const imgArray = state.data?.lesson?.artist?.images;
   const lessonType = state.data.lesson.type;
@@ -185,7 +180,7 @@ const Intro = (props: LessonComponentsInterface) => {
                 </div>
               )}
               {!isLastPage && (
-                <div
+                <button
                   onClick={onNext}
                   className="px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green pageChange__btn transition-all cursor-pointer flex items-center">
                   <Tooltip
@@ -196,7 +191,7 @@ const Intro = (props: LessonComponentsInterface) => {
                       <BsArrowRight color="#fff" />
                     </div>
                   </Tooltip>
-                </div>
+                </button>
               )}
             </div>
           )}

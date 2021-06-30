@@ -48,6 +48,7 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [personLocationObj, setPersonLocationObj] = useState<any>();
   const [recentOp, setRecentOp] = useState<string>('');
+  const [disableNext, setDisableNext] = useState(false);
 
   const pageList = [
     {
@@ -398,6 +399,8 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
         setCurrentPage,
         state,
         dispatch,
+        setDisableNext,
+        disableNext,
         pageList,
         theme,
         lesson,

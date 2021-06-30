@@ -46,6 +46,7 @@ const Question = (props: QuestionProps) => {
     handleInputChange,
     value,
   } = props;
+
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);

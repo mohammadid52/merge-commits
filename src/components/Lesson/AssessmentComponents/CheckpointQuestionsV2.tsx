@@ -20,6 +20,7 @@ import findIndex from 'lodash/findIndex';
 import {BsArrowRight, BsArrowLeft} from 'react-icons/bs';
 import Tooltip from '../../Atoms/Tooltip';
 import last from 'lodash/last';
+import {find} from 'lodash';
 
 interface CheckpointQuestionsProps {
   isTeacher?: boolean;
@@ -70,7 +71,16 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   const switchContext = isTeacher
     ? useContext(LessonControlContext)
     : useContext(LessonContext);
-  const {state, theme, dispatch, pageList, currentPage, setCurrentPage} = switchContext;
+  const {
+    state,
+    theme,
+    dispatch,
+    disableNext,
+    pageList,
+    currentPage,
+    setDisableNext,
+    setCurrentPage,
+  } = switchContext;
 
   const checkpointId = checkpointsItems.map((item: any, idx: number) => ({
     id: idx,
@@ -257,12 +267,14 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   /**
    * HANDLE CHANGE OF QUESTION SELECTION
    */
+
   const handleInputChange = (
     id: number | string,
     value: string | string[],
     checkpointID: string
   ) => {
     const valueArray = typeof value === 'string' ? [value] : value;
+
     const updatedInput = Object.keys(input).reduce((acc: any, checkpointIDgroup: any) => {
       if (checkpointIDgroup === checkpointID) {
         // @ts-ignore
@@ -308,10 +320,12 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
     }
   };
   const onNext = () => {
-    if (currentCheckpointIdx !== checkpointId.length - 1) {
-      setCurrentCheckpoint(checkpointId[currentCheckpointIdx + 1]);
-    } else {
-      setCurrentPage(pageList[currentPageIdx + 1]);
+    if (!disableNext) {
+      if (currentCheckpointIdx !== checkpointId.length - 1) {
+        setCurrentCheckpoint(checkpointId[currentCheckpointIdx + 1]);
+      } else {
+        setCurrentPage(pageList[currentPageIdx + 1]);
+      }
     }
   };
 
@@ -330,6 +344,26 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
   if (status !== 'loaded') return null;
 
   const allQuestionGroupsData = allQuestionGroups()[currentCheckpointIdx] || [];
+
+  const checkAllRequiredQuestions = () => {
+    allQuestionGroupsData.forEach((item: any) => {
+      if (item.required) {
+        const currentRes: any = find(
+          input[item.checkpointID],
+          (_d: any) => _d.qid === item.question.id
+          // @ts-ignore
+        ).response;
+
+        if (currentRes.length > 0) {
+          setDisableNext(false);
+        } else {
+          setDisableNext(true);
+        }
+      }
+    });
+  };
+
+  checkAllRequiredQuestions();
 
   return (
     <div className={theme.section}>
@@ -398,7 +432,8 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                   </div>
                 </Tooltip>
               </div>
-              <div
+              <button
+                disabled={disableNext}
                 onClick={onNext}
                 className="pageChange__btn px-2 py-1 border-0 border-sea-green rounded hover:bg-transparent bg-sea-green transition-all cursor-pointer flex items-center">
                 <Tooltip text={tooltipTextForNextBtn} placement="bottom">
@@ -407,7 +442,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                     <BsArrowRight color="#fff" />
                   </div>
                 </Tooltip>
-              </div>
+              </button>
             </div>
           )}
         </div>

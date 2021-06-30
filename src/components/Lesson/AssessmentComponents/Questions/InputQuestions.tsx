@@ -12,6 +12,7 @@ import Loader from '../../../Atoms/Loader';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
 import Tooltip from '../../../Atoms/Tooltip';
 import ClickAwayListener from 'react-click-away-listener';
+import FormInput from '../../../Atoms/Form/FormInput';
 
 interface TextInputState {
   id: string;
@@ -178,7 +179,8 @@ const InputQuestions = (props: QuestionProps) => {
         <label htmlFor={question.question.label}>
           <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
             <b>{questionIndex + 1}. </b>
-            {question.question.question}
+            {question.question.question}{' '}
+            <span className="text-red-500"> {question.required ? '*' : null}</span>
           </p>
         </label>
 
@@ -226,13 +228,13 @@ const InputQuestions = (props: QuestionProps) => {
         ) : attachments ? (
           <Attachment />
         ) : (
-          <input
-            id={questionId}
-            className={`${theme.elem.textInput} w-full rounded-xl`}
+          <FormInput
             type={type}
-            name={question.question.label}
             value={contents.value}
+            name={question.question.label}
             onChange={(e) => (!isTeacher ? handleTextInputChange(e) : null)}
+            id={questionId}
+            dark
           />
         )}
       </div>
