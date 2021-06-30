@@ -20,6 +20,7 @@ const LessonApp = () => {
   const match = useRouteMatch();
 
   const [overlay, setOverlay] = useState<string>('');
+  const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
 
   //  NAVIGATION CONSTANTS
   const PAGES = lessonState.lessonData.lessonPlan;
@@ -78,15 +79,28 @@ const LessonApp = () => {
       });
 
       lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
-
+      setStudentDataInitialized(true);
     }
   }, [lessonState.lessonData.lessonPlan]);
 
   useEffect(()=>{
-   if(lessonState.studentData.length > 0){
-     lessonDispatch({type: 'UPDATE_STUDENT_DATA', payload: { pageIdx: 1, data: {} }});
-   }
-  },[lessonState.studentData])
+    setTimeout(()=>{
+      if(studentDataInitialized){
+        lessonDispatch(
+          {
+            type: 'UPDATE_STUDENT_DATA',
+            payload: {
+              pageIdx: 1,
+              data: {
+                domID: 'page_2_part_1_questionGroup-1',
+                input: ['XXX']
+              }
+            }
+          });
+      }
+    },250)
+
+  },[studentDataInitialized])
 
   /**
    *

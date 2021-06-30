@@ -69,10 +69,10 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const pageIdx = action.payload.pageIdx;
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
-      const mappedStudentData = state.studentData[pageIdx].map((pagePart: any, idx: number)=>{
+      const updatedTargetStudentData = state.studentData[pageIdx].map((pagePart: any, idx: number)=>{
         return {
           pagePartID: pagePart.pagePartID,
-          pagePartInput: pagePart.pagePartInput.map((pagePartInput: any, idx2: number)=>{
+          pagePartInput: pagePart.pagePartInput.map((pagePartInput: any)=>{
             return {
               ...pagePartInput,
               input: pagePartInput.domID === domID ? newInput : pagePartInput.input
@@ -80,8 +80,14 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           })
         }
       });
-      console.log('mapped student data 000', state.studentData)
-      return state;
+      const mappedStudentData = state.studentData.map((pagePart: any, idx: number)=>{
+        if(idx === pageIdx){
+          return updatedTargetStudentData;
+        } else {
+          return pagePart;
+        }
+      })
+      return {...state, studentData: mappedStudentData};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
     case 'TOGGLE_OPEN_PAGE':
