@@ -11,7 +11,7 @@ interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
   setUnsavedChanges: any;
-  askBeforeClose?: () => void;
+  askBeforeClose: () => void;
 }
 
 const ParaModalComponent = ({

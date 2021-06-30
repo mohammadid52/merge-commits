@@ -15,21 +15,21 @@ const PlayComplete: React.FC<LessonInfoTitleBarProps> = (props: LessonInfoTitleB
   return (
     <>
       {/* START / COMPLETE BUTTON */}
-      {!state.open || state.complete ? (
+      {!lessonState.open || lessonState.complete ? (
         <span
           className="w-auto h-6 my-auto mr-2 leading-4 text-xs text-white bg-sea-green hover:bg-green-500 hover:text-underline p-1 rounded-lg cursor-pointer"
           onClick={() => {
-            !state.open || state.complete ? handleOpen() : null;
+            !lessonState.open || lessonState.complete ? handleOpen() : null;
           }}>
           {lessonPlannerDict[userLanguage]['ACCESS_BUTTONS']['START']}
         </span>
       ) : null}
 
-      {!state.complete ? (
+      {!lessonState.complete ? (
         <span
           className="w-auto h-6 my-auto  mr-2 leading-4 text-xs text-white bg-blueberry hover:bg-blue-500 hover:text-underline p-1 rounded-lg cursor-pointer"
           onClick={() => {
-            !state.complete ? handleLessonButton() : null;
+            !lessonState.complete ? handleLessonButton() : null;
           }}>
           {lessonPlannerDict[userLanguage]['ACCESS_BUTTONS']['COMPLETE']}
         </span>
