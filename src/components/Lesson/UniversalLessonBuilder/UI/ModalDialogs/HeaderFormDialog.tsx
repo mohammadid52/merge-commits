@@ -13,7 +13,7 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   classString?: string;
   selectedPageID?: string;
   setUnsavedChanges: any;
-  askBeforeClose?: () => void;
+  askBeforeClose: () => void;
 }
 
 const HeaderModalComponent = ({

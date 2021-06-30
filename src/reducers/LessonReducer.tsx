@@ -1,6 +1,7 @@
 import {lessonState} from '../state/LessonState';
 import {
   UniversalLesson,
+  UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
 // import { useStudentTimer } from '../customHooks/timer'
@@ -19,8 +20,20 @@ export type LessonActions =
       payload: UniversalLessonStudentData;
     }
   | {
+      type: 'SET_INITIAL_STUDENT_DATA';
+      payload: UniversalLessonStudentData[];
+    }
+  | {
       type: 'SET_CURRENT_PAGE';
       payload: number;
+    }
+  | {
+      type: 'TOGGLE_OPEN_PAGE';
+      payload: number;
+    }
+  | {
+      type: 'INCREMENT_SAVE_COUNT';
+      payload: any;
     }
   | {
       type: 'CLEANUP';
@@ -42,8 +55,26 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         studentData: action.payload,
       };
+    case 'SET_INITIAL_STUDENT_DATA':
+      return {
+        ...state,
+        studentData: action.payload
+      }
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
+    case 'TOGGLE_OPEN_PAGE':
+      const mappedPages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (idx !== action.payload) {
+            return page;
+          } else {
+            return {...page, open: !page.open};
+          }
+        }
+      );
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedPages}};
+    case 'INCREMENT_SAVE_COUNT':
+      return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
       return lessonState;
     default:

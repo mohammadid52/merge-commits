@@ -6,6 +6,8 @@ import {AnthologyContentInterface} from '../components/Dashboard/Anthology/Antho
 import * as mutations from '../graphql/mutations';
 import {useParams} from 'react-router-dom';
 import {lessonStateOLD} from '../state/LessonStateOLD';
+import {lessonState} from '../state/LessonState';
+import {globalState} from '../state/GlobalState';
 
 interface inputs {
   subscription?: any;
@@ -13,6 +15,7 @@ interface inputs {
   dispatch: React.Dispatch<LessonActions>;
   callback?: () => Promise<void>;
   state?: any;
+  lessonState?: any;
 }
 
 interface timerStateType {
@@ -21,6 +24,7 @@ interface timerStateType {
   dispatch: React.Dispatch<LessonActions>;
   callback?: () => Promise<void>;
   state?: any;
+  lessonState?: any;
   activeTimer?: any;
   idleTimer?: any;
   autoSaveInterval?: any;
@@ -31,7 +35,8 @@ const timerInitialParams: timerStateType = {
   subscribeFunc: null,
   dispatch: null,
   callback: null,
-  state: lessonStateOLD,
+  state: globalState,
+  lessonState: lessonState,
   activeTimer: null,
   idleTimer: null,
   autoSaveInterval: null,
@@ -39,13 +44,14 @@ const timerInitialParams: timerStateType = {
 
 const useStudentTimer = (inputs?: inputs) => {
   const urlParams: any = useParams();
-  const {subscription, subscribeFunc, dispatch, callback, state} = inputs;
+  const {subscription, subscribeFunc, dispatch, callback, state, lessonState} = inputs;
   const [params, setParams] = useState<timerStateType>({
     subscription: subscription,
     subscribeFunc: subscribeFunc,
     dispatch: dispatch,
     callback: callback,
     state: state,
+    lessonState: lessonState,
     activeTimer: null,
     idleTimer: null,
     autoSaveInterval: null,
@@ -63,9 +69,9 @@ const useStudentTimer = (inputs?: inputs) => {
    */
   //PAGE SWITCH => SAVE TTRIGGER after 10 secs
   useEffect(() => {
-    const isLesson = false;
+    const isLesson = true; // UPDATE IN FUTURE FOR ULB-SURVEYS/LESSONS
     if (isLesson) {
-      if (state.viewing) {
+      if (lessonState.viewing) {
         clearTimeout(activityTimeout);
         setactivityTimeout(
           setTimeout(() => {
@@ -73,7 +79,7 @@ const useStudentTimer = (inputs?: inputs) => {
             dispatch({type: 'INCREMENT_SAVE_COUNT'});
           }, 2000)
         );
-      } else if (!state.viewing) {
+      } else if (!lessonState.viewing) {
         if (typeOfTimeout === '') {
           console.log(
             '%c save timer: ',
@@ -92,15 +98,15 @@ const useStudentTimer = (inputs?: inputs) => {
       }
     }
     return () => resetParams();
-  }, [state.currentPage]);
+  }, [lessonState.currentPage]);
 
   // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
   // COMPONENT CHANGE --> save after 60 secs
   // COMPONENT CHANGE --> checkpoint in lesson && lesson
   useEffect(() => {
-    const isLesson = false;
+    const isLesson = true; // UPDATE IN FUTURE FOR ULB-SURVEYS/LESSONS
     if (isLesson) {
-      if (state.viewing) {
+      if (lessonState.viewing) {
         clearTimeout(activityTimeout);
         setactivityTimeout(
           setTimeout(() => {
@@ -108,7 +114,7 @@ const useStudentTimer = (inputs?: inputs) => {
             console.log('VIEWING -> EDIT -> save');
           }, 2000)
         );
-      } else if (!state.viewing) {
+      } else if (!lessonState.viewing) {
         if (typeOfTimeout === '') {
           console.log(
             '%c save timer: ',
@@ -131,7 +137,11 @@ const useStudentTimer = (inputs?: inputs) => {
       }
     }
     return () => resetParams();
-  }, [state.viewing, state.componentState, state.questionData]);
+  }, [
+    params.lessonState.viewing,
+    params.lessonState.componentState,
+    params.lessonState.questionData,
+  ]);
 
   /**
    *
@@ -139,109 +149,119 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   useEffect(() => {
-    if(!state.viewing && currentSaveCount < params.state.saveCount){
-      console.log('currentSaveCount - ', currentSaveCount)
-      console.log('params.state.saveCount - ', params.state.saveCount)
-      setCurrentSaveCount(params.state.saveCount)
+    if (!lessonState.viewing && currentSaveCount < lessonState.saveCount) {
+      setCurrentSaveCount(lessonState.saveCount);
       updateStudentData('autosave');
-      handleUpdateQuestionData();
+
+      // TODO: put normal exercise data and question data in context
+      //////////////////////////////
+      //////////////////////////////
+      //////////////////////////////
+      //////////////////////////////
+      ////////////////////////////// handleUpdateQuestionData();
     }
-    if(state.viewing){
-      if(currentSaveCount < params.state.saveCount){
-        setCurrentSaveCount(params.state.saveCount)
+    if (lessonState.viewing) {
+      if (currentSaveCount < lessonState.saveCount) {
+        setCurrentSaveCount(lessonState.saveCount);
       }
       updateStudentData('autosave');
-      handleUpdateQuestionData();
+
+      // TODO: put normal exercise data and question data in context
+      //////////////////////////////
+      //////////////////////////////
+      //////////////////////////////
+      //////////////////////////////
+      ////////////////////////////// handleUpdateQuestionData();
     }
 
     return () => resetParams();
-  }, [params.state.saveCount]);
+  }, [lessonState.saveCount]);
 
   /**
    *
-   * CONTENT - SAVE
+   * COLLECT DATA & CONTENT FROM CONTEXT - SAVE
    *
    */
-  const getWarmupDataSource = () => {
-    const warmupType = state.data.lesson.warmUp.type;
-    switch (warmupType) {
-      case 'story':
-      case 'list':
-        return params.state.componentState.story;
-      case 'truthgame':
-        return {truthGame: params.state.componentState.truthGame.truthGameArray};
-      case 'poll':
-        return {
-          poll: params.state.componentState.poll.pollInputs,
-          additional: params.state.componentState.poll.additional,
-        };
-      case 'adventure':
-      default:
-        return {};
-    }
-  };
+  // const getWarmupDataSource = () => {
+  //   const warmupType = lessonState.data.lesson.warmUp.type;
+  //   switch (warmupType) {
+  //     case 'story':
+  //     case 'list':
+  //       return params.lessonState.componentState.story;
+  //     case 'truthgame':
+  //       return {truthGame: params.lessonState.componentState.truthGame.truthGameArray};
+  //     case 'poll':
+  //       return {
+  //         poll: params.lessonState.componentState.poll.pollInputs,
+  //         additional: params.lessonState.componentState.poll.additional,
+  //       };
+  //     case 'adventure':
+  //     default:
+  //       return {};
+  //   }
+  // };
 
-  const getAnthologyContent = () => {
-    const template: AnthologyContentInterface = {
-      type: 'work',
-      subType: '',
-      title: '',
-      subTitle: '',
-      description: '',
-      content: '',
-    };
-    return Object.keys(params.state.componentState).reduce(
-      (acc: AnthologyContentInterface[], componentKey: string) => {
-        const output = () => {
-          switch (componentKey) {
-            case 'story':
-              return {
-                ...template,
-                subType: 'story',
-                title: params.state.componentState?.story
-                  ? params.state.componentState?.story.title
-                  : '',
-                content: params.state.componentState?.story
-                  ? params.state.componentState.story.story
-                  : '',
-              };
-            case 'poem':
-              return {
-                ...template,
-                subType: 'poem',
-                title: params.state.componentState?.poem
-                  ? params.state.componentState?.poem.title
-                  : '',
-                content: params.state.componentState?.poem
-                  ? params.state.componentState.poem?.editInput
-                  : '',
-              };
-            case 'notes':
-              return {
-                ...template,
-                type: 'notes',
-                subType: 'notes',
-                title: params.state.componentState?.notes
-                  ? params.state.data.lesson.title
-                  : '',
-                content: params.state.componentState?.notes
-                  ? params.state.componentState.notes?.content
-                  : '',
-              };
-            default:
-              return {};
-          }
-        };
-
-        if (Object.keys(output()).length > 0) {
-          return [...acc, output()];
-        } else {
-          return acc;
-        }
-      },
-      []
-    );
-  };
+  // const getAnthologyContent = () => {
+  //   const template: AnthologyContentInterface = {
+  //     type: 'work',
+  //     subType: '',
+  //     title: '',
+  //     subTitle: '',
+  //     description: '',
+  //     content: '',
+  //   };
+  //   return Object.keys(params.lessonState.componentState).reduce(
+  //     (acc: AnthologyContentInterface[], componentKey: string) => {
+  //       const output = () => {
+  //         switch (componentKey) {
+  //           case 'story':
+  //             return {
+  //               ...template,
+  //               subType: 'story',
+  //               title: params.lessonState.componentState?.story
+  //                 ? params.lessonState.componentState?.story.title
+  //                 : '',
+  //               content: params.lessonState.componentState?.story
+  //                 ? params.lessonState.componentState.story.story
+  //                 : '',
+  //             };
+  //           case 'poem':
+  //             return {
+  //               ...template,
+  //               subType: 'poem',
+  //               title: params.lessonState.componentState?.poem
+  //                 ? params.lessonState.componentState?.poem.title
+  //                 : '',
+  //               content: params.lessonState.componentState?.poem
+  //                 ? params.lessonState.componentState.poem?.editInput
+  //                 : '',
+  //             };
+  //           case 'notes':
+  //             return {
+  //               ...template,
+  //               type: 'notes',
+  //               subType: 'notes',
+  //               title: params.lessonState.componentState?.notes
+  //                 ? params.lessonState.data.lesson.title
+  //                 : '',
+  //               content: params.lessonState.componentState?.notes
+  //                 ? params.lessonState.componentState.notes?.content
+  //                 : '',
+  //             };
+  //           default:
+  //             return {};
+  //         }
+  //       };
+  //
+  //       if (Object.keys(output()).length > 0) {
+  //         return [...acc, output()];
+  //       } else {
+  //         return acc;
+  //       }
+  //     },
+  //     []
+  //   );
+  // };
 
   /**
    *
@@ -249,32 +269,25 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   const updateStudentData = async (saveType?: string) => {
-    if (state.studentDataID && params.state.syllabusLessonID !== "") {
-      let data = {
-        id: state.studentDataID,
-        lessonProgress: params.state.lessonProgress,
-        currentLocation: params.state.currentPage,
-        saveType: saveType,
-        status: params.state.studentStatus,
-        syllabusLessonID: params.state.syllabusLessonID,
-        studentID: params.state.studentUsername,
-        studentAuthID: params.state.studentAuthID,
-        warmupData: getWarmupDataSource(),
-        corelessonData: params.state.componentState.lyrics
-          ? params.state.componentState.lyrics
-          : null,
-        activityData: params.state.componentState.poem
-          ? params.state.componentState.poem
-          : null,
-        anthologyContent: getAnthologyContent(),
-      };
+    let data = {
+      id: params.lessonState.studentDataID,
+      lessonProgress: params.lessonState.lessonProgress,
+      currentLocation: params.lessonState.currentPage,
+      saveType: saveType,
+      status: 'ACTIVE',
+      syllabusLessonID: params.lessonState.syllabusLessonID,
+      studentID: params.state.user.email,
+      studentAuthID: params.state.user.authId,
+    };
 
-      // console.log('updateStudentData - data - ', data)
+    console.log('updateStudentData - data - ', data);
 
+    if (lessonState.studentDataID && lessonState.syllabusLessonID !== '') {
       try {
-        const dataObject: any = await API.graphql(
-          graphqlOperation(customMutations.updateStudentData, {input: data})
-        );
+        // TODO: enable this once all student data can be saved
+        // const dataObject: any = await API.graphql(
+        //   graphqlOperation(customMutations.updateStudentData, {input: data})
+        // );
         dispatch({type: 'SAVED_CHANGES'});
       } catch (error) {
         console.error(error);
@@ -289,29 +302,30 @@ const useStudentTimer = (inputs?: inputs) => {
    */
   const updateQuestionData = async (responseObj: any) => {
     try {
-      const updatedQuestionData = await API.graphql(
-        graphqlOperation(mutations.updateQuestionData, {input: responseObj})
-      );
-      // console.log('updateQuestionData responseObj -> ', responseObj);
+      // TODO: enable this once all student data can be saved
+      // const updatedQuestionData = await API.graphql(
+      //   graphqlOperation(mutations.updateQuestionData, {input: responseObj})
+      // );
+      console.log('updateQuestionData responseObj -> ', responseObj);
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleUpdateQuestionData = async () => {
-    if (Object.keys(state.questionData).length > 0) {
-      let questionDataUpdateArray = state.questionDataUpdate;
+    if (Object.keys(lessonState.questionData).length > 0) {
+      let questionDataUpdateArray = lessonState.questionDataUpdate;
       if (questionDataUpdateArray) {
         await questionDataUpdateArray.reduce((_: any, val: any) => {
           let responseObject = {
             id: val.id,
-            syllabusLessonID: state.syllabusLessonID,
+            syllabusLessonID: lessonState.syllabusLessonID,
             checkpointID: val.checkpointID,
-            componentType: state.data.lesson.type,
-            lessonID: state.data.lesson.id,
-            authID: state.studentAuthID,
-            email: state.studentUsername,
-            responseObject: state.questionData[val.checkpointID],
+            componentType: lessonState.data.lesson.type,
+            lessonID: lessonState.data.lesson.id,
+            authID: lessonState.studentAuthID,
+            email: lessonState.studentUsername,
+            responseObject: lessonState.questionData[val.checkpointID],
           };
 
           updateQuestionData(responseObject);

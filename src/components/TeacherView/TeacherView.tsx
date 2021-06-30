@@ -7,9 +7,9 @@ import LessonControl from './LessonControl';
 
 const TeacherView = () => {
     return (
-        <LessonControlContextProvider>
+        // <LessonControlContextProvider>
             <LessonControl />
-        </LessonControlContextProvider>
+        // </LessonControlContextProvider>
     )
 }
 

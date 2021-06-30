@@ -21,7 +21,7 @@ interface ParagraphBlockProps extends RowWrapperProps {
 
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const {id, value, type, pagePartId, updateOnSave} = props;
-  const {previewMode} = useULBContext();
+  // const {previewMode} = mode !== 'lesson' ? useULBContext() : true;
 
   const EditButton = ({onEdit, editing, onSave, onCancel}: any) => {
     const btnClass =

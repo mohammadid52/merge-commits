@@ -3,47 +3,46 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 
 import StageLabels from '../../General/LabelSwitch';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface StageButtonProps {
-  iconID: number;
-  stage: string;
-  type: string;
-  active: boolean;
-  open: boolean;
-  disabled: boolean;
-  breakdown: boolean;
-  menuOpen: boolean;
-  handleOpenMenu: (stage: string) => void;
-  pageViewed: { pageID: number; stage: string };
-  handlePageChange: any;
+  iconID?: number;
+  active?: boolean;
+  open?: boolean;
+  disabled?: boolean;
+  label?: string;
+  breakdown?: boolean;
+  menuOpen?: boolean;
+  handleOpenMenu?: (stage: string) => void;
+  handlePageChange?: any;
   counter?: number;
 }
 
 const StageButton = (props: StageButtonProps) => {
   const {
     iconID,
-    stage,
-    type,
     active,
     breakdown,
     open,
     menuOpen,
     handleOpenMenu,
     disabled,
-    pageViewed,
+    label,
     handlePageChange,
     counter,
   } = props;
-  const { state, dispatch } = useContext(LessonControlContext);
+  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
 
-  const stageIsViewed = pageViewed.pageID === iconID;
-  const stageIsDisabled = state.pages[iconID].disabled === true;
-  const stageIsClosed = state.pages[iconID].open === false;
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  const stageIsViewed = lessonState.currentPage === iconID;
+  const stageIsDisabled = PAGES[iconID].disabled === true;
+  const stageIsClosed = PAGES[iconID].open === false;
 
   const handleView = () => {
-    dispatch({ type: 'QUIT_STUDENT_VIEWING' });
+    controlDispatch({ type: 'QUIT_STUDENT_VIEWING' });
 
     /**
      *
@@ -54,11 +53,7 @@ const StageButton = (props: StageButtonProps) => {
 
     handlePageChange(iconID);
 
-    return history.push(`${match.url}/${stage}`);
-  };
-
-  const buttonLabel = (): string => {
-    return props.stage.charAt(0).toUpperCase() + props.stage.slice(1);
+    return history.push(`${match.url}/${iconID}`);
   };
 
   const stageButtonChoice = () => {
@@ -73,12 +68,12 @@ const StageButton = (props: StageButtonProps) => {
             ${stageIsDisabled ? null : 'hover:font-bold hover:underline hover:text-sea-green'} 
             ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold' : null}`}>
             <div className="text-blueberry text-center flex flex-row">
-              <StageLabels label={buttonLabel()} counter={counter} />
+              <StageLabels label={PAGES ? label : 'n/a'} />
             </div>
           </a>
         </div>
       );
-    } else if (iconID < state.pages.length - 1) {
+    } else if (iconID < PAGES.length - 1) {
       return (
         <div className="flex items-center">
           <svg
@@ -102,7 +97,7 @@ const StageButton = (props: StageButtonProps) => {
             ${!stageIsClosed && !stageIsDisabled ? 'hover:text-sea-green hover:underline' : null}
             ${stageIsViewed && !stageIsClosed && !stageIsDisabled ? 'font-bold text-sea-green underline' : null}`}>
             <div className={`pl-2 text-center flex flex-row`}>
-              <StageLabels label={buttonLabel()} counter={counter} />
+              <StageLabels label={PAGES ? label : 'n/a'} />
             </div>
           </a>
         </div>
@@ -130,7 +125,7 @@ const StageButton = (props: StageButtonProps) => {
               className={`text-ketchup pl-2 text-center  flex flex-row ${
                 stageIsDisabled ? 'line-through text-gray-500' : null
               }`}>
-              <StageLabels label={buttonLabel()} counter={counter} />
+              <StageLabels label={PAGES ? label : 'n/a'} />
             </div>
           </a>
         </div>
