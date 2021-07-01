@@ -4595,6 +4595,7 @@ export const getUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
+      estTime
       lessonPlan {
         id
         title
@@ -4653,6 +4654,7 @@ export const listUniversalLessons = /* GraphQL */ `
         notes
         cardImage
         cardCaption
+        estTime
         lessonPlan {
           id
           title
