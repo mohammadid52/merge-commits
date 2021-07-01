@@ -2927,3 +2927,34 @@ export const getStudentResponse = /* GraphQL */ `
     }
   }
 `;
+
+
+export const getInstList = /* GraphQL */ `
+  query ListInstitutions(
+    $id: ID
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutions(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        type
+        phone
+        website
+        image
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
