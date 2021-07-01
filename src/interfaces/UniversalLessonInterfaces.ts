@@ -81,13 +81,13 @@ export interface UniversalLessonStudentData {
   studentID: string;
   currentLocation: string;
   lessonProgress: string;
-  pageData: StudentDataPageData[];
+  pageData: PagePartInput[];
 }
 
-export interface StudentDataPageData {
-  pagePartID: string;
-  pagePartInput: PagePartInput[];
-}
+// export interface StudentDataPageData {
+//   pagePartID: string;
+//   pagePartInput: PagePartInput[];
+// }
 
 export interface PagePartInput {
   domID: string;

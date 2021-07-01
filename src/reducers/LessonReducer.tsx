@@ -45,6 +45,7 @@ export type LessonActions =
       payload: '';
     };
 
+
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
     case 'TEST':
@@ -69,22 +70,19 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const pageIdx = action.payload.pageIdx;
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
-      const updatedTargetStudentData = state.studentData[pageIdx].map((pagePart: any, idx: number)=>{
+      // update single object
+      const updatedTargetStudentData = state.studentData[pageIdx].map((pagePartInput: PagePartInput)=>{
         return {
-          pagePartID: pagePart.pagePartID,
-          pagePartInput: pagePart.pagePartInput.map((pagePartInput: any)=>{
-            return {
-              ...pagePartInput,
-              input: pagePartInput.domID === domID ? newInput : pagePartInput.input
-            }
-          })
+          domID: pagePartInput.domID,
+          input: pagePartInput.domID === domID ? newInput : pagePartInput.input
         }
       });
-      const mappedStudentData = state.studentData.map((pagePart: any, idx: number)=>{
+      // merge updated object into original array
+      const mappedStudentData = state.studentData.map((pageData: PagePartInput[], idx: number)=>{
         if(idx === pageIdx){
           return updatedTargetStudentData;
         } else {
-          return pagePart;
+          return pageData;
         }
       })
       return {...state, studentData: mappedStudentData};
@@ -104,6 +102,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'INCREMENT_SAVE_COUNT':
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
+      console.log('cleanup...')
       return lessonState;
     default:
       return state;

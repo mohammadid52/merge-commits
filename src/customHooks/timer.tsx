@@ -283,7 +283,7 @@ const useStudentTimer = (inputs?: inputs) => {
       pageData: params.lessonState.studentData[params.lessonState.currentPage]
     };
 
-    console.log('updateStudentData - timer - ', data);
+    // console.log('updateStudentData - timer - ', data);
 
     if (lessonState.studentDataID && lessonState.syllabusLessonID !== '') {
       try {
