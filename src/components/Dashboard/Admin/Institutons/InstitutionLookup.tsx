@@ -137,7 +137,7 @@ const InstitutionLookup: React.FC = () => {
   async function getInstitutionsData() {
     try {
       const fetchInstitutionData: any = await API.graphql(
-        graphqlOperation(customQueries.listInstitutions)
+        graphqlOperation(customQueries.getInstList)
       );
       if (!fetchInstitutionData) {
         throw new Error('fail!');
