@@ -10630,6 +10630,7 @@ export const createUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
+      estTime
       lessonPlan {
         id
         title
@@ -10678,6 +10679,7 @@ export const updateUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
+      estTime
       lessonPlan {
         id
         title
@@ -10726,6 +10728,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
+      estTime
       lessonPlan {
         id
         title
