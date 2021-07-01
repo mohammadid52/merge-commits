@@ -90,7 +90,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
 
   const checkValidUrl = async () => {
     if (!lessonId) {
-      console.log('Invalid url');
+      console.log('@LessonTabView: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);

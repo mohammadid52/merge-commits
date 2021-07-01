@@ -79,7 +79,7 @@ const LessonPlan = () => {
 
   const checkValidUrl = async () => {
     if (!lessonId) {
-      console.log('Invalid url');
+      console.log('@LessonPlan: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     }
   };

@@ -72,14 +72,15 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
   const onInputChange = (e: any) => {
+    const {name, value} = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
     setUnsavedChanges(true);
     setValidation({
       ...validation,
-      [e.target.name]: '',
+      [name === 'imageCaption' ? 'image' : name]: '',
     });
   };
 
@@ -93,31 +94,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       },
     });
     setUnsavedChanges(true);
-    if (validation.type || validation.languages) {
-      setValidation({
-        ...validation,
-        type: '',
-        languages: '',
-        institution: '',
-      });
-    }
-  };
-  const selectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasu({id, name, value: val});
-  };
 
-  const addNewMeasurement = () => {
-    setLessonMeasurements([
-      ...lessonMeasurements,
-      {
-        id: selectedMeasu.id,
-        measurement: selectedMeasu.name,
-        topic:
-          allMeasurement.find((item) => item.id.toString() === selectedMeasu.id)?.topic ||
-          '',
-      },
-    ]);
-    setSelectedMeasu({id: '', name: '', value: ''});
+    setValidation({
+      ...validation,
+      [field]: '',
+    });
   };
 
   const selectLanguage = (id: string, name: string, value: string) => {
@@ -132,6 +113,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setFormData({
       ...formData,
       languages: updatedList,
+    });
+    setValidation({
+      ...validation,
+      languages: '',
     });
     setUnsavedChanges(true);
   };
@@ -252,11 +237,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   // DataBase Related
 
   const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
+  console.log(formData);
 
   const createNewLesson = async () => {
     if (!lessonId) {
       // Creating New Lesson
-      const isValid = true; // replace static boolean with validateForm
+      const isValid = validateForm();
       if (isValid) {
         setCreatingLessons(true);
         try {
@@ -264,8 +250,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             type: formData.type.value,
             title: formData.name,
             institutionID: formData.institution.id,
-            purpose: formData.purposeHtml,
-            objectives: [formData.objectiveHtml],
+            purpose: formData.purpose,
+            objectives: [formData.objective],
             language: formData.languages.map((item) => item.value),
             designers: selectedDesigners.map((item) => item.id),
             lessonPlan: [],
@@ -293,8 +279,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       }
     } else {
       // Updating existing Lesson
-
-      const isValid = true; // replace static boolean with validateForm
+      const isValid = validateForm();
 
       if (isValid) {
         try {
@@ -304,8 +289,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             type: formData.type.value,
             title: formData.name,
             institutionID: formData.institution.id,
-            purpose: formData.purposeHtml,
-            objectives: [formData.objectiveHtml],
+            purpose: formData.purpose,
+            objectives: [formData.objective],
             language: formData.languages.map((item) => item.value),
             designers: selectedDesigners.map((item) => item.id),
             summary: formData.studentSummary,

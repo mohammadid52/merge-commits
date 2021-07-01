@@ -275,7 +275,7 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const checkValidUrl = async () => {
     if ((!lessonId && !assessmentId) || (lessonId && assessmentId)) {
-      console.log('Invalid url');
+      console.log('@LessonEdit: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);
@@ -534,8 +534,9 @@ const LessonEdit = (props: LessonEditProps) => {
             setUnsavedChanges={setUnsavedChanges}
             activeStep={activeStep}
             lessonName={formData.name}
-            lessonType={formData.type?.value}/>
-        )
+            lessonType={formData.type?.value}
+          />
+        );
       case 'Preview Details':
         return (
           <PreviewForm
@@ -650,9 +651,9 @@ const LessonEdit = (props: LessonEditProps) => {
                     setHistoryList([...historyList, step]);
                   }
                 }}
-              /> 
+              />
             </div>
-             
+
             <div className="sm:col-span-4">
               {loading ? (
                 <p className="h-100 flex justify-center items-center">
