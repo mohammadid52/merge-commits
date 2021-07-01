@@ -16,6 +16,7 @@ const initialUniversalLessonData: UniversalLesson = {
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
+  const [builderTheme, setBuilderTheme] = useState<'light' | 'dark'>('dark');
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
   const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
@@ -113,6 +114,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
+        builderTheme,
+        setBuilderTheme,
         previewMode,
         setPreviewMode,
         selectedLessonID,
@@ -137,6 +140,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         enableDnD,
         universalLessonsList,
         setUniversalLessonsList,
+        themeTextColor: builderTheme === 'light' ? 'text-dark-gray' : 'text-white',
+        themeBackgroundColor: builderTheme === 'light' ? 'bg-dark-gray' : 'bg-white',
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

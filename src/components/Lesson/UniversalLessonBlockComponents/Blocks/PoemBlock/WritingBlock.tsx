@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { PagePartInput, PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
+import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface WritingBlockProps {
   id?: string;
@@ -15,6 +16,7 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
   const {id, linestarters, poemInput, setPoemInput, saveAndEdit, setSaveAndEdit} = props;
+  const {builderTheme, themeTextColor} = useULBContext();
 
   const handleAddInput = () => {
     setPoemInput([
@@ -31,8 +33,6 @@ const WritingBlock = (props: WritingBlockProps) => {
     const filtered = poemInput.filter((input: PagePartInput) => input.domID !== id);
     setPoemInput(filtered);
   };
-
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const {id, value} = e.target as HTMLSelectElement;
@@ -53,7 +53,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     <div className="w-full flex flex-col">
       <div className={`w-full h-full rounded-xl z-10 p-4`}>
         <h3
-          className={`relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}>
+          className={`relative w-auto pb-2 mb-2 mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left ${themeTextColor} text-xl`}>
           Line Prompts
         </h3>
 
@@ -93,7 +93,9 @@ const WritingBlock = (props: WritingBlockProps) => {
               id={`${inputObj.domID}`}
               onChange={(e) => handleInputChange(e)}
               name={`${inputObj.domID}`}
-              className="bg-charcoal mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+              className={`${
+                builderTheme === 'light' ? 'bg-gray-200' : 'bg-charcoal'
+              } mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}>
               {linestarters.map((line: PartContentSub, idx2: number) => (
                 <option key={`line_${idx}_${idx2}`}>{line.value}</option>
               ))}

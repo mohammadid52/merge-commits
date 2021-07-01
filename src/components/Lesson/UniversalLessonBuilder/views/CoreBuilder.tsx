@@ -3,6 +3,7 @@ import {useHistory} from 'react-router';
 
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
+import {FaMoon, FaSun} from 'react-icons/fa';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {
@@ -58,7 +59,14 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleTagModalOpen,
     setEditModal,
   } = props;
-  const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
+  const {
+    previewMode,
+    setPreviewMode,
+    enableDnD,
+    setEnableDnD,
+    builderTheme,
+    setBuilderTheme,
+  } = useULBContext();
 
   const handleAddNewPage = () => {
     history.push(`/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`);
@@ -73,10 +81,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   );
 
   return (
-    <div
-      className={`h-full overflow-hidden overflow-y-scroll ${
-        activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'
-      }`}>
+    <div className={`h-full overflow-hidden overflow-y-scroll `}>
+      {/* ${activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'} */}
       <div className={`w-full h-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
           <BuilderRowComposer
@@ -99,9 +105,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           />
         </LessonPageWrapper>
       </div>
-
       <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
         <div className="bg-dark flex flex-col items-center justify-center w-32 p-2">
+          <button
+            onClick={() =>
+              setBuilderTheme((prevTheme: 'light' | 'dark') =>
+                prevTheme === 'light' ? 'dark' : 'light'
+              )
+            }
+            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
+            {builderTheme === 'light' ? <FaSun /> : <FaMoon />}
+          </button>
           <button
             onClick={() => setPreviewMode(!previewMode)}
             className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
@@ -127,8 +141,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </button>
         </div>
       </div>
-
-      <div className={`absolute w-auto top-10 left-1`}>
+      <div className={`absolute w-auto top-10 left-0.5`}>
         {/* <ClickAwayListener onClickAway={onClickAwayFromColorPicker}>
           <>
             <Tooltip placement="right" text={`Select background color`}>

@@ -2,11 +2,13 @@ import React, {useContext, useState} from 'react';
 import {FaEdit, FaTrashAlt} from 'react-icons/fa';
 
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import { useULBContext } from '../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../customHooks/dictionary';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 
 const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
+  const {themeTextColor, builderTheme} = useULBContext();
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
   const [confirmationConfig, setConfirmationConfig] = useState<{
@@ -47,23 +49,23 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
   return (
     <div>
       <div className="flex">
-        <h3 className="text-base leading-6 font-medium text-white pb-4 ">
+        <h3 className={`text-base leading-6 font-medium ${themeTextColor} pb-4`}>
           Page Overview
         </h3>
         <div className="inline-flex justify-end">
           <FaEdit
             className="w-6 h-6 mr-2 cursor-pointer"
-            color={'white'}
+            color={builderTheme === 'light' ? 'black' : 'white'}
             onClick={handleEditPageDetail}
           />
           <FaTrashAlt
             className="w-6 h-6 cursor-pointer"
-            color={'white'}
+            color={builderTheme === 'light' ? 'black' : 'white'}
             onClick={onDeleteButtonClick}
           />
         </div>
       </div>
-      <div className="rounded-lg bg-light-gray border-light-gray p-2">
+      <div className={`rounded-lg ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'} border-light-gray p-2`}>
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
           <span className="text-gray-900 mr-2">
             {' '}
@@ -105,7 +107,9 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ESTIMATED_TIME']}:
           </span>
-          <span className="">{activePageData.estTime ? `${activePageData.estTime} min` : '-'}</span>
+          <span className="">
+            {activePageData.estTime ? `${activePageData.estTime} min` : '-'}
+          </span>
         </p>
       </div>
       {show && (

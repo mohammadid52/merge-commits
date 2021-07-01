@@ -358,7 +358,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <>
-          <h1 className={`w-full text-center`}>This page has no layout information.</h1>
+          <h1 className={`w-full text-center mt-2`}>This page has no layout information.</h1>
           <EditOverlayBlock
             mode={mode}
             key={`pp_addNew`}

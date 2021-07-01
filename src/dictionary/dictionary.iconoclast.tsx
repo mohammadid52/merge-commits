@@ -8,6 +8,7 @@ const BUTTONS: any = {
     CANCEL: 'Cancel',
     PUBLISH: 'Publish',
     YES: 'Yes',
+    SAVING: 'Saving...',
   },
   ES: {
     ADD: 'Añadir',

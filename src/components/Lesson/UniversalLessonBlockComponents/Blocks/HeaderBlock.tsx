@@ -27,7 +27,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     pagePartId,
     updateOnSave,
   } = props;
-  const {previewMode} = mode !== 'lesson' ? useULBContext() : true;
+  const {previewMode, themeTextColor} = mode !== 'lesson' ? useULBContext() : true;
 
   const EditButton = ({onEdit, editing, onSave, onCancel}: any) => {
     const btnClass =
@@ -93,7 +93,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
       <div className="flex w-auto items-center justify-center">
         {editing ? (
           <input
-            className={`${classStr} relative w-full flex border-b-4  font-medium text-left  flex-row items-center text-gray-100 mt-4 border-none bg-transparent z-50`}
+            className={`${classStr} relative w-full flex border-b-4  font-medium text-left  flex-row items-center ${themeTextColor} mt-4 border-none bg-transparent z-50`}
             value={updatedText}
             id={inputID}
             autoFocus={true}
@@ -101,7 +101,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
           />
         ) : (
           <h3
-            className={`${classStr} relative w-full flex border-b-4  font-medium text-left  flex-row items-center text-gray-100 mt-4 border-none bg-transparent z-50`}>
+            className={`${classStr} relative w-full flex border-b-4  font-medium text-left  flex-row items-center ${themeTextColor} mt-4 border-none bg-transparent z-50`}>
             {updatedText}
           </h3>
         )}
@@ -123,7 +123,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
         id={inputID}
         className={`
             relative
-            w-full flex font-medium text-left flex-row items-center text-gray-100 mt-4`}>
+            w-full flex font-medium text-left flex-row items-center ${themeTextColor} mt-4`}>
         {inputValue}
       </h3>
     );
@@ -134,7 +134,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     //         id={inputID}
     //         className={`
     //         relative
-    //         w-full text-xl font-semibold  text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
+    //         w-full text-xl font-semibold  text-left flex flex-row items-center ${themeTextColor} mt-4 border-b border-white border-opacity-10`}>
     //         {inputValue}
     //       </h2>
     //     );
@@ -145,7 +145,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     //         className={`
     //         ${classString || 'border-sea-green text-xl'}
     //         relative
-    //         w-full flex border-b-4  font-medium text-left  flex-row items-center text-gray-100 mt-4`}>
+    //         w-full flex border-b-4  font-medium text-left  flex-row items-center ${themeTextColor} mt-4`}>
     //         {inputValue}
     //       </h3>
     //     );
