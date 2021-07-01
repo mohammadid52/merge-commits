@@ -178,9 +178,9 @@ const InputQuestions = (props: QuestionProps) => {
       <div key={`question_${questionId}`} className={`w-auto my-4`}>
         <label htmlFor={question.question.label}>
           <p className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
+            <span className="text-red-500"> {question.required ? '*' : null}</span>{' '}
             <b>{questionIndex + 1}. </b>
-            {question.question.question}{' '}
-            <span className="text-red-500"> {question.required ? '*' : null}</span>
+            {question.question.question}
           </p>
         </label>
 

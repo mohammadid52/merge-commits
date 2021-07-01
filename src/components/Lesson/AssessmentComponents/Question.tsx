@@ -58,9 +58,11 @@ const Question = (props: QuestionProps) => {
    * @param key
    */
   const questionSwitch = (questionIndex: number, key: string) => {
+    const {type} = question.question;
     switch (question.question.type) {
       case 'input':
       case 'link':
+      case 'datePicker':
       case 'emoji':
       case 'attachments':
         return (
@@ -74,29 +76,17 @@ const Question = (props: QuestionProps) => {
             handleInputChange={handleInputChange}
             value={value}
             type={
-              question.question.type === 'input' || question.question.type === 'emoji'
+              type === 'input' || type === 'emoji'
                 ? 'text'
+                : type === 'datePicker'
+                ? 'date'
                 : 'url'
             }
-            emoji={question.question.type === 'emoji'}
-            attachments={question.question.type === 'attachments'}
+            emoji={type === 'emoji'}
+            attachments={type === 'attachments'}
           />
         );
 
-      case 'datePicker':
-        return (
-          <InputQuestions
-            checkpointID={checkpointID}
-            visible={visible}
-            isTeacher={isTeacher}
-            question={question}
-            questionIndex={questionIndex}
-            questionKey={key}
-            handleInputChange={handleInputChange}
-            value={value}
-            type={'date'}
-          />
-        );
       case 'text':
         return (
           <TextQuestions

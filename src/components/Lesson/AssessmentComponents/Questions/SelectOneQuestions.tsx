@@ -81,8 +81,9 @@ const SelectOneQuestions = (props: QuestionProps) => {
           <label htmlFor={question.question.label}>
             <p
               className={`font-semibold ${theme.elem.text} ${theme.underline} pb-2 mb-4`}>
+              <span className="text-red-500"> {question.required ? '*' : null}</span>{' '}
               <b>{questionIndex + 1}. </b>
-              {question.question.question} (Select one)
+              {question.question.question} (Select one){' '}
             </p>
           </label>
           <div className={'w-auto flex flex-wrap'}>
