@@ -191,7 +191,7 @@ const LessonsList = () => {
       const currentLessonsList = [...lessonsData];
       const newList = currentLessonsList.filter((item) => {
         // Search on lesson title for match.
-        return item.title?.toLowerCase().includes(searchInput.value);
+        return item.title?.toLowerCase().includes(searchInput.value.toLowerCase());
       });
       setSearchInput({
         ...searchInput,
