@@ -1,22 +1,24 @@
 import React, {useContext, useState, useEffect} from 'react';
+import {IoIosMenu} from 'react-icons/io';
+
 import useDictionary from '../../../../customHooks/dictionary';
+import { useQuery } from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import PageSelector from '../UI/PageSelector';
-import {Toolbar} from '../UI/Toolbar';
 import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
-import {HierarchyPanel} from '../UI/HierarchyPanel';
-import {BuilderMenu} from '../UI/BuilderMenu';
 
-import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
-import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
-
-import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 import Modal from '../../../Atoms/Modal';
 
+import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
+import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
+import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
+import PageSelector from '../UI/PageSelector';
+// import {Toolbar} from '../UI/Toolbar';
+// import {HierarchyPanel} from '../UI/HierarchyPanel';
+import {BuilderMenu} from '../UI/BuilderMenu';
 import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
 import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
 import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
@@ -25,7 +27,6 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
-
 import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
 import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
@@ -47,7 +48,6 @@ import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
-import {useQuery} from '../../../../customHooks/urlParam';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -473,6 +473,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         currentModalDialog={currentModalDialog}
         handleModalPopToggle={handleModalPopToggle}
       /> */}
+      <div
+        className="flex justify-end my-1 pr-2"
+        onClick={() => setBuilderMenuVisible(true)}>
+        <IoIosMenu className="w-auto cursor-pointer h-8 w-8 text-gray-400" />
+      </div>
       <LessonPlanNavigation
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
@@ -557,14 +562,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setEditMode={setEditMode}
         setEditModal={setEditModal}
         setHierarchyVisible={setHierarchyVisible}
-      />
+      />*/}
 
       <BuilderMenu
         galleryVisible={galleryVisible}
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
         setBuilderMenuVisible={setBuilderMenuVisible}
-      /> */}
+      />
 
       <CoreBuilder
         mode={mode}

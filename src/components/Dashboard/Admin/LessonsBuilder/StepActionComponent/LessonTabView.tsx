@@ -9,7 +9,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Loader from '../../../../Atoms/Loader';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 // import Tooltip from '../../../../Atoms/Tooltip';
-import UnderlinedTabs from '../../../../Atoms/UnderlinedTabs';
+import UnderlinedTabs, {ITabElementProps} from '../../../../Atoms/UnderlinedTabs';
 
 import UnitLookup from './UnitLookup';
 import LessonMeasurements from './LessonMeasurements';
@@ -113,6 +113,14 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     history.push(redirectionUrl);
   };
 
+  const updateTab = (tab: number) => {
+    // setActiveTab(tab);
+    history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
+  };
+
+  const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
+    lessonData || {};
+
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
@@ -126,6 +134,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       case '1':
         return (
           <LessonPlansList
+            loading={loading}
             lessonId={lessonId}
             universalLessonDetails={universalLessonDetails}
           />
@@ -138,7 +147,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
             <UnitLookup
               lessonName={''}
               lessonId={lessonId}
-              institution={lessonData.institution}
+              institution={institution}
               lessonType={''}
               lessonPlans={''}
             />
@@ -156,7 +165,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     }
   };
 
-  const tabs = [
+  const tabs: ITabElementProps[] = [
     {
       index: 0,
       title: 'Lesson Summary',
@@ -168,31 +177,23 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       title: 'Lesson Plan',
       icon: <FaQuestionCircle />,
       content: currentTabComp(`${activeTab}`),
-      // disabled: formData.institution && formData.institution.id ? false : true,
     },
     {
       index: 2,
       title: 'Lesson Measurements',
       icon: <FaChartLine />,
       content: currentTabComp(`${activeTab}`),
-      // disabled: formData.institution && formData.institution.id ? false : true,
     },
     {
       index: 3,
       title: 'Assign to Units',
       icon: <FaUnity />,
       content: currentTabComp(`${activeTab}`),
-      // disabled: formData.institution && formData.institution.id ? false : true,
+      disabled: true,
+      tooltipText: LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO'],
+      tooltipPlacement: 'left',
     },
   ];
-
-  const updateTab = (tab: number) => {
-    // setActiveTab(tab);
-    history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
-  };
-
-  const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
-    lessonData || {};
 
   return (
     <div className="w-full h-full">
@@ -298,7 +299,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
           </div>
         </div>
         {true && (
-          <div className="bg-white border-gray-200 shadow-5 overflow-hidden sm:rounded-lg  mb-4">
+          <div className="bg-white border-gray-200 shadow-5 overflow-hidden sm:rounded-lg mb-4">
             <div className="">
               <UnderlinedTabs tabs={tabs} activeTab={activeTab} updateTab={updateTab} />
             </div>

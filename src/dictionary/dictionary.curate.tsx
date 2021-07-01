@@ -660,11 +660,19 @@ const lessonBuilderDict: any = {
         'Publishing your changes will update session plans in all the connected modules, Do you want to continue?',
       TITLE: 'Preview Details',
     },
+    MESSAGES: {
+      UNSAVE: 'You have unsaved changes, do you still want to continue?',
+      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',
+    },
   },
   ES: {
     PREVIEW_DETAILS: {
       WARN_MESSAGE: 'TBD',
       TITLE: 'TBD',
+    },
+    MESSAGES: {
+      UNSAVE: 'TBD',
+      PUBLISH_DISABLED_INFO: 'TBD',
     },
   },
 };

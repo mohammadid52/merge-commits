@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useRouteMatch, useHistory} from 'react-router';
+import {API, graphqlOperation} from 'aws-amplify';
 
 import Buttons from '../../Atoms/Buttons';
 import SectionTitle from '../../Atoms/SectionTitle';
@@ -21,6 +22,7 @@ import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInter
 import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
+import * as queries from '../../../graphql/queries';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -88,6 +90,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const history = useHistory();
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
+  const pageId = params.get('pageId');
   const {state, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
 
   const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
@@ -119,6 +122,26 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'universal-lesson-builder'}});
     }
   }, [state.user.role]);
+
+  useEffect(() => {
+    if (!(universalLessonDetails && universalLessonDetails.id)) {
+      fetchLessonData();
+    }
+  }, [lessonId]);
+
+  useEffect(() => {
+    setSelectedPageID(pageId);
+  }, [pageId]);
+
+  const fetchLessonData = async () => {
+    const result: any = await API.graphql(
+      graphqlOperation(queries.getUniversalLesson, {
+        id: lessonId,
+      })
+    );
+    const savedData = result.data.getUniversalLesson;
+    setUniversalLessonDetails(savedData);
+  };
 
   /**********************************************
    * FUNCTIONALITY AND DATA FETCHES WILL
