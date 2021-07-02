@@ -22,6 +22,7 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
   lessonProgress: '2',
   pageData: [
     {
+      // @ts-ignore
       pagePartID: 'page_2_part_1',
       pagePartInput: [
         {
@@ -35,6 +36,8 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
       ],
     },
     {
+      // @ts-ignore
+
       pagePartID: 'page_2_part_2',
       pagePartInput: [
         {

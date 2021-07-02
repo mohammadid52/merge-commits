@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { PagePart, PartContent, UniversalLessonPage } from '../../../../../interfaces/UniversalLessonInterfaces';
+import React, {useState} from 'react';
+import {
+  PagePart,
+  PartContent,
+  UniversalLessonPage,
+} from '../../../../../interfaces/UniversalLessonInterfaces';
 import TextArea from '../../../../Atoms/Form/TextArea';
 
 interface EditPanelFormProps {
@@ -22,7 +26,7 @@ export const EditPanelForm = (props: EditPanelFormProps) => {
   //TODO: this update function needs to do more complex stuff
   const updatePartContentValue = (e: any) => {
     const value = e.target.value;
-    const newPartContentDetails = { ...selectedPartContentDetails, value: [value] };
+    const newPartContentDetails = {...selectedPartContentDetails, value: [value]};
     setSelectedPartContentDetails(newPartContentDetails);
   };
 
@@ -32,8 +36,8 @@ export const EditPanelForm = (props: EditPanelFormProps) => {
         <TextArea
           id={partContent.id}
           onChange={updatePartContentValue}
-          value={partContent.value.length > 0 ? partContent.value[0] : ''}
-          placeHolder={partContent.value.length > 0 ? partContent.value[0] : ''}
+          value={partContent.value.length > 0 ? partContent.value[0].value : ''}
+          placeHolder={partContent.value.length > 0 ? partContent.value[0].label : ''}
         />
       );
     } else {
