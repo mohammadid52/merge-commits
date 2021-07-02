@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { PartContentSub } from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
@@ -13,14 +14,14 @@ interface HeaderBlockProps extends RowWrapperProps {
 export const HeaderBlock = (props: HeaderBlockProps) => {
   const {id, value, type} = props;
 
-  const composeHeader = (inputID: string, inputValue: string, inputType: string) => {
+  const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <h3
         id={inputID}
         className={`
             relative
             w-full flex font-medium text-left flex-row items-center text-gray-100 mt-4`}>
-        {inputValue}
+        {inputValue.value}
       </h3>
     );
     // switch (inputType) {

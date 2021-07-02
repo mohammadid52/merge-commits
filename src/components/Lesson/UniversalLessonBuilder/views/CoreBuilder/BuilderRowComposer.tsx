@@ -198,7 +198,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                           contentID={content.id}
                                           editedID={editedID}
                                           isComponent={true}
-                                          isLast={idx2 === partContent.length - 1}
+                                          isLast={idx2 === partContent?.length - 1}
                                           handleEditBlockToggle={() =>
                                             handleEditBlockToggle(content.id)
                                           }
@@ -272,7 +272,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                     //           contentID={content.id}
                     //           editedID={editedID}
                     //           isComponent={true}
-                    //           isLast={idx2 === pagePart.partContent.length - 1}
+                    //           isLast={idx2 === pagePart.partContent?.length - 1}
                     //           handleEditBlockToggle={() =>
                     //             handleEditBlockToggle(content.id)
                     //           }

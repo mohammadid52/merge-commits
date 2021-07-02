@@ -11,6 +11,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {getAsset} from '../../../../../assets';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -29,9 +30,9 @@ const estimatedTimeList = Array(30)
 
 const LessonPlanForm = () => {
   const history = useHistory();
-  const {clientKey, userLanguage} = useContext(GlobalContext);
-
-  const {LessonBuilderDict} = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
   const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
     id: '',
@@ -42,6 +43,7 @@ const LessonPlanForm = () => {
   });
   const [errors, setErrors] = useState<any>({});
   const [creatingLesson, setCreatingLesson] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
   const pages = universalLessonDetails?.lessonPlan;
@@ -63,17 +65,17 @@ const LessonPlanForm = () => {
     const isValid = validateForm();
     if (isValid) {
       try {
-        setCreatingLesson(true);
+        setLoading(true);
         const input = {
           id: lessonId,
           lessonPlan: [
             ...pages,
             {
-              id: uuidV4().toString(),
               title: inputObj.title,
               label: inputObj.label,
               description: inputObj.description,
               pageContent: [],
+              // estTime: Number(inputObj.estTime?.split(' ')[0]),
             },
           ],
         };
@@ -83,11 +85,13 @@ const LessonPlanForm = () => {
           })
         );
         const data = res.data.updateUniversalLesson;
+        setLoading(false);
         if (data) {
-          history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}`);
           setActiveTab(1);
+          history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}`);
         }
       } catch (error) {
+        setLoading(false);
         console.error(error.message);
       } finally {
         setCreatingLesson(false);
@@ -191,8 +195,12 @@ const LessonPlanForm = () => {
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                label={'Save'}
                 disabled={creatingLesson}
+                label={
+                  loading
+                    ? BUTTONS[userLanguage]['SAVING']
+                    : BUTTONS[userLanguage]['SAVE']
+                }
                 type="submit"
                 onClick={createPage}
               />
