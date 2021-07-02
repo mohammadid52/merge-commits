@@ -2168,12 +2168,13 @@ const RegistrationDict: any = {
     messages: {
       emailerr: "Please make sure the user's email is correct",
       existemail: 'An account with this email exists',
-      fitstname: "User's first name cannot be blank",
+      firstname: "User's first name cannot be blank",
       lastname: "User's last name cannot be blank",
       email: "User's email cannot be blank",
       emailaddress: "User's email is not in the expected email address format",
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
+      institution: 'Institution cannot be blank'
     },
   },
   ES: {
@@ -2192,12 +2193,13 @@ const RegistrationDict: any = {
     messages: {
       emailerr: 'TBD',
       existemail: 'TBD',
-      fitstname: 'TBD',
+      firstname: 'TBD',
       lastname: 'TBD',
       email: 'TBD',
       emailaddress: 'TBD',
       userrol: 'TBD',
       loading: 'TBD',
+      institution: 'TBD'
     },
   },
 };

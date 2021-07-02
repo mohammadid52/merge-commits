@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface StarRatingBlockProps {
@@ -45,7 +44,7 @@ const StarRatingBlock = (props: StarRatingBlockProps) => {
   const iconColor = lessonPageTheme === 'light' ? 'gray' : '#ffffff';
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
-      <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
+      <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
         {label}
       </label>
       <div

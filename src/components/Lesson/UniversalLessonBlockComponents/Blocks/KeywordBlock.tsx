@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import { useContext } from 'react';
+import React, {useContext, useState, useEffect} from 'react';
+
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+
+import {LessonComponentsInterface} from '../../../../interfaces/LessonComponentsInterfaces';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
@@ -39,7 +41,7 @@ const KeywordBlock = (props: KeywordBlockProps) => {
   }, [value]);
 
   return (
-    <div id={id} className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}>
+    <div id={id} className={`flex flex-col md:w-full text-gray-200 rounded-r-lg`}>
       <div
         className={`relative flex flex-row items-center w-full pb-2 px-4 mb-2 mt-4 font-medium text-left text-xl border-b border-white border-opacity-10`}>
         <h3>Keywords:</h3>
@@ -61,10 +63,10 @@ const KeywordBlock = (props: KeywordBlockProps) => {
                         lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
                       } border-light-gray`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
-                        <p className={`text-lg font-semibold ${themeTextColor}`}>
+                        <p className={`text-lg font-semibold text-gray-200`}>
                           {word.label}:
                         </p>
-                        <p className={`text-sm ${themeTextColor}`}>{word.value}</p>
+                        <p className={`text-sm text-gray-200`}>{word.value}</p>
                       </div>
                     </div>
                   )

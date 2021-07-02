@@ -1,21 +1,17 @@
 import React, {useState, useContext} from 'react';
 import {useHistory} from 'react-router';
-import {uniqueId} from 'lodash';
-
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Selector from '../../../../Atoms/Form/Selector';
-import * as mutations from '../../../../../graphql/mutations';
+import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
-import {getAsset} from '../../../../../assets';
-import {ILessonPlan} from './LessonPlan';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {v4 as uuidV4} from 'uuid';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {getAsset} from '../../../../../assets';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -46,6 +42,7 @@ const LessonPlanForm = () => {
     estTime: '1 min',
   });
   const [errors, setErrors] = useState<any>({});
+  const [creatingLesson, setCreatingLesson] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
@@ -83,7 +80,7 @@ const LessonPlanForm = () => {
           ],
         };
         const res: any = await API.graphql(
-          graphqlOperation(mutations.updateUniversalLesson, {
+          graphqlOperation(customMutations.updateUniversalLesson, {
             input,
           })
         );
@@ -96,12 +93,14 @@ const LessonPlanForm = () => {
       } catch (error) {
         setLoading(false);
         console.error(error.message);
+      } finally {
+        setCreatingLesson(false);
       }
     }
   };
 
   const validateForm = () => {
-    const {id = '', label = '', title = ''} = inputObj;
+    const {label = '', title = ''} = inputObj;
     let isValid = true,
       formErrors: any = {};
 
@@ -123,13 +122,6 @@ const LessonPlanForm = () => {
       estTime: name,
     }));
   };
-  const handleEstimationTime = (value: string) => {
-    setInputObj((prevInputs: ILessonInputs) => ({
-      ...prevInputs,
-      estTime: value,
-    }));
-  };
-  
 
   return (
     <div className="w-full m-auto">
@@ -203,7 +195,7 @@ const LessonPlanForm = () => {
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                disabled={loading}
+                disabled={creatingLesson}
                 label={
                   loading
                     ? BUTTONS[userLanguage]['SAVING']

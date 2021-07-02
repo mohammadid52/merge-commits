@@ -18,6 +18,7 @@ import * as mutations from '../../../../../graphql/mutations';
 
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
+import {getImageFromS3} from '../../../../../utilities/services';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -70,16 +71,18 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const [showCropper, setShowCropper] = useState(false);
   const [imageData, setImageData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
-
+  const [uploadImageUrl, setUploadImageUrl] = useState(null);
+  const [fileObject, setFileObject] = useState<any>({});
   const onInputChange = (e: any) => {
+    const {name, value} = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
     setUnsavedChanges(true);
     setValidation({
       ...validation,
-      [e.target.name]: '',
+      [name === 'imageCaption' ? 'image' : name]: '',
     });
   };
 
@@ -93,31 +96,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       },
     });
     setUnsavedChanges(true);
-    if (validation.type || validation.languages) {
-      setValidation({
-        ...validation,
-        type: '',
-        languages: '',
-        institution: '',
-      });
-    }
-  };
-  const selectMeasurement = (val: string, name: string, id: string) => {
-    setSelectedMeasu({id, name, value: val});
-  };
 
-  const addNewMeasurement = () => {
-    setLessonMeasurements([
-      ...lessonMeasurements,
-      {
-        id: selectedMeasu.id,
-        measurement: selectedMeasu.name,
-        topic:
-          allMeasurement.find((item) => item.id.toString() === selectedMeasu.id)?.topic ||
-          '',
-      },
-    ]);
-    setSelectedMeasu({id: '', name: '', value: ''});
+    setValidation({
+      ...validation,
+      [field]: '',
+    });
   };
 
   const selectLanguage = (id: string, name: string, value: string) => {
@@ -132,6 +115,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setFormData({
       ...formData,
       languages: updatedList,
+    });
+    setValidation({
+      ...validation,
+      languages: '',
     });
     setUnsavedChanges(true);
   };
@@ -166,6 +153,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const fileReader = new FileReader();
+
+      setFileObject(file);
       fileReader.onload = function () {
         setImageData(fileReader.result);
       };
@@ -182,6 +171,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     toggleCropper();
     setImageData(image);
     const imageUrl = URL.createObjectURL(image);
+
     setImagePreviewUrl(imageUrl);
     toggleCropper();
   };
@@ -213,6 +203,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const validateForm = () => {
     let isValid = true;
     const msgs = validation;
+
     if (!formData.name?.trim().length) {
       isValid = false;
       msgs.name = AddNewLessonFormDict[userLanguage]['VALIDATION']['NAME'];
@@ -256,22 +247,23 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const createNewLesson = async () => {
     if (!lessonId) {
       // Creating New Lesson
-      const isValid = true; // replace static boolean with validateForm
+      const isValid = validateForm();
       if (isValid) {
         setCreatingLessons(true);
         try {
           const input: any = {
             type: formData.type.value,
             title: formData.name,
-            institutionID: formData.institution.id,
-            purpose: formData.purposeHtml,
-            objectives: [formData.objectiveHtml],
-            language: formData.languages.map((item) => item.value),
+
             designers: selectedDesigners.map((item) => item.id),
             lessonPlan: [],
             summary: formData.studentSummary,
             cardImage: formData.imageUrl,
             cardCaption: formData.imageCaption,
+            purpose: formData.purposeHtml,
+            objectives: [formData.objectiveHtml],
+            language: formData.languages.map((item) => item.value),
+            institutionID: formData.institution?.id,
             // adding defaults to prevent errors
             duration: 1,
             notes: '',
@@ -294,10 +286,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     } else {
       // Updating existing Lesson
 
-      const isValid = true; // replace static boolean with validateForm
-
-      if (isValid) {
-        try {
+      const isValid = validateForm();
+      try {
+        if (isValid) {
           setLoading(true);
           const input = {
             id: lessonId,
@@ -313,152 +304,16 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardCaption: formData.imageCaption,
           };
           const results: any = await API.graphql(
-            graphqlOperation(mutations.updateUniversalLesson, {input: input})
+            graphqlOperation(customMutations.updateUniversalLesson, {input: input})
           );
           const lessonsData = results?.data?.updateUniversalLesson;
-
-          setLoading(false);
-          setUnsavedChanges(false);
-
-          if (lessonsData) {
-            // postLessonCreation(lessonsData?.id);
-            setValidation({
-              name: '',
-              type: '',
-              message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATE'],
-              isError: false,
-              image: '',
-              institution: '',
-              languages: '',
-              studentSummary: '',
-            });
-          }
-        } catch {
-          setValidation({
-            name: '',
-            type: '',
-            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
-            isError: true,
-            institution: '',
-            image: '',
-            languages: '',
-            studentSummary: '',
-          });
-          setLoading(false);
-        }
-      }
-    }
-  };
-  const deleteLesson = async (id: string) => {
-    try {
-      const result = await API.graphql(
-        graphqlOperation(mutations.deleteUniversalLesson, {
-          input: {id},
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   deleteLesson('696bb72f-0209-4de3-a05c-722dae9cf8e4');
-  // }, []);
-
-  const saveFormData = async () => {
-    if (!lessonId) {
-      const isValid = validateForm();
-      if (isValid) {
-        try {
-          setLoading(true);
-          let input = {
-            title: formData.name,
-            type: formData.type?.value,
-            purpose: formData.purposeHtml,
-            objectives: [formData.objectiveHtml],
-            // studentSummary: formData.studentSummary,
-            language: formData.languages.map((item) => item.value),
-            designers: selectedDesigners.map((item) => item.id),
-            institutionID: formData.institution?.id,
-            artistID: '0',
-            doFirstID: '0',
-            warmUpId: '0',
-            coreLessonId: '0',
-            activityId: '0',
-            assessmentID: '0',
-            // image: ''
-            // assessmentID: formData.type?.value === 'lesson' ? "0" : uuidv4(),
-          };
-          // if (imageData) {
-          //   const fileName = `${Date.now()}`;
-          //   await uploadImageToS3(imageData, fileName, 'image/jpeg');
-          //   input = {
-          //     ...input,
-          //     image: `ULB/lesson_image_${fileName}`,
-          //   };
-          // }
-          const results: any = await API.graphql(
-            graphqlOperation(customMutations.createLesson, {input: input})
-          );
-          const lessonsData = results?.data?.createLesson;
           postLessonCreation(lessonsData?.id);
-          // if (lessonsData?.id) {
-          //   let rubrics = Promise.all(
-          //     lessonMeasurements.map(async (item: any) =>
-          //       saveMeasurements(lessonsData?.id, item.id)
-          //     )
-          //   );
-          //   setLoading(false);
-          //   postLessonCreation(lessonsData?.id);
-          //   setUnsavedChanges(false);
-
-          //   setValidation({
-          //     name: '',
-          //     type: '',
-          //     institution: '',
-          //     languages: '',
-          //     message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVE'],
-          //     isError: false,
-          //   });
-          // }
-        } catch {
-          setValidation({
-            name: '',
-            type: '',
-            institution: '',
-            languages: '',
-            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['SAVEERR'],
-            image: '',
-            isError: true,
-            studentSummary: '',
-          });
-          setLoading(false);
-        }
-      }
-    } else {
-      const isValid = validateForm();
-      if (isValid) {
-        try {
-          setLoading(true);
-          const input = {
-            id: lessonId,
-            title: formData.name,
-            purpose: formData.purposeHtml,
-            objectives: [formData.objectiveHtml],
-            designers: selectedDesigners.map((item) => item.id),
-            language: formData.languages.map((item) => item.value),
-            // studentSummary: formData.studentSummary,
-          };
-          const results: any = await API.graphql(
-            graphqlOperation(customMutations.updateLesson, {input: input})
-          );
-          const lessonsData = results?.data?.updateLesson;
 
           setLoading(false);
           setUnsavedChanges(false);
 
           if (lessonsData) {
-            // postLessonCreation(lessonsData?.id);
+            postLessonCreation(lessonsData?.id);
             setValidation({
               name: '',
               type: '',
@@ -470,19 +325,21 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               studentSummary: '',
             });
           }
-        } catch {
-          setValidation({
-            name: '',
-            type: '',
-            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
-            isError: true,
-            institution: '',
-            image: '',
-            languages: '',
-            studentSummary: '',
-          });
-          setLoading(false);
         }
+      } catch (error) {
+        console.error(error);
+
+        setValidation({
+          name: '',
+          type: '',
+          message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+          isError: true,
+          institution: '',
+          image: '',
+          languages: '',
+          studentSummary: '',
+        });
+        setLoading(false);
       }
     }
   };

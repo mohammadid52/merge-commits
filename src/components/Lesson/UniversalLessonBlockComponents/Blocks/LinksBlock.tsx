@@ -4,7 +4,6 @@ import {IoIosGlobe} from 'react-icons/io';
 import {AiOutlineInstagram, AiOutlineYoutube} from 'react-icons/ai';
 import {FaSpotify} from 'react-icons/fa';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { useULBContext } from '../../../../contexts/UniversalLessonBuilderContext';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface LinksBlockProps extends RowWrapperProps {
@@ -57,7 +56,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'spotify' ? (
                       <IconContext.Provider
                         value={{
-                          color: iconColor,
+                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -66,7 +65,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'instagram' ? (
                       <IconContext.Provider
                         value={{
-                          color: iconColor,
+                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -75,7 +74,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : (
                       <IconContext.Provider
                         value={{
-                          color: iconColor,
+                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -83,8 +82,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                       </IconContext.Provider>
                     )}
 
-                    <p
-                      className={`flex-grow text-sm text-center ${themeTextColor} text-opacity-75`}>
+                    <p className="flex-grow text-sm text-center text-blue-100 text-opacity-75">
                       {item.label}
                     </p>
                   </a>

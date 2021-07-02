@@ -289,6 +289,7 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
                 const part2 = questionGroup.map(
                   (question: QuestionInterface, idx: number) => {
                     const realIndex = indexInc[idx0] + idx;
+
                     return (
                       <React.Fragment key={`questionFragment_${realIndex}`}>
                         <div

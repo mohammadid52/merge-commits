@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import {IoIosMenu} from 'react-icons/io';
 
 import useDictionary from '../../../../customHooks/dictionary';
-import { useQuery } from '../../../../customHooks/urlParam';
+import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
@@ -431,7 +431,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   // For Edit Page Names
-  const [editMode, setEditMode] = useState<boolean>(false);
+
   const [editModal, setEditModal] = useState({
     show: false,
     content: {},
@@ -441,7 +441,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const content: any = editModal.content;
   const getEditModalTitle = () => {
     if (!editModal.editOnlyId) {
-      return `Edit - ${content.id}`;
+      return `Edit ${`- ${content.title}` || 'Lesson Page'}`;
     } else {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }
@@ -455,7 +455,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   return (
     <div
       id={`builderWrapper`}
-      className={`relative h-full ${themeBackgroundColor} shadow-5 sm:rounded-lg flex flex-col`}>
+      className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
       {/* <Toolbar
         universalLessonDetails={universalLessonDetails}
         deleteFromULBHandler={deleteFromULBHandler}
@@ -476,7 +476,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       <div
         className="flex justify-end my-1 pr-2"
         onClick={() => setBuilderMenuVisible(true)}>
-        <IoIosMenu className="w-auto cursor-pointer h-8 w-8 text-gray-400" />
+        <IoIosMenu className="w-auto cursor-pointer h-8 text-gray-400" />
       </div>
       <LessonPlanNavigation
         selectedPageID={selectedPageID}

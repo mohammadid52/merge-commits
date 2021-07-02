@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { FinalText, SelectedTextGroup } from '../../LessonComponents/LyricsPage/LyricsModules/LyricsActivity';
+import React, {useState} from 'react';
+import {
+  FinalText,
+  SelectedTextGroup,
+} from '../../LessonComponents/LyricsPage/LyricsModules/LyricsActivity';
 import SelectableBlock from './HighlighterBlock/SelectableBlock';
 import HighlightColorBlock from './HighlighterBlock/HighlightColorBlock';
-import { RowWrapperProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 type SelectObject = {
   id?: string | number;
@@ -30,12 +33,9 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   return (
     <div className={`p-4`}>
-      <HighlightColorBlock
-        color={color}
-        setColor={setColor}
-      />
+      <HighlightColorBlock color={color} setColor={setColor} />
       <SelectableBlock
-        rawText={value && value.length > 0 ? value[0] : ''}
+        rawText={value && value.length > 0 ? value[0].value : ''}
         color={color}
         selected={selected}
         setSelected={setSelected}

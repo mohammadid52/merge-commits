@@ -1,18 +1,6 @@
-import React, {lazy, useContext, useEffect, useState} from 'react';
+import React, {lazy, useContext, useEffect} from 'react';
 import {LessonContext} from '../../../contexts/LessonContext';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customQueries from '../../../customGraphql/customQueries';
-import queryString from 'query-string';
-import * as mutations from '../../../graphql/mutations';
-import NotesForm from '../LessonComponents/Notes/NotesForm';
+import {Redirect, Route, Switch, useRouteMatch} from 'react-router-dom';
 
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const IntroV2 = lazy(() => import('../LessonComponents/Intro/IntroV2'));
@@ -21,9 +9,7 @@ const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
 const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
 const List = lazy(() => import('../LessonComponents/ListPage/List'));
 const Poll = lazy(() => import('../LessonComponents/PollPage/Poll'));
-const TChart = lazy(() => import('../LessonComponents/TChartPage/TChart'));
 const TruthGame = lazy(() => import('../LessonComponents/TruthGamePage/TruthGame'));
-const MultiList = lazy(() => import('../LessonComponents/MultiListPage/MultiList'));
 const Adventure = lazy(() => import('../LessonComponents/AdventurePage/Adventure'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
 const LessonError = lazy(() => import('../../Error/LessonError'));
@@ -43,11 +29,10 @@ export interface BodyProps {
 }
 
 const Body = (props: BodyProps) => {
-  const {setupComplete, checkpointsLoaded, lessonDataLoaded, checkpointsItems} = props;
+  const {checkpointsItems} = props;
 
   const {state, theme, dispatch} = useContext(LessonContext);
-  const location = useLocation();
-  const history = useHistory();
+
   const match = useRouteMatch();
 
   const lessonType = state.data?.lesson?.type;

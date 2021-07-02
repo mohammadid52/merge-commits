@@ -17,7 +17,7 @@ import ExistingPageView from './ExistingPageView';
 import TemplateView from './TemplateView';
 import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {graphqlOperation, API} from 'aws-amplify';
-import * as queries from '../../../../../graphql/queries';
+import * as customQueries from '../../../../../customGraphql/customQueries';
 
 export interface ILessonPlan {
   addNewPageHandler: (content: any) => void;
@@ -65,7 +65,7 @@ const LessonPlan = () => {
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(queries.getUniversalLesson, {
+        graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
         })
       );
@@ -79,7 +79,7 @@ const LessonPlan = () => {
 
   const checkValidUrl = async () => {
     if (!lessonId) {
-      console.log('Invalid url');
+      console.log('@LessonPlan: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     }
   };

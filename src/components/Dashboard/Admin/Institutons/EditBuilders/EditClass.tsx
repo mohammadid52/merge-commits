@@ -31,7 +31,7 @@ import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import { goBackBreadCrumb } from '../../../../../utilities/functions';
 import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
 
-interface EditClassProps {}
+interface EditClassProps { }
 
 const EditClass = (props: EditClassProps) => {
   const history = useHistory();
@@ -150,8 +150,10 @@ const EditClass = (props: EditClassProps) => {
   const fetchStudentList = async (searchQuery: string) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: { role: { eq: 'ST' },
-          status: { eq: 'ACTIVE' }, or: [{ firstName: { contains: searchQuery} }, { lastName: { contains: searchQuery } }] },
+        filter: {
+          role: { eq: 'ST' },
+          status: { eq: 'ACTIVE' }, or: [{ firstName: { contains: searchQuery } }, { lastName: { contains: searchQuery } }]
+        },
       })
     );
     const students = result.data.listPersons.items;
@@ -252,6 +254,26 @@ const EditClass = (props: EditClassProps) => {
     const classId = urlParams.get('id');
     if (classId) fetchClassData(classId);
     else history.push('/dashboard/manage-institutions');
+    // try {
+    //   console.log('Here.......')
+    //   const input = { classStudents: [{
+    //     classID: "97323010-05d0-4278-ac15-7343e1b58f0d",
+    //     status: "Active",
+    //     studentAuthID: "e02c63b2-6dca-4d37-a9ea-006e53c04769",
+    //     studentEmail: "aman+1@sublimedatasys.com",
+    //     studentID: "b3fe0840-6a1e-4d72-b34e-f2c585804fa3"
+    //   },
+    //   {
+    //     classID: "97323010-05d0-4278-ac15-7343e1b58f0d",
+    //     status: "Active",
+    //     studentAuthID: "78c518a8-0413-409c-b613-cb087446abe7",
+    //     studentEmail: "brandi@zoiq.io",
+    //     studentID: "8ed85558-389a-4203-8a0e-fb061e519dac",
+    //   }] };
+    //   API.graphql(graphqlOperation(mutations.batchAddClassStudent, input));
+    // } catch (err) {
+    //   console.log('ERRRRROR', err);
+    // }
   }, []);
 
   const checkUniqClassName = async () => {
@@ -473,16 +495,16 @@ const EditClass = (props: EditClassProps) => {
                                 style={{
                                   background: `${stringToHslColor(
                                     getInitialsFromString(item.student.name)[0] +
-                                      ' ' +
-                                      getInitialsFromString(item.student.name)[1]
+                                    ' ' +
+                                    getInitialsFromString(item.student.name)[1]
                                   )}`,
                                   textShadow: '0.1rem 0.1rem 2px #423939b3',
                                 }}>
                                 {item.student.name
                                   ? initials(
-                                      getInitialsFromString(item.student.name)[0],
-                                      getInitialsFromString(item.student.name)[1]
-                                    )
+                                    getInitialsFromString(item.student.name)[0],
+                                    getInitialsFromString(item.student.name)[1]
+                                  )
                                   : initials('N', 'A')}
                               </div>
                             )}

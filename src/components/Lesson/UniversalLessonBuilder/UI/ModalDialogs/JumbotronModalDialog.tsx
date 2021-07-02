@@ -12,6 +12,7 @@ import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterface
 import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 import Loader from '../../../../Atoms/Loader';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface IImageInput {
   url: string;
@@ -123,6 +124,16 @@ const JumbotronModalDialog = ({
     setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
     setErrors((prevValues) => ({...prevValues, url: ''}));
   };
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
   const onSave = async () => {
     const isValid: boolean = validateFormFields();
     if (isValid) {
@@ -149,7 +160,6 @@ const JumbotronModalDialog = ({
         ]);
       }
       setIsLoading(false);
-      closeAction();
     }
   };
   const validateFormFields = () => {
@@ -216,12 +226,25 @@ const JumbotronModalDialog = ({
   const onJumbotronCreate = async () => {
     await onSave();
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'jumbotron', inputFieldsArray, 0);
+      const updatedList = updateBlockContentULBHandler(
+        '',
+        '',
+        'jumbotron',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', 'jumbotron', inputFieldsArray, 0);
+      const updatedList = createNewBlockULBHandler(
+        '',
+        '',
+        'jumbotron',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     }
-    // close modal after saving
-    closeAction();
+
     setUnsavedChanges(false);
 
     // clear fields

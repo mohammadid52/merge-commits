@@ -23,7 +23,11 @@ interface LessonPlansListProps {
   };
 }
 
-const LessonPlansList = ({lessonId, loading, universalLessonDetails}: LessonPlansListProps) => {
+const LessonPlansList = ({
+  lessonId,
+  loading,
+  universalLessonDetails,
+}: LessonPlansListProps) => {
   const history = useHistory();
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -168,7 +172,9 @@ const LessonPlansList = ({lessonId, loading, universalLessonDetails}: LessonPlan
                                   <span onClick={() => lessonPagePreview(page.id)}>
                                     {LessonBuilderDict[userLanguage]['BUTTON']['PREVIEW']}
                                   </span>
-                                  <span className="flex justify-center">&nbsp;|&nbsp;</span>
+                                  <span className="flex justify-center">
+                                    &nbsp;|&nbsp;
+                                  </span>
                                   <span onClick={() => editLessonPage(page.id)}>
                                     {LessonBuilderDict[userLanguage]['BUTTON']['EDIT']}
                                   </span>

@@ -7,6 +7,10 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import {useQuery} from '../../../../../customHooks/urlParam';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -26,6 +30,7 @@ const HeaderModalComponent = ({
   updateBlockContentULBHandler,
 }: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
+
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
@@ -94,7 +99,18 @@ const HeaderModalComponent = ({
     return sizeName;
   };
 
-  const onHeaderCreate = () => {
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const onHeaderCreate = async () => {
     const value: string = inputFields[FIELD_ID];
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
     const bgColorClass: string = selectedValues.color;
@@ -105,12 +121,29 @@ const HeaderModalComponent = ({
       .filter(Boolean)
       .join(' ');
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'header', [value], 0, classValue);
+      const updatedList: any = updateBlockContentULBHandler(
+        '',
+        '',
+        FIELD_ID,
+        [{id: uuidv4().toString(), value}],
+        0,
+        classValue
+      );
+
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', 'header', [value], 0, classValue);
+      const updatedList: any = createNewBlockULBHandler(
+        '',
+        '',
+        FIELD_ID,
+        [{id: uuidv4().toString(), value}],
+        0,
+        classValue
+      );
+      await addToDB(updatedList);
     }
+
     // close modal after saving
-    closeAction();
     // clear fields
     setInputFields({
       ...inputFields,

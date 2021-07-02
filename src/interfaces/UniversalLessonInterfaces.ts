@@ -2,7 +2,7 @@
  * UNIVERSAL LESSON BUILDER INTERFACES*
  ***************************************/
 //
-export interface UniversalLesson{
+export interface UniversalLesson {
   id: string;
   isDraft?: boolean; //will determine if curriculum builder can see lesson to add to syllabus
   institute?: string;
@@ -44,7 +44,7 @@ export interface UniversalLessonPage {
   class?: string;
   estTime?: number;
   pageContent?: PagePart[];
-  [key: string]:any;
+  [key: string]: any;
 }
 
 export interface PagePart {
@@ -52,14 +52,14 @@ export interface PagePart {
   partType: 'component' | 'default';
   class: string;
   partContent: PartContent[];
-  [key: string]:any;
+  [key: string]: any;
 }
 
 export interface PartContent {
   id: string;
   type?: string;
-  value: any[];
-  [key: string]:any;
+  value: PartContentSub[];
+  [key: string]: any;
 }
 
 export interface PartContentSub {
@@ -67,6 +67,13 @@ export interface PartContentSub {
   type?: string;
   label?: string;
   value?: string;
+  options?: Options[];
+}
+
+export interface Options {
+  id?: string;
+  label?: string;
+  text?: string;
 }
 
 /**************************************

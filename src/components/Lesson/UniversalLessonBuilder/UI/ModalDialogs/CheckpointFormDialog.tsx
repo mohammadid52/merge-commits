@@ -20,6 +20,7 @@ import SearchInput from '../../../../Atoms/Form/SearchInput';
 import Loader from '../../../../Atoms/Loader';
 import RemoveInput from '../common/RemoveInput';
 import {FORM_TYPES} from '../common/constants';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface InitialState {
   question: string;
@@ -708,14 +709,25 @@ const QuestionLookup = ({
     });
     return dataToSend;
   };
+  const addToDB = async (list: any) => {
+    closeAction();
 
-  const addToULBObject = () => {
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+  const addToULBObject = async () => {
     let valueArr = generateQuestionList();
     const formType = numbered ? 'form-numbered' : 'form-default';
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', formType, valueArr);
+      const updatedList = updateBlockContentULBHandler('', '', formType, valueArr);
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', formType, valueArr);
+      const updatedList = createNewBlockULBHandler('', '', formType, valueArr);
+      await addToDB(updatedList);
     }
     closeAction();
   };

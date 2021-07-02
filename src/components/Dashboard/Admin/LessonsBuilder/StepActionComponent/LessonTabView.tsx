@@ -20,8 +20,6 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../customGraphql/customQueries';
-import * as queries from '../../../../../graphql/queries';
-import * as mutations from '../../../../../graphql/mutations';
 import {languageList} from '../../../../../utilities/staticData';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
@@ -69,7 +67,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(queries.getUniversalLesson, {
+        graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
         })
       );
@@ -90,7 +88,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
 
   const checkValidUrl = async () => {
     if (!lessonId) {
-      console.log('Invalid url');
+      console.log('@LessonTabView: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);

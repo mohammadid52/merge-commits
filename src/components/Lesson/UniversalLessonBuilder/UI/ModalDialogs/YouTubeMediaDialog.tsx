@@ -10,6 +10,7 @@ import {
 } from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 const youTubeVideoRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
@@ -61,17 +62,31 @@ const YouTubeMediaDialog = ({
   const onChangeVideoSize = (_: string, name: string) => {
     setVideoInputs((prevValues) => ({...prevValues, size: name}));
   };
+  const addToDB = async (list: any) => {
+    closeAction();
 
-  const onSave = (event: React.FormEvent<HTMLFormElement>) => {
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+  const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = checkUrl();
     if (isValid) {
       if (isEditingMode) {
-        updateBlockContentULBHandler('', '', 'video', [videoInputs]);
+        const updatedList = updateBlockContentULBHandler('', '', 'video', [videoInputs]);
+        console.log(updatedList);
+
+        // await addToDB(updatedList);
       } else {
-        createNewBlockULBHandler('', '', 'video', [videoInputs]);
+        const updatedList = createNewBlockULBHandler('', '', 'video', [videoInputs]);
+        console.log(updatedList);
+
+        // await addToDB(updatedList);
       }
-      closeAction();
       setUnsavedChanges(false);
     }
   };

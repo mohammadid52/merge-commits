@@ -13,6 +13,7 @@ import {
   INPUT_WITH_EMOJI,
   LINK,
 } from '../common/constants';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 const Attachments = (props: any) => {
   const {
@@ -29,7 +30,16 @@ const Attachments = (props: any) => {
     createNewContent,
   } = props;
   const {userLanguage} = useContext(GlobalContext);
+  const addToDB = async (list: any) => {
+    closeAction();
 
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
   const addOneInputField = () => {
     setList([...list, {id: uuidv4(), label: '', value: ''}]);
   };
@@ -46,7 +56,7 @@ const Attachments = (props: any) => {
     setList([...list]);
   };
 
-  const onFormCreate = () => {
+  const onFormCreate = async () => {
     const pageContentId: string = `${uuidv4()}_`;
     const partContentId: string = `${pageContentId}_${
       selectedForm === ATTACHMENTS
@@ -81,13 +91,13 @@ const Attachments = (props: any) => {
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
-      updateContent('', '', type, inputObjArray);
+      const updatedList = updateContent('', '', type, inputObjArray);
+      await addToDB(updatedList);
     } else {
-      createNewContent('', '', type, inputObjArray);
+      const updatedList = createNewContent('', '', type, inputObjArray);
+      await addToDB(updatedList);
     }
 
-    // close modal after saving
-    closeAction();
     setUnsavedChanges(false);
   };
 
@@ -120,15 +130,17 @@ const Attachments = (props: any) => {
                     placeHolder={`Enter Title`}
                   />
                 </div>
-                <div>
-                  <FormInput
-                    onChange={(e) => onChange(e, idx, false)}
-                    label={`${title} Placeholder`}
-                    value={input.value}
-                    id={`placeholder_${input.id}`}
-                    placeHolder={`Enter Placeholder`}
-                  />
-                </div>
+                {selectedForm !== DATE_PICKER && (
+                  <div>
+                    <FormInput
+                      onChange={(e) => onChange(e, idx, false)}
+                      label={`${title} Placeholder`}
+                      value={input.value}
+                      id={`placeholder_${input.id}`}
+                      placeHolder={`Enter Placeholder`}
+                    />
+                  </div>
+                )}
                 {idx !== 0 && (
                   <div className="flex my-2 items-center justify-end w-auto mx-3">
                     <button

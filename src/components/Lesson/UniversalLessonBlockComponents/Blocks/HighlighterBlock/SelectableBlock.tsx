@@ -3,6 +3,7 @@ import {
   FinalText,
   SelectedTextGroup,
 } from '../../../LessonComponents/LyricsPage/LyricsModules/LyricsActivity';
+import ReactHtmlParser from 'react-html-parser';
 
 interface SelectableBlockProps {
   rawText?: string;
@@ -158,7 +159,8 @@ const SelectableBlock = (props: SelectableBlockProps) => {
    * - Makes it easier to parse on the breakdown page
    */
 
-  const combineLyrics = removeHtmlTagsFromText.map((str: string) => [...str.split(' '), '\n'])
+  const combineLyrics = removeHtmlTagsFromText
+    .map((str: string) => [...str.split(' '), '\n'])
     .reduce((acc: string[], val: string[]) => [...acc, ...val]);
 
   const combineMappedWords = combineLyrics.map(
@@ -307,6 +309,7 @@ const SelectableBlock = (props: SelectableBlockProps) => {
           WebkitUserSelect: 'none',
           msUserSelect: 'none',
         }}>
+        {/* {ReactHtmlParser(rawText)} */}
         {mapStrToSpan(combineLyrics)}
       </div>
     </>

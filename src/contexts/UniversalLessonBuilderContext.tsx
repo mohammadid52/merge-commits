@@ -1,6 +1,5 @@
-import {find, findIndex, get, includes, keys, update} from 'lodash';
-import React, {useContext, createContext, useState, useEffect} from 'react';
-import {exampleUniversalLesson} from '../components/Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import {findIndex, get, update} from 'lodash';
+import React, {useContext, createContext, useState} from 'react';
 import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
 export const UniversalLessonBuilderContext = createContext(null);
 
@@ -16,9 +15,7 @@ const initialUniversalLessonData: UniversalLesson = {
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
-  const [builderTheme, setBuilderTheme] = useState<'light' | 'dark'>('dark');
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
-  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
@@ -87,7 +84,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         update(universalLessonDetails, PATH, () => items);
         break;
     }
-    console.log('universalLessonDetails: ----> ', universalLessonDetails.lessonPlan);
 
     setUniversalLessonDetails({...universalLessonDetails});
   };
@@ -110,12 +106,11 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   };
 
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [fetchingLessonDetails, setFetchingLessonDetails] = useState(false);
 
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
-        builderTheme,
-        setBuilderTheme,
         previewMode,
         setPreviewMode,
         selectedLessonID,
@@ -138,10 +133,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getPartContent,
         getPageContent,
         enableDnD,
-        universalLessonsList,
-        setUniversalLessonsList,
-        themeTextColor: builderTheme === 'light' ? 'text-dark-gray' : 'text-white',
-        themeBackgroundColor: builderTheme === 'light' ? 'bg-white' : 'bg-dark-gray',
+        fetchingLessonDetails,
+        setFetchingLessonDetails,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

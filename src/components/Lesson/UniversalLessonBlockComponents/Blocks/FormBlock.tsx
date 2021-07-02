@@ -3,7 +3,6 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {BiImageAdd} from 'react-icons/bi';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import { useULBContext } from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
@@ -43,10 +42,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   };
 
   const [fields, setFields] = useState<any>({});
-
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    console.log('onChange - id - value - ', id, ' - ', value)
+    console.log('onChange - id - value - ', id, ' - ', value);
     setFields({...fields, [id]: value});
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);
@@ -58,7 +56,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   const LinkInput = ({inputID, label, value}: any) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+        <label className={`text-sm text-gray-200`} htmlFor="label">
           {label}{' '}
           <span
             className={`py-0.5 px-1 ml-2 text-xs  rounded bg-indigo-200  text-indigo-700`}>
@@ -75,7 +73,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           name="url"
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
-          onChange={isInLesson ? (e)=>onChange(e) : undefined}
+          onChange={isInLesson ? (e) => onChange(e) : undefined}
           // value={fields[inputID] || 'Please input...'}
         />
       </div>
@@ -115,7 +113,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     };
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+        <label className={`text-sm text-gray-200`} htmlFor="label">
           {label}
         </label>
         <div className="mt-2">
@@ -123,7 +121,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             role="button"
             tabIndex={-1}
             onClick={openFilesExplorer}
-            className={`border-0 border-white relative z-100 flex items-center justify-center text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
+            className={`border-0 border-white relative z-100 flex items-center justify-center text-base px-4 py-2 text-white hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
             Upload Attachments
           </span>
@@ -138,7 +136,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         {fileObject.name && (
           <Tooltip show={!uploading} placement="bottom" text={'View Attachments'}>
             <div className="cursor-pointer flex items-center justify-between border-0 border-sea-green rounded-md shadow-sm mt-2 p-2 px-4">
-              <p className="text-center ${themeTextColor} w-auto truncate">
+              <p className="text-center text-white w-auto truncate">
                 {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
               </p>
 
@@ -147,7 +145,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
                   <Loader color={`#fff`} />
                 </div>
               ) : (
-                <AiOutlineCheckCircle className="w-auto ${themeTextColor} text-lg" />
+                <AiOutlineCheckCircle className="w-auto text-white text-lg" />
               )}
             </div>
           </Tooltip>
@@ -176,7 +174,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
                   data-key={id}
                   data-value={label}
                   type="checkbox"
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor}
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
                   ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
                   checked={false}
                 />
@@ -219,7 +217,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 `;
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
+        <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
           {label}
         </label>
         <div className="flex items-center relative">
@@ -230,7 +228,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
             }`}
             name="emoji"
-            onChange={isInLesson ? (e)=>onChange(e) : undefined}
+            onChange={isInLesson ? (e) => onChange(e) : undefined}
             type="text"
             value={textValue}
           />
@@ -258,13 +256,19 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     );
   };
 
-  const composeInput = (inputID: string, type: string, label: string, value: any) => {
+  const composeInput = (
+    inputID: string,
+    type: string,
+    label: string,
+    value: any,
+    options: any
+  ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
       case FORM_TYPES.DATE_PICKER:
         return (
           <div id={id} key={id} className={`mb-4 p-4`}>
-            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+            <label className={`text-sm text-gray-200`} htmlFor="label">
               {label}
             </label>
             <input
@@ -275,7 +279,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson ? (e)=>onChange(e) : undefined}
+              onChange={isInLesson ? (e) => onChange(e) : undefined}
               defaultValue={value}
             />
           </div>
@@ -284,7 +288,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       case FORM_TYPES.TEXTAREA:
         return (
           <div id={id} key={id} className={`mb-4 p-4`}>
-            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+            <label className={`text-sm text-gray-200 `} htmlFor="label">
               {label}
             </label>
             <textarea
@@ -292,7 +296,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               disabled={mode === 'building'}
               className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
               name="story"
-              onChange={isInLesson ? (e)=>onChange(e) : undefined}
+              onChange={isInLesson ? (e) => onChange(e) : undefined}
               defaultValue={value}
             />
           </div>
@@ -301,10 +305,10 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       case FORM_TYPES.MULTIPLE:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+            <label className={`text-sm text-gray-200`} htmlFor="label">
               {label}
             </label>
-            {generateCheckbox(value, type === FORM_TYPES.MULTIPLE ? true : false)}
+            {generateCheckbox(options, type === FORM_TYPES.MULTIPLE ? true : false)}
           </div>
         );
 
@@ -324,13 +328,12 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
 
   return (
     <>
-      {
-        value &&
+      {value &&
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
             <React.Fragment key={`formBlock_${i}`}>
-              {composeInput(v.id, v.type, v.label, v.value)}
+              {composeInput(v.id, v.type, v.label, v.value, v.options)}
             </React.Fragment>
           );
         })}

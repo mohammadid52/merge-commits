@@ -8,6 +8,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -110,14 +111,31 @@ const LinestarterModalDialog = ({
     handleUpdateInputFields(id, value);
   };
 
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
   const onLineCreate = async () => {
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'poem', inputFieldsArray, 0);
+      const updatedList = updateBlockContentULBHandler(
+        '',
+        '',
+        'poem',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', 'poem', inputFieldsArray, 0);
+      const updatedList = createNewBlockULBHandler('', '', 'poem', inputFieldsArray, 0);
+      await addToDB(updatedList);
     }
-    // close modal after saving
-    closeAction();
+
     // clear fields
     setInputFieldsArray(initialInputFieldsState);
     setUnsavedChanges(false);

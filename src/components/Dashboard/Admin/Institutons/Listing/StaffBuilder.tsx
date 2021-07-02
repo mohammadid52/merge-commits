@@ -1,13 +1,13 @@
-import React, {useEffect, useState, Fragment, useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {useHistory} from 'react-router';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import React, { useEffect, useState, Fragment, useContext } from 'react';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { useHistory } from 'react-router';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
 import PageWrapper from '../../../../Atoms/PageWrapper';
-import {reorder} from '../../../../../utilities/strings';
+import { reorder } from '../../../../../utilities/strings';
 
 import {
   getInitialsFromString,
@@ -15,11 +15,11 @@ import {
   stringToHslColor,
   createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {statusList} from '../../../../../utilities/staticData';
-import {getAsset} from '../../../../../assets';
+import { getImageFromS3 } from '../../../../../utilities/services';
+import { statusList } from '../../../../../utilities/staticData';
+import { getAsset } from '../../../../../assets';
 
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -31,16 +31,16 @@ import Tooltip from '../../../../Atoms/Tooltip';
 import Status from '../../../../Atoms/Status';
 interface StaffBuilderProps {
   instituteId: String;
-  serviceProviders: {items: {id: string; providerID: string}[]};
+  serviceProviders: { items: { id: string; providerID: string }[] };
   instName: string;
 }
 
 const StaffBuilder = (props: StaffBuilderProps) => {
-  const {instName, instituteId} = props;
-  const {userLanguage, clientKey, theme} = useContext(GlobalContext);
+  const { instName, instituteId } = props;
+  const { userLanguage, clientKey, theme } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
-  const {staffBuilderDict} = useDictionary(clientKey);
+  const { staffBuilderDict } = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
   const [availableUsers, setAvailableUsers] = useState([]);
   const [allAvailableUsers, setAllAvailableUsers] = useState([]);
@@ -52,7 +52,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   });
   const [activeStaffList, setActiveStaffList] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const [showModal, setShowModal] = useState<{show: boolean; item: any}>({
+  const [showModal, setShowModal] = useState<{ show: boolean; item: any }>({
     show: false,
     item: {},
   });
@@ -92,7 +92,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       let updatedList = previousList
         .map((t: any) => {
           let index = list.indexOf(t.userId);
-          return {...t, index};
+          return { ...t, index };
         })
         .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
       setActiveStaffList(updatedList);
@@ -102,48 +102,22 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const getPersonsList = async () => {
     try {
-      // const list: any = await API.graphql(
-      //   graphqlOperation(customQueries.listPersons, {
-      //     // filter: { or: [{ role: { eq: "TR" } }, { role: { eq: "FLW" } }, { role: { eq: "CRD" } }] },
-      //     filter: {role: {ne: 'ST'}},
-      //   })
-      // );
-      let data: any = [];
-      const admins: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'ADM'
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.fetchPersons, {
+          filter: { role: { ne: 'ST' } },
+          limit: 500
         })
       );
-      data = data.concat(admins.data.usersByRole.items)
-      const teachers: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'TR'
-        })
-      );
-      data = data.concat(teachers.data.usersByRole.items)
-      const fellows: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'FLW'
-        })
-      );
-      data = data.concat(fellows.data.usersByRole.items)
-      const builders: any = await API.graphql(
-        graphqlOperation(queries.usersByRole, {
-          role: 'BLD'
-        })
-      );
-      data = data.concat(builders.data.usersByRole.items)
+      let data = list.data.listPersons.items;
       const sortedList = data.sort((a: any, b: any) =>
         a.firstName?.toLowerCase() > b.firstName?.toLowerCase() ? 1 : -1
       );
       const personsList = sortedList.map((item: any, i: any) => ({
         id: item.id,
-        name: `${item.firstName ? item.firstName : ''} ${
-          item.lastName ? item.lastName : ''
-        }`,
-        value: `${item.firstName ? item.firstName : ''} ${
-          item.lastName ? item.lastName : ''
-        }`,
+        name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''
+          }`,
+        value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''
+          }`,
         authId: item.authId,
         email: item.email,
         avatar: item.image ? getImageFromS3(item.image) : '',
@@ -155,15 +129,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   };
   const getStaffSequence = async () => {
     let sequence: any = await API.graphql(
-      graphqlOperation(queries.getCSequences, {id: `staff_${instituteId}`})
+      graphqlOperation(queries.getCSequences, { id: `staff_${instituteId}` })
     );
-    sequence = sequence?.data?.getCSequences?.sequence;
-    return sequence ? [...sequence] : [];
+    let sequenceData = sequence?.data?.getCSequences;
+    return sequenceData;
   };
+
   const updateStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
       graphqlOperation(mutations.updateCSequences, {
-        input: {id: `staff_${instituteId}`, sequence: newList},
+        input: { id: `staff_${instituteId}`, sequence: newList },
       })
     );
   };
@@ -171,7 +146,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const createStaffSequence = async (newList: any) => {
     let seqItem: any = await API.graphql(
       graphqlOperation(mutations.createCSequences, {
-        input: {id: `staff_${instituteId}`, sequence: newList},
+        input: { id: `staff_${instituteId}`, sequence: [...newList] },
       })
     );
   };
@@ -180,7 +155,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     try {
       // get service providers of the institute and create a list and fetch the staff
       const {
-        serviceProviders: {items},
+        serviceProviders: { items },
         instituteId,
       } = props;
       const institutions = [instituteId];
@@ -206,9 +181,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id);
           member.userId = member.staffMember.id;
-          member.name = `${member.staffMember.firstName || ''} ${
-            member.staffMember.lastName || ''
-          }`;
+          member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''
+            }`;
           member.image = member.staffMember.image
             ? getImageFromS3(member?.staffMember?.image)
             : null;
@@ -240,14 +214,13 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           statusChangeDate: new Date().toISOString().split('T')[0],
         };
         const staff: any = await API.graphql(
-          graphqlOperation(mutations.createStaff, {input: input})
+          graphqlOperation(mutations.createStaff, { input: input })
         );
         // use the mutation result to add the selected user to the staff list
         const addedMember = staff.data.createStaff;
         addedMember.userId = addedMember.staffMember.id;
-        addedMember.name = `${addedMember.staffMember.firstName || ''} ${
-          addedMember.staffMember.lastName || ''
-        }`;
+        addedMember.name = `${addedMember.staffMember.firstName || ''} ${addedMember.staffMember.lastName || ''
+          }`;
         addedMember.image = addedMember.staffMember.image
           ? getImageFromS3(addedMember?.staffMember?.image)
           : null;
@@ -255,7 +228,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         addedMember.email = addedMember.staffMember.email;
         setActiveStaffList([...activeStaffList, addedMember]);
         // remove the selected user
-        setNewMember({name: '', id: '', value: '', avatar: ''});
+        setNewMember({ name: '', id: '', value: '', avatar: '' });
         // remove the selected user from the available users list
         let updatedAvailableUsers = availableUsers.filter(
           (item: any) => item.id !== member.id
@@ -280,20 +253,23 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const fetchStaffData = async () => {
     // const staffMembers = await getStaff()
-    let [staffLists, staffSequence]: any = await Promise.all([
+    let [staffLists, sequenceData]: any = await Promise.all([
       await getStaff(),
       await getStaffSequence(),
     ]);
+    let staffSequence = sequenceData?.sequence || [];
     const staffMembersIds = staffLists.map((item: any) => item.userId);
-    if (staffSequence?.length === 0) {
-      createStaffSequence(staffMembersIds);
-    } else if (staffLists?.length !== staffSequence?.length) {
-      updateStaffSequence(staffMembersIds);
+    if (sequenceData) {
+      if (!sequenceData.id && staffSequence?.length === 0) {
+        createStaffSequence(staffMembersIds);
+      } else if (staffLists?.length !== staffSequence?.length) {
+        updateStaffSequence(staffMembersIds);
+      }
     }
     staffLists = staffLists
       .map((item: any) => {
         let index = staffSequence.indexOf(item.userId);
-        return {...item, index};
+        return { ...item, index };
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
 
@@ -320,7 +296,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     if (currentStatus !== status) {
       setUpdateStatus(true);
       await API.graphql(
-        graphqlOperation(customMutations.updateStaff, {input: {id: staffId, status}})
+        graphqlOperation(customMutations.updateStaff, { input: { id: staffId, status } })
       );
       const updatedStaff = activeStaffList.map((staff) => {
         if (staff.id === staffId) {
@@ -333,6 +309,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     }
     setStatusEdit('');
   };
+
   return (
     <div className="pb-8 flex m-auto justify-center">
       <div className="">
@@ -411,16 +388,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                                                 /* stylelint-disable */
                                                 background: `${stringToHslColor(
                                                   getInitialsFromString(item.name)[0] +
-                                                    ' ' +
-                                                    getInitialsFromString(item.name)[1]
+                                                  ' ' +
+                                                  getInitialsFromString(item.name)[1]
                                                 )}`,
                                                 textShadow: '0.1rem 0.1rem 2px #423939b3',
                                               }}>
                                               {item.name
                                                 ? initials(
-                                                    getInitialsFromString(item.name)[0],
-                                                    getInitialsFromString(item.name)[1]
-                                                  )
+                                                  getInitialsFromString(item.name)[0],
+                                                  getInitialsFromString(item.name)[1]
+                                                )
                                                 : initials('N', 'A')}
                                             </div>
                                           ) : (

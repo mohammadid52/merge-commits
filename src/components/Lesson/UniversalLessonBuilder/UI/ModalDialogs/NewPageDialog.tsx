@@ -10,7 +10,7 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import Tooltip from '../../../../Atoms/Tooltip';
 import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as mutations from '../../../../../graphql/mutations';
+import * as customMutations from '../../../../../customGraphql/customMutations';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -76,7 +76,7 @@ const NewPageDialog = ({universalLessonDetails, closeAction}: INewPageDialog) =>
         ],
       };
       const result = await API.graphql(
-        graphqlOperation(mutations.updateUniversalLesson, {input})
+        graphqlOperation(customMutations.updateUniversalLesson, {input})
       );
     } catch (error) {
       console.error(error.message);

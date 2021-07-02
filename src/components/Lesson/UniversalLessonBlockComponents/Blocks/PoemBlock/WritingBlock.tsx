@@ -37,6 +37,8 @@ const WritingBlock = (props: WritingBlockProps) => {
     setPoemInput(filtered);
   };
 
+
+
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const {id, value} = e.target as HTMLSelectElement;
     const mapped = poemInput.map((input: PagePartInput) => {
@@ -56,7 +58,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     <div className="w-full flex flex-col">
       <div className={`w-full h-full rounded-xl z-10 p-4`}>
         <h3
-          className={`relative w-auto pb-2 mb-2 mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left ${themeTextColor} text-xl`}>
+          className={`relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}>
           Line Prompts
         </h3>
 

@@ -22,7 +22,7 @@ import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInter
 import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import * as queries from '../../../graphql/queries';
+import * as customQueries from '../../../customGraphql/customQueries';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -96,10 +96,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
-    themeBackgroundColor,
     universalLessonDetails,
     setUniversalLessonDetails,
     selectedPageID,
+    setFetchingLessonDetails,
     setSelectedPageID,
   } = useULBContext();
 
@@ -135,13 +135,20 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   }, [pageId]);
 
   const fetchLessonData = async () => {
-    const result: any = await API.graphql(
-      graphqlOperation(queries.getUniversalLesson, {
-        id: lessonId,
-      })
-    );
-    const savedData = result.data.getUniversalLesson;
-    setUniversalLessonDetails(savedData);
+    try {
+      setFetchingLessonDetails(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
+          id: lessonId,
+        })
+      );
+      const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
+    } catch {
+      setUniversalLessonDetails((prev: any) => ({...prev}));
+    } finally {
+      setFetchingLessonDetails(false);
+    }
   };
 
   /**********************************************
@@ -342,7 +349,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         );
         if (splittedPageContentIndex > -1) {
           let activePageContentData = pageContentData[splittedPageContentIndex];
-          // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
+          // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent?.length}_${contentType}_0`;
           const alreadyAddedPartContentLength: number =
             activePageContentData.partContent?.length;
           let activePagePartContentData = [...activePageContentData.partContent];
@@ -403,6 +410,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       lessonPlan: lessonPages,
     };
     setUniversalLessonDetails(temp);
+    return temp;
   };
 
   const updateBlockContentULBHandler = (
@@ -433,6 +441,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           pageContent: pageContentData,
         };
         break;
+
       case 'partContent':
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
@@ -467,12 +476,15 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       lessonPlan: lessonPages,
     };
     setUniversalLessonDetails(temp);
+    return temp;
   };
 
   const onBack = () => {
     history.goBack();
   };
 
+  console.log(selectedPageID, 'selectedPageIDselectedPageID');
+  
   return (
     /**
      *
@@ -484,7 +496,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div className="h-full bg-dark-gray flex overflow-hidden">
+    <div
+      id={`universalLessonBuilder`}
+      className="h-full bg-dark-gray flex overflow-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
 
       <div className="w-full overflow-y-auto h-full bg-gray-200">
@@ -505,10 +519,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           </div>
         </div>
         {/* Body */}
-        <div className="w-full h-full pb-8 m-auto pr-6">
+        <div className="w-full h-full pb-8 m-auto">
           <div
             id={`universalLessonBuilder`}
-            className={`h-full flex ${themeBackgroundColor} shadow-5 sm:rounded-lg overflow-y-hidden mb-4`}>
+            className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
             {/*{currentStepComp(universalBuilderStep)}*/}
 
             <BuilderWrapper

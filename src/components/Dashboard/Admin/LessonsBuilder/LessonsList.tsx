@@ -16,7 +16,6 @@ import PageCountSelector from '../../../Atoms/PageCountSelector';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as customQueries from '../../../../customGraphql/customQueries';
-import * as queries from '../../../../graphql/queries';
 import * as mutations from '../../../../graphql/mutations';
 import LessonsListRow from './LessonsListRow';
 import {getLanguageString} from '../../../../utilities/strings';
@@ -146,7 +145,7 @@ const LessonsList = () => {
       //   graphqlOperation(customQueries.listLessonsTitles)
       // );
       const fetchUList: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessons)
+        graphqlOperation(customQueries.listUniversalLessons)
       );
       if (!fetchUList) {
         throw new Error('fail!');

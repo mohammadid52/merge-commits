@@ -8,7 +8,7 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import Buttons from '../../../../Atoms/Buttons';
 import {graphqlOperation, API} from 'aws-amplify';
-import * as mutations from '../../../../../graphql/mutations';
+import * as customMutations from '../../../../../customGraphql/customMutations';
 
 const periodOptions = [
   {id: 1, name: '1'},
@@ -50,7 +50,7 @@ const LessonSummaryForm = (props: LessonSummaryFormInterface) => {
         duration: Number(formData.duration),
       };
       const res: any = await API.graphql(
-        graphqlOperation(mutations.updateUniversalLesson, {input})
+        graphqlOperation(customMutations.updateUniversalLesson, {input})
       );
     } catch (error) {
       console.error(error.message);

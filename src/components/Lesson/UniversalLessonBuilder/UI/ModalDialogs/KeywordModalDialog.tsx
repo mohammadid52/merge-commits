@@ -15,6 +15,7 @@ import Loader from '../../../../Atoms/Loader';
 import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface KeywordModalDialog extends IContentTypeComponentProps {
   inputObj?: any;
@@ -79,6 +80,17 @@ const KeywordModalDialog = ({
     }
   }, [inputObj]);
 
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
   //////////////////////////
   //  FOR DATA UPDATE     //
   //////////////////////////
@@ -121,12 +133,25 @@ const KeywordModalDialog = ({
 
   const onKeywordCreate = async () => {
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'keywords', inputFieldsArray, 0);
+      const updatedList = updateBlockContentULBHandler(
+        '',
+        '',
+        'keywords',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', 'keywords', inputFieldsArray, 0);
+      const updatedList = createNewBlockULBHandler(
+        '',
+        '',
+        'keywords',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     }
-    // close modal after saving
-    closeAction();
+
     // clear fields
     setInputFieldsArray(initialInputFieldsState);
     setUnsavedChanges(false);
