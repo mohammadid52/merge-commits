@@ -6,6 +6,7 @@ import {GiCancel} from 'react-icons/gi';
 import {HiPencil} from 'react-icons/hi';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { PartContentSub } from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
@@ -117,14 +118,14 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     );
   };
 
-  const composeHeader = (inputID: string, inputValue: string, inputType: string) => {
+  const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <h3
         id={inputID}
         className={`
             relative
             w-full flex font-medium text-left flex-row items-center text-gray-100 mt-4`}>
-        {inputValue}
+        {inputValue.value}
       </h3>
     );
     // switch (inputType) {
