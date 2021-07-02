@@ -72,9 +72,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     userLanguage,
     clientKey,
-    state: {user},
+    state: {lessonPage: {themeBackgroundColor = ''} = {}, user},
   } = useContext(GlobalContext);
-  const {themeBackgroundColor, universalLessonDetails} = useULBContext();
+  const {universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);

@@ -1,12 +1,16 @@
+import React, { useContext } from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import React from 'react';
 import {IoMdAddCircleOutline} from 'react-icons/io';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 export const AddNewBlock = (props: RowWrapperProps) => {
   const {handleModalPopToggle, idx} = props;
-  const {themeTextColor, setNewBlockSeqId} = useULBContext();
+  const {setNewBlockSeqId} = useULBContext();
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
 
   return (
     <div

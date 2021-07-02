@@ -2,14 +2,16 @@ import React, {useContext, useState} from 'react';
 import {FaEdit, FaTrashAlt} from 'react-icons/fa';
 
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import { useULBContext } from '../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../customHooks/dictionary';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 
 const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
-  const {themeTextColor, builderTheme} = useULBContext();
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {
+    clientKey,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    userLanguage,
+  } = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
@@ -55,17 +57,20 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
         <div className="inline-flex justify-end">
           <FaEdit
             className="w-6 h-6 mr-2 cursor-pointer"
-            color={builderTheme === 'light' ? 'black' : 'white'}
+            color={lessonPageTheme === 'light' ? 'black' : 'white'}
             onClick={handleEditPageDetail}
           />
           <FaTrashAlt
             className="w-6 h-6 cursor-pointer"
-            color={builderTheme === 'light' ? 'black' : 'white'}
+            color={lessonPageTheme === 'light' ? 'black' : 'white'}
             onClick={onDeleteButtonClick}
           />
         </div>
       </div>
-      <div className={`rounded-lg ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'} border-light-gray p-2`}>
+      <div
+        className={`rounded-lg ${
+          lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
+        } border-light-gray p-2`}>
         {/* <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
           <span className="text-gray-900 mr-2">
             {' '}

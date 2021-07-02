@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoIosGlobe} from 'react-icons/io';
 import {AiOutlineInstagram, AiOutlineYoutube} from 'react-icons/ai';
 import {FaSpotify} from 'react-icons/fa';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import { useULBContext } from '../../../../contexts/UniversalLessonBuilderContext';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface LinksBlockProps extends RowWrapperProps {
   id?: string;
@@ -14,8 +15,10 @@ interface LinksBlockProps extends RowWrapperProps {
 
 const LinksBlock = (props: LinksBlockProps) => {
   const {id, value} = props;
-  const {builderTheme, themeTextColor} = useULBContext();
-  const iconColor = builderTheme === 'light' ? 'black' : 'white';
+    const {
+      state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+    } = useContext(GlobalContext);
+  const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
   return (
     <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
       {/* <PhotoBlock /> */}

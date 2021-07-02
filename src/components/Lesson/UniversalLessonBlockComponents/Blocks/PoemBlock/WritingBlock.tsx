@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { nanoid } from 'nanoid';
 import { IconContext } from 'react-icons/lib/esm/iconContext';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { PagePartInput, PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface WritingBlockProps {
   id?: string;
@@ -16,7 +16,10 @@ interface WritingBlockProps {
 
 const WritingBlock = (props: WritingBlockProps) => {
   const {id, linestarters, poemInput, setPoemInput, saveAndEdit, setSaveAndEdit} = props;
-  const {builderTheme, themeTextColor} = useULBContext();
+  const {
+    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
+  
 
   const handleAddInput = () => {
     setPoemInput([
@@ -94,7 +97,7 @@ const WritingBlock = (props: WritingBlockProps) => {
               onChange={(e) => handleInputChange(e)}
               name={`${inputObj.domID}`}
               className={`${
-                builderTheme === 'light' ? 'bg-gray-200' : 'bg-charcoal'
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-charcoal'
               } mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md`}>
               {linestarters.map((line: PartContentSub, idx2: number) => (
                 <option key={`line_${idx}_${idx2}`}>{line.value}</option>

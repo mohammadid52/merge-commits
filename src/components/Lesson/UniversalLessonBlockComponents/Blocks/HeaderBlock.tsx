@@ -1,9 +1,10 @@
 import {findIndex, update} from 'lodash';
-import React, {useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {BiCheckCircle} from 'react-icons/bi';
 import {BsCheck} from 'react-icons/bs';
 import {GiCancel} from 'react-icons/gi';
 import {HiPencil} from 'react-icons/hi';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
@@ -27,7 +28,10 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     pagePartId,
     updateOnSave,
   } = props;
-  const {previewMode, themeTextColor} = mode !== 'lesson' ? useULBContext() : true;
+    const {
+      state: {lessonPage: {themeTextColor = ''} = {}},
+    } = useContext(GlobalContext);
+  const {previewMode} = mode !== 'lesson' ? useULBContext() : true;
 
   const EditButton = ({onEdit, editing, onSave, onCancel}: any) => {
     const btnClass =

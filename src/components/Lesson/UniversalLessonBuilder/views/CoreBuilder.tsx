@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useHistory} from 'react-router';
 
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
@@ -6,14 +6,15 @@ import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 import {FaMoon, FaSun} from 'react-icons/fa';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
+import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import LessonPlanDescription from '../UI/LessonPlanDescription';
 
@@ -67,6 +68,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     builderTheme,
     setBuilderTheme,
   } = useULBContext();
+  const {
+    dispatch,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark'} = {}},
+  } = useContext(GlobalContext);
+
+  const handleThemeChange = () => {
+    dispatch({
+      type: 'UPDATE_LESSON_PAGE_THEME',
+      payload: {theme: lessonPageTheme === 'dark' ? 'light' : 'dark'},
+    });
+  };
 
   const handleAddNewPage = () => {
     history.push(`/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`);
@@ -108,13 +120,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
         <div className="bg-dark flex flex-col items-center justify-center w-32 p-2">
           <button
-            onClick={() =>
-              setBuilderTheme((prevTheme: 'light' | 'dark') =>
-                prevTheme === 'light' ? 'dark' : 'light'
-              )
-            }
+            onClick={handleThemeChange}
             className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
-            {builderTheme === 'light' ? <FaSun /> : <FaMoon />}
+            {lessonPageTheme === 'light' ? <FaSun /> : <FaMoon />}
           </button>
           <button
             onClick={() => setPreviewMode(!previewMode)}

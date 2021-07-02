@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {IconContext} from 'react-icons';
 import {FaEraser, FaHighlighter} from 'react-icons/fa';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface HighlightColorBlockProps {
@@ -11,7 +11,9 @@ interface HighlightColorBlockProps {
 
 const HighlightColorBlock = (props: HighlightColorBlockProps) => {
   const {setColor, color} = props;
-  const {themeTextColor} = useULBContext()
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
 
   const buttons = [{color: 'mustard', name: 'Yellow'}];
 

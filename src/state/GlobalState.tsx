@@ -13,6 +13,11 @@ export interface globalStateType {
   status: string;
   error: string;
   isAuthenticated: boolean;
+  lessonPage: {
+    theme: 'light' | 'dark';
+    themeTextColor: string;
+    themeBackgroundColor: string;
+  };
   user: {
     id: string;
     authId: string;
@@ -22,7 +27,7 @@ export interface globalStateType {
     language: string;
     role: string;
     onBoardSurvey?: boolean;
-    location: any[]
+    location: any[];
   };
 }
 
@@ -34,13 +39,18 @@ export const globalState: globalStateType = {
     rooms: [],
     syllabus: [],
     lessons: [],
-    widgets: []
+    widgets: [],
   },
   currentPage: '',
   activeRoom: '',
   status: '',
   error: '',
   isAuthenticated: false,
+  lessonPage: {
+    theme: 'dark',
+    themeTextColor: 'text-white',
+    themeBackgroundColor: 'bg-dark-gray',
+  },
   user: {
     id: '',
     authId: '',
@@ -49,6 +59,6 @@ export const globalState: globalStateType = {
     lastName: '',
     language: '',
     role: '',
-    location: []
+    location: [],
   },
 };

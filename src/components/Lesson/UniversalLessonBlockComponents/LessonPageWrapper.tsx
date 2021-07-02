@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 import {useULBContext} from '../../../contexts/UniversalLessonBuilderContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 
@@ -9,7 +10,9 @@ interface PageWrapperProps {
 
 export const LessonPageWrapper = (props: PageWrapperProps) => {
   const {children} = props;
-  const {themeTextColor} = useULBContext();
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
 
   return (
     <div

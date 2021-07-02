@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiFillStar, AiOutlineStar} from 'react-icons/ai';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface StarRatingBlockProps {
   id?: string;
@@ -14,7 +15,9 @@ const StarRatingBlock = (props: StarRatingBlockProps) => {
   const [isRated, setIsRated] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(0);
   const [whichStarHovered, setWhichStarHovered] = useState<number>(0);
-  const {builderTheme, themeTextColor} = useULBContext();
+    const {
+      state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+    } = useContext(GlobalContext);
 
   const ratings = ['1', '2', '3', '4', '5'];
 
@@ -39,7 +42,7 @@ const StarRatingBlock = (props: StarRatingBlockProps) => {
     }
   };
 
-  const iconColor = builderTheme === 'light' ? 'gray' : '#ffffff';
+  const iconColor = lessonPageTheme === 'light' ? 'gray' : '#ffffff';
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
       <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">

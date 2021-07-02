@@ -19,8 +19,12 @@ interface FormBlockProps extends RowWrapperProps {
 }
 
 export const FormBlock = ({id, mode, value}: FormBlockProps) => {
-  const {lessonState, lessonDispatch, theme} = useContext(GlobalContext);
-  const {builderTheme, themeTextColor} = useULBContext();
+  const {
+    lessonState,
+    lessonDispatch,
+    theme,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
 
   //  Check if form is in a Lesson, and if it is...
   //  ...Dispatch the updated form data to context!
@@ -49,7 +53,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     }
   };
   
-  const themePlaceholderColor = builderTheme === 'light' ? 'placeholder-gray-800' : '';
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
 
   const LinkInput = ({inputID, label, value}: any) => {
     return (
@@ -66,7 +70,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           disabled={mode === 'building'}
           pattern="https://.*"
           className={`w-full py-2 px-4 mt-2 ${themePlaceholderColor} rounded-xl ${
-            builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           }`}
           name="url"
           type="text"
@@ -160,7 +164,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       return (
         <div
           className={`mt-2 flex flex-wrap text-gray-300 ${
-            builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           } py-2 px-4 rounded-xl`}>
           {values.map(({label, text, id}, idx: number) =>
             selectMany ? (
@@ -223,7 +227,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             id={inputID}
             disabled={mode === 'building'}
             className={`w-full py-2 px-4 ${themePlaceholderColor} rounded-xl ${
-              builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
             }`}
             name="emoji"
             onChange={isInLesson ? (e)=>onChange(e) : undefined}
@@ -267,7 +271,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               id={inputID}
               disabled={mode === 'building'}
               className={`w-full py-2 px-4 ${theme} mt-2 rounded-xl ${
-                builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
@@ -286,7 +290,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <textarea
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
+              className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
               name="story"
               onChange={isInLesson ? (e)=>onChange(e) : undefined}
               defaultValue={value}

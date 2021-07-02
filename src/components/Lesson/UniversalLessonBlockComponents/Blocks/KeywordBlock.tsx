@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import { useContext } from 'react';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
@@ -9,7 +10,9 @@ interface KeywordBlockProps extends RowWrapperProps {
 }
 
 const KeywordBlock = (props: KeywordBlockProps) => {
-  const {builderTheme, themeTextColor} = useULBContext();
+  const {
+    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const {id, value} = props;
   const keywords: any = [];
   const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
@@ -54,7 +57,9 @@ const KeywordBlock = (props: KeywordBlockProps) => {
                   ) => (
                     <div
                       key={`cardKW_${idx}`}
-                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'} border-light-gray`}>
+                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg ${
+                        lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
+                      } border-light-gray`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
                         <p className={`text-lg font-semibold ${themeTextColor}`}>
                           {word.label}:
