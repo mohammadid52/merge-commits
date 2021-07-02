@@ -341,9 +341,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         );
         if (splittedPageContentIndex > -1) {
           let activePageContentData = pageContentData[splittedPageContentIndex];
-          // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
+          // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent?.length}_${contentType}_0`;
           const alreadyAddedPartContentLength: number =
-            activePageContentData.partContent.length;
+            activePageContentData.partContent?.length;
           let activePagePartContentData = [...activePageContentData.partContent];
           if (alreadyAddedPartContentLength < inputObj) {
             activePagePartContentData = [
@@ -472,6 +472,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     history.goBack();
   };
 
+  console.log(selectedPageID, 'selectedPageIDselectedPageID');
+  
   return (
     /**
      *

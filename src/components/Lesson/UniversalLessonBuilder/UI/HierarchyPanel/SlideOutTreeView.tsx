@@ -116,7 +116,7 @@ export const SlideOutTreeView = (props: SlideOutTreeViewProps) => {
                           ref={provided.innerRef}
                           className=""
                           id={`sub-menu-${idx}`}>
-                          {partContent.length > 0 &&
+                          {partContent?.length > 0 &&
                             partContent.map((partContent: PartContent, idx2: number) => (
                               <Draggable
                                 isDragDisabled={!enableDnD}
