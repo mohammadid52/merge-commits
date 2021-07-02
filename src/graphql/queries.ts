@@ -4595,7 +4595,6 @@ export const getUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
-      estTime
       lessonPlan {
         id
         title
@@ -4606,6 +4605,7 @@ export const getUniversalLesson = /* GraphQL */ `
         disabled
         displayMode
         open
+        estTime
         pageContent {
           id
           tags
@@ -4654,7 +4654,6 @@ export const listUniversalLessons = /* GraphQL */ `
         notes
         cardImage
         cardCaption
-        estTime
         lessonPlan {
           id
           title
@@ -4665,6 +4664,7 @@ export const listUniversalLessons = /* GraphQL */ `
           disabled
           displayMode
           open
+          estTime
         }
         createdAt
         updatedAt

@@ -3240,7 +3240,6 @@ export type CreateUniversalLessonInput = {
   notes?: string | null,
   cardImage?: string | null,
   cardCaption?: string | null,
-  estTime?: string | null,
   lessonPlan?: Array< UniversalLessonPlanInput | null > | null,
 };
 
@@ -3254,6 +3253,7 @@ export type UniversalLessonPlanInput = {
   disabled?: boolean | null,
   displayMode?: string | null,
   open?: boolean | null,
+  estTime?: string | null,
   pageContent?: Array< UniversalpageContentInput | null > | null,
 };
 
@@ -3270,6 +3270,7 @@ export type UniversalPartContentInput = {
   type?: string | null,
   class?: string | null,
   value?: Array< UniversalContentInput | null > | null,
+  isRequired?: boolean | null,
 };
 
 export type UniversalContentInput = {
@@ -3277,7 +3278,13 @@ export type UniversalContentInput = {
   type?: string | null,
   label?: string | null,
   value?: string | null,
-  isRequired?: boolean | null,
+  options?: Array< UniversalContentOptionsInput | null > | null,
+};
+
+export type UniversalContentOptionsInput = {
+  id?: string | null,
+  label?: string | null,
+  test?: string | null,
 };
 
 export type ModelUniversalLessonConditionInput = {
@@ -3300,7 +3307,6 @@ export type ModelUniversalLessonConditionInput = {
   notes?: ModelStringInput | null,
   cardImage?: ModelStringInput | null,
   cardCaption?: ModelStringInput | null,
-  estTime?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonConditionInput | null > | null,
   or?: Array< ModelUniversalLessonConditionInput | null > | null,
   not?: ModelUniversalLessonConditionInput | null,
@@ -3328,7 +3334,6 @@ export type UniversalLesson = {
   notes?: string | null,
   cardImage?: string | null,
   cardCaption?: string | null,
-  estTime?: string | null,
   lessonPlan?:  Array<UniversalLessonPlan | null > | null,
   createdAt?: string,
   updatedAt?: string,
@@ -3345,6 +3350,7 @@ export type UniversalLessonPlan = {
   disabled?: boolean | null,
   displayMode?: string | null,
   open?: boolean | null,
+  estTime?: string | null,
   pageContent?:  Array<UniversalpageContent | null > | null,
 };
 
@@ -3363,6 +3369,7 @@ export type UniversalPartContent = {
   type?: string | null,
   class?: string | null,
   value?:  Array<UniversalContent | null > | null,
+  isRequired?: boolean | null,
 };
 
 export type UniversalContent = {
@@ -3371,7 +3378,14 @@ export type UniversalContent = {
   type?: string | null,
   label?: string | null,
   value?: string | null,
-  isRequired?: boolean | null,
+  options?:  Array<UniversalContentOptions | null > | null,
+};
+
+export type UniversalContentOptions = {
+  __typename: "UniversalContentOptions",
+  id?: string | null,
+  label?: string | null,
+  test?: string | null,
 };
 
 export type UpdateUniversalLessonInput = {
@@ -3395,7 +3409,6 @@ export type UpdateUniversalLessonInput = {
   notes?: string | null,
   cardImage?: string | null,
   cardCaption?: string | null,
-  estTime?: string | null,
   lessonPlan?: Array< UniversalLessonPlanInput | null > | null,
 };
 
@@ -4139,7 +4152,6 @@ export type ModelUniversalLessonFilterInput = {
   notes?: ModelStringInput | null,
   cardImage?: ModelStringInput | null,
   cardCaption?: ModelStringInput | null,
-  estTime?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonFilterInput | null > | null,
   or?: Array< ModelUniversalLessonFilterInput | null > | null,
   not?: ModelUniversalLessonFilterInput | null,
@@ -16127,7 +16139,6 @@ export type CreateUniversalLessonMutation = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -16139,6 +16150,7 @@ export type CreateUniversalLessonMutation = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
@@ -16180,7 +16192,6 @@ export type UpdateUniversalLessonMutation = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -16192,6 +16203,7 @@ export type UpdateUniversalLessonMutation = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
@@ -16233,7 +16245,6 @@ export type DeleteUniversalLessonMutation = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -16245,6 +16256,7 @@ export type DeleteUniversalLessonMutation = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
@@ -21400,7 +21412,6 @@ export type GetUniversalLessonQuery = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -21412,6 +21423,7 @@ export type GetUniversalLessonQuery = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
@@ -21458,7 +21470,6 @@ export type ListUniversalLessonsQuery = {
       notes?: string | null,
       cardImage?: string | null,
       cardCaption?: string | null,
-      estTime?: string | null,
       lessonPlan?:  Array< {
         __typename: "UniversalLessonPlan",
         id?: string | null,
@@ -21470,6 +21481,7 @@ export type ListUniversalLessonsQuery = {
         disabled?: boolean | null,
         displayMode?: string | null,
         open?: boolean | null,
+        estTime?: string | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -32939,7 +32951,6 @@ export type OnCreateUniversalLessonSubscription = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -32951,6 +32962,7 @@ export type OnCreateUniversalLessonSubscription = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
@@ -32987,7 +32999,6 @@ export type OnUpdateUniversalLessonSubscription = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -32999,6 +33010,7 @@ export type OnUpdateUniversalLessonSubscription = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
@@ -33035,7 +33047,6 @@ export type OnDeleteUniversalLessonSubscription = {
     notes?: string | null,
     cardImage?: string | null,
     cardCaption?: string | null,
-    estTime?: string | null,
     lessonPlan?:  Array< {
       __typename: "UniversalLessonPlan",
       id?: string | null,
@@ -33047,6 +33058,7 @@ export type OnDeleteUniversalLessonSubscription = {
       disabled?: boolean | null,
       displayMode?: string | null,
       open?: boolean | null,
+      estTime?: string | null,
       pageContent?:  Array< {
         __typename: "UniversalpageContent",
         id?: string | null,
