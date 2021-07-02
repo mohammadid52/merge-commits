@@ -10,6 +10,7 @@ import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLes
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -105,9 +106,8 @@ const HeaderModalComponent = ({
       id: list.id,
       lessonPlan: [...list.lessonPlan],
     };
-    console.log(input.lessonPlan);
 
-    // await updateLessonPageToDB(input);
+    await updateLessonPageToDB(input);
   };
 
   const onHeaderCreate = async () => {
@@ -121,11 +121,25 @@ const HeaderModalComponent = ({
       .filter(Boolean)
       .join(' ');
     if (isEditingMode) {
-      const updatedList: any = updateBlockContentULBHandler('', '', 'header', [value], 0);
+      const updatedList: any = updateBlockContentULBHandler(
+        '',
+        '',
+        FIELD_ID,
+        [{id: uuidv4().toString(), value}],
+        0,
+        classValue
+      );
 
       await addToDB(updatedList);
     } else {
-      const updatedList: any = createNewBlockULBHandler('', '', 'header', [value], 0);
+      const updatedList: any = createNewBlockULBHandler(
+        '',
+        '',
+        FIELD_ID,
+        [{id: uuidv4().toString(), value}],
+        0,
+        classValue
+      );
       await addToDB(updatedList);
     }
 

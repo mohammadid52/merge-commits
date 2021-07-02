@@ -475,6 +475,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     history.goBack();
   };
 
+  console.log('universalLessonDetails: ----------------', universalLessonDetails);
+
   return (
     /**
      *

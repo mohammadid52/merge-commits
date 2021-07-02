@@ -34,8 +34,8 @@ const estimatedTimeList = Array(30)
 
 const LessonPlanForm = () => {
   const history = useHistory();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
@@ -46,6 +46,7 @@ const LessonPlanForm = () => {
     estTime: '1 min',
   });
   const [errors, setErrors] = useState<any>({});
+  const [creatingLesson, setCreatingLesson] = useState(false);
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
   const pages = universalLessonDetails?.lessonPlan;
@@ -67,6 +68,7 @@ const LessonPlanForm = () => {
     const isValid = validateForm();
     if (isValid) {
       try {
+        setCreatingLesson(true);
         const input = {
           id: lessonId,
           lessonPlan: [
@@ -92,12 +94,14 @@ const LessonPlanForm = () => {
         }
       } catch (error) {
         console.error(error.message);
+      } finally {
+        setCreatingLesson(false);
       }
     }
   };
 
   const validateForm = () => {
-    const {id = '', label = '', title = ''} = inputObj;
+    const {label = '', title = ''} = inputObj;
     let isValid = true,
       formErrors: any = {};
 
@@ -119,13 +123,6 @@ const LessonPlanForm = () => {
       estTime: name,
     }));
   };
-  const handleEstimationTime = (value: string) => {
-    setInputObj((prevInputs: ILessonInputs) => ({
-      ...prevInputs,
-      estTime: value,
-    }));
-  };
-  
 
   return (
     <div className="w-full m-auto">
@@ -200,6 +197,7 @@ const LessonPlanForm = () => {
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
                 label={'Save'}
+                disabled={creatingLesson}
                 type="submit"
                 onClick={createPage}
               />

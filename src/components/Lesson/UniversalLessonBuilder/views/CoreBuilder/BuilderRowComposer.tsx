@@ -161,19 +161,19 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 section="pageContent">
                 <BuilderRowWrapper
                   mode={mode}
-                  hasContent={pagePart.partContent.length > 0}
+                  hasContent={pagePart?.partContent?.length > 0}
                   contentID={pagePart.id}
                   classString={`${pagePart.class}`}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
-                  {pagePart.partContent.length > 0 ? (
+                  {pagePart?.partContent?.length > 0 ? (
                     <DragDropContext
                       onDragEnd={(result) =>
-                        handleOnDragEnd(result, pagePart.id, pagePart.partContent)
+                        handleOnDragEnd(result, pagePart.id, pagePart?.partContent)
                       }>
                       <Droppable isDropDisabled={!enableDnD} droppableId="partContent">
                         {(provided) => {
-                          const partContent = pagePart.partContent;
+                          const partContent = pagePart?.partContent || [];
                           return (
                             <ul
                               {...provided.droppableProps}
@@ -330,7 +330,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                         handleModalPopToggle={(dialogToToggle) =>
                           handleModalPopToggle(
                             dialogToToggle,
-                            pagePart.partContent.length,
+                            pagePart?.partContent?.length,
                             'partContent',
                             pagePart.id
                           )

@@ -7,6 +7,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {v4 as uuidv4} from 'uuid';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -66,10 +67,14 @@ const ParaModalComponent = ({
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
     if (isEditingMode) {
-      const updatedList = updateBlockContentULBHandler('', '', 'paragraph', [value]);
+      const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
+        {id: uuidv4().toString(), value},
+      ]);
       await addToDB(updatedList);
     } else {
-      const updatedList = createNewBlockULBHandler('', '', 'paragraph', [value]);
+      const updatedList = createNewBlockULBHandler('', '', FIELD_ID, [
+        {id: uuidv4().toString(), value},
+      ]);
       await addToDB(updatedList);
     }
     // close modal after saving
