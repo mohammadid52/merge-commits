@@ -9,8 +9,9 @@ import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exam
 import Foot from './Foot/Foot';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {
-  PagePart,
+  PagePart, PagePartInput,
   PartContent,
+  PartContentSub,
   UniversalLessonPage,
 } from '../../interfaces/UniversalLessonInterfaces';
 
@@ -20,21 +21,20 @@ const LessonApp = () => {
   const match = useRouteMatch();
 
   const [overlay, setOverlay] = useState<string>('');
+  const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
 
   //  NAVIGATION CONSTANTS
   const PAGES = lessonState.lessonData.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
-  /**
-   * HELP SECTION:
-   *  On mount ->
-   *  1. setLessonDataLoaded -> true;
-   *  2. set current page
-   */
+  //  LESSON FETCH AND UNMOUNT
   useEffect(() => {
     setTimeout(() => {
       lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
     }, 1000);
+    return () => {
+      lessonDispatch({type: 'CLEANUP'});
+    };
   }, []);
 
   //  RESPONSE TO LOADING LESSON DATA FETCH
@@ -61,23 +61,27 @@ const LessonApp = () => {
     if (PAGES) {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
         const allPageParts = page.pageContent;
-
-        const initialPageData = allPageParts.map((pagePart: PagePart) => {
-          const pagePartContent = pagePart.partContent.map((partContent: PartContent) => {
-            return {
-              domID: partContent.id,
-              input: [''],
-            };
-          });
-          return {
-            pagePartID: `${pagePart.id}`,
-            pagePartInput: pagePartContent,
-          };
-        });
+        const initialPageData = allPageParts.reduce((pageData: PagePartInput[], pagePart: PagePart) => {
+          const pagePartContent = pagePart.partContent.reduce((pagePartAcc: any[], partContent: PartContent) => {
+            const isForm = (/form/g).test(partContent.type);
+            if(isForm){
+              // map through partContent sub array
+              return [...pagePartAcc, ...partContent.value.map((partContentSub: PartContentSub)=>{
+                return {
+                  domID: partContentSub.id,
+                  input: ['']
+                }
+              })]
+            } else {return pagePartAcc
+            }
+          },[]);
+          return [...pageData, ...pagePartContent]
+        },[]);
         return initialPageData;
       });
-
+      // console.log('initialPageData - ', mappedPages)
       lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
+      setStudentDataInitialized(true);
     }
   }, [lessonState.lessonData.lessonPlan]);
 
