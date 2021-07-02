@@ -100,6 +100,7 @@ module.exports = {
     },
     inset: {
       0: '0rem',
+      0.5: '0.5rem',
       1: '1rem',
       2.5: '2.5rem',
       2: '2rem',
