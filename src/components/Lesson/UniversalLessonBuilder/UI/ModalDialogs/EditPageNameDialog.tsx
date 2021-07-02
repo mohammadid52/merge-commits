@@ -126,7 +126,7 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
         />
       ) : (
         <div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <FormInput
               disabled={true}
               value={updatedValues.id}
@@ -134,7 +134,7 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
               onChange={onChange}
               id={'id'}
             />
-          </div>
+          </div> */}
 
           <div className="mb-4">
             <FormInput
