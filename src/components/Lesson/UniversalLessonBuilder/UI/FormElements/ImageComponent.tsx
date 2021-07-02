@@ -6,13 +6,13 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 
-import { getImageFromS3Static } from '../../../../../utilities/services';
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {getImageFromS3Static} from '../../../../../utilities/services';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   EditQuestionModalDict,
   UniversalBuilderDict,
 } from '../../../../../dictionary/dictionary.iconoclast';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 interface IImageInput {
   url: string;
@@ -34,6 +34,8 @@ const ImageFormComponent = ({
   createNewBlockULBHandler,
   updateBlockContentULBHandler,
   handleGalleryModal,
+  setUnsavedChanges,
+  askBeforeClose,
   selectedImageFromGallery,
 }: IImageFormComponentProps) => {
   const {
@@ -79,6 +81,7 @@ const ImageFormComponent = ({
     setErrors((prevValues) => ({...prevValues, url: ''}));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUnsavedChanges(true);
     const name: string = (event.target as HTMLInputElement).name;
     const value: string = (event.target as HTMLInputElement).value;
     setImageInputs((prevValues) => ({...prevValues, [name]: value}));
@@ -109,6 +112,7 @@ const ImageFormComponent = ({
         createNewBlockULBHandler('', '', 'image', [payload]);
       }
       setIsLoading(false);
+      setUnsavedChanges(false);
       closeAction();
     }
   };
@@ -237,7 +241,7 @@ const ImageFormComponent = ({
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-              onClick={closeAction}
+              onClick={askBeforeClose}
               transparent
             />
             <Buttons

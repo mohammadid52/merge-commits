@@ -25,7 +25,6 @@ interface TopMenuControlProps {
   handleQuitShare: () => void;
   handleClick: () => void;
   handleHomePopup: () => void;
-  pageViewed: { pageID: number; stage: string };
   handlePageChange: any;
   setQuickRegister: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -45,18 +44,17 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
     handleQuitShare,
     handleClick,
     handleHomePopup,
-    pageViewed,
     handlePageChange,
     setQuickRegister,
   } = props;
 
-  const { state, theme, dispatch } = useContext(LessonControlContext);
+  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(GlobalContext);
   const { clientKey, userLanguage } = useContext(GlobalContext);
   const { lessonPlannerDict } = useDictionary(clientKey);
 
   const studentsOnline = () => {
-    if (state.roster) {
-      return state.roster.length;
+    if (controlState.roster) {
+      return controlState.roster.length;
     } else {
       return 0;
     }
@@ -101,9 +99,9 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
             <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity</p>
             <p className="text-xs">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}:{' '}
-              {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}
+              {/*{formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}*/}
             </p>
-            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: 1 hr 15 mins</p>
+            <p className="text-xs">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: t.b.d.</p>
           </div>
         </div>
 
@@ -113,7 +111,7 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         <div
           className="relative 
             w-6/10 lg:w-full h-20 flex flex-col items-center z-100">
-          <LessonControlBar pageViewed={pageViewed} handlePageChange={handlePageChange} />
+          <LessonControlBar handlePageChange={handlePageChange} />
         </div>
         {/* CONTROL END */}
       </div>

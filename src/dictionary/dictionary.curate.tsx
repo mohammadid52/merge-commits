@@ -660,11 +660,19 @@ const lessonBuilderDict: any = {
         'Publishing your changes will update session plans in all the connected modules, Do you want to continue?',
       TITLE: 'Preview Details',
     },
+    MESSAGES: {
+      UNSAVE: 'You have unsaved changes, do you still want to continue?',
+      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',
+    },
   },
   ES: {
     PREVIEW_DETAILS: {
       WARN_MESSAGE: 'TBD',
       TITLE: 'TBD',
+    },
+    MESSAGES: {
+      UNSAVE: 'TBD',
+      PUBLISH_DISABLED_INFO: 'TBD',
     },
   },
 };
@@ -1182,7 +1190,7 @@ const RoomBuilderdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Cohort',
     CURRICULUM_LABEL: 'Curriculum',
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
-    MAXSTUDENT_LABEL: 'Max.Students (Add number between 1 to 30)',
+    MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max participants',
     BUTTON: {
       SAVE: 'Save',
@@ -1332,7 +1340,7 @@ const RoomEDITdict: any = {
     CLASS_NAME_PLACEHOLDER: 'Select Cohort',
     CURRICULUM_LABEL: 'Curriculum',
     CURRICULUM_PLACEHOLDER: 'Select Curriculum',
-    MAXSTUDENT_LABEL: 'Max.Students (Add number between 1 to 30)',
+    MAXSTUDENT_LABEL: 'Max Number of Students',
     MAXSTUDENT_PLACHOLDER: 'Max participants',
     messages: {
       institutebefor: 'Please create an organization before creating Class.',
@@ -3010,20 +3018,92 @@ const UniversalBuilderDict: any = {
 
 const LessonBuilderDict: any = {
   EN: {
-    TITLE: 'SESSION PLAN BUILDER',
+    TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
-
+    BUTTON: {
+      ADD_PLAN: 'Add new page',
+      EDIT: 'Edit',
+      VIEW: 'View',
+      PREVIEW: 'Preview',
+      SAVE: 'Save',
+    },
+    LESSON_PLAN_COLUMN: {
+      ID: 'id',
+      PAGE_TITLE: 'Page Title',
+      PLAN_LABEL: 'Plan Label',
+      DESCRIPTION: 'Description',
+      ESTIMATED_TIME: 'Estimated Time',
+      ACTION: 'Action',
+    },
+    LESSON_PLAN_FORM: {
+      DESCRIPTION: 'Description',
+      ESTIMATED_TIME: 'Estimated Time',
+      HEADING: 'Create new lesson plan',
+      ID: 'Id',
+      LABEL: 'Lesson plan label',
+      TITLE: 'Page title',
+    },
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
+      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',
     },
+    INFORMATION_HEADING: 'General Information',
+    NAME: 'Lesson Name',
+    OWNER: 'Institution Owner',
+    DESCRIPTION: 'Description',
+    DESIGNER: 'Designers',
+    DURATION: 'Duration',
+    LANGUAGE: 'Languages',
+    LESSON_PLAN_LABEL: 'Lesson Plan Label',
+    OBJECTIVE: 'Objective',
+    PURPOSE: 'Purpose',
+    RESOURCES: 'Resources',
+    NOTES: 'Notes & Reflection',
+    SUMMARY: 'Student Summary',
   },
   ES: {
     TITLE: 'TBD',
     SUBTITLE: 'TBD',
-
+    BUTTON: {
+      ADD_PLAN: 'TBD',
+      EDIT: 'TBD',
+      VIEW: 'TBD',
+      PREVIEW: 'TBD',
+      SAVE: 'TBD',
+    },
+    LESSON_PLAN_COLUMN: {
+      ID: 'TBD',
+      PAGE_TITLE: 'TBD',
+      PLAN_LABEL: 'TBD',
+      DESCRIPTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      ACTION: 'TBD',
+    },
+    LESSON_PLAN_FORM: {
+      DESCRIPTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      HEADING: 'TBD',
+      ID: 'TBD',
+      LABEL: 'TBD',
+      TITLE: 'TBD',
+    },
     MESSAGES: {
       UNSAVE: 'TBD',
+      PUBLISH_DISABLED_INFO: 'TBD',
     },
+    INFORMATION_HEADING: 'TBD',
+    NAME: 'TBD',
+    OWNER: 'TBD',
+    DESCRIPTION: 'TBD',
+    DESIGNER: 'TBD',
+    DURATION: 'TBD',
+    LANGUAGE: 'TBD',
+    LESSON_PLAN_LABEL: 'TBD',
+    OBJECTIVE: 'TBD',
+    PURPOSE: 'TBD',
+    RESOURCES: 'TBD',
+    NOTES: 'TBD',
+    SUMMARY: 'TBD',
   },
 };
 const LessonEditDict: any = {

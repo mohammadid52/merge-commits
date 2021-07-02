@@ -45,7 +45,12 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   isEditingMode?: boolean;
 }
 
-const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) => {
+const CreateQuestion = ({
+  setCheckpQuestions,
+  setUnsavedChanges,
+  checkpQuestions,
+  changeStep,
+}: any) => {
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {AddNewQuestionDict} = useDictionary(clientKey);
@@ -190,6 +195,7 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
     noneOfAbove,
   } = questionData;
   const onInputChange = (e: any) => {
+    setUnsavedChanges(true);
     clearErrors();
     setQuestionData({
       ...questionData,
@@ -439,7 +445,12 @@ const CreateQuestion = ({setCheckpQuestions, checkpQuestions, changeStep}: any) 
   );
 };
 
-const ExistingQuestionList = ({checkpQuestions, changeStep, setCheckpQuestions}: any) => {
+const ExistingQuestionList = ({
+  checkpQuestions,
+  setUnsavedChanges,
+  changeStep,
+  setCheckpQuestions,
+}: any) => {
   const [selectedQuestionIds, setSelectedQuestionIds] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [allQuestionsList, setAllQuestionsList] = useState([]);
@@ -460,7 +471,7 @@ const ExistingQuestionList = ({checkpQuestions, changeStep, setCheckpQuestions}:
       updatedList = selectedQuestionIds.filter((id) => id !== questId);
     }
     setSelectedQuestionIds(updatedList);
-    // setUnsavedChanges(true);
+    setUnsavedChanges(true);
   };
 
   const searchFromList = () => {
@@ -662,10 +673,12 @@ const QuestionLookup = ({
   setCheckpQuestions,
   updateBlockContentULBHandler,
   createNewBlockULBHandler,
+  askBeforeClose,
 }: {
   checkpQuestions: InitialState[];
   changeStep: (step: string) => void;
   closeAction: () => void;
+  askBeforeClose: () => void;
   isEditingMode?: boolean;
   updateBlockContentULBHandler: any;
   createNewBlockULBHandler: any;
@@ -817,7 +830,7 @@ const QuestionLookup = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
           <Buttons
@@ -836,6 +849,8 @@ const CheckpointFormDialog = ({
   isEditingMode,
   updateBlockContentULBHandler,
   createNewBlockULBHandler,
+  setUnsavedChanges,
+  askBeforeClose,
 }: IHeaderModalComponentProps) => {
   const [checkpQuestions, setCheckpQuestions] = useState([]);
 
@@ -856,12 +871,14 @@ const CheckpointFormDialog = ({
           <CreateQuestion
             checkpQuestions={checkpQuestions}
             changeStep={changeStep}
+            setUnsavedChanges={setUnsavedChanges}
             setCheckpQuestions={setCheckpQuestions}
           />
         );
       case 'QuestionLookup':
         return (
           <QuestionLookup
+            askBeforeClose={askBeforeClose}
             isEditingMode={isEditingMode}
             updateBlockContentULBHandler={updateBlockContentULBHandler}
             createNewBlockULBHandler={createNewBlockULBHandler}
@@ -876,6 +893,7 @@ const CheckpointFormDialog = ({
           <ExistingQuestionList
             setCheckpQuestions={setCheckpQuestions}
             checkpQuestions={checkpQuestions}
+            setUnsavedChanges={setUnsavedChanges}
             changeStep={changeStep}
           />
         );

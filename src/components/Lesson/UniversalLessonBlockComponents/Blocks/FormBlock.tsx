@@ -311,7 +311,11 @@ export const FormBlock = (props: FormBlockProps) => {
       {value &&
         value.length > 0 &&
         value.map((v: any, i: number) => {
-          return composeInput(`${id}_${i}`, v.type, v.label, v.value);
+          return (
+            <React.Fragment key={`formBlock_${i}`}>
+              {composeInput(`${id}_${i}`, v.type, v.label, v.value)}
+            </React.Fragment>
+          );
         })}
     </>
   );

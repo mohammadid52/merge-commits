@@ -9,7 +9,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Loader from '../../../../Atoms/Loader';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 // import Tooltip from '../../../../Atoms/Tooltip';
-import UnderlinedTabs from '../../../../Atoms/UnderlinedTabs';
+import UnderlinedTabs, {ITabElementProps} from '../../../../Atoms/UnderlinedTabs';
 
 import UnitLookup from './UnitLookup';
 import LessonMeasurements from './LessonMeasurements';
@@ -20,8 +20,10 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import * as customQueries from '../../../../../customGraphql/customQueries';
+import * as queries from '../../../../../graphql/queries';
+import * as mutations from '../../../../../graphql/mutations';
 import {languageList} from '../../../../../utilities/staticData';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface ILessonTabViewProps {
   designersList: any[];
@@ -30,8 +32,13 @@ interface ILessonTabViewProps {
 const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const match = useRouteMatch();
   const history = useHistory();
+  const {
+    setUniversalLessonDetails,
+    universalLessonDetails,
+    activeTab,
+    setActiveTab,
+  } = useULBContext();
 
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [lessonData, setLessonData] = useState<any>();
   const [selectedDesigners, setSelectedDesigners] = useState([]);
@@ -40,9 +47,10 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict, LessonEditDict} = useDictionary(
     clientKey
   );
-  const {universalLessonDetails} = useULBContext();
+
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
+  const tab = params.get('tab');
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -58,19 +66,21 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     },
   ];
 
-  const fetchLessonDetails = async () => {
+  const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.getLesson, {
+        graphqlOperation(queries.getUniversalLesson, {
           id: lessonId,
         })
       );
-      const savedData = result.data.getLesson;
+      const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
       setLessonData(savedData);
+
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );
-      setSelectedDesigners(designers);
+      setSelectedDesigners(designers || []);
       setLoading(false);
     } catch {
       console.log('Error while fetching lesson data');
@@ -84,7 +94,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);
-      fetchLessonDetails();
+      fetchUniversalLessonDetails();
     }
   };
 
@@ -92,18 +102,39 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     checkValidUrl();
   }, []);
 
+  useEffect(() => {
+    if (tab) {
+      setActiveTab(parseInt(tab));
+    }
+  }, [tab]);
+
   const handleEdit = () => {
     const redirectionUrl = `${match.url.replace('view', `edit?lessonId=${lessonId}`)}`;
     history.push(redirectionUrl);
-  }
+  };
+
+  const updateTab = (tab: number) => {
+    // setActiveTab(tab);
+    history.push(`${match.url}?lessonId=${lessonId}&tab=${tab}`);
+  };
+
+  const {institution = {}, language = [], objectives = [], purpose = '', title = ''} =
+    lessonData || {};
 
   const currentTabComp = (activeTab: string) => {
     switch (activeTab) {
       case '0':
-        return <LessonSummaryForm />;
+        return (
+          <LessonSummaryForm
+            lessonId={lessonId}
+            setFormData={setLessonData}
+            formData={lessonData}
+          />
+        );
       case '1':
         return (
           <LessonPlansList
+            loading={loading}
             lessonId={lessonId}
             universalLessonDetails={universalLessonDetails}
           />
@@ -116,7 +147,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
             <UnitLookup
               lessonName={''}
               lessonId={lessonId}
-              institution={lessonData.institution}
+              institution={institution}
               lessonType={''}
               lessonPlans={''}
             />
@@ -134,7 +165,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
     }
   };
 
-  const tabs = [
+  const tabs: ITabElementProps[] = [
     {
       index: 0,
       title: 'Lesson Summary',
@@ -146,35 +177,23 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
       title: 'Lesson Plan',
       icon: <FaQuestionCircle />,
       content: currentTabComp(`${activeTab}`),
-      // disabled: formData.institution && formData.institution.id ? false : true,
     },
     {
       index: 2,
       title: 'Lesson Measurements',
       icon: <FaChartLine />,
       content: currentTabComp(`${activeTab}`),
-      // disabled: formData.institution && formData.institution.id ? false : true,
     },
     {
       index: 3,
       title: 'Assign to Units',
       icon: <FaUnity />,
       content: currentTabComp(`${activeTab}`),
-      // disabled: formData.institution && formData.institution.id ? false : true,
+      disabled: true,
+      tooltipText: LessonBuilderDict[userLanguage]['MESSAGES']['PUBLISH_DISABLED_INFO'],
+      tooltipPlacement: 'left',
     },
   ];
-
-  const updateTab = (tab: number) => {
-    setActiveTab(tab);
-  };
-
-  const {
-    institution = {},
-    language = [],
-    objectives = [],
-    purpose = '',
-    title = '',
-  } = lessonData || {};
 
   return (
     <div className="w-full h-full">
@@ -280,7 +299,7 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
           </div>
         </div>
         {true && (
-          <div className="bg-white border-gray-200 shadow-5 overflow-hidden sm:rounded-lg  mb-4">
+          <div className="bg-white border-gray-200 shadow-5 overflow-hidden sm:rounded-lg mb-4">
             <div className="">
               <UnderlinedTabs tabs={tabs} activeTab={activeTab} updateTab={updateTab} />
             </div>

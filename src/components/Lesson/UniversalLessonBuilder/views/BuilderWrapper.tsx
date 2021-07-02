@@ -1,22 +1,24 @@
 import React, {useContext, useState, useEffect} from 'react';
+import {IoIosMenu} from 'react-icons/io';
+
 import useDictionary from '../../../../customHooks/dictionary';
+import { useQuery } from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import PageSelector from '../UI/PageSelector';
-import {Toolbar} from '../UI/Toolbar';
 import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
-import {HierarchyPanel} from '../UI/HierarchyPanel';
-import {BuilderMenu} from '../UI/BuilderMenu';
 
-import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
-import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
-
-import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 import Modal from '../../../Atoms/Modal';
 
+import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
+import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
+import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
+import PageSelector from '../UI/PageSelector';
+// import {Toolbar} from '../UI/Toolbar';
+// import {HierarchyPanel} from '../UI/HierarchyPanel';
+import {BuilderMenu} from '../UI/BuilderMenu';
 import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
 import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
 import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
@@ -25,7 +27,6 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
 import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
-
 import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
 import LinestarterModalDialog from '../UI/ModalDialogs/LinestarterModalDialog';
@@ -45,8 +46,8 @@ import {
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
+import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
-import { useQuery } from '../../../../customHooks/urlParam';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -78,6 +79,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
   const isNewPage = params.get('isNewPage');
+  const lessonId = params.get('lessonId');
 
   const [loading] = useState(false);
 
@@ -109,7 +111,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     if (isNewPage === 'true') {
       handleModalPopToggle(dialogLabelList.NEW_PAGE);
     }
-  },[]);
+  }, []);
 
   const handleGalleryModal = () => {
     setOpenGallery((prevShow) => !prevShow);
@@ -281,8 +283,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       classString: selectedContentClass = '',
     } = blockConfig;
 
-    console.log(type);
-
     const updateBlockContent = (
       targetID: string,
       propertyToTarget: string,
@@ -323,6 +323,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputObj: inputObj,
       selectedPageID,
       updateBlockContentULBHandler: updateBlockContent,
+      setUnsavedChanges,
+      askBeforeClose,
     };
 
     switch (type) {
@@ -336,10 +338,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'image':
         return (
           <ImageFormComponent
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
+            {...commonProps}
             handleGalleryModal={handleGalleryModal}
             selectedImageFromGallery={selectedImageFromGallery}
           />
@@ -351,67 +350,19 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'form-default':
         return <InputModalComponent {...commonProps} contentType={type} />;
       case 'video':
-        return (
-          <YouTubeMediaDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <YouTubeMediaDialog {...commonProps} />;
       case 'tag':
-        return (
-          <TagInputDialog
-            updateBlockContentULBHandler={updateBlockContent}
-            closeAction={closeAction}
-            inputObj={inputObj}
-          />
-        );
+        return <TagInputDialog {...commonProps} />;
       case 'jumbotron':
-        return (
-          <JumbotronFormDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <JumbotronFormDialog {...commonProps} />;
       case 'highlighter':
-        return (
-          <HighlighterFormDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <HighlighterFormDialog {...commonProps} />;
       case 'poem':
-        return (
-          <LinestarterModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <LinestarterModalDialog {...commonProps} />;
       case 'keywords':
-        return (
-          <KeywordModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <KeywordModalDialog {...commonProps} />;
       case 'links':
-        return (
-          <LinksModalDialog
-            createNewBlockULBHandler={createNewBlock}
-            closeAction={closeAction}
-            inputObj={inputObj}
-            updateBlockContentULBHandler={updateBlockContent}
-          />
-        );
+        return <LinksModalDialog {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
@@ -424,6 +375,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
             updateContent={updateBlockContent}
+            setUnsavedChanges={setUnsavedChanges}
+            askBeforeClose={askBeforeClose}
             closeAction={closeAction}
             selectedForm={
               type === FORM_TYPES.ATTACHMENTS
@@ -449,6 +402,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
             updateContent={updateBlockContent}
+            setUnsavedChanges={setUnsavedChanges}
+            askBeforeClose={askBeforeClose}
             closeAction={closeAction}
             selectedForm={type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY}
           />
@@ -491,7 +446,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }
   };
-
+  const {
+    UnsavedModal,
+    askBeforeClose,
+    unsavedChanges,
+    setUnsavedChanges,
+  } = useUnsavedChanges(closeAction);
   return (
     <div
       id={`builderWrapper`}
@@ -513,6 +473,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         currentModalDialog={currentModalDialog}
         handleModalPopToggle={handleModalPopToggle}
       /> */}
+      <div
+        className="flex justify-end my-1 pr-2"
+        onClick={() => setBuilderMenuVisible(true)}>
+        <IoIosMenu className="w-auto cursor-pointer h-8 w-8 text-gray-400" />
+      </div>
       <LessonPlanNavigation
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
@@ -541,15 +506,22 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           titleButton={
             <span
               onClick={() => {
-                hideAllModals();
-                handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                if (unsavedChanges) {
+                  askBeforeClose();
+                } else {
+                  hideAllModals();
+                  handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                }
               }}
               className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
               Go Back
             </span>
           }
-          closeAction={closeAction}>
-          <div className="min-w-256">{modalByType(addContentModal.type)}</div>
+          closeAction={askBeforeClose}>
+          <div className="min-w-256">
+            <>{modalByType(addContentModal.type)}</>
+          </div>
+          <UnsavedModal />
         </Modal>
       )}
 
@@ -590,14 +562,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         setEditMode={setEditMode}
         setEditModal={setEditModal}
         setHierarchyVisible={setHierarchyVisible}
-      />
+      />*/}
 
       <BuilderMenu
         galleryVisible={galleryVisible}
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
         setBuilderMenuVisible={setBuilderMenuVisible}
-      /> */}
+      />
 
       <CoreBuilder
         mode={mode}
@@ -607,12 +579,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         universalLessonDetails={universalLessonDetails}
         galleryVisible={galleryVisible}
         hierarchyVisible={hierarchyVisible}
+        lessonId={lessonId}
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}
+        setEditModal={setEditModal}
       />
     </div>
   );

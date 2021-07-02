@@ -16,11 +16,13 @@ import PageCountSelector from '../../../Atoms/PageCountSelector';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import * as customQueries from '../../../../customGraphql/customQueries';
+import * as queries from '../../../../graphql/queries';
+import * as mutations from '../../../../graphql/mutations';
 import LessonsListRow from './LessonsListRow';
 import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
-import {times} from 'lodash';
+import {remove} from 'lodash';
 
 const LessonsList = () => {
   const match = useRouteMatch();
@@ -140,18 +142,22 @@ const LessonsList = () => {
 
   const getLessonsList = async () => {
     try {
-      const fetchLessonsData: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonsTitles)
+      // const fetchLessonsData: any = await API.graphql(
+      //   graphqlOperation(customQueries.listLessonsTitles)
+      // );
+      const fetchUList: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessons)
       );
-      if (!fetchLessonsData) {
+      if (!fetchUList) {
         throw new Error('fail!');
       } else {
-        const LessonsListData = fetchLessonsData.data?.listLessons?.items;
-        const filteredList = getFilteredList(LessonsListData, state.user.id);
+        const data = fetchUList?.data?.listUniversalLessons.items;
 
-        setLessonsData(isTeacher ? filteredList : LessonsListData);
+        const filteredList = getFilteredList(data, state.user.id);
+
+        setLessonsData(isTeacher ? filteredList : data);
         const totalListPages = Math.floor(
-          (isTeacher ? filteredList.length : LessonsListData.length) / pageCount
+          (isTeacher ? filteredList.length : data.length) / pageCount
         );
 
         setTotalPages(
@@ -159,12 +165,12 @@ const LessonsList = () => {
             ? totalListPages * pageCount === filteredList.length
               ? totalListPages
               : totalListPages + 1
-            : totalListPages * pageCount === LessonsListData.length
+            : totalListPages * pageCount === data.length
             ? totalListPages
             : totalListPages + 1
         );
 
-        setTotalLessonNum(isTeacher ? filteredList.length : LessonsListData.length);
+        setTotalLessonNum(isTeacher ? filteredList.length : data.length);
 
         setStatus('done');
       }
@@ -185,7 +191,7 @@ const LessonsList = () => {
       const currentLessonsList = [...lessonsData];
       const newList = currentLessonsList.filter((item) => {
         // Search on lesson title for match.
-        return item.title?.toLowerCase().includes(searchInput.value);
+        return item.title?.toLowerCase().includes(searchInput.value.toLowerCase());
       });
       setSearchInput({
         ...searchInput,
@@ -224,6 +230,20 @@ const LessonsList = () => {
       name: name,
     });
   };
+  const deleteLesson = async (id: string) => {
+    try {
+      remove(lessonsData, (lesson) => lesson.id === id);
+      setLessonsData([...lessonsData]);
+      const result = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalLesson, {
+          input: {id},
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getLessonsList();
   }, []);
@@ -349,6 +369,7 @@ const LessonsList = () => {
                 {currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
+                      deleteLesson={deleteLesson}
                       key={`lessonsRows${i}`}
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}

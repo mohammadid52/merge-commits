@@ -6,13 +6,16 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Selector from '../../../../Atoms/Form/Selector';
-
+import * as mutations from '../../../../../graphql/mutations';
+import {graphqlOperation, API} from 'aws-amplify';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {getAsset} from '../../../../../assets';
 import {ILessonPlan} from './LessonPlan';
-
+import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {v4 as uuidV4} from 'uuid';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 interface ILessonInputs {
   id: string;
   label: string;
@@ -29,11 +32,12 @@ const estimatedTimeList = Array(30)
     value: index + 1,
   }));
 
-const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan) => {
+const LessonPlanForm = () => {
   const history = useHistory();
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {LessonBuilderDict} = useDictionary(clientKey);
+  const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
     id: '',
     label: '',
@@ -59,21 +63,36 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
     }));
   };
 
-  const handleSubmit = () => {
+  const createPage = async () => {
     const isValid = validateForm();
     if (isValid) {
-      const pageId = uniqueId();
-      addNewPageHandler({
-        ...inputObj,
-        id: pageId,
-        estTime: estimatedTimeList.find(item => item.name === inputObj.estTime)?.value,
-        pageContent: [],
-      });
-      history.push(
-        `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
-      );
-    } else {
-      return;
+      try {
+        const input = {
+          id: lessonId,
+          lessonPlan: [
+            ...pages,
+            {
+              id: uuidV4().toString(),
+              title: inputObj.title,
+              label: inputObj.label,
+              description: inputObj.description,
+              pageContent: [],
+            },
+          ],
+        };
+        const res: any = await API.graphql(
+          graphqlOperation(mutations.updateUniversalLesson, {
+            input,
+          })
+        );
+        const data = res.data.updateUniversalLesson;
+        if (data) {
+          history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}`);
+          setActiveTab(1);
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
     }
   };
 
@@ -81,16 +100,6 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
     const {id = '', label = '', title = ''} = inputObj;
     let isValid = true,
       formErrors: any = {};
-    // if (!id) {
-    //   isValid = false;
-    //   formErrors.id = 'Id is required';
-    // } else if (pages.findIndex((page: any) => page.id === id) > -1) {
-    //   isValid = false;
-    //   formErrors.id = 'This id is already associated with different page';
-    // } else {
-    //   isValid = true;
-    //   formErrors.id = '';
-    // }
 
     if (!label) {
       isValid = false;
@@ -110,10 +119,17 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
       estTime: name,
     }));
   };
+  const handleEstimationTime = (value: string) => {
+    setInputObj((prevInputs: ILessonInputs) => ({
+      ...prevInputs,
+      estTime: value,
+    }));
+  };
+  
 
   return (
     <div className="w-full m-auto">
-      <div className="overflow-hidden mb-4">
+      <div className="mb-4">
         <div className="p-4">
           <div className="py-2">
             <div className="grid grid-cols-3">
@@ -185,7 +201,7 @@ const LessonPlanForm = ({addNewPageHandler, universalLessonDetails}: ILessonPlan
                 btnClass="py-1 px-8 text-xs ml-2"
                 label={'Save'}
                 type="submit"
-                onClick={handleSubmit}
+                onClick={createPage}
               />
             </div>
           </div>

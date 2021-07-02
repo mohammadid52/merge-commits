@@ -59,6 +59,8 @@ const KeywordModalDialog = ({
   closeAction,
   inputObj,
   createNewBlockULBHandler,
+  askBeforeClose,
+  setUnsavedChanges,
   updateBlockContentULBHandler,
 }: KeywordModalDialog) => {
   const {userLanguage} = useContext(GlobalContext);
@@ -112,6 +114,7 @@ const KeywordModalDialog = ({
   //  FOR NORMAL INPUT    //
   //////////////////////////
   const onChange = (e: React.FormEvent, idx: number) => {
+    setUnsavedChanges(true);
     const {id, value, name} = e.target as HTMLFormElement;
     handleUpdateInputFields(value, name, idx);
   };
@@ -126,6 +129,7 @@ const KeywordModalDialog = ({
     closeAction();
     // clear fields
     setInputFieldsArray(initialInputFieldsState);
+    setUnsavedChanges(false);
   };
 
   const removeItemFromList = (id: string) => {
@@ -185,7 +189,7 @@ const KeywordModalDialog = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
 

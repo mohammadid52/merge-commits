@@ -237,6 +237,7 @@ const UnitLookup = (props: UnitLookupProps) => {
           isError: true,
           msg: UnitLookupDict[userLanguage]['MESSAGES']['FETCHERR'],
         });
+        setLoading(false);
       });
   };
 
@@ -261,8 +262,10 @@ const UnitLookup = (props: UnitLookupProps) => {
   }, [formState?.curriculum?.id]);
 
   useEffect(() => {
-    fetchUnitsList();
-  }, []);
+    if (institution?.id) {
+      fetchUnitsList();
+    }
+  }, [institution?.id]);
 
   const {curriculum, unit} = formState;
   return (
@@ -389,9 +392,11 @@ const UnitLookup = (props: UnitLookupProps) => {
                 </div>
               ))
             ) : (
-              <p className="text-center p-16 mt-4">
+              <div className="text-center p-16 mt-4">
+                <p className="text-gray-600 font-medium">
                 {UnitLookupDict[userLanguage]['NOTADDED']}
-              </p>
+                </p>
+              </div>
             )}
           </div>
         </div>

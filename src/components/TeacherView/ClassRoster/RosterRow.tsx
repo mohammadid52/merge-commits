@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LessonControlContext } from '../../../contexts/LessonControlContext';
 import ProgressSwitch from '../../General/LessonProgressSwitch';
+import { GlobalContext } from '../../../contexts/GlobalContext';
 
 interface RosterRowProps {
   keyProp: number;
@@ -45,42 +46,19 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     setViewedStudent,
     handlePageChange,
   } = props;
-  const { state, dispatch } = useContext(LessonControlContext);
+  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(GlobalContext);
   const [shareable, setShareable] = useState(true);
 
-  useEffect(() => {
-    if (currentLocation) {
-      const indexToPage = state.pages[currentLocation].stage;
-      let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-
-      if (currentLocation) {
-        result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-      } else if (lessonProgress) {
-        result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-      }
-
-      if (result) {
-        setShareable(true);
-      }
-
-      if (!result) {
-        setShareable(false);
-      }
-    } else {
-      setShareable(false);
-    }
-  }, [currentLocation]);
-
   const studentIsShared = () => {
-    if (/* state.studentViewing.live &&  */ state.sharing) {
+    if (controlState.sharing) {
       return (
-        state.displayData.studentInfo.firstName === firstName && state.displayData.studentInfo.lastName === lastName
+        controlState.displayData.studentInfo.firstName === firstName && controlState.displayData.studentInfo.lastName === lastName
       );
     }
   };
 
   const studentIsViewed = () => {
-    if (state.studentViewing.live) {
+    if (controlState.studentViewing.live) {
       return viewedStudent === id;
     }
   };
@@ -99,7 +77,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     if (locationIndex === '') {
       return 'n/a';
     } else {
-      return state.pages[parseInt(locationIndex)].stage;
+      return lessonState.lessonData[parseInt(locationIndex)]?.label;
     }
   };
 

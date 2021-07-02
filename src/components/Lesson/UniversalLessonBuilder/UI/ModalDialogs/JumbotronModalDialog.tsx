@@ -60,6 +60,8 @@ const JumbotronModalDialog = ({
   inputObj,
   imageInput,
   createNewBlockULBHandler,
+  askBeforeClose,
+  setUnsavedChanges,
   updateBlockContentULBHandler,
 }: IJumbotronModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
@@ -116,6 +118,8 @@ const JumbotronModalDialog = ({
   const [loading, setIsLoading] = useState<boolean>(false);
 
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
+    setUnsavedChanges(true);
+
     setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
     setErrors((prevValues) => ({...prevValues, url: ''}));
   };
@@ -204,6 +208,7 @@ const JumbotronModalDialog = ({
   //  FOR NORMAL INPUT    //
   //////////////////////////
   const onChange = (e: React.FormEvent) => {
+    setUnsavedChanges(true);
     const {id, value} = e.target as HTMLFormElement;
     handleUpdateInputFields(id, value);
   };
@@ -217,6 +222,8 @@ const JumbotronModalDialog = ({
     }
     // close modal after saving
     closeAction();
+    setUnsavedChanges(false);
+
     // clear fields
     setInputFieldsArray(initialInputFieldsState);
   };
@@ -264,7 +271,7 @@ const JumbotronModalDialog = ({
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-            onClick={closeAction}
+            onClick={askBeforeClose}
             transparent
           />
 

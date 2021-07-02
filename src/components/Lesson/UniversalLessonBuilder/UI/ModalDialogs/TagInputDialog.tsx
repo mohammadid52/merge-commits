@@ -15,17 +15,25 @@ import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 interface IVideoInput {
   url: string;
   size: string;
+  tags: any[];
 }
 
 interface IVideoDialogProps extends IContentTypeComponentProps {
   inputObj?: IVideoInput;
 }
 
-const TagInputDialog = ({inputObj, closeAction, updateBlockContentULBHandler}: any) => {
+const TagInputDialog = ({
+  inputObj,
+  closeAction,
+  updateBlockContentULBHandler,
+  askBeforeClose,
+  setUnsavedChanges,
+}: IVideoDialogProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<IVideoInput['tags']>([]);
 
   const handleChange = (tags: any) => {
+    setUnsavedChanges(true);
     setTags(tags);
   };
   const [error, setError] = useState<string>('');
@@ -39,11 +47,12 @@ const TagInputDialog = ({inputObj, closeAction, updateBlockContentULBHandler}: a
   const onSave = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!tags.length) {
-      setError("Please enter atleast one tag");
+      setError('Please enter atleast one tag');
       return;
     }
     updateBlockContentULBHandler('', 'pageContent', '', {tags});
     closeAction();
+    setUnsavedChanges(false);
   };
 
   return (
@@ -59,7 +68,7 @@ const TagInputDialog = ({inputObj, closeAction, updateBlockContentULBHandler}: a
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-              onClick={closeAction}
+              onClick={askBeforeClose}
               transparent
             />
             <Buttons

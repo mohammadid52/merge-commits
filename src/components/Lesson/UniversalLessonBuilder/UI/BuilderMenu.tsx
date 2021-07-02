@@ -58,10 +58,10 @@ export const BuilderMenu = (props: BuilderMenuProps) => {
     <>
       <div
         className={`${
-          builderMenuVisible ? 'relative w-56 h-0 mr-0 ml-auto bg-gray-400' : 'hidden'
+          builderMenuVisible ? 'w-56 h-0 mr-0 ml-auto bg-gray-400' : 'hidden'
         }`}
         style={{zIndex: 99999}}>
-        <div className="absolute" style={{top: '0.5rem', right: '1.2rem'}}>
+        <div className="absolute w-auto top-2 right-0.5">
           <Transition
             show={builderMenuVisible}
             enter="transition duration-200"
