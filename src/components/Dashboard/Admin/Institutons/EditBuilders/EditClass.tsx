@@ -257,14 +257,14 @@ const EditClass = (props: EditClassProps) => {
     // try {
     //   console.log('Here.......')
     //   const input = { classStudents: [{
-    //     classID: "7c161e1d-49e9-43fe-946e-f42d2f0489ed",
+    //     classID: "97323010-05d0-4278-ac15-7343e1b58f0d",
     //     status: "Active",
     //     studentAuthID: "e02c63b2-6dca-4d37-a9ea-006e53c04769",
     //     studentEmail: "aman+1@sublimedatasys.com",
     //     studentID: "b3fe0840-6a1e-4d72-b34e-f2c585804fa3"
     //   },
     //   {
-    //     classID: "7c161e1d-49e9-43fe-946e-f42d2f0489ed",
+    //     classID: "97323010-05d0-4278-ac15-7343e1b58f0d",
     //     status: "Active",
     //     studentAuthID: "78c518a8-0413-409c-b613-cb087446abe7",
     //     studentEmail: "brandi@zoiq.io",

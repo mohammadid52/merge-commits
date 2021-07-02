@@ -10703,7 +10703,6 @@ export const createUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
-      estTime
       lessonPlan {
         id
         title
@@ -10714,6 +10713,7 @@ export const createUniversalLesson = /* GraphQL */ `
         disabled
         displayMode
         open
+        estTime
         pageContent {
           id
           tags
@@ -10752,7 +10752,6 @@ export const updateUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
-      estTime
       lessonPlan {
         id
         title
@@ -10763,6 +10762,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         disabled
         displayMode
         open
+        estTime
         pageContent {
           id
           tags
@@ -10801,7 +10801,6 @@ export const deleteUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
-      estTime
       lessonPlan {
         id
         title
@@ -10812,6 +10811,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         disabled
         displayMode
         open
+        estTime
         pageContent {
           id
           tags
