@@ -74,7 +74,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     clientKey,
     state: {user},
   } = useContext(GlobalContext);
-  const {themeBackgroundColor, universalLessonDetails} = useULBContext();
+  const {universalLessonDetails} = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
@@ -455,7 +455,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   return (
     <div
       id={`builderWrapper`}
-      className={`relative h-full ${themeBackgroundColor} shadow-5 sm:rounded-lg flex flex-col`}>
+      className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
       {/* <Toolbar
         universalLessonDetails={universalLessonDetails}
         deleteFromULBHandler={deleteFromULBHandler}

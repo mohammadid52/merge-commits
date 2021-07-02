@@ -13,19 +13,6 @@ module.exports = {
     translate: true,
   },
   theme: {
-    placeholderColor: {
-      gray: {
-        100: '#f7fafc',
-        200: '#edf2f7',
-        300: '#e2e8f0',
-        400: '#cbd5e0',
-        500: '#a0aec0',
-        600: '#718096',
-        700: '#4a5568',
-        800: '#2d3748',
-        900: '#1a202c',
-      },
-    },
     flexGrow: {
       0: 0,
       default: 1,
@@ -113,7 +100,6 @@ module.exports = {
     },
     inset: {
       0: '0rem',
-      0.5: '0.5rem',
       1: '1rem',
       2.5: '2.5rem',
       2: '2rem',

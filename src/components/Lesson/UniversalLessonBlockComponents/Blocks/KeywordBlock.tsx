@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import React, {useContext, useState, useEffect} from 'react';
+import {LessonComponentsInterface} from '../../../../interfaces/LessonComponentsInterfaces';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
@@ -9,7 +9,6 @@ interface KeywordBlockProps extends RowWrapperProps {
 }
 
 const KeywordBlock = (props: KeywordBlockProps) => {
-  const {builderTheme, themeTextColor} = useULBContext();
   const {id, value} = props;
   const keywords: any = [];
   const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
@@ -36,7 +35,7 @@ const KeywordBlock = (props: KeywordBlockProps) => {
   }, [value]);
 
   return (
-    <div id={id} className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}>
+    <div id={id} className={`flex flex-col md:w-full text-gray-200 rounded-r-lg`}>
       <div
         className={`relative flex flex-row items-center w-full pb-2 px-4 mb-2 mt-4 font-medium text-left text-xl border-b border-white border-opacity-10`}>
         <h3>Keywords:</h3>
@@ -54,12 +53,12 @@ const KeywordBlock = (props: KeywordBlockProps) => {
                   ) => (
                     <div
                       key={`cardKW_${idx}`}
-                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'} border-light-gray`}>
+                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg bg-light-gray border-light-gray`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
-                        <p className={`text-lg font-semibold ${themeTextColor}`}>
+                        <p className={`text-lg font-semibold text-gray-200`}>
                           {word.label}:
                         </p>
-                        <p className={`text-sm ${themeTextColor}`}>{word.value}</p>
+                        <p className={`text-sm text-gray-200`}>{word.value}</p>
                       </div>
                     </div>
                   )

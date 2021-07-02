@@ -96,7 +96,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
-    themeBackgroundColor,
     universalLessonDetails,
     setUniversalLessonDetails,
     selectedPageID,
@@ -344,7 +343,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           let activePageContentData = pageContentData[splittedPageContentIndex];
           // const partContentId: string = `${selectedPageID}_part_${activePageContentData.partContent.length}_${contentType}_0`;
           const alreadyAddedPartContentLength: number =
-            activePageContentData.partContent?.length;
+            activePageContentData.partContent.length;
           let activePagePartContentData = [...activePageContentData.partContent];
           if (alreadyAddedPartContentLength < inputObj) {
             activePagePartContentData = [
@@ -484,7 +483,9 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *    5. builder body
      *
      */
-    <div className="h-full bg-dark-gray flex overflow-hidden">
+    <div
+      id={`universalLessonBuilder`}
+      className="h-full bg-dark-gray flex overflow-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
 
       <div className="w-full overflow-y-auto h-full bg-gray-200">
@@ -505,10 +506,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           </div>
         </div>
         {/* Body */}
-        <div className="w-full h-full pb-8 m-auto pr-6">
+        <div className="w-full h-full pb-8 m-auto">
           <div
             id={`universalLessonBuilder`}
-            className={`h-full flex ${themeBackgroundColor} shadow-5 sm:rounded-lg overflow-y-hidden mb-4`}>
+            className="h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4">
             {/*{currentStepComp(universalBuilderStep)}*/}
 
             <BuilderWrapper

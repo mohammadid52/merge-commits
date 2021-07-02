@@ -32,12 +32,12 @@ const LessonRowComposer = () => {
               } right-2 z-100`}>
               <BuilderRowWrapper
                 mode={'lesson'}
-                hasContent={pagePart.partContent?.length > 0}
+                hasContent={pagePart.partContent.length > 0}
                 contentID={pagePart.id}
                 classString={pagePart.class}
                 dataIdAttribute={pagePart.id}
                 pagePart={pagePart}>
-                {pagePart.partContent?.length > 0 &&
+                {pagePart.partContent.length > 0 &&
                   pagePart.partContent.map((content: PartContent, idx2: number) => {
                     if (content.value.length > 0) {
                       return (
