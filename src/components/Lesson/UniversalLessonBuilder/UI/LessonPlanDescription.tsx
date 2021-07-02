@@ -66,7 +66,7 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
         </div>
       </div>
       <div className={`rounded-lg ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'} border-light-gray p-2`}>
-        <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
+        {/* <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
           <span className="text-gray-900 mr-2">
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}:
@@ -74,7 +74,7 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
           <span className="whitespace-nowrap overflow-ellipsis overflow-hidden">
             {activePageData.id}
           </span>
-        </p>
+        </p> */}
         <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
           <span className="text-gray-900 mr-2">
             {' '}
