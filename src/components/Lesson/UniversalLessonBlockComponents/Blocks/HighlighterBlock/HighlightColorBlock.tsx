@@ -1,7 +1,6 @@
 import React from 'react';
 import {IconContext} from 'react-icons';
 import {FaEraser, FaHighlighter} from 'react-icons/fa';
-import { useULBContext } from '../../../../../contexts/UniversalLessonBuilderContext';
 import ToolTip from '../../../../General/ToolTip/ToolTip';
 
 interface HighlightColorBlockProps {
@@ -11,7 +10,6 @@ interface HighlightColorBlockProps {
 
 const HighlightColorBlock = (props: HighlightColorBlockProps) => {
   const {setColor, color} = props;
-  const {themeTextColor} = useULBContext()
 
   const buttons = [{color: 'mustard', name: 'Yellow'}];
 
@@ -23,7 +21,7 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
     <>
       <div
         className={`
-        relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left ${themeTextColor} text-xl`}
+        relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}
         style={{marginTop: '0', paddingBottom: '0'}}>
         <div className="w-3.3/10  flex flex-col justify-center items-center">
           <span>Select Highlighter:</span>
@@ -108,10 +106,10 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
       </div>
 
       <div className="w-full leading-6 border-b-0 border-white border-opacity-10 mb-4">
-        <p className={`pl-2 text-sm text-left ${themeTextColor}`}>
+        <p className="pl-2 text-sm text-left text-white">
           1. <b>Click 2 separate words</b> to select a sentence.
         </p>
-        <p className={`pl-2 text-sm text-left ${themeTextColor}`}>
+        <p className="pl-2 text-sm text-left text-white">
           2. <b>Double-Click 1 word</b> to select a word.
         </p>
       </div>

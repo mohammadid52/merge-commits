@@ -36,7 +36,7 @@ const LessonPlanForm = () => {
   const history = useHistory();
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  const {LessonBuilderDict} = useDictionary(clientKey);
   const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
     id: '',
@@ -46,7 +46,6 @@ const LessonPlanForm = () => {
     estTime: '1 min',
   });
   const [errors, setErrors] = useState<any>({});
-  const [loading, setLoading] = useState<boolean>(false);
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
   const pages = universalLessonDetails?.lessonPlan;
@@ -68,17 +67,16 @@ const LessonPlanForm = () => {
     const isValid = validateForm();
     if (isValid) {
       try {
-        setLoading(true);
         const input = {
           id: lessonId,
           lessonPlan: [
             ...pages,
             {
+              id: uuidV4().toString(),
               title: inputObj.title,
               label: inputObj.label,
               description: inputObj.description,
               pageContent: [],
-              // estTime: Number(inputObj.estTime?.split(' ')[0]),
             },
           ],
         };
@@ -88,13 +86,11 @@ const LessonPlanForm = () => {
           })
         );
         const data = res.data.updateUniversalLesson;
-        setLoading(false);
         if (data) {
-          setActiveTab(1);
           history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}`);
+          setActiveTab(1);
         }
       } catch (error) {
-        setLoading(false);
         console.error(error.message);
       }
     }
@@ -203,12 +199,7 @@ const LessonPlanForm = () => {
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                disabled={loading}
-                label={
-                  loading
-                    ? BUTTONS[userLanguage]['SAVING']
-                    : BUTTONS[userLanguage]['SAVE']
-                }
+                label={'Save'}
                 type="submit"
                 onClick={createPage}
               />
