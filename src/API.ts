@@ -2,173 +2,13 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreatePersonInput = {
+export type CreateClassStudentInput = {
   id?: string | null,
-  authId: string,
-  status: PersonStatus,
-  email: string,
-  role: Role,
-  type?: string | null,
-  firstName: string,
-  preferredName?: string | null,
-  lastName: string,
-  externalId?: string | null,
-  grade?: string | null,
-  onBoardSurvey?: boolean | null,
-  offBoardSurvey?: boolean | null,
-  phone?: string | null,
-  birthdate?: string | null,
-  image?: string | null,
-  language: Language,
-  filters?: Array< string | null > | null,
-  lastLoggedIn?: string | null,
-  lastLoggedOut?: string | null,
-};
-
-export enum PersonStatus {
-  ACTIVE = "ACTIVE",
-  SUSPENDED = "SUSPENDED",
-  INACTIVE = "INACTIVE",
-  HOLD = "HOLD",
-}
-
-
-export enum Role {
-  SUP = "SUP",
-  ADM = "ADM",
-  BLD = "BLD",
-  FLW = "FLW",
-  CRD = "CRD",
-  TR = "TR",
-  ST = "ST",
-}
-
-
-export enum Language {
-  EN = "EN",
-  ES = "ES",
-  VT = "VT",
-  TR = "TR",
-  CZ = "CZ",
-}
-
-
-export type ModelPersonConditionInput = {
-  status?: ModelPersonStatusInput | null,
-  role?: ModelRoleInput | null,
-  type?: ModelStringInput | null,
-  firstName?: ModelStringInput | null,
-  preferredName?: ModelStringInput | null,
-  lastName?: ModelStringInput | null,
-  externalId?: ModelStringInput | null,
-  grade?: ModelStringInput | null,
-  onBoardSurvey?: ModelBooleanInput | null,
-  offBoardSurvey?: ModelBooleanInput | null,
-  phone?: ModelStringInput | null,
-  birthdate?: ModelStringInput | null,
-  image?: ModelStringInput | null,
-  language?: ModelLanguageInput | null,
-  filters?: ModelStringInput | null,
-  lastLoggedIn?: ModelStringInput | null,
-  lastLoggedOut?: ModelStringInput | null,
-  and?: Array< ModelPersonConditionInput | null > | null,
-  or?: Array< ModelPersonConditionInput | null > | null,
-  not?: ModelPersonConditionInput | null,
-};
-
-export type ModelPersonStatusInput = {
-  eq?: PersonStatus | null,
-  ne?: PersonStatus | null,
-};
-
-export type ModelRoleInput = {
-  eq?: Role | null,
-  ne?: Role | null,
-};
-
-export type ModelStringInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
-};
-
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
-
-
-export type ModelSizeInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-};
-
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
-export type ModelLanguageInput = {
-  eq?: Language | null,
-  ne?: Language | null,
-};
-
-export type Person = {
-  __typename: "Person",
-  id?: string,
-  authId?: string,
-  status?: PersonStatus,
-  email?: string,
-  role?: Role,
-  type?: string | null,
-  firstName?: string,
-  preferredName?: string | null,
-  lastName?: string,
-  externalId?: string | null,
-  grade?: string | null,
-  onBoardSurvey?: boolean | null,
-  offBoardSurvey?: boolean | null,
-  phone?: string | null,
-  birthdate?: string | null,
-  image?: string | null,
-  language?: Language,
-  filters?: Array< string | null > | null,
-  lastLoggedIn?: string | null,
-  lastLoggedOut?: string | null,
-  classes?: ModelClassStudentConnection,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type ModelClassStudentConnection = {
-  __typename: "ModelClassStudentConnection",
-  items?:  Array<ClassStudent | null > | null,
-  nextToken?: string | null,
+  classID: string,
+  studentID: string,
+  studentEmail: string,
+  studentAuthID: string,
+  status?: string | null,
 };
 
 export type ClassStudent = {
@@ -258,6 +98,67 @@ export type Staff = {
   staffMember?: Person,
   createdAt?: string,
   updatedAt?: string,
+};
+
+export type Person = {
+  __typename: "Person",
+  id?: string,
+  authId?: string,
+  status?: PersonStatus,
+  email?: string,
+  role?: Role,
+  type?: string | null,
+  firstName?: string,
+  preferredName?: string | null,
+  lastName?: string,
+  externalId?: string | null,
+  grade?: string | null,
+  onBoardSurvey?: boolean | null,
+  offBoardSurvey?: boolean | null,
+  phone?: string | null,
+  birthdate?: string | null,
+  image?: string | null,
+  language?: Language,
+  filters?: Array< string | null > | null,
+  lastLoggedIn?: string | null,
+  lastLoggedOut?: string | null,
+  classes?: ModelClassStudentConnection,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export enum PersonStatus {
+  ACTIVE = "ACTIVE",
+  SUSPENDED = "SUSPENDED",
+  INACTIVE = "INACTIVE",
+  HOLD = "HOLD",
+}
+
+
+export enum Role {
+  SUP = "SUP",
+  ADM = "ADM",
+  BLD = "BLD",
+  FLW = "FLW",
+  CRD = "CRD",
+  TR = "TR",
+  ST = "ST",
+}
+
+
+export enum Language {
+  EN = "EN",
+  ES = "ES",
+  VT = "VT",
+  TR = "TR",
+  CZ = "CZ",
+}
+
+
+export type ModelClassStudentConnection = {
+  __typename: "ModelClassStudentConnection",
+  items?:  Array<ClassStudent | null > | null,
+  nextToken?: string | null,
 };
 
 export type ModelRoomConnection = {
@@ -1102,6 +1003,114 @@ export type ModelClassConnection = {
   nextToken?: string | null,
 };
 
+export type CreatePersonInput = {
+  id?: string | null,
+  authId: string,
+  status: PersonStatus,
+  email: string,
+  role: Role,
+  type?: string | null,
+  firstName: string,
+  preferredName?: string | null,
+  lastName: string,
+  externalId?: string | null,
+  grade?: string | null,
+  onBoardSurvey?: boolean | null,
+  offBoardSurvey?: boolean | null,
+  phone?: string | null,
+  birthdate?: string | null,
+  image?: string | null,
+  language: Language,
+  filters?: Array< string | null > | null,
+  lastLoggedIn?: string | null,
+  lastLoggedOut?: string | null,
+};
+
+export type ModelPersonConditionInput = {
+  status?: ModelPersonStatusInput | null,
+  role?: ModelRoleInput | null,
+  type?: ModelStringInput | null,
+  firstName?: ModelStringInput | null,
+  preferredName?: ModelStringInput | null,
+  lastName?: ModelStringInput | null,
+  externalId?: ModelStringInput | null,
+  grade?: ModelStringInput | null,
+  onBoardSurvey?: ModelBooleanInput | null,
+  offBoardSurvey?: ModelBooleanInput | null,
+  phone?: ModelStringInput | null,
+  birthdate?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  language?: ModelLanguageInput | null,
+  filters?: ModelStringInput | null,
+  lastLoggedIn?: ModelStringInput | null,
+  lastLoggedOut?: ModelStringInput | null,
+  and?: Array< ModelPersonConditionInput | null > | null,
+  or?: Array< ModelPersonConditionInput | null > | null,
+  not?: ModelPersonConditionInput | null,
+};
+
+export type ModelPersonStatusInput = {
+  eq?: PersonStatus | null,
+  ne?: PersonStatus | null,
+};
+
+export type ModelRoleInput = {
+  eq?: Role | null,
+  ne?: Role | null,
+};
+
+export type ModelStringInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
+
+
+export type ModelSizeInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+};
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelLanguageInput = {
+  eq?: Language | null,
+  ne?: Language | null,
+};
+
 export type UpdatePersonInput = {
   id?: string | null,
   authId: string,
@@ -1399,15 +1408,6 @@ export type UpdateClassInput = {
 
 export type DeleteClassInput = {
   id: string,
-};
-
-export type CreateClassStudentInput = {
-  id?: string | null,
-  classID: string,
-  studentID: string,
-  studentEmail: string,
-  studentAuthID: string,
-  status?: string | null,
 };
 
 export type ModelClassStudentConditionInput = {
@@ -4149,6 +4149,89 @@ export type ModelUniversalLessonConnection = {
   __typename: "ModelUniversalLessonConnection",
   items?:  Array<UniversalLesson | null > | null,
   nextToken?: string | null,
+};
+
+export type BatchAddClassStudentMutationVariables = {
+  classStudents?: Array< CreateClassStudentInput | null > | null,
+};
+
+export type BatchAddClassStudentMutation = {
+  batchAddClassStudent?:  Array< {
+    __typename: "ClassStudent",
+    id: string,
+    classID: string,
+    studentID: string,
+    studentEmail: string,
+    studentAuthID: string,
+    status?: string | null,
+    class?:  {
+      __typename: "Class",
+      id: string,
+      institutionID: string,
+      type?: string | null,
+      name: string,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      students?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    student?:  {
+      __typename: "Person",
+      id: string,
+      authId: string,
+      status: PersonStatus,
+      email: string,
+      role: Role,
+      type?: string | null,
+      firstName: string,
+      preferredName?: string | null,
+      lastName: string,
+      externalId?: string | null,
+      grade?: string | null,
+      onBoardSurvey?: boolean | null,
+      offBoardSurvey?: boolean | null,
+      phone?: string | null,
+      birthdate?: string | null,
+      image?: string | null,
+      language: Language,
+      filters?: Array< string | null > | null,
+      lastLoggedIn?: string | null,
+      lastLoggedOut?: string | null,
+      classes?:  {
+        __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null > | null,
 };
 
 export type CreatePersonMutationVariables = {

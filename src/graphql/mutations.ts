@@ -2,6 +2,79 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const batchAddClassStudent = /* GraphQL */ `
+  mutation BatchAddClassStudent($classStudents: [CreateClassStudentInput]) {
+    batchAddClassStudent(classStudents: $classStudents) {
+      id
+      classID
+      studentID
+      studentEmail
+      studentAuthID
+      status
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      student {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const createPerson = /* GraphQL */ `
   mutation CreatePerson(
     $input: CreatePersonInput!
