@@ -17,7 +17,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
     return (
       <div className="flex w-auto items-center p-4">
         <p key={inputID} id={inputID}>
-          {inputValue}
+          {inputValue.value}
         </p>
       </div>
     );
@@ -36,7 +36,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
         value.length > 0 &&
         value.map((v: any, i: number) => (
           <React.Fragment key={`paragraphBlock_${i}`}>
-            {composeParagraph(id, v.value, type)}
+            {composeParagraph(id, v, type)}
           </React.Fragment>
         ))}
     </div>

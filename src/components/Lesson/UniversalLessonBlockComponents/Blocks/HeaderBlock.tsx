@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { PartContentSub } from '../../../../interfaces/UniversalLessonInterfaces';
+import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
@@ -57,7 +57,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
         value.length > 0 &&
         value.map((v: any, i: number) => (
           <div key={id} className={`p-4`}>
-            {composeHeader(id, v.value, type)}
+            {composeHeader(id, v, type)}
           </div>
         ))}
     </div>
