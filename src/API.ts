@@ -3284,7 +3284,7 @@ export type UniversalContentInput = {
 export type UniversalContentOptionsInput = {
   id?: string | null,
   label?: string | null,
-  test?: string | null,
+  text?: string | null,
 };
 
 export type ModelUniversalLessonConditionInput = {
@@ -3385,7 +3385,7 @@ export type UniversalContentOptions = {
   __typename: "UniversalContentOptions",
   id?: string | null,
   label?: string | null,
-  test?: string | null,
+  text?: string | null,
 };
 
 export type UpdateUniversalLessonInput = {

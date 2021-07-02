@@ -560,7 +560,6 @@ export const getClassroomStudent = /* GraphQL */ `
 export const listPersons = /* GraphQL */ `
   query ListPersons(
     $filter: ModelPersonFilterInput
-    $limit: Int
     $sortDirection: ModelSortDirection
   ) {
     listPersons(filter: $filter, sortDirection: $sortDirection) {

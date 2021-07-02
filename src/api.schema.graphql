@@ -938,6 +938,7 @@ type UniversalLessonPlan {
   disabled: Boolean
   displayMode: String
   open: Boolean
+  estTime: String
   pageContent: [UniversalpageContent]
 }
 
@@ -952,7 +953,9 @@ type UniversalpageContent {
 type UniversalPartContent {
   id: String
   type: String
+  class: String
   value: [UniversalContent]
+  isRequired: Boolean
 }
 
 type UniversalContent {
@@ -960,6 +963,13 @@ type UniversalContent {
   type: String
   label: String
   value: String
+  options: [UniversalContentOptions]
+}
+
+type UniversalContentOptions {
+  id: String
+  label: String
+  text: String
 }
 
 type Subscription {
@@ -971,4 +981,17 @@ type Subscription {
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"])
+}
+
+input CreateClassStudentInput {
+  id: ID
+  classID: ID!
+  studentID: ID!
+  studentEmail: String!
+  studentAuthID: String!
+  status: String
+}
+
+type Mutation {
+ batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }
