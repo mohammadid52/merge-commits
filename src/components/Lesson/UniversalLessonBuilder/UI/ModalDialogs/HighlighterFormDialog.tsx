@@ -4,6 +4,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface IHighlighterFormDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -37,14 +38,38 @@ const HighlighterFormDialog = ({
     }
   }, [inputObj]);
 
-  const onHighlighterBlockCreate = () => {
-    if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'highlighter', [inputFieldValue], 0);
-    } else {
-      createNewBlockULBHandler('', '', 'highlighter', [inputFieldValue], 0);
-    }
-    // close modal after saving
+  const addToDB = async (list: any) => {
     closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const onHighlighterBlockCreate = async () => {
+    if (isEditingMode) {
+      const updatedList = updateBlockContentULBHandler(
+        '',
+        '',
+        'highlighter',
+        [inputFieldValue],
+        0
+      );
+      await addToDB(updatedList);
+    } else {
+      const updatedList = createNewBlockULBHandler(
+        '',
+        '',
+        'highlighter',
+        [inputFieldValue],
+        0
+      );
+      await addToDB(updatedList);
+    }
+
     // clear fields
     setInputFieldValue('');
     setUnsavedChanges(false);

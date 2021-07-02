@@ -8,6 +8,7 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import {getAsset} from '../../../../../assets';
 import {FORM_TYPES, SELECT_ONE} from '../common/constants';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 const SelectOne = ({
   numbered,
@@ -50,8 +51,18 @@ const SelectOne = ({
       },
     ]);
   };
+  const addToDB = async (list: any) => {
+    closeAction();
 
-  const onRadioCreate = () => {
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const onRadioCreate = async () => {
     const pageContentId: string = `${uuidv4()}_`;
     const partContentId: string = `${pageContentId}_radioInput`;
 
@@ -71,13 +82,17 @@ const SelectOne = ({
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
-      updateContent('', '', type, inputObjArray);
+      const updatedList = updateContent('', '', type, inputObjArray);
+      console.log(updatedList);
+
+      await addToDB(updatedList);
     } else {
-      createNewContent('', '', type, inputObjArray);
+      const updatedList = createNewContent('', '', type, inputObjArray);
+      console.log(updatedList);
+
+      await addToDB(updatedList);
     }
 
-    // // close modal after saving
-    closeAction();
     setUnsavedChanges(false);
   };
 

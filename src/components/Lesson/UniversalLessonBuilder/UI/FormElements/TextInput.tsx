@@ -7,6 +7,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import {v4 as uuidv4} from 'uuid';
 import {FORM_TYPES} from '../common/constants';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 const Checkbox = ({val}: {val: boolean}) => {
   return (
@@ -57,7 +58,18 @@ const TextInput = ({
     setList([...list]);
   };
 
-  const onFormCreate = () => {
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const onFormCreate = async () => {
     const pageContentId: string = `${uuidv4()}_`;
     const partContentId: string = `${pageContentId}_textInput`;
 
@@ -71,12 +83,14 @@ const TextInput = ({
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
-      updateContent('', '', type, inputObjArray);
+      const updatedList = updateContent('', '', type, inputObjArray);
+      await addToDB(updatedList);
     } else {
-      createNewContent('', '', type, inputObjArray);
+      const updatedList = createNewContent('', '', type, inputObjArray);
+      await addToDB(updatedList);
     }
     // close modal after saving
-    closeAction();
+
     setUnsavedChanges(false);
   };
 

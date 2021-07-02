@@ -1,14 +1,25 @@
+import {remove} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {FaEdit, FaTrashAlt} from 'react-icons/fa';
-
+import {API, graphqlOperation} from 'aws-amplify';
+import * as mutations from '../../../../graphql/mutations';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import {useQuery} from '../../../../customHooks/urlParam';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+import {useHistory} from 'react-router';
+import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 
 const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
+  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
+  const params = useQuery(location.search);
+  const history = useHistory();
+
+  const lessonId = params.get('lessonId');
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
     message: string;
@@ -44,6 +55,18 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
     });
   };
   const {message = '', show = false} = confirmationConfig;
+  const deleteLessonPlan = async (id: string) => {
+    remove(universalLessonDetails.lessonPlan, (item: any) => item.id === id);
+    setUniversalLessonDetails({...universalLessonDetails});
+    const input = {
+      id: lessonId,
+      lessonPlan: [...universalLessonDetails.lessonPlan],
+    };
+    closeAction();
+    history.goBack();
+    await updateLessonPageToDB(input);
+  };
+
   return (
     <div>
       <div className="flex">
@@ -51,16 +74,16 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
           Page Overview
         </h3>
         <div className="inline-flex justify-end">
-          <FaEdit
-            className="w-6 h-6 mr-2 cursor-pointer"
-            color={'white'}
-            onClick={handleEditPageDetail}
-          />
-          <FaTrashAlt
-            className="w-6 h-6 cursor-pointer"
-            color={'white'}
-            onClick={onDeleteButtonClick}
-          />
+          <div
+            className="w-6 h-6 mr-2 cursor-pointer relative z-100"
+            onClick={handleEditPageDetail}>
+            <FaEdit color={'white'} />
+          </div>
+          <div
+            className="w-6 h-6 cursor-pointer relative z-100"
+            onClick={onDeleteButtonClick}>
+            <FaTrashAlt color={'white'} />
+          </div>
         </div>
       </div>
       <div className="rounded-lg bg-light-gray border-light-gray p-2">
@@ -105,7 +128,9 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
             {' '}
             {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ESTIMATED_TIME']}:
           </span>
-          <span className="">{activePageData.estTime ? `${activePageData.estTime} min` : '-'}</span>
+          <span className="">
+            {activePageData.estTime ? `${activePageData.estTime} min` : '-'}
+          </span>
         </p>
       </div>
       {show && (
@@ -113,6 +138,7 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
           message={message}
           closeAction={closeAction}
           saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+          saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
     </div>

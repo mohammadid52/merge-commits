@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect} from 'react';
 import {IoIosMenu} from 'react-icons/io';
 
 import useDictionary from '../../../../customHooks/dictionary';
-import { useQuery } from '../../../../customHooks/urlParam';
+import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
@@ -431,7 +431,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   // For Edit Page Names
-  const [editMode, setEditMode] = useState<boolean>(false);
+
   const [editModal, setEditModal] = useState({
     show: false,
     content: {},
@@ -441,7 +441,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const content: any = editModal.content;
   const getEditModalTitle = () => {
     if (!editModal.editOnlyId) {
-      return `Edit - ${content.id}`;
+      return `Edit - ${content.name}`;
     } else {
       return `Edit - ${content.partContentId || content.pageContentId}`;
     }

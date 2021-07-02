@@ -11,6 +11,7 @@ import {
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import FormTagInput from '../../../../Atoms/Form/FormTagInput';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface IVideoInput {
   url: string;
@@ -44,14 +45,24 @@ const TagInputDialog = ({
     }
   }, [inputObj]);
 
-  const onSave = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+  const onSave = async () => {
     if (!tags.length) {
       setError('Please enter atleast one tag');
       return;
     }
-    updateBlockContentULBHandler('', 'pageContent', '', {tags});
-    closeAction();
+    const updatedInput = updateBlockContentULBHandler('', 'pageContent', '', {tags});
+    await addToDB(updatedInput);
+
     setUnsavedChanges(false);
   };
 

@@ -5,6 +5,10 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
+import {API, graphqlOperation} from 'aws-amplify';
+import * as mutations from '../../../../../graphql/mutations';
+import {useQuery} from '../../../../../customHooks/urlParam';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
   const ID_VALUE: string = content.partContentId || content.pageContentId;
@@ -21,7 +25,6 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
     universalLessonDetails,
     setUniversalLessonDetails,
     selectedPageID,
-    setSelectedPageID,
   } = useULBContext();
 
   // to update id
@@ -67,8 +70,11 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
 
     setUniversalLessonDetails({...universalLessonDetails});
   };
+  const params = useQuery(location.search);
 
-  const updateData = () => {
+  const lessonId = params.get('lessonId');
+
+  const updateData = async () => {
     closeAction();
 
     const PAGECONTENT_ID = content.id;
@@ -90,11 +96,18 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
     update(universalLessonDetails, PATH_TO_PAGECONTENT, () => {
       return updatedObject;
     });
-
     setUniversalLessonDetails({...universalLessonDetails});
-    if (selectedPageID === PAGECONTENT_ID) {
-      setSelectedPageID(updatedValues.id);
-    }
+
+    const input = {
+      id: lessonId,
+      lessonPlan: [...universalLessonDetails.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+
+    // if (selectedPageID === PAGECONTENT_ID) {
+    //   setSelectedPageID(updatedValues.id);
+    // }
   };
 
   const onChange = (e: any) => {

@@ -9,6 +9,7 @@ import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterface
 import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface Links extends IContentTypeComponentProps {
   inputObj?: any;
@@ -114,19 +115,41 @@ const LinksModalDialog = ({
     );
     return isYoutubeLink === null;
   };
+  const addToDB = async (list: any) => {
+    closeAction();
 
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
   const onLinkCreate = async () => {
     const validLinkArray = inputFieldsArray.map((field: PartContentSub, idx: number) =>
       validateUrl(field.value)
     );
     if (!validLinkArray.includes(true)) {
       if (isEditingMode) {
-        updateBlockContentULBHandler('', '', 'links', inputFieldsArray, 0);
+        const updatedList = updateBlockContentULBHandler(
+          '',
+          '',
+          'links',
+          inputFieldsArray,
+          0
+        );
+        await addToDB(updatedList);
       } else {
-        createNewBlockULBHandler('', '', 'links', inputFieldsArray, 0);
+        const updatedList = createNewBlockULBHandler(
+          '',
+          '',
+          'links',
+          inputFieldsArray,
+          0
+        );
+        await addToDB(updatedList);
       }
-      // close modal after saving
-      closeAction();
+
       // clear fields
       setInputFieldsArray(initialInputFieldsState);
       setUnsavedChanges(false);

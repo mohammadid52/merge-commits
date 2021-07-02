@@ -169,6 +169,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
   const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
 
+  const getInstitutionByID = async (id: string) => {
+    try {
+      const inst: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitution, {id})
+      );
+      return inst.data.getInstitution;
+    } catch (error) {
+      console.error('@getInstitutionByID: ', error);
+    }
+  };
+
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
@@ -177,27 +188,33 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
-      setFormData({
-        ...formData,
-        ...savedData,
-        imageCaption: savedData.cardCaption,
-        imageUrl: savedData.cardUrl,
-        name: savedData.title,
-        type:
-          savedData.type &&
-          lessonTypeList.find((item: any) => item.value === savedData.type),
-        purposeHtml: savedData?.purpose ? savedData.purpose : '',
-        objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
-        languages: savedData.language.map((it: any) =>
-          languageList.find((it2: any) => it2.value === it)
-        ),
-        studentSummary: savedData.summary,
-        institution: {
-          id: savedData?.institution?.id,
-          name: savedData?.institution?.name,
-          value: savedData?.institution?.name,
-        },
-      });
+
+      if (savedData.institutionID) {
+        const institution = await getInstitutionByID(savedData.institutionID);
+
+        setFormData({
+          ...formData,
+          ...savedData,
+          imageCaption: savedData.cardCaption,
+          imageUrl: savedData.cardUrl,
+          name: savedData.title,
+          type:
+            savedData.type &&
+            lessonTypeList.find((item: any) => item.value === savedData.type),
+          purposeHtml: savedData?.purpose ? savedData.purpose : '',
+          objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
+          languages: savedData.language.map((it: any) =>
+            languageList.find((it2: any) => it2.value === it)
+          ),
+          studentSummary: savedData.summary,
+          institution: {
+            id: institution?.id,
+            name: institution?.name,
+            value: institution?.name,
+          },
+        });
+      }
+
       const designers = designersList.filter((item: any) =>
         savedData?.designers?.includes(item.id)
       );

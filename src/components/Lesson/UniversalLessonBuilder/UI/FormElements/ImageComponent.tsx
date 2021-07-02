@@ -13,6 +13,7 @@ import {
   UniversalBuilderDict,
 } from '../../../../../dictionary/dictionary.iconoclast';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface IImageInput {
   url: string;
@@ -88,6 +89,17 @@ const ImageFormComponent = ({
     setErrors((prevValues) => ({...prevValues, [name]: ''}));
   };
 
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
   const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
@@ -107,13 +119,14 @@ const ImageFormComponent = ({
         };
       }
       if (isEditingMode) {
-        updateBlockContentULBHandler('', '', 'image', [payload]);
+        const updatedList = updateBlockContentULBHandler('', '', 'image', [payload]);
+        await addToDB(updatedList);
       } else {
-        createNewBlockULBHandler('', '', 'image', [payload]);
+        const updatedList = createNewBlockULBHandler('', '', 'image', [payload]);
+        await addToDB(updatedList);
       }
       setIsLoading(false);
       setUnsavedChanges(false);
-      closeAction();
     }
   };
 

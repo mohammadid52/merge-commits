@@ -402,6 +402,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       lessonPlan: lessonPages,
     };
     setUniversalLessonDetails(temp);
+    return temp;
   };
 
   const updateBlockContentULBHandler = (
@@ -432,6 +433,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           pageContent: pageContentData,
         };
         break;
+
       case 'partContent':
         if (activePageContentIndex > -1) {
           let activePageContentData = pageContentData[activePageContentIndex];
@@ -466,6 +468,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       lessonPlan: lessonPages,
     };
     setUniversalLessonDetails(temp);
+    return temp;
   };
 
   const onBack = () => {

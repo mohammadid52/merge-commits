@@ -17,7 +17,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
-  const [universalLessonsList, setUniversalLessonsList] = useState<UniversalLesson[]>([]);
 
   const [universalLessonDetails, setUniversalLessonDetails] = useState<UniversalLesson>(
     initialUniversalLessonData
@@ -135,8 +134,6 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getPartContent,
         getPageContent,
         enableDnD,
-        universalLessonsList,
-        setUniversalLessonsList,
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

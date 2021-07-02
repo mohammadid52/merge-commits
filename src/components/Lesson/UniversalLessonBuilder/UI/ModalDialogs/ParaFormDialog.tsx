@@ -6,6 +6,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {uniqueId} from 'lodash';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -49,31 +50,30 @@ const ParaModalComponent = ({
   };
   const [inputFields, setInputFields] = useState<any>({});
 
-  const onParaCreate = () => {
+  const addToDB = async (list: any) => {
+    closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const onParaCreate = async () => {
     const value: string = inputFields[FIELD_ID];
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'paragraph', [value]);
+      const updatedList = updateBlockContentULBHandler('', '', 'paragraph', [value]);
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', 'paragraph', [value]);
-      // const newDataObject = {
-      //   id: pageContentId,
-      //   partType: 'default',
-      //   class: 'rounded-lg',
-      //   partContent: [
-      //     {
-      //       id: partContentId,
-      //       type: 'paragraph',
-      //       value: [value],
-      //     },
-      //   ],
-      // };
-      // // add data to list
-      // addFromULBHandler(selectedPageID, newDataObject);
+      const updatedList = createNewBlockULBHandler('', '', 'paragraph', [value]);
+      await addToDB(updatedList);
     }
     // close modal after saving
-    closeAction();
+
     // clear fields
     setInputFields({
       ...inputFields,
