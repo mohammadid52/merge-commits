@@ -59,7 +59,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
 
   const Paragraph = ({inputID, inputValue}: any) => {
     const [editing, setEditing] = useState(false);
-    const [updatedText, setUpdatedText] = useState(inputValue);
+    const [updatedText, setUpdatedText] = useState(inputValue.value);
 
     const onChange = (e: any) => {
       const {value} = e.target;
@@ -96,14 +96,6 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
             {updatedText}
           </p>
         )}
-        {/* {!previewMode && (
-          <EditButton
-            editing={editing}
-            onCancel={onCancel}
-            onSave={onSave}
-            onEdit={onEdit}
-          />
-        )} */}
       </div>
     );
   };
