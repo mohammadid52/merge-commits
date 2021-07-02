@@ -1627,6 +1627,64 @@ export const listLessonFilters = /* GraphQL */ `
   }
 `;
 
+export const getUniversalLesson = /* GraphQL */ `
+  query GetUniversalLesson($id: ID!) {
+    getUniversalLesson(id: $id) {
+      id
+      type
+      label
+      title
+      institutionID
+      language
+      designers
+      objectives
+      purpose
+      summary
+      summaryTitle
+      duration
+      resources
+      notes
+      cardImage
+      cardCaption
+      lessonPlan {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        estTime
+        pageContent {
+          id
+          tags
+          partType
+          class
+          partContent {
+            id
+            type
+            class
+            value {
+              id
+              type
+              label
+              value
+              options {
+             
+              }
+            }
+            isRequired
+          }
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const listInstitutions = /* GraphQL */ `
   query ListInstitutions(
     $id: ID
@@ -2987,7 +3045,6 @@ export const getStudentResponse = /* GraphQL */ `
     }
   }
 `;
-
 
 export const getInstList = /* GraphQL */ `
   query ListInstitutions(

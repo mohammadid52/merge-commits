@@ -30,7 +30,7 @@ const HeaderModalComponent = ({
   updateBlockContentULBHandler,
 }: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
-  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
+
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
@@ -107,7 +107,9 @@ const HeaderModalComponent = ({
       lessonPlan: [...list.lessonPlan],
     };
 
-    await updateLessonPageToDB(input);
+    console.log(input.lessonPlan);
+
+    // await updateLessonPageToDB(input);
   };
 
   const onHeaderCreate = async () => {

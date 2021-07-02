@@ -22,7 +22,7 @@ import {ULBSelectionProps} from '../../../interfaces/UniversalLessonBuilderInter
 import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit';
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
-import * as queries from '../../../graphql/queries';
+import * as customQueries from '../../../customGraphql/customQueries';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -135,7 +135,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
   const fetchLessonData = async () => {
     const result: any = await API.graphql(
-      graphqlOperation(queries.getUniversalLesson, {
+      graphqlOperation(customQueries.getUniversalLesson, {
         id: lessonId,
       })
     );

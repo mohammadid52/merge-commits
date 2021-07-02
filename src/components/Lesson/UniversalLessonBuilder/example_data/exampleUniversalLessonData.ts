@@ -116,12 +116,13 @@ export const exampleUniversalLesson: UniversalLesson = {
             {
               id: 'page_1_part_0_header-0',
               type: 'header',
-              value: ['Introduction'],
+              value: [{id: 'header_323', value: 'Introduction'}],
             },
             {
               id: 'page_1_part_0_text-0',
               type: 'paragraph',
-              value: ['Just some instruction text'],
+
+              value: [{id: 'paragraph_454323', value: 'Just some instruction text'}],
             },
           ],
         },
@@ -147,15 +148,20 @@ export const exampleUniversalLesson: UniversalLesson = {
             {
               id: 'page_2_part_0_header-0',
               type: 'header',
-              value: ['Instructions'],
+
+              value: [{id: 'header_454323', value: 'Instructions'}],
             },
             {
               id: 'page_2_part_0_text-0',
               type: 'paragraph',
               value: [
-                "Try to think of a story, supersition, or urban myth you've been told by a family member, friend, or loved one. Think about who told it to you, where the story comes from, and why the story is told.\n" +
-                  '\n' +
-                  'Then, fill in the spaces below describing this story, and, in the large space, write a few sentences summarizing the story.',
+                {
+                  id: 'paragraph_5346',
+                  value:
+                    "Try to think of a story, supersition, or urban myth you've been told by a family member, friend, or loved one. Think about who told it to you, where the story comes from, and why the story is told.\n" +
+                    '\n' +
+                    'Then, fill in the spaces below describing this story, and, in the large space, write a few sentences summarizing the story.',
+                },
               ],
             },
           ],
@@ -170,7 +176,8 @@ export const exampleUniversalLesson: UniversalLesson = {
               id: 'page_2_part_1_header-1',
               type: 'header',
               class: 'border-b-4 border-green-500',
-              value: ['Myths Story Warmup'],
+
+              value: [{id: 'header_eq4543', value: 'Myths Story Warmup'}],
             },
             {
               id: 'page_2_part_1_questionGroup-1',
@@ -201,7 +208,7 @@ export const exampleUniversalLesson: UniversalLesson = {
               id: 'page_2_part_2_header-2',
               type: 'header',
               class: 'border-b-4 border-green-500',
-              value: ['Focus Questions'],
+              value: [{id: 'header_4543', value: 'Focus Questions'}],
             },
             {
               id: 'page_2_part_2_questionGroup-2',
@@ -290,7 +297,11 @@ export const exampleUniversalLesson: UniversalLesson = {
               id: 'page_3_part_1_highlighter-0',
               type: 'highlighter',
               value: [
-                '<p>No man is an island,</p>\\n<p>Entire of itself,</p>\\n<p>Every man is a piece of the continent,</p>\\n<p>A part of the main.</p>\\n<p>If a clod be washed away by the sea,</p>\\n<p>Europe is the less.</p>\\n<p>As well as if a promontory were.</p>\\n<p>As well as if a manor of thy friend’s</p>\\n<p>Or of thine own were:</p>\\n<p>Any man’s death diminishes me,</p>\\n<p>Because I am involved in mankind,</p>\\n<p>And therefore never send to know for whom the bell tolls;</p>\\n<p>It tolls for thee.</p>\\n',
+                {
+                  id: 'highlighter_433374',
+                  value:
+                    '<p>No man is an island,</p>\\n<p>Entire of itself,</p>\\n<p>Every man is a piece of the continent,</p>\\n<p>A part of the main.</p>\\n<p>If a clod be washed away by the sea,</p>\\n<p>Europe is the less.</p>\\n<p>As well as if a promontory were.</p>\\n<p>As well as if a manor of thy friend’s</p>\\n<p>Or of thine own were:</p>\\n<p>Any man’s death diminishes me,</p>\\n<p>Because I am involved in mankind,</p>\\n<p>And therefore never send to know for whom the bell tolls;</p>\\n<p>It tolls for thee.</p>\\n',
+                },
               ],
             },
           ],
