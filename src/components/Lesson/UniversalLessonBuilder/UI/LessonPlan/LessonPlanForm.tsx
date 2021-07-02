@@ -1,19 +1,14 @@
 import React, {useState, useContext} from 'react';
 import {useHistory} from 'react-router';
-import {uniqueId} from 'lodash';
-
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import TextArea from '../../../../Atoms/Form/TextArea';
 import Selector from '../../../../Atoms/Form/Selector';
-import * as mutations from '../../../../../graphql/mutations';
+import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
-import {getAsset} from '../../../../../assets';
-import {ILessonPlan} from './LessonPlan';
-import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {v4 as uuidV4} from 'uuid';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 interface ILessonInputs {
@@ -83,7 +78,7 @@ const LessonPlanForm = () => {
           ],
         };
         const res: any = await API.graphql(
-          graphqlOperation(mutations.updateUniversalLesson, {
+          graphqlOperation(customMutations.updateUniversalLesson, {
             input,
           })
         );

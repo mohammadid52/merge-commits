@@ -77,18 +77,16 @@ const SelectOne = ({
         id: partContentId,
         type: selectedForm === SELECT_ONE ? FORM_TYPES.RADIO : FORM_TYPES.MULTIPLE,
         label: d.label,
-        value: modifiedOptions(d.options),
+        options: d.options,
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
       const updatedList = updateContent('', '', type, inputObjArray);
-      console.log(updatedList);
 
       await addToDB(updatedList);
     } else {
       const updatedList = createNewContent('', '', type, inputObjArray);
-      console.log(updatedList);
 
       await addToDB(updatedList);
     }

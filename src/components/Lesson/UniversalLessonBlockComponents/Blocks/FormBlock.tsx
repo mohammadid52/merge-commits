@@ -39,7 +39,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   const [fields, setFields] = useState<any>({});
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    console.log('onChange - id - value - ', id, ' - ', value)
+    console.log('onChange - id - value - ', id, ' - ', value);
     setFields({...fields, [id]: value});
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);
@@ -64,7 +64,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           name="url"
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
-          onChange={isInLesson ? (e)=>onChange(e) : undefined}
+          onChange={isInLesson ? (e) => onChange(e) : undefined}
           // value={fields[inputID] || 'Please input...'}
         />
       </div>
@@ -214,7 +214,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             disabled={mode === 'building'}
             className={`w-full py-2 px-4 text-white rounded-xl bg-darker-gray`}
             name="emoji"
-            onChange={isInLesson ? (e)=>onChange(e) : undefined}
+            onChange={isInLesson ? (e) => onChange(e) : undefined}
             type="text"
             value={textValue}
           />
@@ -242,7 +242,13 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     );
   };
 
-  const composeInput = (inputID: string, type: string, label: string, value: any) => {
+  const composeInput = (
+    inputID: string,
+    type: string,
+    label: string,
+    value: any,
+    options: any
+  ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
       case FORM_TYPES.DATE_PICKER:
@@ -257,7 +263,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               className={`w-full py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson ? (e)=>onChange(e) : undefined}
+              onChange={isInLesson ? (e) => onChange(e) : undefined}
               defaultValue={value}
             />
           </div>
@@ -274,7 +280,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               disabled={mode === 'building'}
               className={`w-full h-64 py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
               name="story"
-              onChange={isInLesson ? (e)=>onChange(e) : undefined}
+              onChange={isInLesson ? (e) => onChange(e) : undefined}
               defaultValue={value}
             />
           </div>
@@ -286,7 +292,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <label className={`text-sm text-gray-200`} htmlFor="label">
               {label}
             </label>
-            {generateCheckbox(value, type === FORM_TYPES.MULTIPLE ? true : false)}
+            {generateCheckbox(options, type === FORM_TYPES.MULTIPLE ? true : false)}
           </div>
         );
 
@@ -306,13 +312,12 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
 
   return (
     <>
-      {
-        value &&
+      {value &&
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
             <React.Fragment key={`formBlock_${i}`}>
-              {composeInput(v.id, v.type, v.label, v.value)}
+              {composeInput(v.id, v.type, v.label, v.value, v.options)}
             </React.Fragment>
           );
         })}

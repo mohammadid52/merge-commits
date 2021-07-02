@@ -130,15 +130,17 @@ const Attachments = (props: any) => {
                     placeHolder={`Enter Title`}
                   />
                 </div>
-                <div>
-                  <FormInput
-                    onChange={(e) => onChange(e, idx, false)}
-                    label={`${title} Placeholder`}
-                    value={input.value}
-                    id={`placeholder_${input.id}`}
-                    placeHolder={`Enter Placeholder`}
-                  />
-                </div>
+                {selectedForm !== DATE_PICKER && (
+                  <div>
+                    <FormInput
+                      onChange={(e) => onChange(e, idx, false)}
+                      label={`${title} Placeholder`}
+                      value={input.value}
+                      id={`placeholder_${input.id}`}
+                      placeHolder={`Enter Placeholder`}
+                    />
+                  </div>
+                )}
                 {idx !== 0 && (
                   <div className="flex my-2 items-center justify-end w-auto mx-3">
                     <button

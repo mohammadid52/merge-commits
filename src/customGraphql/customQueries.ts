@@ -558,10 +558,7 @@ export const getClassroomStudent = /* GraphQL */ `
 `;
 
 export const listPersons = /* GraphQL */ `
-  query ListPersons(
-    $filter: ModelPersonFilterInput
-    $sortDirection: ModelSortDirection
-  ) {
+  query ListPersons($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
     listPersons(filter: $filter, sortDirection: $sortDirection) {
       items {
         id
@@ -1626,6 +1623,46 @@ export const listLessonFilters = /* GraphQL */ `
   }
 `;
 
+export const listUniversalLessons = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        designers
+        objectives
+        purpose
+        instructions
+        summary
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const getUniversalLesson = /* GraphQL */ `
   query GetUniversalLesson($id: ID!) {
     getUniversalLesson(id: $id) {
@@ -1671,7 +1708,9 @@ export const getUniversalLesson = /* GraphQL */ `
               label
               value
               options {
-             
+                id
+                label
+                text
               }
             }
             isRequired

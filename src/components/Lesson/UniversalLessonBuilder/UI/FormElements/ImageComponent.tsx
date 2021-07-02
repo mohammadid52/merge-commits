@@ -6,7 +6,7 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 
-import {getImageFromS3Static} from '../../../../../utilities/services';
+import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   EditQuestionModalDict,
@@ -16,7 +16,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 interface IImageInput {
-  url: string;
+  value: string;
   width: string;
   height: string;
   caption?: string;
@@ -46,14 +46,14 @@ const ImageFormComponent = ({
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
-    url: '',
+    value: '',
     imageData: null,
     width: 'auto',
     height: 'auto',
     caption: '',
   });
   const [errors, setErrors] = useState<IImageInput>({
-    url: '',
+    value: '',
     width: '',
     height: '',
   });
@@ -71,15 +71,15 @@ const ImageFormComponent = ({
     if (selectedImageFromGallery) {
       setImageInputs((prevValues) => ({
         ...prevValues,
-        url: selectedImageFromGallery,
+        value: selectedImageFromGallery,
         imageData: null,
       }));
     }
   }, [selectedImageFromGallery]);
 
   const updateFileUrl = (previewUrl: string, imageData: File | null) => {
-    setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
-    setErrors((prevValues) => ({...prevValues, url: ''}));
+    setImageInputs((prevValues) => ({...prevValues, value: previewUrl, imageData}));
+    setErrors((prevValues) => ({...prevValues, value: ''}));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUnsavedChanges(true);
@@ -113,34 +113,42 @@ const ImageFormComponent = ({
           .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
         setIsLoading(true);
         await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
-        payload = {
-          ...payload,
-          url: `ULB/${user.id}/content_image_${fileName}`,
-        };
+
+        const imageUrl: any = await getImageFromS3(
+          `ULB/${user.id}/content_image_${fileName}`
+        );
+
+        if (imageUrl) {
+          payload = {
+            ...payload,
+            value: imageUrl,
+          };
+        }
+        if (isEditingMode) {
+          const updatedList = updateBlockContentULBHandler('', '', 'image', [payload]);
+          await addToDB(updatedList);
+        } else {
+          const updatedList = createNewBlockULBHandler('', '', 'image', [payload]);
+          await addToDB(updatedList);
+        }
       }
-      if (isEditingMode) {
-        const updatedList = updateBlockContentULBHandler('', '', 'image', [payload]);
-        await addToDB(updatedList);
-      } else {
-        const updatedList = createNewBlockULBHandler('', '', 'image', [payload]);
-        await addToDB(updatedList);
-      }
+
       setIsLoading(false);
       setUnsavedChanges(false);
     }
   };
 
   const validateFormFields = () => {
-    const {url = '', width = '', height = ''} = imageInputs;
+    const {value = '', width = '', height = ''} = imageInputs;
     let isValid = true;
     let errorMsgs = {
-      url: '',
+      value: '',
       width: '',
       height: '',
     };
-    if (!url) {
+    if (!value) {
       isValid = false;
-      errorMsgs.url =
+      errorMsgs.value =
         UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_REQUIRED'];
     }
     if (!width || (width !== 'auto' && !Number(width))) {
@@ -172,7 +180,7 @@ const ImageFormComponent = ({
         .catch((err: any) => {
           setErrors((prevValues) => ({
             ...prevValues,
-            url: 'Unable to upload image. Please try again later. ',
+            value: 'Unable to upload image. Please try again later. ',
           }));
           console.log('Error in uploading file to s3', err);
           reject(err);
@@ -180,7 +188,7 @@ const ImageFormComponent = ({
     });
   };
 
-  const {caption = '', url = '', width = '', height = '', imageData} = imageInputs;
+  const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
   return (
     <div>
       <form onSubmit={onSave}>
@@ -192,8 +200,8 @@ const ImageFormComponent = ({
             <ULBFileUploader
               acceptedFilesFormat={'image/*'}
               updateFileUrl={updateFileUrl}
-              fileUrl={url}
-              error={errors?.url}
+              fileUrl={value}
+              error={errors?.value}
               showPreview={false}
             />
             <div className="flex flex-col items-center justify-center text-gray-400">
@@ -240,10 +248,10 @@ const ImageFormComponent = ({
             </div>
           </div>
         </div>
-        {url ? (
+        {value ? (
           <div>
             <img
-              src={imageData ? url : getImageFromS3Static(url)}
+              src={imageData ? value : getImageFromS3Static(value)}
               alt=""
               className={`w-auto h-30 pt-4`}
             />

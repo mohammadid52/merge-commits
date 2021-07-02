@@ -304,7 +304,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardCaption: formData.imageCaption,
           };
           const results: any = await API.graphql(
-            graphqlOperation(mutations.updateUniversalLesson, {input: input})
+            graphqlOperation(customMutations.updateUniversalLesson, {input: input})
           );
           const lessonsData = results?.data?.updateUniversalLesson;
           postLessonCreation(lessonsData?.id);

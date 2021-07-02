@@ -5,7 +5,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-
+import {v4 as uuidv4} from 'uuid';
 interface IHighlighterFormDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
@@ -55,7 +55,7 @@ const HighlighterFormDialog = ({
         '',
         '',
         'highlighter',
-        [inputFieldValue],
+        [{id: uuidv4().toString(), value: inputFieldValue}],
         0
       );
       await addToDB(updatedList);
@@ -64,7 +64,8 @@ const HighlighterFormDialog = ({
         '',
         '',
         'highlighter',
-        [inputFieldValue],
+        [{id: uuidv4().toString(), value: inputFieldValue}],
+
         0
       );
       await addToDB(updatedList);

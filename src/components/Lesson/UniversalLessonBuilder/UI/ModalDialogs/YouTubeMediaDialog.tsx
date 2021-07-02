@@ -78,10 +78,14 @@ const YouTubeMediaDialog = ({
     if (isValid) {
       if (isEditingMode) {
         const updatedList = updateBlockContentULBHandler('', '', 'video', [videoInputs]);
-        await addToDB(updatedList);
+        console.log(updatedList);
+
+        // await addToDB(updatedList);
       } else {
         const updatedList = createNewBlockULBHandler('', '', 'video', [videoInputs]);
-        await addToDB(updatedList);
+        console.log(updatedList);
+
+        // await addToDB(updatedList);
       }
       setUnsavedChanges(false);
     }

@@ -10,7 +10,7 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {getAsset} from '../../../../../assets';
 import PageTile from '../common/PageTile';
-import * as mutations from '../../../../../graphql/mutations';
+import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
 import {ILessonPlan} from './LessonPlan';
 import {v4 as uuidV4} from 'uuid';
@@ -43,7 +43,7 @@ const ExistingPageView = ({addNewPageHandler, universalLessonDetails}: ILessonPl
         ],
       };
       const result = await API.graphql(
-        graphqlOperation(mutations.updateUniversalLesson, {input})
+        graphqlOperation(customMutations.updateUniversalLesson, {input})
       );
     } catch (error) {
       console.error(error.message);

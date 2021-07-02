@@ -107,9 +107,7 @@ const HeaderModalComponent = ({
       lessonPlan: [...list.lessonPlan],
     };
 
-    console.log(input.lessonPlan);
-
-    // await updateLessonPageToDB(input);
+    await updateLessonPageToDB(input);
   };
 
   const onHeaderCreate = async () => {

@@ -73,7 +73,7 @@ export interface PartContentSub {
 export interface Options {
   id?: string;
   label?: string;
-  test?: string; // it's text. but because of typo it's test
+  text?: string;
 }
 
 /**************************************

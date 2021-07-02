@@ -99,6 +99,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     universalLessonDetails,
     setUniversalLessonDetails,
     selectedPageID,
+    setFetchingLessonDetails,
     setSelectedPageID,
   } = useULBContext();
 
@@ -134,13 +135,20 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   }, [pageId]);
 
   const fetchLessonData = async () => {
-    const result: any = await API.graphql(
-      graphqlOperation(customQueries.getUniversalLesson, {
-        id: lessonId,
-      })
-    );
-    const savedData = result.data.getUniversalLesson;
-    setUniversalLessonDetails(savedData);
+    try {
+      setFetchingLessonDetails(true);
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
+          id: lessonId,
+        })
+      );
+      const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
+    } catch {
+      setUniversalLessonDetails((prev: any) => ({...prev}));
+    } finally {
+      setFetchingLessonDetails(false);
+    }
   };
 
   /**********************************************
@@ -474,8 +482,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const onBack = () => {
     history.goBack();
   };
-
-  console.log('universalLessonDetails: ----------------', universalLessonDetails);
 
   return (
     /**

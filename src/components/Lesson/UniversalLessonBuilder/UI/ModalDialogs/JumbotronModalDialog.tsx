@@ -145,21 +145,19 @@ const JumbotronModalDialog = ({
       setIsLoading(true);
       await uploadImageToS3(imageInputs.imageData, `${fileName}`, 'image/jpeg');
       if (isEditingMode) {
-        const updatedList = updateBlockContentULBHandler('', '', 'video', [
+        updateBlockContentULBHandler('', '', 'video', [
           {
             ...imageInputs,
             url: `ULB/content_image_${fileName}`,
           },
         ]);
-        await addToDB(updatedList);
       } else {
-        const updatedList = createNewBlockULBHandler('', '', 'image', [
+        createNewBlockULBHandler('', '', 'image', [
           {
             ...imageInputs,
             url: `ULB/content_image_${fileName}`,
           },
         ]);
-        await addToDB(updatedList);
       }
       setIsLoading(false);
     }
@@ -228,9 +226,23 @@ const JumbotronModalDialog = ({
   const onJumbotronCreate = async () => {
     await onSave();
     if (isEditingMode) {
-      updateBlockContentULBHandler('', '', 'jumbotron', inputFieldsArray, 0);
+      const updatedList = updateBlockContentULBHandler(
+        '',
+        '',
+        'jumbotron',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     } else {
-      createNewBlockULBHandler('', '', 'jumbotron', inputFieldsArray, 0);
+      const updatedList = createNewBlockULBHandler(
+        '',
+        '',
+        'jumbotron',
+        inputFieldsArray,
+        0
+      );
+      await addToDB(updatedList);
     }
 
     setUnsavedChanges(false);

@@ -1,10 +1,10 @@
 import {API, graphqlOperation} from 'aws-amplify';
-import * as mutations from '../graphql/mutations';
+import * as customMutations from '../customGraphql/customMutations';
 
 export const updateLessonPageToDB = async (input: any) => {
   try {
     const res: any = await API.graphql(
-      graphqlOperation(mutations.updateUniversalLesson, {input})
+      graphqlOperation(customMutations.updateUniversalLesson, {input})
     );
     return res.data.updateUniversalLesson;
   } catch (error) {
