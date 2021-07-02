@@ -6,7 +6,7 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 
 export const AddNewBlock = (props: RowWrapperProps) => {
   const {handleModalPopToggle, idx} = props;
-  const {builderTheme, setNewBlockSeqId} = useULBContext();
+  const {themeTextColor, setNewBlockSeqId} = useULBContext();
 
   return (
     <div
@@ -23,9 +23,7 @@ export const AddNewBlock = (props: RowWrapperProps) => {
         }}
         className={`w-auto cursor-pointer z-50`}>
         <IconContext.Provider value={{size: '4rem'}}>
-          <IoMdAddCircleOutline
-            className={`${builderTheme === 'light' ? 'text-dark-gray' : 'text-white'}`}
-          />
+          <IoMdAddCircleOutline className={themeTextColor} />
         </IconContext.Provider>
         <p className={`text-center`}>Add New Block</p>
       </div>

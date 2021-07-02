@@ -161,12 +161,12 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 section="pageContent">
                 <BuilderRowWrapper
                   mode={mode}
-                  hasContent={pagePart.partContent.length > 0}
+                  hasContent={pagePart.partContent?.length > 0}
                   contentID={pagePart.id}
                   classString={`${pagePart.class}`}
                   dataIdAttribute={`${pagePart.id}`}
                   pagePart={pagePart}>
-                  {pagePart.partContent.length > 0 ? (
+                  {pagePart.partContent?.length > 0 ? (
                     <DragDropContext
                       onDragEnd={(result) =>
                         handleOnDragEnd(result, pagePart.id, pagePart.partContent)
@@ -272,7 +272,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                     //           contentID={content.id}
                     //           editedID={editedID}
                     //           isComponent={true}
-                    //           isLast={idx2 === pagePart.partContent.length - 1}
+                    //           isLast={idx2 === pagePart.partContent?.length - 1}
                     //           handleEditBlockToggle={() =>
                     //             handleEditBlockToggle(content.id)
                     //           }
@@ -330,7 +330,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                         handleModalPopToggle={(dialogToToggle) =>
                           handleModalPopToggle(
                             dialogToToggle,
-                            pagePart.partContent.length,
+                            pagePart.partContent?.length,
                             'partContent',
                             pagePart.id
                           )

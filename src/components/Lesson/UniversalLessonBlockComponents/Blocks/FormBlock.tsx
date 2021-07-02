@@ -21,12 +21,14 @@ export const FormBlock = (props: FormBlockProps) => {
   const {id, mode, dataIdAttribute, value, handleEditBlockToggle} = props;
   const {theme} = useContext(GlobalContext);
   const {builderTheme, themeTextColor} = useULBContext();
-
   const [fields, setFields] = useState<any>({});
+
   const onChange = (e: any) => {
     const {id, value} = e.target;
     setFields({...fields, [id]: value});
   };
+  
+  const themePlaceholderColor = builderTheme === 'light' ? 'placeholder-gray-800' : '';
 
   const LinkInput = ({inputID, label, value}: any) => {
     return (
@@ -42,7 +44,9 @@ export const FormBlock = (props: FormBlockProps) => {
           id={inputID}
           disabled={mode === 'building'}
           pattern="https://.*"
-          className={`w-full py-2 px-4 mt-2 ${themeTextColor} rounded-xl ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
+          className={`w-full py-2 px-4 mt-2 ${themePlaceholderColor} rounded-xl ${
+            builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+          }`}
           name="url"
           type="text"
           placeholder={value.length > 0 ? value : 'Please input...'}
@@ -152,7 +156,10 @@ export const FormBlock = (props: FormBlockProps) => {
   ) => {
     if (values && Array.isArray(values)) {
       return (
-        <div className={`mt-2 flex flex-wrap text-gray-300 ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'} py-2 px-4 rounded-xl`}>
+        <div
+          className={`mt-2 flex flex-wrap text-gray-300 ${
+            builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+          } py-2 px-4 rounded-xl`}>
           {values.map(({label, text, id}, idx: number) =>
             selectMany ? (
               <div
@@ -163,7 +170,7 @@ export const FormBlock = (props: FormBlockProps) => {
                   data-key={id}
                   data-value={label}
                   type="checkbox"
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor}
                   ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
                   checked={false}
                 />
@@ -213,7 +220,9 @@ export const FormBlock = (props: FormBlockProps) => {
           <input
             id={inputID}
             disabled={mode === 'building'}
-            className={`w-full py-2 px-4 ${themeTextColor} rounded-xl ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
+            className={`w-full py-2 px-4 ${themePlaceholderColor} rounded-xl ${
+              builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            }`}
             name="emoji"
             onChange={onChange}
             type="text"
@@ -256,7 +265,9 @@ export const FormBlock = (props: FormBlockProps) => {
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
+              className={`w-full py-2 px-4 ${theme} mt-2 rounded-xl ${
+                builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               placeholder={value.length > 0 ? value : 'Please input...'}

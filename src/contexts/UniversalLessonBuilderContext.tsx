@@ -141,7 +141,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         universalLessonsList,
         setUniversalLessonsList,
         themeTextColor: builderTheme === 'light' ? 'text-dark-gray' : 'text-white',
-        themeBackgroundColor: builderTheme === 'light' ? 'bg-dark-gray' : 'bg-white',
+        themeBackgroundColor: builderTheme === 'light' ? 'bg-white' : 'bg-dark-gray',
       }}>
       {children}
     </UniversalLessonBuilderContext.Provider>

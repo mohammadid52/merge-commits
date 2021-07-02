@@ -96,6 +96,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const {BreadcrumsTitles, LessonEditDict} = useDictionary(clientKey);
   const [universalBuilderStep, setUniversalBuilderStep] = useState('BuilderWrapper');
   const {
+    themeBackgroundColor,
     universalLessonDetails,
     setUniversalLessonDetails,
     selectedPageID,
@@ -507,7 +508,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         <div className="w-full h-full pb-8 m-auto pr-6">
           <div
             id={`universalLessonBuilder`}
-            className={`h-full flex bg-white shadow-5 sm:rounded-lg overflow-y-hidden mb-4`}>
+            className={`h-full flex ${themeBackgroundColor} shadow-5 sm:rounded-lg overflow-y-hidden mb-4`}>
             {/*{currentStepComp(universalBuilderStep)}*/}
 
             <BuilderWrapper
