@@ -248,9 +248,8 @@ const JumbotronModalDialog = ({
               );
             } else {
               return (
-                <div className="mb-2">
+                <div className="mb-2" key={`jumboform_${idx}`}>
                   <FormInput
-                    key={`jumboform_${idx}`}
                     onChange={onChange}
                     label={inputFieldsArray[idx]?.label}
                     isRequired

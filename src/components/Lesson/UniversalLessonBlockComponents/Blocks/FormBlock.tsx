@@ -1,5 +1,5 @@
 import EmojiPicker from 'emoji-picker-react';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {BiImageAdd} from 'react-icons/bi';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -11,28 +11,49 @@ import Storage from '@aws-amplify/storage';
 import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
+import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
   value?: {id: string; type: string; label: string; value: string}[];
 }
 
-export const FormBlock = (props: FormBlockProps) => {
-  const {id, mode, dataIdAttribute, value, handleEditBlockToggle} = props;
-  const {theme} = useContext(GlobalContext);
+export const FormBlock = ({id, mode, value}: FormBlockProps) => {
+  const {lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const {builderTheme, themeTextColor} = useULBContext();
+
+  //  Check if form is in a Lesson, and if it is...
+  //  ...Dispatch the updated form data to context!
+  const isInLesson = useInLessonCheck();
+  const handleUpdateStudentData = (domID: string, input: string[]) => {
+    lessonDispatch({
+      type: 'UPDATE_STUDENT_DATA',
+      payload: {
+        pageIdx: lessonState.currentPage,
+        data: {
+          domID: domID,
+          input: input,
+        },
+      },
+    });
+  };
+
   const [fields, setFields] = useState<any>({});
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
+    console.log('onChange - id - value - ', id, ' - ', value)
     setFields({...fields, [id]: value});
+    if (isInLesson) {
+      handleUpdateStudentData(id, [value]);
+    }
   };
   
   const themePlaceholderColor = builderTheme === 'light' ? 'placeholder-gray-800' : '';
 
   const LinkInput = ({inputID, label, value}: any) => {
     return (
-      <div id={id} key={inputID} className={`mb-4 p-4`}>
+      <div id={id} key={id} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
           {label}{' '}
           <span
@@ -49,9 +70,9 @@ export const FormBlock = (props: FormBlockProps) => {
           }`}
           name="url"
           type="text"
-          placeholder={value.length > 0 ? value : 'Please input...'}
-          // onChange={onChange}
-          // value={fields[inputID]}
+          defaultValue={value.length > 0 ? value : 'Please input...'}
+          onChange={isInLesson ? (e)=>onChange(e) : undefined}
+          // value={fields[inputID] || 'Please input...'}
         />
       </div>
     );
@@ -63,30 +84,11 @@ export const FormBlock = (props: FormBlockProps) => {
     const openFilesExplorer = () => inputOther.current.click();
     // For Attachments - 31
 
-    const uploadAttachment = async (file: any, id: string, type: string) => {
-      // Upload Attachments
-      return new Promise((resolve, reject) => {
-        Storage.put(id, file, {
-          contentType: type,
-        })
-          .then((result) => {
-            resolve(result);
-          })
-          .catch((err) => {
-            console.log('Error in uploading file to s3', err);
-            reject(err);
-          });
-      });
-    };
-
     const UPLOAD_KEY = 'survey_attachments';
     const [uploading, setUploading] = useState(false);
     const [fileObject, setfileObject] = useState<any>({});
-    const [url, setUrl] = useState(value);
+    const [, setUrl] = useState(value);
 
-    const addImageUrlToResponse = (url: string) => {
-      setUrl(url);
-    };
     const wait = (timeout: number) => {
       return new Promise((resolve) => setTimeout(resolve, timeout));
     };
@@ -94,7 +96,7 @@ export const FormBlock = (props: FormBlockProps) => {
       if (e.target.files && e.target.files.length > 0) {
         const file = e.target.files[0];
         setfileObject(file);
-        const id: string = `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
+        `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
         setUploading(true);
 
         // await uploadAttachment(file, id, file.type);
@@ -224,9 +226,8 @@ export const FormBlock = (props: FormBlockProps) => {
               builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
             }`}
             name="emoji"
-            onChange={onChange}
+            onChange={isInLesson ? (e)=>onChange(e) : undefined}
             type="text"
-            placeholder={value.length > 0 ? value : 'Please input...'}
             value={textValue}
           />
           {showEmojiSelector && (
@@ -258,7 +259,7 @@ export const FormBlock = (props: FormBlockProps) => {
       case FORM_TYPES.TEXT:
       case FORM_TYPES.DATE_PICKER:
         return (
-          <div id={id} key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`mb-4 p-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {label}
             </label>
@@ -270,17 +271,16 @@ export const FormBlock = (props: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              placeholder={value.length > 0 ? value : 'Please input...'}
-              // onChange={onChange}
-              // value={fields[inputID]}
+              onChange={isInLesson ? (e)=>onChange(e) : undefined}
+              defaultValue={value}
             />
           </div>
         );
 
       case FORM_TYPES.TEXTAREA:
         return (
-          <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm ${themeTextColor} `} htmlFor="label">
+          <div id={id} key={id} className={`mb-4 p-4`}>
+            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {label}
             </label>
             <textarea
@@ -288,8 +288,8 @@ export const FormBlock = (props: FormBlockProps) => {
               disabled={mode === 'building'}
               className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${builderTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
               name="story"
-              placeholder={value.length > 0 ? value : 'Please input...'}
-              value={''}
+              onChange={isInLesson ? (e)=>onChange(e) : undefined}
+              defaultValue={value}
             />
           </div>
         );
@@ -305,7 +305,7 @@ export const FormBlock = (props: FormBlockProps) => {
         );
 
       case FORM_TYPES.EMOJI:
-        return <EmojiInput inputID={inputID} value={value} label={label} />;
+        return <EmojiInput id={id} inputID={inputID} value={value} label={label} />;
       case FORM_TYPES.RATING:
         return <StarRatingBlock id={id} inputID={inputID} label={label} />;
       case FORM_TYPES.LINK:
@@ -320,12 +320,13 @@ export const FormBlock = (props: FormBlockProps) => {
 
   return (
     <>
-      {value &&
+      {
+        value &&
         value.length > 0 &&
         value.map((v: any, i: number) => {
           return (
             <React.Fragment key={`formBlock_${i}`}>
-              {composeInput(`${id}_${i}`, v.type, v.label, v.value)}
+              {composeInput(v.id, v.type, v.label, v.value)}
             </React.Fragment>
           );
         })}

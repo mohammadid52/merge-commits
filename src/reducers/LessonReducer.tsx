@@ -1,5 +1,6 @@
 import {lessonState} from '../state/LessonState';
 import {
+  PagePartInput,
   UniversalLesson,
   UniversalLessonPage,
   UniversalLessonStudentData,
@@ -24,6 +25,10 @@ export type LessonActions =
       payload: UniversalLessonStudentData[];
     }
   | {
+      type: 'UPDATE_STUDENT_DATA';
+      payload: {pageIdx: number; data: PagePartInput};
+    }
+  | {
       type: 'SET_CURRENT_PAGE';
       payload: number;
     }
@@ -39,6 +44,7 @@ export type LessonActions =
       type: 'CLEANUP';
       payload: '';
     };
+
 
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
@@ -58,8 +64,28 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'SET_INITIAL_STUDENT_DATA':
       return {
         ...state,
-        studentData: action.payload
-      }
+        studentData: action.payload,
+      };
+    case 'UPDATE_STUDENT_DATA':
+      const pageIdx = action.payload.pageIdx;
+      const domID = action.payload.data.domID;
+      const newInput = action.payload.data.input;
+      // update single object
+      const updatedTargetStudentData = state.studentData[pageIdx].map((pagePartInput: PagePartInput)=>{
+        return {
+          domID: pagePartInput.domID,
+          input: pagePartInput.domID === domID ? newInput : pagePartInput.input
+        }
+      });
+      // merge updated object into original array
+      const mappedStudentData = state.studentData.map((pageData: PagePartInput[], idx: number)=>{
+        if(idx === pageIdx){
+          return updatedTargetStudentData;
+        } else {
+          return pageData;
+        }
+      })
+      return {...state, studentData: mappedStudentData};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
     case 'TOGGLE_OPEN_PAGE':
@@ -76,6 +102,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'INCREMENT_SAVE_COUNT':
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
+      console.log('cleanup...')
       return lessonState;
     default:
       return state;
