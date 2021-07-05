@@ -11,7 +11,7 @@ import {
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-
+import {v4 as uuidv4} from 'uuid';
 const youTubeVideoRegex = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
 const videoSizeOptions = [
@@ -22,8 +22,9 @@ const videoSizeOptions = [
 ];
 
 interface IVideoInput {
-  url: string;
-  size: string;
+  value: string;
+  width: string;
+  height: string;
 }
 
 interface IVideoDialogProps extends IContentTypeComponentProps {
@@ -41,8 +42,9 @@ const YouTubeMediaDialog = ({
   const {userLanguage} = useContext(GlobalContext);
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [videoInputs, setVideoInputs] = useState<IVideoInput>({
-    url: '',
-    size: '560 x 315',
+    value: '',
+    width: '560',
+    height: '315',
   });
   const [error, setError] = useState<string>('');
 
@@ -60,7 +62,9 @@ const YouTubeMediaDialog = ({
     setError('');
   };
   const onChangeVideoSize = (_: string, name: string) => {
-    setVideoInputs((prevValues) => ({...prevValues, size: name}));
+    const height = name.split(' x ')[1];
+    const width = name.split(' x ')[0];
+    setVideoInputs((prevValues) => ({...prevValues, height, width}));
   };
   const addToDB = async (list: any) => {
     closeAction();
@@ -76,26 +80,24 @@ const YouTubeMediaDialog = ({
     event.preventDefault();
     const isValid: boolean = checkUrl();
     if (isValid) {
+      const input = {id: uuidv4().toString(), ...videoInputs};
+
       if (isEditingMode) {
-        const updatedList = updateBlockContentULBHandler('', '', 'video', [videoInputs]);
-        console.log(updatedList);
-
-        // await addToDB(updatedList);
+        const updatedList = updateBlockContentULBHandler('', '', 'video', [input]);
+        await addToDB(updatedList);
       } else {
-        const updatedList = createNewBlockULBHandler('', '', 'video', [videoInputs]);
-        console.log(updatedList);
-
-        // await addToDB(updatedList);
+        const updatedList: any = createNewBlockULBHandler('', '', 'video', [input]);
+        await addToDB(updatedList);
       }
       setUnsavedChanges(false);
     }
   };
   const checkUrl = () => {
-    if (!videoInputs.url) {
+    if (!videoInputs.value) {
       setError(UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['VIDEO_REQUIRED']);
       return false;
     }
-    if (!youTubeVideoRegex.test(videoInputs.url)) {
+    if (!youTubeVideoRegex.test(videoInputs.value)) {
       setError(UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['VIDEO_INVALID']);
       return false;
     } else {
@@ -104,18 +106,18 @@ const YouTubeMediaDialog = ({
     }
   };
 
-  const {url = '', size = ''} = videoInputs;
-
+  const {value = '', height = '', width = ''} = videoInputs;
+  const size = `${width} x ${height}`;
   return (
     <div>
       <form onSubmit={onSave}>
         <div className={`grid grid-cols-3 gap-2`}>
           <div className={`col-span-2`}>
             <FormInput
-              value={url || ''}
-              id="url"
+              value={value || ''}
+              id="value"
               onChange={onChange}
-              name="url"
+              name="value"
               label={UniversalBuilderDict[userLanguage]['FORMS']['VIDEO_URL_LABEL']}
               placeHolder={'Ex. https://www.youtube.com/embed/12345678912'}
               isRequired

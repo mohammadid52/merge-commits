@@ -13,6 +13,7 @@ import Storage from '@aws-amplify/storage';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 import Loader from '../../../../Atoms/Loader';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {getImageFromS3} from '../../../../../utilities/services';
 
 interface IImageInput {
   url: string;
@@ -144,20 +145,22 @@ const JumbotronModalDialog = ({
         .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
       setIsLoading(true);
       await uploadImageToS3(imageInputs.imageData, `${fileName}`, 'image/jpeg');
+
+      const input = {
+        value: `ULB/content_image_${fileName}`,
+        height: imageInputs.height,
+        width: imageInputs.width,
+        caption: imageInputs.caption,
+      };
+
       if (isEditingMode) {
-        updateBlockContentULBHandler('', '', 'video', [
-          {
-            ...imageInputs,
-            url: `ULB/content_image_${fileName}`,
-          },
-        ]);
+        const updatedList = updateBlockContentULBHandler('', '', 'video', [{...input}]);
+
+        await addToDB(updatedList);
       } else {
-        createNewBlockULBHandler('', '', 'image', [
-          {
-            ...imageInputs,
-            url: `ULB/content_image_${fileName}`,
-          },
-        ]);
+        const updatedList = createNewBlockULBHandler('', '', 'image', [{...input}]);
+
+        await addToDB(updatedList);
       }
       setIsLoading(false);
     }
@@ -233,7 +236,7 @@ const JumbotronModalDialog = ({
         inputFieldsArray,
         0
       );
-      await addToDB(updatedList);
+      // await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
         '',
@@ -242,7 +245,8 @@ const JumbotronModalDialog = ({
         inputFieldsArray,
         0
       );
-      await addToDB(updatedList);
+
+      // await addToDB(updatedList);
     }
 
     setUnsavedChanges(false);

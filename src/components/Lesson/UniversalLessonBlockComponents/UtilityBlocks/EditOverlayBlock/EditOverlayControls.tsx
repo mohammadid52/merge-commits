@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {
   AiOutlineBgColors,
@@ -20,6 +20,10 @@ import {
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import ColorPicker from '../../../UniversalLessonBuilder/UI/ColorPicker/ColorPicker';
 import SplitColumnDropdown from '../../../UniversalLessonBuilder/UI/SplitColumn/SplitColumnDropdown';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import ModalPopUp from '../../../../Molecules/ModalPopUp';
+import useDictionary from '../../../../../customHooks/dictionary';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -104,6 +108,56 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const textClass = 'mx-2 w-auto tracking-widest';
   if (previewMode) return null;
   const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-2.5rem'};
+
+  const addToDB = async (list: any) => {
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const [confirmationConfig, setConfirmationConfig] = useState<{
+    show: boolean;
+    message: string;
+
+    id: string;
+  }>({
+    show: false,
+    message: '',
+    id: '',
+  });
+
+  const onDeleteButtonClick = (id: string, right?: boolean) => {
+    setConfirmationConfig({
+      message: `Are you sure you want to delete this content? ${
+        right
+          ? 'All of the sub content will also be permanently removed.'
+          : 'It will be permanently removed.'
+      } This action cannot be undone.`,
+      show: true,
+
+      id,
+    });
+  };
+
+  const closeAction = () => {
+    setConfirmationConfig({
+      message: '',
+      show: false,
+      id: '',
+    });
+  };
+
+  const deletePartContent = async (contentID: string) => {
+    const updatedList = deleteFromULBHandler(contentID);
+    await addToDB(updatedList);
+  };
+
+  const {message = '', show = false} = confirmationConfig;
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {LessonBuilderDict} = useDictionary(clientKey);
   return (
     <div
       id="editControlsWrapper"
@@ -174,7 +228,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           )}
 
           <button
-            onClick={() => deleteFromULBHandler(contentID)}
+            onClick={() => onDeleteButtonClick(contentID, section === 'pageContent')}
             className={`${actionClass} text-red-400`}>
             <span className={iconClass}>
               <AiOutlineDelete />
@@ -209,6 +263,14 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           <HiPencil color={'#fff'} size={20} />
         )}
       </button>
+      {show && (
+        <ModalPopUp
+          message={message}
+          closeAction={closeAction}
+          saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
+          saveAction={() => deletePartContent(confirmationConfig.id)}
+        />
+      )}
     </div>
   );
 };

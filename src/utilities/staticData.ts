@@ -1,6 +1,6 @@
 export const languageList = [
-  { id: '1', name: 'English', value: 'EN' },
-  { id: '2', name: 'Spanish', value: 'ES' },
+  {id: '1', name: 'English', value: 'EN'},
+  {id: '2', name: 'Spanish', value: 'ES'},
 ];
 
 export const lessonTypeList: any = [
@@ -9,10 +9,18 @@ export const lessonTypeList: any = [
   {id: '3', name: 'Survey', value: 'survey'},
 ];
 
+export const estimatedTimeList = Array(30)
+  .fill({})
+  .map((_, index: number) => ({
+    id: index + 1,
+    name: `${index + 1} min`,
+    value: index + 1,
+  }));
+
 export const statusList = [
-  { id: 1, name: 'Active', value: 'Active' },
-  { id: 2, name: 'Inactive', value: 'Inactive' },
-  { id: 3, name: 'Dropped', value: 'Dropped' },
+  {id: 1, name: 'Active', value: 'Active'},
+  {id: 2, name: 'Inactive', value: 'Inactive'},
+  {id: 3, name: 'Dropped', value: 'Dropped'},
 ];
 
 export const statesList = [

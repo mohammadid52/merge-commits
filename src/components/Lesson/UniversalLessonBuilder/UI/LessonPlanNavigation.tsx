@@ -32,9 +32,6 @@ const LessonPlanNavigation = ({
     updateMovableList(items, 'page');
   };
 
-  console.log(lessonPlan, 'lessonPlanlessonPlan');
-  
-
   return (
     <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 bg-gray-200">
       <div>

@@ -1,8 +1,6 @@
 import {remove} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {FaEdit, FaTrashAlt} from 'react-icons/fa';
-import {API, graphqlOperation} from 'aws-amplify';
-import * as mutations from '../../../../graphql/mutations';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../customHooks/dictionary';
