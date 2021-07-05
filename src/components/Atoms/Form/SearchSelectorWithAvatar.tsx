@@ -37,7 +37,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     searchStatus,
     searchCallback,
   } = props;
-  const countdownTimer = 500;
+  const countdownTimer = 200;
   const [countdownEnabled, setCountdownEnabled] = useState(undefined);
   const [searchTerm, setSearchTerm] = useState<string>(undefined);
 
@@ -73,7 +73,8 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
 
   const handleSearchChange = (e: any) => {
     const {value} = e.target as HTMLInputElement;
-    setSearchTerm(value);
+    const firstLetterCapitalized = value.charAt(0).toUpperCase() + value.slice(1);
+    setSearchTerm(firstLetterCapitalized);
 
     if (countdownEnabled) {
       clearTimeout(countdownEnabled);
@@ -85,7 +86,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
       if (searchStatus) searchCallback(false);
     }
 
-    if (value.length < 3) {
+    if (value.length < 2) {
       clearFilteredStudents();
     } else {
       setCountdownEnabled(
@@ -172,6 +173,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
           </span>
         </button>
       </span>
+
       {showList && (
         <div className="z-50 absolute mt-1 w-full rounded-md bg-white shadow-lg">
           <ul
@@ -179,7 +181,11 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
             aria-labelledby="listbox-label"
             aria-activedescendant="listbox-item-3"
             className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-            {teacherList.length > 0 ? (
+            {searchStatus ? (
+              <li className="flex justify-center relative py-2 px-4">
+                <span className="font-normal">Searching...</span>
+              </li>
+            ) : teacherList.length > 0 ? (
               teacherList.map(
                 (
                   item: {name: string; id: any; value: string; avatar?: string},
