@@ -74,23 +74,22 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
   return (
     <div>
       <div className="flex">
-        <h3 className="text-base leading-6 font-medium text-white pb-4 ">
+        <h3 className={`text-base leading-6 font-medium ${themeTextColor} pb-4`}>
           Page Overview
         </h3>
         <div className="inline-flex justify-end">
           <div
-            className="w-6 h-6 mr-2 cursor-pointer relative z-100"
+            className="w-6 h-6 mr-2 cursor-pointer relative"
             onClick={handleEditPageDetail}>
             <FaEdit color={lessonPageTheme === 'light' ? 'black' : 'white'} />
           </div>
-          <div
-            className="w-6 h-6 cursor-pointer relative z-100"
-            onClick={onDeleteButtonClick}>
+          <div className="w-6 h-6 cursor-pointer relative" onClick={onDeleteButtonClick}>
             <FaTrashAlt color={lessonPageTheme === 'light' ? 'black' : 'white'} />
           </div>
         </div>
       </div>
-      <div  className={`rounded-lg ${
+      <div
+        className={`rounded-lg ${
           lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
         } border-light-gray p-2`}>
         {/* <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">

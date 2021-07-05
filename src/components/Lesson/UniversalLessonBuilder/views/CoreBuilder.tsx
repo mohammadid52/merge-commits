@@ -70,7 +70,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   } = useULBContext();
   const {
     dispatch,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark'} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeBackgroundColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const handleThemeChange = () => {
@@ -94,8 +94,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   return (
     <div
-      className={`h-full overflow-hidden overflow-y-scroll ${
-        activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'
+      className={`h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
+        activePageData && activePageData.class ? activePageData.class : ''
       }`}>
       <div className={`w-full h-full flex flex-row mx-auto`}>
         <LessonPageWrapper>

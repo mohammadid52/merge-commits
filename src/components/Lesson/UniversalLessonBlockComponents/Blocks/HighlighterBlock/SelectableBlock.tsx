@@ -4,6 +4,7 @@ import {
   SelectedTextGroup,
 } from '../../../LessonComponents/LyricsPage/LyricsModules/LyricsActivity';
 import ReactHtmlParser from 'react-html-parser';
+import { GlobalContext } from '../../../../../contexts/GlobalContext';
 
 interface SelectableBlockProps {
   rawText?: string;
@@ -29,6 +30,9 @@ const SelectableBlock = (props: SelectableBlockProps) => {
     selectGroup,
     setSelectGroup,
   } = props;
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const [firstLastSelected, setFirstLastSelected] = useState<string[]>(['', '']);
 
   const removeHtmlTagsFromText = rawText.replace(/<\w>|<\/\w>/g, '').split(/<br>|\\n/g);
@@ -302,7 +306,7 @@ const SelectableBlock = (props: SelectableBlockProps) => {
   return (
     <>
       <div
-        className={`leading-6 text-sm px-4`}
+        className={`leading-6 text-sm px-4 ${themeTextColor}`}
         onClick={handleSelection} // Clickhandler on the parent...nice!
         style={{
           MozUserSelect: 'none',

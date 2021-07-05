@@ -14,10 +14,10 @@ interface HeaderBlockProps extends RowWrapperProps {
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
   const {id, value, type} = props;
-      const {
-        state: {lessonPage: {themeTextColor = ''} = {}},
-      } = useContext(GlobalContext);
-
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
+       
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <h3
