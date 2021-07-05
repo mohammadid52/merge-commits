@@ -90,12 +90,6 @@ export interface UniversalLessonStudentData {
   lessonProgress: string;
   pageData: PagePartInput[];
 }
-
-// export interface StudentDataPageData {
-//   pagePartID: string;
-//   pagePartInput: PagePartInput[];
-// }
-
 export interface PagePartInput {
   domID: string;
   input: string[];
