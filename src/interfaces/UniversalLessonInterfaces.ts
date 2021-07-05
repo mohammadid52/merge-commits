@@ -15,6 +15,7 @@ export interface UniversalLesson {
   unit?: string; //get this information from LESSON PLAN BUILDER
   categories?: string[];
   additionalFiles?: string[];
+  institutionID?: string;
   lessonPlan: UniversalLessonPage[];
 }
 
