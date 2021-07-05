@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
@@ -12,11 +13,14 @@ interface ParagraphBlockProps extends RowWrapperProps {
 
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const {id, value, type} = props;
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
 
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
       <div className="flex w-auto items-center p-4">
-        <p key={inputID} id={inputID}>
+        <p key={inputID} id={inputID} className={themeTextColor}>
           {inputValue.value}
         </p>
       </div>

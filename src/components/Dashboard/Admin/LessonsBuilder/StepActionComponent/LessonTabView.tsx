@@ -242,7 +242,9 @@ const LessonTabView = ({designersList}: ILessonTabViewProps) => {
                       {' '}
                       {LessonBuilderDict[userLanguage]['OWNER']}:
                     </span>
-                    <span className="w-auto">{institution ? institution.name : '-'}</span>
+                    <span className="w-auto">
+                      {institution && institution.name ? institution.name : '-'}
+                    </span>
                   </p>
                   <p className="text-base leading-5 font-medium text-gray-500 my-3 flex">
                     <span className="text-gray-900 mr-2 w-3/10">

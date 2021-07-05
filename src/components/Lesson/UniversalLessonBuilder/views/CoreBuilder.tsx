@@ -1,18 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useHistory} from 'react-router';
 
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
+import { FaMoon, FaSun } from 'react-icons/fa';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
+import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {
   PartContent,
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import LessonPlanDescription from '../UI/LessonPlanDescription';
 import Loader from '../../../Atoms/Loader';
@@ -66,6 +68,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     enableDnD,
     setEnableDnD,
   } = useULBContext();
+  const {
+    dispatch,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeBackgroundColor = ''} = {}},
+  } = useContext(GlobalContext);
+
+  const handleThemeChange = () => {
+    dispatch({
+      type: 'UPDATE_LESSON_PAGE_THEME',
+      payload: {theme: lessonPageTheme === 'dark' ? 'light' : 'dark'},
+    });
+  };
 
   const handleAddNewPage = () => {
     history.push(`/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`);
@@ -81,8 +94,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   return (
     <div
-      className={`h-full overflow-hidden overflow-y-scroll ${
-        activePageData && activePageData.class ? activePageData.class : 'bg-dark-gray'
+      className={`h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
+        activePageData && activePageData.class ? activePageData.class : ''
       }`}>
       <div className={`w-full h-full flex flex-row mx-auto`}>
         <LessonPageWrapper>
@@ -117,6 +130,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       </div>
       <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
         <div className="bg-dark flex flex-col items-center justify-center w-32 p-2">
+          <button
+            onClick={handleThemeChange}
+            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
+            {lessonPageTheme === 'light' ? <FaSun /> : <FaMoon />}
+          </button>
           <button
             onClick={() => setPreviewMode(!previewMode)}
             className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">

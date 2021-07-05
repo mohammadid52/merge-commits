@@ -17,7 +17,12 @@ interface FormBlockProps extends RowWrapperProps {
 }
 
 export const FormBlock = ({id, mode, value}: FormBlockProps) => {
-  const {lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const {
+    lessonState,
+    lessonDispatch,
+    theme,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
 
   //  Check if form is in a Lesson, and if it is...
   //  ...Dispatch the updated form data to context!
@@ -45,6 +50,8 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     }
   };
 
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+
   const Type = ({text, color = 'indigo'}: {color?: string; text: string}) => (
     <span
       className={`py-0.5 px-1 ml-2 text-xs  rounded bg-${color}-200  text-${color}-700`}>
@@ -62,7 +69,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           id={inputID}
           disabled={mode === 'building'}
           pattern="https://.*"
-          className={`w-full py-2 px-4 mt-2 text-white rounded-xl bg-darker-gray`}
+          className={`w-full py-2 px-4 mt-2 rounded-xl ${themeTextColor} ${themePlaceholderColor} ${
+            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+          }`}
           name="url"
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
@@ -106,7 +115,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     };
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm text-gray-200`} htmlFor="label">
+        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
           {label}
         </label>
         <div className="mt-2">
@@ -153,7 +162,10 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   ) => {
     if (values && Array.isArray(values)) {
       return (
-        <div className="mt-2 flex flex-wrap text-gray-300 bg-darker-gray py-2 px-4 rounded-xl ">
+        <div
+          className={`mt-2 flex flex-wrap ${themeTextColor} ${
+            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+          } py-2 px-4 rounded-xl`}>
           {values.map(({label, text, id}, idx: number) =>
             selectMany ? (
               <div
@@ -164,11 +176,14 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
                   data-key={id}
                   data-value={label}
                   type="checkbox"
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 
-                  ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+                    false ? 'bg-blueberry border-white' : 'bg-white border-black '
+                  }`}
                   checked={false}
                 />
-                <span className={`ml-2 ${theme.elem.text}`}>{text}</span>
+                <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>
+                  {text}
+                </span>
               </div>
             ) : (
               <div
@@ -207,7 +222,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 `;
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
+        <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
           {label}
         </label>
 
@@ -215,7 +230,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           <input
             id={inputID}
             disabled={mode === 'building'}
-            className={`w-full py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
+            className={`w-full py-2 px-4 ${themeTextColor} ${themePlaceholderColor} rounded-xl ${
+              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            }`}
             name="emoji"
             onChange={isInLesson ? (e) => onChange(e) : undefined}
             type="text"
@@ -257,13 +274,15 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       case FORM_TYPES.DATE_PICKER:
         return (
           <div id={id} key={id} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200`} htmlFor="label">
+            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {label}
             </label>
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
+              className={`w-full py-2 px-4 ${theme} ${themeTextColor} mt-2 rounded-xl ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               onChange={isInLesson ? (e) => onChange(e) : undefined}
@@ -275,13 +294,15 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       case FORM_TYPES.TEXTAREA:
         return (
           <div id={id} key={id} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200 `} htmlFor="label">
-              {label}{' '}
+            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+              {label}
             </label>
             <textarea
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full h-64 py-2 px-4 text-white mt-2 rounded-xl bg-darker-gray`}
+              className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              }`}
               name="story"
               onChange={isInLesson ? (e) => onChange(e) : undefined}
               defaultValue={value}
@@ -292,7 +313,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       case FORM_TYPES.MULTIPLE:
         return (
           <div id={id} key={inputID} className={`mb-4 p-4`}>
-            <label className={`text-sm text-gray-200`} htmlFor="label">
+            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {label}
             </label>
             {generateCheckbox(options, type === FORM_TYPES.MULTIPLE ? true : false)}

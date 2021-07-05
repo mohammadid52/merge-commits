@@ -72,7 +72,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const {
     userLanguage,
     clientKey,
-    state: {user},
+    state: {lessonPage: {themeBackgroundColor = ''} = {}, user},
   } = useContext(GlobalContext);
   const {universalLessonDetails} = useULBContext();
   //@ts-ignore

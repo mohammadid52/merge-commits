@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoIosGlobe} from 'react-icons/io';
 import {AiOutlineInstagram, AiOutlineYoutube} from 'react-icons/ai';
 import {FaSpotify} from 'react-icons/fa';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 
 interface LinksBlockProps extends RowWrapperProps {
   id?: string;
@@ -13,7 +14,10 @@ interface LinksBlockProps extends RowWrapperProps {
 
 const LinksBlock = (props: LinksBlockProps) => {
   const {id, value} = props;
-
+    const {
+      state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+    } = useContext(GlobalContext);
+  const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
   return (
     <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
       {/* <PhotoBlock /> */}
@@ -52,7 +56,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'spotify' ? (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -61,7 +65,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'instagram' ? (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
