@@ -10,7 +10,8 @@ const exampleFinalStudentContext = {
   universalStudentDataID: '000001', // formerly: studentDataID
   studentAuthID: '9101f663-f819-4180-9d31-63afd81d7b56',
   studentUsername: 'jasperprague@yopmail.com',
-  lessonData: {    //formerly: data
+  lessonData: {
+    //formerly: data
     id: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
     syllabusID: '',
     summary:
@@ -19,15 +20,51 @@ const exampleFinalStudentContext = {
     teachers: ['Marlon Lizama'],
     categories: ['Creative Writing'],
     universalLessonPlan: [
-      { enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Story Breakdown', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Core Lesson', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Core Lesson Breakdown', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Activity', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Activity Breakdown', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Checkpoint', displayMode: 'SELF' },
-      { enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF' },
+      {
+        enabled: true,
+        open: true,
+        active: true,
+        label: 'Introduction',
+        displayMode: 'SELF',
+      },
+      {enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF'},
+      {
+        enabled: true,
+        open: false,
+        active: false,
+        label: 'Story Breakdown',
+        displayMode: 'SELF',
+      },
+      {
+        enabled: true,
+        open: false,
+        active: false,
+        label: 'Core Lesson',
+        displayMode: 'SELF',
+      },
+      {
+        enabled: true,
+        open: false,
+        active: false,
+        label: 'Core Lesson Breakdown',
+        displayMode: 'SELF',
+      },
+      {enabled: true, open: false, active: false, label: 'Activity', displayMode: 'SELF'},
+      {
+        enabled: true,
+        open: false,
+        active: false,
+        label: 'Activity Breakdown',
+        displayMode: 'SELF',
+      },
+      {
+        enabled: true,
+        open: false,
+        active: false,
+        label: 'Checkpoint',
+        displayMode: 'SELF',
+      },
+      {enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF'},
     ],
     lessonPlan: [
       {
@@ -48,7 +85,7 @@ const exampleFinalStudentContext = {
             partType: 'default',
             class: '',
             partContent: [
-              { id: 'header-0', type: 'header-default', value: ['Instructions'] },
+              {id: 'header-0', type: 'header-default', value: ['Instructions']},
               {
                 id: 'text-0',
                 type: 'paragraph',
@@ -74,8 +111,18 @@ const exampleFinalStudentContext = {
                 id: 'questionGroup-1',
                 type: 'form-default',
                 value: [
-                  { id: 'title', type: 'text-input', label: 'Title', value: ['This is the placeholder'] },
-                  { id: 'story', type: 'text-area', label: '', value: ['This is the placeholder'] },
+                  {
+                    id: 'title',
+                    type: 'text-input',
+                    label: 'Title',
+                    value: ['This is the placeholder'],
+                  },
+                  {
+                    id: 'story',
+                    type: 'text-area',
+                    label: '',
+                    value: ['This is the placeholder'],
+                  },
                 ],
               },
             ],
@@ -127,16 +174,41 @@ const exampleFinalStudentContext = {
       },
     ],
   },
-  pages: [ //contains: lessonData.universalLessonPlan
-    { enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Story Breakdown', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Core Lesson', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Core Lesson Breakdown', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Activity', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Activity Breakdown', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Checkpoint', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF' },
+  pages: [
+    //contains: lessonData.universalLessonPlan
+    {enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF'},
+    {enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF'},
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Story Breakdown',
+      displayMode: 'SELF',
+    },
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Core Lesson',
+      displayMode: 'SELF',
+    },
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Core Lesson Breakdown',
+      displayMode: 'SELF',
+    },
+    {enabled: true, open: false, active: false, label: 'Activity', displayMode: 'SELF'},
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Activity Breakdown',
+      displayMode: 'SELF',
+    },
+    {enabled: true, open: false, active: false, label: 'Checkpoint', displayMode: 'SELF'},
+    {enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF'},
   ],
   currentPage: '2',
   lessonProgress: '2',
@@ -144,7 +216,7 @@ const exampleFinalStudentContext = {
   componentState: [
     {
       pagePartID: 'page_2_part_1',
-      pagePartInput: [
+      studentPageInput: [
         {
           domID: 'title',
           input: 'My story title',
@@ -157,7 +229,7 @@ const exampleFinalStudentContext = {
     },
     {
       pagePartID: 'page_2_part_2',
-      pagePartInput: [
+      studentPageInput: [
         {
           domID: 'culture',
           input: 'Dutch',
@@ -185,7 +257,7 @@ const exampleFinalStudentContext = {
       pageData: [
         {
           pagePartID: 'page_2_part_1',
-          pagePartInput: [
+          studentPageInput: [
             {
               domID: 'title',
               input: "Another student's title",
@@ -198,7 +270,7 @@ const exampleFinalStudentContext = {
         },
         {
           pagePartID: 'page_2_part_2',
-          pagePartInput: [
+          studentPageInput: [
             {
               domID: 'culture',
               input: 'Dutch',

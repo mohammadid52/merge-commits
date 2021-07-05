@@ -12,15 +12,39 @@ const exampleFinalTeacherContext = {
   lessonData: {},
   pages: [
     //contains: lessonData.universalLessonPlan
-    { enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Story Breakdown', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Core Lesson', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Core Lesson Breakdown', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Activity', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Activity Breakdown', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Checkpoint', displayMode: 'SELF' },
-    { enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF' },
+    {enabled: true, open: true, active: true, label: 'Introduction', displayMode: 'SELF'},
+    {enabled: true, open: false, active: false, label: 'Story', displayMode: 'SELF'},
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Story Breakdown',
+      displayMode: 'SELF',
+    },
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Core Lesson',
+      displayMode: 'SELF',
+    },
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Core Lesson Breakdown',
+      displayMode: 'SELF',
+    },
+    {enabled: true, open: false, active: false, label: 'Activity', displayMode: 'SELF'},
+    {
+      enabled: true,
+      open: false,
+      active: false,
+      label: 'Activity Breakdown',
+      displayMode: 'SELF',
+    },
+    {enabled: true, open: false, active: false, label: 'Checkpoint', displayMode: 'SELF'},
+    {enabled: true, open: false, active: false, label: 'Outro', displayMode: 'SELF'},
   ],
   sharing: false,
   displayData: [
@@ -34,7 +58,7 @@ const exampleFinalTeacherContext = {
       pageData: [
         {
           pagePartID: 'page_2_part_1',
-          pagePartInput: [
+          studentPageInput: [
             {
               domID: 'title',
               input: "Another student's title",
@@ -47,7 +71,7 @@ const exampleFinalTeacherContext = {
         },
         {
           pagePartID: 'page_2_part_2',
-          pagePartInput: [
+          studentPageInput: [
             {
               domID: 'culture',
               input: 'Dutch',
@@ -79,7 +103,7 @@ const exampleFinalTeacherContext = {
       pageData: [
         {
           pagePartID: 'page_2_part_1',
-          pagePartInput: [
+          studentPageInput: [
             {
               domID: 'title',
               input: 'My story title',
@@ -92,7 +116,7 @@ const exampleFinalTeacherContext = {
         },
         {
           pagePartID: 'page_2_part_2',
-          pagePartInput: [
+          studentPageInput: [
             {
               domID: 'culture',
               input: 'Dutch',

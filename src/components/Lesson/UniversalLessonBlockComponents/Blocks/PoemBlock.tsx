@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import WritingBlock from './PoemBlock/WritingBlock';
-import {PagePartInput} from '../../../../interfaces/UniversalLessonInterfaces';
+import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import EditingBlock from './PoemBlock/EditingBlock';
 
 interface PoemBlockProps extends RowWrapperProps {
@@ -12,27 +12,32 @@ interface PoemBlockProps extends RowWrapperProps {
 
 const PoemBlock = (props: PoemBlockProps) => {
   const {id, value} = props;
-  const [poemInput, setPoemInput] = useState<PagePartInput[]>([]);
+  const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
   const [poemWriting, setPoemWriting] = useState<string>('');
   const [saveAndEdit, setSaveAndEdit] = useState<boolean>(false);
 
   // init poemInput so the first linestarter shows up
-  useEffect(()=>{
-    if(poemInput.length === 0 && value.length > 0){
-      setPoemInput([{
-        domID: value[0].id,
-        input:[value[0].value]
-      }])
+  useEffect(() => {
+    if (poemInput.length === 0 && value.length > 0) {
+      setPoemInput([
+        {
+          domID: value[0].id,
+          input: [value[0].value],
+        },
+      ]);
     }
-  },[value])
+  }, [value]);
 
   // init poemWriting for WYSIWYG
   useEffect(() => {
     if (poemInput.length > 0) {
-      const concatenated = poemInput.reduce((acc: string, poemInputObj: PagePartInput) => {
-        return `${acc}<p>${poemInputObj.input[0]}</p>`;
-      }, '');
-      setPoemWriting(concatenated)
+      const concatenated = poemInput.reduce(
+        (acc: string, poemInputObj: StudentPageInput) => {
+          return `${acc}<p>${poemInputObj.input[0]}</p>`;
+        },
+        ''
+      );
+      setPoemWriting(concatenated);
     }
   }, [poemInput]);
 

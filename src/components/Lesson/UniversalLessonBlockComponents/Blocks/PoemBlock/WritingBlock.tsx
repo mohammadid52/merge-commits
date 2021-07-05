@@ -1,15 +1,18 @@
-import React, { useContext } from 'react';
-import { nanoid } from 'nanoid';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { AiOutlinePlus } from 'react-icons/ai';
-import { PagePartInput, PartContentSub } from '../../../../../interfaces/UniversalLessonInterfaces';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {nanoid} from 'nanoid';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {AiOutlinePlus} from 'react-icons/ai';
+import {
+  StudentPageInput,
+  PartContentSub,
+} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 interface WritingBlockProps {
   id?: string;
   linestarters?: PartContentSub[];
-  poemInput?: PagePartInput[];
-  setPoemInput?: React.Dispatch<React.SetStateAction<PagePartInput[]>>;
+  poemInput?: StudentPageInput[];
+  setPoemInput?: React.Dispatch<React.SetStateAction<StudentPageInput[]>>;
   saveAndEdit?: boolean;
   setSaveAndEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -19,7 +22,6 @@ const WritingBlock = (props: WritingBlockProps) => {
   const {
     state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-  
 
   const handleAddInput = () => {
     setPoemInput([
@@ -33,15 +35,13 @@ const WritingBlock = (props: WritingBlockProps) => {
 
   const handleDeleteInput = (e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
-    const filtered = poemInput.filter((input: PagePartInput) => input.domID !== id);
+    const filtered = poemInput.filter((input: StudentPageInput) => input.domID !== id);
     setPoemInput(filtered);
   };
 
-
-
   const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const {id, value} = e.target as HTMLSelectElement;
-    const mapped = poemInput.map((input: PagePartInput) => {
+    const mapped = poemInput.map((input: StudentPageInput) => {
       if (input.domID === id) {
         return {
           domID: input.domID,
@@ -51,7 +51,7 @@ const WritingBlock = (props: WritingBlockProps) => {
         return input;
       }
     });
-    setPoemInput(mapped)
+    setPoemInput(mapped);
   };
 
   return (
@@ -83,7 +83,7 @@ const WritingBlock = (props: WritingBlockProps) => {
       <div
         className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg p-4`}>
         {/* MAP THE LINE PROMPTS */}
-        {poemInput.map((inputObj: PagePartInput, idx: number) => (
+        {poemInput.map((inputObj: StudentPageInput, idx: number) => (
           <div key={`${inputObj.domID}`} className={`mb-4`}>
             <label htmlFor={id} className={`block text-sm font-medium ${themeTextColor}`}>
               Input {idx}:{' '}

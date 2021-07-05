@@ -88,9 +88,15 @@ export interface UniversalLessonStudentData {
   studentID: string;
   currentLocation: string;
   lessonProgress: string;
-  pageData: PagePartInput[];
+  pageData: StudentPageInput[];
 }
-export interface PagePartInput {
+export interface StudentPageInput {
   domID: string;
   input: string[];
+  comments?: StudentInputComment[];
+}
+
+export interface StudentInputComment {
+  teacherID: string;
+  comment: string;
 }

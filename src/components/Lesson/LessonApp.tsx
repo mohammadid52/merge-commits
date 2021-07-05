@@ -10,7 +10,7 @@ import Foot from './Foot/Foot';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {
   PagePart,
-  PagePartInput,
+  StudentPageInput,
   PartContent,
   PartContentSub,
   UniversalLessonPage,
@@ -63,7 +63,7 @@ const LessonApp = () => {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
         const allPageParts = page.pageContent;
         const initialPageData = allPageParts.reduce(
-          (pageData: PagePartInput[], pagePart: PagePart) => {
+          (pageData: StudentPageInput[], pagePart: PagePart) => {
             const pagePartContent = pagePart.partContent.reduce(
               (pagePartAcc: any[], partContent: PartContent) => {
                 const isForm = /form/g.test(partContent.type);
