@@ -3279,6 +3279,9 @@ export type UniversalContentInput = {
   label?: string | null,
   value?: string | null,
   options?: Array< UniversalContentOptionsInput | null > | null,
+  caption?: string | null,
+  height?: string | null,
+  width?: string | null,
 };
 
 export type UniversalContentOptionsInput = {
@@ -3379,6 +3382,9 @@ export type UniversalContent = {
   label?: string | null,
   value?: string | null,
   options?:  Array<UniversalContentOptions | null > | null,
+  caption?: string | null,
+  height?: string | null,
+  width?: string | null,
 };
 
 export type UniversalContentOptions = {
