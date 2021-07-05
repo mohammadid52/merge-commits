@@ -1,4 +1,4 @@
-import React, {useState, useRef, useContext} from 'react';
+import React, {useState, useRef, useContext, useEffect} from 'react';
 
 import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -46,6 +46,8 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
   const [teacherList, setTeacherList] = useState([]);
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+
+  useEffect(() => {}, [searchTerm]);
 
   const updateSelectedItem = (str: string, name: string, id: string, avatar: string) => {
     setShowList(!showList);
@@ -115,16 +117,24 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
     return modifiedlist;
   };
 
+  const filterListBySearchQuery = (nameSearch: string, list: any) => {
+    return list.filter((nameObj: any) => nameObj.name.includes(nameSearch));
+  };
+
   React.useEffect(() => {
     if (list && list.length > 0) {
+      const filteredList =
+        searchTerm && searchTerm.length > 2
+          ? filterListBySearchQuery(searchTerm, list)
+          : list;
       if (imageFromS3) {
-        const modifiedlist = getList(list);
+        const modifiedlist = getList(filteredList);
         setTeacherList(modifiedlist);
       } else {
-        setTeacherList(list);
+        setTeacherList(filteredList);
       }
     }
-  }, [list, imageFromS3]);
+  }, [list, searchTerm, imageFromS3]);
 
   return (
     <div className="relative" ref={currentRef} onFocus={() => onFocus()}>
