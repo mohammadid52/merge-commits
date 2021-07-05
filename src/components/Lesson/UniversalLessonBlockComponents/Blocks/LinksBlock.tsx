@@ -56,7 +56,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'spotify' ? (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -65,7 +65,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'instagram' ? (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>

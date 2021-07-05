@@ -122,7 +122,6 @@ const LinksModalDialog = ({
       id: list.id,
       lessonPlan: [...list.lessonPlan],
     };
-
     await updateLessonPageToDB(input);
   };
   const onLinkCreate = async () => {

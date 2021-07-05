@@ -67,7 +67,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           id={inputID}
           disabled={mode === 'building'}
           pattern="https://.*"
-          className={`w-full py-2 px-4 mt-2 rounded-xl ${
+          className={`w-full py-2 px-4 mt-2 rounded-xl ${themeTextColor} ${themePlaceholderColor} ${
             lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           }`}
           name="url"
@@ -223,7 +223,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           <input
             id={inputID}
             disabled={mode === 'building'}
-            className={`w-full py-2 px-4 ${themePlaceholderColor} rounded-xl ${
+            className={`w-full py-2 px-4 ${themeTextColor} ${themePlaceholderColor} rounded-xl ${
               lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
             }`}
             name="emoji"
@@ -273,7 +273,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 ${theme} mt-2 rounded-xl ${
+              className={`w-full py-2 px-4 ${theme} ${themeTextColor} mt-2 rounded-xl ${
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } ${themePlaceholderColor}`}
               name="title"
