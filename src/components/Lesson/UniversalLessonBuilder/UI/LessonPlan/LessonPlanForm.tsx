@@ -34,7 +34,6 @@ const LessonPlanForm = () => {
     estTime: '1 min',
   });
   const [errors, setErrors] = useState<any>({});
-  const [creatingLesson, setCreatingLesson] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
@@ -87,7 +86,7 @@ const LessonPlanForm = () => {
         setLoading(false);
         console.error(error.message);
       } finally {
-        setCreatingLesson(false);
+        setLoading(false);
       }
     }
   };
@@ -188,7 +187,7 @@ const LessonPlanForm = () => {
             <div className="flex justify-end">
               <Buttons
                 btnClass="py-1 px-8 text-xs ml-2"
-                disabled={creatingLesson}
+                disabled={loading}
                 label={
                   loading
                     ? BUTTONS[userLanguage]['SAVING']

@@ -113,6 +113,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         // if (imageUrl) addImageUrlToResponse(imageUrl);
       }
     };
+  const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
@@ -123,7 +124,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             role="button"
             tabIndex={-1}
             onClick={openFilesExplorer}
-            className={`border-0 border-white relative z-100 flex items-center justify-center text-base px-4 py-2 text-white hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
+            className={`border-0 ${
+              lessonPageTheme === 'light' ? 'border-dark-gray' : 'border-white'
+            } relative z-100 flex items-center justify-center text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
             Upload Attachments
           </span>
@@ -138,16 +141,16 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         {fileObject.name && (
           <Tooltip show={!uploading} placement="bottom" text={'View Attachments'}>
             <div className="cursor-pointer flex items-center justify-between border-0 border-sea-green rounded-md shadow-sm mt-2 p-2 px-4">
-              <p className="text-center text-white w-auto truncate">
+              <p className={`text-center ${themeTextColor} w-auto truncate`}>
                 {uploading ? 'Uploading' : 'Uploaded'} - {fileObject.name}
               </p>
 
               {uploading ? (
                 <div className=" w-auto">
-                  <Loader color={`#fff`} />
+                  <Loader color={iconColor} />
                 </div>
               ) : (
-                <AiOutlineCheckCircle className="w-auto text-white text-lg" />
+                <AiOutlineCheckCircle className={`w-auto ${themeTextColor} text-lg`} />
               )}
             </div>
           </Tooltip>
@@ -219,7 +222,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       }
     };
 
-    const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 `;
+    const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 ${themeTextColor}`;
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
