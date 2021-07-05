@@ -35,7 +35,7 @@ const ParaModalComponent = ({
     if (inputObj && inputObj.length) {
       setInputFields((prevInputFields: any) => ({
         ...prevInputFields,
-        [FIELD_ID]: inputObj[0],
+        [FIELD_ID]: inputObj[0].value,
       }));
       setIsEditingMode(true);
     }

@@ -5,71 +5,26 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {API, graphqlOperation} from 'aws-amplify';
-import * as mutations from '../../../../../graphql/mutations';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import Selector from '../../../../Atoms/Form/Selector';
+import useDictionary from '../../../../../customHooks/dictionary';
+import {estimatedTimeList} from '../../../../../utilities/staticData';
 
-const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
-  const ID_VALUE: string = content.partContentId || content.pageContentId;
-  const [updatedID, setUpdatedID] = useState(ID_VALUE);
+const EditPageNameDialog = ({content, closeAction}: any) => {
   const [updatedValues, setUpdatedValues] = useState({
     id: content.id,
     title: content.title,
     description: content.description,
     label: content.label,
+    estTime: `${content.estTime} min`,
   });
 
-  const {userLanguage} = useContext(GlobalContext);
-  const {
-    universalLessonDetails,
-    setUniversalLessonDetails,
-    selectedPageID,
-  } = useULBContext();
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {LessonBuilderDict} = useDictionary(clientKey);
 
-  // to update id
-  // #1 - Find current pageObject by id
-  // #2 - nav to obj.pageContent
-  // #3 - check the contentId
-  // #4 - if found the update that
-  // #5 - else go map to partContent find object by id and update that
+  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
 
-  const updateId = () => {
-    closeAction();
-
-    const PAGECONTENT_ID = content.pageContentId;
-    const PARTCONTENT_ID = content?.partContentId;
-    const pageIdx = findIndex(
-      universalLessonDetails.lessonPlan,
-      (item: any) => item.id === selectedPageID
-    );
-    const pageContentIdx = findIndex(
-      universalLessonDetails.lessonPlan[pageIdx].pageContent,
-      (item: any) => item.id === PAGECONTENT_ID
-    );
-
-    const PATH_TO_PAGECONTENT = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}]`;
-
-    const partContentIdx =
-      PARTCONTENT_ID &&
-      findIndex(
-        universalLessonDetails.lessonPlan[pageIdx].pageContent[pageContentIdx]
-          .partContent,
-        (item: any) => item.id === PARTCONTENT_ID
-      );
-
-    update(
-      universalLessonDetails,
-      PARTCONTENT_ID
-        ? `${PATH_TO_PAGECONTENT}.partContent[${partContentIdx}].id`
-        : `${PATH_TO_PAGECONTENT}.id`,
-      () => {
-        return updatedID;
-      }
-    );
-
-    setUniversalLessonDetails({...universalLessonDetails});
-  };
   const params = useQuery(location.search);
 
   const lessonId = params.get('lessonId');
@@ -91,6 +46,7 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
       title: updatedValues.title,
       description: updatedValues.description,
       label: updatedValues.label,
+      estTime: Number(updatedValues.estTime?.split(' ')[0]),
     };
 
     update(universalLessonDetails, PATH_TO_PAGECONTENT, () => {
@@ -104,10 +60,6 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
     };
 
     await updateLessonPageToDB(input);
-
-    // if (selectedPageID === PAGECONTENT_ID) {
-    //   setSelectedPageID(updatedValues.id);
-    // }
   };
 
   const onChange = (e: any) => {
@@ -115,53 +67,50 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
     setUpdatedValues({...updatedValues, [id]: value});
   };
 
+  const onSelectOption = (_: any, name: string) => {
+    setUpdatedValues((prevInputs: any) => ({
+      ...prevInputs,
+      estTime: name,
+    }));
+  };
+
   return (
     <div>
-      {editOnlyId ? (
-        <FormInput
-          label={'Edit Id'}
-          value={updatedID}
-          onChange={(e) => setUpdatedID(e.target.value)}
-          disabled={true}
-        />
-      ) : (
-        <div>
-          {/* <div className="mb-4">
-            <FormInput
-              disabled={true}
-              value={updatedValues.id}
-              label={'Edit Id'}
-              onChange={onChange}
-              id={'id'}
-            />
-          </div> */}
-
+      <div>
+        <div className="mb-4">
+          <FormInput
+            label={'Edit Label'}
+            value={updatedValues.label}
+            onChange={onChange}
+            id={'label'}
+          />
+        </div>
+        <div className="mb-4">
+          <FormInput
+            label={'Edit Title'}
+            value={updatedValues.title}
+            onChange={onChange}
+            id={'title'}
+          />
+        </div>
+        <div className="mb-4">
+          <FormInput
+            label={'Edit Description'}
+            value={updatedValues.description}
+            onChange={onChange}
+            id={'description'}
+          />
           <div className="mb-4">
-            <FormInput
-              label={'Edit Label'}
-              value={updatedValues.label}
-              onChange={onChange}
-              id={'label'}
-            />
-          </div>
-          <div className="mb-4">
-            <FormInput
-              label={'Edit Title'}
-              value={updatedValues.title}
-              onChange={onChange}
-              id={'title'}
-            />
-          </div>
-          <div className="mb-4">
-            <FormInput
-              label={'Edit Description'}
-              value={updatedValues.description}
-              onChange={onChange}
-              id={'description'}
+            <Selector
+              label={LessonBuilderDict[userLanguage]['LESSON_PLAN_FORM'].ESTIMATED_TIME}
+              placeholder={'Select estimate time'}
+              list={estimatedTimeList}
+              selectedItem={updatedValues.estTime}
+              onChange={onSelectOption}
             />
           </div>
         </div>
-      )}
+      </div>
 
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">
@@ -174,7 +123,7 @@ const EditPageNameDialog = ({content, closeAction, editOnlyId}: any) => {
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={content.editOnlyId ? () => updateId() : () => updateData()}
+            onClick={updateData}
           />
         </div>
       </div>

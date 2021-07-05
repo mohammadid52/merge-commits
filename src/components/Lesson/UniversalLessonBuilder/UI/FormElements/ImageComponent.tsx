@@ -114,21 +114,17 @@ const ImageFormComponent = ({
         setIsLoading(true);
         await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
 
-        const imageUrl: any = await getImageFromS3(
-          `ULB/${user.id}/content_image_${fileName}`
-        );
-
-        if (imageUrl) {
-          payload = {
-            ...payload,
-            value: imageUrl,
-          };
-        }
+        payload = {
+          ...payload,
+          value: `ULB/${user.id}/content_image_${fileName}`,
+        };
         if (isEditingMode) {
           const updatedList = updateBlockContentULBHandler('', '', 'image', [payload]);
+          console.log('updatedList ---- ', updatedList);
           await addToDB(updatedList);
         } else {
           const updatedList = createNewBlockULBHandler('', '', 'image', [payload]);
+          console.log('updatedList ---- ', updatedList);
           await addToDB(updatedList);
         }
       }

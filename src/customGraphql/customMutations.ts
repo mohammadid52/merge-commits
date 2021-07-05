@@ -49,6 +49,9 @@ export const updateUniversalLesson = /* GraphQL */ `
               type
               label
               value
+              caption
+              width
+              height
               options {
                 id
                 label

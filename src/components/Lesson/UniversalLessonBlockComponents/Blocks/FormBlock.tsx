@@ -1,12 +1,11 @@
 import EmojiPicker from 'emoji-picker-react';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {BiImageAdd} from 'react-icons/bi';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {FORM_TYPES} from '../../UniversalLessonBuilder/UI/common/constants';
 import StarRatingBlock from './FormBlock/StarRatingBlock';
-import Storage from '@aws-amplify/storage';
 import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
@@ -50,18 +49,21 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       handleUpdateStudentData(id, [value]);
     }
   };
-  
+
   const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+
+  const Type = ({text, color = 'indigo'}: {color?: string; text: string}) => (
+    <span
+      className={`py-0.5 px-1 ml-2 text-xs  rounded bg-${color}-200  text-${color}-700`}>
+      {text}
+    </span>
+  );
 
   const LinkInput = ({inputID, label, value}: any) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {label}{' '}
-          <span
-            className={`py-0.5 px-1 ml-2 text-xs  rounded bg-indigo-200  text-indigo-700`}>
-            Link
-          </span>
+        <label className={`text-sm text-gray-200`} htmlFor="label">
+          {label} <Type text="Link" />
         </label>
         <input
           id={inputID}
@@ -174,10 +176,14 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
                   data-key={id}
                   data-value={label}
                   type="checkbox"
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${false ? 'bg-blueberry border-white' : 'bg-white border-black '}`}
+                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+                    false ? 'bg-blueberry border-white' : 'bg-white border-black '
+                  }`}
                   checked={false}
                 />
-                <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+                <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>
+                  {text}
+                </span>
               </div>
             ) : (
               <div
@@ -219,6 +225,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
           {label}
         </label>
+
         <div className="flex items-center relative">
           <input
             id={inputID}
@@ -293,7 +300,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <textarea
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'}`}
+              className={`w-full h-64 py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              }`}
               name="story"
               onChange={isInLesson ? (e) => onChange(e) : undefined}
               defaultValue={value}

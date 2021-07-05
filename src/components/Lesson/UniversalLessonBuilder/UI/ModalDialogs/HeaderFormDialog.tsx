@@ -48,7 +48,7 @@ const HeaderModalComponent = ({
     if (inputObj && inputObj.length) {
       setInputFields((prevInputFields: any) => ({
         ...prevInputFields,
-        [FIELD_ID]: inputObj[0],
+        [FIELD_ID]: inputObj[0].value,
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);

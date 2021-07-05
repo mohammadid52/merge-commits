@@ -55,12 +55,14 @@ const TagInputDialog = ({
 
     await updateLessonPageToDB(input);
   };
-  const onSave = async () => {
+  const onSave = async (e: any) => {
+    e.preventDefault();
     if (!tags.length) {
       setError('Please enter atleast one tag');
       return;
     }
     const updatedInput = updateBlockContentULBHandler('', 'pageContent', '', {tags});
+
     await addToDB(updatedInput);
 
     setUnsavedChanges(false);

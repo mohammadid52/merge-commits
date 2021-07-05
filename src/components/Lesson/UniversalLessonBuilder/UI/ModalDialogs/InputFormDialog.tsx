@@ -40,16 +40,18 @@ const InputModalComponent = ({
       if (inputObj[0].type === FORM_TYPES.RADIO) {
         setRadioList(
           inputObj.map((input: any) => ({
-            ...input,
-            options: input.value,
+            id: input.id,
+            options: input.options,
+            label: input.label,
           }))
         );
         setSelectedFormType(SELECT_ONE);
       } else if (inputObj[0].type === FORM_TYPES.MULTIPLE) {
         setManyOptionList(
           inputObj.map((input: any) => ({
-            ...input,
-            options: input.value,
+            id: input.id,
+            options: input.options,
+            label: input.label,
           }))
         );
         setSelectedFormType(SELECT_MANY);
@@ -169,8 +171,8 @@ const InputModalComponent = ({
           <UniversalOption
             {...commonFormProps}
             selectedForm={type}
-            list={radioList}
-            setList={setRadioList}
+            list={type === SELECT_ONE ? radioList : manyOptionList}
+            setList={type === SELECT_ONE ? setRadioList : setManyOptionList}
           />
         );
 

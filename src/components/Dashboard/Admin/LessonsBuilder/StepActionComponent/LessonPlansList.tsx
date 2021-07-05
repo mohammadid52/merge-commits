@@ -6,14 +6,12 @@ import {graphqlOperation, API} from 'aws-amplify';
 import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
-import Tooltip from '../../../../Atoms/Tooltip';
 
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
-import {truncate} from 'lodash';
 
 interface LessonPlansListProps {
   lessonId: string;

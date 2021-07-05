@@ -15,6 +15,7 @@ import TagBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/TagB
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
+import {ImFileEmpty} from 'react-icons/im';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -22,7 +23,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
-    setTargetID,
     handleEditBlockContent,
     handleModalPopToggle,
     handleTagModalOpen,
@@ -318,9 +318,13 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                     //   )}
                     // </ul>
                     // )
-                    <h1 className={`w-full text-center`}>
-                      This pagepart has no content.
-                    </h1>
+                    <div
+                      style={{minHeight: '60px'}}
+                      className="flex w-auto items-center justify-center text-lg text-gray-600">
+                      <ImFileEmpty className="mr-4 text-lg text-gray-600 w-auto" />
+                      {/* Add this to dictionary */}
+                      <h1 className={`w-auto text-center`}>This block has no content</h1>
+                    </div>
                   )}
 
                   {!previewMode && (

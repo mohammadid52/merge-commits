@@ -11,7 +11,8 @@ import useDictionary from '../../../../../customHooks/dictionary';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {getAsset} from '../../../../../assets';
+import {estimatedTimeList} from '../../../../../utilities/staticData';
+
 interface ILessonInputs {
   id: string;
   label: string;
@@ -20,18 +21,9 @@ interface ILessonInputs {
   estTime: string;
 }
 
-const estimatedTimeList = Array(30)
-  .fill({})
-  .map((_, index: number) => ({
-    id: index + 1,
-    name: `${index + 1} min`,
-    value: index + 1,
-  }));
-
 const LessonPlanForm = () => {
   const history = useHistory();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
   const {universalLessonDetails, setActiveTab} = useULBContext();
   const [inputObj, setInputObj] = useState<ILessonInputs>({
@@ -70,11 +62,12 @@ const LessonPlanForm = () => {
           lessonPlan: [
             ...pages,
             {
+              id: uuidV4().toString(),
               title: inputObj.title,
               label: inputObj.label,
               description: inputObj.description,
               pageContent: [],
-              // estTime: Number(inputObj.estTime?.split(' ')[0]),
+              estTime: Number(inputObj.estTime?.split(' ')[0]),
             },
           ],
         };

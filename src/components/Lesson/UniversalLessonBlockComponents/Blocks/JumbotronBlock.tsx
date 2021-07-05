@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import QuoteBlock from './JumbotronBlock/QuoteBlock';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
+import {getImageFromS3Static} from '../../../../utilities/services';
 
 interface JumbotronBlockProps extends RowWrapperProps {
   id?: string;
@@ -31,7 +32,8 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
         const newJumbotronInfo = value.reduce(
           (acc: JumbotronInterface, val: PartContentSub) => {
             if (val.type === 'background') {
-              return {...acc, src: val.value};
+              const url = getImageFromS3Static(val.value);
+              return {...acc, src: url};
             } else if (val.type === 'title') {
               return {...acc, title: val.value};
             } else if (val.type === 'subtitle') {

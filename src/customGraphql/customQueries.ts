@@ -1707,6 +1707,9 @@ export const getUniversalLesson = /* GraphQL */ `
               type
               label
               value
+              caption
+              width
+              height
               options {
                 id
                 label

@@ -289,6 +289,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const deleteULBHandler = (targetID: string) => {
     const deleted = crudULBHandler(universalLessonDetails, 'delete', targetID);
     setUniversalLessonDetails(deleted);
+    return deleted;
   };
 
   const updateULBHandler = (
@@ -319,6 +320,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
       (page: any) => page.id === selectedPageID
     );
+
     let lessonPages = [...universalLessonDetails.lessonPlan];
     let pageContentData = [...lessonPages[activePageIndex].pageContent];
 
@@ -483,8 +485,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     history.goBack();
   };
 
-  console.log(selectedPageID, 'selectedPageIDselectedPageID');
-  
   return (
     /**
      *
