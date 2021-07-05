@@ -9,7 +9,8 @@ import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exam
 import Foot from './Foot/Foot';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {
-  PagePart, PagePartInput,
+  PagePart,
+  PagePartInput,
   PartContent,
   PartContentSub,
   UniversalLessonPage,
@@ -61,22 +62,32 @@ const LessonApp = () => {
     if (PAGES) {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
         const allPageParts = page.pageContent;
-        const initialPageData = allPageParts.reduce((pageData: PagePartInput[], pagePart: PagePart) => {
-          const pagePartContent = pagePart.partContent.reduce((pagePartAcc: any[], partContent: PartContent) => {
-            const isForm = (/form/g).test(partContent.type);
-            if(isForm){
-              // map through partContent sub array
-              return [...pagePartAcc, ...partContent.value.map((partContentSub: PartContentSub)=>{
-                return {
-                  domID: partContentSub.id,
-                  input: ['']
+        const initialPageData = allPageParts.reduce(
+          (pageData: PagePartInput[], pagePart: PagePart) => {
+            const pagePartContent = pagePart.partContent.reduce(
+              (pagePartAcc: any[], partContent: PartContent) => {
+                const isForm = /form/g.test(partContent.type);
+                if (isForm) {
+                  // map through partContent sub array
+                  return [
+                    ...pagePartAcc,
+                    ...partContent.value.map((partContentSub: PartContentSub) => {
+                      return {
+                        domID: partContentSub.id,
+                        input: [''],
+                      };
+                    }),
+                  ];
+                } else {
+                  return pagePartAcc;
                 }
-              })]
-            } else {return pagePartAcc
-            }
-          },[]);
-          return [...pageData, ...pagePartContent]
-        },[]);
+              },
+              []
+            );
+            return [...pageData, ...pagePartContent];
+          },
+          []
+        );
         return initialPageData;
       });
       // console.log('initialPageData - ', mappedPages)
@@ -91,6 +102,20 @@ const LessonApp = () => {
    * FROM LESSONCONTEXT.tsx
    *
    */
+
+  //GET liveClassroomLesson --> Replace temporary function above
+  //CRUD personLocation
+  //CRUD studentData
+  // initialize if not present
+  // get studentData
+  // set studentDataID to context
+
+  //SUBSCRIBE to liveClassroomLesson
+  //UPDATE to liveClassroomLEsson
+  //UNSUBSCRIBE from liveClassroomLesson
+  //CLEANUP context on unmount classroom
+
+  // set initial componentState --> Maybe not necessary with new structure
 
   return (
     <>
