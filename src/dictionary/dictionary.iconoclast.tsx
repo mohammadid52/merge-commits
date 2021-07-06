@@ -2231,11 +2231,11 @@ const UserEditDict: any = {
     nickname: 'Nickname',
     status: 'Status',
     role: 'Role',
-
     button: {
       save: 'Save',
       cancel: 'Cancel',
     },
+    ondemand: 'On-Demand',
   },
   ES: {
     heading: 'TBD',
@@ -2244,11 +2244,11 @@ const UserEditDict: any = {
     nickname: 'TBD',
     status: 'TBD',
     role: 'TBD',
-
     button: {
       save: 'TBD',
       cancel: 'TBD',
     },
+    ondemand: 'TBD',
   },
 };
 
@@ -2262,6 +2262,7 @@ const UserInformationDict: any = {
     status: 'Status',
     email: 'Email Address',
     account: 'Account Created',
+    ondemand: 'On-Demand',
   },
   ES: {
     heading: 'TBD',
@@ -2272,6 +2273,7 @@ const UserInformationDict: any = {
     status: 'TBD',
     email: 'TBD',
     account: 'TBD',
+    ondemand: 'TBD',
   },
 };
 

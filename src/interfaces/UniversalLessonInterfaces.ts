@@ -94,10 +94,10 @@ export interface UniversalLessonStudentData {
 export interface StudentPageInput {
   domID: string;
   input: string[];
-  comments?: StudentInputComment[];
+  comments?: TeacherStudentComments[];
 }
 
-export interface StudentInputComment {
-  teacherID: string;
+export interface TeacherStudentComments {
+  commentBy: string;
   comment: string;
 }

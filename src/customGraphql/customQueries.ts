@@ -2354,7 +2354,7 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
-
+        onDemand
         classes {
           items {
             classID

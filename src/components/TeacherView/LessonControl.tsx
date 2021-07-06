@@ -13,8 +13,8 @@ import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
 import {awsFormatDate, dateString} from '../../utilities/time';
 import ErrorBoundary from '../Error/ErrorBoundary';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { exampleUniversalLesson } from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 
 const LessonControl = () => {
@@ -49,17 +49,13 @@ const LessonControl = () => {
     }
   }, [lessonState.lessonData.id]);
 
-
-
   /**
    *
    * SHARING ETC.
    *
    *
    */
-  const [shareable, setShareable] = useState(false); // THIS ROW COPIED TO RosterRow.tsx, NEEDS TO BE REFACTORED
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
-
 
   const handlePageChange = (pageNr: number) => {
     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
@@ -297,11 +293,6 @@ const LessonControl = () => {
    *
    * */
   const [quickRegister, setQuickRegister] = useState(false);
-  const [instructions, setInstructions] = useState({
-    visible: false,
-    available: false,
-    content: null,
-  });
 
   const [homePopup, setHomePopup] = useState(false);
   const [lessonButton, setLessonButton] = useState(false);
@@ -325,7 +316,6 @@ const LessonControl = () => {
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
-
         {/* QUICK REGISTER */}
 
         {quickRegister && (
@@ -390,10 +380,7 @@ const LessonControl = () => {
 
         {/* START TOP MENU */}
 
-
         <TopMenu
-          shareable={shareable}
-          setShareable={setShareable}
           isSameStudentShared={isSameStudentShared}
           handleOpen={handleOpen}
           handleComplete={handleComplete}
@@ -406,8 +393,6 @@ const LessonControl = () => {
           handlePageChange={handlePageChange}
           setQuickRegister={setQuickRegister}
         />
-
-
 
         {/* END TOP MENU */}
 
@@ -441,11 +426,10 @@ const LessonControl = () => {
             <StudentWindowTitleBar
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}
-              instructions={instructions}
-              setInstructions={setInstructions}
             />
 
-            <div className={`
+            <div
+              className={`
                           ${fullscreen ? 'h-full' : 'h-full'}
                           ${theme.bg} 
                           relative w-full  
@@ -456,18 +440,18 @@ const LessonControl = () => {
                * INSTRUCTIONS
                *
                * */}
-              {instructions.visible && instructions.available ? (
-                <div className={`${fullscreen ? 'h-full' : 'h-full'}
-                              absolute w-full
-                              border-t-2 border-black
-                              overflow-hidden bg-black bg-opacity-40 z-100`}>
-                  <div className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
-                    <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
-                      {instructions.content}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
+              {/*{instructions.visible && instructions.available ? (*/}
+              {/*  <div className={`${fullscreen ? 'h-full' : 'h-full'}*/}
+              {/*                absolute w-full*/}
+              {/*                border-t-2 border-black*/}
+              {/*                overflow-hidden bg-black bg-opacity-40 z-100`}>*/}
+              {/*    <div className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>*/}
+              {/*      <div className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>*/}
+              {/*        {instructions.content}*/}
+              {/*      </div>*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*) : null}*/}
 
               {/**
                *
@@ -488,9 +472,9 @@ const LessonControl = () => {
                    *
                    *
                    */}
-                    <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                      <CoreUniversalLesson/>
-                    </ErrorBoundary>
+                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                    <CoreUniversalLesson />
+                  </ErrorBoundary>
                 </Suspense>
               </div>
             </div>

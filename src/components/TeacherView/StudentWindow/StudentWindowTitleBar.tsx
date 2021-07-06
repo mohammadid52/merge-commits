@@ -1,30 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaCompress, FaExpand, FaInfoCircle} from 'react-icons/fa';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { UniversalLessonPage } from '../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 
 interface StudentWindowTitleBarProps {
   handleFullscreen: () => void;
   fullscreen: boolean;
-  instructions: {
-    visible: boolean;
-    available: boolean;
-    content: any;
-  };
-  setInstructions: React.Dispatch<React.SetStateAction<object>>;
 }
 
 const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   props: StudentWindowTitleBarProps
 ) => {
-  const {
-    handleFullscreen,
-    fullscreen,
-    instructions,
-    setInstructions,
-  } = props;
+  const {handleFullscreen, fullscreen} = props;
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
@@ -36,7 +25,6 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
       setActivePageData(ACTIVE_PAGE_DATA);
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
-
 
   /**
    * Variable referring to ^ function above
@@ -70,7 +58,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
          *
          */}
         {lessonState.currentPage !== 0 &&
-        (activePageData && activePageData.enabled === true) ? (
+        activePageData &&
+        activePageData.enabled === true ? (
           activePageData.open ? (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
@@ -85,33 +74,9 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
             </span>
           )
         ) : null}
-
-
       </div>
 
       <div className="w-auto flex justify-between">
-        {instructions.available ? (
-          <div
-            className="w-auto flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry"
-            onClick={() =>
-              setInstructions({
-                visible: !instructions.visible,
-                available: instructions.available,
-                content: instructions.content,
-              })
-            }>
-            <IconContext.Provider
-              value={{
-                size: '1.5rem',
-                style: {
-                  zIndex: 50,
-                },
-              }}>
-              <FaInfoCircle />
-            </IconContext.Provider>
-          </div>
-        ) : null}
-
         <div
           className="w-8 mr-4 flex justify-center items-center cursor-pointer text-xl z-50 px-2 text-black hover:text-blueberry"
           onClick={handleFullscreen}>

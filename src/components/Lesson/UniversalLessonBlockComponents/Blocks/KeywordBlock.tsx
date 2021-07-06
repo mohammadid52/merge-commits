@@ -1,8 +1,7 @@
 import React, {useContext, useState, useEffect} from 'react';
 
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import {LessonComponentsInterface} from '../../../../interfaces/LessonComponentsInterfaces';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
