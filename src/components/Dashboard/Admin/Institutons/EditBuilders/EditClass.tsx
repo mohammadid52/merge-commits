@@ -1,7 +1,7 @@
-import React, { Fragment, useState, useEffect, useContext } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { IoArrowUndoCircleOutline, IoClose } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {Fragment, useState, useEffect, useContext} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
 import SectionTitle from '../../../../Atoms/SectionTitle';
@@ -15,23 +15,24 @@ import {
   stringToHslColor,
   getInitialsFromString,
   initials,
-  createFilterToFetchAllItemsExcept, createFilterToFetchSpecificItemsOnly,
+  createFilterToFetchAllItemsExcept,
+  createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
-import { getImageFromS3 } from '../../../../../utilities/services';
-import { statusList } from '../../../../../utilities/staticData';
-import { getAsset } from '../../../../../assets';
+import {getImageFromS3} from '../../../../../utilities/services';
+import {statusList} from '../../../../../utilities/staticData';
+import {getAsset} from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as queries from '../../../../../graphql/queries';
 import * as mutations from '../../../../../graphql/mutations';
 import useDictionary from '../../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import { goBackBreadCrumb } from '../../../../../utilities/functions';
+import {goBackBreadCrumb} from '../../../../../utilities/functions';
 import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
 
-interface EditClassProps { }
+interface EditClassProps {}
 
 const EditClass = (props: EditClassProps) => {
   const history = useHistory();
@@ -41,10 +42,10 @@ const EditClass = (props: EditClassProps) => {
   const urlParams = useQuery();
   const match = useRouteMatch();
 
-  const initialData = { id: '', name: '', institute: { id: '', name: '', value: '' } };
-  const defaultNewMember = { id: '', name: '', value: '', avatar: '' };
+  const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
+  const defaultNewMember = {id: '', name: '', value: '', avatar: ''};
   const [classData, setClassData] = useState(initialData);
-  const [messages, setMessages] = useState({ show: false, message: '', isError: false });
+  const [messages, setMessages] = useState({show: false, message: '', isError: false});
   const [classStudents, setClassStudents] = useState([]);
   const [students, setStudents] = useState([]);
 
@@ -65,20 +66,28 @@ const EditClass = (props: EditClassProps) => {
     message: 'Do you want to save changes before moving forward?',
   });
 
-  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
+  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { editClassDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {editClassDict, BreadcrumsTitles} = useDictionary(clientKey);
   const dictionary = editClassDict[userLanguage];
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
-    { title: BreadcrumsTitles[userLanguage]['EDITCLASS'], url: `${match.url}?id=${urlParams.get('id')}`, last: true },
+    {
+      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      goBack: true,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['EDITCLASS'],
+      url: `${match.url}?id=${urlParams.get('id')}`,
+      last: true,
+    },
   ];
 
   const gotoProfileInfo = (profileId: string) => {
@@ -87,7 +96,9 @@ const EditClass = (props: EditClassProps) => {
 
   const fetchClassData = async (classId: string) => {
     try {
-      const result: any = await API.graphql(graphqlOperation(customQueries.getClassDetails, { id: classId }));
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getClassDetails, {id: classId})
+      );
       const classData = result.data.getClass;
       setClassData({
         ...classData,
@@ -116,11 +127,11 @@ const EditClass = (props: EditClassProps) => {
       let students: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
           filter: {
-            role: { eq: 'ST' },
-            status: { eq: 'ACTIVE' },
+            role: {eq: 'ST'},
+            status: {eq: 'ACTIVE'},
             ...createFilterToFetchAllItemsExcept(selectedStudentsIds, 'id'),
           },
-          limit: 500
+          limit: 500,
         })
       );
       students = students.data.listPersons.items;
@@ -151,8 +162,9 @@ const EditClass = (props: EditClassProps) => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
         filter: {
-          role: { eq: 'ST' },
-          status: { eq: 'ACTIVE' }, or: [{ firstName: { contains: searchQuery } }, { lastName: { contains: searchQuery } }]
+          role: {eq: 'ST'},
+          status: {eq: 'ACTIVE'},
+          or: [{firstName: {contains: searchQuery}}, {lastName: {contains: searchQuery}}],
         },
       })
     );
@@ -166,16 +178,19 @@ const EditClass = (props: EditClassProps) => {
       email: item.email || '',
       authId: item.authId || '',
     }));
-    setFilteredStudents(sortStudents(mappedStudents))
-  }
+    setFilteredStudents(sortStudents(mappedStudents));
+    setSearching(false);
+  };
 
   const sortStudents = (studentList: any) => {
-    return studentList.sort((personA: any, personB: any) => personA.name[0] < personB.name[0] ? -1 : 1)
-  }
+    return studentList.sort((personA: any, personB: any) =>
+      personA.name[0] < personB.name[0] ? -1 : 1
+    );
+  };
 
   const clearFilteredStudents = () => {
-    setFilteredStudents([])
-  }
+    setFilteredStudents([]);
+  };
 
   const onNameChange = (e: any) => {
     setClassData({
@@ -184,7 +199,7 @@ const EditClass = (props: EditClassProps) => {
     });
     setUnsavedChanges(true);
     if (messages.show) {
-      setMessages({ show: false, message: '', isError: false });
+      setMessages({show: false, message: '', isError: false});
     }
   };
 
@@ -199,11 +214,11 @@ const EditClass = (props: EditClassProps) => {
 
   const addStudentInClass = () => {
     if (newMember.id) {
-      const { id, name, avatar } = newMember;
+      const {id, name, avatar} = newMember;
       saveClassStudent(id, classData.id);
       setNewMember(defaultNewMember);
     }
-    setFilteredStudents([])
+    setFilteredStudents([]);
   };
 
   const saveClassStudent = async (id: string, classId: string) => {
@@ -216,14 +231,16 @@ const EditClass = (props: EditClassProps) => {
         studentEmail: selected.email,
         status: 'Active',
       };
-      let newStudent: any = await API.graphql(graphqlOperation(customMutations.createClassStudent, { input: input }));
+      let newStudent: any = await API.graphql(
+        graphqlOperation(customMutations.createClassStudent, {input: input})
+      );
       newStudent = newStudent.data.createClassStudent;
       setClassStudents([
         ...classStudents,
         {
           id: newStudent.id,
           status: newStudent.status,
-          student: { ...selected },
+          student: {...selected},
         },
       ]);
     } catch (err) {
@@ -236,9 +253,18 @@ const EditClass = (props: EditClassProps) => {
     }
   };
 
-  const onClassStudentStatusChange = async (val: string, name: string, id: string, studentId: string) => {
+  const onClassStudentStatusChange = async (
+    val: string,
+    name: string,
+    id: string,
+    studentId: string
+  ) => {
     setUpdateStatus(true);
-    await API.graphql(graphqlOperation(customMutations.updateClassStudent, { input: { id: studentId, status: val } }));
+    await API.graphql(
+      graphqlOperation(customMutations.updateClassStudent, {
+        input: {id: studentId, status: val},
+      })
+    );
     const updatedSudents = classStudents.map((stu) => {
       if (stu.id === studentId) {
         stu.status = val;
@@ -281,8 +307,8 @@ const EditClass = (props: EditClassProps) => {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
           filter: {
-            institutionID: { eq: classData.institute.id },
-            name: { eq: classData.name },
+            institutionID: {eq: classData.institute.id},
+            name: {eq: classData.name},
           },
         })
       );
@@ -337,7 +363,9 @@ const EditClass = (props: EditClassProps) => {
           name: classData.name,
           institutionID: classData.institute.id,
         };
-        const newClass: any = await API.graphql(graphqlOperation(mutations.updateClass, { input: input }));
+        const newClass: any = await API.graphql(
+          graphqlOperation(mutations.updateClass, {input: input})
+        );
         setMessages({
           show: true,
           message: dictionary.messages.classupdate,
@@ -406,13 +434,20 @@ const EditClass = (props: EditClassProps) => {
       <div className="flex justify-between">
         <SectionTitle title={dictionary.TITLE} subtitle={dictionary.SUBTITLE} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons btnClass="" label="Go Back" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
+          <Buttons
+            btnClass=""
+            label="Go Back"
+            onClick={goBack}
+            Icon={IoArrowUndoCircleOutline}
+          />
         </div>
       </div>
 
       <PageWrapper>
         <div className="w-6/10 px-2 m-auto mb-4">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{dictionary.heading}</h3>
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+            {dictionary.heading}
+          </h3>
           <div className="">
             <div className="flex items-center">
               <div>
@@ -437,7 +472,9 @@ const EditClass = (props: EditClassProps) => {
         </div>
 
         <div className="flex flex-col items-center justify-center w-6/10 m-auto px-2">
-          <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">Add students to class</label>
+          <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
+            Add students to class
+          </label>
           <div className="flex items-center justify-between">
             <SearchSelectorWithAvatar
               selectedItem={newMember}
@@ -469,7 +506,9 @@ const EditClass = (props: EditClassProps) => {
                       <div className="flex w-1/10 items-center px-8 py-3 text-left text-s leading-4">
                         {dictionary.TABLE.SNO}
                       </div>
-                      <div className="flex w-5/10 items-center px-4 py-2">{dictionary.TABLE.NAME}</div>
+                      <div className="flex w-5/10 items-center px-4 py-2">
+                        {dictionary.TABLE.NAME}
+                      </div>
                       <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
                       <div className="w-1/10">{dictionary.TABLE.ACTIONS}</div>
                     </div>
@@ -488,23 +527,26 @@ const EditClass = (props: EditClassProps) => {
                           onClick={() => movetoStudentProfile(item.student.id)}>
                           <div className="flex-shrink-0 h-10 w-10 flex items-center">
                             {item.student.avatar ? (
-                              <img src={item.student.avatar} className="h-8 w-8 rounded-full" />
+                              <img
+                                src={item.student.avatar}
+                                className="h-8 w-8 rounded-full"
+                              />
                             ) : (
                               <div
                                 className="h-8 w-8 rounded-full flex justify-center items-center text-white text-sm text-bold"
                                 style={{
                                   background: `${stringToHslColor(
                                     getInitialsFromString(item.student.name)[0] +
-                                    ' ' +
-                                    getInitialsFromString(item.student.name)[1]
+                                      ' ' +
+                                      getInitialsFromString(item.student.name)[1]
                                   )}`,
                                   textShadow: '0.1rem 0.1rem 2px #423939b3',
                                 }}>
                                 {item.student.name
                                   ? initials(
-                                    getInitialsFromString(item.student.name)[0],
-                                    getInitialsFromString(item.student.name)[1]
-                                  )
+                                      getInitialsFromString(item.student.name)[0],
+                                      getInitialsFromString(item.student.name)[1]
+                                    )
                                   : initials('N', 'A')}
                               </div>
                             )}
@@ -514,7 +556,9 @@ const EditClass = (props: EditClassProps) => {
                             <div className="hover:text-gray-600 text-sm leading-5 font-medium text-gray-900">
                               {item.student.name}
                             </div>
-                            <div className="text-sm leading-5 text-gray-500">{item.student.email}</div>
+                            <div className="text-sm leading-5 text-gray-500">
+                              {item.student.email}
+                            </div>
                           </div>
                         </div>
 
@@ -524,7 +568,9 @@ const EditClass = (props: EditClassProps) => {
                               selectedItem={item.status}
                               placeholder="Select Status"
                               list={statusList}
-                              onChange={(val, name, id) => onClassStudentStatusChange(val, name, id, item.id)}
+                              onChange={(val, name, id) =>
+                                onClassStudentStatusChange(val, name, id, item.id)
+                              }
                             />
                           </div>
                         ) : (
@@ -551,7 +597,9 @@ const EditClass = (props: EditClassProps) => {
                   </div>
                 </Fragment>
               ) : (
-                <div className="py-12 my-12 m-auto text-center">{dictionary.NOSTUDENT}</div>
+                <div className="py-12 my-12 m-auto text-center">
+                  {dictionary.NOSTUDENT}
+                </div>
               )
             ) : (
               <div className="py-12 my-12 m-auto text-center">{dictionary.LOADING}</div>
