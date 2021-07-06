@@ -473,11 +473,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         currentModalDialog={currentModalDialog}
         handleModalPopToggle={handleModalPopToggle}
       /> */}
-      <div
+      {/* <div
         className="flex justify-end my-1 pr-2"
         onClick={() => setBuilderMenuVisible(true)}>
         <IoIosMenu className="w-auto cursor-pointer h-8 text-gray-400" />
-      </div>
+      </div> */}
       <LessonPlanNavigation
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}

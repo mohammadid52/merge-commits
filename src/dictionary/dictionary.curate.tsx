@@ -8,6 +8,8 @@ const BUTTONS: any = {
     CANCEL: 'Cancel',
     PUBLISH: 'Publish',
     YES: 'Yes',
+    CREATE: 'Create',
+    CREATING: 'Creating',
   },
   ES: {
     ADD: 'Añadir',
@@ -18,6 +20,8 @@ const BUTTONS: any = {
     CANCEL: 'Cancelar',
     PUBLISH: 'TBD',
     YES: 'TBD',
+    CREATE: 'TBD',
+    CREATING: 'TBD',
   },
 };
 
@@ -2176,7 +2180,7 @@ const RegistrationDict: any = {
       emailaddress: "User's email is not in the expected email address format",
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
-      institution: 'Institution cannot be blank'
+      institution: 'Institution cannot be blank',
     },
   },
   ES: {
@@ -2201,7 +2205,7 @@ const RegistrationDict: any = {
       emailaddress: 'TBD',
       userrol: 'TBD',
       loading: 'TBD',
-      institution: 'TBD'
+      institution: 'TBD',
     },
   },
 };

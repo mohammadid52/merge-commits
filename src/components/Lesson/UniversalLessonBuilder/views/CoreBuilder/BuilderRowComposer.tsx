@@ -120,7 +120,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                   idx === selectedPageDetails.pageContent.length - 1 || previewMode
                     ? 2
                     : 4
-                } right-2 z-100`}>
+                } right-2`}>
                 {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
                   <TagBlock
                     tags={pagePart.tags}
@@ -259,65 +259,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                       </Droppable>
                     </DragDropContext>
                   ) : (
-                    // ) : (
-                    // <></>
-                    // <ul className={pagePart.class}>
-                    //   {pagePart.partContent.map(
-                    //     (content: PartContent, idx2: number) => (
-                    //       <li>
-                    //         <EditOverlayBlock
-                    //           key={`pp_${idx}_pc_${idx2}`}
-                    //           mode={mode}
-                    //           classString={content.class}
-                    //           contentID={content.id}
-                    //           editedID={editedID}
-                    //           isComponent={true}
-                    //           isLast={idx2 === pagePart.partContent?.length - 1}
-                    //           handleEditBlockToggle={() =>
-                    //             handleEditBlockToggle(content.id)
-                    //           }
-                    //           handleEditBlockContent={() =>
-                    //             handleEditBlockContent(
-                    //               content.type,
-                    //               'partContent',
-                    //               content.value,
-                    //               pagePart.id,
-                    //               idx2
-                    //             )
-                    //           }
-                    //           createNewBlockULBHandler={createNewBlockULBHandler}
-                    //           deleteFromULBHandler={deleteFromULBHandler}
-                    //           updateFromULBHandler={updateFromULBHandler}>
-                    //           {content.value.length > 0 ? (
-                    //             <div className={content.class} id={content.id}>
-                    //               {composePartContent(
-                    //                 content.id,
-                    //                 content.type,
-                    //                 content.value,
-                    //                 `pp_${idx}_pc_${idx2}`,
-                    //                 content.class
-                    //               )}
-                    //             </div>
-                    //           ) : (
-                    //             <AddNewBlock
-                    //               idx={-1}
-                    //               mode={mode}
-                    //               handleModalPopToggle={(dialogToToggle) =>
-                    //                 handleModalPopToggle(
-                    //                   dialogToToggle,
-                    //                   idx2,
-                    //                   'partContent',
-                    //                   pagePart.id
-                    //                 )
-                    //               }
-                    //             />
-                    //           )}
-                    //         </EditOverlayBlock>
-                    //       </li>
-                    //     )
-                    //   )}
-                    // </ul>
-                    // )
                     <div
                       style={{minHeight: '60px'}}
                       className="flex w-auto items-center justify-center text-lg text-gray-600">

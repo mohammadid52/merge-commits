@@ -725,5 +725,7 @@ module.exports = {
     position: ['responsive', 'hover', 'focus'],
     display: ['group-hover', 'responsive', 'group-focus'],
   },
-  plugins: [],
+  // for slide over
+  plugins: [require('@tailwindcss/forms')],
+  // plugins: [],
 };

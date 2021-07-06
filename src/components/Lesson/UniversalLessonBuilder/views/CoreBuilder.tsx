@@ -1,9 +1,9 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
-import { FaMoon, FaSun } from 'react-icons/fa';
+import {FaMoon, FaSun} from 'react-icons/fa';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
@@ -18,6 +18,8 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import LessonPlanDescription from '../UI/LessonPlanDescription';
 import Loader from '../../../Atoms/Loader';
+import ActionLeft from '../UI/UIComponents/ActionLeft';
+import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
@@ -70,7 +72,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   } = useULBContext();
   const {
     dispatch,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeBackgroundColor = ''} = {}},
+    state: {
+      lessonPage: {theme: lessonPageTheme = 'dark', themeBackgroundColor = ''} = {},
+    },
   } = useContext(GlobalContext);
 
   const handleThemeChange = () => {
@@ -91,13 +95,18 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const activePageData = universalLessonDetails.lessonPlan.find(
     (lessonPage) => lessonPage.id === selectedPageID
   );
+  const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
+  const toggleLessonPlanSlideOver = () => setNewLessonPlanShow(!newLessonPlanShow);
 
   return (
     <div
-      className={`h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
+      className={`grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
         activePageData && activePageData.class ? activePageData.class : ''
       }`}>
-      <div className={`w-full h-full flex flex-row mx-auto`}>
+      <div className="h-48 rounded-md bg-gray-700 w-auto col-span-1 p-8">
+        <ActionLeft toggleLessonPlanSlideOver={toggleLessonPlanSlideOver} />
+      </div>
+      <div className={`w-full h-full col-span-3 flex flex-row mx-auto`}>
         <LessonPageWrapper>
           {fetchingLessonDetails ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
@@ -128,7 +137,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           )}
         </LessonPageWrapper>
       </div>
-      <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
+      {/* <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
         <div className="bg-dark flex flex-col items-center justify-center w-32 p-2">
           <button
             onClick={handleThemeChange}
@@ -148,7 +157,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           </button>
 
           <button
-            // onClick={() => handleModalPopToggle('NEW_PAGE')}
             onClick={handleAddNewPage}
             className="text-white bg-indigo-500 h-auto py-2 my-2 w-full px-2 rounded-md shadow hover:shadow-lg text-base">
             Add page
@@ -159,14 +167,16 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             Lesson Plan
           </button>
         </div>
-      </div>
-      <div className={`absolute w-auto top-10 left-1`}>
-        <div className="w-4/6 min-w-64">
+      </div> */}
+      <div className={`col-span-1`}>
+        {/* <div className="w-4/6 min-w-64">
           <LessonPlanDescription
             activePageData={activePageData}
             setEditModal={setEditModal}
           />
-        </div>
+        </div> */}
+
+        <NewLessonPlanSO open={newLessonPlanShow} setOpen={setNewLessonPlanShow} />
       </div>
     </div>
   );

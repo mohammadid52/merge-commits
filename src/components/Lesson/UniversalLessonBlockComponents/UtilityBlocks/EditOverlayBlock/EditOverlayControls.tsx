@@ -158,6 +158,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const {message = '', show = false} = confirmationConfig;
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
+  // isComponent === 'the left one'
   return (
     <div
       id="editControlsWrapper"
@@ -169,7 +170,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           bg-transparent rounded-lg
           ${overlayVisible ? 'z-100' : 'z-10'}
           h-auto w-auto
-          ${isComponent ? componentAlignmentToggleClass : rowAlignmentToggleClass}
+          ${isComponent ? componentAlignmentToggleClass : 'hidden'}
           `}>
       <ClickAwayListener
         onClickAway={() => {
