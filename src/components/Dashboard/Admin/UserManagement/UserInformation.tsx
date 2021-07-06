@@ -164,33 +164,27 @@ const UserInformation = (props: UserInfoProps) => {
                   <Status status={user.status} />
                 </dd>
               </div>
-              {/* <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-regular text-gray-600">
-                  Birthday
-                </dt>
-                <dd className="mt-2 text-base leading-5 text-gray-900">
-                  {`${user.birthdate ? user.birthdate : 'not set'}`}
-                </dd>
-              </div> */}
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-regular text-gray-600">
                   {UserInformationDict[userLanguage]['email']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">{`${user.email}`}</dd>
               </div>
-              {/* <div className="sm:col-span-1 p-2">
-                <dt className="text-sm leading-5 font-regular text-gray-600">
-                  Contact Number
-                </dt>
-                <dd className="mt-2 text-base leading-5 text-gray-900">
-                  {`${user.phone}`}
-                </dd>
-              </div> */}
+
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-regular text-gray-600">
                   {UserInformationDict[userLanguage]['account']}
                 </dt>
                 <dd className="mt-2 text-base leading-5 text-gray-900">{created()}</dd>
+              </div>
+              {/*----ON DEMAND TOGGLE----*/}
+              <div className="sm:col-span-1 p-2">
+                <dt className="text-sm leading-5 font-regular text-gray-600">
+                  {UserInformationDict[userLanguage]['ondemand']}
+                </dt>
+                <dd className="mt-2 text-base leading-5 text-gray-900">
+                  <Status status={user?.onDemand ? 'YES' : 'NO'} />
+                </dd>
               </div>
             </dl>
           </div>

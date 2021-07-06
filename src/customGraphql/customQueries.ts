@@ -558,10 +558,7 @@ export const getClassroomStudent = /* GraphQL */ `
 `;
 
 export const listPersons = /* GraphQL */ `
-  query ListPersons(
-    $filter: ModelPersonFilterInput
-    $sortDirection: ModelSortDirection
-  ) {
+  query ListPersons($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
     listPersons(filter: $filter, sortDirection: $sortDirection) {
       items {
         id
@@ -2216,7 +2213,7 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
-
+        onDemand
         classes {
           items {
             classID
@@ -2986,7 +2983,6 @@ export const getStudentResponse = /* GraphQL */ `
     }
   }
 `;
-
 
 export const getInstList = /* GraphQL */ `
   query ListInstitutions(
