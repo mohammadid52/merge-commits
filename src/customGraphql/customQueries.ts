@@ -2354,7 +2354,7 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
-
+        onDemand
         classes {
           items {
             classID
@@ -3149,6 +3149,12 @@ export const getInstList = /* GraphQL */ `
         image
         createdAt
         updatedAt
+        staff {
+          items {
+            staffAuthID
+            staffEmail
+          }
+        }
       }
       nextToken
     }
