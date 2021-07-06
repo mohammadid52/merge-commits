@@ -59,7 +59,7 @@ const LessonApp = () => {
   //  INITIALIZE STUDENTDATA
   //  INITIALIZE STUDENTDATA
   useEffect(() => {
-    if (PAGES) {
+    if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
         const allPageParts = page.pageContent;
         const initialPageData = allPageParts.reduce(
