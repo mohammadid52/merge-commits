@@ -147,6 +147,7 @@ module.exports = {
       29: '29rem',
       30: '30rem',
       '1/2': '50%',
+      auto:'auto'
     },
     fontFamily: {
       open: ['Open Sans', 'sans-serif'],

@@ -79,14 +79,14 @@ const LessonsListRow = (props: LessonsListRow) => {
         className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`}
         onClick={() => handleLessonsEdit(type)}>
         <span className="w-auto mr-2">{BUTTONS[userLanguage]['EDIT']}</span>
-        <span
+        {/* <span
           onClick={(e) => {
             e.stopPropagation();
             deleteLesson(id);
           }}
           className="w-auto hover:text-red-500 text-red-400">
           Delete
-        </span>
+        </span> */}
       </div>
     </div>
   );

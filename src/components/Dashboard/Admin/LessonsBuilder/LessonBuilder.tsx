@@ -15,6 +15,7 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import Loader from '../../../Atoms/Loader';
+import StepComponent, { IStepElementInterface } from '../../../Atoms/StepComponent';
 import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
@@ -34,6 +35,7 @@ import {useQuery} from '../../../../customHooks/urlParam';
 export interface InitialData {
   name: string;
   type: InputValueObject;
+  duration: string;
   purpose: string;
   purposeHtml: string;
   objective: string;
@@ -62,7 +64,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const params = useQuery(location.search);
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
-
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
@@ -80,6 +81,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const initialData = {
     name: '',
     type: {id: '', name: '', value: ''},
+    duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',
     objective: '',
@@ -121,7 +123,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
-  const [activeStep, setActiveStep] = useState('Overview');
+  const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -402,7 +404,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case 'Overview':
+      case 'overview':
         return (
           <AddNewLessonForm
             lessonId={lessonId}
@@ -569,6 +571,36 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   //   fetchMeasurementList();
   // }, []);
 
+  const steps: IStepElementInterface[] = [
+    {
+      title: 'Overview',
+      step: 'overview',
+      icon: <IoCardSharp />,
+      isComplete: true,
+    },
+    {
+      title: 'Activities',
+      step: 'activities',
+      icon: <FaQuestionCircle />,
+      disabled: true,
+      isComplete: false,
+    },
+    {
+      title: 'Courses',
+      step: 'courses',
+      icon: <FaQuestionCircle />,
+      disabled: true,
+      isComplete: false,
+    },
+    {
+      title: 'Learning Evidence',
+      step: 'learning-evidence',
+      icon: <FaQuestionCircle />,
+      disabled: true,
+      isComplete: false,
+    },
+  ];
+
   return (
     <div className="w-full h-full">
       {/* Section Header */}
@@ -596,7 +628,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       <PageWrapper>
         <div className="w-full m-auto">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 p-4">
+          <StepComponent steps={steps} activeStep={activeStep} />
+
+          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+            <div className="">{currentStepComp(activeStep)}</div>
             {/* <div className="sm:col-span-1"> */}
             {/* <WizardScroller
                 stepsList={lessonBuilderSteps}
@@ -625,7 +660,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                 }}
               /> */}
             {/* </div> */}
-            <div>
+            {/* <div>
               {loading ? (
                 <div className="h-100 flex justify-center items-center">
                   <div className="w-5/10">
@@ -652,7 +687,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
                   setUnsavedChanges={setUnsavedChanges}
                 />
               )}
-            </div>
+            </div> */}
           </div>
         </div>
         {warnModal.show && (
