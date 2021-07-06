@@ -10936,3 +10936,84 @@ export const deleteUniversalLesson = /* GraphQL */ `
     }
   }
 `;
+export const createUniversalLessonStudentData = /* GraphQL */ `
+  mutation CreateUniversalLessonStudentData(
+    $input: CreateUniversalLessonStudentDataInput!
+    $condition: ModelUniversalLessonStudentDataConditionInput
+  ) {
+    createUniversalLessonStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalLessonStudentData = /* GraphQL */ `
+  mutation UpdateUniversalLessonStudentData(
+    $input: UpdateUniversalLessonStudentDataInput!
+    $condition: ModelUniversalLessonStudentDataConditionInput
+  ) {
+    updateUniversalLessonStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalLessonStudentData = /* GraphQL */ `
+  mutation DeleteUniversalLessonStudentData(
+    $input: DeleteUniversalLessonStudentDataInput!
+    $condition: ModelUniversalLessonStudentDataConditionInput
+  ) {
+    deleteUniversalLessonStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;

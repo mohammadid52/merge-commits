@@ -905,6 +905,8 @@ type Planner @model {
   duration: Int
 }
 
+# Universal lesson tables ----------------------------------------------
+
 type UniversalLesson @model @key(fields: ["id"]) {
   id: ID!
   type: String!
@@ -979,6 +981,38 @@ type UniversalContentOptions {
   id: String
   label: String
   text: String
+}
+
+type UniversalLessonStudentData
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+    id: ID!
+    syllabusLessonID: ID!
+    lessonID: ID!
+    lessonPageID: ID!
+    studentID: ID!
+    studentAuthID: ID!
+    studentEmail: String!
+    currentLocation: String
+    lessonProgress: String
+    pageData: [StudentPageInput]
+}
+
+type StudentPageInput {
+  pagePartID: String
+  pagePartInput: [partInput]
+}
+
+type partInput {
+  domID: String
+  input: [String]
+  comments: [InputComment]
+}
+
+type InputComment {
+  commentBy: ID
+  comment: String
 }
 
 type Subscription {

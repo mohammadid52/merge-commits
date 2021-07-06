@@ -4735,6 +4735,65 @@ export const listUniversalLessons = /* GraphQL */ `
     }
   }
 `;
+export const getUniversalLessonStudentData = /* GraphQL */ `
+  query GetUniversalLessonStudentData($id: ID!) {
+    getUniversalLessonStudentData(id: $id) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalLessonStudentDatas = /* GraphQL */ `
+  query ListUniversalLessonStudentDatas(
+    $id: ID
+    $filter: ModelUniversalLessonStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        currentLocation
+        lessonProgress
+        pageData {
+          pagePartID
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID

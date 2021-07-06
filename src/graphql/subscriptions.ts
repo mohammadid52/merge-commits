@@ -10452,3 +10452,75 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnCreateUniversalLessonStudentData {
+    onCreateUniversalLessonStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnUpdateUniversalLessonStudentData {
+    onUpdateUniversalLessonStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnDeleteUniversalLessonStudentData {
+    onDeleteUniversalLessonStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
