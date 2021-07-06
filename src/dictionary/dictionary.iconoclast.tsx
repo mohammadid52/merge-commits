@@ -2177,7 +2177,7 @@ const RegistrationDict: any = {
       emailaddress: "User's email is not in the expected email address format",
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
-      institution: 'Institution cannot be blank'
+      institution: 'Institution cannot be blank',
     },
   },
   ES: {
@@ -2202,7 +2202,7 @@ const RegistrationDict: any = {
       emailaddress: 'TBD',
       userrol: 'TBD',
       loading: 'TBD',
-      institution: 'TBD'
+      institution: 'TBD',
     },
   },
 };
@@ -2224,11 +2224,11 @@ const UserEditDict: any = {
     nickname: 'Nickname',
     status: 'Status',
     role: 'Role',
-
     button: {
       save: 'Save',
       cancel: 'Cancel',
     },
+    ondemand: 'On-Demand',
   },
   ES: {
     heading: 'TBD',
@@ -2237,11 +2237,11 @@ const UserEditDict: any = {
     nickname: 'TBD',
     status: 'TBD',
     role: 'TBD',
-
     button: {
       save: 'TBD',
       cancel: 'TBD',
     },
+    ondemand: 'TBD',
   },
 };
 
@@ -2255,6 +2255,7 @@ const UserInformationDict: any = {
     status: 'Status',
     email: 'Email Address',
     account: 'Account Created',
+    ondemand: 'On-Demand',
   },
   ES: {
     heading: 'TBD',
@@ -2265,6 +2266,7 @@ const UserInformationDict: any = {
     status: 'TBD',
     email: 'TBD',
     account: 'TBD',
+    ondemand: 'TBD',
   },
 };
 
@@ -3137,27 +3139,26 @@ const LessonsListDict: any = {
   },
 };
 
-
 const UniversalBuilderDict: any = {
-  'EN':{
+  EN: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'Lesson Pages'
+      LESSON_PAGES: 'Lesson Pages',
     },
-    TEMPLATES:{
-      TITLE: 'Lesson Templates'
-    }
+    TEMPLATES: {
+      TITLE: 'Lesson Templates',
+    },
   },
-  'ES':{
+  ES: {
     FETCHING: 'Fetching lesson pages...',
     GALLERY: {
-      LESSON_PAGES: 'TBD'
+      LESSON_PAGES: 'TBD',
     },
-    TEMPLATES:{
-      TITLE: 'TBD'
-    }
-  }
-}
+    TEMPLATES: {
+      TITLE: 'TBD',
+    },
+  },
+};
 
 const CsvDict: any = {
   EN: {

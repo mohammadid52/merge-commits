@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 interface DropdownProps {
   label: string;
   items: any;
   userInfo: string;
   id: string;
-  handleChange: (item: { code: string; name: string }) => void;
+  handleChange: (item: {code: string | boolean; name: string}) => void;
   style: boolean;
   value: string;
 }
@@ -14,7 +14,7 @@ interface DropdownProps {
 // to use selector component in atom > froms > selector.
 
 const DropdownForm = (props: DropdownProps) => {
-  const { label, items, userInfo, handleChange, id, style, value } = props;
+  const {label, items, userInfo, handleChange, id, style, value} = props;
 
   const options = () => {
     if (userInfo === 'ACTIVE') {
@@ -57,7 +57,11 @@ const DropdownForm = (props: DropdownProps) => {
 
   return (
     <div className="space-y-1">
-      <label id="listbox-label" className={`${style ? 'text-m' : 'text-sm'} block leading-5 font-medium text-gray-700`}>
+      <label
+        id="listbox-label"
+        className={`${
+          style ? 'text-m' : 'text-sm'
+        } block leading-5 font-medium text-gray-700`}>
         <span className={`${style ? 'text-red-500' : 'hidden'}`}>* </span>
         {label}
       </label>
@@ -72,8 +76,17 @@ const DropdownForm = (props: DropdownProps) => {
             className="flex cursor-pointer relative w-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none focus:ring-blue focus:border-blue-300 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
             <span className="block truncate">{options()}</span>
             <span className="relative justify-end inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="none" stroke="currentColor">
-                <path d="M7 7l3-3 3 3m0 6l-3 3-3-3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                className="h-5 w-5 text-gray-400"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor">
+                <path
+                  d="M7 7l3-3 3 3m0 6l-3 3-3-3"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </span>
           </button>
@@ -85,14 +98,17 @@ const DropdownForm = (props: DropdownProps) => {
               aria-labelledby="listbox-label"
               aria-activedescendant="listbox-item-3"
               className="max-h-60 rounded-md py-1 text-base leading-6 ring-1 ring-black ring-opacity-10 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-              {items.map((item: { code: string; name: string }, key: number) => (
+              {items.map((item: {code: string; name: string}, key: number) => (
                 <li
                   key={key}
                   onClick={() => selection(item)}
                   id={id}
                   role="option"
                   className={`hover:bg-indigo-400 hover:text-white flex cursor-pointer select-none relative py-2 pl-8 pr-4`}>
-                  <span className={`${options() === item.name ? 'font-semibold' : 'font-normal'} block truncate"`}>
+                  <span
+                    className={`${
+                      options() === item.name ? 'font-semibold' : 'font-normal'
+                    } block truncate"`}>
                     {item.name}
                   </span>
                   <span
