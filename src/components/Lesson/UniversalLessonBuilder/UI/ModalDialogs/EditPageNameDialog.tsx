@@ -42,7 +42,6 @@ const EditPageNameDialog = ({content, closeAction}: any) => {
     const PATH_TO_PAGECONTENT = `lessonPlan[${pageIdx}]`;
     const updatedObject = {
       ...universalLessonDetails.lessonPlan[pageIdx],
-      id: updatedValues.id,
       title: updatedValues.title,
       description: updatedValues.description,
       label: updatedValues.label,

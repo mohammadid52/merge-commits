@@ -141,9 +141,6 @@ const LessonsList = () => {
 
   const getLessonsList = async () => {
     try {
-      // const fetchLessonsData: any = await API.graphql(
-      //   graphqlOperation(customQueries.listLessonsTitles)
-      // );
       const fetchUList: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessons)
       );
@@ -228,19 +225,6 @@ const LessonsList = () => {
       value: str,
       name: name,
     });
-  };
-  const deleteLesson = async (id: string) => {
-    try {
-      remove(lessonsData, (lesson) => lesson.id === id);
-      setLessonsData([...lessonsData]);
-      const result = await API.graphql(
-        graphqlOperation(mutations.deleteUniversalLesson, {
-          input: {id},
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   useEffect(() => {
@@ -368,7 +352,6 @@ const LessonsList = () => {
                 {currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
-                      deleteLesson={deleteLesson}
                       key={`lessonsRows${i}`}
                       index={currentPage * pageCount + i}
                       id={lessonsObject.id}
