@@ -42,7 +42,7 @@ export type LessonActions =
     }
   | {
       type: 'CLEANUP';
-      payload: '';
+      payload: any;
     };
 
 export const lessonReducer = (state: any, action: LessonActions) => {

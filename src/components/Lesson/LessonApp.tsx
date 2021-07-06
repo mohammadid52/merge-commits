@@ -31,7 +31,9 @@ const LessonApp = () => {
   const PAGES = lessonState.lessonData.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
-  //  LESSON FETCH AND UNMOUNT
+  // ##################################################################### //
+  // ############################ LESSON FETCH ########################### //
+  // ##################################################################### //
   useEffect(() => {
     setTimeout(() => {
       lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
@@ -44,9 +46,7 @@ const LessonApp = () => {
     };
   }, []);
 
-  //  RESPONSE TO LOADING LESSON DATA FETCH
-  //  RESPONSE TO LOADING LESSON DATA FETCH
-  //  RESPONSE TO LOADING LESSON DATA FETCH
+  // ~~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
@@ -61,9 +61,9 @@ const LessonApp = () => {
     }
   }, [lessonState.lessonData]);
 
-  //  INITIALIZE STUDENTDATA
-  //  INITIALIZE STUDENTDATA
-  //  INITIALIZE STUDENTDATA
+  // ##################################################################### //
+  // ###################### INITIALIZE STUDENT DATA ###################### //
+  // ##################################################################### //
   useEffect(() => {
     if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
