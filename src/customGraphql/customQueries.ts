@@ -3149,6 +3149,12 @@ export const getInstList = /* GraphQL */ `
         image
         createdAt
         updatedAt
+        staff {
+          items {
+            staffAuthID
+            staffEmail
+          }
+        }
       }
       nextToken
     }
