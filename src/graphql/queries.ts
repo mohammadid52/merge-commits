@@ -25,6 +25,7 @@ export const getPerson = /* GraphQL */ `
       filters
       lastLoggedIn
       lastLoggedOut
+      onDemand
       classes {
         items {
           id
@@ -81,6 +82,7 @@ export const listPersons = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -286,6 +288,7 @@ export const getStaff = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -332,6 +335,7 @@ export const listStaffs = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -409,6 +413,7 @@ export const getRoom = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -539,6 +544,7 @@ export const listRooms = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -629,6 +635,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -681,6 +688,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -748,6 +756,7 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -949,6 +958,7 @@ export const getClassStudent = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1003,6 +1013,7 @@ export const listClassStudents = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -2324,6 +2335,7 @@ export const getRoomMsgs = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -2369,6 +2381,7 @@ export const listRoomMsgss = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -3510,6 +3523,7 @@ export const getStudentData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -3660,6 +3674,7 @@ export const listStudentDatas = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -3727,6 +3742,7 @@ export const getAnthologyComment = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -3782,6 +3798,7 @@ export const listAnthologyComments = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -3828,6 +3845,7 @@ export const getQuestionData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -3948,6 +3966,7 @@ export const listQuestionDatas = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -4125,6 +4144,7 @@ export const getPersonLocation = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4245,6 +4265,7 @@ export const getPersonLocation = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -4327,6 +4348,7 @@ export const listPersonLocations = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -4419,6 +4441,7 @@ export const getNoticeboardWidget = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4484,6 +4507,7 @@ export const listNoticeboardWidgets = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -4577,6 +4601,9 @@ export const getUniversalLesson = /* GraphQL */ `
     getUniversalLesson(id: $id) {
       id
       type
+      activityType
+      interactionType
+      tags
       label
       title
       institutionID
@@ -4613,6 +4640,25 @@ export const getUniversalLesson = /* GraphQL */ `
           class
         }
       }
+      homework {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        estTime
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      darkMode
       createdAt
       updatedAt
     }
@@ -4636,6 +4682,9 @@ export const listUniversalLessons = /* GraphQL */ `
       items {
         id
         type
+        activityType
+        interactionType
+        tags
         label
         title
         institutionID
@@ -4666,6 +4715,19 @@ export const listUniversalLessons = /* GraphQL */ `
           open
           estTime
         }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+        }
+        darkMode
         createdAt
         updatedAt
       }
@@ -4709,6 +4771,7 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4755,6 +4818,7 @@ export const usersByRole = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4836,6 +4900,7 @@ export const messagesByRoomId = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -4889,6 +4954,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }

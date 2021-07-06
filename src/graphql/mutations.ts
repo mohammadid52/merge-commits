@@ -64,6 +64,7 @@ export const batchAddClassStudent = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -101,6 +102,7 @@ export const createPerson = /* GraphQL */ `
       filters
       lastLoggedIn
       lastLoggedOut
+      onDemand
       classes {
         items {
           id
@@ -145,6 +147,7 @@ export const updatePerson = /* GraphQL */ `
       filters
       lastLoggedIn
       lastLoggedOut
+      onDemand
       classes {
         items {
           id
@@ -189,6 +192,7 @@ export const deletePerson = /* GraphQL */ `
       filters
       lastLoggedIn
       lastLoggedOut
+      onDemand
       classes {
         items {
           id
@@ -732,6 +736,7 @@ export const createStaff = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -776,6 +781,7 @@ export const updateStaff = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -820,6 +826,7 @@ export const deleteStaff = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -901,6 +908,7 @@ export const createRoom = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1047,6 +1055,7 @@ export const updateRoom = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1193,6 +1202,7 @@ export const deleteRoom = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1327,6 +1337,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -1379,6 +1390,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1448,6 +1460,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -1500,6 +1513,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1569,6 +1583,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -1621,6 +1636,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -1964,6 +1980,7 @@ export const createClassStudent = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -2040,6 +2057,7 @@ export const updateClassStudent = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -2116,6 +2134,7 @@ export const deleteClassStudent = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4884,6 +4903,7 @@ export const createRoomMsgs = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4927,6 +4947,7 @@ export const updateRoomMsgs = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -4970,6 +4991,7 @@ export const deleteRoomMsgs = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8151,6 +8173,7 @@ export const createStudentData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8341,6 +8364,7 @@ export const updateStudentData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8531,6 +8555,7 @@ export const deleteStudentData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8650,6 +8675,7 @@ export const createAnthologyComment = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8699,6 +8725,7 @@ export const updateAnthologyComment = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8748,6 +8775,7 @@ export const deleteAnthologyComment = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8798,6 +8826,7 @@ export const createQuestionData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -8916,6 +8945,7 @@ export const updateQuestionData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -9034,6 +9064,7 @@ export const deleteQuestionData = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -9173,6 +9204,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -9236,6 +9268,7 @@ export const createQuestionDataStudentData = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -9323,6 +9356,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -9386,6 +9420,7 @@ export const updateQuestionDataStudentData = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -9473,6 +9508,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -9536,6 +9572,7 @@ export const deleteQuestionDataStudentData = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -9850,6 +9887,7 @@ export const createPersonLocation = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -9970,6 +10008,7 @@ export const createPersonLocation = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -10040,6 +10079,7 @@ export const updatePersonLocation = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -10160,6 +10200,7 @@ export const updatePersonLocation = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -10230,6 +10271,7 @@ export const deletePersonLocation = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -10350,6 +10392,7 @@ export const deletePersonLocation = /* GraphQL */ `
           filters
           lastLoggedIn
           lastLoggedOut
+          onDemand
           createdAt
           updatedAt
         }
@@ -10434,6 +10477,7 @@ export const createNoticeboardWidget = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -10493,6 +10537,7 @@ export const updateNoticeboardWidget = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -10552,6 +10597,7 @@ export const deleteNoticeboardWidget = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
+        onDemand
         classes {
           nextToken
         }
@@ -10685,6 +10731,9 @@ export const createUniversalLesson = /* GraphQL */ `
     createUniversalLesson(input: $input, condition: $condition) {
       id
       type
+      activityType
+      interactionType
+      tags
       label
       title
       institutionID
@@ -10721,6 +10770,25 @@ export const createUniversalLesson = /* GraphQL */ `
           class
         }
       }
+      homework {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        estTime
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      darkMode
       createdAt
       updatedAt
     }
@@ -10734,6 +10802,9 @@ export const updateUniversalLesson = /* GraphQL */ `
     updateUniversalLesson(input: $input, condition: $condition) {
       id
       type
+      activityType
+      interactionType
+      tags
       label
       title
       institutionID
@@ -10770,6 +10841,25 @@ export const updateUniversalLesson = /* GraphQL */ `
           class
         }
       }
+      homework {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        estTime
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      darkMode
       createdAt
       updatedAt
     }
@@ -10783,6 +10873,9 @@ export const deleteUniversalLesson = /* GraphQL */ `
     deleteUniversalLesson(input: $input, condition: $condition) {
       id
       type
+      activityType
+      interactionType
+      tags
       label
       title
       institutionID
@@ -10819,6 +10912,25 @@ export const deleteUniversalLesson = /* GraphQL */ `
           class
         }
       }
+      homework {
+        id
+        title
+        label
+        description
+        class
+        active
+        disabled
+        displayMode
+        open
+        estTime
+        pageContent {
+          id
+          tags
+          partType
+          class
+        }
+      }
+      darkMode
       createdAt
       updatedAt
     }
