@@ -16,28 +16,64 @@ import ErrorBoundary from '../Error/ErrorBoundary';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
+import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 
 const LessonControl = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
-  const location = useLocation();
   const [fullscreen, setFullscreen] = useState(false);
 
-  /**
-   *
-   * HELP SECTION:
-   *
-   *  On mount ->
-   *  1. setLessonDataLoaded -> true;
-   *
-   *
-   */
+  // Subscription for student->teacher interaction
+  let subscription: any;
+
+  // const subscribeToStudentData = (lessonID: string) => {
+  //   const studentDataSubscription = API.graphql(
+  //     graphqlOperation(customSubscriptions.onChangeStudentData, {
+  //       syllabusLessonID: lessonID,
+  //     })
+  //     // @ts-ignore
+  //   ).subscribe({
+  //     next: (studentData: any) => {
+  //       let updatedData = studentData.value.data.onChangeStudentData;
+  //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // NEED TO MODIFY WHERE UPDATED STUDENT DATA GOES
+  //     },
+  //   });
+  //
+  //   return studentDataSubscription;
+  // };
+
+  const getSyllabusLesson = async (lessonID?: string) => {
+    // lessonID will be undefined for testing
+    if (typeof lessonID !== 'undefined') {
+      console.log('getSyllabusLesson - ', lessonID);
+
+      // const lesson: any = await API.graphql(
+      //   graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
+      // );
+      //  lessonDispatch({type: 'SET_LESSON_DATA', payload: lesson.data.getSyllabusLesson});
+      //
+      // subscription = subscribeToStudentData(lessonID);
+    } else {
+      setTimeout(() => {
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+      }, 1000);
+    }
+  };
   useEffect(() => {
-    setTimeout(() => {
-      lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-    }, 1000);
-  }, []);
+    if (lessonState.universalLessonID) {
+      getSyllabusLesson(lessonState.universalLessonID).then((_: void) =>
+        console.log('Lesson Mount - ', 'Lesson fetched!')
+      );
+    }
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      lessonDispatch({type: 'CLEANUP'});
+      // lessonControlDispatch({type: 'CLEANUP'});
+    };
+  }, [lessonState.universalLessonID]);
 
   //  RESPONSE TO LOADING LESSON DATA FETCH
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
@@ -46,6 +82,21 @@ const LessonControl = () => {
       setLessonDataLoaded(true);
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
+
+      // MODIFY REDUCER FOR THIS
+      // lessonControlDispatch({
+      //   type: 'INITIAL_CONTROL_SETUP',
+      //   payload: {
+      //     syllabusLessonID: lessonID,
+      //     pages: lesson.lessonPlan,
+      //     data: lesson,
+      //     students: [],
+      //     open: lesson?.status === 'Active',
+      //     complete: lesson?.complete,
+      //     startDate: lesson?.startDate ? lesson?.startDate : '',
+      //     endDate: lesson?.endDate ? lesson?.endDate : '',
+      //   },
+      // });
     }
   }, [lessonState.lessonData.id]);
 

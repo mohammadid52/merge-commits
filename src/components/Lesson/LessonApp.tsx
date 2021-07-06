@@ -21,6 +21,9 @@ const LessonApp = () => {
   const history = useHistory();
   const match = useRouteMatch();
 
+  // Subscription for student->teacher interaction
+  let subscription: any;
+
   const [overlay, setOverlay] = useState<string>('');
   const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
 
@@ -34,6 +37,9 @@ const LessonApp = () => {
       lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
     }, 1000);
     return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
       lessonDispatch({type: 'CLEANUP'});
     };
   }, []);
