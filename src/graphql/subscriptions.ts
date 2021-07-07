@@ -1225,6 +1225,42 @@ export const onCreateStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1267,6 +1303,42 @@ export const onUpdateStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -1304,6 +1376,42 @@ export const onDeleteStaff = /* GraphQL */ `
         lastLoggedOut
         onDemand
         classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
           nextToken
         }
         createdAt
@@ -10253,8 +10361,6 @@ export const onCreateUniversalLesson = /* GraphQL */ `
     onCreateUniversalLesson {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -10291,6 +10397,8 @@ export const onCreateUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -10309,6 +10417,8 @@ export const onCreateUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
       createdAt
@@ -10321,8 +10431,6 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
     onUpdateUniversalLesson {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -10359,6 +10467,8 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -10377,6 +10487,8 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
       createdAt
@@ -10389,8 +10501,6 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
     onDeleteUniversalLesson {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -10427,6 +10537,8 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -10445,8 +10557,82 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnCreateUniversalLessonStudentData {
+    onCreateUniversalLessonStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnUpdateUniversalLessonStudentData {
+    onUpdateUniversalLessonStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnDeleteUniversalLessonStudentData {
+    onDeleteUniversalLessonStudentData {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
       createdAt
       updatedAt
     }
