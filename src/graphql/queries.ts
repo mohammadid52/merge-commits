@@ -4655,8 +4655,6 @@ export const getUniversalLesson = /* GraphQL */ `
     getUniversalLesson(id: $id) {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -4693,6 +4691,8 @@ export const getUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -4711,6 +4711,8 @@ export const getUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
       createdAt
@@ -4736,8 +4738,6 @@ export const listUniversalLessons = /* GraphQL */ `
       items {
         id
         type
-        activityType
-        interactionType
         tags
         label
         title
@@ -4768,6 +4768,8 @@ export const listUniversalLessons = /* GraphQL */ `
           displayMode
           open
           estTime
+          activityType
+          interactionType
         }
         homework {
           id
@@ -4780,6 +4782,8 @@ export const listUniversalLessons = /* GraphQL */ `
           displayMode
           open
           estTime
+          activityType
+          interactionType
         }
         darkMode
         createdAt
