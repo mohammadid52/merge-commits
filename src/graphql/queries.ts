@@ -295,6 +295,42 @@ export const getStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -336,6 +372,24 @@ export const listStaffs = /* GraphQL */ `
           lastLoggedIn
           lastLoggedOut
           onDemand
+          createdAt
+          updatedAt
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
           createdAt
           updatedAt
         }
@@ -4601,8 +4655,6 @@ export const getUniversalLesson = /* GraphQL */ `
     getUniversalLesson(id: $id) {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -4639,6 +4691,8 @@ export const getUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -4657,6 +4711,8 @@ export const getUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
       createdAt
@@ -4682,8 +4738,6 @@ export const listUniversalLessons = /* GraphQL */ `
       items {
         id
         type
-        activityType
-        interactionType
         tags
         label
         title
@@ -4714,6 +4768,8 @@ export const listUniversalLessons = /* GraphQL */ `
           displayMode
           open
           estTime
+          activityType
+          interactionType
         }
         homework {
           id
@@ -4726,8 +4782,69 @@ export const listUniversalLessons = /* GraphQL */ `
           displayMode
           open
           estTime
+          activityType
+          interactionType
         }
         darkMode
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUniversalLessonStudentData = /* GraphQL */ `
+  query GetUniversalLessonStudentData($id: ID!) {
+    getUniversalLessonStudentData(id: $id) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalLessonStudentDatas = /* GraphQL */ `
+  query ListUniversalLessonStudentDatas(
+    $id: ID
+    $filter: ModelUniversalLessonStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        currentLocation
+        lessonProgress
+        pageData {
+          pagePartID
+        }
         createdAt
         updatedAt
       }
