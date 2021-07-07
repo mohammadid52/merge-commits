@@ -295,6 +295,42 @@ export const getStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -336,6 +372,24 @@ export const listStaffs = /* GraphQL */ `
           lastLoggedIn
           lastLoggedOut
           onDemand
+          createdAt
+          updatedAt
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
           createdAt
           updatedAt
         }

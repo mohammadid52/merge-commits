@@ -97,6 +97,7 @@ type Staff
   status: String
   statusChangeDate: AWSDate
   staffMember: Person @connection(fields: ["staffEmail", "staffAuthID"])
+  institution: Institution @connection(fields: ["institutionID"])
 }
 
 type Room
