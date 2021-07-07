@@ -39,7 +39,7 @@ export type studentObject = {
   };
 };
 
-export interface lessonControlStateType {
+export interface lessonControlStateTypeOLD {
   status: string;
   error: string;
   pages: Array<pageObject>;
@@ -60,10 +60,10 @@ export interface lessonControlStateType {
       preferredName?: string;
       lastName: string;
     };
-    doFirstData?: { [key: string]: any };
-    warmUpData?: { [key: string]: any };
-    corelessonData?: { [key: string]: any };
-    activityData?: { [key: string]: any };
+    doFirstData?: {[key: string]: any};
+    warmUpData?: {[key: string]: any};
+    corelessonData?: {[key: string]: any};
+    activityData?: {[key: string]: any};
   };
   studentViewing: {
     live: boolean;
@@ -73,7 +73,7 @@ export interface lessonControlStateType {
   syllabusLessonID: string;
 }
 
-export const lessonControlState: lessonControlStateType = {
+export const lessonControlStateOLD: lessonControlStateTypeOLD = {
   status: '',
   error: '',
   pages: [],

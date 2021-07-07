@@ -1,22 +1,17 @@
 import React, {Suspense, useContext, useEffect, useState} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
-import {LessonControlContext} from '../../contexts/LessonControlContext';
-import * as customMutations from '../../customGraphql/customMutations';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import PositiveAlert from '../General/Popup';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
-import Body from './Body';
 import TopMenu from './TopMenu';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
 import QuickRegister from '../Auth/QuickRegister';
-import {awsFormatDate, dateString} from '../../utilities/time';
+import {dateString} from '../../utilities/time';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import {useParams} from 'react-router';
 
 const LessonControl = () => {
@@ -106,7 +101,6 @@ const LessonControl = () => {
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
-      console.log('id -----', lessonID);
       getSyllabusLesson(lessonID).then((_: void) =>
         console.log('Lesson Mount - ', 'Lesson fetched!')
       );

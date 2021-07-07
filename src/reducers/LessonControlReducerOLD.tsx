@@ -1,4 +1,7 @@
-import { lessonControlStateType, lessonControlState } from '../state/LessonControlState';
+import {
+  lessonControlStateTypeOLD,
+  lessonControlStateOLD,
+} from '../state/LessonControlStateOLD';
 
 type lessonControlActions =
   | {
@@ -7,7 +10,7 @@ type lessonControlActions =
     }
   | {
       type: 'UPDATE_LESSON_DATA';
-      payload: { [key: string]: any };
+      payload: {[key: string]: any};
     }
   | {
       type: 'UPDATE_STUDENT_ROSTER';
@@ -39,7 +42,10 @@ type lessonControlActions =
       type: 'CLEANUP';
     };
 
-export const lessonControlReducer = (state: lessonControlStateType, action: lessonControlActions) => {
+export const lessonControlReducerOLD = (
+  state: lessonControlStateTypeOLD,
+  action: lessonControlActions
+) => {
   switch (action.type) {
     case 'INITIAL_LESSON_SETUP':
       return {
@@ -115,7 +121,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
            * */
 
           if (page.type === 'breakdown' && pageBefore.disabled) {
-            return { ...page, disabled: false };
+            return {...page, disabled: false};
           }
 
           if (
@@ -123,20 +129,20 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
             action.payload.stage.includes('breakdown') &&
             !pageBefore.disabled
           ) {
-            return { ...page, disabled: !page.disabled };
+            return {...page, disabled: !page.disabled};
           }
 
           if (page.stage.includes(action.payload.stage)) {
             if (page.type === 'breakdown' && !pageBefore.disabled) {
-              return { ...page, disabled: true };
+              return {...page, disabled: true};
             }
 
             if (page.type !== 'breakdown' && page.stage === action.payload.stage) {
-              return { ...page, disabled: !page.disabled };
+              return {...page, disabled: !page.disabled};
             }
 
             if (page.type === 'breakdown' && page.stage === action.payload.stage) {
-              return { ...page, disabled: !page.disabled };
+              return {...page, disabled: !page.disabled};
             }
           } else {
             return page;
@@ -169,7 +175,8 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         return student.personAuthID === action.payload.studentAuthID;
       });
 
-      let viewing = state.studentViewing.studentInfo?.personAuthID === action.payload.studentAuthID;
+      let viewing =
+        state.studentViewing.studentInfo?.personAuthID === action.payload.studentAuthID;
 
       const updatedRoster = state.roster.map((student: any) => {
         if (student.personAuthID === action.payload.studentAuthID) {
@@ -190,7 +197,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         roster: updatedRoster,
         studentViewing: {
           ...state.studentViewing,
-          studentInfo: { ...state.studentViewing.studentInfo, ...action.payload },
+          studentInfo: {...state.studentViewing.studentInfo, ...action.payload},
         },
       };
 
@@ -286,7 +293,7 @@ export const lessonControlReducer = (state: lessonControlStateType, action: less
         endDate: action.payload,
       };
     case 'CLEANUP':
-      return lessonControlState;
+      return lessonControlStateOLD;
     default:
       return state;
   }
