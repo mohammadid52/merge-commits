@@ -743,6 +743,42 @@ export const createStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -788,6 +824,42 @@ export const updateStaff = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -828,6 +900,42 @@ export const deleteStaff = /* GraphQL */ `
         lastLoggedOut
         onDemand
         classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
           nextToken
         }
         createdAt
@@ -10731,8 +10839,6 @@ export const createUniversalLesson = /* GraphQL */ `
     createUniversalLesson(input: $input, condition: $condition) {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -10769,6 +10875,8 @@ export const createUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -10787,6 +10895,8 @@ export const createUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
       createdAt
@@ -10802,8 +10912,6 @@ export const updateUniversalLesson = /* GraphQL */ `
     updateUniversalLesson(input: $input, condition: $condition) {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -10840,6 +10948,8 @@ export const updateUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -10858,6 +10968,8 @@ export const updateUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
       createdAt
@@ -10873,8 +10985,6 @@ export const deleteUniversalLesson = /* GraphQL */ `
     deleteUniversalLesson(input: $input, condition: $condition) {
       id
       type
-      activityType
-      interactionType
       tags
       label
       title
@@ -10911,6 +11021,8 @@ export const deleteUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       homework {
         id
@@ -10929,8 +11041,91 @@ export const deleteUniversalLesson = /* GraphQL */ `
           partType
           class
         }
+        activityType
+        interactionType
       }
       darkMode
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createUniversalLessonStudentData = /* GraphQL */ `
+  mutation CreateUniversalLessonStudentData(
+    $input: CreateUniversalLessonStudentDataInput!
+    $condition: ModelUniversalLessonStudentDataConditionInput
+  ) {
+    createUniversalLessonStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateUniversalLessonStudentData = /* GraphQL */ `
+  mutation UpdateUniversalLessonStudentData(
+    $input: UpdateUniversalLessonStudentDataInput!
+    $condition: ModelUniversalLessonStudentDataConditionInput
+  ) {
+    updateUniversalLessonStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUniversalLessonStudentData = /* GraphQL */ `
+  mutation DeleteUniversalLessonStudentData(
+    $input: DeleteUniversalLessonStudentDataInput!
+    $condition: ModelUniversalLessonStudentDataConditionInput
+  ) {
+    deleteUniversalLessonStudentData(input: $input, condition: $condition) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        pagePartID
+        pagePartInput {
+          domID
+          input
+        }
+      }
       createdAt
       updatedAt
     }

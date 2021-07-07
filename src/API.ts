@@ -96,6 +96,7 @@ export type Staff = {
   status?: string | null,
   statusChangeDate?: string | null,
   staffMember?: Person,
+  institution?: Institution,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -3226,8 +3227,6 @@ export type DeletePlannerInput = {
 export type CreateUniversalLessonInput = {
   id?: string | null,
   type: string,
-  activityType: string,
-  interactionType: string,
   tags?: Array< string | null > | null,
   label?: string | null,
   title: string,
@@ -3264,6 +3263,8 @@ export type UniversalLessonPlanInput = {
   open?: boolean | null,
   estTime?: string | null,
   pageContent?: Array< UniversalpageContentInput | null > | null,
+  activityType?: string | null,
+  interactionType?: string | null,
 };
 
 export type UniversalpageContentInput = {
@@ -3301,8 +3302,6 @@ export type UniversalContentOptionsInput = {
 
 export type ModelUniversalLessonConditionInput = {
   type?: ModelStringInput | null,
-  activityType?: ModelStringInput | null,
-  interactionType?: ModelStringInput | null,
   tags?: ModelStringInput | null,
   label?: ModelStringInput | null,
   title?: ModelStringInput | null,
@@ -3332,8 +3331,6 @@ export type UniversalLesson = {
   __typename: "UniversalLesson",
   id?: string,
   type?: string,
-  activityType?: string,
-  interactionType?: string,
   tags?: Array< string | null > | null,
   label?: string | null,
   title?: string,
@@ -3373,6 +3370,8 @@ export type UniversalLessonPlan = {
   open?: boolean | null,
   estTime?: string | null,
   pageContent?:  Array<UniversalpageContent | null > | null,
+  activityType?: string | null,
+  interactionType?: string | null,
 };
 
 export type UniversalpageContent = {
@@ -3415,8 +3414,6 @@ export type UniversalContentOptions = {
 export type UpdateUniversalLessonInput = {
   id: string,
   type?: string | null,
-  activityType?: string | null,
-  interactionType?: string | null,
   tags?: Array< string | null > | null,
   label?: string | null,
   title?: string | null,
@@ -3442,6 +3439,101 @@ export type UpdateUniversalLessonInput = {
 };
 
 export type DeleteUniversalLessonInput = {
+  id: string,
+};
+
+export type CreateUniversalLessonStudentDataInput = {
+  id?: string | null,
+  syllabusLessonID: string,
+  lessonID: string,
+  lessonPageID: string,
+  studentID: string,
+  studentAuthID: string,
+  studentEmail: string,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  pageData?: Array< StudentPageInputInput | null > | null,
+};
+
+export type StudentPageInputInput = {
+  pagePartID?: string | null,
+  pagePartInput?: Array< PartInputInput | null > | null,
+};
+
+export type PartInputInput = {
+  domID?: string | null,
+  input?: Array< string | null > | null,
+  comments?: Array< InputCommentInput | null > | null,
+};
+
+export type InputCommentInput = {
+  commentBy?: string | null,
+  comment?: string | null,
+};
+
+export type ModelUniversalLessonStudentDataConditionInput = {
+  syllabusLessonID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  lessonPageID?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  currentLocation?: ModelStringInput | null,
+  lessonProgress?: ModelStringInput | null,
+  and?: Array< ModelUniversalLessonStudentDataConditionInput | null > | null,
+  or?: Array< ModelUniversalLessonStudentDataConditionInput | null > | null,
+  not?: ModelUniversalLessonStudentDataConditionInput | null,
+};
+
+export type UniversalLessonStudentData = {
+  __typename: "UniversalLessonStudentData",
+  id?: string,
+  syllabusLessonID?: string,
+  lessonID?: string,
+  lessonPageID?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  pageData?:  Array<StudentPageInput | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type StudentPageInput = {
+  __typename: "StudentPageInput",
+  pagePartID?: string | null,
+  pagePartInput?:  Array<partInput | null > | null,
+};
+
+export type partInput = {
+  __typename: "partInput",
+  domID?: string | null,
+  input?: Array< string | null > | null,
+  comments?:  Array<InputComment | null > | null,
+};
+
+export type InputComment = {
+  __typename: "InputComment",
+  commentBy?: string | null,
+  comment?: string | null,
+};
+
+export type UpdateUniversalLessonStudentDataInput = {
+  id: string,
+  syllabusLessonID?: string | null,
+  lessonID?: string | null,
+  lessonPageID?: string | null,
+  studentID?: string | null,
+  studentAuthID?: string | null,
+  studentEmail?: string | null,
+  currentLocation?: string | null,
+  lessonProgress?: string | null,
+  pageData?: Array< StudentPageInputInput | null > | null,
+};
+
+export type DeleteUniversalLessonStudentDataInput = {
   id: string,
 };
 
@@ -4164,8 +4256,6 @@ export type ModelPlannerConnection = {
 export type ModelUniversalLessonFilterInput = {
   id?: ModelIDInput | null,
   type?: ModelStringInput | null,
-  activityType?: ModelStringInput | null,
-  interactionType?: ModelStringInput | null,
   tags?: ModelStringInput | null,
   label?: ModelStringInput | null,
   title?: ModelStringInput | null,
@@ -4194,6 +4284,27 @@ export type ModelUniversalLessonFilterInput = {
 export type ModelUniversalLessonConnection = {
   __typename: "ModelUniversalLessonConnection",
   items?:  Array<UniversalLesson | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelUniversalLessonStudentDataFilterInput = {
+  id?: ModelIDInput | null,
+  syllabusLessonID?: ModelIDInput | null,
+  lessonID?: ModelIDInput | null,
+  lessonPageID?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  currentLocation?: ModelStringInput | null,
+  lessonProgress?: ModelStringInput | null,
+  and?: Array< ModelUniversalLessonStudentDataFilterInput | null > | null,
+  or?: Array< ModelUniversalLessonStudentDataFilterInput | null > | null,
+  not?: ModelUniversalLessonStudentDataFilterInput | null,
+};
+
+export type ModelUniversalLessonStudentDataConnection = {
+  __typename: "ModelUniversalLessonStudentDataConnection",
+  items?:  Array<UniversalLessonStudentData | null > | null,
   nextToken?: string | null,
 };
 
@@ -5033,6 +5144,49 @@ export type CreateStaffMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5082,6 +5236,49 @@ export type UpdateStaffMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -5126,6 +5323,49 @@ export type DeleteStaffMutation = {
       onDemand?: boolean | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -16201,8 +16441,6 @@ export type CreateUniversalLessonMutation = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -16241,6 +16479,8 @@ export type CreateUniversalLessonMutation = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -16261,6 +16501,8 @@ export type CreateUniversalLessonMutation = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     createdAt: string,
@@ -16278,8 +16520,6 @@ export type UpdateUniversalLessonMutation = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -16318,6 +16558,8 @@ export type UpdateUniversalLessonMutation = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -16338,6 +16580,8 @@ export type UpdateUniversalLessonMutation = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     createdAt: string,
@@ -16355,8 +16599,6 @@ export type DeleteUniversalLessonMutation = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -16395,6 +16637,8 @@ export type DeleteUniversalLessonMutation = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -16415,8 +16659,103 @@ export type DeleteUniversalLessonMutation = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateUniversalLessonStudentDataMutationVariables = {
+  input?: CreateUniversalLessonStudentDataInput,
+  condition?: ModelUniversalLessonStudentDataConditionInput | null,
+};
+
+export type CreateUniversalLessonStudentDataMutation = {
+  createUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUniversalLessonStudentDataMutationVariables = {
+  input?: UpdateUniversalLessonStudentDataInput,
+  condition?: ModelUniversalLessonStudentDataConditionInput | null,
+};
+
+export type UpdateUniversalLessonStudentDataMutation = {
+  updateUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUniversalLessonStudentDataMutationVariables = {
+  input?: DeleteUniversalLessonStudentDataInput,
+  condition?: ModelUniversalLessonStudentDataConditionInput | null,
+};
+
+export type DeleteUniversalLessonStudentDataMutation = {
+  deleteUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -16744,6 +17083,49 @@ export type GetStaffQuery = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -16789,6 +17171,25 @@ export type ListStaffsQuery = {
         lastLoggedIn?: string | null,
         lastLoggedOut?: string | null,
         onDemand?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      institution?:  {
+        __typename: "Institution",
+        id: string,
+        name: string,
+        type: string,
+        district?: string | null,
+        address: string,
+        addressLine2?: string | null,
+        city: string,
+        state?: string | null,
+        zip: string,
+        phone?: string | null,
+        website?: string | null,
+        image?: string | null,
+        isServiceProvider?: boolean | null,
+        filters?: Array< string | null > | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -21570,8 +21971,6 @@ export type GetUniversalLessonQuery = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -21610,6 +22009,8 @@ export type GetUniversalLessonQuery = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -21630,6 +22031,8 @@ export type GetUniversalLessonQuery = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     createdAt: string,
@@ -21652,8 +22055,6 @@ export type ListUniversalLessonsQuery = {
       __typename: "UniversalLesson",
       id: string,
       type: string,
-      activityType: string,
-      interactionType: string,
       tags?: Array< string | null > | null,
       label?: string | null,
       title: string,
@@ -21685,6 +22086,8 @@ export type ListUniversalLessonsQuery = {
         displayMode?: string | null,
         open?: boolean | null,
         estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: string | null,
       } | null > | null,
       homework?:  Array< {
         __typename: "UniversalLessonPlan",
@@ -21698,8 +22101,73 @@ export type ListUniversalLessonsQuery = {
         displayMode?: string | null,
         open?: boolean | null,
         estTime?: string | null,
+        activityType?: string | null,
+        interactionType?: string | null,
       } | null > | null,
       darkMode?: boolean | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUniversalLessonStudentDataQueryVariables = {
+  id?: string,
+};
+
+export type GetUniversalLessonStudentDataQuery = {
+  getUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUniversalLessonStudentDatasQueryVariables = {
+  id?: string | null,
+  filter?: ModelUniversalLessonStudentDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUniversalLessonStudentDatasQuery = {
+  listUniversalLessonStudentDatas?:  {
+    __typename: "ModelUniversalLessonStudentDataConnection",
+    items?:  Array< {
+      __typename: "UniversalLessonStudentData",
+      id: string,
+      syllabusLessonID: string,
+      lessonID: string,
+      lessonPageID: string,
+      studentID: string,
+      studentAuthID: string,
+      studentEmail: string,
+      currentLocation?: string | null,
+      lessonProgress?: string | null,
+      pageData?:  Array< {
+        __typename: "StudentPageInput",
+        pagePartID?: string | null,
+      } | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -23324,6 +23792,49 @@ export type OnCreateStaffSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23368,6 +23879,49 @@ export type OnUpdateStaffSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23407,6 +23961,49 @@ export type OnDeleteStaffSubscription = {
       onDemand?: boolean | null,
       classes?:  {
         __typename: "ModelClassStudentConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    institution?:  {
+      __typename: "Institution",
+      id: string,
+      name: string,
+      type: string,
+      district?: string | null,
+      address: string,
+      addressLine2?: string | null,
+      city: string,
+      state?: string | null,
+      zip: string,
+      phone?: string | null,
+      website?: string | null,
+      image?: string | null,
+      isServiceProvider?: boolean | null,
+      serviceProviders?:  {
+        __typename: "ModelServiceProviderConnection",
+        nextToken?: string | null,
+      } | null,
+      staff?:  {
+        __typename: "ModelStaffConnection",
+        nextToken?: string | null,
+      } | null,
+      rooms?:  {
+        __typename: "ModelRoomConnection",
+        nextToken?: string | null,
+      } | null,
+      curricula?:  {
+        __typename: "ModelCurriculumConnection",
+        nextToken?: string | null,
+      } | null,
+      classes?:  {
+        __typename: "ModelClassConnection",
+        nextToken?: string | null,
+      } | null,
+      filters?: Array< string | null > | null,
+      checkpoints?:  {
+        __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -33199,8 +33796,6 @@ export type OnCreateUniversalLessonSubscription = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -33239,6 +33834,8 @@ export type OnCreateUniversalLessonSubscription = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -33259,6 +33856,8 @@ export type OnCreateUniversalLessonSubscription = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     createdAt: string,
@@ -33271,8 +33870,6 @@ export type OnUpdateUniversalLessonSubscription = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -33311,6 +33908,8 @@ export type OnUpdateUniversalLessonSubscription = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -33331,6 +33930,8 @@ export type OnUpdateUniversalLessonSubscription = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
     createdAt: string,
@@ -33343,8 +33944,6 @@ export type OnDeleteUniversalLessonSubscription = {
     __typename: "UniversalLesson",
     id: string,
     type: string,
-    activityType: string,
-    interactionType: string,
     tags?: Array< string | null > | null,
     label?: string | null,
     title: string,
@@ -33383,6 +33982,8 @@ export type OnDeleteUniversalLessonSubscription = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     homework?:  Array< {
       __typename: "UniversalLessonPlan",
@@ -33403,8 +34004,88 @@ export type OnDeleteUniversalLessonSubscription = {
         partType?: string | null,
         class?: string | null,
       } | null > | null,
+      activityType?: string | null,
+      interactionType?: string | null,
     } | null > | null,
     darkMode?: boolean | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUniversalLessonStudentDataSubscription = {
+  onCreateUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUniversalLessonStudentDataSubscription = {
+  onUpdateUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUniversalLessonStudentDataSubscription = {
+  onDeleteUniversalLessonStudentData?:  {
+    __typename: "UniversalLessonStudentData",
+    id: string,
+    syllabusLessonID: string,
+    lessonID: string,
+    lessonPageID: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    currentLocation?: string | null,
+    lessonProgress?: string | null,
+    pageData?:  Array< {
+      __typename: "StudentPageInput",
+      pagePartID?: string | null,
+      pagePartInput?:  Array< {
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
+      } | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
