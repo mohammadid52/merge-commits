@@ -3125,7 +3125,7 @@ export const getStudentResponse = /* GraphQL */ `
   }
 `;
 
-export const getInstList = /* GraphQL */ `
+export const getInstListForAdmin = /* GraphQL */ `
   query ListInstitutions(
     $id: ID
     $filter: ModelInstitutionFilterInput
@@ -3149,12 +3149,40 @@ export const getInstList = /* GraphQL */ `
         image
         createdAt
         updatedAt
-        staff {
-          items {
-            staffAuthID
-            staffEmail
-          }
+      }
+      nextToken
+    }
+  }
+`;
+export const getInstListForNonAdmin = /* GraphQL */ `
+  query ListStaffs(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
         }
+        createdAt
+        updatedAt
       }
       nextToken
     }
