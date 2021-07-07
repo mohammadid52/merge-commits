@@ -15,12 +15,13 @@ import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import Loader from '../../../Atoms/Loader';
-import StepComponent, { IStepElementInterface } from '../../../Atoms/StepComponent';
+import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
 import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
+import LessonActivities from './StepActionComponent/LessonActivities';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import {
   InstructionInitialState,
@@ -31,6 +32,8 @@ import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {useQuery} from '../../../../customHooks/urlParam';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import { getImageFromS3Static } from '../../../../utilities/services';
 
 export interface InitialData {
   name: string;
@@ -40,6 +43,8 @@ export interface InitialData {
   purposeHtml: string;
   objective: string;
   objectiveHtml: string;
+  notes?: string;
+  notesHtml?: string;
   languages: {id: string; name: string; value: string}[];
   institution?: InputValueObject;
   language: string[];
@@ -62,7 +67,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
+  const step = params.get('step');
   const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -86,6 +93,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
+    notes: '',
+    notesHtml: '<p></p>',
     languages: [{id: '1', name: 'English', value: 'EN'}],
     institution: {id: '', name: '', value: ''},
     language: [''],
@@ -190,6 +199,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
@@ -198,12 +208,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           ...formData,
           ...savedData,
           imageCaption: savedData.cardCaption,
-          imageUrl: savedData.cardUrl,
+          imageUrl: savedData.cardImage ? getImageFromS3Static(savedData.cardImage) : '',
           name: savedData.title,
           type:
             savedData.type &&
             lessonTypeList.find((item: any) => item.value === savedData.type),
           purposeHtml: savedData?.purpose ? savedData.purpose : '',
+          notesHtml: savedData?.notes ? savedData.notes : '',
           objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
           languages: savedData.language.map((it: any) =>
             languageList.find((it2: any) => it2.value === it)
@@ -402,6 +413,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const handleTabSwitch = (step: string) => {
+    history.push(`${match.url}?lessonId=${lessonId}&step=${step}`);
+  };
+
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
       case 'overview':
@@ -422,15 +437,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             setUnsavedChanges={setUnsavedChanges}
           />
         );
-      case 'Instructions':
+      case 'activities':
         return (
-          <AssessmentInstuctions
+          <LessonActivities
+            loading={loading}
             lessonId={lessonId}
-            setUnsavedChanges={setUnsavedChanges}
-            savedInstructions={savedLessonDetails?.lessonInstructions}
-            updateParentState={(obj) => onInstructionSaved(obj)}
-            lessonType={formData.type?.value}
-            lessonName={formData.name}
+            universalLessonDetails={universalLessonDetails}
           />
         );
       case 'Builder':
@@ -538,13 +550,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
-    const redirectionUrl = `${match.url.replace('add', `view?lessonId=${lessonId}`)}`;
+    const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=activities`;
     history.push(redirectionUrl);
-    if (formData.type?.id === '1') {
-      setActiveStep('Preview Details');
-    } else {
-      setActiveStep('Instructions');
-    }
+    // if (formData.type?.id === '1') {
+    //   setActiveStep('Preview Details');
+    // } else {
+    //   setActiveStep('Instructions');
+    // }
   };
 
   const onInstructionSaved = (obj: InstructionInitialState) => {
@@ -567,6 +579,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [formData.type?.id]);
 
+  useEffect(() => {
+    if (step) {
+      setActiveStep(step);
+    }
+  }, [step]);
+
   // useEffect(() => {
   //   fetchMeasurementList();
   // }, []);
@@ -582,7 +600,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       title: 'Activities',
       step: 'activities',
       icon: <FaQuestionCircle />,
-      disabled: true,
+      disabled: !Boolean(lessonId),
       isComplete: false,
     },
     {
@@ -628,10 +646,25 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       <PageWrapper>
         <div className="w-full m-auto">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
-          <StepComponent steps={steps} activeStep={activeStep} />
+          <StepComponent
+            steps={steps}
+            activeStep={activeStep}
+            handleTabSwitch={handleTabSwitch}
+          />
 
           <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
-            <div className="">{currentStepComp(activeStep)}</div>
+            {loading ? (
+              <div className="h-100 flex justify-center items-center">
+                <div className="w-5/10">
+                  <Loader />
+                  <p className="mt-2 text-center">
+                    Fetching lesson details please wait...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="">{currentStepComp(activeStep)}</div>
+            )}
             {/* <div className="sm:col-span-1"> */}
             {/* <WizardScroller
                 stepsList={lessonBuilderSteps}

@@ -24,10 +24,10 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
             ({description, disabled, isComplete, title, step}: any, index: number) => (
               <li
                 className={`relative overflow-hidden lg:flex-1 ${
-                  disabled ? 'bg-gray-300' : ''
+                  disabled ? 'bg-gray-300 cursor-not-allowed' : 'cursor-pointer'
                 }`}
                 key={index}
-                onClick={() => handleTabSwitch(step)}>
+                onClick={() => (!disabled ? handleTabSwitch(step) : null)}>
                 <div
                   className={`border border-gray-200 overflow-hidden ${
                     step === activeStep ? '' : 'border-b-0'

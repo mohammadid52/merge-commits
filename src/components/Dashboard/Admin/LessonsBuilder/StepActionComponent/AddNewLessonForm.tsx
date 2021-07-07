@@ -179,7 +179,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     toggleCropper();
     setImageData(image);
     const imageUrl = URL.createObjectURL(image);
-
+    setFormData({
+      ...formData,
+      imageUrl,
+    });
     setImagePreviewUrl(imageUrl);
     toggleCropper();
   };
@@ -195,7 +198,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     // Upload file to s3 bucket
 
     return new Promise((resolve, reject) => {
-      Storage.put(`ULB/lesson_image_${fileName}`, file, {
+      Storage.put(`${fileName}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
       })
@@ -263,7 +266,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const isValid = validateForm();
     if (isValid) {
       setCreatingLessons(true);
-      let fileName = '';
+      let fileName = formData.imageUrl;
       if (imageData) {
         fileName = `ULB/lesson_image_${Date.now()}`;
         await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
@@ -281,11 +284,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardCaption: formData.imageCaption,
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],
+            notes: formData.notesHtml,
             language: formData.languages.map((item) => item.value),
             institutionID: formData.institution?.id,
             // adding defaults to prevent errors
-            duration: 1,
-            notes: '',
+            duration: Number(formData.duration),
             resources: '',
             label: '',
           };
@@ -293,7 +296,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           const result: any = await API.graphql(
             graphqlOperation(mutations.createUniversalLesson, {input})
           );
-
           const newLesson = result.data.createUniversalLesson;
           postLessonCreation(newLesson?.id);
         } catch (error) {
@@ -315,7 +317,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             language: formData.languages.map((item) => item.value),
             designers: selectedDesigners.map((item) => item.id),
             summary: formData.studentSummary,
-            cardImage: formData.imageUrl,
+            cardImage: fileName,
             cardCaption: formData.imageCaption,
           };
           const results: any = await API.graphql(
@@ -376,10 +378,14 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     languages,
     purposeHtml,
     objectiveHtml,
+    notesHtml,
     institution,
     imageCaption,
+    imageUrl = '',
     studentSummary = '',
   } = formData;
+  console.log(formData, 'formData');
+  
 
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
@@ -519,30 +525,32 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                     )}
                   </div>
                 </div>
-                <div className="px-3 py-4">
-                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                    {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-                    <span className="text-red-500"> * </span>
-                  </label>
-                  <MultipleSelector
-                    // disabled={lessonId !== ''}
-                    selectedItems={languages}
-                    placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
-                    list={languageList}
-                    onChange={selectLanguage}
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
+                      <span className="text-red-500"> * </span>
+                    </label>
+                    <MultipleSelector
+                      // disabled={lessonId !== ''}
+                      selectedItems={languages}
+                      placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
+                      list={languageList}
+                      onChange={selectLanguage}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
             <div className="border-b-0 border-gray-200 mt-6">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2">
                 <div>
                   <div className="border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                       {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
                     </h3>
                   </div>
-                  <div className="p-4">
+                  <div className="py-4 pl-4">
                     <div className="px-3 py-4">
                       {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                       {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
@@ -567,7 +575,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                       {AddNewLessonFormDict[userLanguage]['MATERIALS']}
                     </h3>
                   </div>
-                  <div className="p-4">
+                  <div className="py-4 pr-4">
                     <div className="px-3 py-4">
                       {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                       {AddNewLessonFormDict[userLanguage]['PURPOSE']}
@@ -588,27 +596,19 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2">
               <div>
                 <div className="border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600 pt-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
                     {AddNewLessonFormDict[userLanguage]['REMINDERANDNOTES']}
                   </h3>
                 </div>
-                <div className="px-4">
+                <div className="pl-4">
                   <div className="px-3 py-4">
-                    {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                    {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
-                  </label> */}
                     <RichTextEditor
-                      initialValue={objectiveHtml}
+                      initialValue={notesHtml}
                       onChange={(htmlContent, plainText) =>
-                        setEditorContent(
-                          htmlContent,
-                          plainText,
-                          'objectiveHtml',
-                          'objective'
-                        )
+                        setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
                       }
                     />
                   </div>
@@ -620,13 +620,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                     Lesson card
                   </h3>
                 </div>
-                <div className="px-3 py-1">
+                <div className="px-3 py-2">
                   <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mb-4">
                     <label className="cursor-pointer flex justify-center">
-                      {imagePreviewUrl ? (
+                      {imageUrl ? (
                         <img
                           className={`profile w-50 h-60 md:w-50 md:h-60 border flex flex-shrink-0 border-gray-400`}
-                          src={imagePreviewUrl}
+                          src={imageUrl}
                         />
                       ) : (
                         <div
@@ -646,7 +646,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </button>
                 </div>
                 <div className="col-span-2">
-                  <div className="pr-2">
+                  <div className="pr-8 pt-1">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
                       {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
                       <span className="text-red-500"> * </span>
@@ -667,13 +667,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </div>
                   {/* </div> */}
                   {/* <div className="col-span-3"> */}
-                  <div className="pr-2">
+                  <div className="pr-8 pt-2">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                       {AddNewLessonFormDict[userLanguage]['SUMMARY']}
                       <span className="text-red-500"> *</span>
                     </label>
                     <TextArea
-                      rows={4}
+                      rows={5}
                       id="studentSummary"
                       value={studentSummary}
                       onChange={onInputChange}
