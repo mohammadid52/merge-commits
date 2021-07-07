@@ -558,11 +558,7 @@ export const getClassroomStudent = /* GraphQL */ `
 `;
 
 export const listPersons = /* GraphQL */ `
-  query ListPersons(
-    $filter: ModelPersonFilterInput
-    $limit: Int
-    $sortDirection: ModelSortDirection
-  ) {
+  query ListPersons($filter: ModelPersonFilterInput, $sortDirection: ModelSortDirection) {
     listPersons(filter: $filter, sortDirection: $sortDirection) {
       items {
         id
@@ -2217,7 +2213,7 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
-
+        onDemand
         classes {
           items {
             classID
@@ -2988,8 +2984,7 @@ export const getStudentResponse = /* GraphQL */ `
   }
 `;
 
-
-export const getInstList = /* GraphQL */ `
+export const getInstListForAdmin = /* GraphQL */ `
   query ListInstitutions(
     $id: ID
     $filter: ModelInstitutionFilterInput
@@ -3011,6 +3006,40 @@ export const getInstList = /* GraphQL */ `
         phone
         website
         image
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInstListForNonAdmin = /* GraphQL */ `
+  query ListStaffs(
+    $filter: ModelStaffFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

@@ -60,6 +60,7 @@ export interface UserInfo {
   phone: string;
   updatedAt: string;
   birthdate?: string;
+  onDemand?: boolean;
 }
 
 export interface AnthologyContentInterface {
@@ -128,6 +129,7 @@ const User = () => {
     phone: '',
     updatedAt: '',
     birthdate: null,
+    onDemand: false,
   });
 
   const [imageUrl, setImageUrl] = useState('');
