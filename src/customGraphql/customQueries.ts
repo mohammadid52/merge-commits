@@ -1657,6 +1657,44 @@ export const listUniversalLessons = /* GraphQL */ `
         cardCaption
         createdAt
         updatedAt
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          pageContent {
+            id
+            tags
+            partType
+            class
+            partContent {
+              id
+              type
+              class
+              value {
+                id
+                type
+                label
+                value
+                caption
+                width
+                height
+                options {
+                  id
+                  label
+                  text
+                }
+              }
+              isRequired
+            }
+          }
+        }
       }
       nextToken
     }
@@ -2316,7 +2354,7 @@ export const userById = /* GraphQL */ `
         filters
         lastLoggedIn
         lastLoggedOut
-
+        onDemand
         classes {
           items {
             classID
@@ -3111,6 +3149,12 @@ export const getInstList = /* GraphQL */ `
         image
         createdAt
         updatedAt
+        staff {
+          items {
+            staffAuthID
+            staffEmail
+          }
+        }
       }
       nextToken
     }

@@ -15,6 +15,7 @@ export interface UniversalLesson {
   unit?: string; //get this information from LESSON PLAN BUILDER
   categories?: string[];
   additionalFiles?: string[];
+  institutionID?: string;
   lessonPlan: UniversalLessonPage[];
 }
 
@@ -88,15 +89,15 @@ export interface UniversalLessonStudentData {
   studentID: string;
   currentLocation: string;
   lessonProgress: string;
-  pageData: PagePartInput[];
+  pageData: StudentPageInput[];
 }
-
-// export interface StudentDataPageData {
-//   pagePartID: string;
-//   pagePartInput: PagePartInput[];
-// }
-
-export interface PagePartInput {
+export interface StudentPageInput {
   domID: string;
   input: string[];
+  comments?: TeacherStudentComments[];
+}
+
+export interface TeacherStudentComments {
+  commentBy: string;
+  comment: string;
 }

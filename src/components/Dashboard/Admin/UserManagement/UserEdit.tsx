@@ -54,6 +54,7 @@ const UserEdit = (props: UserInfoProps) => {
     stdCheckpoints,
     questionData,
   } = props;
+  const [superEdit, setSuperEdit] = useState<boolean>(false);
   const [editUser, setEditUser] = useState(user);
   const {theme, state, userLanguage, clientKey} = useContext(GlobalContext);
   const {UserEditDict, BreadcrumsTitles} = useDictionary(clientKey);
@@ -64,6 +65,23 @@ const UserEdit = (props: UserInfoProps) => {
   );
 
   const themeColor = getAsset(clientKey, 'themeClassName');
+
+  useEffect(() => {
+    const superEditSwitch = (role: string) => {
+      switch (role) {
+        case 'FLW':
+        case 'TR':
+        case 'ADM':
+          setSuperEdit(true);
+          break;
+        default:
+          setSuperEdit(false);
+      }
+    };
+    if (state.user.role) {
+      superEditSwitch(state.user.role);
+    }
+  }, [state.user.role]);
 
   useEffect(() => {
     setEditUser(user);
@@ -84,6 +102,7 @@ const UserEdit = (props: UserInfoProps) => {
       phone: editUser.phone,
       birthdate: editUser.birthdate,
       email: editUser.email,
+      onDemand: editUser.onDemand,
     };
 
     try {
@@ -356,6 +375,15 @@ const UserEdit = (props: UserInfoProps) => {
     });
   };
 
+  const handleChangeOnDemand = (item: {name: string; code: boolean}) => {
+    setEditUser(() => {
+      return {
+        ...editUser,
+        onDemand: item.code,
+      };
+    });
+  };
+
   const Status = [
     {
       code: 'ACTIVE',
@@ -399,6 +427,17 @@ const UserEdit = (props: UserInfoProps) => {
     {
       code: 'ST',
       name: 'Student',
+    },
+  ];
+
+  const OnDemand = [
+    {
+      code: false,
+      name: 'No',
+    },
+    {
+      code: true,
+      name: 'Yes',
     },
   ];
 
@@ -707,24 +746,6 @@ const UserEdit = (props: UserInfoProps) => {
                   </div>
                 </div>
 
-                {/* <div className="sm:col-span-3">
-                            <label htmlFor="photo" className="block text-m leading-5 font-medium text-gray-700">
-                                Photo
-                            </label>
-                            <div className="mt-2 flex items-center">
-                                <span className="h-8 w-8 rounded-full bg-gray-100">
-                                <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
-                                </span>
-                                <span className="ml-5 rounded-md shadow-sm">
-                                <button type="button" className="py-2 px-3  border-0 border-gray-300 rounded-md text-m leading-4 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:ring-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                                    Change
-                                </button>
-                                </span>
-                            </div>
-                        </div> */}
-
                 <div className="sm:col-span-3 p-2">
                   <label
                     htmlFor="preferredName"
@@ -766,21 +787,19 @@ const UserEdit = (props: UserInfoProps) => {
                   />
                 </div>
 
-                {/* <div className='sm:col-span-3 p-2'>
-                  <label
-                    htmlFor='phone'
-                    className='block text-m font-medium leading-5 text-gray-700'>
-                    Contact Number
-                  </label>
-                  <div className='mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm'>
-                    <input
-                      id='phone'
-                      onChange={onChange}
-                      className='form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5'
-                      defaultValue={user.phone}
+                {superEdit && (
+                  <div className="sm:col-span-3 p-2">
+                    <DropdownForm
+                      value=""
+                      style={false}
+                      handleChange={handleChangeOnDemand}
+                      userInfo={editUser?.onDemand ? 'Yes' : 'No'}
+                      label={UserEditDict[userLanguage]['ondemand']}
+                      id="ondemand"
+                      items={OnDemand}
                     />
                   </div>
-                </div> */}
+                )}
               </div>
             )}
             {tab !== 'p' && (

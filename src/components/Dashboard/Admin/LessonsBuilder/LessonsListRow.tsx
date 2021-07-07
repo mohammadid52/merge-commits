@@ -12,7 +12,6 @@ interface LessonsListRow {
   languages: string[];
   createdAt: Date;
   updatedAt: Date;
-  deleteLesson: (id: string) => void;
 }
 
 const LessonsListRow = (props: LessonsListRow) => {
@@ -30,7 +29,7 @@ const LessonsListRow = (props: LessonsListRow) => {
     }
   };
 
-  const {id, index, title, type, languages, deleteLesson, createdAt, updatedAt} = props;
+  const {id, index, title, type, languages, createdAt, updatedAt} = props;
   return (
     <div
       id={id}
@@ -78,15 +77,7 @@ const LessonsListRow = (props: LessonsListRow) => {
       <div
         className={`w-1/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap ${theme.textColor[themeColor]} text-sm leading-5 font-medium`}
         onClick={() => handleLessonsEdit(type)}>
-        <span className="w-auto mr-2">{BUTTONS[userLanguage]['EDIT']}</span>
-        {/* <span
-          onClick={(e) => {
-            e.stopPropagation();
-            deleteLesson(id);
-          }}
-          className="w-auto hover:text-red-500 text-red-400">
-          Delete
-        </span> */}
+        <span className="w-auto">{BUTTONS[userLanguage]['EDIT']}</span>
       </div>
     </div>
   );

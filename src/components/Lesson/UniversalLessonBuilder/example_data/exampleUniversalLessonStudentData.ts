@@ -22,37 +22,30 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
   lessonProgress: '2',
   pageData: [
     {
-      // @ts-ignore
-      pagePartID: 'page_2_part_1',
-      pagePartInput: [
-        {
-          domID: 'title',
-          input: ['My story title'],
-        },
-        {
-          domID: 'story',
-          input: ['My story content'],
-        },
-      ],
+      domID: 'title',
+      input: ['My story title'],
+      comments: [{teacherID: 'xxx', comment: 'abc'}],
     },
     {
-      // @ts-ignore
+      domID: 'story',
+      input: ['My story content'],
+      comments: [{teacherID: 'xxx', comment: 'abc'}],
+    },
 
-      pagePartID: 'page_2_part_2',
-      pagePartInput: [
-        {
-          domID: 'culture',
-          input: ['Dutch'],
-        },
-        {
-          domID: 'storyteller',
-          input: ['Grandmother'],
-        },
-        {
-          domID: 'lessons',
-          input: ['Perseverance'],
-        },
-      ],
+    {
+      domID: 'culture',
+      input: ['Dutch'],
+      comments: [{teacherID: 'xxx', comment: 'abc'}],
+    },
+    {
+      domID: 'storyteller',
+      input: ['Grandmother'],
+      comments: [{teacherID: 'xxx', comment: 'abc'}],
+    },
+    {
+      domID: 'lessons',
+      input: ['Perseverance'],
+      comments: [{teacherID: 'xxx', comment: 'abc'}],
     },
   ],
 };

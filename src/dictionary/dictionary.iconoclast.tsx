@@ -2182,7 +2182,7 @@ const RegistrationDict: any = {
       emailaddress: "User's email is not in the expected email address format",
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
-      institution: 'Institution cannot be blank'
+      institution: 'Institution cannot be blank',
     },
   },
   ES: {
@@ -2207,7 +2207,7 @@ const RegistrationDict: any = {
       emailaddress: 'TBD',
       userrol: 'TBD',
       loading: 'TBD',
-      institution: 'TBD'
+      institution: 'TBD',
     },
   },
 };
@@ -2229,11 +2229,11 @@ const UserEditDict: any = {
     nickname: 'Nickname',
     status: 'Status',
     role: 'Role',
-
     button: {
       save: 'Save',
       cancel: 'Cancel',
     },
+    ondemand: 'On-Demand',
   },
   ES: {
     heading: 'TBD',
@@ -2242,11 +2242,11 @@ const UserEditDict: any = {
     nickname: 'TBD',
     status: 'TBD',
     role: 'TBD',
-
     button: {
       save: 'TBD',
       cancel: 'TBD',
     },
+    ondemand: 'TBD',
   },
 };
 
@@ -2260,6 +2260,7 @@ const UserInformationDict: any = {
     status: 'Status',
     email: 'Email Address',
     account: 'Account Created',
+    ondemand: 'On-Demand',
   },
   ES: {
     heading: 'TBD',
@@ -2270,6 +2271,7 @@ const UserInformationDict: any = {
     status: 'TBD',
     email: 'TBD',
     account: 'TBD',
+    ondemand: 'TBD',
   },
 };
 

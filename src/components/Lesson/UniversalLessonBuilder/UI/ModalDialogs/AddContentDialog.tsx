@@ -273,7 +273,9 @@ const AddContentDialog = ({
             </div>
 
             <div className="w-auto">
-              <HiOutlineArrowRight className={`arrow-icon ${content.iconForeground}`} />
+              <HiOutlineArrowRight
+                className={`arrow-icon w-auto ${content.iconForeground}`}
+              />
             </div>
           </div>
         ))}

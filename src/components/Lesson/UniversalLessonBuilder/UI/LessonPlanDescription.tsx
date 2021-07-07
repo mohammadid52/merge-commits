@@ -47,7 +47,6 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
     setEditModal({
       show: true,
       content: {
-        id: activePageData.id,
         title: activePageData.title,
         description: activePageData.description,
         label: activePageData.label,

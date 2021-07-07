@@ -1,6 +1,6 @@
 import {lessonState} from '../state/LessonState';
 import {
-  PagePartInput,
+  StudentPageInput,
   UniversalLesson,
   UniversalLessonPage,
   UniversalLessonStudentData,
@@ -26,7 +26,7 @@ export type LessonActions =
     }
   | {
       type: 'UPDATE_STUDENT_DATA';
-      payload: {pageIdx: number; data: PagePartInput};
+      payload: {pageIdx: number; data: StudentPageInput};
     }
   | {
       type: 'SET_CURRENT_PAGE';
@@ -44,7 +44,6 @@ export type LessonActions =
       type: 'CLEANUP';
       payload: '';
     };
-
 
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
@@ -71,20 +70,24 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
       // update single object
-      const updatedTargetStudentData = state.studentData[pageIdx].map((pagePartInput: PagePartInput)=>{
-        return {
-          domID: pagePartInput.domID,
-          input: pagePartInput.domID === domID ? newInput : pagePartInput.input
+      const updatedTargetStudentData = state.studentData[pageIdx].map(
+        (studentPageInput: StudentPageInput) => {
+          return {
+            domID: studentPageInput.domID,
+            input: studentPageInput.domID === domID ? newInput : studentPageInput.input,
+          };
         }
-      });
+      );
       // merge updated object into original array
-      const mappedStudentData = state.studentData.map((pageData: PagePartInput[], idx: number)=>{
-        if(idx === pageIdx){
-          return updatedTargetStudentData;
-        } else {
-          return pageData;
+      const mappedStudentData = state.studentData.map(
+        (pageData: StudentPageInput[], idx: number) => {
+          if (idx === pageIdx) {
+            return updatedTargetStudentData;
+          } else {
+            return pageData;
+          }
         }
-      })
+      );
       return {...state, studentData: mappedStudentData};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
@@ -102,7 +105,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'INCREMENT_SAVE_COUNT':
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
-      console.log('cleanup...')
+      console.log('cleanup...');
       return lessonState;
     default:
       return state;
