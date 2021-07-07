@@ -20,7 +20,7 @@ export const lessonControlReducer = (
 ) => {
   switch (action.type) {
     case 'CLEANUP':
-      return lessonControlState;
+      return state;
     default:
       return state;
   }

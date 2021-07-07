@@ -106,7 +106,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
       console.log('cleanup...');
-      return lessonState;
+      return state;
     default:
       return state;
   }
