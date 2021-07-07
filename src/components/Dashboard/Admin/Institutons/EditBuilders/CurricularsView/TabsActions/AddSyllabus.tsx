@@ -133,8 +133,9 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const fetchPersonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
+        graphqlOperation(customQueries.fetchPersons, {
           filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
+          limit: 300
         })
       );
       const savedData = result.data.listPersons;
@@ -179,23 +180,25 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           languages: languagesCode,
           designers: designers,
         };
-        const newSyllabus: any = await API.graphql(graphqlOperation(mutations.createSyllabus, { input: input }));
-        const newItem = newSyllabus.data.createSyllabus;
-        if (!syllabusIds.length) {
-          let seqItem: any = await API.graphql(
-            graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: [newItem.id] } })
-          );
-          seqItem = seqItem.data.createCSequences;
-          console.log('seqItem', seqItem);
-        } else {
-          let seqItem: any = await API.graphql(
-            graphqlOperation(mutations.updateCSequences, {
-              input: { id: `s_${curricularId}`, sequence: [...syllabusIds, newItem.id] },
-            })
-          );
-          seqItem = seqItem.data.updateCSequences;
-          console.log('seqItem', seqItem);
-        }
+        console.log('syllabus', input)
+        const newSyllabus: any = await API.graphql(graphqlOperation(mutations.createUniversalSyllabus, { input }));
+        const newItem = newSyllabus.data.createUniversalSyllabus;
+        console.log('newItem', newItem)
+        // if (!syllabusIds.length) {
+        //   let seqItem: any = await API.graphql(
+        //     graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: [newItem.id] } })
+        //   );
+        //   seqItem = seqItem.data.createCSequences;
+        //   console.log('seqItem', seqItem);
+        // } else {
+        //   let seqItem: any = await API.graphql(
+        //     graphqlOperation(mutations.updateCSequences, {
+        //       input: { id: `s_${curricularId}`, sequence: [...syllabusIds, newItem.id] },
+        //     })
+        //   );
+        //   seqItem = seqItem.data.updateCSequences;
+        //   console.log('seqItem', seqItem);
+        // }
         setMessages({
           show: true,
           message: AddSyllabusDict[userLanguage]['messages']['unitsave'],

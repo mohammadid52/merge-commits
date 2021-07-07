@@ -31,14 +31,22 @@ const SyllabusList = (props: SyllabusListProps) => {
   const [syllabusList, setSyllabusList] = useState([]);
 
   const fetchSyllabusList = async () => {
-    let list: any = await API.graphql(
-      graphqlOperation(queries.listUniversalSyllabuss, {
-        filter: {
-          curriculumID: { eq: curricularId }
-        },
-      })
-    );
-    console.log('list', list)
+    try {
+      setLoading(true)
+      let list: any = await API.graphql(
+        graphqlOperation(queries.listUniversalSyllabuss, {
+          filter: {
+            curriculumID: { eq: curricularId }
+          },
+        })
+      );
+      list = list?.data?.listUniversalSyllabuss?.items;
+      console.log('list', list)
+      setSyllabusList(list);
+      setLoading(false);
+    } catch (err) {
+      console.log('ERROR: Fetch syllabus list', err);
+    }
   }
 
   const createNewSyllabus = async () => {
