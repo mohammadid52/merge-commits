@@ -29,11 +29,11 @@ import {
   LessonPlansProps,
 } from './LessonEdit';
 import useDictionary from '../../../../customHooks/dictionary';
-import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {useQuery} from '../../../../customHooks/urlParam';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
-import { getImageFromS3Static } from '../../../../utilities/services';
+import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import {getImageFromS3Static} from '../../../../utilities/services';
 
 export interface InitialData {
   name: string;
@@ -50,6 +50,7 @@ export interface InitialData {
   language: string[];
   imageCaption?: string;
   imageUrl?: string;
+  imagePreviewUrl?: string;
   studentSummary?: string;
 }
 export interface InputValueObject {
@@ -208,7 +209,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           ...formData,
           ...savedData,
           imageCaption: savedData.cardCaption,
-          imageUrl: savedData.cardImage ? getImageFromS3Static(savedData.cardImage) : '',
+          imageUrl: savedData.cardImage,
+          imagePreviewUrl: savedData.cardImage
+            ? getImageFromS3Static(savedData.cardImage)
+            : '',
           name: savedData.title,
           type:
             savedData.type &&
@@ -545,13 +549,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
-  const postLessonCreation = (lessonId: string) => {
+  const postLessonCreation = (lessonId: string, action?: string) => {
     const currentSteps = [...lessonBuilderSteps];
     const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
-    const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=activities`;
-    history.push(redirectionUrl);
+    if (action === 'add') {
+      const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=activities`;
+      history.push(redirectionUrl);
+    }
     // if (formData.type?.id === '1') {
     //   setActiveStep('Preview Details');
     // } else {
@@ -602,13 +608,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
       isComplete: false,
+      tooltipText: 'Add overview details in step 1 to continue',
     },
     {
       title: 'Courses',
       step: 'courses',
       icon: <FaQuestionCircle />,
-      disabled: true,
+      disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
       isComplete: false,
+      tooltipText: 'Create lesson activities in step 2 to continue',
     },
     {
       title: 'Learning Evidence',
@@ -616,6 +624,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       icon: <FaQuestionCircle />,
       disabled: true,
       isComplete: false,
+      tooltipText: 'Assign your lesson to courses in step 3 to continue',
     },
   ];
 

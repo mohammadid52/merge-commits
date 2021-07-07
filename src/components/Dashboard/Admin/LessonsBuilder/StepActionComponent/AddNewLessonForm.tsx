@@ -27,7 +27,7 @@ interface AddNewLessonFormProps {
   changeLessonType: (type: string) => void;
   setFormData: (data: InitialData) => void;
   setSelectedDesigners: (designer: InputValueObject[]) => void;
-  postLessonCreation: (lessonId: string) => void;
+  postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
   lessonMeasurements: any[];
   setLessonMeasurements: (obj: any[]) => void;
@@ -78,7 +78,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   });
   const [showCropper, setShowCropper] = useState(false);
   const [imageData, setImageData] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
+  // const [imagePreviewUrl, setImagePreviewUrl] = useState('');
   const [uploadImageUrl, setUploadImageUrl] = useState(null);
   const [fileObject, setFileObject] = useState<any>({});
   const onInputChange = (e: any) => {
@@ -181,9 +181,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     const imageUrl = URL.createObjectURL(image);
     setFormData({
       ...formData,
-      imageUrl,
+      imagePreviewUrl: imageUrl,
     });
-    setImagePreviewUrl(imageUrl);
+    // setImagePreviewUrl(imageUrl);
     toggleCropper();
   };
 
@@ -297,7 +297,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             graphqlOperation(mutations.createUniversalLesson, {input})
           );
           const newLesson = result.data.createUniversalLesson;
-          postLessonCreation(newLesson?.id);
+          postLessonCreation(newLesson?.id, 'add');
         } catch (error) {
           console.error(error.message);
         } finally {
@@ -324,13 +324,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             graphqlOperation(customMutations.updateUniversalLesson, {input: input})
           );
           const lessonsData = results?.data?.updateUniversalLesson;
-          postLessonCreation(lessonsData?.id);
-
-          setLoading(false);
+          setCreatingLessons(false);
           setUnsavedChanges(false);
-
           if (lessonsData) {
-            postLessonCreation(lessonsData?.id);
             setValidation({
               name: '',
               type: '',
@@ -341,10 +337,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               languages: '',
               studentSummary: '',
             });
+            postLessonCreation(lessonsData?.id,'update');
           }
         } catch (error) {
           console.error(error);
-
           setValidation({
             name: '',
             type: '',
@@ -381,12 +377,11 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     notesHtml,
     institution,
     imageCaption,
-    imageUrl = '',
+    imagePreviewUrl = '',
     studentSummary = '',
   } = formData;
   console.log(formData, 'formData');
   
-
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
       {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -623,10 +618,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 <div className="px-3 py-2">
                   <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mb-4">
                     <label className="cursor-pointer flex justify-center">
-                      {imageUrl ? (
+                      {imagePreviewUrl ? (
                         <img
                           className={`profile w-50 h-60 md:w-50 md:h-60 border flex flex-shrink-0 border-gray-400`}
-                          src={imageUrl}
+                          src={imagePreviewUrl}
                         />
                       ) : (
                         <div
