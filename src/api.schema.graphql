@@ -911,8 +911,6 @@ type Planner @model {
 type UniversalLesson @model @key(fields: ["id"]) {
   id: ID!
   type: String!
-  activityType: String!
-  interactionType: String!
   tags: [String]
   label: String
   title: String!
@@ -949,6 +947,8 @@ type UniversalLessonPlan {
   open: Boolean
   estTime: String
   pageContent: [UniversalpageContent]
+  activityType: String
+  interactionType: String
 }
 
 type UniversalpageContent {
@@ -1014,6 +1014,54 @@ type partInput {
 type InputComment {
   commentBy: ID
   comment: String
+}
+
+type UniversalSyllabus
+  @model
+  @key(fields: ["id"])
+  @key(name: "syllabusByCurriculum", fields: ["curriculumID"]) {
+  id: ID!
+  name: String!
+  type: String
+  description: String
+  methodology: String
+  policies: String
+  pupose: String
+  objectives: String
+  curriculumID: ID!
+  languages: [Language]
+  lessons: [UniversalSyllabusLesson] @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
+  designers: [String]
+  status: Boolean
+}
+
+# Need to add universalStudentData field
+type UniversalSyllabusLesson
+  @model
+  @key(name: "UniversalLessonsBySyllabus", fields: ["syllabusID", "lessonID"]) {
+  id: ID!
+  syllabusID: ID!
+  lessonID: ID!
+  unit: String
+  sequence: Int
+  status: String
+  complete: Boolean
+  roster: [String!]
+  viewing: String
+  lesson: Lesson @connection(fields: ["lessonID"])
+  displayData: DisplayData
+  lessonPlan: [ComponentSummary!]
+  startDate: AWSDate
+  endDate: AWSDate
+  feedback: [UniversalLessonFeedback] @connection(fields: ["id"])
+}
+
+type UniversalLessonFeedback @model {
+  id: ID!
+  syllabusLessonID: ID!
+  liked: String
+  comment: String
+  syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
 }
 
 type Subscription {
