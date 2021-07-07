@@ -2,6 +2,10 @@ import {lessonControlState, lessonControlStateType} from '../state/LessonControl
 
 type lessonControlActions =
   | {
+      type: 'SET_INITIAL_CONTROL_STATE';
+      payload: any;
+    }
+  | {
       type: 'UPDATE_LESSON_DATA';
       payload: any;
     }

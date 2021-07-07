@@ -68,7 +68,7 @@ const LessonControl = () => {
   //   ).subscribe({
   //     next: (studentData: any) => {
   //       let updatedData = studentData.value.data.onChangeStudentData;
-  //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // NEED TO MODIFY WHERE UPDATED STUDENT DATA GOES
+  //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
   //     },
   //   });
   //
