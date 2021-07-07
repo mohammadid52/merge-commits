@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useContext, Fragment} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {IoBusinessSharp} from 'react-icons/io5';
-import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { IconContext } from 'react-icons/lib/esm/iconContext';
+import { IoBusinessSharp } from 'react-icons/io5';
+import { AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 
-import {GlobalContext} from '../../../../contexts/GlobalContext';
+import { GlobalContext } from '../../../../contexts/GlobalContext';
 import * as customQueries from '../../../../customGraphql/customQueries';
 import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import InstitutionRow from './InstitutionRow';
@@ -16,7 +16,7 @@ import Pagination from '../../../Atoms/Pagination';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
-import {getAsset} from '../../../../assets';
+import { getAsset } from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
 
 /**
@@ -27,8 +27,8 @@ import useDictionary from '../../../../customHooks/dictionary';
 const InstitutionLookup: React.FC = () => {
   const match = useRouteMatch();
   const history = useHistory();
-  const {theme, clientKey, userLanguage, state} = useContext(GlobalContext);
-  const {InstitutionDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const { theme, clientKey, userLanguage, state } = useContext(GlobalContext);
+  const { InstitutionDict, BreadcrumsTitles } = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [status, setStatus] = useState('');
   const [institutionsData, setInstitutionsData] = useState([]);
@@ -51,7 +51,7 @@ const InstitutionLookup: React.FC = () => {
   });
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: `${match.url}`,
@@ -60,14 +60,14 @@ const InstitutionLookup: React.FC = () => {
   ];
 
   const sortByList = [
-    {id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name'},
-    {id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type'},
+    { id: 1, name: `${InstitutionDict[userLanguage]['TABLE']['NAME']}`, value: 'name' },
+    { id: 2, name: `${InstitutionDict[userLanguage]['TABLE']['TYPE']}`, value: 'type' },
     {
       id: 3,
       name: `${InstitutionDict[userLanguage]['TABLE']['WEBSITE']}`,
       value: 'website',
     },
-    {id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone'},
+    { id: 4, name: `${InstitutionDict[userLanguage]['TABLE']['CONTACT']}`, value: 'phone' },
   ];
 
   const goNextPage = () => {
@@ -114,56 +114,41 @@ const InstitutionLookup: React.FC = () => {
     history.push(`${match.url}/add`);
   };
 
-  // show institution where the teacher{current authId} is associated
-  const getFilteredInstitution = (
-    data: [{staff: {items: [{staffAuthID: string}]}}],
-    target: string
-  ) => {
-    console.log(data, target);
-    const list: any[] = [];
-    data?.forEach((institution) => {
-      institution?.staff?.items?.forEach((staff) => {
-        if (staff?.staffAuthID === target) {
-          list.push(institution);
-        }
-      });
-    });
-
-    return list;
-  };
-
   const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
+
+  async function fetchInstListForAdmin() {
+    const fetchInstitutionData: any = await API.graphql(
+      graphqlOperation(customQueries.getInstListForAdmin)
+    );
+    return fetchInstitutionData.data?.listInstitutions?.items || [];
+  }
+
+  async function fetchInstListForNonAdmin() {
+    const fetchInstitutionData: any = await API.graphql(
+      graphqlOperation(customQueries.getInstListForNonAdmin, {
+        filter: {
+          staffAuthID: { eq: state.user.authId },
+          staffEmail: { eq: state.user.email },
+          status: { eq: 'Active' },
+      }})
+    );
+    let userInstitutes: any = fetchInstitutionData.data?.listStaffs?.items;
+    return userInstitutes.filter((inst: any) => inst.institution).map((inst: any) => inst.institution)
+  }
 
   async function getInstitutionsData() {
     try {
-      const fetchInstitutionData: any = await API.graphql(
-        graphqlOperation(customQueries.getInstList)
-      );
-      if (!fetchInstitutionData) {
-        throw new Error('fail!');
+      let instituteList: any;
+      if (isTeacher) {
+        instituteList = await fetchInstListForNonAdmin()
       } else {
-        const instituteList = fetchInstitutionData.data?.listInstitutions?.items;
-        const filteredInstitution =
-          isTeacher && getFilteredInstitution(instituteList, state.user.authId);
-        const totalListPages = Math.floor(
-          (isTeacher ? filteredInstitution.length : instituteList.length) / userCount
-        );
-
-        setTotalPages(
-          isTeacher
-            ? totalListPages * userCount === filteredInstitution.length
-              ? totalListPages
-              : totalListPages + 1
-            : totalListPages * userCount === instituteList.length
-            ? totalListPages
-            : totalListPages + 1
-        );
-
-        setTotalInstNum(isTeacher ? filteredInstitution.length : instituteList.length);
-        setInstitutionsData(isTeacher ? filteredInstitution : instituteList);
-
-        setStatus('done');
+        instituteList = await fetchInstListForAdmin()
       }
+      const totalListPages = Math.floor(instituteList.length / userCount);
+      setTotalPages(totalListPages * userCount === instituteList.length ? totalListPages : totalListPages + 1)
+      setTotalInstNum(instituteList.length);
+      setInstitutionsData(instituteList);
+      setStatus('done');
     } catch (error) {
       console.error(error);
     }
@@ -202,13 +187,13 @@ const InstitutionLookup: React.FC = () => {
 
   const removeSearchAction = () => {
     backToInitials();
-    setSearchInput({value: '', isActive: false});
+    setSearchInput({ value: '', isActive: false });
   };
 
   const fetchSortedList = () => {
     const newInstList = [...institutionsData].sort((a, b) =>
       a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
-      sortingType.asc
+        sortingType.asc
         ? 1
         : -1
     );
@@ -295,7 +280,7 @@ const InstitutionLookup: React.FC = () => {
               className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
               onClick={toggleSortDimention}>
               <IconContext.Provider
-                value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>

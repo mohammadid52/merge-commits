@@ -49,6 +49,7 @@ type Person
   filters: [String]
   lastLoggedIn: AWSDateTime
   lastLoggedOut: AWSDateTime
+  onDemand: Boolean
   classes: [ClassStudent] @connection(keyName: "classByStudent", fields: ["email"])
 }
 
@@ -96,6 +97,7 @@ type Staff
   status: String
   statusChangeDate: AWSDate
   staffMember: Person @connection(fields: ["staffEmail", "staffAuthID"])
+  institution: Institution @connection(fields: ["institutionID"])
 }
 
 type Room
@@ -904,9 +906,12 @@ type Planner @model {
   duration: Int
 }
 
+# Universal lesson tables ----------------------------------------------
+
 type UniversalLesson @model @key(fields: ["id"]) {
   id: ID!
   type: String!
+  tags: [String]
   label: String
   title: String!
   institutionID: ID!
@@ -926,6 +931,8 @@ type UniversalLesson @model @key(fields: ["id"]) {
   cardImage: String
   cardCaption: String
   lessonPlan: [UniversalLessonPlan]
+  homework: [UniversalLessonPlan]
+  darkMode: Boolean
 }
 
 type UniversalLessonPlan {
@@ -938,7 +945,10 @@ type UniversalLessonPlan {
   disabled: Boolean
   displayMode: String
   open: Boolean
+  estTime: String
   pageContent: [UniversalpageContent]
+  activityType: String
+  interactionType: String
 }
 
 type UniversalpageContent {
@@ -952,7 +962,9 @@ type UniversalpageContent {
 type UniversalPartContent {
   id: String
   type: String
+  class: String
   value: [UniversalContent]
+  isRequired: Boolean
 }
 
 type UniversalContent {
@@ -960,7 +972,50 @@ type UniversalContent {
   type: String
   label: String
   value: String
+  options: [UniversalContentOptions]
+  caption: String
+  height: String
+  width: String
 }
+
+type UniversalContentOptions {
+  id: String
+  label: String
+  text: String
+}
+
+type UniversalLessonStudentData
+  @model
+  @key(fields: ["id"])
+  @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
+    id: ID!
+    syllabusLessonID: ID!
+    lessonID: ID!
+    lessonPageID: ID!
+    studentID: ID!
+    studentAuthID: ID!
+    studentEmail: String!
+    currentLocation: String
+    lessonProgress: String
+    pageData: [StudentPageInput]
+}
+
+type StudentPageInput {
+  pagePartID: String
+  pagePartInput: [partInput]
+}
+
+type partInput {
+  domID: String
+  input: [String]
+  comments: [InputComment]
+}
+
+type InputComment {
+  commentBy: ID
+  comment: String
+}
+
 
 type Subscription {
   onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
