@@ -12,9 +12,10 @@ export interface IStepElementInterface {
 export interface IStepComponentInterface {
   steps: IStepElementInterface[];
   activeStep: string;
+  handleTabSwitch: (step: string) => void;
 }
 
-const StepComponent = ({steps, activeStep}: IStepComponentInterface) => {
+const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInterface) => {
   return (
     <div className="lg:border-t lg:border-b lg:border-gray-200">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Progress">
@@ -25,7 +26,8 @@ const StepComponent = ({steps, activeStep}: IStepComponentInterface) => {
                 className={`relative overflow-hidden lg:flex-1 ${
                   disabled ? 'bg-gray-300' : ''
                 }`}
-                key={index}>
+                key={index}
+                onClick={() => handleTabSwitch(step)}>
                 <div
                   className={`border border-gray-200 overflow-hidden ${
                     step === activeStep ? '' : 'border-b-0'
@@ -49,10 +51,10 @@ const StepComponent = ({steps, activeStep}: IStepComponentInterface) => {
                         <span
                           className={`w-6 h-6 flex items-center justify-center border-2 ${
                             disabled ? 'bg-gray-600' : ''
-                          } ${isComplete ? 'border-indigo-600' : ''} rounded-full`}>
+                          } ${!disabled ? 'border-indigo-600' : ''} rounded-full`}>
                           <span
                             className={`${
-                              isComplete ? 'text-indigo-600' : 'text-white'
+                              !disabled ? 'text-indigo-600' : 'text-white'
                             } w-auto`}>
                             {index + 1}
                           </span>
@@ -82,7 +84,7 @@ const StepComponent = ({steps, activeStep}: IStepComponentInterface) => {
                         <path
                           d="M0.5 0V31L10.5 41L0.5 51V82"
                           stroke="currentcolor"
-                          vector-effect="non-scaling-stroke"
+                          vectorEffect="non-scaling-stroke"
                         />
                       </svg>
                     </div>
