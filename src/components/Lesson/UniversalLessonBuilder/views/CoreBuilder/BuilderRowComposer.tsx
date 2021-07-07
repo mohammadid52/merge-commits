@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {FaPlus} from 'react-icons/fa';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {
   PagePart,
@@ -11,11 +10,9 @@ import {BuilderRowWrapper} from './BuilderRowWrapper';
 import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/EditOverlayBlock';
 import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
-import TagBlock from '../../../UniversalLessonBlockComponents/UtilityBlocks/TagBlock';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import {ImFileEmpty} from 'react-icons/im';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -115,38 +112,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
             <div key={`row_pagepart_${idx}`} className="relative">
-              <div
-                className={`absolute w-auto bottom-${
-                  idx === selectedPageDetails.pageContent.length - 1 || previewMode
-                    ? 2
-                    : 4
-                } right-2`}>
-                {pagePart.tags && pagePart.tags.filter(Boolean).length ? (
-                  <TagBlock
-                    tags={pagePart.tags}
-                    handleEditTag={() =>
-                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
-                    }
-                  />
-                ) : !previewMode ? (
-                  <button
-                    className=" flex items-center
-                      w-auto 
-                      px-2
-                      cursor-pointer 
-                      text-xs text-center bg-blue-200 text-blue-700 rounded-lg z-100 .-mb-2"
-                    style={{marginBottom: '-6px'}}
-                    onClick={() =>
-                      handleTagModalOpen(pagePart.id, {tags: pagePart.tags || []})
-                    }>
-                    <span className="w-8 h-8 flex items-center">
-                      <FaPlus />
-                    </span>
-                    Add tag
-                  </button>
-                ) : null}
-              </div>
-
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -262,7 +227,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                     <div
                       style={{minHeight: '60px'}}
                       className="flex w-auto items-center justify-center text-lg text-gray-600">
-                      <ImFileEmpty className="mr-4 text-lg text-gray-600 w-auto" />
                       {/* Add this to dictionary */}
                       <h1 className={`w-auto text-center`}>This block has no content</h1>
                     </div>
@@ -303,7 +267,12 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <>
-          <h1 className={`w-full text-center`}>This page has no layout information.</h1>
+          <h1 className={`w-full my-2 text-center`}>
+            This page has no layout information.
+          </h1>
+          <h1 className={`w-full my-2 text-center`}>
+            Click on the below button to add components
+          </h1>
           <EditOverlayBlock
             mode={mode}
             key={`pp_addNew`}

@@ -3035,6 +3035,7 @@ const LessonBuilderDict: any = {
       EDIT: 'Edit',
       VIEW: 'View',
       PREVIEW: 'Preview',
+      ADD_ROW: 'Add Component',
       SAVE: 'Save',
     },
     LESSON_PLAN_COLUMN: {
@@ -3079,6 +3080,7 @@ const LessonBuilderDict: any = {
       EDIT: 'TBD',
       VIEW: 'TBD',
       PREVIEW: 'TBD',
+      ADD_ROW: 'TBD',
       SAVE: 'TBD',
     },
     LESSON_PLAN_COLUMN: {

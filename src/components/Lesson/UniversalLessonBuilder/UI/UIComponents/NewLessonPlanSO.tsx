@@ -14,68 +14,13 @@ import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
 import * as mutations from '../../../../../graphql/mutations';
 
-const Input = ({
-  type = 'text',
-  name,
-  id,
-  placeholder,
-  value,
-  defaultValue,
-  onChange,
-  error,
-}: {
-  type?: string;
-  name?: string;
-  id: string;
-  placeholder: string;
-  value: string;
-  defaultValue: string;
-  error: string;
-  onChange: (e: any) => void;
-}) => {
-  const whenError = error
-    ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
-    : '';
-  return (
-    <div>
-      <div className="mt-1 relative rounded-md shadow-sm">
-        <input
-          type={type}
-          name={name}
-          onChange={onChange}
-          id={id}
-          className={`${whenError} block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md`}
-          placeholder={placeholder}
-          value={value}
-          defaultValue={defaultValue}
-          aria-invalid="true"
-          aria-describedby={error}
-        />
-        <div
-          hidden={error.length === 0}
-          className="absolute inset-y-0 w-auto right-0 pr-3 flex items-center pointer-events-none">
-          <ExclamationCircleIcon
-            className={`h-5 w-5 text-red-500 ${error.length === 0 ? 'hidden' : ''}`}
-            aria-hidden="true"
-          />
-        </div>
-      </div>
-      <p
-        hidden={error.length === 0}
-        className="mt-2 transition-all text-sm text-red-600"
-        id="email-error">
-        {error}
-      </p>
-    </div>
-  );
-};
-
 import {Switch} from '@headlessui/react';
 import {FaMoon, FaSun} from 'react-icons/fa';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
+import Input from './Input';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -150,10 +95,11 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
     classwork: true,
   });
 
-  const {universalLessonDetails, setActiveTab} = useULBContext();
+  const {universalLessonDetails, setSelectedPageID} = useULBContext();
   const history = useHistory();
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
+
     setFields((prevInputs: any) => ({
       ...prevInputs,
       [id]: value,
@@ -228,7 +174,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
       isValid = true;
     }
     if (interactionType.length <= 0) {
-      errors.interactionType = 'Please select at least on interaction type';
+      errors.interactionType = 'Please select at least one interaction type';
       isValid = false;
     } else {
       errors.interactionType = '';
@@ -240,7 +186,8 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
 
   const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
-  const pages = universalLessonDetails?.lessonPlan;
+  const classworkPages = universalLessonDetails?.lessonPlan;
+  const homeworkPages = universalLessonDetails?.homework || [];
 
   const [creatingLessonPlan, setCreatingLessonPlan] = useState(false); // loader for creating lesson
 
@@ -250,25 +197,37 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
     if (isValid) {
       try {
         setCreatingLessonPlan(true);
-        // const input = {
-        //   id: lessonId,
-        //   lessonPlan: [
-        //     ...pages,
-        //     {
-        //       id: uuidV4().toString(),
-        //       title: fields.title,
-        //       label: fields.label,
-        //       description: fields.instructions,
-        //       pageContent: [],
-        //       estTime: Number(fields.estTime?.split(' ')[0]),
-        //     },
-        //   ],
-        // };
-        // const result: any = await API.graphql(
-        //     graphqlOperation(mutations.createUniversalLesson, {input})
-        //   );
+        const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
+        const input = {
+          id: lessonId,
+          [classwork ? 'lessonPlan' : 'homework']: [
+            ...prevPages,
+            {
+              id: uuidV4().toString(),
+              title: fields.title,
+              label: fields.label,
+              description: fields.instructions,
+              estTime: Number(fields.estTime?.split(' ')[0]),
+              interactionType: fields.interactionType.join(' || '),
+              activityType: classwork ? 'classwork' : 'homework',
+              pageContent: [],
+            },
+          ],
+        };
+        const res: any = await API.graphql(
+          graphqlOperation(customMutations.updateUniversalLesson, {
+            input,
+          })
+        );
 
-        //   const newLesson = result.data.createUniversalLesson;
+        setOpen(false);
+
+        const data = res.data.updateUniversalLesson;
+        if (data.id) {
+          history.push(
+            `dashboard/lesson-builder/lesson/page-builder?lessonId=4239b962-ce92-4196-ba14-d1a1b8102c1c&pageId=${data.id}`
+          );
+        }
       } catch (error) {
         console.error(error.message);
       } finally {
@@ -560,7 +519,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                           <label
                             htmlFor="project-description"
                             className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                            Homework
+                            Classwork
                           </label>
                         </div>
                         <div className="sm:col-span-2 flex items-center">
@@ -572,7 +531,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                             setEnabled={() => handleToggle('classwork', !classwork)}
                           />
                           <span className="text-sm text-gray-500 ml-2">
-                            only homework activities available now
+                            only classwork activities available now
                           </span>
                         </div>
                       </div>

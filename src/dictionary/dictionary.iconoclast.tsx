@@ -3098,6 +3098,7 @@ const LessonBuilderDict: any = {
       VIEW: 'View',
       PREVIEW: 'Preview',
       SAVE: 'Save',
+      ADD_ROW: 'Add Component',
       DELETE: 'Delete',
     },
     LESSON_PLAN_COLUMN: {
@@ -3143,6 +3144,7 @@ const LessonBuilderDict: any = {
       EDIT: 'TBD',
       VIEW: 'TBD',
       PREVIEW: 'TBD',
+      ADD_ROW: 'TBD',
       SAVE: 'TBD',
     },
     LESSON_PLAN_COLUMN: {

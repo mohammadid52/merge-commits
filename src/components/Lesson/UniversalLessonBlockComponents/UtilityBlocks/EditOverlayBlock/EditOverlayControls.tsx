@@ -106,7 +106,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
-  if (previewMode) return null;
+  // if (previewMode) return null;
   const iconPos = isComponent ? {left: '-2.5rem'} : {right: '-2.5rem'};
 
   const addToDB = async (list: any) => {
@@ -253,17 +253,19 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         iconTxtColorClass={'text-white'}
       /> */}
 
-      <button
-        className={`bg-gray-700 rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
-        onClick={() => {
-          handleEditBlockToggle();
-        }}>
-        {overlayVisible ? (
-          <IoCloseSharp color={'#fff'} size={20} />
-        ) : (
-          <HiPencil color={'#fff'} size={20} />
-        )}
-      </button>
+      {!previewMode && (
+        <button
+          className={`bg-gray-700 rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
+          onClick={() => {
+            handleEditBlockToggle();
+          }}>
+          {overlayVisible ? (
+            <IoCloseSharp color={'#fff'} size={20} />
+          ) : (
+            <HiPencil color={'#fff'} size={20} />
+          )}
+        </button>
+      )}
       {show && (
         <ModalPopUp
           message={message}

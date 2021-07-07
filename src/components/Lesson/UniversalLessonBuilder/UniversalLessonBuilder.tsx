@@ -504,7 +504,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       <div className="w-full overflow-y-auto h-full bg-gray-200">
         {/* Section Header */}
         <BreadCrums items={breadCrumsList} />
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <SectionTitle
             title={LessonEditDict[userLanguage]['TITLE']}
             subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
@@ -517,7 +517,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               Icon={IoArrowUndoCircleOutline}
             />
           </div>
-        </div>
+        </div> */}
         {/* Body */}
         <div className="w-full h-full pb-8 m-auto">
           <div
