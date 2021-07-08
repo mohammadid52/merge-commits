@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
-import {IoImage} from 'react-icons/io5';
+import {IoCamera} from 'react-icons/io5';
 
 import Selector from '../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
@@ -18,7 +18,7 @@ import * as mutations from '../../../../../graphql/mutations';
 
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
-import {getImageFromS3} from '../../../../../utilities/services';
+import { getAsset } from '../../../../../assets';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -27,7 +27,7 @@ interface AddNewLessonFormProps {
   changeLessonType: (type: string) => void;
   setFormData: (data: InitialData) => void;
   setSelectedDesigners: (designer: InputValueObject[]) => void;
-  postLessonCreation: (lessonId: string) => void;
+  postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
   lessonMeasurements: any[];
   setLessonMeasurements: (obj: any[]) => void;
@@ -35,6 +35,14 @@ interface AddNewLessonFormProps {
   institutionList: any[];
   setUnsavedChanges: Function;
 }
+
+const periodOptions = [
+  {id: 1, name: '1'},
+  {id: 2, name: '2'},
+  {id: 3, name: '3'},
+  {id: 4, name: '4'},
+  {id: 5, name: '5'},
+];
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {
@@ -55,7 +63,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const [selectedMeasu, setSelectedMeasu] = useState({id: '', name: '', value: ''});
   const [measurementList, setMeasurementList] = useState(allMeasurement);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const {AddNewLessonFormDict} = useDictionary(clientKey);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
@@ -70,7 +79,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   });
   const [showCropper, setShowCropper] = useState(false);
   const [imageData, setImageData] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
+  // const [imagePreviewUrl, setImagePreviewUrl] = useState('');
   const [uploadImageUrl, setUploadImageUrl] = useState(null);
   const [fileObject, setFileObject] = useState<any>({});
   const onInputChange = (e: any) => {
@@ -171,16 +180,26 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     toggleCropper();
     setImageData(image);
     const imageUrl = URL.createObjectURL(image);
-
-    setImagePreviewUrl(imageUrl);
+    setFormData({
+      ...formData,
+      imagePreviewUrl: imageUrl,
+    });
+    // setImagePreviewUrl(imageUrl);
     toggleCropper();
+  };
+
+  const onDurationSelect = (_: any, name: string) => {
+    setFormData({
+      ...formData,
+      duration: name,
+    });
   };
 
   const uploadImageToS3 = async (file: any, fileName: string, type: string) => {
     // Upload file to s3 bucket
 
     return new Promise((resolve, reject) => {
-      Storage.put(`ULB/lesson_image_${fileName}`, file, {
+      Storage.put(`${fileName}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
       })
@@ -245,28 +264,32 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const [creatingLessons, setCreatingLessons] = useState(false); // loader for saving new lessons
 
   const createNewLesson = async () => {
-    if (!lessonId) {
+    const isValid = validateForm();
+    if (isValid) {
+      setCreatingLessons(true);
+      let fileName = formData.imageUrl;
+      if (imageData) {
+        fileName = `ULB/lesson_image_${Date.now()}`;
+        await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
+      }
       // Creating New Lesson
-      const isValid = validateForm();
-      if (isValid) {
-        setCreatingLessons(true);
+      if (!lessonId) {
         try {
           const input: any = {
             type: formData.type.value,
             title: formData.name,
-
             designers: selectedDesigners.map((item) => item.id),
             lessonPlan: [],
             summary: formData.studentSummary,
-            cardImage: formData.imageUrl,
+            cardImage: fileName,
             cardCaption: formData.imageCaption,
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],
+            notes: formData.notesHtml,
             language: formData.languages.map((item) => item.value),
             institutionID: formData.institution?.id,
             // adding defaults to prevent errors
-            duration: 1,
-            notes: '',
+            duration: Number(formData.duration),
             resources: '',
             label: '',
           };
@@ -274,21 +297,16 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           const result: any = await API.graphql(
             graphqlOperation(mutations.createUniversalLesson, {input})
           );
-
           const newLesson = result.data.createUniversalLesson;
-          postLessonCreation(newLesson?.id);
+          postLessonCreation(newLesson?.id, 'add');
         } catch (error) {
           console.error(error.message);
         } finally {
           setCreatingLessons(false);
         }
-      }
-    } else {
-      // Updating existing Lesson
-
-      const isValid = validateForm();
-      try {
-        if (isValid) {
+      } else {
+        // Updating existing Lesson
+        try {
           setLoading(true);
           const input = {
             id: lessonId,
@@ -300,20 +318,16 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             language: formData.languages.map((item) => item.value),
             designers: selectedDesigners.map((item) => item.id),
             summary: formData.studentSummary,
-            cardImage: formData.imageUrl,
+            cardImage: fileName,
             cardCaption: formData.imageCaption,
           };
           const results: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {input: input})
           );
           const lessonsData = results?.data?.updateUniversalLesson;
-          postLessonCreation(lessonsData?.id);
-
-          setLoading(false);
+          setCreatingLessons(false);
           setUnsavedChanges(false);
-
           if (lessonsData) {
-            postLessonCreation(lessonsData?.id);
             setValidation({
               name: '',
               type: '',
@@ -324,22 +338,22 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               languages: '',
               studentSummary: '',
             });
+            postLessonCreation(lessonsData?.id,'update');
           }
+        } catch (error) {
+          console.error(error);
+          setValidation({
+            name: '',
+            type: '',
+            message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+            isError: true,
+            institution: '',
+            image: '',
+            languages: '',
+            studentSummary: '',
+          });
+          setLoading(false);
         }
-      } catch (error) {
-        console.error(error);
-
-        setValidation({
-          name: '',
-          type: '',
-          message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
-          isError: true,
-          institution: '',
-          image: '',
-          languages: '',
-          studentSummary: '',
-        });
-        setLoading(false);
       }
     }
   };
@@ -357,172 +371,271 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {
     name,
     type,
+    duration = '1',
     languages,
     purposeHtml,
     objectiveHtml,
+    notesHtml,
     institution,
     imageCaption,
+    imagePreviewUrl = '',
     studentSummary = '',
   } = formData;
-
+  
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
-      <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
+      {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {AddNewLessonFormDict[userLanguage]['TITLE']}
         </h3>
-      </div>
+      </div> */}
 
-      <div className="p-4">
+      <div className="">
         <div className="h-9/10 flex flex-col md:flex-row">
-          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-              <label className="cursor-pointer flex justify-center">
-                {imagePreviewUrl ? (
-                  <img
-                    className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
-                    src={imagePreviewUrl}
-                  />
-                ) : (
-                  <div
-                    className={`profile justify-center lign-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
-                    <IoImage className="fill-current text-gray-80" size={32} />
-                  </div>
-                )}
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => cropSelecetedImage(e)}
-                  onClick={(e: any) => (e.target.value = '')}
-                  accept="image/*"
-                  multiple={false}
-                />
-              </label>
-            </button>
-            <p className="text-gray-600 my-4">Click to add lesson image</p>
-
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
-                {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
-                <span className="text-red-500"> * </span>
-              </label>
-              <FormInput
-                value={imageCaption}
-                id="imageCaption"
-                onChange={onInputChange}
-                name="imageCaption"
-                maxLength={15}
-              />
-              {validation.name && (
-                <p className="text-red-600 text-sm">{validation.name}</p>
-              )}
-              <div className="text-right text-gray-400">{imageCaption.length} of 15</div>
-            </div>
-          </div>
           <div className="h-9/10 md:flex-row">
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
-                <span className="text-red-500"> * </span>
-              </label>
-              <FormInput value={name} id="name" onChange={onInputChange} name="name" />
-              {validation.name && (
-                <p className="text-red-600 text-sm">{validation.name}</p>
-              )}
+            <div className="border-b-0 border-gray-200 mt-6">
+              <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  Lesson Details
+                </h3>
+              </div>
+              <div className="p-4">
+                <div className="px-3 py-4">
+                  <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                    {AddNewLessonFormDict[userLanguage]['NAME']}{' '}
+                    <span className="text-red-500"> * </span>
+                  </label>
+                  <FormInput
+                    value={name}
+                    id="name"
+                    onChange={onInputChange}
+                    name="name"
+                  />
+                  {validation.name && (
+                    <p className="text-red-600 text-sm">{validation.name}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
+                      <span className="text-red-500"> * </span>
+                    </label>
+                    <Selector
+                      disabled={lessonId !== ''}
+                      selectedItem={type.name}
+                      placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
+                      list={lessonTypeList}
+                      onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
+                    />
+                    {validation.type && (
+                      <p className="text-red-600 text-sm">{validation.type}</p>
+                    )}
+                  </div>
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['DURATION']}{' '}
+                    </label>
+                    <Selector
+                      selectedItem={duration.toString() || ''}
+                      placeholder={AddNewLessonFormDict[userLanguage]['DURATION']}
+                      list={periodOptions}
+                      onChange={onDurationSelect}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
+                    </label>
+                    <MultipleSelector
+                      selectedItems={selectedDesigners}
+                      placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
+                      list={designersList}
+                      onChange={selectDesigner}
+                    />
+                  </div>
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
+                      <span className="text-red-500"> * </span>
+                    </label>
+                    <Selector
+                      disabled={lessonId !== ''}
+                      selectedItem={institution.name}
+                      placeholder={AddNewLessonFormDict[userLanguage]['INSTITUTION']}
+                      list={institutionList}
+                      onChange={(val, name, id) =>
+                        onSelectOption(val, name, id, 'institution')
+                      }
+                    />
+                    {validation.institution && (
+                      <p className="text-red-600 text-sm">{validation.institution}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
+                      <span className="text-red-500"> * </span>
+                    </label>
+                    <MultipleSelector
+                      // disabled={lessonId !== ''}
+                      selectedItems={languages}
+                      placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
+                      list={languageList}
+                      onChange={selectLanguage}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewLessonFormDict[userLanguage]['SELECTTYPE']}{' '}
-                <span className="text-red-500"> * </span>
-              </label>
-              <Selector
-                disabled={lessonId !== ''}
-                selectedItem={type.name}
-                placeholder={AddNewLessonFormDict[userLanguage]['TYPE']}
-                list={lessonTypeList}
-                onChange={(val, name, id) => onSelectOption(val, name, id, 'type')}
-              />
-              {validation.type && (
-                <p className="text-red-600 text-sm">{validation.type}</p>
-              )}
+            <div className="border-b-0 border-gray-200 mt-6">
+              <div className="grid grid-cols-2">
+                <div>
+                  <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
+                    </h3>
+                  </div>
+                  <div className="py-4 pl-4">
+                    <div className="px-3 py-4">
+                      {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                      {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
+                    </label> */}
+                      <RichTextEditor
+                        initialValue={objectiveHtml}
+                        onChange={(htmlContent, plainText) =>
+                          setEditorContent(
+                            htmlContent,
+                            plainText,
+                            'objectiveHtml',
+                            'objective'
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      {AddNewLessonFormDict[userLanguage]['MATERIALS']}
+                    </h3>
+                  </div>
+                  <div className="py-4 pr-4">
+                    <div className="px-3 py-4">
+                      {/* <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                      {AddNewLessonFormDict[userLanguage]['PURPOSE']}
+                    </label> */}
+                      <RichTextEditor
+                        initialValue={purposeHtml}
+                        onChange={(htmlContent, plainText) =>
+                          setEditorContent(
+                            htmlContent,
+                            plainText,
+                            'purposeHtml',
+                            'purpose'
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
-                <span className="text-red-500"> * </span>
-              </label>
-              <Selector
-                disabled={lessonId !== ''}
-                selectedItem={institution.name}
-                placeholder={AddNewLessonFormDict[userLanguage]['INSTITUTION']}
-                list={institutionList}
-                onChange={(val, name, id) => onSelectOption(val, name, id, 'institution')}
-              />
-              {validation.institution && (
-                <p className="text-red-600 text-sm">{validation.institution}</p>
-              )}
-            </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewLessonFormDict[userLanguage]['SELECTLANG']}
-                <span className="text-red-500"> * </span>
-              </label>
-              <MultipleSelector
-                // disabled={lessonId !== ''}
-                selectedItems={languages}
-                placeholder={AddNewLessonFormDict[userLanguage]['LANGUAGE']}
-                list={languageList}
-                onChange={selectLanguage}
-              />
-            </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
-              </label>
-              <MultipleSelector
-                selectedItems={selectedDesigners}
-                placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
-                list={designersList}
-                onChange={selectDesigner}
-              />
-            </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                {AddNewLessonFormDict[userLanguage]['PURPOSE']}
-              </label>
-              <RichTextEditor
-                initialValue={purposeHtml}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'purposeHtml', 'purpose')
-                }
-              />
-            </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
-              </label>
-              <RichTextEditor
-                initialValue={objectiveHtml}
-                onChange={(htmlContent, plainText) =>
-                  setEditorContent(htmlContent, plainText, 'objectiveHtml', 'objective')
-                }
-              />
-            </div>
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
-                {AddNewLessonFormDict[userLanguage]['SUMMARY']}
-                <span className="text-red-500"> *</span>
-              </label>
-              <TextArea
-                rows={2}
-                id="studentSummary"
-                value={studentSummary}
-                onChange={onInputChange}
-                name="studentSummary"
-                maxLength={128}
-                showCharacterUsage
-                error={validation.studentSummary}
-              />
+            <div className="grid grid-cols-2">
+              <div>
+                <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    {AddNewLessonFormDict[userLanguage]['REMINDERANDNOTES']}
+                  </h3>
+                </div>
+                <div className="pl-4 py-4">
+                  <div className="px-3 py-4">
+                    <RichTextEditor
+                      initialValue={notesHtml}
+                      onChange={(htmlContent, plainText) =>
+                        setEditorContent(htmlContent, plainText, 'notesHtml', 'notes')
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className={`col-span-3 border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    Lesson card
+                  </h3>
+                </div>
+                <div className="px-3 py-5">
+                  <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mb-4">
+                    <label className="cursor-pointer flex justify-center">
+                      {imagePreviewUrl ? (
+                        <img
+                          className={`profile w-50 h-60 md:w-50 md:h-60 border flex flex-shrink-0 border-gray-400`}
+                          src={imagePreviewUrl}
+                        />
+                      ) : (
+                        <div
+                          className={`profile justify-center align-center items-center content-center w-50 h-60 md:w-50 md:h-60 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
+                          <IoCamera className="fill-current text-gray-80" size={32} />
+                        </div>
+                      )}
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={(e) => cropSelecetedImage(e)}
+                        onClick={(e: any) => (e.target.value = '')}
+                        accept="image/*"
+                        multiple={false}
+                      />
+                    </label>
+                  </button>
+                </div>
+                <div className="col-span-2">
+                  <div className="pr-8 pt-5">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
+                      {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
+                      <span className="text-red-500"> * </span>
+                    </label>
+                    <FormInput
+                      value={imageCaption}
+                      id="imageCaption"
+                      onChange={onInputChange}
+                      name="imageCaption"
+                      maxLength={15}
+                    />
+                    {validation.name && (
+                      <p className="text-red-600 text-sm">{validation.name}</p>
+                    )}
+                    <div className="text-right text-gray-400">
+                      {imageCaption.length} of 15
+                    </div>
+                  </div>
+                  {/* </div> */}
+                  {/* <div className="col-span-3"> */}
+                  <div className="pr-8 pt-1">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
+                      {AddNewLessonFormDict[userLanguage]['SUMMARY']}
+                      <span className="text-red-500"> *</span>
+                    </label>
+                    <TextArea
+                      rows={5}
+                      id="studentSummary"
+                      value={studentSummary}
+                      onChange={onInputChange}
+                      name="studentSummary"
+                      maxLength={128}
+                      showCharacterUsage
+                      error={validation.studentSummary}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
