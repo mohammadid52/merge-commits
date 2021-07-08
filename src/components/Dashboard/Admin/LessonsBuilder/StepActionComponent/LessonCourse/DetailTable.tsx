@@ -8,7 +8,12 @@ const DetailTable = () => {
 
   return (
     <>
-      <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
+      <div className="pl-4">
+        <span className="w-auto pt-5 font-bold text-lg items-center inline-flex">
+          Unit(s): Identity, Self-Awareness
+        </span>
+      </div>
+      <div className="w-full flex justify-between border-b-0 border-gray-200 mt-4">
         <div className="w-3/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
             {
