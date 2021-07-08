@@ -1,12 +1,12 @@
 import '@pathofdev/react-tag-input/build/index.css';
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import {ExclamationCircleIcon} from '@heroicons/react/solid';
 import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import {estimatedTimeList} from '../../../../../utilities/staticData';
-import {remove} from 'lodash';
+import {isEmpty, remove} from 'lodash';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
@@ -25,6 +25,27 @@ import Input from './Input';
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
 }
+interface FieldsInterface {
+  title: string;
+  label: string;
+  instructions: string;
+  interactionType: string[];
+  tags?: string[];
+  estTime: string;
+  darkMode: boolean;
+  classwork: boolean;
+}
+
+const INITIAL_STATE: FieldsInterface = {
+  title: '',
+  label: '',
+  instructions: '',
+  interactionType: [],
+  tags: [],
+  estTime: '1 min',
+  darkMode: true,
+  classwork: true,
+};
 
 const Toggle = ({
   enabled,
@@ -77,23 +98,32 @@ const Toggle = ({
   );
 };
 
-const NewLessonPlanSO = ({open, setOpen}: any) => {
+const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
+  // fill the fields if edit mode
+  useEffect(() => {
+    if (!isEmpty(pageDetails) && editMode) {
+      console.log(pageDetails);
+      setFields({
+        ...pageDetails,
+        tags: [],
+        instructions: pageDetails.description,
+        estTime: `${pageDetails.estTime} min`, //
+        // interactionType: pageDetails.interactionType.split(' || '),
+        darkMode: true,
+        classwork: true,
+      });
+    } else {
+      setFields(INITIAL_STATE);
+    }
+  }, [pageDetails]);
+
   const handleAddTags = (tags: string[]) =>
     setFields((prevInputs) => ({...prevInputs, tags}));
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {BUTTONS} = useDictionary(clientKey);
 
-  const [fields, setFields] = useState({
-    title: '',
-    label: '',
-    instructions: '',
-    interactionType: [],
-    tags: [],
-    estTime: '1 min',
-    darkMode: true,
-    classwork: true,
-  });
+  const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
   const {universalLessonDetails, setSelectedPageID} = useULBContext();
   const history = useHistory();
@@ -189,14 +219,14 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
   const classworkPages = universalLessonDetails?.lessonPlan;
   const homeworkPages = universalLessonDetails?.homework || [];
 
-  const [creatingLessonPlan, setCreatingLessonPlan] = useState(false); // loader for creating lesson
+  const [loading, setLoading] = useState(false); // loader for creating lesson
 
   const onSave = async (e: any) => {
     e.preventDefault();
     const isValid = validate();
     if (isValid) {
       try {
-        setCreatingLessonPlan(true);
+        setLoading(true);
         const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
         const input = {
           id: lessonId,
@@ -224,14 +254,12 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
 
         const data = res.data.updateUniversalLesson;
         if (data.id) {
-          history.push(
-            `dashboard/lesson-builder/lesson/page-builder?lessonId=4239b962-ce92-4196-ba14-d1a1b8102c1c&pageId=${data.id}`
-          );
+          history.push(`page-builder?lessonId=${lessonId}&pageId=${data.id}`);
         }
       } catch (error) {
         console.error(error.message);
       } finally {
-        setCreatingLessonPlan(false);
+        setLoading(false);
       }
     }
   };
@@ -346,7 +374,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                             Activity Instructions <span className="text-red-500">*</span>
                           </label>
                         </div>
-                        <div className="sm:col-span-2">
+                        <div className="sm:col-span-2 max-w-132">
                           <RichTextEditor
                             initialValue={instructions}
                             onChange={(htmlContent, plainText) =>
@@ -382,6 +410,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                                   id="group"
                                   name="group"
                                   type="checkbox"
+                                  // checked={interactionType.includes('group')}
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
                                 />
@@ -402,6 +431,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                                 <input
                                   id="smallGroup"
                                   name="smallGroup"
+                                  // checked={interactionType.includes('smallGroup')}
                                   type="checkbox"
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
@@ -424,6 +454,7 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                                   id="individual"
                                   name="individual"
                                   type="checkbox"
+                                  // checked={interactionType.includes('individual')}
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
                                 />
@@ -481,7 +512,6 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                           <form
                             onSubmit={(e) => {
                               e.preventDefault();
-                              //   handleAddTags();
                             }}>
                             <FormTagInput
                               className="max-w-132"
@@ -548,12 +578,12 @@ const NewLessonPlanSO = ({open, setOpen}: any) => {
                         Cancel
                       </button>
                       <button
-                        disabled={creatingLessonPlan}
+                        disabled={loading}
                         onClick={onSave}
                         className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        {creatingLessonPlan
-                          ? BUTTONS[userLanguage]['CREATING']
-                          : BUTTONS[userLanguage]['CREATE']}
+                        {loading
+                          ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
+                          : BUTTONS[userLanguage][editMode ? 'SAVE' : 'CREATE']}
                       </button>
                     </div>
                   </div>

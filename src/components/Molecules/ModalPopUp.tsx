@@ -18,6 +18,7 @@ interface ModalProps {
   saveTooltip?: string;
   cancelTooltip?: string;
   noTooltip?: string;
+  titleButton?: React.ReactElement;
 }
 
 const ModalPopUp = (props: ModalProps) => {
@@ -36,9 +37,11 @@ const ModalPopUp = (props: ModalProps) => {
     cancelTooltip,
     noTooltip,
     saveTooltip,
+    titleButton,
   } = props;
   return (
     <Modal
+      titleButton={titleButton}
       closeOnBackdrop
       showHeader={true}
       showHeaderBorder={false}

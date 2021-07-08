@@ -501,7 +501,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       className="h-full bg-dark-gray flex overflow-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
 
-      <div className="w-full overflow-y-auto h-full bg-gray-200">
+      <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
         <BreadCrums items={breadCrumsList} />
         {/* <div className="flex justify-between">

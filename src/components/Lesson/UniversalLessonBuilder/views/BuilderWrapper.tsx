@@ -431,6 +431,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   // For Edit Page Names
+  const [pageDetailsModal, setPageDetailsModal] = useState(false);
 
   const [editModal, setEditModal] = useState({
     show: false,
@@ -438,6 +439,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     editOnlyId: true,
   });
   const closeEditModal = () => setEditModal({show: false, content: {}, editOnlyId: true});
+
   const content: any = editModal.content;
   const getEditModalTitle = () => {
     if (!editModal.editOnlyId) {
@@ -531,9 +533,20 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           title={getEditModalTitle()}
           showHeaderBorder={true}
           showFooter={false}
+          titleButton={
+            <span
+              onClick={() => {
+                setEditModal({show: false, content: {}, editOnlyId: false});
+                setPageDetailsModal(true);
+              }}
+              className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
+              Go back to page details
+            </span>
+          }
           closeAction={closeEditModal}>
           <div className="min-w-256">
             <EditPageNameDialog
+              backToDetails={() => setPageDetailsModal(true)}
               editOnlyId={editModal.editOnlyId}
               closeAction={closeEditModal}
               content={content}
@@ -581,6 +594,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         hierarchyVisible={hierarchyVisible}
         lessonId={lessonId}
         selectedPageID={selectedPageID}
+        pageDetailsModal={pageDetailsModal}
+        setPageDetailsModal={setPageDetailsModal}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
