@@ -15,32 +15,154 @@ import {
   PartContentSub,
   UniversalLessonPage,
 } from '../../interfaces/UniversalLessonInterfaces';
+import {Auth} from '@aws-amplify/auth';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customQueries from '../../customGraphql/customQueries';
+import * as customMutations from '../../customGraphql/customMutations';
+import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
+  const urlParams: any = useParams();
 
+  // ##################################################################### //
+  // ######################### BASIC UI CONTROLS ######################### //
+  // ##################################################################### //
   const [overlay, setOverlay] = useState<string>('');
-  const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
-
   //  NAVIGATION CONSTANTS
   const PAGES = lessonState.lessonData.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
-  //  LESSON FETCH AND UNMOUNT
+  // ##################################################################### //
+  // ######################### SUBSCRIPTION SETUP ######################## //
+  // ##################################################################### //
+  let subscription: any;
+  const [subscriptionData, setSubscriptionData] = useState<any>();
+
+  // ----------- 1 ---------- //
+  //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
+
+  // useEffect(() => {
+  //   if (lesson) {
+  //     dispatch({
+  //       type: 'SET_INITIAL_STATE',
+  //       payload: {
+  //         subscribeFunc: subscribeToPlanner,
+  //       },
+  //     });
+  //   }
+  // }, [lesson]);
+
+  // ----------- 2 ---------- //
+  //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
+
+  const subscribeToPlanner = () => {
+    // const {lessonID} = urlParams;
+    //
+    // const syllabusLessonSubscription = API.graphql(
+    //   graphqlOperation(customSubscriptions.onChangeSyllabusLesson, {id: lessonID})
+    //   // @ts-ignore
+    // ).subscribe({
+    //   next: (syllabusLessonData: any) => {
+    //     const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
+    //     // @ts-ignore
+    //     API.graphql(
+    //       graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
+    //       // @ts-ignore
+    //     ).then((sLessonData: any) => {
+    //       const sLessonDataData = sLessonData.data.getSyllabusLesson;
+    //       setSubscriptionData(sLessonDataData);
+    //     });
+    //   },
+    // });
+    //
+    // dispatch({
+    //   type: 'SET_SUBSCRIPTION',
+    //   payload: {
+    //     subscription: syllabusLessonSubscription,
+    //   },
+    // });
+    //
+    // return syllabusLessonSubscription;
+  };
+
+  // ----------- 3 ---------- //
+
+  const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
+    // dispatch({
+    //   type: 'UPDATE_LESSON_PLAN',
+    //   payload: {
+    //     pages: subscriptionData.lessonPlan.filter(
+    //       (item: {disabled: boolean; [key: string]: any}) => {
+    //         return !item.disabled;
+    //       }
+    //     ),
+    //
+    //     displayData: {
+    //       ...subscriptionData.displayData
+    //     },
+    //     viewing: subscriptionData.viewing,
+    //   },
+    // });
+  };
+
+  // ----------- 4 ---------- //
+  /**
+   * Once step 2 updates subscriptionData,
+   * this useEffect will invoke the function
+   * at step 3
+   *
+   */
+
+  // useEffect(() => {
+  //   if (subscriptionData) {
+  //     updateOnIncomingSubscriptionData(subscriptionData);
+  //   }
+  // }, [subscriptionData]);
+
+
+
+  // ##################################################################### //
+  // ############################ LESSON FETCH ########################### //
+  // ##################################################################### //
+  const getSyllabusLesson = async (lessonID?: string) => {
+    // lessonID will be undefined for testing
+    if (lessonID !== '') {
+      console.log('getSyllabusLesson - ', lessonID);
+
+      // const lesson: any = await API.graphql(
+      //   graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
+      // );
+      setTimeout(() => {
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+      }, 1000);
+      //
+      // subscription = subscribeToStudentData(lessonID);
+    } else {
+      setTimeout(() => {
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+      }, 1000);
+    }
+  };
+
   useEffect(() => {
-    setTimeout(() => {
-      lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-    }, 1000);
+    const {lessonID} = urlParams;
+    if (lessonID) {
+      getSyllabusLesson(lessonID).then((_: void) =>
+        console.log('Lesson Mount - ', 'Lesson fetched!')
+      );
+    }
     return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
       lessonDispatch({type: 'CLEANUP'});
     };
   }, []);
 
-  //  RESPONSE TO LOADING LESSON DATA FETCH
-  //  RESPONSE TO LOADING LESSON DATA FETCH
-  //  RESPONSE TO LOADING LESSON DATA FETCH
+  // ~~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
@@ -55,11 +177,17 @@ const LessonApp = () => {
     }
   }, [lessonState.lessonData]);
 
-  //  INITIALIZE STUDENTDATA
-  //  INITIALIZE STUDENTDATA
-  //  INITIALIZE STUDENTDATA
+
+
+
+  // ##################################################################### //
+  // ###################### INITIALIZE STUDENT DATA ###################### //
+  // ##################################################################### //
+  const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
+
+  // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
   useEffect(() => {
-    if (PAGES) {
+    if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
         const allPageParts = page.pageContent;
         const initialPageData = allPageParts.reduce(
@@ -90,32 +218,59 @@ const LessonApp = () => {
         );
         return initialPageData;
       });
-      // console.log('initialPageData - ', mappedPages)
       lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
       setStudentDataInitialized(true);
     }
   }, [lessonState.lessonData.lessonPlan]);
 
-  /**
-   *
-   * COPY NAMES OF ALL REMAINING FUNCTIONS/PROCESSES
-   * FROM LESSONCONTEXT.tsx
-   *
-   */
+  // ~~ CREATE NEW OR UPDATE STUDENT DATA ~~ //
+  const getOrCreateStudentData = async () => {
+    const {lessonID} = urlParams;
 
-  //GET liveClassroomLesson --> Replace temporary function above
-  //CRUD personLocation
-  //CRUD studentData
-  // initialize if not present
-  // get studentData
-  // set studentDataID to context
-
-  //SUBSCRIBE to liveClassroomLesson
-  //UPDATE to liveClassroomLEsson
-  //UNSUBSCRIBE from liveClassroomLesson
-  //CLEANUP context on unmount classroom
-
-  // set initial componentState --> Maybe not necessary with new structure
+    // try {
+    //   const studentData: any = await API.graphql(
+    //     graphqlOperation(customQueries.getStudentData, {
+    //       syllabusLessonID: lessonID,
+    //       studentID: studentID,
+    //     })
+    //   );
+    //
+    //   if (!studentData.data.getStudentData) {
+    //     const newStudentData: any = await API.graphql(
+    //       graphqlOperation(customMutations.createStudentData, {
+    //         input: {
+    //           lessonProgress: 0,
+    //           currentLocation: 0,
+    //           status: 'ACTIVE',
+    //           syllabusLessonID: lessonID,
+    //           studentID: studentID,
+    //           studentAuthID: studentAuthID,
+    //         },
+    //       })
+    //     );
+    //     dispatch({
+    //       type: 'SET_STUDENT_INFO',
+    //       payload: {
+    //         studentDataID: newStudentData.data.createStudentData.id,
+    //         studentUsername: newStudentData.data.createStudentData.studentID,
+    //         studentAuthID: newStudentData.data.createStudentData.studentAuthID,
+    //       },
+    //     });
+    //     return setData(newStudentData.data.createStudentData);
+    //   }
+    //   dispatch({
+    //     type: 'SET_STUDENT_INFO',
+    //     payload: {
+    //       studentDataID: studentData.data.getStudentData.id,
+    //       studentUsername: studentData.data.getStudentData.studentID,
+    //       studentAuthID: studentData.data.getStudentData.studentAuthID,
+    //     },
+    //   });
+    //   return setData(studentData.data.getStudentData);
+    // } catch (err) {
+    //   console.error(err);
+    // }
+  };
 
   return (
     <>
