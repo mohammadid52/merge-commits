@@ -2,8 +2,6 @@ import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {remove} from 'lodash';
-import * as mutations from '../../../../../graphql/mutations';
-import {graphqlOperation, API} from 'aws-amplify';
 import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
@@ -276,6 +274,7 @@ const LessonActivities = ({
               </div>
             </Fragment>
           )}
+          <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`} />
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
               <div className="items-center flex justify-center flex-col">
@@ -286,7 +285,7 @@ const LessonActivities = ({
               </div>
             </div>
           ) : true || pages.length > 0 ? (
-            <div className="mt-16">
+            <div className="mt-8">
               <div className="flex justify-between">
                 <span className="w-auto px-4 font-bold text-lg items-center inline-flex">
                   {

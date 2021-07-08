@@ -18,7 +18,7 @@ import * as mutations from '../../../../../graphql/mutations';
 
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
-import {getImageFromS3} from '../../../../../utilities/services';
+import { getAsset } from '../../../../../assets';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -63,7 +63,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
   const [selectedMeasu, setSelectedMeasu] = useState({id: '', name: '', value: ''});
   const [measurementList, setMeasurementList] = useState(allMeasurement);
-  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const {AddNewLessonFormDict} = useDictionary(clientKey);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({
@@ -380,7 +381,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     imagePreviewUrl = '',
     studentSummary = '',
   } = formData;
-  console.log(formData, 'formData');
   
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
@@ -392,54 +392,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
 
       <div className="">
         <div className="h-9/10 flex flex-col md:flex-row">
-          {/* <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-              <label className="cursor-pointer flex justify-center">
-                {imagePreviewUrl ? (
-                  <img
-                    className={`profile  w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
-                    src={imagePreviewUrl}
-                  />
-                ) : (
-                  <div
-                    className={`profile justify-center lign-center items-center content-center w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex-shrink-0 flex border-gray-400`}>
-                    <IoCamera className="fill-current text-gray-80" size={32} />
-                  </div>
-                )}
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => cropSelecetedImage(e)}
-                  onClick={(e: any) => (e.target.value = '')}
-                  accept="image/*"
-                  multiple={false}
-                />
-              </label>
-            </button>
-            <p className="text-gray-600 my-4">Click to add lesson image</p>
-
-            <div className="px-3 py-4">
-              <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
-                {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
-                <span className="text-red-500"> * </span>
-              </label>
-              <FormInput
-                value={imageCaption}
-                id="imageCaption"
-                onChange={onInputChange}
-                name="imageCaption"
-                maxLength={15}
-              />
-              {validation.name && (
-                <p className="text-red-600 text-sm">{validation.name}</p>
-              )}
-              <div className="text-right text-gray-400">{imageCaption.length} of 15</div>
-            </div>
-          </div>
-           */}
           <div className="h-9/10 md:flex-row">
             <div className="border-b-0 border-gray-200 mt-6">
-              <div className="border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600">
+              <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                   Lesson Details
                 </h3>
@@ -540,7 +495,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             <div className="border-b-0 border-gray-200 mt-6">
               <div className="grid grid-cols-2">
                 <div>
-                  <div className="border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600">
+                  <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                       {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
                     </h3>
@@ -565,7 +520,8 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </div>
                 </div>
                 <div>
-                  <div className="border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600">
+                  <div
+                    className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
                       {AddNewLessonFormDict[userLanguage]['MATERIALS']}
                     </h3>
@@ -593,12 +549,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             </div>
             <div className="grid grid-cols-2">
               <div>
-                <div className="border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600 pt-6">
+                <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
                     {AddNewLessonFormDict[userLanguage]['REMINDERANDNOTES']}
                   </h3>
                 </div>
-                <div className="pl-4">
+                <div className="pl-4 py-4">
                   <div className="px-3 py-4">
                     <RichTextEditor
                       initialValue={notesHtml}
@@ -610,12 +566,12 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3">
-                <div className="col-span-3 border-b-0 border-gray-200 pb-2 pl-2 border-indigo-600 pt-6">
+                <div className={`col-span-3 border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Lesson card
                   </h3>
                 </div>
-                <div className="px-3 py-2">
+                <div className="px-3 py-5">
                   <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mb-4">
                     <label className="cursor-pointer flex justify-center">
                       {imagePreviewUrl ? (
@@ -641,7 +597,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </button>
                 </div>
                 <div className="col-span-2">
-                  <div className="pr-8 pt-1">
+                  <div className="pr-8 pt-5">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1 text-left">
                       {AddNewLessonFormDict[userLanguage]['IMAGE_CAPTION']}{' '}
                       <span className="text-red-500"> * </span>
@@ -662,7 +618,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </div>
                   {/* </div> */}
                   {/* <div className="col-span-3"> */}
-                  <div className="pr-8 pt-2">
+                  <div className="pr-8 pt-1">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-3">
                       {AddNewLessonFormDict[userLanguage]['SUMMARY']}
                       <span className="text-red-500"> *</span>

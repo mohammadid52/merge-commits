@@ -22,6 +22,7 @@ import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import LessonActivities from './StepActionComponent/LessonActivities';
+import LessonCourse from './StepActionComponent/LessonCourse';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import {
   InstructionInitialState,
@@ -34,6 +35,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import DragableAccordion from '../../../Atoms/DragableAccordion';
 
 export interface InitialData {
   name: string;
@@ -449,28 +451,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             universalLessonDetails={universalLessonDetails}
           />
         );
-      case 'Builder':
-        return (
-          <CheckpointBuilder
-            lessonPlans={savedLessonDetails?.lessonPlans}
-            designersList={designersList}
-            lessonID={lessonId}
-            updateLessonPlan={updateLessonPlan}
-            setUnsavedChanges={setUnsavedChanges}
-            activeStep={activeStep}
-            lessonName={formData.name}
-            lessonType={formData.type?.value}
-            hasUnsavedCheckpoint={(
-              val: boolean,
-              isIndividualEmpty: boolean,
-              data: any,
-              data2: any,
-              selectedDesigners: any[]
-            ) =>
-              hasUnsavedCheckpoint(val, isIndividualEmpty, data, data2, selectedDesigners)
-            }
-          />
-        );
+      case 'courses':
+        return <LessonCourse />;
       case 'Preview Details':
         return (
           <PreviewForm
@@ -513,7 +495,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      goBack();
+      history.push('/dashboard/lesson-builder');
     }
   };
 
@@ -598,12 +580,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const steps: IStepElementInterface[] = [
     {
       title: 'Overview',
+      description: 'Capture core details of your lesson',
       stepValue: 'overview',
       icon: <IoCardSharp />,
       isComplete: true,
     },
     {
       title: 'Activities',
+      description: 'Create class and home work here',
       stepValue: 'activities',
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
@@ -612,6 +596,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     },
     {
       title: 'Courses',
+      description: 'Assign lessons to courses',
       stepValue: 'courses',
       icon: <FaQuestionCircle />,
       disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
@@ -620,6 +605,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     },
     {
       title: 'Learning Evidence',
+      description: 'Link measurements to activities',
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
       disabled: true,

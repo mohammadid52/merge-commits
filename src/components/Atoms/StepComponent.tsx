@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { getAsset } from '../../assets';
+import { GlobalContext } from '../../contexts/GlobalContext';
 import Tooltip from './Tooltip';
 
 export interface IStepElementInterface {
@@ -19,14 +21,17 @@ export interface IStepComponentInterface {
 }
 
 const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInterface) => {
+  const {theme, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  
   const renderStepElement = (
-    {description, disabled, isComplete, title, tooltipText, step}: any,
+    {description, disabled, isComplete, title, stepValue}: any,
     index: number
   ) => {
     return (
       <div
         className={`border border-gray-200 ${
-          step === activeStep ? '' : 'border-b-0'
+          stepValue === activeStep ? '' : 'border-b-0'
         } lg:border-0 ${
           index === 0
             ? 'lg:border-r-none'
@@ -37,8 +42,8 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
         <div className="group">
           <span
             className={`absolute top-0 left-0 w-1 h-full ${
-              step === activeStep
-                ? 'bg-indigo-600'
+              stepValue === activeStep
+                ? theme.backGround[themeColor]
                 : 'bg-transparent group-hover:bg-gray-200'
             } lg:w-full lg:h-1 lg:bottom-0 lg:top-auto`}
             aria-hidden="true"></span>
@@ -47,15 +52,30 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
               <span
                 className={`w-6 h-6 flex items-center justify-center border-2 ${
                   disabled ? 'bg-gray-600' : ''
-                } ${!disabled ? 'border-indigo-600' : ''} rounded-full`}>
+                } ${
+                  stepValue === activeStep
+                    ? theme.borderColor[themeColor]
+                    : 'border-gray-300'
+                } rounded-full`}>
                 <span
-                  className={`${!disabled ? 'text-indigo-600' : 'text-white'} w-auto`}>
+                  className={`${
+                    stepValue === activeStep
+                      ? theme.textColor[themeColor]
+                      : disabled
+                      ? 'text-white'
+                      : 'text-gray-500'
+                  } w-auto`}>
                   {index + 1}
                 </span>
               </span>
             </span>
             <span className="mt-0.5 ml-4 min-w-0 w-auto flex flex-col">
-              <span className="text-xs font-semibold tracking-wide uppercase">
+              <span
+                className={`text-xs font-semibold ${
+                  stepValue === activeStep
+                    ? theme.textColor[themeColor]
+                    : ''
+                } tracking-wide uppercase`}>
                 {title}
               </span>
               {description ? (
