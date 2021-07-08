@@ -10,6 +10,10 @@ type lessonControlActions =
       payload: any;
     }
   | {
+      type: 'UPDATE_STUDENT_ROSTER';
+      payload: {students: any[]};
+    }
+  | {
       type: 'CLEANUP';
       payload: any;
     };
@@ -21,6 +25,8 @@ export const lessonControlReducer = (
   switch (action.type) {
     case 'CLEANUP':
       return state;
+    case 'UPDATE_STUDENT_ROSTER':
+      return {...state, roster: action.payload.students};
     default:
       return state;
   }

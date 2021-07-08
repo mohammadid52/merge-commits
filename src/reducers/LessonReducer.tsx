@@ -1,24 +1,16 @@
 import {lessonState} from '../state/LessonState';
-import {
-  StudentPageInput,
-  UniversalLesson,
-  UniversalLessonPage,
-  UniversalLessonStudentData,
-} from '../interfaces/UniversalLessonInterfaces';
-// import { useStudentTimer } from '../customHooks/timer'
-
 export type LessonActions =
   | {
       type: 'TEST';
       payload: '';
     }
   | {
-      type: 'SET_LESSON_DATA';
-      payload: UniversalLesson;
+      type: 'SET_INITIAL_STATE';
+      payload: {universalLessonID: string};
     }
   | {
-      type: 'SET_INITIAL_STATE';
-      payload: UniversalLessonStudentData;
+      type: 'SET_LESSON_DATA';
+      payload: UniversalLesson;
     }
   | {
       type: 'SET_INITIAL_STUDENT_DATA';
@@ -44,21 +36,29 @@ export type LessonActions =
       type: 'CLEANUP';
       payload: any;
     };
+import {
+  StudentPageInput,
+  UniversalLesson,
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../interfaces/UniversalLessonInterfaces';
+
+// import { useStudentTimer } from '../customHooks/timer'
 
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
     case 'TEST':
       console.log('lessonReducer test...');
       break;
+    case 'SET_INITIAL_STATE':
+      return {
+        ...state,
+        universalLessonID: action.payload.universalLessonID,
+      };
     case 'SET_LESSON_DATA':
       return {
         ...state,
         lessonData: action.payload,
-      };
-    case 'SET_INITIAL_STATE':
-      return {
-        ...state,
-        studentData: action.payload,
       };
     case 'SET_INITIAL_STUDENT_DATA':
       return {
