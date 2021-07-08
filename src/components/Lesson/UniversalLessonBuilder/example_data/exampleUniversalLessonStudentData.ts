@@ -24,28 +24,28 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
     {
       domID: 'title',
       input: ['My story title'],
-      comments: [{teacherID: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
     },
     {
       domID: 'story',
       input: ['My story content'],
-      comments: [{teacherID: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
     },
 
     {
       domID: 'culture',
       input: ['Dutch'],
-      comments: [{teacherID: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
     },
     {
       domID: 'storyteller',
       input: ['Grandmother'],
-      comments: [{teacherID: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
     },
     {
       domID: 'lessons',
       input: ['Perseverance'],
-      comments: [{teacherID: 'xxx', comment: 'abc'}],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
     },
   ],
 };
