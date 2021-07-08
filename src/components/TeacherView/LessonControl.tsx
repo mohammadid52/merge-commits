@@ -13,9 +13,18 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import {useParams} from 'react-router';
+import {lessonControlState} from '../../state/LessonControlState';
 
 const LessonControl = () => {
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const {
+    state,
+    dispatch,
+    lessonState,
+    lessonDispatch,
+    controlState,
+    controlDispatch,
+    theme,
+  } = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
@@ -161,32 +170,23 @@ const LessonControl = () => {
    */
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
-  // useEffect(() => {
-  //   if (state.studentViewing.live) {
-  //     const hasCurrentLocation =
-  //       typeof state.studentViewing.studentInfo.currentLocation === 'string';
-  //     const currentLocationDefined =
-  //       typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !==
-  //       'undefined';
-  //     const lessonProgressDefined =
-  //       typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !==
-  //       'undefined';
-  //
-  //     if (hasCurrentLocation) {
-  //       if (currentLocationDefined) {
-  //         history.push(
-  //           `${match.url}/${
-  //             state.pages[state.studentViewing.studentInfo.currentLocation]?.stage
-  //           }`
-  //         );
-  //       }
-  //     } else if (!hasCurrentLocation) {
-  //       if (lessonProgressDefined) {
-  //         history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
-  //       }
-  //     }
-  //   }
-  // }, [state.studentViewing]);
+  useEffect(() => {
+    if (controlState.studentViewing !== '') {
+      const viewedStudentLocation = controlState.roster.find(
+        (student: any) => student.personAuthID === controlState.studentViewing
+      )?.currentLocation;
+
+      console.log('controlState.roster - currentLocation - ', viewedStudentLocation);
+
+      if (viewedStudentLocation !== '') {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+        history.push(`${match.url}/${viewedStudentLocation}`);
+      } else {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/0`);
+      }
+    }
+  }, [controlState.roster]);
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
