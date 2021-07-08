@@ -22,7 +22,7 @@ import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
 import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import LessonActivities from './StepActionComponent/LessonActivities';
-import LessonCourse from './StepActionComponent/LessonCourse';
+import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import {
   InstructionInitialState,
