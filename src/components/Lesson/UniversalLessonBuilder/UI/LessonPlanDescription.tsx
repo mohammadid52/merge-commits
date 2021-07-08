@@ -31,13 +31,7 @@ const LessonPlanDescription = ({activePageData = {}, setEditModal}: any) => {
     show: false,
     message: '',
   });
-  const onDeleteButtonClick = () => {
-    setConfirmationConfig({
-      message:
-        'Are you sure you want to delete the this page? All of your data will be permanently removed. This action cannot be undone.',
-      show: true,
-    });
-  };
+
   const closeAction = () => {
     setConfirmationConfig({
       message: '',

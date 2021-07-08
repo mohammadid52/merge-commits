@@ -12,18 +12,18 @@ import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderIn
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import LessonPlanDescription from '../UI/LessonPlanDescription';
 import Loader from '../../../Atoms/Loader';
 import Toolbar from '../UI/UIComponents/Toolbar';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 import {PlusIcon} from '@heroicons/react/solid';
 import {IconType} from 'react-icons/lib';
-import {RiPagesLine} from 'react-icons/ri';
-import Modal from '../../../Atoms/Modal';
-import {findLastIndex, lastIndexOf, remove} from 'lodash';
+import {RiArrowRightSLine, RiPagesLine} from 'react-icons/ri';
+
+import {findLastIndex, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+import Tooltip from '../../../Atoms/Tooltip';
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
   universalLessonDetails: UniversalLesson;
@@ -66,13 +66,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleEditBlockContent,
     handleModalPopToggle,
     handleTagModalOpen,
-    setEditModal,
-    setPageDetailsModal,
-    pageDetailsModal,
   } = props;
   const {previewMode, setUniversalLessonDetails, fetchingLessonDetails} = useULBContext();
   const {
-    dispatch,
     clientKey,
     userLanguage,
     state: {
@@ -81,17 +77,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   } = useContext(GlobalContext);
 
   const {LessonBuilderDict} = useDictionary(clientKey);
-
-  const handleThemeChange = () => {
-    dispatch({
-      type: 'UPDATE_LESSON_PAGE_THEME',
-      payload: {theme: lessonPageTheme === 'dark' ? 'light' : 'dark'},
-    });
-  };
-
-  const handleAddNewPage = () => {
-    history.push(`/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}`);
-  };
 
   const goToLessonPlan = () => {
     history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}&tab=1`);
@@ -185,7 +170,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-
       {!previewMode && (
         <GiantButton
           icon={PlusIcon}
@@ -196,6 +180,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           }}
         />
       )}
+      {/* 
       {!previewMode && (
         <GiantButton
           onClick={() => {
@@ -206,39 +191,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           text="Show Page Details"
           side={'right'}
         />
-      )}
-
-      {/* {pageDetailsModal && (
-        <Modal
-          closeAction={() => setPageDetailsModal(false)}
-          showHeader
-          titleButton={
-            <span
-              onClick={() => {
-                setPageDetailsModal(false);
-                setEditModal({
-                  show: true,
-                  content: {
-                    id: activePageData.id,
-                    title: activePageData.title,
-                    description: activePageData.description,
-                    label: activePageData.label,
-                    estTime: activePageData.estTime,
-                  },
-                  editOnlyId: false,
-                });
-              }}
-              className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-indigo-200 text-indigo-800 w-auto">
-              Edit
-            </span>
-          }
-          closeOnBackdrop
-          showHeaderBorder
-          title={'Page Details'}
-          showFooter={false}>
-          <LessonPlanDescription activePageData={activePageData} />
-        </Modal>
       )} */}
+
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
           activePageData && activePageData.class ? activePageData.class : ''
@@ -285,45 +239,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             )}
           </LessonPageWrapper>
         </div>
-        {/* <div className="absolute top-10 right-2 w-auto flex flex-col items-center z-30">
-        <div className="bg-dark flex flex-col items-center justify-center w-32 p-2">
-          <button
-            onClick={handleThemeChange}
-            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
-            {lessonPageTheme === 'light' ? <FaSun /> : <FaMoon />}
-          </button>
-          <button
-            onClick={() => setPreviewMode(!previewMode)}
-            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
-            {previewMode ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-          </button>
 
-          <button
-            onClick={() => setEnableDnD(!enableDnD)}
-            className="text-white bg-indigo-500 h-auto py-2 my-2 px-2 rounded-md shadow hover:shadow-lg text-2xl">
-            {enableDnD ? <RiDragDropFill /> : <RiDragDropLine />}
-          </button>
-
-          <button
-            onClick={handleAddNewPage}
-            className="text-white bg-indigo-500 h-auto py-2 my-2 w-full px-2 rounded-md shadow hover:shadow-lg text-base">
-            Add page
-          </button>
-          <button
-            onClick={goToLessonPlan}
-            className="text-white bg-indigo-500 h-auto py-2 my-2 w-full px-2 rounded-md shadow hover:shadow-lg text-base">
-            Lesson Plan
-          </button>
-        </div>
-      </div> */}
         <div className={`col-span-1`}>
-          {/* <div className="w-4/6 min-w-64">
-          <LessonPlanDescription
-            activePageData={activePageData}
-            setEditModal={setEditModal}
-          />
-        </div> */}
-
           <NewLessonPlanSO
             editMode={editMode}
             pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing

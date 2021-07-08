@@ -2,7 +2,7 @@ import '@pathofdev/react-tag-input/build/index.css';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
-import {ExclamationCircleIcon} from '@heroicons/react/solid';
+
 import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import {estimatedTimeList} from '../../../../../utilities/staticData';
@@ -12,7 +12,6 @@ import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
-import * as mutations from '../../../../../graphql/mutations';
 
 import {Switch} from '@headlessui/react';
 import {FaMoon, FaSun} from 'react-icons/fa';

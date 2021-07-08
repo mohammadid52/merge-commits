@@ -13,6 +13,7 @@ const FormTagInput = ({className, error, tags, handleChange}: any) => {
   return (
     <>
       <TagsInput
+        maxTags={15}
         value={tags}
         className={className}
         onChange={handleChange}

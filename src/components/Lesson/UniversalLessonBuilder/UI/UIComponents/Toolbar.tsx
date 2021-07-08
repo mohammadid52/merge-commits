@@ -1,5 +1,4 @@
-import {TrashIcon} from '@heroicons/react/solid';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   AiOutlineDelete,
   AiOutlineEye,
