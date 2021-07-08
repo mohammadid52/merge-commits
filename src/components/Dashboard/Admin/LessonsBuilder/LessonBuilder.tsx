@@ -598,13 +598,13 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const steps: IStepElementInterface[] = [
     {
       title: 'Overview',
-      step: 'overview',
+      stepValue: 'overview',
       icon: <IoCardSharp />,
       isComplete: true,
     },
     {
       title: 'Activities',
-      step: 'activities',
+      stepValue: 'activities',
       icon: <FaQuestionCircle />,
       disabled: !Boolean(lessonId),
       isComplete: false,
@@ -612,7 +612,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     },
     {
       title: 'Courses',
-      step: 'courses',
+      stepValue: 'courses',
       icon: <FaQuestionCircle />,
       disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
       isComplete: false,
@@ -620,7 +620,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     },
     {
       title: 'Learning Evidence',
-      step: 'learning-evidence',
+      stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
       disabled: true,
       isComplete: false,
