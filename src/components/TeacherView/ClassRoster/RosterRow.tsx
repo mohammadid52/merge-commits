@@ -51,7 +51,7 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   };
 
   const studentIsViewed = () => {
-    if (controlState.studentViewing.live) {
+    if (controlState.studentViewing) {
       return viewedStudent === id;
     }
   };

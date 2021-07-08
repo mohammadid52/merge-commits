@@ -101,6 +101,7 @@ const LessonControl = () => {
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
       getSyllabusLesson(lessonID).then((_: void) =>
         console.log('Lesson Mount - ', 'Lesson fetched!')
       );

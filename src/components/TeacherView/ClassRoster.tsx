@@ -144,10 +144,10 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   useEffect(() => {
-    if (lessonState.syllabusLessonID && controlState.roster.length === 0) {
+    if (lessonState.universalLessonID && controlState.roster.length === 0) {
       getSyllabusLessonStudents();
     }
-  }, [lessonState.syllabusLessonID]);
+  }, [lessonState.universalLessonID]);
 
   // Subscriptions and updating
   const subscribeToPersonLocations = () => {
@@ -213,9 +213,8 @@ const ClassRoster = (props: classRosterProps) => {
       return student.personAuthID === id;
     });
 
-    // console.log('row ID : ', id)
     setViewedStudent(id);
-    controlDispatch({type: 'SET_STUDENT_VIEWING', payload: selected[0]});
+    controlDispatch({type: 'SET_STUDENT_VIEWING', payload: id});
   };
 
   const handleManualRefresh = () => {

@@ -14,6 +14,10 @@ type lessonControlActions =
       payload: {students: any[]};
     }
   | {
+      type: 'SET_STUDENT_VIEWING';
+      payload: string;
+    }
+  | {
       type: 'CLEANUP';
       payload: any;
     };
@@ -27,6 +31,8 @@ export const lessonControlReducer = (
       return state;
     case 'UPDATE_STUDENT_ROSTER':
       return {...state, roster: action.payload.students};
+    case 'SET_STUDENT_VIEWING':
+      return {...state, studentViewing: action.payload};
     default:
       return state;
   }
