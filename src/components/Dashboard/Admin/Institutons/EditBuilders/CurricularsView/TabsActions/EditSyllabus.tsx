@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {useHistory, useLocation, useParams} from 'react-router';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import React, { useState, useEffect, useContext } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router';
+import { IoArrowUndoCircleOutline } from 'react-icons/io5';
+import API, { graphqlOperation } from '@aws-amplify/api';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import find from 'lodash/find';
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums';
@@ -13,22 +13,22 @@ import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
 import Selector from '../../../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
-import {languageList, statusList} from '../../../../../../../utilities/staticData';
-import {reorder, getLessonType} from '../../../../../../../utilities/strings';
+import { languageList, statusList } from '../../../../../../../utilities/staticData';
+import { reorder, getLessonType } from '../../../../../../../utilities/strings';
 
 // TODO: Check wether mutations and queries are needed for fetching all the data or not.
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
-import {getAsset} from '../../../../../../../assets';
-import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
+import { getAsset } from '../../../../../../../assets';
+import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import Tooltip from '../../../../../../Atoms/Tooltip';
 import findIndex from 'lodash/findIndex';
 
-interface EditSyllabusProps {}
+interface EditSyllabusProps { }
 interface InitialData {
   name: string;
   description: string;
@@ -36,7 +36,7 @@ interface InitialData {
   policies: string;
   purpose: string;
   objectives: string;
-  languages: {id: string; name: string; value: string}[];
+  languages: { id: string; name: string; value: string }[];
 }
 
 interface UIMessages {
@@ -47,13 +47,13 @@ interface UIMessages {
 }
 
 const EditSyllabus = (props: EditSyllabusProps) => {
-  const {} = props;
+  const { } = props;
   const history = useHistory();
   const location = useLocation();
 
-  const {clientKey, theme, userLanguage} = useContext(GlobalContext);
+  const { clientKey, theme, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {EditSyllabusDict, BreadcrumsTitles} = useDictionary(clientKey);
+  const { EditSyllabusDict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const initialData = {
     name: '',
@@ -62,7 +62,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     policies: '',
     purpose: '',
     objectives: '',
-    languages: [{id: '1', name: 'English', value: 'EN'}],
+    languages: [{ id: '1', name: 'English', value: 'EN' }],
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [loading, setLoading] = useState(false);
@@ -96,7 +96,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const institutionId = urlParams.institutionId;
 
   const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
@@ -126,7 +126,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       ...syllabusData,
       [e.target.name]: e.target.value,
     });
+    console.log('unsavedChanges', unsavedChanges)
     if (!unsavedChanges) {
+      console.log('here', unsavedChanges)
       setUnsavedChanges(true);
     }
     if (messages.show) {
@@ -142,7 +144,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     const currentLanguages = syllabusData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, {id, name, value}];
+      updatedList = [...currentLanguages, { id, name, value }];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
@@ -160,7 +162,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, {id, name, value}];
+      updatedList = [...currentDesigners, { id, name, value }];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -177,7 +179,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       try {
         setLoading(true);
         const languagesCode = syllabusData.languages.map(
-          (item: {value: string}) => item.value
+          (item: { value: string }) => item.value
         );
         const designers = selectedDesigners.map((item) => item.id);
         const input = {
@@ -193,7 +195,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           designers: designers,
         };
         const newSyllabus = await API.graphql(
-          graphqlOperation(mutations.updateSyllabus, {input: input})
+          graphqlOperation(mutations.updateSyllabus, { input: input })
         );
         setMessages({
           show: true,
@@ -213,6 +215,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       }
     }
   };
+
   const validateForm = async () => {
     if (syllabusData.name.trim() === '') {
       setMessages({
@@ -222,21 +225,6 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       });
       return false;
     }
-    //  TODO: Need to confirm that syllabus name should be uniq or not?
-
-    // else if (syllabusData.name.trim() !== '') {
-    //   const isUniq = await checkUniqSyllabusName()
-    //   if (!isUniq) {
-    //     setMessages({
-    //       show: true,
-    //       message: 'This syllabus name is already exist, please add another name.',
-    //       isError: true
-    //     })
-    //     return false;
-    //   } else {
-    //     return true
-    //   }
-    // }
     else {
       return true;
     }
@@ -246,7 +234,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (syllabusId) {
       try {
         const result: any = await API.graphql(
-          graphqlOperation(queries.getUniversalSyllabus, {id: syllabusId})
+          graphqlOperation(queries.getUniversalSyllabus, { id: syllabusId })
         );
         const savedData = result.data.getUniversalSyllabus;
         setSyllabusData({
@@ -282,13 +270,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.fetchPersons, {
-          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+          filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
           limit: 300
         })
       );
       const savedData = result.data.listPersons;
       const updatedList = savedData?.items.map(
-        (item: {id: string; firstName: string; lastName: string}) => ({
+        (item: { id: string; firstName: string; lastName: string }) => ({
           id: item?.id,
           name: `${item?.firstName || ''} ${item.lastName || ''}`,
           value: `${item?.firstName || ''} ${item.lastName || ''}`,
@@ -338,6 +326,39 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       setSelectedDesigners(designers);
     }
   }, [designersList, designerIds]);
+
+
+  const createNewLesson = () => {
+    console.log('createNewLesson', unsavedChanges)
+    if (unsavedChanges) {
+      setWarnModal({
+        ...warnModal,
+        lessonPlan: true,
+        show: !warnModal.show,
+        lessonEdit: false,
+      });
+    } else {
+      history.push('/dashboard/lesson-builder/lesson/add');
+    }
+  };
+
+  const saveAndCreateNew = async () => {
+    const result: boolean = await saveSyllabusDetails();
+    if (result) {
+      history.push('/dashboard/lesson-builder/lesson/add');
+    } else {
+      toggleModal();
+    }
+  };
+
+  const toggleModal = () => {
+    setWarnModal({
+      ...warnModal,
+      lessonPlan: false,
+      show: false,
+      lessonEdit: false,
+    });
+  };
 
   const {
     name,
@@ -485,17 +506,56 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                 {messages.show && !messages.lessonError ? (
                   <div className="py-2 m-auto text-center">
                     <p
-                      className={`${
-                        messages.isError ? 'text-red-600' : 'text-green-600'
-                      }`}>
+                      className={`${messages.isError ? 'text-red-600' : 'text-green-600'
+                        }`}>
                       {messages.message && messages.message}
                     </p>
                   </div>
                 ) : null}
+                <div className="bg-white shadow-5 sm:rounded-lg mb-4">
+                  <div className="px-4 py-5 flex items-center justify-between border-b-0 border-gray-200 sm:px-6">
+                    <h3 className="text-lg text-center leading-6 font-medium text-gray-900">
+                      {EditSyllabusDict[userLanguage]['lessonplan']}
+                    </h3>
+                    <div className="flex justify-end">
+                      <Buttons
+                        btnClass="py-3 px-10"
+                        label={EditSyllabusDict[userLanguage]['createnew']}
+                        onClick={createNewLesson}
+                        disabled={loading ? true : false}
+                      />
+                    </div>
+                  </div>
+                  {/* Here */}
+                </div>
               </div>
             </div>
           </div>
         </div>
+        {warnModal.show &&
+          (warnModal.lessonPlan ? (
+            <ModalPopUp
+              closeAction={() =>
+                history.push('/dashboard/lesson-builder/lesson/add')
+              }
+              saveAction={saveAndCreateNew}
+              saveLabel="SAVE"
+              message={warnModal.message}
+              loading={loading}
+              cancelLabel="DISCARD"
+            />
+          ) : (
+            <ModalPopUp
+              saveAction={saveAndGoback}
+              saveLabel="SAVE"
+              closeAction={closeModal}
+              cancelLabel="CANCEL"
+              loading={loading}
+              noButton="DISCARD"
+              noButtonAction={cancelSaveAction}
+              message={warnModal.message}
+            />
+          ))}
       </PageWrapper>
     </div>
   );
