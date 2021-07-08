@@ -14,6 +14,7 @@ import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_d
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import {useParams} from 'react-router';
 import {lessonControlState} from '../../state/LessonControlState';
+import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
 
 const LessonControl = () => {
   const {
@@ -68,21 +69,27 @@ const LessonControl = () => {
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
-  // const subscribeToStudentData = (lessonID: string) => {
-  //   const studentDataSubscription = API.graphql(
-  //     graphqlOperation(customSubscriptions.onChangeStudentData, {
-  //       syllabusLessonID: lessonID,
-  //     })
-  //     // @ts-ignore
-  //   ).subscribe({
-  //     next: (studentData: any) => {
-  //       let updatedData = studentData.value.data.onChangeStudentData;
-  //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
-  //     },
-  //   });
-  //
-  //   return studentDataSubscription;
-  // };
+  const subscribeToStudentData = (lessonID: string, authId: string) => {
+    //   const studentDataSubscription = API.graphql(
+    //     graphqlOperation(customSubscriptions.onChangeStudentData, {
+    //       syllabusLessonID: lessonID,
+    //     })
+    //     // @ts-ignore
+    //   ).subscribe({
+    //     next: (studentData: any) => {
+    //       let updatedData = studentData.value.data.onChangeStudentData;
+    //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
+    //     },
+    //   });
+    //
+    //   return studentDataSubscription;
+    /**
+     * TODO:
+     *  Ask Aman how to set this up...
+     *  Subscribe to studentData, but then 1 row at a time
+     *  based on these filters: lessonID, authId
+     */
+  };
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
@@ -175,8 +182,6 @@ const LessonControl = () => {
       const viewedStudentLocation = controlState.roster.find(
         (student: any) => student.personAuthID === controlState.studentViewing
       )?.currentLocation;
-
-      console.log('controlState.roster - currentLocation - ', viewedStudentLocation);
 
       if (viewedStudentLocation !== '') {
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
