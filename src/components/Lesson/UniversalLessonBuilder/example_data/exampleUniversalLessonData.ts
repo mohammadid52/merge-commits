@@ -257,7 +257,7 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_3_part_0_dropdown-0',
-              type: 'poem',
+              type: 'poem-input',
               value: [
                 {
                   id: 'line_1',
@@ -295,7 +295,7 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_3_part_1_highlighter-0',
-              type: 'highlighter',
+              type: 'highlighter-input',
               value: [
                 {
                   id: 'highlighter_433374',

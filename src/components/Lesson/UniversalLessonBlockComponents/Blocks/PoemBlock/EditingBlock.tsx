@@ -4,14 +4,14 @@ import RichTextEditor from '../../../../Atoms/RichTextEditor';
 interface EditingBlockProps {
   id?: string;
   poemWriting?: string;
-  setPoemWriting?: React.Dispatch<React.SetStateAction<string>>;
+  handleUpdateStudentData?: (domID: string, input: string[]) => void;
 }
 
 const EditingBlock = (props: EditingBlockProps) => {
-  const {id, poemWriting, setPoemWriting} = props;
+  const {id, poemWriting, handleUpdateStudentData} = props;
 
   const setEditorContent = (html: string, text: string, idKey: string) =>
-    setPoemWriting(html);
+    handleUpdateStudentData(id, [html]);
 
   return (
     <div className="w-full flex flex-col">

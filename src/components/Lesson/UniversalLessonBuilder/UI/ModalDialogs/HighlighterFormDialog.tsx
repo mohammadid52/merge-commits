@@ -54,7 +54,7 @@ const HighlighterFormDialog = ({
       const updatedList = updateBlockContentULBHandler(
         '',
         '',
-        'highlighter',
+        'highlighter-input',
         [{id: uuidv4().toString(), value: inputFieldValue}],
         0
       );
@@ -63,7 +63,7 @@ const HighlighterFormDialog = ({
       const updatedList = createNewBlockULBHandler(
         '',
         '',
-        'highlighter',
+        'highlighter-input',
         [{id: uuidv4().toString(), value: inputFieldValue}],
 
         0

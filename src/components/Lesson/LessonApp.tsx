@@ -192,6 +192,7 @@ const LessonApp = () => {
             const pagePartContent = pagePart.partContent.reduce(
               (pagePartAcc: any[], partContent: PartContent) => {
                 const isForm = /form/g.test(partContent.type);
+                const isOtherInput = /input/g.test(partContent.type);
                 if (isForm) {
                   // map through partContent sub array
                   return [
@@ -202,6 +203,14 @@ const LessonApp = () => {
                         input: [''],
                       };
                     }),
+                  ];
+                } else if (isOtherInput) {
+                  return [
+                    ...pagePartAcc,
+                    {
+                      domID: partContent.id,
+                      input: [''],
+                    },
                   ];
                 } else {
                   return pagePartAcc;
