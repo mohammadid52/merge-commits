@@ -3146,6 +3146,11 @@ const LessonBuilderDict: any = {
       ADD_NEW_ACTIVITY: 'New Homework',
       HEADING: 'Homework/Challenges',
     },
+    LESSON_COURSES_UNIT_DETAIL_VIEW: {
+      INSTITUTION: 'Institution',
+      CLASSROOM: 'Classroom',
+      LEAD_INSTRUCTOR: 'Lead Instructor'
+    },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'Description',
       ESTIMATED_TIME: 'Estimated Time',
