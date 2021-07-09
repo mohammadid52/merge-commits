@@ -22,8 +22,8 @@ export interface FormControlProps {
   id?: string;
   inputID: string;
   type?: string;
-  label: string;
-  value: any;
+  label?: string;
+  value?: any;
   options?: any;
   isInLesson?: boolean;
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
@@ -321,7 +321,16 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           />
         );
       case FORM_TYPES.RATING:
-        return <StarRatingBlock id={id} inputID={inputID} label={label} />;
+        return (
+          <StarRatingBlock
+            id={id}
+            inputID={inputID}
+            label={label}
+            isInLesson={isInLesson}
+            handleUpdateStudentData={handleUpdateStudentData}
+            getStudentDataValue={getStudentDataValue}
+          />
+        );
       case FORM_TYPES.LINK:
         return <LinkInput id={id} value={value} inputID={inputID} label={label} />;
       case FORM_TYPES.ATTACHMENTS:
