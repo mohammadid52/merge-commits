@@ -32,6 +32,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         class
         active
         disabled
+        interactionType
         displayMode
         open
         estTime
