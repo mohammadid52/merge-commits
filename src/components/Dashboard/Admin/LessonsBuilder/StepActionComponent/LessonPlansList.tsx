@@ -29,7 +29,7 @@ const LessonPlansList = ({
   const history = useHistory();
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {LessonBuilderDict} = useDictionary(clientKey);
+  const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
   const {setPreviewMode, updateMovableList} = useULBContext();
 
   const pages = universalLessonDetails.lessonPlan;
@@ -174,7 +174,7 @@ const LessonPlansList = ({
                                     &nbsp;|&nbsp;
                                   </span>
                                   <span onClick={() => editLessonPage(page.id)}>
-                                    {LessonBuilderDict[userLanguage]['BUTTON']['EDIT']}
+                                    {BUTTONS[userLanguage]['DELETE']}
                                   </span>
                                 </span>
                               </div>

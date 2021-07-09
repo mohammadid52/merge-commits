@@ -6,9 +6,13 @@ interface TooltipProps {
   placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
   additionalClass?: string;
 }
-
+/**  
+ @text the main text content
+ @show to show/hide tooltip. default true
+**/
 const Tooltip = ({
   text,
+
   show = true,
   placement = 'right',
   children,

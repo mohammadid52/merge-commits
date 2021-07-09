@@ -147,6 +147,7 @@ module.exports = {
       29: '29rem',
       30: '30rem',
       '1/2': '50%',
+      auto:'auto'
     },
     fontFamily: {
       open: ['Open Sans', 'sans-serif'],
@@ -725,5 +726,7 @@ module.exports = {
     position: ['responsive', 'hover', 'focus'],
     display: ['group-hover', 'responsive', 'group-focus'],
   },
-  plugins: [],
+  // for slide over
+  plugins: [require('@tailwindcss/forms')],
+  // plugins: [],
 };

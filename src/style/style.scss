@@ -479,7 +479,7 @@
 
 [data-tooltip] {
   position: relative;
-  z-index: 9999;
+  z-index: 10;
 }
 
 /* Positioning and visibility settings of the tooltip */
@@ -754,6 +754,7 @@
     transform: translateX(-100px);
   }
 }
+
 .comment-box {
   transition: all 0.15s ease-in-out;
   &:focus-within {
