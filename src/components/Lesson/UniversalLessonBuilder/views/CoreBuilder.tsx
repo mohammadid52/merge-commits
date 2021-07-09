@@ -114,6 +114,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     show: false,
     message: '',
   });
+
+  /**
+   * @void trigger delete modal
+   */
   const onDeleteButtonClick = () => {
     setConfirmationConfig({
       message:
@@ -129,6 +133,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   };
 
   const {message = '', show = false} = confirmationConfig;
+
+  /**
+   * @param id - pageId - string
+   * @void this function will delete the current lesson
+   */
   const deleteLessonPlan = async (id: string) => {
     remove(universalLessonDetails.lessonPlan, (item: any) => item.id === id);
     setUniversalLessonDetails({...universalLessonDetails});
@@ -200,7 +209,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
           <Toolbar
             deleteLesson={onDeleteButtonClick}
-            newLessonPlanShow={newLessonPlanShow}
             setNewLessonPlanShow={setNewLessonPlanShow}
           />
           <LessonPageWrapper>
