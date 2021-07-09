@@ -11,7 +11,7 @@ import Selector from '../../../../Atoms/Form/Selector';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {estimatedTimeList} from '../../../../../utilities/staticData';
 
-const EditPageNameDialog = ({content, closeAction}: any) => {
+const EditPageNameDialog = ({content, closeAction, backToDetails}: any) => {
   const [updatedValues, setUpdatedValues] = useState({
     id: content.id,
     title: content.title,
@@ -42,6 +42,7 @@ const EditPageNameDialog = ({content, closeAction}: any) => {
     const PATH_TO_PAGECONTENT = `lessonPlan[${pageIdx}]`;
     const updatedObject = {
       ...universalLessonDetails.lessonPlan[pageIdx],
+      id: content.id,
       title: updatedValues.title,
       description: updatedValues.description,
       label: updatedValues.label,
@@ -51,6 +52,7 @@ const EditPageNameDialog = ({content, closeAction}: any) => {
     update(universalLessonDetails, PATH_TO_PAGECONTENT, () => {
       return updatedObject;
     });
+
     setUniversalLessonDetails({...universalLessonDetails});
 
     const input = {
@@ -58,6 +60,7 @@ const EditPageNameDialog = ({content, closeAction}: any) => {
       lessonPlan: [...universalLessonDetails.lessonPlan],
     };
 
+    backToDetails();
     await updateLessonPageToDB(input);
   };
 

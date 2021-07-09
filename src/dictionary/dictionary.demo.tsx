@@ -8,6 +8,9 @@ const BUTTONS: any = {
     CANCEL: 'Cancel',
     PUBLISH: 'Publish',
     YES: 'Yes',
+    CREATE: 'Create',
+    CREATING: 'Creating'
+
   },
   ES: {
     ADD: 'Añadir',
@@ -18,6 +21,9 @@ const BUTTONS: any = {
     CANCEL: 'Cancelar',
     PUBLISH: 'TBD',
     YES: 'TBD',
+    CREATE: 'TBD',
+    CREATING: 'TBD'
+
   },
 };
 

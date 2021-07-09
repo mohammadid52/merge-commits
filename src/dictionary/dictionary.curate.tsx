@@ -8,6 +8,8 @@ const BUTTONS: any = {
     CANCEL: 'Cancel',
     PUBLISH: 'Publish',
     YES: 'Yes',
+    CREATE: 'Create',
+    CREATING: 'Creating',
   },
   ES: {
     ADD: 'Añadir',
@@ -18,6 +20,8 @@ const BUTTONS: any = {
     CANCEL: 'Cancelar',
     PUBLISH: 'TBD',
     YES: 'TBD',
+    CREATE: 'TBD',
+    CREATING: 'TBD',
   },
 };
 
@@ -3042,15 +3046,20 @@ const LessonBuilderDict: any = {
       EDIT: 'Edit',
       VIEW: 'View',
       PREVIEW: 'Preview',
+      ADD_ROW: 'Add Component',
       SAVE: 'Save',
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
-      PAGE_TITLE: 'Page Title',
-      PLAN_LABEL: 'Plan Label',
-      DESCRIPTION: 'Description',
+      PAGE_TITLE: 'Activity name',
+      PLAN_LABEL: 'Activity label',
+      DESCRIPTION: 'Instructions',
+      TAGS: 'Add Tags',
       ESTIMATED_TIME: 'Estimated Time',
       ACTION: 'Action',
+      ACTIVITY_TYPE: 'Activity Type',
+      INTERACTION_TYPE: 'Interaction Type',
+      ACTIVITY_INSTRUCTIONS: 'Activity Instructions',
     },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'Description',
@@ -3105,6 +3114,7 @@ const LessonBuilderDict: any = {
       EDIT: 'TBD',
       VIEW: 'TBD',
       PREVIEW: 'TBD',
+      ADD_ROW: 'TBD',
       SAVE: 'TBD',
     },
     LESSON_PLAN_COLUMN: {
@@ -3112,8 +3122,12 @@ const LessonBuilderDict: any = {
       PAGE_TITLE: 'TBD',
       PLAN_LABEL: 'TBD',
       DESCRIPTION: 'TBD',
+      TAGS: 'TBD',
       ESTIMATED_TIME: 'TBD',
       ACTION: 'TBD',
+      ACTIVITY_TYPE: 'TBD',
+      INTERACTION_TYPE: 'TBD',
+      ACTIVITY_INSTRUCTIONS: 'TBD',
     },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'TBD',

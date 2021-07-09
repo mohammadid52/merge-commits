@@ -23,6 +23,8 @@ import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit'
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import * as customQueries from '../../../customGraphql/customQueries';
+import Tooltip from '../../Atoms/Tooltip';
+import {RiArrowRightSLine} from 'react-icons/ri';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -501,10 +503,24 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       className="h-full bg-dark-gray flex overflow-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
 
-      <div className="w-full overflow-y-auto h-full bg-gray-200">
+      {true && (
+        <div
+          // onClick={() => setNewLessonPlanShow(true)}
+          className={`${
+            true ? 'not-collapse-right' : 'collapse-right'
+          } absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
+          <Tooltip placement="left" text="Show Activity Panel">
+            <div className="w-auto transform rotate-180 mr-1">
+              <RiArrowRightSLine color="#fff" size={24} />
+            </div>
+          </Tooltip>
+        </div>
+      )}
+
+      <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
         <BreadCrums items={breadCrumsList} />
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <SectionTitle
             title={LessonEditDict[userLanguage]['TITLE']}
             subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
@@ -517,7 +533,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               Icon={IoArrowUndoCircleOutline}
             />
           </div>
-        </div>
+        </div> */}
         {/* Body */}
         <div className="w-full h-full pb-8 m-auto">
           <div

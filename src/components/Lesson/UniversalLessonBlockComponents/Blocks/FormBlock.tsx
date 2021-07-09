@@ -113,7 +113,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         // if (imageUrl) addImageUrlToResponse(imageUrl);
       }
     };
-  const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
+    const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
@@ -173,7 +173,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             selectMany ? (
               <div
                 key={`question_${id}_${idx}`}
-                className={`flex w-auto justify-center items-center mr-8`}>
+                className={`flex my-2 w-auto justify-center items-center mr-8`}>
                 <input
                   id={`${label}`}
                   data-key={id}

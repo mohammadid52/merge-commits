@@ -25,7 +25,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
       data-id={dataIdAttribute}
       className={`
         relative
-        my-4
+        my-4 ${previewMode ? 'bg-gray-700 rounded-lg shadow' : ''}
       `}>
       <div
         className={`

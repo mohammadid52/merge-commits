@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
@@ -20,7 +20,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
       <div className="flex w-auto items-center p-4">
-        <p key={inputID} id={inputID} className={themeTextColor}>
+        <p key={inputID} id={inputID} className={`whitespace-pre-wrap ${themeTextColor}`}>
           {inputValue.value}
         </p>
       </div>
