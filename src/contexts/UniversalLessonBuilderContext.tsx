@@ -107,6 +107,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [fetchingLessonDetails, setFetchingLessonDetails] = useState(false);
   const [previewMode, setPreviewMode] = useState<boolean>(false);
+  const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -125,6 +126,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         setSelectedPageID,
         getCurrentPage,
         theme,
+        newLessonPlanShow,
+        setNewLessonPlanShow,
         setUniversalLessonDetails,
         setEnableDnD,
         addFromULBHandler: addULBHandler,

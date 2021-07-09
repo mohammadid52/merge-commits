@@ -1,10 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {useRouteMatch, useHistory} from 'react-router';
 import {API, graphqlOperation} from 'aws-amplify';
-
-import Buttons from '../../Atoms/Buttons';
-import SectionTitle from '../../Atoms/SectionTitle';
 import BreadCrums from '../../Atoms/BreadCrums';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -103,6 +99,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     selectedPageID,
     setFetchingLessonDetails,
     setSelectedPageID,
+    setNewLessonPlanShow,
   } = useULBContext();
 
   const breadCrumsList = [
@@ -503,19 +500,15 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       className="h-full bg-dark-gray flex overflow-hidden">
       {/*{currentStepComp(universalBuilderStep)}*/}
 
-      {true && (
-        <div
-          // onClick={() => setNewLessonPlanShow(true)}
-          className={`${
-            true ? 'not-collapse-right' : 'collapse-right'
-          } absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
-          <Tooltip placement="left" text="Show Activity Panel">
-            <div className="w-auto transform rotate-180 mr-1">
-              <RiArrowRightSLine color="#fff" size={24} />
-            </div>
-          </Tooltip>
-        </div>
-      )}
+      <div
+        onClick={() => setNewLessonPlanShow(true)}
+        className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
+        <Tooltip placement="left" text="Show Activity Panel">
+          <div className="w-auto transform rotate-180 mr-1">
+            <RiArrowRightSLine color="#fff" size={24} />
+          </div>
+        </Tooltip>
+      </div>
 
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}

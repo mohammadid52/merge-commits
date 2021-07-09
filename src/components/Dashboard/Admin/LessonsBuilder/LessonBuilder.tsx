@@ -198,7 +198,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const fetchUniversalLessonDetails = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(queries.getUniversalLesson, {
+        graphqlOperation(customQueries.getUniversalLesson, {
           id: lessonId,
         })
       );

@@ -45,8 +45,11 @@ const LessonActivities = ({
 
   const addNewLessonPlan = () => {
     history.push(
-      `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}&isNewPage=${true}`
+      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=open-overlay`
     );
+    // history.push(
+    //   `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}&isNewPage=${true}`
+    // );
   };
 
   const editLessonPage = (id: string) => {

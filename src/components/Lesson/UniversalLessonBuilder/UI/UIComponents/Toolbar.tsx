@@ -52,7 +52,13 @@ const Container = ({children}: {children: any}) => (
   <div className="flex items-center w-auto">{children}</div>
 );
 
-const Toolbar = ({deleteLesson, setNewLessonPlanShow}: any) => {
+const Toolbar = ({
+  deleteLesson,
+  setNewLessonPlanShow,
+}: {
+  deleteLesson: () => void;
+  setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
 
   return (
