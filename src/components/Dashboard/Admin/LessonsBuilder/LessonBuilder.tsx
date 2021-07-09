@@ -23,6 +23,7 @@ import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
 import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import LessonActivities from './StepActionComponent/LessonActivities';
 import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
+import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import PreviewForm from './StepActionComponent/PreviewForm';
 import {
   InstructionInitialState,
@@ -453,15 +454,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         );
       case 'courses':
         return <LessonCourse />;
-      case 'Preview Details':
-        return (
-          <PreviewForm
-            lessonName={formData.name}
-            lessonID={lessonId}
-            lessonPlans={savedLessonDetails.lessonPlans || []}
-            lessonType={formData.type?.value}
-          />
-        );
+      case 'learning-evidence':
+        return <LearningEvidence />;
       // default:
       //   return <AddNewLessonForm
       //     changeLessonType={changeLessonType}

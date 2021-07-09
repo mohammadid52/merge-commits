@@ -18,7 +18,7 @@ import * as mutations from '../../../../../graphql/mutations';
 
 import {InitialData, InputValueObject} from '../LessonBuilder';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
-import { getAsset } from '../../../../../assets';
+import {getAsset} from '../../../../../assets';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
@@ -338,7 +338,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               languages: '',
               studentSummary: '',
             });
-            postLessonCreation(lessonsData?.id,'update');
+            postLessonCreation(lessonsData?.id, 'update');
           }
         } catch (error) {
           console.error(error);
@@ -381,7 +381,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     imagePreviewUrl = '',
     studentSummary = '',
   } = formData;
-  
+
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
       {/* <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
@@ -495,10 +495,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             <div className="border-b-0 border-gray-200 mt-6">
               <div className="grid grid-cols-2">
                 <div>
-                  <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
-                    </h3>
+                  <div className="pr-4">
+                    <div
+                      className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        {AddNewLessonFormDict[userLanguage]['OBJECTIVE']}
+                      </h3>
+                    </div>
                   </div>
                   <div className="py-4 pl-4">
                     <div className="px-3 py-4">
@@ -520,11 +523,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                   </div>
                 </div>
                 <div>
-                  <div
-                    className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      {AddNewLessonFormDict[userLanguage]['MATERIALS']}
-                    </h3>
+                  <div className="pl-4">
+                    <div
+                      className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]}`}>
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        {AddNewLessonFormDict[userLanguage]['MATERIALS']}
+                      </h3>
+                    </div>
                   </div>
                   <div className="py-4 pr-4">
                     <div className="px-3 py-4">
@@ -549,10 +554,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             </div>
             <div className="grid grid-cols-2">
               <div>
-                <div className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    {AddNewLessonFormDict[userLanguage]['REMINDERANDNOTES']}
-                  </h3>
+                <div className="pr-4">
+                  <div
+                    className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      {AddNewLessonFormDict[userLanguage]['REMINDERANDNOTES']}
+                    </h3>
+                  </div>
                 </div>
                 <div className="pl-4 py-4">
                   <div className="px-3 py-4">
@@ -566,10 +574,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3">
-                <div className={`col-span-3 border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Lesson card
-                  </h3>
+                <div className="col-span-3 pl-4">
+                  <div
+                    className={`border-b-0 pb-2 pl-2 ${theme.borderColor[themeColor]} pt-6`}>
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                      Lesson Card
+                    </h3>
+                  </div>
                 </div>
                 <div className="px-3 py-5">
                   <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mb-4">
