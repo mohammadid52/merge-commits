@@ -245,6 +245,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <div className={`col-span-1`}>
           <NewLessonPlanSO
             editMode={editMode}
+            setEditMode={setEditMode}
             pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing
             open={newLessonPlanShow}
             setOpen={setNewLessonPlanShow}

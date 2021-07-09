@@ -40,6 +40,7 @@ interface FieldsInterface {
 
 interface NewLessonPlanSOInterface {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
   editMode: boolean;
   pageDetails: any;
@@ -112,6 +113,7 @@ const NewLessonPlanSO = ({
   open,
   setOpen,
   editMode,
+  setEditMode,
   pageDetails,
 }: NewLessonPlanSOInterface) => {
   // fill the fields if edit mode
@@ -311,10 +313,10 @@ const NewLessonPlanSO = ({
 
           const data = res.data.updateUniversalLesson;
 
-          setSelectedPageID(pageId);
+          setUniversalLessonDetails({...data});
 
-          update(universalLessonDetails, `lessonPlan`, () => input.lessonPlan);
-          setUniversalLessonDetails({...universalLessonDetails});
+          setSelectedPageID(pageId);
+          setEditMode(true);
 
           if (data.id && !editMode) {
             history.push(
