@@ -152,14 +152,17 @@ const JumbotronModalDialog = ({
         width: imageInputs.width,
         caption: imageInputs.caption,
       };
-
+      const updatedData = inputFieldsArray.map((item) => item.type === 'background' ? {...item, ...input} : item);
       if (isEditingMode) {
-        const updatedList = updateBlockContentULBHandler('', '', 'video', [{...input}]);
-
+        const updatedList = updateBlockContentULBHandler(
+          '',
+          '',
+          'jumbotron',
+          updatedData
+        );
         await addToDB(updatedList);
       } else {
-        const updatedList = createNewBlockULBHandler('', '', 'image', [{...input}]);
-
+        const updatedList = createNewBlockULBHandler('', '', 'jumbotron', updatedData);
         await addToDB(updatedList);
       }
       setIsLoading(false);
@@ -228,26 +231,26 @@ const JumbotronModalDialog = ({
 
   const onJumbotronCreate = async () => {
     await onSave();
-    if (isEditingMode) {
-      const updatedList = updateBlockContentULBHandler(
-        '',
-        '',
-        'jumbotron',
-        inputFieldsArray,
-        0
-      );
-      // await addToDB(updatedList);
-    } else {
-      const updatedList = createNewBlockULBHandler(
-        '',
-        '',
-        'jumbotron',
-        inputFieldsArray,
-        0
-      );
+    // if (isEditingMode) {
+    //   const updatedList = updateBlockContentULBHandler(
+    //     '',
+    //     '',
+    //     'jumbotron',
+    //     inputFieldsArray,
+    //     0
+    //   );
+    //   // await addToDB(updatedList);
+    // } else {
+    //   const updatedList = createNewBlockULBHandler(
+    //     '',
+    //     '',
+    //     'jumbotron',
+    //     inputFieldsArray,
+    //     0
+    //   );
 
-      // await addToDB(updatedList);
-    }
+    //   // await addToDB(updatedList);
+    // }
 
     setUnsavedChanges(false);
 
