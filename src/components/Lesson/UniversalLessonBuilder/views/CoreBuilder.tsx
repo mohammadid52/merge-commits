@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
@@ -17,13 +17,12 @@ import Toolbar from '../UI/UIComponents/Toolbar';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 import {PlusIcon} from '@heroicons/react/solid';
 import {IconType} from 'react-icons/lib';
-import {RiArrowRightSLine, RiPagesLine} from 'react-icons/ri';
 
 import {findLastIndex, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
-import Tooltip from '../../../Atoms/Tooltip';
+import {useQuery} from '../../../../customHooks/urlParam';
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
   universalLessonDetails: UniversalLesson;
@@ -67,7 +66,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleModalPopToggle,
     handleTagModalOpen,
   } = props;
-  const {previewMode, setUniversalLessonDetails, fetchingLessonDetails} = useULBContext();
+  const {
+    previewMode,
+    setUniversalLessonDetails,
+    newLessonPlanShow,
+    setNewLessonPlanShow,
+    fetchingLessonDetails,
+  } = useULBContext();
   const {
     clientKey,
     userLanguage,
@@ -75,6 +80,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       lessonPage: {theme: lessonPageTheme = 'dark', themeBackgroundColor = ''} = {},
     },
   } = useContext(GlobalContext);
+
+  const params = useQuery(location.search);
+
+  const pageId = params.get('pageId');
+
+  useEffect(() => {
+    if (pageId === 'open-overlay') {
+      setNewLessonPlanShow(true);
+      setEditMode(false);
+    }
+  }, [pageId]);
 
   const {LessonBuilderDict} = useDictionary(clientKey);
 
@@ -86,14 +102,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     (lessonPage) => lessonPage.id === selectedPageID
   );
 
-  const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  function capitalizeFirstLetter(str: string = '') {
-    if (str.length > 0) {
-      const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
-      return capitalized;
-    }
-  }
+  const [editMode, setEditMode] = useState(true);
 
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
@@ -170,7 +179,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-      {!previewMode && (
+      {!previewMode && pageId !== 'open-overlay' && (
         <GiantButton
           icon={PlusIcon}
           text="Add New Activity"
@@ -180,28 +189,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           }}
         />
       )}
-      {/* 
-      {!previewMode && (
-        <GiantButton
-          onClick={() => {
-            setNewLessonPlanShow(true);
-            setEditMode(true);
-          }}
-          icon={RiPagesLine}
-          text="Show Page Details"
-          side={'right'}
-        />
-      )} */}
 
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
-        {/* <div className="h-12 flex items-center justify-center p-4 font-semibold">
-          <h2 className="text-white text-xl">
-            {capitalizeFirstLetter(activePageData?.title)}
-          </h2>
-        </div> */}
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
           <Toolbar
