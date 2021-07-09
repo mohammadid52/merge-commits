@@ -100,7 +100,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const activePageData = universalLessonDetails.lessonPlan.find(
+  const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
     (lessonPage) => lessonPage.id === selectedPageID
   );
 

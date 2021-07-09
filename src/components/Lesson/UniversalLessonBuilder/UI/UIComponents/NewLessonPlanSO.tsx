@@ -26,6 +26,7 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
 }
 interface FieldsInterface {
+  description: string;
   title: string;
   label: string;
   instructions: string;
@@ -36,10 +37,18 @@ interface FieldsInterface {
   classwork: boolean;
 }
 
+interface NewLessonPlanSOInterface {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+  editMode: boolean;
+  pageDetails: any;
+}
+
 const INITIAL_STATE: FieldsInterface = {
   title: '',
   label: '',
   instructions: '',
+  description: '', // ignore this field
   interactionType: [],
   tags: [],
   estTime: '1 min',
@@ -98,7 +107,12 @@ const Toggle = ({
   );
 };
 
-const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
+const NewLessonPlanSO = ({
+  open,
+  setOpen,
+  editMode,
+  pageDetails,
+}: NewLessonPlanSOInterface) => {
   // fill the fields if edit mode
   useEffect(() => {
     if (!isEmpty(pageDetails) && editMode) {
@@ -107,7 +121,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
         tags: pageDetails.tags || [],
         instructions: pageDetails.description,
         estTime: `${pageDetails.estTime} min`, //
-        interactionType: pageDetails.interactionType,
+        interactionType: pageDetails.interactionType || [],
         darkMode: true,
         classwork: true,
       });
