@@ -258,6 +258,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (lessonId) {
       setLoading(true);
       fetchUniversalLessonDetails();
+    }else{
+      setUniversalLessonDetails({
+        id: '',
+        summary: '',
+        designers: [''],
+        teachers: [''],
+        categories: [''],
+        lessonPlan: [],
+      });
     }
   }, []);
 
@@ -449,6 +458,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <LessonActivities
             loading={loading}
             lessonId={lessonId}
+            // lessonName={formData?.name}
             universalLessonDetails={universalLessonDetails}
           />
         );
