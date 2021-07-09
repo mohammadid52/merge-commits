@@ -1,5 +1,5 @@
 import EmojiPicker from 'emoji-picker-react';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {BiImageAdd} from 'react-icons/bi';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -10,10 +10,24 @@ import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
+import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
+import EmojiInput from './FormBlock/EmojiInputBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
   value?: {id: string; type: string; label: string; value: string}[];
+}
+
+export interface FormControlProps {
+  id?: string;
+  inputID: string;
+  type?: string;
+  label: string;
+  value: any;
+  options?: any;
+  isInLesson?: boolean;
+  handleUpdateStudentData?: (domID: string, input: string[]) => void;
+  getStudentDataValue?: (domID: string) => string[];
 }
 
 export const FormBlock = ({id, mode, value}: FormBlockProps) => {
@@ -24,8 +38,11 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
-  //  Check if form is in a Lesson, and if it is...
-  //  ...Dispatch the updated form data to context!
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+
+  // ##################################################################### //
+  // ######################## STUDENT DATA CONTEXT ####################### //
+  // ##################################################################### //
   const isInLesson = useInLessonCheck();
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
@@ -40,6 +57,18 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     });
   };
 
+  const getStudentDataValue = (domID: string) => {
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData.find(
+      (inputObj: StudentPageInput) => inputObj.domID === domID
+    );
+    if (getInput) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
+
   const [fields, setFields] = useState<any>({});
   const onChange = (e: any) => {
     const {id, value} = e.target;
@@ -50,8 +79,11 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     }
   };
 
-  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  // ##################################################################### //
+  // ########################## FORM BLOCK TYPES ######################### //
+  // ##################################################################### //
 
+  // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
   const Type = ({text, color = 'indigo'}: {color?: string; text: string}) => (
     <span
       className={`py-0.5 px-1 ml-2 text-xs  rounded bg-${color}-200  text-${color}-700`}>
@@ -59,6 +91,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     </span>
   );
 
+  // ~~~~~~~~~~~~~~~~~ LINK ~~~~~~~~~~~~~~~~ //
   const LinkInput = ({inputID, label, value}: any) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
@@ -76,12 +109,13 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
           onChange={isInLesson ? (e) => onChange(e) : undefined}
-          // value={fields[inputID] || 'Please input...'}
+          value={getStudentDataValue(inputID)}
         />
       </div>
     );
   };
 
+  // ~~~~~~~~~~~~~~ ATTACHMENT ~~~~~~~~~~~~~ //
   const AttachmentBlock = ({inputID, label, value}: any) => {
     const inputOther = useRef(null);
 
@@ -159,6 +193,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     );
   };
 
+  // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
   const generateCheckbox = (
     values: {label: string; text: string; id: string}[],
     selectMany: boolean
@@ -209,68 +244,18 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     }
   };
 
-  const EmojiInput = ({inputID, label, value}: any) => {
-    const [showEmojiSelector, setShowEmojiSelector] = useState(false);
-    const [textValue, setTextValue] = useState('');
-    const onEmojiSelect = (e: any) => {
-      try {
-        let textWithEmoji = value.concat(`${e.emoji} `);
-        setTextValue(textWithEmoji);
-        setShowEmojiSelector(false);
-      } catch (error) {
-        setShowEmojiSelector(false);
-      }
-    };
-
-    const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 ${themeTextColor}`;
-    return (
-      <div id={id} key={inputID} className={`mb-4 p-4`}>
-        <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
-          {label}
-        </label>
-
-        <div className="flex items-center relative">
-          <input
-            id={inputID}
-            disabled={mode === 'building'}
-            className={`w-full py-2 px-4 ${themeTextColor} ${themePlaceholderColor} rounded-xl ${
-              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-            }`}
-            name="emoji"
-            onChange={isInLesson ? (e) => onChange(e) : undefined}
-            type="text"
-            value={textValue}
-          />
-          {showEmojiSelector && (
-            <ClickAwayListener onClickAway={() => setShowEmojiSelector(false)}>
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="picker-wrapper absolute top-1 right-2 w-auto z-100">
-                <EmojiPicker
-                  groupVisibility={{
-                    recently_used: false,
-                  }}
-                  onEmojiClick={(e: any, emoji: any) => onEmojiSelect(emoji)}
-                />
-              </div>
-            </ClickAwayListener>
-          )}
-          <button
-            onClick={() => setShowEmojiSelector(true)}
-            className={`${actionStyles}`}>
-            😀
-          </button>
-        </div>
-      </div>
-    );
-  };
-
+  // ##################################################################### //
+  // ####################### FORM COMPOSER FUNTION ####################### //
+  // ##################################################################### //
   const composeInput = (
     inputID: string,
-    type: string,
-    label: string,
-    value: any,
-    options: any
+    type?: string,
+    label?: string,
+    value?: any,
+    options?: any,
+    isInLesson?: boolean,
+    handleUpdateStudentData?: any,
+    getStudentDataValue?: any
   ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
@@ -289,7 +274,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               onChange={isInLesson ? (e) => onChange(e) : undefined}
-              defaultValue={value}
+              value={getStudentDataValue(inputID)}
             />
           </div>
         );
@@ -308,7 +293,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               }`}
               name="story"
               onChange={isInLesson ? (e) => onChange(e) : undefined}
-              defaultValue={value}
+              value={getStudentDataValue(inputID)}
             />
           </div>
         );
@@ -324,7 +309,17 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         );
 
       case FORM_TYPES.EMOJI:
-        return <EmojiInput id={id} inputID={inputID} value={value} label={label} />;
+        return (
+          <EmojiInput
+            id={id}
+            inputID={inputID}
+            value={value}
+            label={label}
+            isInLesson={isInLesson}
+            handleUpdateStudentData={handleUpdateStudentData}
+            getStudentDataValue={getStudentDataValue}
+          />
+        );
       case FORM_TYPES.RATING:
         return <StarRatingBlock id={id} inputID={inputID} label={label} />;
       case FORM_TYPES.LINK:
@@ -344,7 +339,16 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         value.map((v: any, i: number) => {
           return (
             <React.Fragment key={`formBlock_${i}`}>
-              {composeInput(v.id, v.type, v.label, v.value, v.options)}
+              {composeInput(
+                v.id,
+                v.type,
+                v.label,
+                v.value,
+                v.options,
+                isInLesson,
+                handleUpdateStudentData,
+                getStudentDataValue
+              )}
             </React.Fragment>
           );
         })}

@@ -4,7 +4,7 @@ import {IoIosGlobe} from 'react-icons/io';
 import {AiOutlineInstagram, AiOutlineYoutube} from 'react-icons/ai';
 import {FaSpotify} from 'react-icons/fa';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 interface LinksBlockProps extends RowWrapperProps {
   id?: string;
@@ -14,14 +14,12 @@ interface LinksBlockProps extends RowWrapperProps {
 
 const LinksBlock = (props: LinksBlockProps) => {
   const {id, value} = props;
-    const {
-      state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
-    } = useContext(GlobalContext);
+  const {
+    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
   return (
     <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
-      {/* <PhotoBlock /> */}
-
       <div className="w-full h-full flex flex-row items-center justify-center ">
         <div className="h-full w-full flex flex-row">
           {value &&
