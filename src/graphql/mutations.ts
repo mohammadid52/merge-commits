@@ -10765,7 +10765,6 @@ export const createUniversalLesson = /* GraphQL */ `
     createUniversalLesson(input: $input, condition: $condition) {
       id
       type
-      tags
       label
       title
       institutionID
@@ -10803,6 +10802,7 @@ export const createUniversalLesson = /* GraphQL */ `
         }
         activityType
         interactionType
+        tags
       }
       homework {
         id
@@ -10823,6 +10823,7 @@ export const createUniversalLesson = /* GraphQL */ `
         }
         activityType
         interactionType
+        tags
       }
       darkMode
       createdAt
@@ -10838,7 +10839,6 @@ export const updateUniversalLesson = /* GraphQL */ `
     updateUniversalLesson(input: $input, condition: $condition) {
       id
       type
-      tags
       label
       title
       institutionID
@@ -10876,6 +10876,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         }
         activityType
         interactionType
+        tags
       }
       homework {
         id
@@ -10896,6 +10897,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         }
         activityType
         interactionType
+        tags
       }
       darkMode
       createdAt
@@ -10911,7 +10913,6 @@ export const deleteUniversalLesson = /* GraphQL */ `
     deleteUniversalLesson(input: $input, condition: $condition) {
       id
       type
-      tags
       label
       title
       institutionID
@@ -10949,6 +10950,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         }
         activityType
         interactionType
+        tags
       }
       homework {
         id
@@ -10969,6 +10971,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         }
         activityType
         interactionType
+        tags
       }
       darkMode
       createdAt
