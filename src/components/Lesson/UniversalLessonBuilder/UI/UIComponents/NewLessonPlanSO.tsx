@@ -6,7 +6,7 @@ import {XIcon} from '@heroicons/react/outline';
 import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import {estimatedTimeList} from '../../../../../utilities/staticData';
-import {isEmpty, remove} from 'lodash';
+import {findIndex, isEmpty, remove, update} from 'lodash';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
@@ -20,6 +20,7 @@ import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Input from './Input';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -103,7 +104,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
     if (!isEmpty(pageDetails) && editMode) {
       setFields({
         ...pageDetails,
-        tags: [],
+        tags: pageDetails.tags || [],
         instructions: pageDetails.description,
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType,
@@ -128,7 +129,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
 
   const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
-  const {universalLessonDetails} = useULBContext();
+  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
   const history = useHistory();
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
@@ -230,28 +231,38 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
       try {
         setLoading(true);
         if (editMode) {
-          const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
+          const PAGECONTENT_ID = pageId;
+
+          const pageIdx = findIndex(
+            universalLessonDetails.lessonPlan,
+            (item: any) => item.id === PAGECONTENT_ID
+          );
+
+          const PATH_TO_PAGECONTENT = `lessonPlan[${pageIdx}]`;
+          const updatedObject = {
+            ...universalLessonDetails.lessonPlan[pageIdx],
+            title: fields.title,
+            description: fields.instructions,
+            label: fields.label,
+            estTime: Number(fields.estTime?.split(' ')[0]),
+
+            tags: fields.tags,
+
+            interactionType: fields.interactionType || [],
+            activityType: classwork ? 'classwork' : 'homework',
+          };
+
+          update(universalLessonDetails, PATH_TO_PAGECONTENT, () => {
+            return updatedObject;
+          });
+
+          setUniversalLessonDetails({...universalLessonDetails});
+
           const input = {
             id: lessonId,
-            lessonPlan: [
-              ...prevPages,
-              {
-                id: pageId,
-                title: fields.title,
-                tags: fields.tags,
-                label: fields.label,
-                description: fields.instructions,
-                estTime: Number(fields.estTime?.split(' ')[0]),
-                interactionType: fields.interactionType || [],
-                activityType: classwork ? 'classwork' : 'homework',
-              },
-            ],
+            lessonPlan: [...universalLessonDetails.lessonPlan],
           };
-          const res: any = await API.graphql(
-            graphqlOperation(customMutations.updateUniversalLesson, {
-              input,
-            })
-          );
+          await updateLessonPageToDB(input);
         } else {
           const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
           const input = {
