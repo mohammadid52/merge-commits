@@ -20,10 +20,12 @@ interface LessonPlansListProps {
   universalLessonDetails: {
     lessonPlan: UniversalLessonPage[];
   };
+  // lessonName: string;
 }
 
 const LessonActivities = ({
   lessonId,
+  // lessonName,
   loading,
   universalLessonDetails,
 }: LessonPlansListProps) => {
@@ -111,7 +113,7 @@ const LessonActivities = ({
           ) : true || pages.length > 0 ? (
             <Fragment>
               <div className="flex justify-between">
-                <span className="w-auto px-4 font-bold text-lg items-center inline-flex">
+                <span className="w-auto px-4 font-bold text-lg items-center  inline-flex">
                   {
                     LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
                       'HEADING'
@@ -213,12 +215,11 @@ const LessonActivities = ({
                                   {'-'}
                                 </div> */}
                                   <div className="flex w-3/10 truncate items-center px-4 py-3 text-sm leading-4 font-medium whitespace-normal">
-                                    {page.title || '-'}
-                                  </div>
-                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
                                     {page.label || '-'}
                                   </div>
-
+                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+                                    {page.title || '-'}
+                                  </div>
                                   <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
                                     {['Group', 'Individual'].join(', ')}
                                   </div>
@@ -300,6 +301,7 @@ const LessonActivities = ({
                 <span className="w-auto">
                   <Buttons
                     btnClass="mx-4"
+                    disabled={true}
                     label={
                       LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
                         'ADD_NEW_ACTIVITY'
