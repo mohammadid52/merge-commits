@@ -95,7 +95,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const {LessonBuilderDict} = useDictionary(clientKey);
 
   const goToLessonPlan = () => {
-    history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}&tab=1`);
+    history.push(
+      `/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`
+    );
   };
 
   const activePageData = universalLessonDetails.lessonPlan.find(

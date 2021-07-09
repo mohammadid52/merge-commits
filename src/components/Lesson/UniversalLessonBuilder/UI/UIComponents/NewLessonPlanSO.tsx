@@ -106,14 +106,14 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
         tags: [],
         instructions: pageDetails.description,
         estTime: `${pageDetails.estTime} min`, //
-        interactionType: pageDetails.interactionType.split(' || '),
+        interactionType: pageDetails.interactionType,
         darkMode: true,
         classwork: true,
       });
     } else {
       setFields(INITIAL_STATE);
     }
-  }, [pageDetails]);
+  }, [pageDetails, editMode]);
 
   const params = useQuery(location.search);
 
@@ -206,7 +206,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
       errors.instructions = '';
       isValid = true;
     }
-    if (interactionType.length <= 0) {
+    if (!interactionType && interactionType?.length <= 0) {
       errors.interactionType = 'Please select at least one interaction type';
       isValid = false;
     } else {
@@ -229,35 +229,60 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
     if (isValid) {
       try {
         setLoading(true);
-        const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
-        const input = {
-          id: lessonId,
-          [classwork ? 'lessonPlan' : 'homework']: [
-            ...prevPages,
-            {
-              id: uuidV4().toString(),
-              title: fields.title,
-              label: fields.label,
-              description: fields.instructions,
-              estTime: Number(fields.estTime?.split(' ')[0]),
-              interactionType: fields.interactionType.join(' || '),
-              activityType: classwork ? 'classwork' : 'homework',
-              pageContent: [],
-            },
-          ],
-        };
-        const res: any = await API.graphql(
-          graphqlOperation(customMutations.updateUniversalLesson, {
-            input,
-          })
-        );
+        if (editMode) {
+          const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
+          const input = {
+            id: lessonId,
+            lessonPlan: [
+              ...prevPages,
+              {
+                id: pageId,
+                title: fields.title,
+                tags: fields.tags,
+                label: fields.label,
+                description: fields.instructions,
+                estTime: Number(fields.estTime?.split(' ')[0]),
+                interactionType: fields.interactionType || [],
+                activityType: classwork ? 'classwork' : 'homework',
+              },
+            ],
+          };
+          const res: any = await API.graphql(
+            graphqlOperation(customMutations.updateUniversalLesson, {
+              input,
+            })
+          );
+        } else {
+          const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
+          const input = {
+            id: lessonId,
+            lessonPlan: [
+              ...prevPages,
+              {
+                id: uuidV4().toString(),
+                title: fields.title,
+                tags: fields.tags,
+                label: fields.label,
+                description: fields.instructions,
+                estTime: Number(fields.estTime?.split(' ')[0]),
+                interactionType: fields.interactionType || [],
+                activityType: classwork ? 'classwork' : 'homework',
+                pageContent: [],
+              },
+            ],
+          };
+          const res: any = await API.graphql(
+            graphqlOperation(customMutations.updateUniversalLesson, {
+              input,
+            })
+          );
+          const data = res.data.updateUniversalLesson;
+          if (data.id && !editMode) {
+            history.push(`edit?lessonId=${lessonId}&step=courses`);
+          }
+        }
 
         setOpen(false);
-
-        const data = res.data.updateUniversalLesson;
-        if (data.id && !editMode) {
-          history.push(`edit?lessonId=${lessonId}&step=courses`);
-        }
       } catch (error) {
         console.error(error.message);
       } finally {
@@ -414,7 +439,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                                   id="group"
                                   name="group"
                                   type="checkbox"
-                                  checked={interactionType.includes('group')}
+                                  checked={interactionType?.includes('group')}
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
                                 />
@@ -435,7 +460,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                                 <input
                                   id="smallGroup"
                                   name="smallGroup"
-                                  checked={interactionType.includes('smallGroup')}
+                                  checked={interactionType?.includes('smallGroup')}
                                   type="checkbox"
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
@@ -458,7 +483,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                                   id="individual"
                                   name="individual"
                                   type="checkbox"
-                                  checked={interactionType.includes('individual')}
+                                  checked={interactionType?.includes('individual')}
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
                                 />

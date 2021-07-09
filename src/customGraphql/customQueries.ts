@@ -1727,6 +1727,7 @@ export const getUniversalLesson = /* GraphQL */ `
         description
         class
         active
+        tags
         disabled
         interactionType
         displayMode
