@@ -16,11 +16,12 @@ import {graphqlOperation, API} from 'aws-amplify';
 import {Switch} from '@headlessui/react';
 import {FaMoon, FaSun} from 'react-icons/fa';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Input from './Input';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {match} from 'assert';
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ');
@@ -143,7 +144,11 @@ const NewLessonPlanSO = ({
 
   const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
-  const {universalLessonDetails, setUniversalLessonDetails} = useULBContext();
+  const {
+    universalLessonDetails,
+    setUniversalLessonDetails,
+    setSelectedPageID,
+  } = useULBContext();
   const history = useHistory();
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
@@ -237,6 +242,7 @@ const NewLessonPlanSO = ({
   const homeworkPages = universalLessonDetails?.homework || [];
 
   const [loading, setLoading] = useState(false); // loader for creating lesson
+  const match = useRouteMatch();
 
   const onSave = async (e: any) => {
     e.preventDefault();
@@ -279,12 +285,13 @@ const NewLessonPlanSO = ({
           await updateLessonPageToDB(input);
         } else {
           const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
+          const pageId = uuidV4().toString();
           const input = {
             id: lessonId,
             lessonPlan: [
               ...prevPages,
               {
-                id: uuidV4().toString(),
+                id: pageId,
                 title: fields.title,
                 tags: fields.tags,
                 label: fields.label,
@@ -301,9 +308,18 @@ const NewLessonPlanSO = ({
               input,
             })
           );
+
           const data = res.data.updateUniversalLesson;
+
+          setSelectedPageID(pageId);
+
+          update(universalLessonDetails, `lessonPlan`, () => input.lessonPlan);
+          setUniversalLessonDetails({...universalLessonDetails});
+
           if (data.id && !editMode) {
-            history.push(`edit?lessonId=${lessonId}&step=courses`);
+            history.push(
+              `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+            );
           }
         }
 
@@ -332,7 +348,7 @@ const NewLessonPlanSO = ({
       <Dialog
         as="div"
         static
-        className="w-auto fixed inset-0 overflow-hidden z-100"
+        className="w-auto fixed inset-0 transition-all duration-300 overflow-hidden bg-black bg-opacity-50 z-100"
         open={open}
         onClose={!hideCloseButtons ? setOpen : () => {}}>
         <div className="absolute inset-0 overflow-hidden">
@@ -361,6 +377,7 @@ const NewLessonPlanSO = ({
                             Get started by filling in the information below to create your
                             new lesson plan.
                           </p>
+                          <hr className="mt-2 text-gray-500" />
                         </div>
                         {!hideCloseButtons && (
                           <div className="h-7 w-auto flex items-center">
