@@ -911,7 +911,6 @@ type Planner @model {
 type UniversalLesson @model @key(fields: ["id"]) {
   id: ID!
   type: String!
-  tags: [String]
   label: String
   title: String!
   institutionID: ID!
@@ -948,7 +947,8 @@ type UniversalLessonPlan {
   estTime: String
   pageContent: [UniversalpageContent]
   activityType: String
-  interactionType: String
+  interactionType: [String]
+  tags: [String]
 }
 
 type UniversalpageContent {

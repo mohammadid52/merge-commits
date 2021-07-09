@@ -122,6 +122,7 @@ const ProfileEdit = (props: UserInfoProps) => {
       },
     });
   };
+
   const getQuestionArray = (obj: any) => {
     const keys: any = Object.keys(obj);
     return keys.map((item: any) => ({
@@ -157,7 +158,6 @@ const ProfileEdit = (props: UserInfoProps) => {
       const questionData = await API.graphql(
         graphqlOperation(customMutations.updateQuestionData, {input: modifiedResponseObj})
       );
-      console.log('Question data updated');
     } catch (err) {
       console.error(err);
     }
@@ -383,7 +383,6 @@ const ProfileEdit = (props: UserInfoProps) => {
         [item['checkpointID']]: extractItemFromArray(item.responseObject),
       }));
       const updatedListObj: any = convertArrayIntoObj(updatedListArray);
-
       setCheckpointData({
         ...updatedListObj,
       });
@@ -399,8 +398,14 @@ const ProfileEdit = (props: UserInfoProps) => {
   const path = '/dashboard/profile/password';
 
   // Code for Other Field
-  const hasOther = (val: string | string[], other: string) =>
-    val.toString().includes(other);
+  const hasOther = (val: string | string[], other: string) => {
+    try {
+      return val ? val.toString().includes(other): false;
+    } catch (err) {
+      console.log('errrr' , err)
+      return false;
+    }
+  }
 
   const isOther = (val: any) => {
     if (hasOther(val, 'Other')) {
@@ -521,7 +526,6 @@ const ProfileEdit = (props: UserInfoProps) => {
                       <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                         {checkpoint.questions?.items.map((item: any) => (
                           <Fragment key={item.question.id}>
-                            {console.log(item)}
                             <div className="sm:col-span-6 p-2 flex items-end">
                               <div className="flex flex-col justify-between">
                                 {item.question.type === 'text' ? (
