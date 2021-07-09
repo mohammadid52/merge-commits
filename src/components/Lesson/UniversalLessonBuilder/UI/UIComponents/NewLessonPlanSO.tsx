@@ -101,13 +101,12 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
   // fill the fields if edit mode
   useEffect(() => {
     if (!isEmpty(pageDetails) && editMode) {
-      console.log(pageDetails);
       setFields({
         ...pageDetails,
         tags: [],
         instructions: pageDetails.description,
         estTime: `${pageDetails.estTime} min`, //
-        // interactionType: pageDetails.interactionType.split(' || '),
+        interactionType: pageDetails.interactionType.split(' || '),
         darkMode: true,
         classwork: true,
       });
@@ -115,6 +114,11 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
       setFields(INITIAL_STATE);
     }
   }, [pageDetails]);
+
+  const params = useQuery(location.search);
+
+  const pageId = params.get('pageId');
+  const hideCloseButtons = pageId === 'open-overlay';
 
   const handleAddTags = (tags: string[]) =>
     setFields((prevInputs) => ({...prevInputs, tags}));
@@ -124,7 +128,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
 
   const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
-  const {universalLessonDetails, setSelectedPageID} = useULBContext();
+  const {universalLessonDetails} = useULBContext();
   const history = useHistory();
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
@@ -213,7 +217,6 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
     return isValid;
   };
 
-  const params = useQuery(location.search);
   const lessonId = params.get('lessonId');
   const classworkPages = universalLessonDetails?.lessonPlan;
   const homeworkPages = universalLessonDetails?.homework || [];
@@ -252,8 +255,8 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
         setOpen(false);
 
         const data = res.data.updateUniversalLesson;
-        if (data.id) {
-          history.push(`page-builder?lessonId=${lessonId}&pageId=${data.id}`);
+        if (data.id && !editMode) {
+          history.push(`edit?lessonId=${lessonId}&step=courses`);
         }
       } catch (error) {
         console.error(error.message);
@@ -281,7 +284,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
         static
         className="w-auto fixed inset-0 overflow-hidden z-100"
         open={open}
-        onClose={setOpen}>
+        onClose={!hideCloseButtons ? setOpen : () => {}}>
         <div className="absolute inset-0 overflow-hidden">
           <Dialog.Overlay className="absolute inset-0 w-auto" />
 
@@ -309,15 +312,17 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                             new lesson plan.
                           </p>
                         </div>
-                        <div className="h-7 w-auto flex items-center">
-                          <button
-                            type="button"
-                            className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            onClick={() => setOpen(false)}>
-                            <span className="sr-only">Close panel</span>
-                            <XIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
+                        {!hideCloseButtons && (
+                          <div className="h-7 w-auto flex items-center">
+                            <button
+                              type="button"
+                              className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                              onClick={() => setOpen(false)}>
+                              <span className="sr-only">Close panel</span>
+                              <XIcon className="h-6 w-6" aria-hidden="true" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -409,7 +414,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                                   id="group"
                                   name="group"
                                   type="checkbox"
-                                  // checked={interactionType.includes('group')}
+                                  checked={interactionType.includes('group')}
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
                                 />
@@ -430,7 +435,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                                 <input
                                   id="smallGroup"
                                   name="smallGroup"
-                                  // checked={interactionType.includes('smallGroup')}
+                                  checked={interactionType.includes('smallGroup')}
                                   type="checkbox"
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
@@ -453,7 +458,7 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                                   id="individual"
                                   name="individual"
                                   type="checkbox"
-                                  // checked={interactionType.includes('individual')}
+                                  checked={interactionType.includes('individual')}
                                   onChange={handleInteractionType}
                                   className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
                                 />
@@ -570,12 +575,14 @@ const NewLessonPlanSO = ({open, setOpen, editMode, pageDetails}: any) => {
                   {/* Action buttons */}
                   <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                     <div className="space-x-3 flex justify-end">
-                      <button
-                        type="button"
-                        className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        onClick={() => setOpen(false)}>
-                        Cancel
-                      </button>
+                      {!hideCloseButtons && (
+                        <button
+                          type="button"
+                          className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          onClick={() => setOpen(false)}>
+                          Cancel
+                        </button>
+                      )}
                       <button
                         disabled={loading}
                         onClick={onSave}
