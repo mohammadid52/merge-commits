@@ -2851,6 +2851,64 @@ export const getSyllabus = /* GraphQL */ `
   }
 `;
 
+export const getUniversalSyllabus = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          lesson {
+            title
+            measurements {
+              items {
+                id
+                lessonID
+                rubricID
+                rubric {
+                  id
+                  name
+                  criteria
+                  topicID
+                }
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+          }
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // delete once lessons table updated in production
 // export const listLessonsIds = /* GraphQL */ `
 //   query ListLessons(

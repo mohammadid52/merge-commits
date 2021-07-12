@@ -469,9 +469,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (syllabusId) {
       try {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getSyllabus, {id: syllabusId})
+          graphqlOperation(customQueries.getUniversalSyllabus, {
+            id: syllabusId,
+          })
         );
-        const savedData = result.data.getSyllabus;
+        const savedData = result.data.getUniversalSyllabus;
         setSyllabusData({
           ...syllabusData,
           name: savedData.name,
