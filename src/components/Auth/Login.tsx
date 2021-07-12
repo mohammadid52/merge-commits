@@ -49,7 +49,6 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
     if (showPasswordField) {
       try {
         const user = await Auth.signIn(username, password);
-        console.log('user', user)
         dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
         if (isChecked) {
           setCookie('cred', { email: username, isChecked, password }, { path: '/' });
@@ -129,9 +128,7 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
             setShowPasswordField(true);
           } else if (error.message === 'Temporary password has expired and must be reset by an administrator.') {
             try {
-              console.log('Account is in force change password state, set password and sign in')
               await axios.post(createUserUrl, { email: username, status: 'temporary' });
-              console.log('here the API call will do its work')
               setMessage({
                 show: true,
                 type: 'success',
@@ -156,7 +153,6 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
           }
         }
         else {
-          console.log('calling from here', error);
           manageSignInError(error, true);
         }
         toggleLoading(false);
@@ -165,7 +161,6 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
   }
 
   const manageSignInError = (error: any, onlyEmail: any) => {
-    console.log('errorerrorerror', error, onlyEmail)
     setMessage(() => {
       switch (error.code) {
         case 'UserNotFoundException':
