@@ -90,6 +90,7 @@ interface FieldsInterface {
   title: string;
   label: string;
   instructions: string;
+  instructionsHtml: any;
   interactionType: string[];
   tags?: string[];
   estTime: string;
@@ -116,6 +117,7 @@ const INITIAL_STATE: FieldsInterface = {
   title: '',
   label: '',
   instructions: '',
+  instructionsHtml: '',
   description: '', // ignore this field
   interactionType: [],
   tags: [],
@@ -145,6 +147,7 @@ const NewLessonPlanSO = ({
         ...pageDetails,
         tags: pageDetails.tags || [],
         instructions: pageDetails.description,
+        instructionsHtml: pageDetails.description,
         estTime: `${pageDetails.estTime} min`, //
         interactionType: pageDetails.interactionType || [],
         darkMode: true,
@@ -216,7 +219,7 @@ const NewLessonPlanSO = ({
   ) => {
     setFields({
       ...fields,
-      // [fieldHtml]: html,
+      [fieldHtml]: html,
       [field]: text,
     });
   };
@@ -282,7 +285,7 @@ const NewLessonPlanSO = ({
           const updatedObject = {
             ...universalLessonDetails.lessonPlan[pageIdx],
             title: fields.title,
-            description: fields.instructions,
+            description: fields.instructionsHtml,
             label: fields.label,
             estTime: Number(fields.estTime?.split(' ')[0]),
             tags: fields.tags,
@@ -508,7 +511,7 @@ const NewLessonPlanSO = ({
                               onEditorStateChange(
                                 htmlContent,
                                 plainText,
-                                '',
+                                'instructionsHtml',
                                 'instructions'
                               )
                             }
