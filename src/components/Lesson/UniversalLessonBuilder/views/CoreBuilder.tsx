@@ -176,6 +176,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
           <Toolbar
+            setEditMode={setEditMode}
             deleteLesson={onDeleteButtonClick}
             setNewLessonPlanShow={setNewLessonPlanShow}
           />

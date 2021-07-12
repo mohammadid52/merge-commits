@@ -54,10 +54,12 @@ const Container = ({children}: {children: any}) => (
 
 const Toolbar = ({
   deleteLesson,
+  setEditMode,
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
   setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
 
@@ -82,7 +84,10 @@ const Toolbar = ({
               />
               <Button
                 tooltip="Add New Page"
-                onClick={() => setNewLessonPlanShow(true)}
+                onClick={() => {
+                  setNewLessonPlanShow(true);
+                  setEditMode(false);
+                }}
                 icon={AiOutlineFileAdd}
               />
               <Divider />
