@@ -70,6 +70,7 @@ const LessonEdit = (props: LessonEditProps) => {
   const initialData = {
     name: '',
     type: {id: '', name: '', value: ''},
+    duration:'',
     purpose: '',
     purposeHtml: '<p></p>',
     objective: '',

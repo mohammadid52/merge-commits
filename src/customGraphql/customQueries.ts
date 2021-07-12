@@ -1727,7 +1727,9 @@ export const getUniversalLesson = /* GraphQL */ `
         description
         class
         active
+        tags
         disabled
+        interactionType
         displayMode
         open
         estTime
@@ -3155,11 +3157,7 @@ export const getInstListForAdmin = /* GraphQL */ `
   }
 `;
 export const getInstListForNonAdmin = /* GraphQL */ `
-  query ListStaffs(
-    $filter: ModelStaffFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
     listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id

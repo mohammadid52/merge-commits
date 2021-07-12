@@ -80,7 +80,7 @@ const LessonPlanForm = () => {
         setLoading(false);
         if (data) {
           setActiveTab(1);
-          history.push(`/dashboard/lesson-builder/lesson/view?lessonId=${lessonId}`);
+          history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`);
         }
       } catch (error) {
         setLoading(false);
