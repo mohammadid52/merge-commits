@@ -506,18 +506,20 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           showHeaderBorder={true}
           showFooter={false}
           titleButton={
-            <span
-              onClick={() => {
-                if (unsavedChanges) {
-                  askBeforeClose();
-                } else {
-                  hideAllModals();
-                  handleModalPopToggle(dialogLabelList.ADD_CONTENT);
-                }
-              }}
-              className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
-              Go Back
-            </span>
+            !blockConfig.isEditingMode && (
+              <span
+                onClick={() => {
+                  if (unsavedChanges) {
+                    askBeforeClose();
+                  } else {
+                    hideAllModals();
+                    handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                  }
+                }}
+                className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
+                Go Back
+              </span>
+            )
           }
           closeAction={askBeforeClose}>
           <div className="min-w-256">

@@ -4,7 +4,7 @@ import Buttons from '../Atoms/Buttons';
 import Tooltip from '../Atoms/Tooltip';
 
 interface ModalProps {
-  saveAction?: () => void;
+  saveAction?: (e?: any) => void;
   closeAction?: () => void;
   message?: string;
   saveLabel?: string;

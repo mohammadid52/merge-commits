@@ -46,7 +46,7 @@ const Input = ({
           placeholder={placeholder}
           value={value}
           aria-invalid="true"
-          disabled={otherInputProps.maxLength === value.length}
+          maxLength={maxLength}
           aria-describedby={error}
         />
         <div

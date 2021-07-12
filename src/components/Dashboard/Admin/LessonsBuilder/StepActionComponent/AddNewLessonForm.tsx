@@ -291,6 +291,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             // adding defaults to prevent errors
             duration: Number(formData.duration),
             resources: '',
+            darkMode: true,
             label: '',
           };
 
