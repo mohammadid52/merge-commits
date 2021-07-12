@@ -143,6 +143,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       );
       const savedData = result.data.getUniversalLesson;
       setUniversalLessonDetails(savedData);
+      setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));
     } finally {
@@ -512,7 +513,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
-        <BreadCrums items={breadCrumsList} />
+        <BreadCrums items={breadCrumsList} separateGoBackButton />
         {/* <div className="flex justify-between">
           <SectionTitle
             title={LessonEditDict[userLanguage]['TITLE']}

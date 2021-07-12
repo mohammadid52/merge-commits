@@ -2,6 +2,7 @@ import React, {Fragment, useContext, useState} from 'react';
 import {useHistory} from 'react-router';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {remove} from 'lodash';
+import {FaTasks} from 'react-icons/fa';
 import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import Buttons from '../../../../Atoms/Buttons';
@@ -20,12 +21,12 @@ interface LessonPlansListProps {
   universalLessonDetails: {
     lessonPlan: UniversalLessonPage[];
   };
-  // lessonName: string;
+  lessonName: string;
 }
 
 const LessonActivities = ({
   lessonId,
-  // lessonName,
+  lessonName,
   loading,
   universalLessonDetails,
 }: LessonPlansListProps) => {
@@ -98,9 +99,9 @@ const LessonActivities = ({
     <div className="flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-8 border-0 border-gray-200">
-          {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            Lesson Plans
-          </h3> */}
+          <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
+            {lessonName}
+          </h3>
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
               <div className="items-center flex justify-center flex-col">
@@ -113,13 +114,20 @@ const LessonActivities = ({
           ) : true || pages.length > 0 ? (
             <Fragment>
               <div className="flex justify-between">
-                <span className="w-auto px-4 font-bold text-lg items-center  inline-flex">
-                  {
-                    LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
-                      'HEADING'
-                    ]
-                  }
-                </span>
+                <div className="w-auto">
+                  <p className="w-auto px-4 font-bold text-lg flex items-center">
+                    <span className="inline-flex w-4 mr-2">
+                      <FaTasks size={16} />
+                    </span>
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage][
+                          'LESSON_CLASSROOM_ACTIVITY_TABLE'
+                        ]['HEADING']
+                      }
+                    </span>
+                  </p>
+                </div>
                 <span className="w-auto">
                   <Buttons
                     btnClass="mx-4"
@@ -165,7 +173,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -174,7 +182,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -221,14 +229,17 @@ const LessonActivities = ({
                                     {page.title || '-'}
                                   </div>
                                   <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                    {['Group', 'Individual'].join(', ')}
+                                    {page.interactionType
+                                      ? page.interactionType.join(', ')
+                                      : '-'}
                                   </div>
 
-                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
-                                    {page.description}
-                                  </div>
+                                  <div
+                                    className="flex w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
+                                    dangerouslySetInnerHTML={{__html: page.description}}
+                                  />
 
-                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+                                  <div className="flex w-2/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
                                     {page.estTime ? `${page.estTime} min` : ''}
                                   </div>
                                   <span
@@ -291,14 +302,24 @@ const LessonActivities = ({
           ) : true || pages.length > 0 ? (
             <div className="mt-8">
               <div className="flex justify-between">
-                <span className="w-auto px-4 font-bold text-lg items-center inline-flex">
-                  {
-                    LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
-                      'HEADING'
-                    ]
-                  }
-                </span>
-                <span className="w-auto">
+                <div className="w-auto">
+                  <p className="w-auto px-4 font-bold text-lg flex items-center">
+                    <span className="inline-flex w-4 mr-2">
+                      <FaTasks size={16} />
+                    </span>
+                    <span>
+                      {
+                        LessonBuilderDict[userLanguage]['LESSON_HOMEWORK_ACTIVITY_TABLE'][
+                          'HEADING'
+                        ]
+                      }
+                    </span>
+                  </p>
+                  {/* <p className="w-auto px-4 font-bold text-xs items-center text-gray-500">
+                    {lessonName}
+                  </p> */}
+                </div>
+                <span className="w-auto inline-flex items-center">
                   <Buttons
                     btnClass="mx-4"
                     disabled={true}

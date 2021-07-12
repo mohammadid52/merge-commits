@@ -75,19 +75,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}`,
-      last: true,
-    },
-  ];
 
   const initialData = {
     name: '',
@@ -458,7 +445,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <LessonActivities
             loading={loading}
             lessonId={lessonId}
-            // lessonName={formData?.name}
+            lessonName={formData?.name}
             universalLessonDetails={universalLessonDetails}
           />
         );
@@ -580,6 +567,20 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   // useEffect(() => {
   //   fetchMeasurementList();
   // }, []);
+
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: false,
+    },
+    {
+      title: formData?.name,
+      url: `${match.url}`,
+      last: true,
+    },
+  ];
 
   const steps: IStepElementInterface[] = [
     {

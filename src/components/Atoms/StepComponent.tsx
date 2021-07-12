@@ -40,13 +40,13 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
             : 'lg:border-l-none'
         }`}>
         <div className="group">
-          <span
+          {/* <span
             className={`absolute top-0 left-0 w-1 h-full ${
               stepValue === activeStep
-                ? theme.backGround[themeColor]
+                ? 'bg-gray-900'
                 : 'bg-transparent group-hover:bg-gray-200'
             } lg:w-full lg:h-1 lg:bottom-0 lg:top-auto`}
-            aria-hidden="true"></span>
+            aria-hidden="true"></span> */}
           <span className="px-6 py-5 flex items-start text-sm font-medium">
             <span className="flex-shrink-0 w-auto">
               <span
