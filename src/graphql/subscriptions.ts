@@ -2762,6 +2762,25 @@ export const onCreateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -2828,6 +2847,25 @@ export const onUpdateCurriculum = /* GraphQL */ `
       }
       designers
       syllabi {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabus {
         items {
           id
           name
@@ -2930,6 +2968,25 @@ export const onDeleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -2982,6 +3039,9 @@ export const onCreateTopic = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        universalSyllabus {
           nextToken
         }
         checkpoints {
@@ -3047,6 +3107,9 @@ export const onUpdateTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -3108,6 +3171,9 @@ export const onDeleteTopic = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        universalSyllabus {
           nextToken
         }
         checkpoints {
@@ -3383,6 +3449,9 @@ export const onCreateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -3432,6 +3501,9 @@ export const onUpdateRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -3479,6 +3551,9 @@ export const onDeleteRoomCurriculum = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        universalSyllabus {
           nextToken
         }
         checkpoints {
@@ -4281,6 +4356,9 @@ export const onCreateCommonCheckpoint = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -4388,6 +4466,9 @@ export const onUpdateCommonCheckpoint = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -4493,6 +4574,9 @@ export const onDeleteCommonCheckpoint = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        universalSyllabus {
           nextToken
         }
         checkpoints {
