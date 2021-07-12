@@ -34,7 +34,13 @@ const LessonActivities = ({
   const {clientKey, theme, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
-  const {setPreviewMode, setUniversalLessonDetails, updateMovableList} = useULBContext();
+  const {
+    newLessonPlanShow,
+    setNewLessonPlanShow,
+    setPreviewMode,
+    setUniversalLessonDetails,
+    updateMovableList,
+  } = useULBContext();
   const [showDeleteModal, setShowDeleteModal] = useState<Boolean>(false);
   const [idToBeRemoved, setIdToBeRemoved] = useState<string>('');
 
@@ -47,9 +53,14 @@ const LessonActivities = ({
   };
 
   const addNewLessonPlan = () => {
-    history.push(
-      `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=open-overlay`
-    );
+    /**
+     * Removed the áutomatic pushes to the BUILDER,
+     * opening the new slide-in dialog within the 'BuilderWrapper
+     */
+    setNewLessonPlanShow(!newLessonPlanShow);
+    // history.push(
+    //   `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=open-overlay`
+    // );
     // history.push(
     //   `/dashboard/lesson-builder/lesson/add/lesson-plan?lessonId=${lessonId}&isNewPage=${true}`
     // );

@@ -1,21 +1,29 @@
 import React, {useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {Switch, Route, useRouteMatch} from 'react-router-dom';
+import {Route, Switch, useRouteMatch} from 'react-router-dom';
 
 import * as customQueries from '../../../../customGraphql/customQueries';
 import * as queries from '../../../../graphql/queries';
 
 import LessonBuilder from './LessonBuilder';
 import LessonsList from './LessonsList';
-import LessonEdit from './LessonEdit';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import { UniversalLessonBuilderProvider } from '../../../../contexts/UniversalLessonBuilderContext';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import LessonTabView from './StepActionComponent/LessonTabView';
 import UniversalLessonBuilder from '../../../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import LessonPlan from '../../../Lesson/UniversalLessonBuilder/UI/LessonPlan/LessonPlan';
+import NewLessonPlanSO from '../../../Lesson/UniversalLessonBuilder/UI/UIComponents/NewLessonPlanSO';
 
 const LessonsBuilderHome = () => {
   const {dispatch} = useContext(GlobalContext);
+  const {
+    editMode,
+    setEditMode,
+    selectedPageID,
+    getCurrentPage,
+    newLessonPlanShow,
+    setNewLessonPlanShow,
+  } = useULBContext();
   const match = useRouteMatch();
   const [designersList, setDesignersList] = useState([]);
   const [institutionList, setInstitutionList] = useState([]);
@@ -57,9 +65,29 @@ const LessonsBuilderHome = () => {
     fetchInstitutionsList();
   }, []);
 
+  /**
+   * NewLessonPlanSO modal
+   *  This was the most logical place to put it
+   *  as it needs to overlay several of the components below
+   */
+
+  // const NewLessonPlanModal = (_:any) =>
+  // <div className={`col-span-1`}>
+  //   <NewLessonPlanSO
+  //     editMode={editMode}
+  //     setEditMode={setEditMode}
+  //     pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing
+  //     open={newLessonPlanShow}
+  //     setOpen={setNewLessonPlanShow}
+  //     activePageData={activePageData}
+  //   />
+  // </div>
+  // }
+
   return (
-    <div className={`w-full h-full p-8 flex justify-center`}>
-      <UniversalLessonBuilderProvider>
+    <>
+      <div className={`w-full h-full p-8 flex justify-center`}>
+        {/*<UniversalLessonBuilderProvider>*/}
         <Switch>
           <Route
             exact
@@ -102,8 +130,17 @@ const LessonsBuilderHome = () => {
             render={() => <UniversalLessonBuilder />}
           />
         </Switch>
-      </UniversalLessonBuilderProvider>
-    </div>
+        {/*</UniversalLessonBuilderProvider>*/}
+      </div>
+      <NewLessonPlanSO
+        editMode={editMode}
+        setEditMode={setEditMode}
+        pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
+        open={newLessonPlanShow}
+        setOpen={setNewLessonPlanShow}
+        activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
+      />
+    </>
   );
 };
 

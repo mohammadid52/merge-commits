@@ -5,7 +5,10 @@ import useDictionary from '../../../../customHooks/dictionary';
 import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
+import {
+  PartContent,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
 
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -48,6 +51,7 @@ import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
+import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -65,16 +69,21 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     updateBlockContentULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
-    selectedPageID,
-    setSelectedPageID,
     initialUniversalLessonPagePartContent,
   } = props;
   const {
     userLanguage,
     clientKey,
-    state: {lessonPage: {themeBackgroundColor = ''} = {}, user},
+    state: {user},
   } = useContext(GlobalContext);
-  const {universalLessonDetails} = useULBContext();
+  const {
+    editMode,
+    setEditMode,
+    universalLessonDetails,
+    selectedPageID,
+    setSelectedPageID,
+    getCurrentPage,
+  } = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
@@ -454,32 +463,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     unsavedChanges,
     setUnsavedChanges,
   } = useUnsavedChanges(closeAction);
+
   return (
     <div
       id={`builderWrapper`}
       className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
-      {/* <Toolbar
-        universalLessonDetails={universalLessonDetails}
-        deleteFromULBHandler={deleteFromULBHandler}
-        selectedPageID={selectedPageID}
-        setSelectedPageID={setSelectedPageID}
-        hierarchyVisible={hierarchyVisible}
-        setHierarchyVisible={setHierarchyVisible}
-        galleryVisible={galleryVisible}
-        setGalleryVisible={setGalleryVisible}
-        builderMenuVisible={builderMenuVisible}
-        setBuilderMenuVisible={setBuilderMenuVisible}
-        modalPopVisible={modalPopVisible}
-        setModalPopVisible={setModalPopVisible}
-        hideAllModals={hideAllModals}
-        currentModalDialog={currentModalDialog}
-        handleModalPopToggle={handleModalPopToggle}
-      /> */}
-      {/* <div
-        className="flex justify-end my-1 pr-2"
-        onClick={() => setBuilderMenuVisible(true)}>
-        <IoIosMenu className="w-auto cursor-pointer h-8 text-gray-400" />
-      </div> */}
       <LessonPlanNavigation
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
@@ -568,16 +556,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           </div>
         </Modal>
       )}
-      {/* <HierarchyPanel
-        universalLessonDetails={universalLessonDetails}
-        selectedPageID={selectedPageID}
-        setSelectedPageID={setSelectedPageID}
-        hierarchyVisible={hierarchyVisible}
-        editMode={editMode}
-        setEditMode={setEditMode}
-        setEditModal={setEditModal}
-        setHierarchyVisible={setHierarchyVisible}
-      />*/}
 
       <BuilderMenu
         galleryVisible={galleryVisible}
@@ -588,6 +566,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
+        editMode={editMode}
+        setEditMode={setEditMode}
         createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}
@@ -604,6 +584,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}
         setEditModal={setEditModal}
+        activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
       />
     </div>
   );
