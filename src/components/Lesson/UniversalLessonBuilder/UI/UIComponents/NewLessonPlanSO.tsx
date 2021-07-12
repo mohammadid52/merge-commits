@@ -489,7 +489,7 @@ const NewLessonPlanSO = ({
                             <button
                               type="button"
                               className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                              onClick={() => {}}>
+                              onClick={closeAction}>
                               <span className="sr-only">Close panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
