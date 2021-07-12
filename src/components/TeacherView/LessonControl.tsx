@@ -15,6 +15,7 @@ import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLe
 import {useParams} from 'react-router';
 import {lessonControlState} from '../../state/LessonControlState';
 import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
+import usePrevious from '../../customHooks/previousProps';
 
 const LessonControl = () => {
   const {
@@ -90,6 +91,15 @@ const LessonControl = () => {
      *  based on these filters: lessonID, authId
      */
   };
+
+  //~~~~~~TEMPORARY STUDENT DATA FETCH~~~~~~//
+  const previousViewing = usePrevious(controlState.studentViewing);
+  useEffect(() => {
+    if (controlState.studentViewing !== previousViewing) {
+      console.log('setting student data...');
+      controlDispatch({type: 'UPDATE_STUDENT_DATA', payload: exampleStudentDataMutation});
+    }
+  }, [controlState.studentViewing]);
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
