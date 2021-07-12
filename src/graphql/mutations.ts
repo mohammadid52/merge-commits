@@ -291,6 +291,7 @@ export const createInstitution = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -404,6 +405,7 @@ export const updateInstitution = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -517,6 +519,7 @@ export const deleteInstitution = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -2344,6 +2347,7 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabusSeq
       checkpoints {
         items {
           id
@@ -2450,6 +2454,7 @@ export const updateCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabusSeq
       checkpoints {
         items {
           id
@@ -2556,6 +2561,7 @@ export const deleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabusSeq
       checkpoints {
         items {
           id
@@ -2616,6 +2622,7 @@ export const createTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -2685,6 +2692,7 @@ export const updateTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -2754,6 +2762,7 @@ export const deleteTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -2888,6 +2897,7 @@ export const createRubric = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -2939,6 +2949,7 @@ export const updateRubric = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -2990,6 +3001,7 @@ export const deleteRubric = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -3060,6 +3072,7 @@ export const createRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -3115,6 +3128,7 @@ export const updateRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -3170,6 +3184,7 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -4039,6 +4054,7 @@ export const createCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -4152,6 +4168,7 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -4265,6 +4282,7 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
