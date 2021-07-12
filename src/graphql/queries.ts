@@ -1146,6 +1146,25 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       checkpoints {
         items {
           id
@@ -1209,6 +1228,9 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
         checkpoints {
           nextToken
         }
@@ -1255,6 +1277,9 @@ export const getTopic = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        universalSyllabus {
           nextToken
         }
         checkpoints {
@@ -1535,6 +1560,9 @@ export const getRoomCurriculum = /* GraphQL */ `
         }
         designers
         syllabi {
+          nextToken
+        }
+        universalSyllabus {
           nextToken
         }
         checkpoints {

@@ -228,6 +228,7 @@ export type Curriculum = {
   institution?: Institution,
   designers?: Array< string | null > | null,
   syllabi?: ModelSyllabusConnection,
+  universalSyllabus?: ModelUniversalSyllabusConnection,
   checkpoints?: ModelcommonCheckpointConnection,
   createdAt?: string,
   updatedAt?: string,
@@ -951,6 +952,75 @@ export type Feedback = {
   liked?: string | null,
   comment?: string | null,
   syllabusLesson?: SyllabusLesson,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type ModelUniversalSyllabusConnection = {
+  __typename: "ModelUniversalSyllabusConnection",
+  items?:  Array<UniversalSyllabus | null > | null,
+  nextToken?: string | null,
+};
+
+export type UniversalSyllabus = {
+  __typename: "UniversalSyllabus",
+  id?: string,
+  name?: string,
+  type?: string | null,
+  description?: string | null,
+  methodology?: string | null,
+  policies?: string | null,
+  pupose?: string | null,
+  objectives?: string | null,
+  curriculumID?: string,
+  languages?: Array< Language | null > | null,
+  lessons?: ModelUniversalSyllabusLessonConnection,
+  designers?: Array< string | null > | null,
+  status?: boolean | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type ModelUniversalSyllabusLessonConnection = {
+  __typename: "ModelUniversalSyllabusLessonConnection",
+  items?:  Array<UniversalSyllabusLesson | null > | null,
+  nextToken?: string | null,
+};
+
+export type UniversalSyllabusLesson = {
+  __typename: "UniversalSyllabusLesson",
+  id?: string,
+  syllabusID?: string,
+  lessonID?: string,
+  unit?: string | null,
+  sequence?: number | null,
+  status?: string | null,
+  complete?: boolean | null,
+  roster?: Array< string > | null,
+  viewing?: string | null,
+  lesson?: Lesson,
+  displayData?: DisplayData,
+  lessonPlan?:  Array<ComponentSummary > | null,
+  startDate?: string | null,
+  endDate?: string | null,
+  feedback?: ModelUniversalLessonFeedbackConnection,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type ModelUniversalLessonFeedbackConnection = {
+  __typename: "ModelUniversalLessonFeedbackConnection",
+  items?:  Array<UniversalLessonFeedback | null > | null,
+  nextToken?: string | null,
+};
+
+export type UniversalLessonFeedback = {
+  __typename: "UniversalLessonFeedback",
+  id?: string,
+  syllabusLessonID?: string,
+  liked?: string | null,
+  comment?: string | null,
+  syllabusLesson?: UniversalSyllabusLesson,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -3567,69 +3637,6 @@ export type ModelUniversalSyllabusConditionInput = {
   not?: ModelUniversalSyllabusConditionInput | null,
 };
 
-export type UniversalSyllabus = {
-  __typename: "UniversalSyllabus",
-  id?: string,
-  name?: string,
-  type?: string | null,
-  description?: string | null,
-  methodology?: string | null,
-  policies?: string | null,
-  pupose?: string | null,
-  objectives?: string | null,
-  curriculumID?: string,
-  languages?: Array< Language | null > | null,
-  lessons?: ModelUniversalSyllabusLessonConnection,
-  designers?: Array< string | null > | null,
-  status?: boolean | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type ModelUniversalSyllabusLessonConnection = {
-  __typename: "ModelUniversalSyllabusLessonConnection",
-  items?:  Array<UniversalSyllabusLesson | null > | null,
-  nextToken?: string | null,
-};
-
-export type UniversalSyllabusLesson = {
-  __typename: "UniversalSyllabusLesson",
-  id?: string,
-  syllabusID?: string,
-  lessonID?: string,
-  unit?: string | null,
-  sequence?: number | null,
-  status?: string | null,
-  complete?: boolean | null,
-  roster?: Array< string > | null,
-  viewing?: string | null,
-  lesson?: Lesson,
-  displayData?: DisplayData,
-  lessonPlan?:  Array<ComponentSummary > | null,
-  startDate?: string | null,
-  endDate?: string | null,
-  feedback?: ModelUniversalLessonFeedbackConnection,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type ModelUniversalLessonFeedbackConnection = {
-  __typename: "ModelUniversalLessonFeedbackConnection",
-  items?:  Array<UniversalLessonFeedback | null > | null,
-  nextToken?: string | null,
-};
-
-export type UniversalLessonFeedback = {
-  __typename: "UniversalLessonFeedback",
-  id?: string,
-  syllabusLessonID?: string,
-  liked?: string | null,
-  comment?: string | null,
-  syllabusLesson?: UniversalSyllabusLesson,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
 export type UpdateUniversalSyllabusInput = {
   id: string,
   name?: string | null,
@@ -4514,12 +4521,6 @@ export type ModelUniversalSyllabusFilterInput = {
   and?: Array< ModelUniversalSyllabusFilterInput | null > | null,
   or?: Array< ModelUniversalSyllabusFilterInput | null > | null,
   not?: ModelUniversalSyllabusFilterInput | null,
-};
-
-export type ModelUniversalSyllabusConnection = {
-  __typename: "ModelUniversalSyllabusConnection",
-  items?:  Array<UniversalSyllabus | null > | null,
-  nextToken?: string | null,
 };
 
 export type ModelUniversalSyllabusLessonFilterInput = {
@@ -7157,6 +7158,27 @@ export type CreateCurriculumMutation = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     checkpoints?:  {
       __typename: "ModelcommonCheckpointConnection",
       items?:  Array< {
@@ -7240,6 +7262,27 @@ export type UpdateCurriculumMutation = {
       __typename: "ModelSyllabusConnection",
       items?:  Array< {
         __typename: "Syllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
         id: string,
         name: string,
         type?: string | null,
@@ -7357,6 +7400,27 @@ export type DeleteCurriculumMutation = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     checkpoints?:  {
       __typename: "ModelcommonCheckpointConnection",
       items?:  Array< {
@@ -7419,6 +7483,10 @@ export type CreateTopicMutation = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -7494,6 +7562,10 @@ export type UpdateTopicMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -7565,6 +7637,10 @@ export type DeleteTopicMutation = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -7904,6 +7980,10 @@ export type CreateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -7962,6 +8042,10 @@ export type UpdateRoomCurriculumMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -8018,6 +8102,10 @@ export type DeleteRoomCurriculumMutation = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -9016,6 +9104,10 @@ export type CreateCommonCheckpointMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -9141,6 +9233,10 @@ export type UpdateCommonCheckpointMutation = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -9264,6 +9360,10 @@ export type DeleteCommonCheckpointMutation = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -19338,6 +19438,27 @@ export type GetCurriculumQuery = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     checkpoints?:  {
       __typename: "ModelcommonCheckpointConnection",
       items?:  Array< {
@@ -19402,6 +19523,10 @@ export type ListCurriculumsQuery = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -19456,6 +19581,10 @@ export type GetTopicQuery = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -19751,6 +19880,10 @@ export type GetRoomCurriculumQuery = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -27292,6 +27425,27 @@ export type OnCreateCurriculumSubscription = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     checkpoints?:  {
       __typename: "ModelcommonCheckpointConnection",
       items?:  Array< {
@@ -27370,6 +27524,27 @@ export type OnUpdateCurriculumSubscription = {
       __typename: "ModelSyllabusConnection",
       items?:  Array< {
         __typename: "Syllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
         id: string,
         name: string,
         type?: string | null,
@@ -27482,6 +27657,27 @@ export type OnDeleteCurriculumSubscription = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    universalSyllabus?:  {
+      __typename: "ModelUniversalSyllabusConnection",
+      items?:  Array< {
+        __typename: "UniversalSyllabus",
+        id: string,
+        name: string,
+        type?: string | null,
+        description?: string | null,
+        methodology?: string | null,
+        policies?: string | null,
+        pupose?: string | null,
+        objectives?: string | null,
+        curriculumID: string,
+        languages?: Array< Language | null > | null,
+        designers?: Array< string | null > | null,
+        status?: boolean | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     checkpoints?:  {
       __typename: "ModelcommonCheckpointConnection",
       items?:  Array< {
@@ -27539,6 +27735,10 @@ export type OnCreateTopicSubscription = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -27609,6 +27809,10 @@ export type OnUpdateTopicSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -27675,6 +27879,10 @@ export type OnDeleteTopicSubscription = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -27964,6 +28172,10 @@ export type OnCreateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -28017,6 +28229,10 @@ export type OnUpdateRoomCurriculumSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -28068,6 +28284,10 @@ export type OnDeleteRoomCurriculumSubscription = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
@@ -28956,6 +29176,10 @@ export type OnCreateCommonCheckpointSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -29076,6 +29300,10 @@ export type OnUpdateCommonCheckpointSubscription = {
         __typename: "ModelSyllabusConnection",
         nextToken?: string | null,
       } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
       checkpoints?:  {
         __typename: "ModelcommonCheckpointConnection",
         nextToken?: string | null,
@@ -29194,6 +29422,10 @@ export type OnDeleteCommonCheckpointSubscription = {
       designers?: Array< string | null > | null,
       syllabi?:  {
         __typename: "ModelSyllabusConnection",
+        nextToken?: string | null,
+      } | null,
+      universalSyllabus?:  {
+        __typename: "ModelUniversalSyllabusConnection",
         nextToken?: string | null,
       } | null,
       checkpoints?:  {
