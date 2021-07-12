@@ -143,6 +143,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       );
       const savedData = result.data.getUniversalLesson;
       setUniversalLessonDetails(savedData);
+      setSelectedPageID(pageId);
     } catch {
       setUniversalLessonDetails((prev: any) => ({...prev}));
     } finally {

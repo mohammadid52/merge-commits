@@ -2,8 +2,6 @@ import '@pathofdev/react-tag-input/build/index.css';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
-
-import FormTagInput from '../../../../Atoms/Form/FormTagInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import {estimatedTimeList} from '../../../../../utilities/staticData';
 import {findIndex, isEmpty, remove, update} from 'lodash';
@@ -12,20 +10,81 @@ import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
-
 import {Switch} from '@headlessui/react';
-import {FaMoon, FaSun} from 'react-icons/fa';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {useHistory, useRouteMatch} from 'react-router';
+import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Input from './Input';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {match} from 'assert';
+import {getAsset} from '../../../../../assets';
 
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(' ');
-}
+const InputTag = ({
+  tags,
+  setTags,
+}: {
+  tags: string[];
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
+  const removeTag = (i: any) => {
+    const newTags = [...tags];
+    newTags.splice(i, 1);
+    setTags(newTags);
+  };
+
+  let tagInput: any = React.useRef(null).current;
+
+  const inputKeyDown = (e: any) => {
+    const val = e.target.value;
+    if (e.key === 'Enter' && val) {
+      if (tags.find((tag) => tag.toLowerCase() === val.toLowerCase())) {
+        return;
+      }
+      setTags([...tags, val]);
+      tagInput.value = null;
+    } else if (e.key === 'Backspace' && !val) {
+      removeTag(tags.length - 1);
+    }
+  };
+
+  return (
+    <div className="bg-white border-1 border-gray-400 rounded-md flex-wrap">
+      <ul className="inline-flex flex-wrap m-0 p-0 w-full max-w-132">
+        {tags.map((tag, i) => (
+          <li
+            className={
+              'items-center bg-indigo-600 rounded-md text-white font-light list-none mb-1.5 mr-1.5 py-1.5 px-2.5 w-auto'
+            }
+            key={tag}>
+            {tag}
+            <button
+              className={
+                'items-center appearance-none bg-gray-700 border-none text-white rounded-full cursor-pointer inline-flex text-xs h-4 justify-center ml-2 p-0 transform rotate-45 w-4'
+              }
+              type="button"
+              onClick={() => {
+                removeTag(i);
+              }}>
+              +
+            </button>
+          </li>
+        ))}
+        <li className="bg-transparent flex-grow-1 p-0">
+          <input
+            className={`block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md`}
+            type="text"
+            placeholder="Add tags here..."
+            onKeyDown={inputKeyDown}
+            ref={(c) => {
+              tagInput = c;
+            }}
+          />
+        </li>
+      </ul>
+    </div>
+  );
+};
+
 interface FieldsInterface {
   description: string;
   title: string;
@@ -46,6 +105,13 @@ interface NewLessonPlanSOInterface {
   pageDetails: any;
 }
 
+interface ErrorInterface {
+  title: string;
+  label: string;
+  instructions: string;
+  interactionType: string;
+}
+
 const INITIAL_STATE: FieldsInterface = {
   title: '',
   label: '',
@@ -58,55 +124,11 @@ const INITIAL_STATE: FieldsInterface = {
   classwork: true,
 };
 
-const Toggle = ({
-  enabled,
-  enabledColor,
-  disabledColor,
-  setEnabled,
-  enableIcon,
-  disableIcon,
-  disabled,
-}: any) => {
-  return (
-    <Switch
-      checked={enabled}
-      onChange={setEnabled}
-      disabled={disabled}
-      className={classNames(
-        enabled
-          ? `${enabledColor || 'bg-gray-600'}`
-          : `${disabledColor || 'bg-orange-200'}`,
-        'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-      )}>
-      <span className="sr-only">Use setting</span>
-      <span
-        className={classNames(
-          enabled ? 'translate-x-5' : 'translate-x-0',
-          'pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
-        )}>
-        <span
-          className={classNames(
-            enabled
-              ? 'opacity-0 ease-out duration-100'
-              : 'opacity-100 ease-in duration-200',
-            'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity'
-          )}
-          aria-hidden="true">
-          {disableIcon}
-        </span>
-        <span
-          className={classNames(
-            enabled
-              ? 'opacity-100 ease-in duration-200'
-              : 'opacity-0 ease-out duration-100',
-            'absolute inset-0 h-full w-full flex items-center justify-center transition-opacity'
-          )}
-          aria-hidden="true">
-          {enableIcon}
-        </span>
-      </span>
-    </Switch>
-  );
+const ERROR_INITIAL_STATE: ErrorInterface = {
+  title: '',
+  label: '',
+  instructions: '',
+  interactionType: '',
 };
 
 const NewLessonPlanSO = ({
@@ -142,6 +164,7 @@ const NewLessonPlanSO = ({
     setFields((prevInputs) => ({...prevInputs, tags}));
 
   const {clientKey, userLanguage} = useContext(GlobalContext);
+  const bannerImage = getAsset(clientKey, 'dashboardBanner2');
   const {BUTTONS} = useDictionary(clientKey);
 
   const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
@@ -152,6 +175,7 @@ const NewLessonPlanSO = ({
     setSelectedPageID,
   } = useULBContext();
   const history = useHistory();
+
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
 
@@ -197,12 +221,7 @@ const NewLessonPlanSO = ({
     });
   };
 
-  const [errors, setErrors] = useState({
-    title: '',
-    label: '',
-    instructions: '',
-    interactionType: '',
-  });
+  const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
@@ -244,7 +263,6 @@ const NewLessonPlanSO = ({
   const homeworkPages = universalLessonDetails?.homework || [];
 
   const [loading, setLoading] = useState(false); // loader for creating lesson
-  const match = useRouteMatch();
 
   const onSave = async (e: any) => {
     e.preventDefault();
@@ -267,9 +285,7 @@ const NewLessonPlanSO = ({
             description: fields.instructions,
             label: fields.label,
             estTime: Number(fields.estTime?.split(' ')[0]),
-
             tags: fields.tags,
-
             interactionType: fields.interactionType || [],
             activityType: classwork ? 'classwork' : 'homework',
           };
@@ -284,6 +300,7 @@ const NewLessonPlanSO = ({
             id: lessonId,
             lessonPlan: [...universalLessonDetails.lessonPlan],
           };
+
           await updateLessonPageToDB(input);
         } else {
           const prevPages = classwork ? [...classworkPages] : [...homeworkPages];
@@ -305,6 +322,7 @@ const NewLessonPlanSO = ({
               },
             ],
           };
+
           const res: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {
               input,
@@ -330,6 +348,7 @@ const NewLessonPlanSO = ({
         console.error(error.message);
       } finally {
         setLoading(false);
+        // closeAction();
       }
     }
   };
@@ -345,6 +364,34 @@ const NewLessonPlanSO = ({
     estTime,
   } = fields;
 
+  const closeAction = () => {
+    setErrors(ERROR_INITIAL_STATE);
+    setOpen(false);
+  };
+
+  const Checkbox = ({title, label, id}: {title: string; label: string; id: string}) => {
+    return (
+      <div className="relative flex items-start mb-4">
+        <div className="flex items-center h-5 w-auto">
+          <input
+            id={id}
+            name={id}
+            type="checkbox"
+            checked={interactionType?.includes(id)}
+            onChange={handleInteractionType}
+            className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
+          />
+        </div>
+        <div className="ml-3 text-sm">
+          <label htmlFor="group" className="font-medium text-gray-700">
+            {title}
+          </label>
+          <p className="text-sm whitespace-nowrap text-gray-500">{label}</p>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -352,7 +399,14 @@ const NewLessonPlanSO = ({
         static
         className="w-auto fixed inset-0 transition-all duration-300 overflow-hidden bg-black bg-opacity-50 z-100"
         open={open}
-        onClose={!hideCloseButtons ? setOpen : () => {}}>
+        onClose={
+          !hideCloseButtons
+            ? () => {
+                closeAction();
+                return setOpen;
+              }
+            : () => {}
+        }>
         <div className="absolute inset-0 overflow-hidden">
           <Dialog.Overlay className="absolute inset-0 w-auto" />
 
@@ -386,7 +440,7 @@ const NewLessonPlanSO = ({
                             <button
                               type="button"
                               className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                              onClick={() => setOpen(false)}>
+                              onClick={closeAction}>
                               <span className="sr-only">Close panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
@@ -411,7 +465,6 @@ const NewLessonPlanSO = ({
                             placeholder="eg. What is Javascript?"
                             value={title}
                             onChange={onFieldChange}
-                            defaultValue={title}
                             id="title"
                             error={errors?.title}
                           />
@@ -428,9 +481,10 @@ const NewLessonPlanSO = ({
                         </div>
                         <div className="sm:col-span-2">
                           <Input
+                            showCharacterUsage
+                            maxLength={12}
                             placeholder="eg. Let's learn what is javascript"
                             value={label}
-                            defaultValue={label}
                             error={errors?.label}
                             onChange={onFieldChange}
                             id="label"
@@ -477,72 +531,21 @@ const NewLessonPlanSO = ({
                             </legend>
                           </div>
                           <div className="w-48">
-                            <div className="relative flex items-start mb-4">
-                              <div className="flex items-center h-5 w-auto">
-                                <input
-                                  id="group"
-                                  name="group"
-                                  type="checkbox"
-                                  checked={interactionType?.includes('group')}
-                                  onChange={handleInteractionType}
-                                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
-                                />
-                              </div>
-                              <div className="ml-3 text-sm">
-                                <label
-                                  htmlFor="group"
-                                  className="font-medium text-gray-700">
-                                  Group
-                                </label>
-                                <p className="text-sm whitespace-nowrap text-gray-500">
-                                  Wokring with other teachers
-                                </p>
-                              </div>
-                            </div>
-                            <div className="relative flex items-start mb-4">
-                              <div className="flex items-center h-5 w-auto">
-                                <input
-                                  id="smallGroup"
-                                  name="smallGroup"
-                                  checked={interactionType?.includes('smallGroup')}
-                                  type="checkbox"
-                                  onChange={handleInteractionType}
-                                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
-                                />
-                              </div>
-                              <div className="ml-3 text-sm">
-                                <label
-                                  htmlFor="smallGroup"
-                                  className="font-medium text-gray-700">
-                                  Small group
-                                </label>
-                                <p className="text-sm whitespace-nowrap text-gray-500">
-                                  Working with small group of teachers
-                                </p>
-                              </div>
-                            </div>
-                            <div className="relative flex items-start mb-4">
-                              <div className="flex items-center h-5 w-auto">
-                                <input
-                                  id="individual"
-                                  name="individual"
-                                  type="checkbox"
-                                  checked={interactionType?.includes('individual')}
-                                  onChange={handleInteractionType}
-                                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-400 rounded"
-                                />
-                              </div>
-                              <div className="ml-3 text-sm">
-                                <label
-                                  htmlFor="indiviual"
-                                  className="font-medium text-gray-700">
-                                  Individual
-                                </label>
-                                <p className="text-sm whitespace-nowrap text-gray-500">
-                                  Only you are working on this
-                                </p>
-                              </div>
-                            </div>
+                            <Checkbox
+                              title={'Group'}
+                              label={'Working as a class to complete activity'}
+                              id={'group'}
+                            />
+                            <Checkbox
+                              title={'Small Group'}
+                              label={'Working in small groups to complete activity'}
+                              id={'smallGroup'}
+                            />
+                            <Checkbox
+                              title={'Individual'}
+                              label={'Working individually to complete activity'}
+                              id={'individual'}
+                            />
 
                             <hr className="border-gray-200" />
                             <p
@@ -586,80 +589,33 @@ const NewLessonPlanSO = ({
                             onSubmit={(e) => {
                               e.preventDefault();
                             }}>
-                            <FormTagInput
-                              className="max-w-132"
-                              error=""
-                              tags={tags}
-                              handleChange={handleAddTags}
-                            />
+                            <InputTag tags={tags} setTags={handleAddTags} />
                           </form>
                         </div>
                       </div>
-                      {/* Theme */}
-                      <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-                        <div>
-                          <label
-                            htmlFor="project-description"
-                            className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                            Theme
-                          </label>
-                        </div>
-                        <div className="sm:col-span-2 flex items-center">
-                          <Toggle
-                            enabled={darkMode}
-                            disableIcon={<FaSun className="h-3 w-3 text-orange-400" />}
-                            enableIcon={<FaMoon className="h-3 w-3 text-gray-600" />}
-                            setEnabled={() => handleToggle('darkMode', !darkMode)}
-                          />
-                          <span className="text-sm text-gray-500 ml-2">
-                            ({darkMode ? 'dark' : 'light'})
-                          </span>
-                        </div>
-                      </div>
-                      {/* Classwork / Homework */}
-                      <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-                        <div>
-                          <label
-                            htmlFor="project-description"
-                            className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                            Classwork
-                          </label>
-                        </div>
-                        <div className="sm:col-span-2 flex items-center">
-                          <Toggle
-                            disabled={true}
-                            // disabled for now
-                            enabled={classwork}
-                            enabledColor={'bg-indigo-600'}
-                            setEnabled={() => handleToggle('classwork', !classwork)}
-                          />
-                          <span className="text-sm text-gray-500 ml-2">
-                            only classwork activities available now
-                          </span>
-                        </div>
-                      </div>
                     </div>
-                  </div>
+                    <hr className="my-2 text-gray-500" />
 
-                  {/* Action buttons */}
-                  <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
-                    <div className="space-x-3 flex justify-end">
-                      {!hideCloseButtons && (
+                    {/* Action buttons */}
+                    <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
+                      <div className="space-x-3 flex justify-end">
+                        {!hideCloseButtons && (
+                          <button
+                            type="button"
+                            className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            onClick={closeAction}>
+                            Cancel
+                          </button>
+                        )}
                         <button
-                          type="button"
-                          className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={() => setOpen(false)}>
-                          Cancel
+                          disabled={loading}
+                          onClick={onSave}
+                          className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                          {loading
+                            ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
+                            : BUTTONS[userLanguage][editMode ? 'SAVE' : 'CREATE']}
                         </button>
-                      )}
-                      <button
-                        disabled={loading}
-                        onClick={onSave}
-                        className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        {loading
-                          ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
-                          : BUTTONS[userLanguage][editMode ? 'SAVE' : 'CREATE']}
-                      </button>
+                      </div>
                     </div>
                   </div>
                 </form>

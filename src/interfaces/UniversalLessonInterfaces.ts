@@ -17,6 +17,7 @@ export interface UniversalLesson {
   additionalFiles?: string[];
   institutionID?: string;
   lessonPlan: UniversalLessonPage[];
+  darkMode?: boolean;
 }
 
 export interface UniversalLessonPlanStage {
@@ -40,6 +41,7 @@ export interface UniversalLessonPage {
   open?: boolean;
   active?: boolean;
   label?: string;
+  tags?: string[];
   title?: string;
   description?: string;
   class?: string;

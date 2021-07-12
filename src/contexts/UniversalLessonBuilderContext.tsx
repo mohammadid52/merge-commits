@@ -21,6 +21,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   );
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
+
   const [selectedLessonID, setSelectedLessonID] = useState<string>('');
 
   // Getters
