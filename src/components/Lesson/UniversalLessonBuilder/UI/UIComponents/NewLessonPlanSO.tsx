@@ -394,30 +394,39 @@ const NewLessonPlanSO = ({
   const [showModal, setShowModal] = useState({show: false, msg: ''});
 
   const onTopRightButtonClick = () => {
-    const isValid = validate();
-    console.log(
-      '🚀 ~ file: NewLessonPlanSO.tsx ~ line 398 ~ onTopRightButtonClick ~ isValid',
-      isValid
-    );
-
-    if (isValid) {
-      setOpen(false);
-      setShowModal({show: true, msg: 'Do you want to save changes?'});
-    } else {
-      // setShowModal({show: true, msg: 'Please fill required fields'});
-    }
+    setShowModal({show: true, msg: 'Do you want to save changes?'});
+    // const isValid = validate();
+    // console.log(
+    //   '🚀 ~ file: NewLessonPlanSO.tsx ~ line 398 ~ onTopRightButtonClick ~ isValid',
+    //   isValid
+    // );
+    //
+    // if (isValid) {
+    //   setOpen(false);
+    //   setShowModal({show: true, msg: 'Do you want to save changes?'});
+    // } else {
+    //   // setShowModal({show: true, msg: 'Please fill required fields'});
+    // }
   };
 
   const goToSteps = () => history.push(`edit?lessonId=${lessonId}&step=activities`);
 
   const onModalSaveClick = (e: any) => {
-    onSave(e);
-    onModalCancelClick();
+    const isValid = validate();
+    if (isValid) {
+      setOpen(false);
+      onSave(e);
+      onModalCancelClick();
+    } else {
+      onModalCancelClick();
+      setShowModal({show: true, msg: 'Please fill required fields'});
+    }
   };
 
   const onModalNoClick = () => {
     // continue work
-    setOpen(true);
+    // closeAction();
+    setShowModal({show: false, msg: ''});
   };
 
   const onModalCancelClick = () => {
@@ -428,30 +437,35 @@ const NewLessonPlanSO = ({
 
   return (
     <>
-      {showModal.show && (
-        <ModalPopUp
-          noButton="Continue"
-          noTooltip="No, Continue..."
-          cancelLabel="Discard"
-          cancelTooltip="Discard changes and go back"
-          saveTooltip="Save changes and go back"
-          saveLabel="Save"
-          noButtonAction={onModalNoClick}
-          saveAction={onModalSaveClick}
-          message={showModal.msg}
-          closeAction={onModalCancelClick}
-        />
-      )}
+      <div className={`${showModal.show ? 'z-100' : ''}`}>
+        {showModal.show && (
+          <ModalPopUp
+            noButton="Continue"
+            noTooltip="No, Continue..."
+            cancelLabel="Discard"
+            cancelTooltip="Discard changes and go back"
+            saveTooltip="Save changes and go back"
+            saveLabel="Save"
+            noButtonAction={onModalNoClick}
+            saveAction={onModalSaveClick}
+            message={showModal.msg}
+            closeAction={onModalCancelClick}
+          />
+        )}
+      </div>
+
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
           static
-          className="w-auto fixed inset-0 transition-all duration-300 overflow-hidden bg-black bg-opacity-50 z-100"
+          className={`w-auto fixed inset-0 transition-all duration-300 overflow-hidden bg-black bg-opacity-50 ${
+            showModal.show ? '' : 'z-100'
+          }`}
           open={open}
           onClose={
             !hideCloseButtons
               ? () => {
-                  closeAction();
+                  onTopRightButtonClick();
                   return setOpen;
                 }
               : () => {}
@@ -489,7 +503,9 @@ const NewLessonPlanSO = ({
                             <button
                               type="button"
                               className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                              onClick={() => {}}>
+                              onClick={() => {
+                                onTopRightButtonClick();
+                              }}>
                               <span className="sr-only">Close panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
