@@ -49,7 +49,7 @@ const ProfileInfo = (props: UserInfoProps) => {
         (item: any) => item.qid === questionID
       )?.response;
 
-      const stringedResponse = questionResponce.toString();
+      const stringedResponse = questionResponce ? questionResponce.toString() : '';
 
       if (stringedResponse.includes('Other')) {
         const splitAnswer = stringedResponse.split(' || '); // this will return ["Other", "answer"]
