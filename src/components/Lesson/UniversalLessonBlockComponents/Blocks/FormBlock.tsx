@@ -72,7 +72,6 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   const [fields, setFields] = useState<any>({});
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    console.log('onChange - id - value - ', id, ' - ', value);
     setFields({...fields, [id]: value});
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);
@@ -109,7 +108,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
           onChange={isInLesson ? (e) => onChange(e) : undefined}
-          value={getStudentDataValue(inputID)}
+          value={isInLesson ? getStudentDataValue(inputID) : value}
         />
       </div>
     );
@@ -274,7 +273,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               onChange={isInLesson ? (e) => onChange(e) : undefined}
-              value={getStudentDataValue(inputID)}
+              value={isInLesson ? getStudentDataValue(inputID) : value}
             />
           </div>
         );
@@ -293,7 +292,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
               }`}
               name="story"
               onChange={isInLesson ? (e) => onChange(e) : undefined}
-              value={getStudentDataValue(inputID)}
+              value={isInLesson ? getStudentDataValue(inputID) : value}
             />
           </div>
         );

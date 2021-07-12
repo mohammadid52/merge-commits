@@ -80,7 +80,7 @@ const EmojiInput = ({
           name="emoji"
           type="text"
           onChange={isInLesson ? (e) => onChange(e) : undefined}
-          value={getStudentDataValue(inputID)}
+          value={isInLesson ? getStudentDataValue(inputID) : value}
         />
         {showEmojiSelector && (
           <ClickAwayListener onClickAway={() => setShowEmojiSelector(false)}>

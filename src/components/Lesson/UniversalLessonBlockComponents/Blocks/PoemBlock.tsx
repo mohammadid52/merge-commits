@@ -93,7 +93,7 @@ const PoemBlock = (props: PoemBlockProps) => {
         ) : (
           <EditingBlock
             id={id}
-            poemWriting={getStudentDataValue(id)[0]}
+            poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
             handleUpdateStudentData={handleUpdateStudentData}
           />
         )}
