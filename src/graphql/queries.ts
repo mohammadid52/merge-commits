@@ -170,6 +170,7 @@ export const getInstitution = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -1165,6 +1166,7 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabusSeq
       checkpoints {
         items {
           id
@@ -1231,6 +1233,7 @@ export const listCurriculums = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -1282,6 +1285,7 @@ export const getTopic = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -1337,6 +1341,7 @@ export const listTopics = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -1457,6 +1462,7 @@ export const getRubric = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -1565,6 +1571,7 @@ export const getRoomCurriculum = /* GraphQL */ `
         universalSyllabus {
           nextToken
         }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -1598,6 +1605,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
