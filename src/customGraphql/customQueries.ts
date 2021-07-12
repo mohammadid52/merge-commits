@@ -2220,6 +2220,16 @@ export const getCurriculum = /* GraphQL */ `
   }
 `;
 
+export const getCurriculumUniversalSyllabusSequence = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      universalSyllabusSeq
+    }
+  }
+`;
+
 export const getLesson = /* GraphQL */ `
   query GetLesson($id: ID!) {
     getLesson(id: $id) {

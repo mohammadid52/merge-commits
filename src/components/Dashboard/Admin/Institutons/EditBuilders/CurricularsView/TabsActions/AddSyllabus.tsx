@@ -16,6 +16,7 @@ import { languageList } from '../../../../../../../utilities/staticData';
 import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 
@@ -48,6 +49,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [syllabusIds, setSyllabusIds] = useState([]);
+  const [universalSyllabusSeq, setUniversalSyllabusSeq] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const { AddSyllabusDict, BreadcrumsTitles } = useDictionary(clientKey);
@@ -155,6 +157,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   };
 
   const fetchSyllabusSequence = async () => {
+    let result: any = await API.graphql(graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, { id: `${curricularId}` }));
+    setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
     let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `s_${curricularId}` }));
     item = item?.data.getCSequences?.sequence || [];
     if (item) {
@@ -167,7 +171,9 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     if (isValid) {
       try {
         setIsLoading(true);
-        const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const languagesCode = syllabusData.languages.map(
+          (item: {value: string}) => item.value
+        );
         const designers = selectedDesigners.map((item) => item.id);
         const input = {
           name: syllabusData.name,
@@ -180,10 +186,20 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           languages: languagesCode,
           designers: designers,
         };
-        console.log('syllabus', input)
-        const newSyllabus: any = await API.graphql(graphqlOperation(mutations.createUniversalSyllabus, { input }));
+        console.log('syllabus', input);
+        const newSyllabus: any = await API.graphql(
+          graphqlOperation(mutations.createUniversalSyllabus, {input})
+        );
         const newItem = newSyllabus.data.createUniversalSyllabus;
-        console.log('newItem', newItem)
+        console.log('newItem', newItem);
+        await API.graphql(
+          graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+            input: {
+              id: curricularId,
+              universalSyllabusSeq: [...universalSyllabusSeq, newItem.id],
+            },
+          })
+        );
         // if (!syllabusIds.length) {
         //   let seqItem: any = await API.graphql(
         //     graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: [newItem.id] } })
