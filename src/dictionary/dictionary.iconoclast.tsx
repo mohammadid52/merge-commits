@@ -3113,7 +3113,7 @@ const LessonBuilderDict: any = {
       SAVE: 'Save',
       ADD_ROW: 'Add Component',
       DELETE: 'Delete',
-      ADD_EVIDENCE: 'Add Evidence'
+      ADD_EVIDENCE: 'Add Evidence',
     },
     LESSON_PLAN_COLUMN: {
       ID: 'id',
@@ -3159,6 +3159,12 @@ const LessonBuilderDict: any = {
       EVIDENCE_ACTIVITY: 'Evidence Activity(Page)',
       EVIDENCE_PLACE: 'Evidence Place',
       ACTION: 'Action',
+      ADD_EVIDENCE: {
+        OBJECTIVE: 'Objective',
+        TOPICS: 'Topics',
+        MEASUREMENTS: 'Measurements',
+        ACTIVITY: 'Activity Page',
+      },
     },
     LESSON_PLAN_FORM: {
       DESCRIPTION: 'Description',
