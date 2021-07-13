@@ -99,6 +99,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     selectedPageID,
     setFetchingLessonDetails,
     setSelectedPageID,
+    setEditMode,
     setNewLessonPlanShow,
   } = useULBContext();
 
@@ -484,7 +485,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const onBack = () => {
     history.goBack();
   };
-  const [editMode, setEditMode] = useState(true);
 
   return (
     /**
@@ -526,8 +526,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
             <BuilderWrapper
               mode={`building`}
-              setEditMode={setEditMode}
-              editMode={editMode}
               deleteFromULBHandler={deleteULBHandler}
               updateFromULBHandler={updateULBHandler}
               createNewBlockULBHandler={createNewBlockULBHandler}

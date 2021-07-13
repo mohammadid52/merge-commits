@@ -59,8 +59,6 @@ interface ExistingLessonTemplateProps extends ULBSelectionProps {
   setUniversalBuilderStep?: React.Dispatch<React.SetStateAction<string>>;
   universalBuilderTemplates?: any[];
   initialUniversalLessonPagePartContent: PartContent;
-  editMode?: boolean;
-  setEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // GRID SHOWING EXISTING TEMPLATES TILES
@@ -69,8 +67,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     mode,
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
-    setEditMode,
-    editMode,
+
     deleteFromULBHandler,
     updateFromULBHandler,
     initialUniversalLessonPagePartContent,
@@ -84,6 +81,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
+
     getCurrentPage,
   } = useULBContext();
   //@ts-ignore
@@ -568,8 +566,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
-        setEditMode={setEditMode}
-        editMode={editMode}
         createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}

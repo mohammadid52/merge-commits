@@ -142,34 +142,18 @@ const NewLessonPlanSO = ({
 
   const history = useHistory();
   const {
-    previewMode,
-    setPreviewMode,
-    selectedLessonID,
     editMode,
     setEditMode,
-    setSelectedLessonID,
-    newBlockSeqId,
-    setNewBlockSeqId,
-    getCurrentPageIdx,
+
     universalLessonDetails,
-    selectedPageID,
-    activeTab,
-    setActiveTab,
+
     setSelectedPageID,
-    getCurrentPage,
-    theme,
+
     newLessonPlanShow,
-    setNewLessonPlanShow,
+
     setUniversalLessonDetails,
-    setEnableDnD,
+
     addFromULBHandler: addULBHandler,
-    addNewPageHandler,
-    updateMovableList,
-    getPartContent,
-    getPageContent,
-    enableDnD,
-    fetchingLessonDetails,
-    setFetchingLessonDetails,
   } = useULBContext();
   // fill the fields if edit mode
   useEffect(() => {

@@ -23,8 +23,7 @@ import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
-  editMode: boolean;
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -50,7 +49,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   const {
     mode,
-    setEditMode,
+
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
@@ -74,6 +73,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setNewLessonPlanShow,
     fetchingLessonDetails,
     setLessonPlanFields,
+    setEditMode,
   } = useULBContext();
   const {
     clientKey,
