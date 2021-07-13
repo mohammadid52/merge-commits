@@ -241,15 +241,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           languages: languagesCode,
           designers: designers,
         };
-        const newSyllabus = await API.graphql(
-          graphqlOperation(mutations.updateSyllabus, {input: input})
+        await API.graphql(
+          graphqlOperation(mutations.updateUniversalSyllabus, {input: input})
         );
         setMessages({
           show: true,
           message: EditSyllabusDict[userLanguage]['messages']['unitupdate'],
           isError: false,
         });
-        setSyllabusData(initialData);
+        // setSyllabusData(initialData);
         setIsLoading(false);
         return true;
       } catch {
@@ -342,7 +342,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           status: val,
         };
         const result: any = await API.graphql(
-          graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
+          graphqlOperation(mutations.updateUniversalSyllabus, {input: input})
         );
         const newLesson = result.data.updateSyllabusLesson;
         updateStatusOnTable(newLesson.lessonID, newLesson.status);
@@ -851,9 +851,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                     </p>
                   </div>
                 ) : null}
-                {/* <div className="flex my-8 justify-center">
+                <div className="flex my-8 justify-center">
                   <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
-                </div> */}
+                </div>
               </div>
             </div>
 

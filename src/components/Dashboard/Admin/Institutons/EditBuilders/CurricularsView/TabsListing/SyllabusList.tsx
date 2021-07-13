@@ -29,7 +29,7 @@ const SyllabusList = (props: SyllabusListProps) => {
   const SyllabusDict = useDictionary(clientKey).SYLLABUS;
 
   const [loading, setLoading] = useState(false);
-  const [list, setList] = useState(syllabusList);
+  const [list, setList] = useState<any>(syllabusList);
 
   const createNewSyllabus = async () => {
     history.push(
@@ -44,20 +44,15 @@ const SyllabusList = (props: SyllabusListProps) => {
 
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
-      let seq;
-      if (!syllabusSequence) {
-        seq = syllabusList.map(sy => sy.id)
-      } else {
-        seq = syllabusSequence
-      }
+      const seq = list.map((sy: any) => sy.id);
       console.log('seq', seq)
-      const list = reorder(seq, result.source.index, result.destination.index);
+      const reorderedList = reorder(seq, result.source.index, result.destination.index);
       try {
-        let data = updateSyllabusListorder(syllabusList, list);
+        let data = updateSyllabusListorder(syllabusList, reorderedList);
         setList(data);
         await API.graphql(
           graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
-            input: { id: curricularId, universalSyllabusSeq: list },
+            input: {id: curricularId, universalSyllabusSeq: reorderedList},
           })
         );
       } catch (err) {
@@ -128,7 +123,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                         <Droppable droppableId="droppable">
                           {(provided, snapshot) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
-                              {list.map((item, index) => (
+                              {list.map((item:any, index:number) => (
                                 <Draggable
                                   key={item.id}
                                   draggableId={item.id}
