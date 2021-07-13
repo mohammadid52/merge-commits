@@ -386,7 +386,7 @@ const NewLessonPlanSO = ({
   const onCancel = () => {
     setOpen(false);
     if (!editMode) {
-      setShowModal({...showModal, show: true, msg: 'Do you want to save changes?'});
+      setShowModal({...showModal, show: true, msg: 'Do you want to save information?'});
     }
   };
 
@@ -438,9 +438,9 @@ const NewLessonPlanSO = ({
         <ModalPopUp
           cancelLabel={'Discard'} // discard all changes and go back to activities page
           cancelTooltip="Discard changes"
-          saveTooltip={!showModal.msg.includes('required fields') && 'Save changes'} // first check if all required fields are filled if yes then save changes and go to activity page and if not show another modal
-          saveLabel={!showModal.msg.includes('required fields') && 'Save'}
-          saveAction={!showModal.msg.includes('required fields') && onModalSaveClick}
+          saveTooltip={'Save changes'} // first check if all required fields are filled if yes then save changes and go to activity page and if not show another modal
+          saveLabel={'Save'}
+          saveAction={onModalSaveClick}
           message={showModal.msg}
           closeAction={onModalCancelClick}
         />
