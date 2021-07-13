@@ -1159,6 +1159,7 @@ export const getCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          universalLessonsSeq
           designers
           status
           createdAt
@@ -4921,6 +4922,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      universalLessonsSeq
       designers
       status
       createdAt
@@ -4957,6 +4959,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         lessons {
           nextToken
         }
+        universalLessonsSeq
         designers
         status
         createdAt
