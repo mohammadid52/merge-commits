@@ -23,6 +23,8 @@ import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
+  editMode: boolean;
+  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -40,8 +42,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
     indexToUpdate: number
   ) => void;
   setEditModal: React.Dispatch<React.SetStateAction<any>>;
-  editMode?: boolean;
-  setEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
+  activePageData: UniversalLessonPage;
 }
 
 interface FieldsInterface {
@@ -72,6 +73,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   const {
     mode,
+    setEditMode,
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
@@ -88,22 +90,17 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleEditBlockContent,
     handleModalPopToggle,
     handleTagModalOpen,
-    editMode,
-    setEditMode,
+    activePageData,
   } = props;
   const {
-    previewMode,
     setUniversalLessonDetails,
-    newLessonPlanShow,
     setNewLessonPlanShow,
     fetchingLessonDetails,
   } = useULBContext();
   const {
     clientKey,
     userLanguage,
-    state: {
-      lessonPage: {theme: lessonPageTheme = 'dark', themeBackgroundColor = ''} = {},
-    },
+    state: {lessonPage: {themeBackgroundColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const params = useQuery(location.search);
@@ -125,9 +122,9 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
-    (lessonPage) => lessonPage.id === selectedPageID
-  );
+  // const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
+  //   (lessonPage: UniversalLessonPage) => lessonPage.id === selectedPageID
+  // );
 
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
@@ -184,7 +181,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   return (
     <>
-      {show && (
+      {activePageData && show && (
         <ModalPopUp
           message={message}
           closeAction={closeAction}
@@ -236,18 +233,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               />
             )}
           </LessonPageWrapper>
-        </div>
-
-        <div className={`col-span-1`}>
-          <NewLessonPlanSO
-            editMode={editMode}
-            setEditMode={setEditMode}
-            fields={fields}
-            setFields={setFields}
-            pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing
-            open={newLessonPlanShow}
-            setOpen={setNewLessonPlanShow}
-          />
         </div>
       </div>
     </>

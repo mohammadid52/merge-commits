@@ -108,7 +108,12 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [fetchingLessonDetails, setFetchingLessonDetails] = useState(false);
   const [previewMode, setPreviewMode] = useState<boolean>(false);
+
+  /**
+   * Specifically for the NEWLESSONPLAN modal
+   */
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -116,6 +121,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         previewMode,
         setPreviewMode,
         selectedLessonID,
+        editMode,
+        setEditMode,
         setSelectedLessonID,
         newBlockSeqId,
         setNewBlockSeqId,

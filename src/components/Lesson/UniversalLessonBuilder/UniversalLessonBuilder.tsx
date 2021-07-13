@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useRouteMatch, useHistory} from 'react-router';
+import {useHistory, useRouteMatch} from 'react-router';
 import {API, graphqlOperation} from 'aws-amplify';
 import BreadCrums from '../../Atoms/BreadCrums';
 
@@ -500,8 +500,6 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     <div
       id={`universalLessonBuilder`}
       className="h-full bg-dark-gray flex overflow-hidden">
-      {/*{currentStepComp(universalBuilderStep)}*/}
-
       <div
         onClick={() => {
           setNewLessonPlanShow(true);
@@ -518,20 +516,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
         <BreadCrums items={breadCrumsList} separateGoBackButton />
-        {/* <div className="flex justify-between">
-          <SectionTitle
-            title={LessonEditDict[userLanguage]['TITLE']}
-            subtitle={LessonEditDict[userLanguage]['SUBTITLE']}
-          />
-          <div className="flex justify-end py-4 mb-4 w-5/10">
-            <Buttons
-              label="Go back"
-              btnClass="mr-4"
-              onClick={onBack}
-              Icon={IoArrowUndoCircleOutline}
-            />
-          </div>
-        </div> */}
+
         {/* Body */}
         <div className="w-full h-full pb-8 m-auto">
           <div
