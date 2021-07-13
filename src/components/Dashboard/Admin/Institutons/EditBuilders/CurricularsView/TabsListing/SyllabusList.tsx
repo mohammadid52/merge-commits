@@ -6,8 +6,7 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
 import { reorder } from '../../../../../../../utilities/strings';
-import * as mutations from '../../../../../../../graphql/mutations';
-import * as queries from '../../../../../../../graphql/queries';
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
@@ -16,38 +15,21 @@ import Tooltip from '../../../../../../Atoms/Tooltip';
 interface SyllabusListProps {
   curricularId?: string;
   institutionId: string;
+  syllabusList: any[];
+  syllabusSequence: any[];
 }
+
 
 const SyllabusList = (props: SyllabusListProps) => {
   const history = useHistory();
 
-  const { curricularId, institutionId } = props;
-
+  const { curricularId, institutionId, syllabusList, syllabusSequence } = props;
   const { clientKey, theme, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const SyllabusDict = useDictionary(clientKey).SYLLABUS;
 
   const [loading, setLoading] = useState(false);
-  const [syllabusList, setSyllabusList] = useState([]);
-
-  const fetchSyllabusList = async () => {
-    try {
-      setLoading(true)
-      let list: any = await API.graphql(
-        graphqlOperation(queries.listUniversalSyllabuss, {
-          filter: {
-            curriculumID: { eq: curricularId }
-          },
-        })
-      );
-      list = list?.data?.listUniversalSyllabuss?.items;
-      console.log('list', list)
-      setSyllabusList(list);
-      setLoading(false);
-    } catch (err) {
-      console.log('ERROR: Fetch syllabus list', err);
-    }
-  }
+  const [list, setList] = useState(syllabusList);
 
   const createNewSyllabus = async () => {
     history.push(
@@ -62,13 +44,45 @@ const SyllabusList = (props: SyllabusListProps) => {
 
   const onDragEnd = async (result: any) => {
     if (result.source.index !== result.destination.index) {
-      console.log('seq updated');
+      let seq;
+      if (!syllabusSequence) {
+        seq = syllabusList.map(sy => sy.id)
+      } else {
+        seq = syllabusSequence
+      }
+      console.log('seq', seq)
+      const list = reorder(seq, result.source.index, result.destination.index);
+      try {
+        let data = updateSyllabusListorder(syllabusList, list);
+        setList(data);
+        await API.graphql(
+          graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+            input: { id: curricularId, universalSyllabusSeq: list },
+          })
+        );
+      } catch (err) {
+        console.log('Could not update syllabus list sequence');
+      }
     }
   };
 
+  const updateSyllabusListorder = (syllabusList: any, sequence: any) => {
+    let data = syllabusList.map((t: any) => {
+      let index = sequence?.indexOf(t.id);
+      return { ...t, index };
+    })
+      .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+    return data;
+  }
+
   useEffect(() => {
-    fetchSyllabusList()
-  }, [])
+    if (syllabusSequence) {
+      let data = updateSyllabusListorder(syllabusList, syllabusSequence)
+      setList(data)
+    } else {
+      setList(syllabusList)
+    }
+  }, [syllabusList])
 
   return (
     <div className="p-8 flex m-auto justify-center">
@@ -85,7 +99,7 @@ const SyllabusList = (props: SyllabusListProps) => {
           {
             !loading &&
             <Fragment>
-              {syllabusList && syllabusList.length > 0 &&
+              {list && list.length > 0 &&
                 <Fragment>
                   <div className="flex justify-end w-8/10 m-auto ">
                     <Buttons
@@ -114,7 +128,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                         <Droppable droppableId="droppable">
                           {(provided, snapshot) => (
                             <div {...provided.droppableProps} ref={provided.innerRef}>
-                              {syllabusList.map((item, index) => (
+                              {list.map((item, index) => (
                                 <Draggable
                                   key={item.id}
                                   draggableId={item.id}
@@ -156,7 +170,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                   </div>
                 </Fragment>
               }
-              {(!syllabusList || syllabusList && syllabusList.length === 0) &&
+              {(!list || list && list.length === 0) &&
                 (
                   <Fragment>
                     <div className="flex justify-center mt-8">
