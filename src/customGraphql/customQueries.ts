@@ -1748,6 +1748,7 @@ export const getUniversalLesson = /* GraphQL */ `
       duration
       resources
       notes
+      darkMode
       cardImage
       cardCaption
       lessonPlan {

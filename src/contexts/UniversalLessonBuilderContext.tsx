@@ -12,6 +12,29 @@ const initialUniversalLessonData: UniversalLesson = {
   lessonPlan: [],
 };
 
+interface FieldsInterface {
+  description: string;
+  title: string;
+  label: string;
+  instructions: string;
+  instructionsHtml: any;
+  interactionType: string[];
+  tags?: string[];
+  estTime: string;
+  classwork: boolean;
+}
+const INITIAL_STATE: FieldsInterface = {
+  title: '',
+  label: '',
+  instructions: '',
+  instructionsHtml: '',
+  description: '', // ignore this field
+  interactionType: [],
+  tags: [],
+  estTime: '1 min',
+  classwork: true,
+};
+
 export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [enableDnD, setEnableDnD] = useState<boolean>(false);
   const [newBlockSeqId, setNewBlockSeqId] = useState(null);
@@ -21,7 +44,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   );
 
   const [selectedPageID, setSelectedPageID] = useState<string>('page_2');
+
   const [selectedLessonID, setSelectedLessonID] = useState<string>('');
+  const [lessonPlanFields, setLessonPlanFields] = useState(INITIAL_STATE);
 
   // Getters
 
@@ -107,7 +132,12 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [fetchingLessonDetails, setFetchingLessonDetails] = useState(false);
   const [previewMode, setPreviewMode] = useState<boolean>(false);
+
+  /**
+   * Specifically for the NEWLESSONPLAN modal
+   */
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -115,12 +145,16 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         previewMode,
         setPreviewMode,
         selectedLessonID,
+        editMode,
+        setEditMode,
         setSelectedLessonID,
         newBlockSeqId,
         setNewBlockSeqId,
         getCurrentPageIdx,
         universalLessonDetails,
         selectedPageID,
+        lessonPlanFields,
+        setLessonPlanFields,
         activeTab,
         setActiveTab,
         setSelectedPageID,

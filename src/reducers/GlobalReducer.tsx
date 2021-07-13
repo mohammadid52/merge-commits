@@ -1,5 +1,5 @@
 // import React from 'react';
-import { globalStateType, globalState } from '../state/GlobalState';
+import {globalStateType, globalState} from '../state/GlobalState';
 
 type globalActions =
   | {
@@ -113,8 +113,12 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         ...state,
         lessonPage: {
           theme: action.payload.theme,
-          themeTextColor: action.payload.theme === 'light' ? 'text-dark-gray' : 'text-white',
-          themeBackgroundColor: action.payload.theme === 'light' ? 'bg-white' : 'bg-dark-gray',
+          themeTextColor:
+            action.payload.theme === 'light' ? 'text-dark-gray' : 'text-white',
+          themeBackgroundColor:
+            action.payload.theme === 'light' ? 'bg-white' : 'bg-dark-gray',
+          themeSecBackgroundColor:
+            action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700',
         },
       };
     case 'SET_USER':

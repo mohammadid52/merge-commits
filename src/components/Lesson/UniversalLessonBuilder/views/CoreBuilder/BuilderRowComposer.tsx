@@ -251,7 +251,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
               </EditOverlayBlock>
 
               {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
-              {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
+              {/* {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
                 <AddNewBlockMini
                   mode={mode}
                   idx={idx}
@@ -259,7 +259,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                     handleModalPopToggle(dialogToToggle, idx + 1)
                   }
                 />
-              )}
+              )} */}
             </div>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE

@@ -152,7 +152,9 @@ const JumbotronModalDialog = ({
         width: imageInputs.width,
         caption: imageInputs.caption,
       };
-      const updatedData = inputFieldsArray.map((item) => item.type === 'background' ? {...item, ...input} : item);
+      const updatedData = inputFieldsArray.map((item) =>
+        item.type === 'background' ? {...item, ...input} : item
+      );
       if (isEditingMode) {
         const updatedList = updateBlockContentULBHandler(
           '',
@@ -231,26 +233,6 @@ const JumbotronModalDialog = ({
 
   const onJumbotronCreate = async () => {
     await onSave();
-    // if (isEditingMode) {
-    //   const updatedList = updateBlockContentULBHandler(
-    //     '',
-    //     '',
-    //     'jumbotron',
-    //     inputFieldsArray,
-    //     0
-    //   );
-    //   // await addToDB(updatedList);
-    // } else {
-    //   const updatedList = createNewBlockULBHandler(
-    //     '',
-    //     '',
-    //     'jumbotron',
-    //     inputFieldsArray,
-    //     0
-    //   );
-
-    //   // await addToDB(updatedList);
-    // }
 
     setUnsavedChanges(false);
 
@@ -277,16 +259,21 @@ const JumbotronModalDialog = ({
                 />
               );
             } else {
+              const isDesc = inputObj.id === 'description';
               return (
                 <div className="mb-2" key={`jumboform_${idx}`}>
                   <FormInput
                     onChange={onChange}
                     label={inputFieldsArray[idx]?.label}
                     isRequired
+                    textarea={isDesc}
                     value={inputFieldsArray[idx]?.value}
                     id={inputFieldsArray[idx]?.id}
                     placeHolder={inputFieldsArray[idx]?.value}
                     type="text"
+                    rows={2}
+                    showCharacterUsage={isDesc}
+                    maxLength={650}
                   />
                 </div>
               );

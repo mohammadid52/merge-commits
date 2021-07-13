@@ -5,7 +5,10 @@ import useDictionary from '../../../../customHooks/dictionary';
 import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
+import {
+  PartContent,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
 
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -48,6 +51,7 @@ import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
+import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -63,18 +67,23 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     mode,
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
+
     deleteFromULBHandler,
     updateFromULBHandler,
-    selectedPageID,
-    setSelectedPageID,
     initialUniversalLessonPagePartContent,
   } = props;
   const {
     userLanguage,
     clientKey,
-    state: {lessonPage: {themeBackgroundColor = ''} = {}, user},
+    state: {user},
   } = useContext(GlobalContext);
-  const {universalLessonDetails} = useULBContext();
+  const {
+    universalLessonDetails,
+    selectedPageID,
+    setSelectedPageID,
+
+    getCurrentPage,
+  } = useULBContext();
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
@@ -454,32 +463,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     unsavedChanges,
     setUnsavedChanges,
   } = useUnsavedChanges(closeAction);
+
   return (
     <div
       id={`builderWrapper`}
       className="relative h-full bg-white shadow-5 sm:rounded-lg flex flex-col">
-      {/* <Toolbar
-        universalLessonDetails={universalLessonDetails}
-        deleteFromULBHandler={deleteFromULBHandler}
-        selectedPageID={selectedPageID}
-        setSelectedPageID={setSelectedPageID}
-        hierarchyVisible={hierarchyVisible}
-        setHierarchyVisible={setHierarchyVisible}
-        galleryVisible={galleryVisible}
-        setGalleryVisible={setGalleryVisible}
-        builderMenuVisible={builderMenuVisible}
-        setBuilderMenuVisible={setBuilderMenuVisible}
-        modalPopVisible={modalPopVisible}
-        setModalPopVisible={setModalPopVisible}
-        hideAllModals={hideAllModals}
-        currentModalDialog={currentModalDialog}
-        handleModalPopToggle={handleModalPopToggle}
-      /> */}
-      {/* <div
-        className="flex justify-end my-1 pr-2"
-        onClick={() => setBuilderMenuVisible(true)}>
-        <IoIosMenu className="w-auto cursor-pointer h-8 text-gray-400" />
-      </div> */}
       <LessonPlanNavigation
         selectedPageID={selectedPageID}
         setSelectedPageID={setSelectedPageID}
@@ -506,18 +494,20 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           showHeaderBorder={true}
           showFooter={false}
           titleButton={
-            <span
-              onClick={() => {
-                if (unsavedChanges) {
-                  askBeforeClose();
-                } else {
-                  hideAllModals();
-                  handleModalPopToggle(dialogLabelList.ADD_CONTENT);
-                }
-              }}
-              className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
-              Go Back
-            </span>
+            !blockConfig.isEditingMode && (
+              <span
+                onClick={() => {
+                  if (unsavedChanges) {
+                    askBeforeClose();
+                  } else {
+                    hideAllModals();
+                    handleModalPopToggle(dialogLabelList.ADD_CONTENT);
+                  }
+                }}
+                className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
+                Go Back
+              </span>
+            )
           }
           closeAction={askBeforeClose}>
           <div className="min-w-256">
@@ -566,16 +556,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           </div>
         </Modal>
       )}
-      {/* <HierarchyPanel
-        universalLessonDetails={universalLessonDetails}
-        selectedPageID={selectedPageID}
-        setSelectedPageID={setSelectedPageID}
-        hierarchyVisible={hierarchyVisible}
-        editMode={editMode}
-        setEditMode={setEditMode}
-        setEditModal={setEditModal}
-        setHierarchyVisible={setHierarchyVisible}
-      />*/}
 
       <BuilderMenu
         galleryVisible={galleryVisible}
@@ -602,6 +582,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}
         setEditModal={setEditModal}
+        activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
       />
     </div>
   );
