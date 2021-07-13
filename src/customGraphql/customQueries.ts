@@ -1437,16 +1437,52 @@ export const listCurriculums = /* GraphQL */ `
         description
         objectives
         languages
-        units {
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listCurriculumsForLessons = /* GraphQL */ `
+  query ListCurriculums(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurriculums(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+        }
+        universalSyllabus {
           items {
             id
             name
-            description
+            lessons{
+              items{
+                lessonID
+              }
+            }
+            curriculumID
           }
           nextToken
         }
-        createdAt
-        updatedAt
       }
       nextToken
     }

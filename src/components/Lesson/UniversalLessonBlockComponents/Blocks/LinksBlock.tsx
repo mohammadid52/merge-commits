@@ -38,7 +38,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     {item.type === 'youtube' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#CA2222',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -47,7 +47,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'etc' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#3d7cef',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -74,7 +74,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -82,7 +82,8 @@ const LinksBlock = (props: LinksBlockProps) => {
                       </IconContext.Provider>
                     )}
 
-                    <p className="flex-grow text-sm text-center text-blue-100 text-opacity-75">
+                    <p
+                      className={`flex-grow text-sm text-center ${themeTextColor} text-opacity-75`}>
                       {item.label}
                     </p>
                   </a>

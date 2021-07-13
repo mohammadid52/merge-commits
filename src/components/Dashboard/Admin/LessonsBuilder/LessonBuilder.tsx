@@ -450,7 +450,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           />
         );
       case 'courses':
-        return <LessonCourse />;
+        return <LessonCourse institution={formData?.institution} lessonId={lessonId} />;
       case 'learning-evidence':
         return <LearningEvidence />;
       // default:

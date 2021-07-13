@@ -102,8 +102,8 @@ const LessonActivities = ({
       lessonPlan: [...universalLessonDetails.lessonPlan],
     };
     toggleDeleteModal(false);
-    history.goBack();
     await updateLessonPageToDB(input);
+    // history.goBack();
   };
 
   return (
