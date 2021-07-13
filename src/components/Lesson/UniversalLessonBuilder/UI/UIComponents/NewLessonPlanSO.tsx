@@ -129,12 +129,16 @@ const ERROR_INITIAL_STATE: ErrorInterface = {
   interactionType: '',
 };
 
-const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
+const NewLessonPlanSO = ({
+  open,
+  setOpen,
+  pageDetails,
+  fields,
+  setFields,
+}: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
 
   const {BUTTONS} = useDictionary(clientKey);
-
-  const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
   const history = useHistory();
   const {

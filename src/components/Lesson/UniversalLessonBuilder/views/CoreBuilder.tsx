@@ -45,29 +45,6 @@ interface CoreBuilderProps extends ULBSelectionProps {
   activePageData: UniversalLessonPage;
 }
 
-interface FieldsInterface {
-  description: string;
-  title: string;
-  label: string;
-  instructions: string;
-  instructionsHtml: any;
-  interactionType: string[];
-  tags?: string[];
-  estTime: string;
-  classwork: boolean;
-}
-const INITIAL_STATE: FieldsInterface = {
-  title: '',
-  label: '',
-  instructions: '',
-  instructionsHtml: '',
-  description: '', // ignore this field
-  interactionType: [],
-  tags: [],
-  estTime: '1 min',
-  classwork: true,
-};
-
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const history = useHistory();
 
@@ -96,6 +73,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setUniversalLessonDetails,
     setNewLessonPlanShow,
     fetchingLessonDetails,
+    setLessonPlanFields,
   } = useULBContext();
   const {
     clientKey,
@@ -177,7 +155,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       goToLessonPlan();
     }
   };
-  const [fields, setFields] = useState(INITIAL_STATE);
 
   return (
     <>
@@ -198,7 +175,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
           {!fetchingLessonDetails && (
             <Toolbar
-              setFields={setFields}
+              setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
               setNewLessonPlanShow={setNewLessonPlanShow}
