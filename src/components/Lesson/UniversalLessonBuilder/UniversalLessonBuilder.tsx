@@ -451,12 +451,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           let activePagePartContentData = activePageContentData.partContent;
           activePagePartContentData[addBlockAtPosition] = {
             ...activePagePartContentData[addBlockAtPosition],
-            class: classString
-              ? replaceTailwindClass(
-                  activePagePartContentData[addBlockAtPosition].class,
-                  classString
-                )
-              : activePagePartContentData[addBlockAtPosition].class,
+            class: classString || activePagePartContentData[addBlockAtPosition].class,
             type: contentType,
             value: inputObj,
           };
