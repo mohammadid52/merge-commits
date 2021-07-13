@@ -484,6 +484,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
   const onBack = () => {
     history.goBack();
   };
+  const [editMode, setEditMode] = useState(true);
 
   return (
     /**
@@ -502,7 +503,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       {/*{currentStepComp(universalBuilderStep)}*/}
 
       <div
-        onClick={() => setNewLessonPlanShow(true)}
+        onClick={() => {
+          setNewLessonPlanShow(true);
+          setEditMode(true);
+        }}
         className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
         <Tooltip placement="left" text="Show Activity Panel">
           <div className="w-auto transform rotate-180 mr-1">
@@ -537,6 +541,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
             <BuilderWrapper
               mode={`building`}
+              setEditMode={setEditMode}
+              editMode={editMode}
               deleteFromULBHandler={deleteULBHandler}
               updateFromULBHandler={updateULBHandler}
               createNewBlockULBHandler={createNewBlockULBHandler}

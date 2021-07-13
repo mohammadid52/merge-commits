@@ -42,7 +42,32 @@ interface CoreBuilderProps extends ULBSelectionProps {
     indexToUpdate: number
   ) => void;
   setEditModal: React.Dispatch<React.SetStateAction<any>>;
+  editMode?: boolean;
+  setEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+interface FieldsInterface {
+  description: string;
+  title: string;
+  label: string;
+  instructions: string;
+  instructionsHtml: any;
+  interactionType: string[];
+  tags?: string[];
+  estTime: string;
+  classwork: boolean;
+}
+const INITIAL_STATE: FieldsInterface = {
+  title: '',
+  label: '',
+  instructions: '',
+  instructionsHtml: '',
+  description: '', // ignore this field
+  interactionType: [],
+  tags: [],
+  estTime: '1 min',
+  classwork: true,
+};
 
 export const CoreBuilder = (props: CoreBuilderProps) => {
   const history = useHistory();
@@ -65,6 +90,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     handleEditBlockContent,
     handleModalPopToggle,
     handleTagModalOpen,
+    editMode,
+    setEditMode,
   } = props;
   const {
     previewMode,
@@ -103,8 +130,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
     (lessonPage) => lessonPage.id === selectedPageID
   );
-
-  const [editMode, setEditMode] = useState(true);
 
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
@@ -157,6 +182,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       goToLessonPlan();
     }
   };
+  const [fields, setFields] = useState(INITIAL_STATE);
 
   return (
     <>
@@ -176,6 +202,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
           <Toolbar
+            setFields={setFields}
             setEditMode={setEditMode}
             deleteLesson={onDeleteButtonClick}
             setNewLessonPlanShow={setNewLessonPlanShow}
@@ -215,6 +242,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           <NewLessonPlanSO
             editMode={editMode}
             setEditMode={setEditMode}
+            fields={fields}
+            setFields={setFields}
             pageDetails={editMode ? activePageData : {}} // don't send unwanted page details if not editing
             open={newLessonPlanShow}
             setOpen={setNewLessonPlanShow}
