@@ -100,6 +100,10 @@ const HeaderModalComponent = ({
   };
 
   const addToDB = async (list: any) => {
+    console.log(
+      '🚀 ~ file: HeaderFormDialog.tsx ~ line 108 ~ addToDB ~ lessonPlan',
+      list.lessonPlan[0].pageContent[0].partContent[2].class
+    );
     closeAction();
 
     const input = {
@@ -113,13 +117,12 @@ const HeaderModalComponent = ({
   const onHeaderCreate = async () => {
     const value: string = inputFields[FIELD_ID];
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
+
     const bgColorClass: string = selectedValues.color;
-    const classValue = [
-      fontSizeClass,
-      `${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classValue = `${
+      bgColorClass ? `border-b-4 border-${bgColorClass}` : ''
+    } ${fontSizeClass}`;
+
     if (isEditingMode) {
       const updatedList: any = updateBlockContentULBHandler(
         '',

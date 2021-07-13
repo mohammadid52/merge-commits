@@ -1,3 +1,4 @@
+import '@pathofdev/react-tag-input/build/index.css';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
@@ -9,12 +10,14 @@ import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
+import {Switch} from '@headlessui/react';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Input from './Input';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {getAsset} from '../../../../../assets';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
 
@@ -23,7 +26,8 @@ const InputTag = ({
   setTags,
 }: {
   tags: string[];
-  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  // setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  setTags: any;
 }) => {
   const removeTag = (i: any) => {
     const newTags = [...tags];
@@ -83,6 +87,7 @@ const InputTag = ({
     </div>
   );
 };
+
 interface FieldsInterface {
   description: string;
   title: string;
@@ -92,18 +97,27 @@ interface FieldsInterface {
   interactionType: string[];
   tags?: string[];
   estTime: string;
+
   classwork: boolean;
 }
+
 interface NewLessonPlanSOInterface {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
   editMode: boolean;
   pageDetails: any;
-  fields: FieldsInterface;
-  setFields: React.Dispatch<React.SetStateAction<FieldsInterface>>;
   activePageData: UniversalLessonPage;
 }
+
+interface ErrorInterface {
+  empty: string;
+  title: string;
+  label: string;
+  instructions: string;
+  interactionType: string;
+}
+
 const INITIAL_STATE: FieldsInterface = {
   title: '',
   label: '',
@@ -115,45 +129,52 @@ const INITIAL_STATE: FieldsInterface = {
   estTime: '1 min',
   classwork: true,
 };
-interface ErrorInterface {
-  title: string;
-  label: string;
-  instructions: string;
-  interactionType: string;
-}
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
+  empty: '',
   title: '',
   label: '',
   instructions: '',
   interactionType: '',
 };
 
-const NewLessonPlanSO = ({
-  open,
-  setOpen,
-  pageDetails,
-  fields,
-  setFields,
-}: NewLessonPlanSOInterface) => {
+const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
 
   const {BUTTONS} = useDictionary(clientKey);
 
+  const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
+
   const history = useHistory();
   const {
+    previewMode,
+    setPreviewMode,
+    selectedLessonID,
     editMode,
     setEditMode,
-
+    setSelectedLessonID,
+    newBlockSeqId,
+    setNewBlockSeqId,
+    getCurrentPageIdx,
     universalLessonDetails,
-
+    selectedPageID,
+    activeTab,
+    setActiveTab,
     setSelectedPageID,
-
+    getCurrentPage,
+    theme,
     newLessonPlanShow,
-
+    setNewLessonPlanShow,
     setUniversalLessonDetails,
-
+    setEnableDnD,
     addFromULBHandler: addULBHandler,
+    addNewPageHandler,
+    updateMovableList,
+    getPartContent,
+    getPageContent,
+    enableDnD,
+    fetchingLessonDetails,
+    setFetchingLessonDetails,
   } = useULBContext();
   // fill the fields if edit mode
   useEffect(() => {
@@ -167,6 +188,8 @@ const NewLessonPlanSO = ({
         interactionType: pageDetails.interactionType || [],
         classwork: true,
       });
+    } else {
+      setFields(INITIAL_STATE);
     }
   }, [pageDetails, editMode]);
 
@@ -221,38 +244,46 @@ const NewLessonPlanSO = ({
 
   const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
-  const validate = (pushErrors: boolean = true) => {
+  const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
     let isValid = true;
+    if (empty) {
+      errors.empty = 'Please fill in all the details';
+      isValid = false;
+    } else {
+      errors.empty = '';
+      // isValid = true;
+    }
     if (trimmedLen(title) <= 0) {
       errors.title = 'Title is mandatory';
       isValid = false;
     } else {
       errors.title = '';
-      isValid = true;
+      // isValid = true;
     }
     if (trimmedLen(label) <= 0) {
       errors.label = 'Label is mandatory';
       isValid = false;
     } else {
       errors.label = '';
-      isValid = true;
+      // isValid = true;
     }
     if (trimmedLen(instructions) <= 0) {
       errors.instructions = 'Instructions is mandatory';
-      isValid = false;
+      // isValid = false;
     } else {
       errors.instructions = '';
-      isValid = true;
+      // isValid = true;
     }
-    if (interactionType?.length === 0) {
+    if (!interactionType && interactionType?.length <= 0) {
       errors.interactionType = 'Please select at least one interaction type';
-      isValid = false;
+      // isValid = false;
     } else {
       errors.interactionType = '';
-      isValid = true;
+      // isValid = true;
     }
-    if (pushErrors) setErrors({...errors});
+
+    setErrors({...errors});
     return isValid;
   };
 
@@ -347,6 +378,12 @@ const NewLessonPlanSO = ({
 
           setSelectedPageID(pageId);
           setEditMode(true);
+
+          if (data.id && !editMode) {
+            history.push(
+              `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+            );
+          }
         }
 
         setOpen(false);
@@ -354,7 +391,6 @@ const NewLessonPlanSO = ({
         console.error(error.message);
       } finally {
         setLoading(false);
-        // closeAction();
       }
     }
   };
@@ -369,10 +405,6 @@ const NewLessonPlanSO = ({
     interactionType,
     estTime,
   } = fields;
-
-  const closeAction = () => {
-    setOpen(false);
-  };
 
   const Checkbox = ({title, label, id}: {title: string; label: string; id: string}) => {
     return (
@@ -397,99 +429,52 @@ const NewLessonPlanSO = ({
     );
   };
 
-  useEffect(() => {
-    // added safety check
-    if (hideCloseButtons) {
-      setErrors(ERROR_INITIAL_STATE);
+  const [showModal, setShowModal] = useState({show: false, msg: ''});
+
+  const onTopRightButtonClick = () => {
+    setShowModal({show: true, msg: 'Do you want to discard changes?'});
+  };
+
+  // Validation only needs to be on save
+  const onSaveClick = (e: any) => {
+    e.preventDefault();
+    const valid = validate();
+    if (valid) {
+      onSave(e);
       setFields(INITIAL_STATE);
-    }
-  }, []);
-
-  const [showModal, setShowModal] = useState({
-    show: false,
-    msg: '',
-    requireFields: false,
-  });
-
-  const clearErrors = () => setErrors(ERROR_INITIAL_STATE);
-
-  const onCancel = () => {
-    setOpen(false);
-    if (!editMode) {
-      setShowModal({...showModal, show: true, msg: 'Do you want to save information?'});
+      setNewLessonPlanShow(false);
     }
   };
 
-  const goToSteps = () =>
-    hideCloseButtons && history.push(`edit?lessonId=${lessonId}&step=activities`);
-
-  // Validation only needs to be on save
-  const onModalSaveClick = (e: any) => {
-    const isValid = validate(false);
-
-    if (isValid) {
-      if (!editMode) {
-        onSave(e);
-        onModalCancelClick();
-      }
-    } else {
-      if (!editMode) {
-        setShowModal({
-          show: true,
-          msg: 'Please fill all required fields.',
-          requireFields: true,
-        });
-      }
-    }
+  const onModalNoClick = () => {
+    // continue work
+    setShowModal({show: false, msg: ''});
   };
 
   const onModalCancelClick = () => {
-    if (!editMode) {
-      if (!showModal.requireFields) {
-        closeAction();
-        clearErrors();
-        setFields(INITIAL_STATE);
-        goToSteps();
-        setShowModal({requireFields: false, show: false, msg: ''});
-        setOpen(false);
-      } else {
-        setShowModal({requireFields: false, show: false, msg: ''});
-
-        setOpen(false);
-      }
-    } else {
-      setOpen(false);
-      setShowModal({requireFields: false, show: false, msg: ''});
-    }
+    // reset everything
+    setFields(INITIAL_STATE);
+    setShowModal({show: false, msg: ''});
+    setErrors(ERROR_INITIAL_STATE);
+    setOpen(false);
+    setNewLessonPlanShow(false);
   };
 
   return (
     <>
       {showModal.show && (
-        <ModalPopUp
-          cancelLabel={'Discard'} // discard all changes and go back to activities page
-          cancelTooltip="Discard changes"
-          saveTooltip={'Save changes'} // first check if all required fields are filled if yes then save changes and go to activity page and if not show another modal
-          saveLabel={'Save'}
-          saveAction={onModalSaveClick}
-          message={showModal.msg}
-          closeAction={onModalCancelClick}
-        />
-      )}
-      {showModal.show && showModal.requireFields && (
-        <ModalPopUp
-          cancelLabel="Discard"
-          saveLabel="Continue"
-          saveAction={() => {
-            setShowModal({show: false, requireFields: false, msg: ''});
-            setOpen(true);
-          }}
-          message={showModal.msg}
-          closeAction={() => {
-            setShowModal({show: false, requireFields: false, msg: ''});
-            setOpen(false);
-          }}
-        />
+        <div className={`${showModal.show ? 'z-1000' : ''}`}>
+          <ModalPopUp
+            noButton="No"
+            noTooltip="Continue New Activity"
+            cancelLabel="Yes"
+            cancelTooltip="Discard changes and go back"
+            noButtonAction={onModalNoClick}
+            message={showModal.msg}
+            closeAction={onModalNoClick}
+            cancelAction={onModalCancelClick}
+          />
+        </div>
       )}
 
       {/*{newLessonPlanShow && (*/}
@@ -509,7 +494,7 @@ const NewLessonPlanSO = ({
         onClose={
           !hideCloseButtons
             ? () => {
-                onCancel();
+                onTopRightButtonClick();
                 return setOpen;
               }
             : () => {}
@@ -545,7 +530,7 @@ const NewLessonPlanSO = ({
                           type="button"
                           className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                           onClick={() => {
-                            onCancel();
+                            onTopRightButtonClick();
                           }}>
                           <span className="sr-only">Close panel</span>
                           <XIcon className="h-6 w-6" aria-hidden="true" />
@@ -708,13 +693,13 @@ const NewLessonPlanSO = ({
                         <button
                           type="button"
                           className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={closeAction}>
+                          onClick={() => onTopRightButtonClick()}>
                           Cancel
                         </button>
                       )}
                       <button
                         disabled={loading}
-                        onClick={onSave}
+                        onClick={(e) => onSaveClick(e)}
                         className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         {loading
                           ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']

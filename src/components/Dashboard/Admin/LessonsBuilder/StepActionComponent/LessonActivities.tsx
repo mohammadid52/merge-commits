@@ -39,7 +39,9 @@ const LessonActivities = ({
     setNewLessonPlanShow,
     setPreviewMode,
     setUniversalLessonDetails,
+    setEditMode,
     updateMovableList,
+    setLessonPlanFields,
   } = useULBContext();
   const [showDeleteModal, setShowDeleteModal] = useState<Boolean>(false);
   const [idToBeRemoved, setIdToBeRemoved] = useState<string>('');
@@ -58,6 +60,18 @@ const LessonActivities = ({
      * opening the new slide-in dialog within the 'BuilderWrapper
      */
     setNewLessonPlanShow(!newLessonPlanShow);
+    setEditMode(false);
+    setLessonPlanFields({
+      title: '',
+      label: '',
+      instructions: '',
+      instructionsHtml: '',
+      description: '', // ignore this field
+      interactionType: [],
+      tags: [],
+      estTime: '1 min',
+      classwork: true,
+    });
     // history.push(
     //   `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=open-overlay`
     // );

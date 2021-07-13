@@ -2777,6 +2777,7 @@ export const onCreateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          universalLessonsSeq
           designers
           status
           createdAt
@@ -2881,6 +2882,7 @@ export const onUpdateCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          universalLessonsSeq
           designers
           status
           createdAt
@@ -2985,6 +2987,7 @@ export const onDeleteCurriculum = /* GraphQL */ `
           objectives
           curriculumID
           languages
+          universalLessonsSeq
           designers
           status
           createdAt
@@ -10774,6 +10777,7 @@ export const onCreateUniversalSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      universalLessonsSeq
       designers
       status
       createdAt
@@ -10812,6 +10816,7 @@ export const onUpdateUniversalSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      universalLessonsSeq
       designers
       status
       createdAt
@@ -10850,6 +10855,7 @@ export const onDeleteUniversalSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      universalLessonsSeq
       designers
       status
       createdAt
