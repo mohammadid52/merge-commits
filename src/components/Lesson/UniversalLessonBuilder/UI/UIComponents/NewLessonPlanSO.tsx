@@ -375,6 +375,14 @@ const NewLessonPlanSO = ({
     );
   };
 
+  useEffect(() => {
+    // added safety check
+    if (hideCloseButtons) {
+      setErrors(ERROR_INITIAL_STATE);
+      setFields(INITIAL_STATE);
+    }
+  }, []);
+
   const [showModal, setShowModal] = useState({
     show: false,
     msg: '',
