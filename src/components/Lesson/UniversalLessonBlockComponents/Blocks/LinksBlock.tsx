@@ -4,7 +4,7 @@ import {IoIosGlobe} from 'react-icons/io';
 import {AiOutlineInstagram, AiOutlineYoutube} from 'react-icons/ai';
 import {FaSpotify} from 'react-icons/fa';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 interface LinksBlockProps extends RowWrapperProps {
   id?: string;
@@ -14,10 +14,11 @@ interface LinksBlockProps extends RowWrapperProps {
 
 const LinksBlock = (props: LinksBlockProps) => {
   const {id, value} = props;
-    const {
-      state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
-    } = useContext(GlobalContext);
+  const {
+    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
+  const textColor = lessonPageTheme === 'light' ? 'text-blue-500' : 'text-blue-100';
   return (
     <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
       {/* <PhotoBlock /> */}
@@ -74,15 +75,19 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : (
                       <IconContext.Provider
                         value={{
-                          color: 'white',
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
-                        <IoIosGlobe />
+                        <IoIosGlobe
+                          className={
+                            lessonPageTheme === 'dark' ? 'text-white' : 'text-gray-600'
+                          }
+                        />
                       </IconContext.Provider>
                     )}
 
-                    <p className="flex-grow text-sm text-center text-blue-100 text-opacity-75">
+                    <p
+                      className={`${textColor} flex-grow text-sm text-center text-opacity-75`}>
                       {item.label}
                     </p>
                   </a>

@@ -62,7 +62,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   const LinkInput = ({inputID, label, value}: any) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
-        <label className={`text-sm text-gray-200`} htmlFor="label">
+        <label
+          className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
+          htmlFor="label">
           {label} <Type text="Link" />
         </label>
         <input
