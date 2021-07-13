@@ -50,6 +50,7 @@ const SyllabusList = (props: SyllabusListProps) => {
       } else {
         seq = syllabusSequence
       }
+      console.log('seq', seq)
       const list = reorder(seq, result.source.index, result.destination.index);
       try {
         let data = updateSyllabusListorder(syllabusList, list);
@@ -145,7 +146,7 @@ const SyllabusList = (props: SyllabusListProps) => {
                                           {index + 1}.
                                         </div>
                                         <div className="flex w-7/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                                          {item.name ? item.name : ''} {item.id}
+                                          {item.name ? item.name : ''}
                                         </div>
                                         <span
                                           className={`w-2/10 flex items-center text-left px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} `}>

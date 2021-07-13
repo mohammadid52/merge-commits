@@ -157,13 +157,14 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   };
 
   const fetchSyllabusSequence = async () => {
+    // use custom query : getCurriculumUniversalSyllabusSequence
     let result: any = await API.graphql(graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, { id: `${curricularId}` }));
     setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `s_${curricularId}` }));
-    item = item?.data.getCSequences?.sequence || [];
-    if (item) {
-      setSyllabusIds(item);
-    }
+    // let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `s_${curricularId}` }));
+    // item = item?.data.getCSequences?.sequence || [];
+    // if (item) {
+    //   setSyllabusIds(item);
+    // }
   };
 
   const saveSyllabusDetails = async () => {
@@ -192,6 +193,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
         );
         const newItem = newSyllabus.data.createUniversalSyllabus;
         console.log('newItem', newItem);
+        // replace this with custom mutation updateCurriculumSyllabusSequence
         await API.graphql(
           graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
             input: {
