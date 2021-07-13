@@ -1,4 +1,3 @@
-import '@pathofdev/react-tag-input/build/index.css';
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {Dialog, Transition} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
@@ -10,14 +9,12 @@ import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
-import {Switch} from '@headlessui/react';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Input from './Input';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {getAsset} from '../../../../../assets';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 
 const InputTag = ({
@@ -85,7 +82,6 @@ const InputTag = ({
     </div>
   );
 };
-
 interface FieldsInterface {
   description: string;
   title: string;
@@ -95,25 +91,17 @@ interface FieldsInterface {
   interactionType: string[];
   tags?: string[];
   estTime: string;
-
   classwork: boolean;
 }
-
 interface NewLessonPlanSOInterface {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
   editMode: boolean;
   pageDetails: any;
+  fields: FieldsInterface;
+  setFields: React.Dispatch<React.SetStateAction<FieldsInterface>>;
 }
-
-interface ErrorInterface {
-  title: string;
-  label: string;
-  instructions: string;
-  interactionType: string;
-}
-
 const INITIAL_STATE: FieldsInterface = {
   title: '',
   label: '',
@@ -123,9 +111,14 @@ const INITIAL_STATE: FieldsInterface = {
   interactionType: [],
   tags: [],
   estTime: '1 min',
-
   classwork: true,
 };
+interface ErrorInterface {
+  title: string;
+  label: string;
+  instructions: string;
+  interactionType: string;
+}
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
   title: '',
@@ -140,6 +133,8 @@ const NewLessonPlanSO = ({
   editMode,
   setEditMode,
   pageDetails,
+  fields,
+  setFields,
 }: NewLessonPlanSOInterface) => {
   // fill the fields if edit mode
   useEffect(() => {
@@ -153,8 +148,6 @@ const NewLessonPlanSO = ({
         interactionType: pageDetails.interactionType || [],
         classwork: true,
       });
-    } else {
-      setFields(INITIAL_STATE);
     }
   }, [pageDetails, editMode]);
 
@@ -169,8 +162,6 @@ const NewLessonPlanSO = ({
   const {clientKey, userLanguage} = useContext(GlobalContext);
 
   const {BUTTONS} = useDictionary(clientKey);
-
-  const [fields, setFields] = useState<FieldsInterface>(INITIAL_STATE);
 
   const {
     universalLessonDetails,
@@ -222,7 +213,7 @@ const NewLessonPlanSO = ({
 
   const [errors, setErrors] = useState(ERROR_INITIAL_STATE);
 
-  const validate = () => {
+  const validate = (pushErrors: boolean = true) => {
     let trimmedLen = (field: any) => field.trim().length;
     let isValid = true;
     if (trimmedLen(title) <= 0) {
@@ -246,14 +237,14 @@ const NewLessonPlanSO = ({
       errors.instructions = '';
       isValid = true;
     }
-    if (!interactionType && interactionType?.length <= 0) {
+    if (interactionType?.length === 0) {
       errors.interactionType = 'Please select at least one interaction type';
       isValid = false;
     } else {
       errors.interactionType = '';
       isValid = true;
     }
-    setErrors({...errors});
+    if (pushErrors) setErrors({...errors});
     return isValid;
   };
 
@@ -334,12 +325,6 @@ const NewLessonPlanSO = ({
 
           setSelectedPageID(pageId);
           setEditMode(true);
-
-          if (data.id && !editMode) {
-            history.push(
-              `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
-            );
-          }
         }
 
         setOpen(false);
@@ -364,7 +349,6 @@ const NewLessonPlanSO = ({
   } = fields;
 
   const closeAction = () => {
-    setErrors(ERROR_INITIAL_STATE);
     setOpen(false);
   };
 
@@ -391,55 +375,97 @@ const NewLessonPlanSO = ({
     );
   };
 
-  const [showModal, setShowModal] = useState({show: false, msg: ''});
+  useEffect(() => {
+    // added safety check
+    if (hideCloseButtons) {
+      setErrors(ERROR_INITIAL_STATE);
+      setFields(INITIAL_STATE);
+    }
+  }, []);
 
-  const onTopRightButtonClick = () => {
-    const isValid = validate();
-    console.log(
-      '🚀 ~ file: NewLessonPlanSO.tsx ~ line 398 ~ onTopRightButtonClick ~ isValid',
-      isValid
-    );
+  const [showModal, setShowModal] = useState({
+    show: false,
+    msg: '',
+    requireFields: false,
+  });
 
-    if (isValid) {
-      setOpen(false);
-      setShowModal({show: true, msg: 'Do you want to save changes?'});
-    } else {
-      // setShowModal({show: true, msg: 'Please fill required fields'});
+  const clearErrors = () => setErrors(ERROR_INITIAL_STATE);
+
+  const onCancel = () => {
+    setOpen(false);
+    if (!editMode) {
+      setShowModal({...showModal, show: true, msg: 'Do you want to save information?'});
     }
   };
 
-  const goToSteps = () => history.push(`edit?lessonId=${lessonId}&step=activities`);
+  const goToSteps = () =>
+    hideCloseButtons && history.push(`edit?lessonId=${lessonId}&step=activities`);
 
   const onModalSaveClick = (e: any) => {
-    onSave(e);
-    onModalCancelClick();
-  };
+    const isValid = validate(false);
 
-  const onModalNoClick = () => {
-    // continue work
-    setOpen(true);
+    if (isValid) {
+      if (!editMode) {
+        onSave(e);
+        onModalCancelClick();
+      }
+    } else {
+      if (!editMode) {
+        setShowModal({
+          show: true,
+          msg: 'Please fill all required fields.',
+          requireFields: true,
+        });
+      }
+    }
   };
 
   const onModalCancelClick = () => {
-    closeAction();
-    goToSteps();
-    setFields(INITIAL_STATE);
+    if (!editMode) {
+      if (!showModal.requireFields) {
+        closeAction();
+        clearErrors();
+        setFields(INITIAL_STATE);
+        goToSteps();
+        setShowModal({requireFields: false, show: false, msg: ''});
+        setOpen(false);
+      } else {
+        setShowModal({requireFields: false, show: false, msg: ''});
+
+        setOpen(false);
+      }
+    } else {
+      setOpen(false);
+      setShowModal({requireFields: false, show: false, msg: ''});
+    }
   };
 
   return (
     <>
       {showModal.show && (
         <ModalPopUp
-          noButton="Continue"
-          noTooltip="No, Continue..."
-          cancelLabel="Discard"
-          cancelTooltip="Discard changes and go back"
-          saveTooltip="Save changes and go back"
-          saveLabel="Save"
-          noButtonAction={onModalNoClick}
+          cancelLabel={'Discard'} // discard all changes and go back to activities page
+          cancelTooltip="Discard changes"
+          saveTooltip={'Save changes'} // first check if all required fields are filled if yes then save changes and go to activity page and if not show another modal
+          saveLabel={'Save'}
           saveAction={onModalSaveClick}
           message={showModal.msg}
           closeAction={onModalCancelClick}
+        />
+      )}
+      {showModal.show && showModal.requireFields && (
+        <ModalPopUp
+          cancelLabel="Discard"
+          saveLabel="Continue"
+          saveAction={() => {
+            setShowModal({show: false, requireFields: false, msg: ''});
+            setOpen(true);
+          }}
+          message={showModal.msg}
+          closeAction={() => {
+            setShowModal({show: false, requireFields: false, msg: ''});
+            setOpen(false);
+          }}
         />
       )}
       <Transition.Root show={open} as={Fragment}>
@@ -451,7 +477,7 @@ const NewLessonPlanSO = ({
           onClose={
             !hideCloseButtons
               ? () => {
-                  closeAction();
+                  onCancel();
                   return setOpen;
                 }
               : () => {}
@@ -489,7 +515,7 @@ const NewLessonPlanSO = ({
                             <button
                               type="button"
                               className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                              onClick={closeAction}>
+                              onClick={onCancel}>
                               <span className="sr-only">Close panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
@@ -648,17 +674,23 @@ const NewLessonPlanSO = ({
                       {/* Action buttons */}
                       <div className="flex-shrink-0 px-4 border-t border-gray-200 py-5 sm:px-6">
                         <div className="space-x-3 flex justify-end">
-                          {!hideCloseButtons && (
-                            <button
-                              type="button"
-                              className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              onClick={closeAction}>
-                              Cancel
-                            </button>
-                          )}
+                          <button
+                            type="button"
+                            className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            onClick={onCancel}>
+                            Cancel
+                          </button>
+
                           <button
                             disabled={loading}
-                            onClick={onSave}
+                            onClick={async (e) => {
+                              await onSave(e);
+                              if (!editMode) {
+                                history.push(
+                                  `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+                                );
+                              }
+                            }}
                             className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {loading
                               ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']

@@ -55,11 +55,13 @@ const Container = ({children}: {children: any}) => (
 const Toolbar = ({
   deleteLesson,
   setEditMode,
+  setFields,
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
   setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setFields: React.Dispatch<React.SetStateAction<any>>;
 }) => {
   const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
 
@@ -87,6 +89,17 @@ const Toolbar = ({
                 onClick={() => {
                   setNewLessonPlanShow(true);
                   setEditMode(false);
+                  setFields({
+                    title: '',
+                    label: '',
+                    instructions: '',
+                    instructionsHtml: '',
+                    description: '', // ignore this field
+                    interactionType: [],
+                    tags: [],
+                    estTime: '1 min',
+                    classwork: true,
+                  });
                 }}
                 icon={AiOutlineFileAdd}
               />
