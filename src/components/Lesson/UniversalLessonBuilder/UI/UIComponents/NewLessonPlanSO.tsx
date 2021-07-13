@@ -155,6 +155,7 @@ const NewLessonPlanSO = ({
 
     addFromULBHandler: addULBHandler,
   } = useULBContext();
+
   // fill the fields if edit mode
   useEffect(() => {
     if (!isEmpty(pageDetails) && editMode) {

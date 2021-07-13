@@ -39,6 +39,7 @@ const LessonActivities = ({
     setNewLessonPlanShow,
     setPreviewMode,
     setUniversalLessonDetails,
+    setEditMode,
     updateMovableList,
   } = useULBContext();
   const [showDeleteModal, setShowDeleteModal] = useState<Boolean>(false);
@@ -58,6 +59,7 @@ const LessonActivities = ({
      * opening the new slide-in dialog within the 'BuilderWrapper
      */
     setNewLessonPlanShow(!newLessonPlanShow);
+    setEditMode(false);
     // history.push(
     //   `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=open-overlay`
     // );
