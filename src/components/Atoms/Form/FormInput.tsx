@@ -38,8 +38,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     textarea = false,
     rows = 1,
     cols = 125,
-    maxLength = 0,
-    showCharacterUsage,
+    maxLength = 99999,
+    showCharacterUsage = false,
     dark,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);

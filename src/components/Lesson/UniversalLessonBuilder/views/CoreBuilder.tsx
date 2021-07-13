@@ -15,8 +15,6 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import Loader from '../../../Atoms/Loader';
 import Toolbar from '../UI/UIComponents/Toolbar';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
-import {PlusIcon} from '@heroicons/react/solid';
-import {IconType} from 'react-icons/lib';
 
 import {findLastIndex, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
@@ -25,8 +23,7 @@ import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
-  editMode: boolean;
-  setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -52,7 +49,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
   const {
     mode,
-    setEditMode,
+
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
@@ -75,6 +72,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setUniversalLessonDetails,
     setNewLessonPlanShow,
     fetchingLessonDetails,
+    setLessonPlanFields,
+    setEditMode,
   } = useULBContext();
   const {
     clientKey,
@@ -104,8 +103,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
   // const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
   //   (lessonPage: UniversalLessonPage) => lessonPage.id === selectedPageID
   // );
-
-  // const [editMode, setEditMode] = useState(true);
 
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
@@ -176,10 +173,14 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         }`}>
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
-          <Toolbar
-            deleteLesson={onDeleteButtonClick}
-            setNewLessonPlanShow={setNewLessonPlanShow}
-          />
+          {!fetchingLessonDetails && (
+            <Toolbar
+              setFields={setLessonPlanFields}
+              setEditMode={setEditMode}
+              deleteLesson={onDeleteButtonClick}
+              setNewLessonPlanShow={setNewLessonPlanShow}
+            />
+          )}
           <LessonPageWrapper>
             {fetchingLessonDetails ? (
               <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">

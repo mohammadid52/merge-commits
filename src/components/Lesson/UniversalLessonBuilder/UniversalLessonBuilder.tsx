@@ -99,6 +99,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     selectedPageID,
     setFetchingLessonDetails,
     setSelectedPageID,
+    setEditMode,
     setNewLessonPlanShow,
   } = useULBContext();
 
@@ -500,7 +501,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       id={`universalLessonBuilder`}
       className="h-full bg-dark-gray flex overflow-hidden">
       <div
-        onClick={() => setNewLessonPlanShow(true)}
+        onClick={() => {
+          setNewLessonPlanShow(true);
+          setEditMode(true);
+        }}
         className={`not-collapse-right absolute flex items-center right-0 justify-start bg-gray-700 h-10 w-6 cursor-pointer animate__sidebar-btn rounded-l-lg top-2 z-100`}>
         <Tooltip placement="left" text="Show Activity Panel">
           <div className="w-auto transform rotate-180 mr-1">

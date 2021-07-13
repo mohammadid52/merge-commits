@@ -67,6 +67,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     mode,
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
+
     deleteFromULBHandler,
     updateFromULBHandler,
     initialUniversalLessonPagePartContent,
@@ -77,11 +78,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     state: {user},
   } = useContext(GlobalContext);
   const {
-    editMode,
-    setEditMode,
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
+
     getCurrentPage,
   } = useULBContext();
   //@ts-ignore
@@ -566,8 +566,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
       <CoreBuilder
         mode={mode}
-        editMode={editMode}
-        setEditMode={setEditMode}
         createNewBlockULBHandler={createNewBlockULBHandler}
         deleteFromULBHandler={deleteFromULBHandler}
         updateFromULBHandler={updateFromULBHandler}

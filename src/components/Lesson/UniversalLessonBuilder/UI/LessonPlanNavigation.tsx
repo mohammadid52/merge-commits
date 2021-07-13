@@ -34,7 +34,7 @@ const LessonPlanNavigation = ({
   universalLessonDetails,
 }: ILessonPlanNavigationProps) => {
   const {lessonPlan = []} = universalLessonDetails || {};
-  const {updateMovableList} = useULBContext();
+  const {updateMovableList, fetchingLessonDetails} = useULBContext();
   const {dispatch} = useContext(GlobalContext);
   const history = useHistory();
   const params = useQuery(location.search);
@@ -117,32 +117,39 @@ const LessonPlanNavigation = ({
   };
 
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
-
+  console.log('darkMode', settings.darkMode);
   useEffect(() => {
-    handleThemeChange(universalLessonDetails.darkMode);
-    setSettings({
-      darkMode: universalLessonDetails.darkMode || true,
-      classwork: true, // for now
-    });
-  }, [universalLessonDetails]);
+    if (universalLessonDetails.darkMode !== undefined) {
+      setSettings({
+        darkMode: universalLessonDetails.darkMode,
+        classwork: true, // for now
+      });
+      handleThemeChange(settings.darkMode);
+    }
+  }, [universalLessonDetails.darkMode]);
 
   const wait = (timeout: number) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
 
   const updateTheme = () => {
-    setSettings({...settings, darkMode: !darkMode});
-    handleThemeChange(settings.darkMode);
+    setSettings({...settings, darkMode: !settings.darkMode});
+    handleThemeChange(!settings.darkMode);
     wait(1000).then(async () => {
       const input = {
         id: lessonId,
-        darkMode,
+        darkMode: !settings.darkMode,
       };
       await updateLessonPageToDB(input);
     });
   };
 
   const handleThemeChange = (val: boolean) => {
+    console.log(
+      '🚀 ~ file: LessonPlanNavigation.tsx ~ line 148 ~ handleThemeChange ~ val',
+      val
+    );
+
     dispatch({
       type: 'UPDATE_LESSON_PAGE_THEME',
       payload: {theme: val ? 'dark' : 'light'},
@@ -205,7 +212,7 @@ const LessonPlanNavigation = ({
             enabledColor={'bg-yellow-400 text-yellow-500'}
             disabledColor={'bg-gray-600 text-gray-500'}
             setEnabled={updateTheme}
-            enabled={darkMode}
+            enabled={!darkMode}
           />
         </div>
         <div className="flex items-center">
