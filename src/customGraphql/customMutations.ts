@@ -24,6 +24,7 @@ export const updateUniversalLesson = /* GraphQL */ `
       notes
       cardImage
       cardCaption
+      darkMode
       lessonPlan {
         id
         title

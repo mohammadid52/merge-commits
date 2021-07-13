@@ -4,8 +4,9 @@ import Buttons from '../Atoms/Buttons';
 import Tooltip from '../Atoms/Tooltip';
 
 interface ModalProps {
-  saveAction?: () => void;
+  saveAction?: (e?: any) => void;
   closeAction?: () => void;
+  cancelAction?: () => void;
   message?: string;
   saveLabel?: string;
   onlyInfo?: boolean;
@@ -25,6 +26,7 @@ const ModalPopUp = (props: ModalProps) => {
   const {
     saveAction,
     closeAction,
+    cancelAction,
     message,
     saveLabel,
     onlyInfo,
@@ -58,11 +60,12 @@ const ModalPopUp = (props: ModalProps) => {
               <Buttons
                 label={cancelLabel ? cancelLabel : 'Cancel'}
                 btnClass="px-8 py-3 mr-4"
-                onClick={closeAction}
+                onClick={cancelAction}
                 transparent
               />
             </Tooltip>
           )}
+
           {noButton && (
             <Tooltip show={noTooltip ? true : false} placement="bottom" text={noTooltip}>
               <Buttons
@@ -73,6 +76,7 @@ const ModalPopUp = (props: ModalProps) => {
               />
             </Tooltip>
           )}
+
           {deleteModal ? (
             <Buttons
               label={deleteLabel ? deleteLabel : 'Delete'}
@@ -81,25 +85,27 @@ const ModalPopUp = (props: ModalProps) => {
               transparent
             />
           ) : (
-            <Tooltip
-              show={saveTooltip ? true : false}
-              placement="bottom"
-              text={saveTooltip}>
-              <Buttons
-                disabled={loading}
-                label={
-                  saveLabel
-                    ? loading
+            saveAction !== undefined && (
+              <Tooltip
+                show={saveTooltip ? true : false}
+                placement="bottom"
+                text={saveTooltip}>
+                <Buttons
+                  disabled={loading}
+                  label={
+                    saveLabel
+                      ? loading
+                        ? 'Saving'
+                        : saveLabel
+                      : loading
                       ? 'Saving'
-                      : saveLabel
-                    : loading
-                    ? 'Saving'
-                    : 'Save'
-                }
-                btnClass="px-10 py-3 ml-4"
-                onClick={saveAction}
-              />
-            </Tooltip>
+                      : 'Save'
+                  }
+                  btnClass="px-10 py-3 ml-4"
+                  onClick={saveAction}
+                />
+              </Tooltip>
+            )
           )}
         </div>
       </div>

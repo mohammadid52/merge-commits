@@ -5,7 +5,9 @@ import useDictionary from '../../../../../../customHooks/dictionary';
 
 import Accordion from '../../../../../Atoms/Accordion';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
+import Modal from '../../../../../Atoms/Modal';
 
+import AddEvidence from './AddEvidence';
 import MeasurementsList from './MeasurementsList';
 
 const LearningEvidence = () => {
@@ -18,7 +20,7 @@ const LearningEvidence = () => {
   ];
 
   const renderTableView = () => {
-    return <MeasurementsList />;
+    return <MeasurementsList setAddModalShow={setAddModalShow} />;
   };
   const titleList = units.map((unit, index) => ({
     id: index,
@@ -47,19 +49,19 @@ const LearningEvidence = () => {
             />
           </div>
         </PageWrapper>
-        {/* {addModalShow && (
+        {addModalShow && (
           <Modal
             showHeader
             showFooter={false}
             showHeaderBorder
-            title={'Add Lesson to Course'}
+            title={'Add Evidence'}
             closeOnBackdrop
             closeAction={() => setAddModalShow(false)}>
             <div className="min-w-256">
-              <AddCourse />
+              <AddEvidence />
             </div>
           </Modal>
-        )} */}
+        )}
       </div>
     </div>
   );

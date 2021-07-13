@@ -4,7 +4,7 @@ import useDictionary from '../../../../../../customHooks/dictionary';
 
 import Buttons from '../../../../../Atoms/Buttons';
 
-const MeasurementsList = () => {
+const MeasurementsList = ({setAddModalShow}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
 
@@ -14,12 +14,8 @@ const MeasurementsList = () => {
         <span className="w-auto pt-5 font-bold text-lg items-center flex justify-end">
           <Buttons
             btnClass="mx-4"
-            label={
-              LessonBuilderDict[userLanguage]['BUTTON'][
-                'ADD_EVIDENCE'
-              ]
-            }
-            // onClick={() => setAddModalShow(true)}
+            label={LessonBuilderDict[userLanguage]['BUTTON']['ADD_EVIDENCE']}
+            onClick={() => setAddModalShow(true)}
           />
         </span>
       </div>
