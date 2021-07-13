@@ -2214,6 +2214,7 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabusSeq
       createdAt
       updatedAt
     }
