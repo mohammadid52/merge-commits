@@ -26,7 +26,8 @@ const InputTag = ({
   setTags,
 }: {
   tags: string[];
-  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  // setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  setTags: any;
 }) => {
   const removeTag = (i: any) => {
     const newTags = [...tags];
@@ -110,6 +111,7 @@ interface NewLessonPlanSOInterface {
 }
 
 interface ErrorInterface {
+  empty: string;
   title: string;
   label: string;
   instructions: string;
@@ -129,6 +131,7 @@ const INITIAL_STATE: FieldsInterface = {
 };
 
 const ERROR_INITIAL_STATE: ErrorInterface = {
+  empty: '',
   title: '',
   label: '',
   instructions: '',
@@ -244,34 +247,42 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
   const validate = () => {
     let trimmedLen = (field: any) => field.trim().length;
     let isValid = true;
+    if (empty) {
+      errors.empty = 'Please fill in all the details';
+      isValid = false;
+    } else {
+      errors.empty = '';
+      // isValid = true;
+    }
     if (trimmedLen(title) <= 0) {
       errors.title = 'Title is mandatory';
       isValid = false;
     } else {
       errors.title = '';
-      isValid = true;
+      // isValid = true;
     }
     if (trimmedLen(label) <= 0) {
       errors.label = 'Label is mandatory';
       isValid = false;
     } else {
       errors.label = '';
-      isValid = true;
+      // isValid = true;
     }
     if (trimmedLen(instructions) <= 0) {
       errors.instructions = 'Instructions is mandatory';
-      isValid = false;
+      // isValid = false;
     } else {
       errors.instructions = '';
-      isValid = true;
+      // isValid = true;
     }
     if (!interactionType && interactionType?.length <= 0) {
       errors.interactionType = 'Please select at least one interaction type';
-      isValid = false;
+      // isValid = false;
     } else {
       errors.interactionType = '';
-      isValid = true;
+      // isValid = true;
     }
+
     setErrors({...errors});
     return isValid;
   };
@@ -380,7 +391,6 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
         console.error(error.message);
       } finally {
         setLoading(false);
-        // closeAction();
       }
     }
   };
@@ -395,11 +405,6 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
     interactionType,
     estTime,
   } = fields;
-
-  const closeAction = () => {
-    setErrors(ERROR_INITIAL_STATE);
-    setOpen(false);
-  };
 
   const Checkbox = ({title, label, id}: {title: string; label: string; id: string}) => {
     return (
@@ -425,46 +430,34 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
   };
 
   const [showModal, setShowModal] = useState({show: false, msg: ''});
-  const initModalState = {show: false, msg: ''};
 
   const onTopRightButtonClick = () => {
-    setShowModal({show: true, msg: 'Do you want to save changes?'});
+    setShowModal({show: true, msg: 'Do you want to discard changes?'});
   };
 
-  // const goToSteps = () => {
-  //   // history.push(`edit?lessonId=${lessonId}&step=activities`);
-  //   history.goBack();
-  // };
-
   // Validation only needs to be on save
-  const onModalSaveClick = (e: any) => {
+  const onSaveClick = (e: any) => {
+    e.preventDefault();
     const valid = validate();
-    if (valid && !isEmpty) {
-      setOpen(false);
+    if (valid) {
       onSave(e);
-      closeAction();
-    } else {
-      setShowModal({show: true, msg: 'Please fill required fields'});
+      setFields(INITIAL_STATE);
+      setNewLessonPlanShow(false);
     }
   };
 
   const onModalNoClick = () => {
     // continue work
-    closeAction();
-    setShowModal({show: false, msg: showModal.msg});
-    console.log('no click');
+    setShowModal({show: false, msg: ''});
   };
 
   const onModalCancelClick = () => {
-    if (isEmpty) {
-      closeAction();
-      setFields(INITIAL_STATE);
-      setShowModal({show: false, msg: ''});
-    } else {
-      closeAction();
-      setShowModal({show: false, msg: showModal.msg});
-      console.log('cancel click');
-    }
+    // reset everything
+    setFields(INITIAL_STATE);
+    setShowModal({show: false, msg: ''});
+    setErrors(ERROR_INITIAL_STATE);
+    setOpen(false);
+    setNewLessonPlanShow(false);
   };
 
   return (
@@ -472,16 +465,14 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
       {showModal.show && (
         <div className={`${showModal.show ? 'z-1000' : ''}`}>
           <ModalPopUp
-            noButton="Continue"
-            noTooltip="No, Continue..."
-            cancelLabel="Discard"
+            noButton="No"
+            noTooltip="Continue New Activity"
+            cancelLabel="Yes"
             cancelTooltip="Discard changes and go back"
-            saveTooltip="Save changes and go back"
-            saveLabel="Save"
             noButtonAction={onModalNoClick}
-            saveAction={onModalSaveClick}
             message={showModal.msg}
-            closeAction={onModalCancelClick}
+            closeAction={onModalNoClick}
+            cancelAction={onModalCancelClick}
           />
         </div>
       )}
@@ -702,13 +693,13 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                         <button
                           type="button"
                           className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                          onClick={closeAction}>
+                          onClick={() => onTopRightButtonClick()}>
                           Cancel
                         </button>
                       )}
                       <button
                         disabled={loading}
-                        onClick={onSave}
+                        onClick={(e) => onSaveClick(e)}
                         className="w-auto inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         {loading
                           ? BUTTONS[userLanguage][editMode ? 'SAVING' : 'CREATING']
