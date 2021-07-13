@@ -23,8 +23,6 @@ const LessonsBuilderHome = () => {
     getCurrentPage,
     newLessonPlanShow,
     setNewLessonPlanShow,
-    setLessonPlanFields,
-    lessonPlanFields,
   } = useULBContext();
   const match = useRouteMatch();
   const [designersList, setDesignersList] = useState([]);
@@ -136,8 +134,6 @@ const LessonsBuilderHome = () => {
       </div>
       <NewLessonPlanSO
         editMode={editMode}
-        fields={lessonPlanFields}
-        setFields={setLessonPlanFields}
         setEditMode={setEditMode}
         pageDetails={selectedPageID ? getCurrentPage(selectedPageID) : {}} // don't send unwanted page details if not editing
         open={newLessonPlanShow}
