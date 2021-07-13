@@ -1700,6 +1700,36 @@ export const listUniversalLessons = /* GraphQL */ `
     }
   }
 `;
+export const listUniversalLessonsOptions = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        lessonPlan {
+          id
+        }
+      }
+      nextToken
+    }
+  }
+`;
 
 export const getUniversalLesson = /* GraphQL */ `
   query GetUniversalLesson($id: ID!) {

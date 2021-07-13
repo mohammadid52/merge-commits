@@ -399,7 +399,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createSyllabusLesson, {input: input})
+        graphqlOperation(mutations.createUniversalSyllabusLesson, {input: input})
       );
 
       const newLesson = result.data.createSyllabusLesson;
@@ -512,11 +512,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const fetchLessonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonsTitles, {
+        graphqlOperation(customQueries.listUniversalLessonsOptions, {
           filter: {institutionID: {eq: institutionId}},
         })
       );
-      const savedData = result.data.listLessons;
+      const savedData = result.data.listUniversalLessons;
       const sortedList = savedData?.items?.sort((a: any, b: any) =>
         a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
       );
@@ -539,6 +539,40 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       });
     }
   };
+  
+  // Fetch associated lesson with syllabus/unit
+  // const fetchAssociatedLessonsList = async () => {
+  //   try {
+  //     const result: any = await API.graphql(
+  //       graphqlOperation(queries.listUniversalSyllabusLessons, {
+  //         filter: {syllabusID: {eq: syllabusId}},
+  //       })
+  //     );
+  //     console.log(result, 'resultresult+++++');
+      
+  //     const savedData = result.data.listUniversalLessons;
+  //     const sortedList = savedData?.items?.sort((a: any, b: any) =>
+  //       a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+  //     );
+
+  //     const updatedList = sortedList
+  //       ?.filter((item: any) => (item.lessonPlan ? true : false))
+  //       .map((item: {id: string; title: string; type: string}) => ({
+  //         id: item.id,
+  //         name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+  //         value: item.title,
+  //       }));
+  //     // setAllLessonsList([...sortedList]);
+  //     // setDropdownLessonsList([...updatedList]);
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: EditSyllabusDict[userLanguage]['messages']['fetchlist'],
+  //       isError: true,
+  //       lessonError: true,
+  //     });
+  //   }
+  // };
 
   const fetchPersonsList = async () => {
     try {
@@ -673,7 +707,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   useEffect(() => {
     setFetchingDetails(true);
-    Promise.all([fetchLessonsList(), fetchPersonsList(), fetchLessonsSequence()])
+    Promise.all([
+      fetchLessonsList(),
+      fetchPersonsList(),
+      fetchLessonsSequence(),
+      // fetchAssociatedLessonsList(),
+    ])
       .then(() => fetchSyllabusData())
       .catch((err) => console.log(err));
   }, []);
