@@ -107,10 +107,11 @@ const CurricularView = (props: CurricularViewProps) => {
       active: false,
       content: (
         <SyllabusList
-          syllabusList={curricularData.syllabusList}
-          syllabusSequence={curricularData.syllabusSequence}
           curricularId={currID}
           institutionId={institutionId}
+          loading={loading}
+          syllabusList={curricularData.syllabusList}
+          syllabusSequence={curricularData.syllabusSequence}
         />
       ),
     },

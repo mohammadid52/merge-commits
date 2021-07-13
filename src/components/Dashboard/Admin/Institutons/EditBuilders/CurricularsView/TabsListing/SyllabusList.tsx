@@ -15,6 +15,7 @@ import Tooltip from '../../../../../../Atoms/Tooltip';
 interface SyllabusListProps {
   curricularId?: string;
   institutionId: string;
+  loading?: boolean;
   syllabusList: any[];
   syllabusSequence: any[];
 }
@@ -23,12 +24,10 @@ interface SyllabusListProps {
 const SyllabusList = (props: SyllabusListProps) => {
   const history = useHistory();
 
-  const { curricularId, institutionId, syllabusList, syllabusSequence } = props;
+  const { curricularId, institutionId, loading, syllabusList, syllabusSequence } = props;
   const { clientKey, theme, userLanguage } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const SyllabusDict = useDictionary(clientKey).SYLLABUS;
-
-  const [loading, setLoading] = useState(false);
   const [list, setList] = useState<any>(syllabusList);
 
   const createNewSyllabus = async () => {
