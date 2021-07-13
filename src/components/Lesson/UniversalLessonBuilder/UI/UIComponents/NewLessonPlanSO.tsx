@@ -246,7 +246,7 @@ const NewLessonPlanSO = ({
       errors.instructions = '';
       isValid = true;
     }
-    if (!interactionType && interactionType?.length <= 0) {
+    if (interactionType?.length === 0) {
       errors.interactionType = 'Please select at least one interaction type';
       isValid = false;
     } else {
@@ -364,7 +364,6 @@ const NewLessonPlanSO = ({
   } = fields;
 
   const closeAction = () => {
-    setErrors(ERROR_INITIAL_STATE);
     setOpen(false);
   };
 
@@ -393,17 +392,16 @@ const NewLessonPlanSO = ({
 
   const [showModal, setShowModal] = useState({show: false, msg: ''});
 
-  const onTopRightButtonClick = () => {
+  const clearErrors = () => setErrors(ERROR_INITIAL_STATE);
+
+  const onCancel = () => {
     const isValid = validate();
-    console.log(
-      '🚀 ~ file: NewLessonPlanSO.tsx ~ line 398 ~ onTopRightButtonClick ~ isValid',
-      isValid
-    );
 
     if (isValid) {
       setOpen(false);
       setShowModal({show: true, msg: 'Do you want to save changes?'});
     } else {
+      // closeAction(); // remove this
       // setShowModal({show: true, msg: 'Please fill required fields'});
     }
   };
@@ -411,8 +409,10 @@ const NewLessonPlanSO = ({
   const goToSteps = () => history.push(`edit?lessonId=${lessonId}&step=activities`);
 
   const onModalSaveClick = (e: any) => {
-    onSave(e);
-    onModalCancelClick();
+    if (!editMode) {
+      onSave(e);
+      onModalCancelClick();
+    }
   };
 
   const onModalNoClick = () => {
@@ -421,14 +421,17 @@ const NewLessonPlanSO = ({
   };
 
   const onModalCancelClick = () => {
-    closeAction();
-    goToSteps();
-    setFields(INITIAL_STATE);
+    if (!editMode) {
+      closeAction();
+      clearErrors();
+      goToSteps();
+      setFields(INITIAL_STATE);
+    }
   };
 
   return (
     <>
-      {showModal.show && (
+      {showModal.show && !open && (
         <ModalPopUp
           noButton="Continue"
           noTooltip="No, Continue..."
@@ -451,7 +454,7 @@ const NewLessonPlanSO = ({
           onClose={
             !hideCloseButtons
               ? () => {
-                  closeAction();
+                  onCancel();
                   return setOpen;
                 }
               : () => {}
@@ -489,7 +492,7 @@ const NewLessonPlanSO = ({
                             <button
                               type="button"
                               className="w-auto bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                              onClick={closeAction}>
+                              onClick={onCancel}>
                               <span className="sr-only">Close panel</span>
                               <XIcon className="h-6 w-6" aria-hidden="true" />
                             </button>
@@ -652,7 +655,7 @@ const NewLessonPlanSO = ({
                             <button
                               type="button"
                               className="w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                              onClick={closeAction}>
+                              onClick={onCancel}>
                               Cancel
                             </button>
                           )}
