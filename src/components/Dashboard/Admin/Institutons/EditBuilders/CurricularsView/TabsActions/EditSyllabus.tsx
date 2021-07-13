@@ -401,8 +401,8 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       const result: any = await API.graphql(
         graphqlOperation(mutations.createUniversalSyllabusLesson, {input: input})
       );
-
-      const newLesson = result.data.createSyllabusLesson;
+        
+      const newLesson = result.data.createUniversalSyllabusLesson;
 
       if (!lessonsIds.length) {
         setLessonsIds([newLesson.id]);
