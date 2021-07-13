@@ -120,11 +120,11 @@ const LessonPlanNavigation = ({
   console.log('darkMode', settings.darkMode);
   useEffect(() => {
     if (universalLessonDetails.darkMode !== undefined) {
-      handleThemeChange(universalLessonDetails.darkMode);
       setSettings({
-        darkMode: universalLessonDetails.darkMode || true,
+        darkMode: universalLessonDetails.darkMode,
         classwork: true, // for now
       });
+      handleThemeChange(settings.darkMode);
     }
   }, [universalLessonDetails.darkMode]);
 
@@ -138,13 +138,18 @@ const LessonPlanNavigation = ({
     wait(1000).then(async () => {
       const input = {
         id: lessonId,
-        darkMode,
+        darkMode: !settings.darkMode,
       };
       await updateLessonPageToDB(input);
     });
   };
 
   const handleThemeChange = (val: boolean) => {
+    console.log(
+      '🚀 ~ file: LessonPlanNavigation.tsx ~ line 148 ~ handleThemeChange ~ val',
+      val
+    );
+
     dispatch({
       type: 'UPDATE_LESSON_PAGE_THEME',
       payload: {theme: val ? 'dark' : 'light'},
