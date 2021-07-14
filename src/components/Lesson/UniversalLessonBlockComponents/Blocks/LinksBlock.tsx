@@ -21,8 +21,6 @@ const LinksBlock = (props: LinksBlockProps) => {
   const textColor = lessonPageTheme === 'light' ? 'text-blue-500' : 'text-blue-100';
   return (
     <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
-      {/* <PhotoBlock /> */}
-
       <div className="w-full h-full flex flex-row items-center justify-center ">
         <div className="h-full w-full flex flex-row">
           {value &&

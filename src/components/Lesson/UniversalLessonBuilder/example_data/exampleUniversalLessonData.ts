@@ -9,7 +9,7 @@ import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces'
  */
 
 export const exampleUniversalLesson: UniversalLesson = {
-  id: '2451e3be-1e12-486d-80dd-3e6fa24591cd',
+  id: 'af39b252-0c33-4c23-b8a1-73fcc8f4d193',
   summary:
     "This is a fun lesson where everyone is encouraged to be a part of the conversation about how our own cultures have influenced our sense of self-identity.  We start by writing about where we are from and share stories from these places.  Afterward, we will have the opportunity to see Marlon tell about how culture influenced his sense of self-identify through his poem 'Where I'm from.' Finally, we will create our own poems and learn more about each other and where we are from by sharing these poem...",
   designers: ['Marlon Lizama'],
@@ -257,7 +257,7 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_3_part_0_dropdown-0',
-              type: 'poem',
+              type: 'poem-input',
               value: [
                 {
                   id: 'line_1',
@@ -295,7 +295,7 @@ export const exampleUniversalLesson: UniversalLesson = {
           partContent: [
             {
               id: 'page_3_part_1_highlighter-0',
-              type: 'highlighter',
+              type: 'highlighter-input',
               value: [
                 {
                   id: 'highlighter_433374',

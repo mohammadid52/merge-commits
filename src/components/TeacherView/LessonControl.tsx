@@ -13,9 +13,20 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import {useParams} from 'react-router';
+import {lessonControlState} from '../../state/LessonControlState';
+import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
+import usePrevious from '../../customHooks/previousProps';
 
 const LessonControl = () => {
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const {
+    state,
+    dispatch,
+    lessonState,
+    lessonDispatch,
+    controlState,
+    controlDispatch,
+    theme,
+  } = useContext(GlobalContext);
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
@@ -59,21 +70,36 @@ const LessonControl = () => {
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
-  // const subscribeToStudentData = (lessonID: string) => {
-  //   const studentDataSubscription = API.graphql(
-  //     graphqlOperation(customSubscriptions.onChangeStudentData, {
-  //       syllabusLessonID: lessonID,
-  //     })
-  //     // @ts-ignore
-  //   ).subscribe({
-  //     next: (studentData: any) => {
-  //       let updatedData = studentData.value.data.onChangeStudentData;
-  //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
-  //     },
-  //   });
-  //
-  //   return studentDataSubscription;
-  // };
+  const subscribeToStudentData = (lessonID: string, authId: string) => {
+    //   const studentDataSubscription = API.graphql(
+    //     graphqlOperation(customSubscriptions.onChangeStudentData, {
+    //       syllabusLessonID: lessonID,
+    //     })
+    //     // @ts-ignore
+    //   ).subscribe({
+    //     next: (studentData: any) => {
+    //       let updatedData = studentData.value.data.onChangeStudentData;
+    //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
+    //     },
+    //   });
+    //
+    //   return studentDataSubscription;
+    /**
+     * TODO:
+     *  Ask Aman how to set this up...
+     *  Subscribe to studentData, but then 1 row at a time
+     *  based on these filters: lessonID, authId
+     */
+  };
+
+  //~~~~~~TEMPORARY STUDENT DATA FETCH~~~~~~//
+  const previousViewing = usePrevious(controlState.studentViewing);
+  useEffect(() => {
+    if (controlState.studentViewing !== previousViewing) {
+      console.log('setting student data...');
+      controlDispatch({type: 'UPDATE_STUDENT_DATA', payload: exampleStudentDataMutation});
+    }
+  }, [controlState.studentViewing]);
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
@@ -101,6 +127,7 @@ const LessonControl = () => {
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
       getSyllabusLesson(lessonID).then((_: void) =>
         console.log('Lesson Mount - ', 'Lesson fetched!')
       );
@@ -160,32 +187,21 @@ const LessonControl = () => {
    */
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
-  // useEffect(() => {
-  //   if (state.studentViewing.live) {
-  //     const hasCurrentLocation =
-  //       typeof state.studentViewing.studentInfo.currentLocation === 'string';
-  //     const currentLocationDefined =
-  //       typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !==
-  //       'undefined';
-  //     const lessonProgressDefined =
-  //       typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !==
-  //       'undefined';
-  //
-  //     if (hasCurrentLocation) {
-  //       if (currentLocationDefined) {
-  //         history.push(
-  //           `${match.url}/${
-  //             state.pages[state.studentViewing.studentInfo.currentLocation]?.stage
-  //           }`
-  //         );
-  //       }
-  //     } else if (!hasCurrentLocation) {
-  //       if (lessonProgressDefined) {
-  //         history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
-  //       }
-  //     }
-  //   }
-  // }, [state.studentViewing]);
+  useEffect(() => {
+    if (controlState.studentViewing !== '') {
+      const viewedStudentLocation = controlState.roster.find(
+        (student: any) => student.personAuthID === controlState.studentViewing
+      )?.currentLocation;
+
+      if (viewedStudentLocation !== '') {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+        history.push(`${match.url}/${viewedStudentLocation}`);
+      } else {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/0`);
+      }
+    }
+  }, [controlState.roster]);
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
