@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {API, graphqlOperation} from 'aws-amplify';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
@@ -13,13 +14,13 @@ import PageWrapper from '../../../../../Atoms/PageWrapper';
 
 import DetailTable from './DetailTable';
 import AddCourse from './AddCourse';
-import {API, graphqlOperation} from 'aws-amplify';
 
 const LessonCourse = ({institution, lessonId}: any) => {
-  const {clientKey} = useContext(GlobalContext);
-  const {LessonBuilderDict} = useDictionary(clientKey);
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {UnitLookupDict} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
   useEffect(() => {
@@ -27,42 +28,46 @@ const LessonCourse = ({institution, lessonId}: any) => {
   }, [institution]);
 
   const fetchCurriculum = async () => {
-    setLoading(true);
-    const list: any = await API.graphql(
-      graphqlOperation(customQueries.listCurriculumsForLessons, {
-        filter: {
-          institutionID: {eq: institution?.id},
-        },
-      })
-    );
-    const curriculumList = list.data?.listCurriculums?.items;
-    console.log(curriculumList, 'curriculumList', lessonId);
-    
-    let selectedCurriculums:any = [];
-    curriculumList.map((curriculum: any) => {
-      const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-        (syllabus: any) =>
-          syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
-            .length
+    try { 
+      setLoading(true);
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listCurriculumsForLessons, {
+          filter: {
+            institutionID: {eq: institution?.id},
+          },
+        })
       );
-      const isCourseAdded = Boolean(assignedSyllabi.length);
-      if (isCourseAdded) {
-        selectedCurriculums.push({
-          ...curriculum,
-          assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
-        });
-      }
-    });
-    setSelectedCurriculumList(selectedCurriculums);
-    setLoading(false);
-    console.log(list, 'list inside fetchCurriculum', selectedCurriculums);
+      const curriculums = list.data?.listCurriculums?.items;
+      setCurriculumList(curriculums);
+      let selectedCurriculums: any = [];
+      curriculums.map((curriculum: any) => {
+        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
+          (syllabus: any) =>
+            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
+              .length
+        );
+        const isCourseAdded = Boolean(assignedSyllabi.length);
+        if (isCourseAdded) {
+          selectedCurriculums.push({
+            ...curriculum,
+            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+          });
+        }
+      });
+      setSelectedCurriculumList(selectedCurriculums);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
-  const units = [
-    {id: '1', name: 'Introduction to ICONOCLAST Artist'},
-    {id: '2', name: 'ICONOCLAST Artist Summer Program'},
-  ];
 
-  const renderTableView = (curriculum:any) => {
+  const onAddModalClose = () => {
+    setAddModalShow(false);
+    fetchCurriculum();
+  };
+
+  const renderTableView = (curriculum: any) => {
     return <DetailTable curriculum={curriculum} />;
   };
   const titleList = selectedCurriculumList.map((curriculum, index) => ({
@@ -86,25 +91,33 @@ const LessonCourse = ({institution, lessonId}: any) => {
               onClick={() => setAddModalShow(true)}
             />
           </div>
-          <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-            {loading ? (
-            <div className="mt-4"><Loader /></div>): 
-            <Accordion
-              titleList={titleList}
-              // titleList={[
-              //   {
-              //     id: '1',
-              //     title: 'Introduction to ICONOCLAST Artist',
-              //     content: <>Hello</>,
-              //   },
-              //   {
-              //     id: '2',
-              //     title: 'ICONOCLAST Artist Summer Program',
-              //     content: <>Hello</>,
-              //   },
-              // ]}
-            />}
-          </div>
+          {loading ? (
+            <div className="mt-4">
+              <Loader />
+            </div>
+          ) : titleList.length ? (
+            <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
+              <Accordion
+                titleList={titleList}
+                // titleList={[
+                //   {
+                //     id: '1',
+                //     title: 'Introduction to ICONOCLAST Artist',
+                //     content: <>Hello</>,
+                //   },
+                //   {
+                //     id: '2',
+                //     title: 'ICONOCLAST Artist Summer Program',
+                //     content: <>Hello</>,
+                //   },
+                // ]}
+              />
+            </div>
+          ): <div className="text-center p-16 mt-4">
+              <p className="text-gray-600 font-medium">
+                {UnitLookupDict[userLanguage]['NOTADDED']}
+              </p>
+            </div>}
         </PageWrapper>
         {addModalShow && (
           <Modal
@@ -113,9 +126,15 @@ const LessonCourse = ({institution, lessonId}: any) => {
             showHeaderBorder
             title={'Add Lesson to Course'}
             closeOnBackdrop
-            closeAction={() => setAddModalShow(false)}>
+            closeAction={onAddModalClose}>
             <div className="min-w-256">
-              <AddCourse institutionID={institution?.id} />
+              <AddCourse
+                curriculumList={curriculumList}
+                fetchCurriculum={fetchCurriculum}
+                institutionID={institution?.id}
+                lessonId={lessonId}
+                selectedCurriculumList={selectedCurriculumList}
+              />
             </div>
           </Modal>
         )}
