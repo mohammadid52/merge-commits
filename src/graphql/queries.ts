@@ -4801,6 +4801,7 @@ export const getUniversalLesson = /* GraphQL */ `
         tags
       }
       darkMode
+      rubrics
       createdAt
       updatedAt
     }
@@ -4873,6 +4874,7 @@ export const listUniversalLessons = /* GraphQL */ `
           tags
         }
         darkMode
+        rubrics
         createdAt
         updatedAt
       }
