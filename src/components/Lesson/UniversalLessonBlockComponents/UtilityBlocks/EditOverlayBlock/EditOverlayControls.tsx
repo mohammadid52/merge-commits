@@ -241,18 +241,19 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               )}
             </div>
           )}
-
-          <button
-            onClick={() => {
-              onDeleteButtonClick(contentID, section === 'pageContent');
-              setOverlayVisible(false);
-            }}
-            className={`${actionClass} text-red-400`}>
-            <span className={iconClass}>
-              <AiOutlineDelete />
-            </span>
-            <span className={textClass}>Delete</span>
-          </button>
+          {section !== 'pageContent' && (
+            <button
+              onClick={() => {
+                onDeleteButtonClick(contentID, section === 'pageContent');
+                setOverlayVisible(false);
+              }}
+              className={`${actionClass} text-red-400`}>
+              <span className={iconClass}>
+                <AiOutlineDelete />
+              </span>
+              <span className={textClass}>Delete</span>
+            </button>
+          )}
         </div>
       </ClickAwayListener>
 
@@ -261,9 +262,18 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           style={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
           className={`${themeSecBackgroundColor} ${themeTextColor} rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
           onClick={() => {
-            handleEditBlockToggle();
+            if (isComponent) {
+              handleEditBlockToggle();
+            } else {
+              onDeleteButtonClick(contentID, section === 'pageContent');
+              setOverlayVisible(false);
+            }
           }}>
-          {overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}
+          {isComponent ? (
+            <>{overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}</>
+          ) : (
+            <AiOutlineDelete className={`text-red-400`} />
+          )}
         </button>
       )}
       {show && (

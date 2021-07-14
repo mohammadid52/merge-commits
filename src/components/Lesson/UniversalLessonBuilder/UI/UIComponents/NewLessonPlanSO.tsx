@@ -114,8 +114,6 @@ interface ErrorInterface {
   empty: string;
   title: string;
   label: string;
-  instructions: string;
-  interactionType: string;
 }
 
 const INITIAL_STATE: FieldsInterface = {
@@ -134,8 +132,6 @@ const ERROR_INITIAL_STATE: ErrorInterface = {
   empty: '',
   title: '',
   label: '',
-  instructions: '',
-  interactionType: '',
 };
 
 const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
@@ -147,34 +143,13 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
 
   const history = useHistory();
   const {
-    previewMode,
-    setPreviewMode,
-    selectedLessonID,
     editMode,
     setEditMode,
-    setSelectedLessonID,
-    newBlockSeqId,
-    setNewBlockSeqId,
-    getCurrentPageIdx,
     universalLessonDetails,
-    selectedPageID,
-    activeTab,
-    setActiveTab,
     setSelectedPageID,
-    getCurrentPage,
-    theme,
     newLessonPlanShow,
     setNewLessonPlanShow,
     setUniversalLessonDetails,
-    setEnableDnD,
-    addFromULBHandler: addULBHandler,
-    addNewPageHandler,
-    updateMovableList,
-    getPartContent,
-    getPageContent,
-    enableDnD,
-    fetchingLessonDetails,
-    setFetchingLessonDetails,
   } = useULBContext();
   // fill the fields if edit mode
   useEffect(() => {
@@ -198,11 +173,14 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
   const pageId = params.get('pageId');
   const hideCloseButtons = pageId === 'open-overlay';
 
-  const handleAddTags = (tags: string[]) =>
+  const handleAddTags = (tags: string[]) => {
+    setUnsavedChanges(true);
     setFields((prevInputs) => ({...prevInputs, tags}));
+  };
 
   const onFieldChange = (e: any) => {
     const {id, value} = e.target;
+    setUnsavedChanges(true);
 
     setFields((prevInputs: any) => ({
       ...prevInputs,
@@ -211,6 +189,8 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
   };
 
   const onSelectOption = (_: any, name: string) => {
+    setUnsavedChanges(true);
+
     setFields((prevInputs: any) => ({
       ...prevInputs,
       estTime: name,
@@ -225,6 +205,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
     } else {
       remove(interactionType, (type) => type === id);
     }
+    setUnsavedChanges(true);
 
     setFields({...fields});
   };
@@ -235,6 +216,8 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
     fieldHtml: string,
     field: string
   ) => {
+    setUnsavedChanges(true);
+
     setFields({
       ...fields,
       [fieldHtml]: html,
@@ -266,20 +249,6 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
       isValid = false;
     } else {
       errors.label = '';
-      // isValid = true;
-    }
-    if (trimmedLen(instructions) <= 0) {
-      errors.instructions = 'Instructions is mandatory';
-      // isValid = false;
-    } else {
-      errors.instructions = '';
-      // isValid = true;
-    }
-    if (!interactionType && interactionType?.length <= 0) {
-      errors.interactionType = 'Please select at least one interaction type';
-      // isValid = false;
-    } else {
-      errors.interactionType = '';
       // isValid = true;
     }
 
@@ -391,6 +360,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
         console.error(error.message);
       } finally {
         setLoading(false);
+        setUnsavedChanges(false);
       }
     }
   };
@@ -430,9 +400,17 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
   };
 
   const [showModal, setShowModal] = useState({show: false, msg: ''});
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   const onTopRightButtonClick = () => {
-    setShowModal({show: true, msg: 'Do you want to discard changes?'});
+    if (unsavedChanges) {
+      setShowModal({show: true, msg: 'Do you want to discard changes?'});
+    } else {
+      setShowModal({show: false, msg: ''});
+      setOpen(false);
+      setErrors(ERROR_INITIAL_STATE);
+      setNewLessonPlanShow(false);
+    }
   };
 
   // Validation only needs to be on save
@@ -453,9 +431,25 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
 
   const onModalCancelClick = () => {
     // reset everything
-    setFields(INITIAL_STATE);
+    setUnsavedChanges(false);
+    if (!editMode) {
+      setFields(INITIAL_STATE);
+      setErrors(ERROR_INITIAL_STATE);
+    } else {
+      if (!isEmpty(pageDetails)) {
+        setFields({
+          ...pageDetails,
+          tags: pageDetails.tags || [],
+          instructions: pageDetails.description,
+          instructionsHtml: pageDetails.description,
+          estTime: `${pageDetails.estTime} min`,
+          interactionType: pageDetails.interactionType || [],
+          classwork: true,
+        });
+        setErrors({...errors});
+      }
+    }
     setShowModal({show: false, msg: ''});
-    setErrors(ERROR_INITIAL_STATE);
     setOpen(false);
     setNewLessonPlanShow(false);
   };
@@ -466,7 +460,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
         <div className={`${showModal.show ? 'z-1000' : ''}`}>
           <ModalPopUp
             noButton="No"
-            noTooltip="Continue New Activity"
+            noTooltip="Continue Activity"
             cancelLabel="Yes"
             cancelTooltip="Discard changes and go back"
             noButtonAction={onModalNoClick}
@@ -588,7 +582,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                         <label
                           htmlFor="project-description"
                           className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                          Activity Instructions <span className="text-red-500">*</span>
+                          Activity Instructions
                         </label>
                       </div>
                       <div className="sm:col-span-2 max-w-132">
@@ -603,12 +597,6 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                             )
                           }
                         />
-                        <p
-                          hidden={errors.instructions.length === 0}
-                          className="mt-2 whitespace-nowrap transition-all text-sm text-red-600"
-                          id="instructions-error">
-                          {errors.instructions}
-                        </p>
                       </div>
                     </div>
 
@@ -617,7 +605,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                       <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:px-6 sm:py-5">
                         <div>
                           <legend className="text-sm font-medium text-gray-900">
-                            Interaction type <span className="text-red-500">*</span>
+                            Interaction type
                           </legend>
                         </div>
                         <div className="w-48">
@@ -638,12 +626,6 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           />
 
                           <hr className="border-gray-200" />
-                          <p
-                            hidden={errors.interactionType.length === 0}
-                            className="mt-2 whitespace-nowrap transition-all text-sm text-red-600"
-                            id="interactionType-error">
-                            {errors.interactionType}
-                          </p>
                         </div>
                       </div>
                     </fieldset>
@@ -653,7 +635,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                         <label
                           htmlFor="project-description"
                           className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                          Estimated time <span className="text-red-500">*</span>
+                          Estimated time
                         </label>
                       </div>
                       <div className="sm:col-span-2">

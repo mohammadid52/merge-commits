@@ -250,10 +250,10 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           <span
             role="button"
             tabIndex={-1}
-            onClick={openFilesExplorer}
+            onClick={isInLesson ? openFilesExplorer : undefined}
             className={`border-0 ${
               lessonPageTheme === 'light' ? 'border-dark-gray' : 'border-white'
-            } relative z-100 flex items-center justify-center text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
+            } flex items-center justify-center text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
             Upload Attachments
           </span>
