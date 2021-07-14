@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
+import {useState} from 'react';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
@@ -6,6 +7,8 @@ import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 interface IEditOverlayBlockProps extends RowWrapperProps {
   handleEditBlockContent?: () => void;
   section?: string;
+  rightMenu?: boolean;
+  setRightMenu?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
@@ -22,8 +25,10 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     // isLast,
     handleEditBlockContent,
     handleEditBlockToggle,
+
     isPagePart,
-    section
+
+    section,
   } = props;
   const {previewMode} = useULBContext();
   return (
@@ -31,8 +36,8 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
       {mode === 'building' ? (
         <div
           className={`
-        relative 
-        ${section === "partContent" ? 'h-full' : 'h-auto'} 
+        relative  
+        ${section === 'partContent' ? 'h-full' : 'h-auto'} 
         flex items-center rowWrapper
         ${
           isComponent && !previewMode

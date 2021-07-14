@@ -510,7 +510,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
-        <BreadCrums items={breadCrumsList} separateGoBackButton />
+        <BreadCrums items={breadCrumsList} separateGoBackButton="Go to activities" />
 
         {/* Body */}
         <div className="w-full h-full pb-8 m-auto">

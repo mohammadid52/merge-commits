@@ -5,7 +5,7 @@ export const FORM_TYPES = {
   TEXTAREA: 'text-area',
   EMOJI: 'emoji-input',
   RADIO: 'radio-input',
-  MULTIPLE: 'multilple-options',
+  MULTIPLE: 'multiple-options',
   RATING: 'rating-star',
   DATE_PICKER: 'date-picker',
 };

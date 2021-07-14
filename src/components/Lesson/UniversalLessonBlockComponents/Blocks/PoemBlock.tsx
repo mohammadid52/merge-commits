@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import WritingBlock from './PoemBlock/WritingBlock';
 import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import EditingBlock from './PoemBlock/EditingBlock';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 
 interface PoemBlockProps extends RowWrapperProps {
   id?: string;
@@ -12,9 +14,39 @@ interface PoemBlockProps extends RowWrapperProps {
 
 const PoemBlock = (props: PoemBlockProps) => {
   const {id, value} = props;
+  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
-  const [poemWriting, setPoemWriting] = useState<string>('');
+  // const [poemWriting, setPoemWriting] = useState<string>('');
   const [saveAndEdit, setSaveAndEdit] = useState<boolean>(false);
+
+  // ##################################################################### //
+  // ######################## STUDENT DATA CONTEXT ####################### //
+  // ##################################################################### //
+  const isInLesson = useInLessonCheck();
+  const handleUpdateStudentData = (domID: string, input: string[]) => {
+    lessonDispatch({
+      type: 'UPDATE_STUDENT_DATA',
+      payload: {
+        pageIdx: lessonState.currentPage,
+        data: {
+          domID: domID,
+          input: input,
+        },
+      },
+    });
+  };
+
+  const getStudentDataValue = (domID: string) => {
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData.find(
+      (inputObj: StudentPageInput) => inputObj.domID === domID
+    );
+    if (getInput) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
 
   // init poemInput so the first linestarter shows up
   useEffect(() => {
@@ -37,7 +69,7 @@ const PoemBlock = (props: PoemBlockProps) => {
         },
         ''
       );
-      setPoemWriting(concatenated);
+      handleUpdateStudentData(id, [concatenated]);
     }
   }, [poemInput]);
 
@@ -61,8 +93,8 @@ const PoemBlock = (props: PoemBlockProps) => {
         ) : (
           <EditingBlock
             id={id}
-            poemWriting={poemWriting}
-            setPoemWriting={setPoemWriting}
+            poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
+            handleUpdateStudentData={handleUpdateStudentData}
           />
         )}
       </div>

@@ -22,22 +22,18 @@ export type studentObject = {
 
 export interface lessonControlStateType {
   status: string;
-  universalLessonID: string;
   currentPage: number;
   roster: Array<studentObject>;
   studentDataUpdated: boolean;
   sharing: boolean;
-  displayData: UniversalLessonStudentData[];
   studentViewing: string;
 }
 
 export const lessonControlState: lessonControlStateType = {
   status: '',
-  universalLessonID: '',
   currentPage: 0,
   roster: [],
   studentDataUpdated: true,
   sharing: false,
-  displayData: [],
   studentViewing: '', // student email
 };
