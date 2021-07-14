@@ -4,6 +4,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
+import * as queries from '../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import Accordion from '../../../../../Atoms/Accordion';
@@ -20,6 +21,7 @@ const LessonCourse = ({institution, lessonId}: any) => {
   const {UnitLookupDict} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [roomLoading, setRoomLoading] = useState(false);
   const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
@@ -28,7 +30,7 @@ const LessonCourse = ({institution, lessonId}: any) => {
   }, [institution]);
 
   const fetchCurriculum = async () => {
-    try { 
+    try {
       setLoading(true);
       const list: any = await API.graphql(
         graphqlOperation(customQueries.listCurriculumsForLessons, {
@@ -62,19 +64,52 @@ const LessonCourse = ({institution, lessonId}: any) => {
     }
   };
 
+  const fetchClassRoomDetails = async (curricularId: string) => {
+    // const result = await API.graphql(
+    //   graphqlOperation(queries.listRoomCurriculums, {
+    //     filter: {
+    //       curriculumID: {eq: curricularId},
+    //     },
+    //   })
+    // );
+    // console.log(result, 'result++++++');
+    setRoomLoading(true);
+    const classroomsResult: any = await API.graphql(
+      graphqlOperation(customQueries.getInstClassRooms, {id: institution?.id})
+    );
+    const classRooms = classroomsResult?.data.getInstitution?.rooms.items;
+    setSelectedCurriculumList((prevSelectedCurriculums) =>
+      prevSelectedCurriculums.map((selectedCurriculum) => {
+        const associatedClassRoomData = classRooms.filter(
+          (classRoom: any) =>
+            classRoom.curricula.items.filter(
+              (e: any) => e.curriculumID === selectedCurriculum.id
+            ).length
+        );
+        selectedCurriculum.associatedClassRoomData = associatedClassRoomData;
+        console.log(associatedClassRoomData, 'result*********');
+        return selectedCurriculum;
+      })
+    );
+    setRoomLoading(false);
+  };
+
   const onAddModalClose = () => {
     setAddModalShow(false);
     fetchCurriculum();
   };
 
   const renderTableView = (curriculum: any) => {
-    return <DetailTable curriculum={curriculum} />;
+    return <DetailTable curriculum={curriculum} loading={roomLoading} />;
   };
+  console.log(selectedCurriculumList, 'selectedCurriculumList');
   const titleList = selectedCurriculumList.map((curriculum, index) => ({
     id: index,
     title: curriculum.name,
     content: renderTableView(curriculum),
+    uniqueId: curriculum.id,
   }));
+
   return (
     <div className="flex m-auto justify-center">
       <div className="">
@@ -99,6 +134,7 @@ const LessonCourse = ({institution, lessonId}: any) => {
             <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
               <Accordion
                 titleList={titleList}
+                actionOnAccordionClick={fetchClassRoomDetails}
                 // titleList={[
                 //   {
                 //     id: '1',
@@ -113,11 +149,13 @@ const LessonCourse = ({institution, lessonId}: any) => {
                 // ]}
               />
             </div>
-          ): <div className="text-center p-16 mt-4">
+          ) : (
+            <div className="text-center p-16 mt-4">
               <p className="text-gray-600 font-medium">
                 {UnitLookupDict[userLanguage]['NOTADDED']}
               </p>
-            </div>}
+            </div>
+          )}
         </PageWrapper>
         {addModalShow && (
           <Modal

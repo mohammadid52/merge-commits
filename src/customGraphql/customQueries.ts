@@ -3146,6 +3146,10 @@ export const getInstClassRooms = /* GraphQL */ `
               }
             }
           }
+          teacher{
+            firstName
+            lastName
+          }
         }
         nextToken
       }
