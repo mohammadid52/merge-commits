@@ -4,10 +4,10 @@ import useDictionary from '../../../../../../customHooks/dictionary';
 
 import Loader from '../../../../../Atoms/Loader';
 
-const DetailTable = ({curriculum}: any) => {
+const DetailTable = ({curriculum, loading}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
-  const {assignedSyllabi, associatedClassRoomData, institution, loading} = curriculum;
+  const {assignedSyllabi, associatedClassRoomData, institution} = curriculum;
 
   return (
     <>
@@ -50,7 +50,7 @@ const DetailTable = ({curriculum}: any) => {
           <div className="mt-4">
             <Loader />
           </div>
-        ) : (
+        ) : associatedClassRoomData.length ? (
           associatedClassRoomData?.map((classRoom: any) => (
             <div
               className="flex justify-between bg-white w-full border-b-0 border-gray-200"
@@ -58,15 +58,25 @@ const DetailTable = ({curriculum}: any) => {
               <div className="w-3/10 flex items-center px-4 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal text-gray-500">
                 <span>{institution?.name}</span>
               </div>
-              <div className="w-3/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-500">
+              <div className="w-3/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-900">
                 <span className="w-auto">{classRoom.name}</span>
               </div>
 
-              <div className="w-3/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-500">
-                <span className="w-auto">{classRoom?.teacher.firstName}</span>
+              <div className="w-3/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-900">
+                <span className="w-auto">
+                  {classRoom?.teacher
+                    ? [classRoom.teacher.firstName, classRoom.teacher.lastName].join(' ')
+                    : '-'}
+                </span>
               </div>
             </div>
           ))
+        ) : (
+          <div className="text-center p-8 mt-4">
+            <p className="text-gray-600 font-medium">
+              No classroom associated with this curriculum
+            </p>
+          </div>
         )}
       </div>
     </>
