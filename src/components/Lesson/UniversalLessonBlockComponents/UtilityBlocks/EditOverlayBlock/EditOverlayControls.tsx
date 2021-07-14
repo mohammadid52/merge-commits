@@ -259,8 +259,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
       {!previewMode && (
         <button
-          style={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
-          className={`${themeSecBackgroundColor} ${themeTextColor} rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
+          className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
           onClick={() => {
             if (isComponent) {
               handleEditBlockToggle();

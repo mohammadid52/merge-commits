@@ -81,8 +81,7 @@ const Toolbar = ({
     <>
       {previewMode && (
         <div
-          style={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
-          className={`rounded-lg toolbar ${themeSecBackgroundColor} p-2 w-auto absolute right-2.5 top-2.5`}>
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} p-2 w-auto absolute right-2.5 top-2.5`}>
           <Button
             onClick={() => setPreviewMode(!previewMode)}
             tooltip="Preview"
@@ -93,9 +92,8 @@ const Toolbar = ({
       )}
       {!previewMode && (
         <div
-          style={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
           // hidden={previewMode}
-          className={`rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
           <div className="flex items-center">
             <Container>
               <Button

@@ -252,8 +252,10 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             tabIndex={-1}
             onClick={isInLesson ? openFilesExplorer : undefined}
             className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-dark-gray' : 'border-white'
-            } flex items-center justify-center text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
+              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
+            } flex items-center justify-center ${
+              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
             Upload Attachments
           </span>
@@ -363,7 +365,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 ${theme} ${themeTextColor} mt-2 rounded-xl ${
+              className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } ${themePlaceholderColor}`}
               name="title"
