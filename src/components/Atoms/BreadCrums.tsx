@@ -9,17 +9,12 @@ import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 interface BreadCrumProps {
   items: {title: string; url?: string; last: boolean; goBack?: boolean}[];
   unsavedChanges?: boolean;
-  separateGoBackButton?: boolean;
+  separateGoBackButton?: string;
   toggleModal?: any;
 }
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
-  const {
-    items,
-    separateGoBackButton = false,
-    unsavedChanges = false,
-    toggleModal,
-  } = brdPrps;
+  const {items, separateGoBackButton = '', unsavedChanges = false, toggleModal} = brdPrps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
@@ -88,7 +83,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
       </div>
       {separateGoBackButton && (
         <Buttons
-          label="Go back"
+          label={separateGoBackButton}
           btnClass="mr-4"
           onClick={history.goBack}
           Icon={IoArrowUndoCircleOutline}
