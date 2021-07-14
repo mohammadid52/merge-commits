@@ -25,11 +25,11 @@ const EmojiInput = ({
 
   const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
 
-  const [fields, setFields] = useState<any>({});
+  // const [fields, setFields] = useState<any>({});
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    console.log('onChange - id - value - ', id, ' - ', value);
-    setFields({...fields, [id]: value});
+    // console.log('onChange - id - value - ', id, ' - ', value);
+    // setFields({...fields, [id]: value});
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);
     }
@@ -55,8 +55,10 @@ const EmojiInput = ({
   const onEmojiSelect = (e: any) => {
     try {
       const studentDataValue = getStudentDataValue(inputID);
-      const textWithEmoji = studentDataValue.concat(`${e.emoji} `);
-      handleUpdateStudentData(inputID, [...textWithEmoji]);
+      const textWithEmoji = studentDataValue[0].concat(`${e.emoji} `);
+      
+      
+      handleUpdateStudentData(inputID, [textWithEmoji]);
       setShowEmojiSelector(false);
     } catch (error) {
       setShowEmojiSelector(false);

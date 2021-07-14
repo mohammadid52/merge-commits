@@ -66,12 +66,7 @@ const SelectOne = ({
     const pageContentId: string = `${uuidv4()}_`;
     const partContentId: string = `${pageContentId}_radioInput`;
 
-    const modifiedOptions = (opt: any) =>
-      map(opt, (o) => ({
-        label: o.label,
-        text: o.text,
-      }));
-
+   
     const inputObjArray = map(list, (d: any) => {
       return {
         id: partContentId,

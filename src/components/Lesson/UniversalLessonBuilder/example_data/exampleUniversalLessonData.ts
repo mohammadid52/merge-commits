@@ -1,4 +1,5 @@
 import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
+import {FORM_TYPES} from '../UI/common/constants';
 
 /**
  *
@@ -108,8 +109,86 @@ export const exampleUniversalLesson: UniversalLesson = {
                 {
                   id: 'story',
                   type: 'emoji-input',
-                  label: '',
+                  label: 'Title2',
                   value: 'This is the placeholder',
+                },
+              ],
+            },
+            {
+              id: 'page_2_part_1_questionGroup-2',
+              type: 'form-default',
+              value: [
+                {
+                  id: 'test_checkbox456',
+                  type: FORM_TYPES.RADIO,
+                  label: 'Test Checkbox',
+                  value: null,
+                  options: [
+                    {
+                      label: '1',
+                      text: 'Option1',
+                      id: 'page_2_part_1_questionGroup-radio-input-1',
+                    },
+                    {
+                      label: '2',
+                      text: 'Option2',
+                      id: 'page_2_part_1_questionGroup-radio-input-2',
+                    },
+                  ],
+                },
+                {
+                  id: 'test_radio123',
+                  type: FORM_TYPES.MULTIPLE,
+                  label: 'Test Radio',
+                  value: null,
+                  options: [
+                    {
+                      label: '1',
+                      text: 'Option1',
+                      id: 'page_2_part_1_questionGroup-multiple-input-1',
+                    },
+                    {
+                      label: '2',
+                      text: 'Option2',
+                      id: 'page_2_part_1_questionGroup-multiple-input-2',
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'page_2_part_1_questionGroup-2',
+              type: 'form-default',
+              value: [
+                {
+                  id: 'test_checkbox456',
+                  type: FORM_TYPES.ATTACHMENTS,
+                  label: 'Test Attachments',
+                  value: 'test placeholder',
+                },
+                {
+                  id: 'test_datepicker356',
+                  type: FORM_TYPES.DATE_PICKER,
+                  label: 'Test Attachments',
+                  value: 'test placeholder',
+                },
+                {
+                  id: 'test_radio123',
+                  type: FORM_TYPES.MULTIPLE,
+                  label: 'Test Radio',
+                  value: null,
+                  options: [
+                    {
+                      label: '1',
+                      text: 'Option1',
+                      id: 'page_2_part_1_questionGroup-multiple-input-1',
+                    },
+                    {
+                      label: '2',
+                      text: 'Option2',
+                      id: 'page_2_part_1_questionGroup-multiple-input-2',
+                    },
+                  ],
                 },
               ],
             },
