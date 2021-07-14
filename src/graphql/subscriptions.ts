@@ -115,6 +115,20 @@ export const onChangePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -169,20 +183,12 @@ export const onChangePersonLocation = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -774,6 +780,12 @@ export const onCreateInstitution = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -885,6 +897,12 @@ export const onUpdateInstitution = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -996,6 +1014,12 @@ export const onDeleteInstitution = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -1435,6 +1459,29 @@ export const onCreateRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       institution {
         id
         name
@@ -1541,29 +1588,12 @@ export const onCreateRoom = /* GraphQL */ `
         }
         nextToken
       }
-      filters
-      location
-      startDate
-      startTime
-      endDate
-      endTime
-      length
-      repeat
-      notes
-      activeSyllabus
-      coTeachers {
-        items {
-          id
-          roomID
-          teacherID
-          teacherEmail
-          teacherAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      frequency
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
       createdAt
       updatedAt
     }
@@ -1579,6 +1609,29 @@ export const onUpdateRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       institution {
         id
         name
@@ -1685,29 +1738,12 @@ export const onUpdateRoom = /* GraphQL */ `
         }
         nextToken
       }
-      filters
-      location
-      startDate
-      startTime
-      endDate
-      endTime
-      length
-      repeat
-      notes
-      activeSyllabus
-      coTeachers {
-        items {
-          id
-          roomID
-          teacherID
-          teacherEmail
-          teacherAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      frequency
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
       createdAt
       updatedAt
     }
@@ -1723,6 +1759,29 @@ export const onDeleteRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       institution {
         id
         name
@@ -1829,29 +1888,12 @@ export const onDeleteRoom = /* GraphQL */ `
         }
         nextToken
       }
-      filters
-      location
-      startDate
-      startTime
-      endDate
-      endTime
-      length
-      repeat
-      notes
-      activeSyllabus
-      coTeachers {
-        items {
-          id
-          roomID
-          teacherID
-          teacherEmail
-          teacherAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      frequency
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
       createdAt
       updatedAt
     }
@@ -1873,6 +1915,20 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -1927,20 +1983,12 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -1993,6 +2041,20 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -2047,20 +2109,12 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -2113,6 +2167,20 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -2167,20 +2235,12 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -2280,6 +2340,12 @@ export const onCreateClass = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -2366,6 +2432,12 @@ export const onUpdateClass = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -2452,6 +2524,12 @@ export const onDeleteClass = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -9740,6 +9818,20 @@ export const onCreatePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -9794,20 +9886,12 @@ export const onCreatePersonLocation = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -9929,6 +10013,20 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -9983,20 +10081,12 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -10118,6 +10208,20 @@ export const onDeletePersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -10172,20 +10276,12 @@ export const onDeletePersonLocation = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
