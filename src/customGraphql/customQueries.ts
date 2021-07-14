@@ -1701,6 +1701,56 @@ export const listUniversalLessons = /* GraphQL */ `
   }
 `;
 
+export const getUniversalSyllabus = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          lesson {
+            id
+            coverImage
+            summaryTitle
+            introductionTitle
+            introduction
+            lessonPlan {
+              id
+            }
+          }
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalLessonsSeq
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const getUniversalLesson = /* GraphQL */ `
   query GetUniversalLesson($id: ID!) {
     getUniversalLesson(id: $id) {
