@@ -88,6 +88,7 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   handleEditBlockToggle?: () => void;
   idx?: number;
   isPagePart?: boolean;
+  rightMenu?: boolean;
 }
 
 export interface IContentTypeComponentProps {

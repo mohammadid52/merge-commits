@@ -15,6 +15,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
   } = props;
 
   const viewModeClass = ``;
+
   const {previewMode} = mode !== 'lesson' ? useULBContext() : true;
   const buildModeClass = `border-0 border-dashed border-gray-400`;
   const {
@@ -26,11 +27,15 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
     <div
       id={contentID}
       data-id={dataIdAttribute}
-      className={`relative my-4 ${previewMode ? `${themeBg} rounded-xl shadow-lg` : ''}`}>
+      className={`relative my-4 ${
+        previewMode ? `${themeBg}  rounded-xl shadow-lg` : ''
+      }`}>
       <div
         className={`${
           mode === 'building' && !previewMode ? buildModeClass : viewModeClass
-        } rounded-lg divide-y divide-gray-200 ${!previewMode ? 'shadow' : ''}`}>
+        } builderWrapper rounded-lg divide-y divide-gray-200 ${
+          !previewMode ? 'shadow' : ''
+        }`}>
         <div className="relative">{children}</div>
       </div>
     </div>
