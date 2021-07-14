@@ -11095,6 +11095,7 @@ export const createUniversalLesson = /* GraphQL */ `
         tags
       }
       darkMode
+      rubrics
       createdAt
       updatedAt
     }
@@ -11169,6 +11170,7 @@ export const updateUniversalLesson = /* GraphQL */ `
         tags
       }
       darkMode
+      rubrics
       createdAt
       updatedAt
     }
@@ -11243,6 +11245,7 @@ export const deleteUniversalLesson = /* GraphQL */ `
         tags
       }
       darkMode
+      rubrics
       createdAt
       updatedAt
     }

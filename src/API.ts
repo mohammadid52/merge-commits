@@ -3347,6 +3347,7 @@ export type CreateUniversalLessonInput = {
   lessonPlan?: Array< UniversalLessonPlanInput | null > | null,
   homework?: Array< UniversalLessonPlanInput | null > | null,
   darkMode?: boolean | null,
+  rubrics?: Array< string | null > | null,
 };
 
 export type UniversalLessonPlanInput = {
@@ -3420,6 +3421,7 @@ export type ModelUniversalLessonConditionInput = {
   cardImage?: ModelStringInput | null,
   cardCaption?: ModelStringInput | null,
   darkMode?: ModelBooleanInput | null,
+  rubrics?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonConditionInput | null > | null,
   or?: Array< ModelUniversalLessonConditionInput | null > | null,
   not?: ModelUniversalLessonConditionInput | null,
@@ -3450,6 +3452,7 @@ export type UniversalLesson = {
   lessonPlan?:  Array<UniversalLessonPlan | null > | null,
   homework?:  Array<UniversalLessonPlan | null > | null,
   darkMode?: boolean | null,
+  rubrics?: Array< string | null > | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -3533,6 +3536,7 @@ export type UpdateUniversalLessonInput = {
   lessonPlan?: Array< UniversalLessonPlanInput | null > | null,
   homework?: Array< UniversalLessonPlanInput | null > | null,
   darkMode?: boolean | null,
+  rubrics?: Array< string | null > | null,
 };
 
 export type DeleteUniversalLessonInput = {
@@ -4512,6 +4516,7 @@ export type ModelUniversalLessonFilterInput = {
   cardImage?: ModelStringInput | null,
   cardCaption?: ModelStringInput | null,
   darkMode?: ModelBooleanInput | null,
+  rubrics?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonFilterInput | null > | null,
   or?: Array< ModelUniversalLessonFilterInput | null > | null,
   not?: ModelUniversalLessonFilterInput | null,
@@ -16998,6 +17003,7 @@ export type CreateUniversalLessonMutation = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17078,6 +17084,7 @@ export type UpdateUniversalLessonMutation = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -17158,6 +17165,7 @@ export type DeleteUniversalLessonMutation = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23677,6 +23685,7 @@ export type GetUniversalLessonQuery = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -23748,6 +23757,7 @@ export type ListUniversalLessonsQuery = {
         tags?: Array< string | null > | null,
       } | null > | null,
       darkMode?: boolean | null,
+      rubrics?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -36232,6 +36242,7 @@ export type OnCreateUniversalLessonSubscription = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -36307,6 +36318,7 @@ export type OnUpdateUniversalLessonSubscription = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -36382,6 +36394,7 @@ export type OnDeleteUniversalLessonSubscription = {
       tags?: Array< string | null > | null,
     } | null > | null,
     darkMode?: boolean | null,
+    rubrics?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
