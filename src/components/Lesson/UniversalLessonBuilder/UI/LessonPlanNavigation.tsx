@@ -117,7 +117,7 @@ const LessonPlanNavigation = ({
   };
 
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
-  console.log('darkMode', settings.darkMode);
+
   useEffect(() => {
     if (universalLessonDetails.darkMode !== undefined) {
       setSettings({
@@ -145,11 +145,6 @@ const LessonPlanNavigation = ({
   };
 
   const handleThemeChange = (val: boolean) => {
-    console.log(
-      '🚀 ~ file: LessonPlanNavigation.tsx ~ line 148 ~ handleThemeChange ~ val',
-      val
-    );
-
     dispatch({
       type: 'UPDATE_LESSON_PAGE_THEME',
       payload: {theme: val ? 'dark' : 'light'},
@@ -220,8 +215,8 @@ const LessonPlanNavigation = ({
           <Toggle
             enabledColor={'bg-indigo-600'}
             disabledColor={'bg-gray-700'}
-            setEnabled={() => setSettings({...settings, classwork: !classwork})}
-            enabled={classwork}
+            setEnabled={() => {}}
+            enabled={true}
           />
         </div>
       </div>

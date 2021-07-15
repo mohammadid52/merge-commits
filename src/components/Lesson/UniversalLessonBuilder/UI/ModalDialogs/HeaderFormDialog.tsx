@@ -7,8 +7,6 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {useQuery} from '../../../../../customHooks/urlParam';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 
@@ -100,10 +98,6 @@ const HeaderModalComponent = ({
   };
 
   const addToDB = async (list: any) => {
-    console.log(
-      '🚀 ~ file: HeaderFormDialog.tsx ~ line 108 ~ addToDB ~ lessonPlan',
-      list.lessonPlan[0].pageContent[0].partContent[2].class
-    );
     closeAction();
 
     const input = {

@@ -78,81 +78,99 @@ const Toolbar = ({
     },
   } = useContext(GlobalContext);
   return (
-    <div
-      style={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
-      // hidden={previewMode}
-      className={`rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
-      <div className="flex items-center">
-        <Container>
+    <>
+      {previewMode && (
+        <div
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} p-2 w-auto absolute right-2.5 top-2.5`}>
           <Button
             onClick={() => setPreviewMode(!previewMode)}
             tooltip="Preview"
             color={themeTextColor}
-            icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+            icon={AiOutlineEyeInvisible}
           />
-          {!previewMode && (
-            <>
+        </div>
+      )}
+      {!previewMode && (
+        <div
+          // hidden={previewMode}
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          <div className="flex items-center">
+            <Container>
+              <Button
+                onClick={() => setPreviewMode(!previewMode)}
+                tooltip="Preview"
+                color={themeTextColor}
+                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+              />
+
+              <>
+                <Button
+                  color={themeTextColor}
+                  onClick={() => setEnableDnD(!enableDnD)}
+                  tooltip="Enable Drag"
+                  icon={enableDnD ? RiDragDropFill : RiDragDropLine}
+                />
+                <Button
+                  color={themeTextColor}
+                  tooltip="Add New Page"
+                  onClick={() => {
+                    setNewLessonPlanShow(true);
+                    setEditMode(false);
+                    setFields({
+                      title: '',
+                      label: '',
+                      instructions: '',
+                      instructionsHtml: '',
+                      description: '', // ignore this field
+                      interactionType: [],
+                      tags: [],
+                      estTime: '1 min',
+                      classwork: true,
+                    });
+                  }}
+                  icon={AiOutlineFileAdd}
+                />
+                <Divider theme={theme} />
+              </>
+            </Container>
+
+            <Container>
               <Button
                 color={themeTextColor}
-                onClick={() => setEnableDnD(!enableDnD)}
                 tooltip="Enable Drag"
                 icon={enableDnD ? RiDragDropFill : RiDragDropLine}
               />
               <Button
                 color={themeTextColor}
-                tooltip="Add New Page"
-                onClick={() => {
-                  setNewLessonPlanShow(true);
-                  setEditMode(false);
-                  setFields({
-                    title: '',
-                    label: '',
-                    instructions: '',
-                    instructionsHtml: '',
-                    description: '', // ignore this field
-                    interactionType: [],
-                    tags: [],
-                    estTime: '1 min',
-                    classwork: true,
-                  });
-                }}
-                icon={AiOutlineFileAdd}
+                tooltip="Search Page"
+                icon={AiOutlineFileSearch}
               />
               <Divider theme={theme} />
-            </>
-          )}
-        </Container>
+            </Container>
 
-        {!previewMode && (
-          <Container>
-            <Button
-              color={themeTextColor}
-              tooltip="Enable Drag"
-              icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-            />
-            <Button
-              color={themeTextColor}
-              tooltip="Search Page"
-              icon={AiOutlineFileSearch}
-            />
-            <Divider theme={theme} />
-          </Container>
-        )}
-        {!previewMode && (
-          <Container>
-            <Button color={themeTextColor} tooltip="Save changes" icon={AiOutlineSave} />
-            <Button color={themeTextColor} tooltip="Discard changes" icon={VscDiscard} />
+            <Container>
+              <Button
+                color={themeTextColor}
+                tooltip="Save changes"
+                icon={AiOutlineSave}
+              />
+              <Button
+                color={themeTextColor}
+                tooltip="Discard changes"
+                icon={VscDiscard}
+              />
 
-            <Button
-              color="text-red-500"
-              tooltip="Delete this page"
-              icon={AiOutlineDelete}
-              onClick={deleteLesson}
-            />
-          </Container>
-        )}
-      </div>
-    </div>
+              <Button
+                color="text-red-500"
+                tooltip="Delete this page"
+                icon={AiOutlineDelete}
+                onClick={deleteLesson}
+              />
+            </Container>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

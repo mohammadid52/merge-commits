@@ -60,7 +60,7 @@ const ModalPopUp = (props: ModalProps) => {
               <Buttons
                 label={cancelLabel ? cancelLabel : 'Cancel'}
                 btnClass="px-8 py-3 mr-4"
-                onClick={cancelAction}
+                onClick={cancelAction !== undefined ? cancelAction : closeAction}
                 transparent
               />
             </Tooltip>

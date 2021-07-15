@@ -126,7 +126,7 @@ const LinestarterModalDialog = ({
       const updatedList = updateBlockContentULBHandler(
         '',
         '',
-        'poem',
+        'poem-input',
         inputFieldsArray,
         0
       );

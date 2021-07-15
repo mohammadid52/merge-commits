@@ -169,6 +169,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         updateMovableList,
         getPartContent,
         getPageContent,
+
         enableDnD,
         fetchingLessonDetails,
         setFetchingLessonDetails,

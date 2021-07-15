@@ -17,6 +17,7 @@ import {
 } from '../../interfaces/UniversalLessonInterfaces';
 import {Auth} from '@aws-amplify/auth';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as customMutations from '../../customGraphql/customMutations';
 import * as customSubscriptions from '../../customGraphql/customSubscriptions';
@@ -122,8 +123,6 @@ const LessonApp = () => {
   //   }
   // }, [subscriptionData]);
 
-
-
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
   // ##################################################################### //
@@ -138,7 +137,7 @@ const LessonApp = () => {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
       }, 1000);
-      //
+
       // subscription = subscribeToStudentData(lessonID);
     } else {
       setTimeout(() => {
@@ -150,6 +149,7 @@ const LessonApp = () => {
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
       getSyllabusLesson(lessonID).then((_: void) =>
         console.log('Lesson Mount - ', 'Lesson fetched!')
       );
@@ -177,9 +177,6 @@ const LessonApp = () => {
     }
   }, [lessonState.lessonData]);
 
-
-
-
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
   // ##################################################################### //
@@ -195,6 +192,7 @@ const LessonApp = () => {
             const pagePartContent = pagePart.partContent.reduce(
               (pagePartAcc: any[], partContent: PartContent) => {
                 const isForm = /form/g.test(partContent.type);
+                const isOtherInput = /input/g.test(partContent.type);
                 if (isForm) {
                   // map through partContent sub array
                   return [
@@ -205,6 +203,14 @@ const LessonApp = () => {
                         input: [''],
                       };
                     }),
+                  ];
+                } else if (isOtherInput) {
+                  return [
+                    ...pagePartAcc,
+                    {
+                      domID: partContent.id,
+                      input: [''],
+                    },
                   ];
                 } else {
                   return pagePartAcc;
@@ -271,6 +277,87 @@ const LessonApp = () => {
     //   console.error(err);
     // }
   };
+
+  const [personLocationObj, setPersonLocationObj] = useState<any>();
+
+  const createPersonLocation = async () => {
+    const newLocation = {
+      personAuthID: state.user.authId,
+      personEmail: state.user.email,
+      syllabusLessonID: lessonState.syllabusLessonID,
+      roomID: '0',
+      currentLocation: lessonState.currentPage,
+      lessonProgress: lessonState.lessonProgress,
+    };
+    try {
+      const newPersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
+      );
+    } catch (e) {
+      console.error('createPersonLocation - ', e);
+    } finally {
+      try {
+        const getNewLocation = await getPersonLocation();
+        console.log('getNewLocation - ', getNewLocation);
+      } catch (e) {
+        console.log('getNewLocation after Create - ', e);
+      }
+    }
+  };
+
+  const getPersonLocation = async () => {
+    try {
+      let userInfo: any = await API.graphql(
+        graphqlOperation(customQueries.getPersonLocation, {
+          personAuthID: state.user.authId,
+          personEmail: state.user.email,
+        })
+      );
+      userInfo = userInfo.data.getPersonLocation;
+      return userInfo || null;
+    } finally {
+      console.log('getPersonLocation funnction completed');
+    }
+  };
+
+  const updatePersonLocation = async () => {
+    const updatedLocation = {
+      id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
+      personAuthID: state.user.authId,
+      personEmail: state.user.email,
+      syllabusLessonID: lessonState.syllabusLessonID,
+      roomID: '0',
+      currentLocation: lessonState.currentPage,
+      lessonProgress: lessonState.lessonProgress,
+    };
+
+    try {
+      const newPersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
+      );
+    } catch (e) {
+      console.error('updatePersonLocation - ', e);
+    } finally {
+      setPersonLocationObj(updatedLocation);
+    }
+  };
+
+  const handleUpdatePersonLocation = async (locationObj: any) => {
+    if (locationObj && Object.keys(locationObj).length > 0 && locationObj.id !== '') {
+      await updatePersonLocation();
+    } else {
+      const getLocation = await getPersonLocation();
+      if (getLocation !== null) {
+        setPersonLocationObj(getLocation);
+      } else {
+        await createPersonLocation();
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleUpdatePersonLocation(personLocationObj);
+  }, [lessonState.currentPage]);
 
   return (
     <>

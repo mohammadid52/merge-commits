@@ -14,7 +14,6 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import Loader from '../../../Atoms/Loader';
 import Toolbar from '../UI/UIComponents/Toolbar';
-import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 
 import {findLastIndex, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';

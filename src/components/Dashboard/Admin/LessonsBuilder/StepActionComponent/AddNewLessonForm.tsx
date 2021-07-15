@@ -642,7 +642,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                         value={studentSummary}
                         onChange={onInputChange}
                         name="studentSummary"
-                        maxLength={128}
+                        maxLength={500}
                         showCharacterUsage
                         error={validation.studentSummary}
                       />

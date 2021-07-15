@@ -42,6 +42,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
   const [colDropdownActive, setColDropdownActive] = useState<boolean>(false);
+  const {previewMode} = useULBContext();
 
   useEffect(() => {
     if (isActive) {
@@ -77,7 +78,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     setColDropdownActive((prevValue) => !prevValue);
     setColorPickerActive(false);
   };
-  const {previewMode} = useULBContext();
   const {
     state: {
       lessonPage: {
@@ -172,7 +172,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           bg-transparent rounded-lg
           z-10
           h-auto w-auto
-          ${isComponent ? componentAlignmentToggleClass : 'hidden'}
+          ${isComponent ? componentAlignmentToggleClass : ''}
           `}>
       <ClickAwayListener
         onClickAway={() => {
@@ -187,7 +187,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
             isComponent ? 'left-2' : 'right-2'
           } ${themeSecBackgroundColor} rounded-lg shadow-lg `}>
-          {section === 'pageContent' ? (
+          {/* {section === 'pageContent' ? (
             <>
               <button
                 className={`${actionClass} ${themeTextColor}`}
@@ -204,20 +204,22 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
                 />
               )}
             </>
-          ) : null}
-          <button
-            className={`${actionClass} ${themeTextColor}`}
-            onClick={() => {
-              handleEditBlockContent();
-              setOverlayVisible(false);
-            }}>
-            <span className={iconClass}>
-              <AiOutlineEdit />
-            </span>
-            <span className={textClass}>Edit</span>
-          </button>
+          ) : null} */}
+          {section !== 'pageContent' && (
+            <button
+              className={`${actionClass} ${themeTextColor}`}
+              onClick={() => {
+                handleEditBlockContent();
+                setOverlayVisible(false);
+              }}>
+              <span className={iconClass}>
+                <AiOutlineEdit />
+              </span>
+              <span className={textClass}>Edit</span>
+            </button>
+          )}
 
-          {section === 'pageContent' && (
+          {section !== 'pageContent' && (
             <div className={`relative`}>
               <button
                 onClick={() => {
@@ -239,29 +241,38 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               )}
             </div>
           )}
-
-          <button
-            onClick={() => {
-              onDeleteButtonClick(contentID, section === 'pageContent');
-              setOverlayVisible(false);
-            }}
-            className={`${actionClass} text-red-400`}>
-            <span className={iconClass}>
-              <AiOutlineDelete />
-            </span>
-            <span className={textClass}>Delete</span>
-          </button>
+          {section !== 'pageContent' && (
+            <button
+              onClick={() => {
+                onDeleteButtonClick(contentID, section === 'pageContent');
+                setOverlayVisible(false);
+              }}
+              className={`${actionClass} text-red-400`}>
+              <span className={iconClass}>
+                <AiOutlineDelete />
+              </span>
+              <span className={textClass}>Delete</span>
+            </button>
+          )}
         </div>
       </ClickAwayListener>
 
       {!previewMode && (
         <button
-          style={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
-          className={`${themeSecBackgroundColor} ${themeTextColor} rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
+          className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
           onClick={() => {
-            handleEditBlockToggle();
+            if (isComponent) {
+              handleEditBlockToggle();
+            } else {
+              onDeleteButtonClick(contentID, section === 'pageContent');
+              setOverlayVisible(false);
+            }
           }}>
-          {overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}
+          {isComponent ? (
+            <>{overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}</>
+          ) : (
+            <AiOutlineDelete className={`text-red-400`} />
+          )}
         </button>
       )}
       {show && (
