@@ -16,6 +16,10 @@ import {useParams} from 'react-router';
 import {lessonControlState} from '../../state/LessonControlState';
 import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
 import usePrevious from '../../customHooks/previousProps';
+import {
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../../interfaces/UniversalLessonInterfaces';
 
 const LessonControl = () => {
   const {
@@ -92,12 +96,35 @@ const LessonControl = () => {
      */
   };
 
+  const transformStudentData = (dataArray: UniversalLessonStudentData[]) => {
+    const newArray = lessonState.lessonData.lessonPlan.map(
+      (page: UniversalLessonPage) => {
+        const matchPageWithData = dataArray.find(
+          (dataObj: UniversalLessonStudentData) =>
+            dataObj.universalLessonPageID === page.id
+        );
+        if (matchPageWithData) {
+          return matchPageWithData.pageData;
+        } else {
+          return [{}];
+        }
+      }
+    );
+    return {
+      studentAuthId: controlState.studentViewing,
+      studentData: newArray,
+    };
+  };
+
   //~~~~~~TEMPORARY STUDENT DATA FETCH~~~~~~//
   const previousViewing = usePrevious(controlState.studentViewing);
   useEffect(() => {
-    if (controlState.studentViewing !== previousViewing) {
-      console.log('setting student data...');
-      controlDispatch({type: 'UPDATE_STUDENT_DATA', payload: exampleStudentDataMutation});
+    if (
+      controlState.studentViewing !== '' &&
+      controlState.studentViewing !== previousViewing
+    ) {
+      const transformedStudentData = transformStudentData([exampleStudentDataMutation]);
+      lessonDispatch({type: 'SET_DISPLAY_DATA', payload: transformedStudentData});
     }
   }, [controlState.studentViewing]);
 
@@ -188,19 +215,19 @@ const LessonControl = () => {
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
-    if (controlState.studentViewing !== '') {
-      const viewedStudentLocation = controlState.roster.find(
-        (student: any) => student.personAuthID === controlState.studentViewing
-      )?.currentLocation;
-
-      if (viewedStudentLocation !== '') {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-        history.push(`${match.url}/${viewedStudentLocation}`);
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/0`);
-      }
-    }
+    // if (controlState.studentViewing !== '') {
+    //   const viewedStudentLocation = controlState.roster.find(
+    //     (student: any) => student.personAuthID === controlState.studentViewing
+    //   )?.currentLocation;
+    //
+    //   if (viewedStudentLocation !== '') {
+    //     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+    //     history.push(`${match.url}/${viewedStudentLocation}`);
+    //   } else {
+    //     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+    //     history.push(`${match.url}/0`);
+    //   }
+    // }
   }, [controlState.roster]);
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
