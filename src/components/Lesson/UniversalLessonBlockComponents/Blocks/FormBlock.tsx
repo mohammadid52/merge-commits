@@ -14,6 +14,8 @@ import {
 } from '../../../../interfaces/UniversalLessonInterfaces';
 
 import EmojiInput from './FormBlock/EmojiInputBlock';
+import Storage from '@aws-amplify/storage';
+import {getImageFromS3} from '../../../../utilities/services';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -28,10 +30,80 @@ export interface FormControlProps {
   value?: any;
   options?: any;
   isInLesson?: boolean;
+
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
   getStudentDataValue?: (domID: string) => string[];
 }
 
+const SelectMany = ({
+  item,
+  getCheckValue,
+  onChange,
+}: {
+  getCheckValue: (id: string) => boolean;
+  onChange: (e: any) => void;
+  item: {text: string; label: string; id: string};
+}) => {
+  const {label, text, id} = item;
+  const {
+    theme,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
+
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  return (
+    <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
+      <input
+        id={id}
+        data-key={id}
+        data-value={label}
+        type="checkbox"
+        className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
+          getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+        }`}
+        onChange={onChange}
+        checked={getCheckValue(id)}
+      />
+
+      <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+    </div>
+  );
+};
+
+const SelectOne = ({
+  item,
+  onChange,
+  getCheckValue,
+}: {
+  onChange: (e: any) => void;
+  getCheckValue: (id: string) => boolean;
+
+  item: {text: string; label: string; id: string};
+}) => {
+  const {label, text, id} = item;
+  const {
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
+
+  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  return (
+    <div className={`w-auto flex justify-center items-center mr-8 `}>
+      <input
+        id={id}
+        data-key={id}
+        data-value={label}
+        type="radio"
+        className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+          getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+        }`}
+        onChange={onChange}
+        checked={getCheckValue(id)}
+      />
+
+      <span className={`w-auto`}>{text}</span>
+    </div>
+  );
+};
 export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   const {
     lessonState,
@@ -51,6 +123,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   // ##################################################################### //
   const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
+
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
       type: 'UPDATE_STUDENT_DATA',
@@ -130,8 +203,10 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   const LinkInput = ({inputID, label, value}: any) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
-        <label className={`text-sm text-gray-200`} htmlFor="label">
-          {label} <Type text="Link" />
+        <label
+          className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
+          htmlFor="label">
+          {label}
         </label>
         <input
           id={inputID}
@@ -162,9 +237,6 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     const [fileObject, setfileObject] = useState<any>({});
     const [, setUrl] = useState(value);
 
-    const wait = (timeout: number) => {
-      return new Promise((resolve) => setTimeout(resolve, timeout));
-    };
     const handleFileSelection = async (e: any) => {
       if (e.target.files && e.target.files.length > 0) {
         const file = e.target.files[0];
@@ -172,16 +244,34 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         `${UPLOAD_KEY}/${Date.now().toString()}_${file.name}`;
         setUploading(true);
 
-        // await uploadAttachment(file, id, file.type);
-        // const imageUrl: any = await getImageFromS3(id);
-
-        wait(3000).then(() => {
-          // addImageUrlToResponse(imageUrl)
+        await uploadImageToS3(file, id, file.type);
+        const imageUrl: any = await getImageFromS3(id);
+        if (isInLesson) {
+          handleUpdateStudentData(inputID, [imageUrl]);
           setUploading(false);
-        });
-        // if (imageUrl) addImageUrlToResponse(imageUrl);
+        }
       }
     };
+
+    const uploadImageToS3 = async (file: any, id: string, type: string) => {
+      // Upload file to s3 bucket
+
+      return new Promise((resolve, reject) => {
+        Storage.put(`ULB/studentdata_${id}`, file, {
+          contentType: type,
+          ContentEncoding: 'base64',
+        })
+          .then((result) => {
+            console.log('File successfully uploaded to s3', result);
+            resolve(true);
+          })
+          .catch((err) => {
+            console.log('Error in uploading file to s3', err);
+            reject(err);
+          });
+      });
+    };
+
     const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
@@ -192,10 +282,12 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           <span
             role="button"
             tabIndex={-1}
-            onClick={openFilesExplorer}
+            onClick={isInLesson ? openFilesExplorer : undefined}
             className={`border-0 ${
-              lessonPageTheme === 'light' ? 'border-dark-gray' : 'border-white'
-            } relative z-100 flex items-center justify-center text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-md shadow-sm`}>
+              lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
+            } flex items-center justify-center ${
+              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            } text-base px-4 py-2 ${themeTextColor} hover:text-sea-green hover:border-sea-green transition-all duration-300 rounded-xl shadow-sm`}>
             <BiImageAdd className={`w-auto mr-2`} />
             Upload Attachments
           </span>
@@ -231,47 +323,49 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
   const generateCheckbox = (
     values: {label: string; text: string; id: string}[],
-    selectMany: boolean
+    selectMany: boolean,
+    inputID: string
   ) => {
     if (values && Array.isArray(values)) {
+      const studentDataValue = getStudentDataValue(inputID);
+      let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
+
+      const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
+      const onChange = (e: any) => {
+        const {id} = e.target;
+        if (isInLesson) {
+          if (selectMany) {
+            if (selectedOptionList.includes(id)) {
+              selectedOptionList = selectedOptionList.filter((d) => d !== id);
+            } else {
+              selectedOptionList.push(id);
+            }
+          } else {
+            selectedOptionList[0] = id;
+          }
+          handleUpdateStudentData(inputID, [...selectedOptionList]);
+        }
+      };
       return (
         <div
           className={`mt-2 flex flex-wrap ${themeTextColor} ${
             lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           } py-2 px-4 rounded-xl`}>
-          {values.map(({label, text, id}, idx: number) =>
+          {values.map((item, idx: number) =>
             selectMany ? (
-              <div
+              <SelectMany
                 key={`question_${id}_${idx}`}
-                className={`flex my-2 w-auto justify-center items-center mr-8`}>
-                <input
-                  id={`${label}`}
-                  data-key={id}
-                  data-value={label}
-                  type="checkbox"
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-                    false ? 'bg-blueberry border-white' : 'bg-white border-black '
-                  }`}
-                  checked={false}
-                />
-                <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>
-                  {text}
-                </span>
-              </div>
+                onChange={isStudent && isInLesson ? onChange : undefined}
+                getCheckValue={getCheckValue}
+                item={item}
+              />
             ) : (
-              <div
+              <SelectOne
+                onChange={isStudent && isInLesson ? onChange : undefined}
+                getCheckValue={getCheckValue}
                 key={`question_${id}_${idx}`}
-                className={`w-auto flex justify-center items-center mr-8 `}>
-                <span
-                  id={label}
-                  className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer  border-0 ${
-                    false ? 'bg-blueberry border-white' : 'bg-white border-black '
-                  }`}
-                  data-value={label}
-                  // onClick={(e) => (!isTeacher ? handleRadioSelect(e) : null)}
-                />
-                <span className={`w-auto`}>{text}</span>
-              </div>
+                item={item}
+              />
             )
           )}
         </div>
@@ -303,7 +397,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <input
               id={inputID}
               disabled={mode === 'building'}
-              className={`w-full py-2 px-4 ${theme} ${themeTextColor} mt-2 rounded-xl ${
+              className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } ${themePlaceholderColor}`}
               name="title"
@@ -339,7 +433,11 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {label}
             </label>
-            {generateCheckbox(options, type === FORM_TYPES.MULTIPLE ? true : false)}
+            {generateCheckbox(
+              options,
+              type === FORM_TYPES.MULTIPLE ? true : false,
+              inputID
+            )}
           </div>
         );
 
@@ -351,7 +449,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             value={value}
             label={label}
             isInLesson={isInLesson}
-            handleUpdateStudentData={handleUpdateStudentData}
+            handleUpdateStudentData={
+              isStudent && isInLesson ? handleUpdateStudentData : undefined
+            }
             getStudentDataValue={getValue}
           />
         );
@@ -362,7 +462,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             inputID={inputID}
             label={label}
             isInLesson={isInLesson}
-            handleUpdateStudentData={handleUpdateStudentData}
+            handleUpdateStudentData={
+              isStudent && isInLesson ? handleUpdateStudentData : undefined
+            }
             getStudentDataValue={getValue}
           />
         );

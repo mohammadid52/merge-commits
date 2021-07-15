@@ -972,3 +972,7 @@
     transition: opacity 0.1s linear, transform 0.3s linear;
   }
 }
+
+.customShadow {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+}

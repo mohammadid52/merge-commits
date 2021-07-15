@@ -17,6 +17,7 @@ export interface globalStateType {
     theme: 'light' | 'dark';
     themeTextColor: string;
     themeBackgroundColor: string;
+    themeSecBackgroundColor: string;
   };
   user: {
     id: string;
@@ -50,6 +51,7 @@ export const globalState: globalStateType = {
     theme: 'dark',
     themeTextColor: 'text-white',
     themeBackgroundColor: 'bg-dark-gray',
+    themeSecBackgroundColor: 'bg-gray-700',
   },
   user: {
     id: '',

@@ -41,12 +41,7 @@ const KeywordBlock = (props: KeywordBlockProps) => {
 
   return (
     <div id={id} className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}>
-      <div
-        className={`relative flex flex-row items-center w-full pb-2 px-4 mb-2 mt-4 font-medium text-left text-xl border-b border-white border-opacity-10`}>
-        <h3>Keywords:</h3>
-      </div>
-
-      <div className={`flex flex-row px-2`}>
+      <div className={`flex flex-row p-2 pt-4`}>
         {mappedKeywords.length > 0 &&
           mappedKeywords.map((row: any[], i0: number) => (
             <div key={`cardKWP_${i0}`} className={`flex flex-col mx-2`}>

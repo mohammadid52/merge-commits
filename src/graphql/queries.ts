@@ -153,6 +153,12 @@ export const getInstitution = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -170,6 +176,7 @@ export const getInstitution = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -410,6 +417,29 @@ export const getRoom = /* GraphQL */ `
       teacherEmail
       name
       maxPersons
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       institution {
         id
         name
@@ -516,29 +546,12 @@ export const getRoom = /* GraphQL */ `
         }
         nextToken
       }
-      filters
-      location
-      startDate
-      startTime
-      endDate
-      endTime
-      length
-      repeat
-      notes
-      activeSyllabus
-      coTeachers {
-        items {
-          id
-          roomID
-          teacherID
-          teacherEmail
-          teacherAuthID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      frequency
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
       createdAt
       updatedAt
     }
@@ -559,6 +572,20 @@ export const listRooms = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -613,20 +640,12 @@ export const listRooms = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -650,6 +669,20 @@ export const getRoomCoTeachers = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -704,20 +737,12 @@ export const getRoomCoTeachers = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -786,6 +811,12 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -884,6 +915,12 @@ export const getClass = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -1146,6 +1183,27 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
       checkpoints {
         items {
           id
@@ -1209,6 +1267,10 @@ export const listCurriculums = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -1257,6 +1319,10 @@ export const getTopic = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -1312,6 +1378,7 @@ export const listTopics = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -1432,6 +1499,7 @@ export const getRubric = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -1537,6 +1605,10 @@ export const getRoomCurriculum = /* GraphQL */ `
         syllabi {
           nextToken
         }
+        universalSyllabus {
+          nextToken
+        }
+        universalSyllabusSeq
         checkpoints {
           nextToken
         }
@@ -1570,6 +1642,7 @@ export const listRoomCurriculums = /* GraphQL */ `
           objectives
           languages
           designers
+          universalSyllabusSeq
           createdAt
           updatedAt
         }
@@ -4280,6 +4353,20 @@ export const getPersonLocation = /* GraphQL */ `
         teacherEmail
         name
         maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
         institution {
           id
           name
@@ -4334,20 +4421,12 @@ export const getPersonLocation = /* GraphQL */ `
         curricula {
           nextToken
         }
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        coTeachers {
-          nextToken
-        }
-        frequency
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -4440,6 +4519,12 @@ export const listPersonLocations = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -4716,6 +4801,7 @@ export const getUniversalLesson = /* GraphQL */ `
         tags
       }
       darkMode
+      rubrics
       createdAt
       updatedAt
     }
@@ -4788,6 +4874,7 @@ export const listUniversalLessons = /* GraphQL */ `
           tags
         }
         darkMode
+        rubrics
         createdAt
         updatedAt
       }
@@ -4885,6 +4972,7 @@ export const getUniversalSyllabus = /* GraphQL */ `
         }
         nextToken
       }
+      universalLessonsSeq
       designers
       status
       createdAt
@@ -4921,6 +5009,7 @@ export const listUniversalSyllabuss = /* GraphQL */ `
         lessons {
           nextToken
         }
+        universalLessonsSeq
         designers
         status
         createdAt
@@ -5574,6 +5663,12 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           notes
           activeSyllabus
           frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }

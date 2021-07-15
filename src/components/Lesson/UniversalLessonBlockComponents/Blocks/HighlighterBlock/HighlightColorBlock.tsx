@@ -30,7 +30,7 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
         <div className="w-3.3/10  flex flex-col justify-center items-center">
           <span>Select Highlighter:</span>
         </div>
-        <div className={`w-3.3/10  flex  justify-center items-center z-50`}>
+        <div className={`w-3.3/10  flex  justify-center items-center`}>
           <div className={`w-auto cursor-pointer flex flex-row`}>
             {/**
              *

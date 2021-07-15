@@ -79,6 +79,7 @@ module.exports = {
       25: 25,
       75: 75,
       100: 100,
+      1000: 1000,
       auto: 'auto',
     },
     opacity: {
@@ -147,7 +148,7 @@ module.exports = {
       29: '29rem',
       30: '30rem',
       '1/2': '50%',
-      auto:'auto'
+      auto: 'auto',
     },
     fontFamily: {
       open: ['Open Sans', 'sans-serif'],

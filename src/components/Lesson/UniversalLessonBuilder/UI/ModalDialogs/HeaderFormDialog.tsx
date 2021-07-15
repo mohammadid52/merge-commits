@@ -7,8 +7,6 @@ import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoc
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {useQuery} from '../../../../../customHooks/urlParam';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 
@@ -113,13 +111,12 @@ const HeaderModalComponent = ({
   const onHeaderCreate = async () => {
     const value: string = inputFields[FIELD_ID];
     const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
+
     const bgColorClass: string = selectedValues.color;
-    const classValue = [
-      fontSizeClass,
-      `${bgColorClass ? `border-b-4 border-${bgColorClass}` : ''}`,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    const classValue = `${
+      bgColorClass ? `border-b-4 border-${bgColorClass}` : ''
+    } ${fontSizeClass}`;
+
     if (isEditingMode) {
       const updatedList: any = updateBlockContentULBHandler(
         '',

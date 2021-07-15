@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React, {Fragment} from 'react';
+import {useState} from 'react';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
@@ -6,6 +7,10 @@ import EditOverlayControls from './EditOverlayBlock/EditOverlayControls';
 interface IEditOverlayBlockProps extends RowWrapperProps {
   handleEditBlockContent?: () => void;
   section?: string;
+  rightMenu?: boolean;
+  setRightMenu?: React.Dispatch<React.SetStateAction<boolean>>;
+  pageContentID?: string;
+  partContentID?: string;
 }
 
 const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
@@ -18,21 +23,26 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     classString,
     contentID,
     editedID,
+    pageContentID,
+    partContentID,
     isComponent,
     // isLast,
     handleEditBlockContent,
     handleEditBlockToggle,
+
     isPagePart,
-    section
+
+    section,
   } = props;
   const {previewMode} = useULBContext();
+
   return (
     <Fragment key={`${contentID}`}>
       {mode === 'building' ? (
         <div
           className={`
-        relative 
-        ${section === "partContent" ? 'h-full' : 'h-auto'} 
+        relative  
+        ${section === 'partContent' ? 'h-full' : 'h-auto'} 
         flex items-center rowWrapper
         ${
           isComponent && !previewMode
@@ -43,11 +53,13 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
           <EditOverlayControls
             mode={mode}
             contentID={contentID}
+            pageContentID={pageContentID}
             classString={classString}
             isActive={contentID === editedID}
             isComponent={isComponent}
             isPagePart={isPagePart}
             section={section}
+            partContentID={partContentID}
             handleEditBlockContent={handleEditBlockContent}
             handleEditBlockToggle={handleEditBlockToggle}
             createNewBlockULBHandler={createNewBlockULBHandler}

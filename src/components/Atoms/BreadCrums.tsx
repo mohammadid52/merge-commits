@@ -1,18 +1,21 @@
-import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useHistory } from 'react-router';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { getAsset } from '../../assets';
+import React, {useContext} from 'react';
+import {NavLink} from 'react-router-dom';
+import {useHistory} from 'react-router';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {getAsset} from '../../assets';
+import Buttons from './Buttons';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
 
 interface BreadCrumProps {
-  items: { title: string; url?: string; last: boolean; goBack?: boolean }[];
+  items: {title: string; url?: string; last: boolean; goBack?: boolean}[];
   unsavedChanges?: boolean;
+  separateGoBackButton?: string;
   toggleModal?: any;
 }
 
 const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
-  const { items, unsavedChanges = false, toggleModal } = brdPrps;
-  const { theme, clientKey } = useContext(GlobalContext);
+  const {items, separateGoBackButton = '', unsavedChanges = false, toggleModal} = brdPrps;
+  const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
 
@@ -25,21 +28,35 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
   };
 
   return (
-    <div className="flex flex-row my-0 py-0 mb-4">
-      <div className={`w-auto border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+    <div
+      className={`${
+        separateGoBackButton ? 'justify-between' : ''
+      } flex flex-row my-0 py-0 mb-4`}>
+      <div
+        className={`w-auto ${
+          separateGoBackButton ? 'flex items-center' : ''
+        } border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
         <nav className="w-full flex">
           <ol className="list-none flex items-center justify-start">
             {items.map((item, i) => (
-              <li className="flex items-center w-auto mr-2" style={{ minWidth: 'fit-content' }} key={i}>
+              <li
+                className="flex items-center w-auto mr-2"
+                style={{minWidth: 'fit-content'}}
+                key={i}>
                 {!item.goBack ? (
                   <div onClick={() => goToUrl(item.url)}>
-                    <span className={`mr-2 cursor-pointer  ${item.last ? theme.text.secondary : theme.text.default}`}>
+                    <span
+                      className={`mr-2 cursor-pointer  ${
+                        item.last ? theme.text.secondary : theme.text.default
+                      }`}>
                       {i === 0 ? item.title.toUpperCase() : item.title}
                     </span>
                   </div>
                 ) : (
                   <span
-                    className={`mr-2 cursor-pointer ${item.last ? theme.text.secondary : theme.text.default}`}
+                    className={`mr-2 cursor-pointer ${
+                      item.last ? theme.text.secondary : theme.text.default
+                    }`}
                     onClick={() => (unsavedChanges ? toggleModal() : history.goBack())}>
                     {i === 0 ? item.title.toUpperCase() : item.title}
                   </span>
@@ -64,6 +81,14 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
           </ol>
         </nav>
       </div>
+      {separateGoBackButton && (
+        <Buttons
+          label={separateGoBackButton}
+          btnClass="mr-4"
+          onClick={history.goBack}
+          Icon={IoArrowUndoCircleOutline}
+        />
+      )}
     </div>
   );
 };

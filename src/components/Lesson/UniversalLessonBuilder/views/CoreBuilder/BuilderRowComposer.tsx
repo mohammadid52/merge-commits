@@ -121,6 +121,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
+                pageContentID={pagePart.id}
                 editedID={editedID}
                 handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
                 section="pageContent">
@@ -162,6 +163,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                           classString={content.class}
                                           contentID={content.id}
                                           editedID={editedID}
+                                          pageContentID={pagePart.id}
+                                          partContentID={content.id}
                                           isComponent={true}
                                           isLast={idx2 === partContent?.length - 1}
                                           handleEditBlockToggle={() =>
@@ -251,7 +254,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
               </EditOverlayBlock>
 
               {/* MINI "ADD NEW BLOCK" SHOWN AFTER ROW only displayed if not last row */}
-              {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
+              {/* {idx < selectedPageDetails.pageContent.length - 1 && !previewMode && (
                 <AddNewBlockMini
                   mode={mode}
                   idx={idx}
@@ -259,7 +262,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                     handleModalPopToggle(dialogToToggle, idx + 1)
                   }
                 />
-              )}
+              )} */}
             </div>
           )),
           // MAIN OVERLAY BLOCK AT BOTTOM OF PAGE
