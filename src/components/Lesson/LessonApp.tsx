@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
 import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
-import NotesForm from './LessonComponents/Notes/NotesForm';
 import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import {GlobalContext} from '../../contexts/GlobalContext';
@@ -10,17 +9,15 @@ import Foot from './Foot/Foot';
 import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
 import {
   PagePart,
-  StudentPageInput,
   PartContent,
   PartContentSub,
+  StudentPageInput,
   UniversalLessonPage,
 } from '../../interfaces/UniversalLessonInterfaces';
-import {Auth} from '@aws-amplify/auth';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
-import * as customMutations from '../../customGraphql/customMutations';
-import * as customSubscriptions from '../../customGraphql/customSubscriptions';
+import * as queries from '../../graphql/queries';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -129,13 +126,13 @@ const LessonApp = () => {
   const getSyllabusLesson = async (lessonID?: string) => {
     // lessonID will be undefined for testing
     if (lessonID !== '') {
-      console.log('getSyllabusLesson - ', lessonID);
-
-      // const lesson: any = await API.graphql(
-      //   graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
-      // );
+      const universalLesson: any = await API.graphql(
+        graphqlOperation(queries.getUniversalLesson, {id: lessonID})
+      );
+      const response = universalLesson.data.getUniversalLesson;
+      console.log('first custom lesson load ::', response);
       setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
 
       // subscription = subscribeToStudentData(lessonID);
