@@ -37,7 +37,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
         previewMode ? `${themeBg}  rounded-xl shadow-lg` : ''
       }`}>
       <div
-        className={`border-dashed transition-all duration-150 ${
+        className={`border-dashed builderWrapper transition-all duration-200 ${
           mode === 'building' && !previewMode ? customBorder : viewModeClass
         } builderWrapper rounded-lg divide-y divide-gray-200 ${
           !previewMode ? 'shadow' : ''

@@ -61,7 +61,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     setSelID,
   } = useULBContext();
 
-  console.log('TCL: selID', selID.pageContentID);
+  const clearIds = () => setSelID({pageContentID: '', partContentID: ''});
 
   const currentPage: UniversalLessonPage = getCurrentPage(selectedPageID);
 
@@ -96,6 +96,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   };
 
   const updateData = async (path: string, newArr: any) => {
+    // clearIds();
     update(universalLessonDetails, path, () => newArr);
     setUniversalLessonDetails({...universalLessonDetails});
     const input = {
@@ -119,7 +120,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   };
   const moveBlock = (dir: 'up' | 'down') => {
     const PATH_TO_PATHCONTENT = `lessonPlan[${pageIdx}].pageContent`;
-    console.log('TCL: moveComponent -> PATH_TO_PATHCONTENT', PATH_TO_PATHCONTENT);
 
     updateData(
       PATH_TO_PATHCONTENT,
@@ -139,8 +139,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     }
     if (!isActive) {
       if (overlayVisible) {
-        setSelID({pageContentID: '', partContentID: ''});
-
+        if (selID.pageContentID === contentID && !selID.partContentID) {
+          clearIds();
+        }
         setOverlayVisible(false);
       }
     }
@@ -283,15 +284,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     <div
       id="editControlsWrapper"
       style={{...iconPos}}
-      className={`
-          absolute 
-          flex flex-row
-          items-center
-          bg-transparent rounded-lg
-          ${overlayVisible ? 'z-100' : 'z-10'}
-          h-auto w-auto
-          ${isComponent ? componentAlignmentToggleClass : ''}
-          `}>
+      className={`absolute flex flex-row items-center bg-transparent rounded-lg ${
+        overlayVisible ? 'z-100' : 'z-10'
+      } h-auto w-auto ${isComponent ? componentAlignmentToggleClass : ''}`}>
       <ClickAwayListener
         onClickAway={() => {
           setOverlayVisible(false);
@@ -362,6 +357,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               onClick={() => {
                 handleEditBlockContent();
                 setOverlayVisible(false);
+                clearIds();
               }}>
               <span className={iconClass}>
                 <AiOutlineEdit />
@@ -396,6 +392,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             onClick={() => {
               onDeleteButtonClick(contentID, section === 'pageContent');
               setOverlayVisible(false);
+              clearIds();
             }}
             className={`${actionClass} ${bgClass} text-red-400`}>
             <span className={iconClass}>
