@@ -5,9 +5,21 @@ import useDictionary from '../../../../../../customHooks/dictionary';
 import Loader from '../../../../../Atoms/Loader';
 import CheckBox from '../../../../../Atoms/Form/CheckBox';
 
-const MeasurementsList = ({setAddModalShow, learningEvidenceList, loading}: any) => {
-  console.log(learningEvidenceList, 'learningEvidenceList inside measurement list');
+interface IMeasurementList {
+  setAddModalShow?: any;
+  handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>,rubricId: string) => void;
+  learningEvidenceList: any[];
+  loading: boolean;
+  selectedMeasurements: string[] | null;
+}
 
+const MeasurementsList = ({
+  setAddModalShow,
+  handleCheckboxChange,
+  learningEvidenceList,
+  loading,
+  selectedMeasurements,
+}: IMeasurementList) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
 
@@ -53,7 +65,10 @@ const MeasurementsList = ({setAddModalShow, learningEvidenceList, loading}: any)
           <Loader />
         </div>
       ) : (
-        learningEvidenceList?.map((item: any) => <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
+        learningEvidenceList?.map((item: any) => (
+          <div
+            className="mb-8 w-full m-auto max-h-88 overflow-y-auto"
+            key={item.rubricId}>
             <div className="flex justify-between bg-white w-full border-b-0 border-gray-200">
               <div className="w-6/10 flex items-center px-4 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal">
                 <span>{item.learningObjectiveName}</span>
@@ -66,14 +81,14 @@ const MeasurementsList = ({setAddModalShow, learningEvidenceList, loading}: any)
               </div>
               <div className="w-3/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-500">
                 <CheckBox
-                  value={false}
-                  onChange={() => console.log('checkbox clicked')}
-                  name="isServiceProvider"
+                  value={selectedMeasurements.indexOf(item.rubricId) > -1}
+                  onChange={(e) => handleCheckboxChange(e, item.rubricId)}
+                  name="rubricId"
                 />
               </div>
             </div>
           </div>
-        )
+        ))
       )}
     </>
   );

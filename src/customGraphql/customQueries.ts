@@ -1827,6 +1827,7 @@ export const getUniversalLesson = /* GraphQL */ `
           }
         }
       }
+      rubrics
       createdAt
       updatedAt
     }

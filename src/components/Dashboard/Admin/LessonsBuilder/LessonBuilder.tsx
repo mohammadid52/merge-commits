@@ -194,7 +194,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
-
+        setSelectedMeasurement(savedData.rubrics);
         setFormData({
           ...formData,
           ...savedData,
@@ -456,6 +456,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           <LearningEvidence
             institutionId={formData?.institution?.id}
             lessonId={lessonId}
+            rubrics={selectedMeasurement}
           />
         );
       // default:

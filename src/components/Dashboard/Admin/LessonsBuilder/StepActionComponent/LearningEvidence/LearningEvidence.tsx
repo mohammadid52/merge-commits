@@ -3,6 +3,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 
 import * as queries from '../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
@@ -15,29 +16,28 @@ import Loader from '../../../../../Atoms/Loader';
 import AddEvidence from './AddEvidence';
 import MeasurementsList from './MeasurementsList';
 
-const LearningEvidence = ({lessonId, institutionId}: any) => {
+interface ILearningEvidence {
+  lessonId: string;
+  institutionId: string;
+  rubrics: string[] | null;
+} 
+
+const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {AddNewLessonFormDict} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
+  const [selectedMeasurements, setSelectedMeasurements] = useState<string[] | null>([]);
   const [loading, setLoading] = useState(false);
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
-
-  const renderTableView = (learningEvidenceList: any) => {
-    console.log(learningEvidenceList, 'learningEvidenceListlearningEvidenceList');
-    
-    return (
-      <MeasurementsList
-        setAddModalShow={setAddModalShow}
-        learningEvidenceList={learningEvidenceList}
-        loading={evidenceListLoading}
-      />
-    );
-  };
 
   useEffect(() => {
     fetchCurriculum();
   }, []);
+
+  useEffect(() => {
+    setSelectedMeasurements(rubrics);
+  }, [rubrics]);
 
   const fetchObjectives = async (curricularId: string) => {
     setEvidenceListLoading(true);
@@ -78,15 +78,18 @@ const LearningEvidence = ({lessonId, institutionId}: any) => {
 
     learningObjectives?.map((objective: any) => {
       const associatedTopics = topicsList.filter(
-        (topic:any) => topic.learningObjectiveID === objective.id
+        (topic: any) => topic.learningObjectiveID === objective.id
       );
-      associatedTopics.map((topic:any) => {
-        const associatedRubrics = rubricList.filter((rubric:any) => rubric.topicID === topic.id);
+      associatedTopics.map((topic: any) => {
+        const associatedRubrics = rubricList.filter(
+          (rubric: any) => rubric.topicID === topic.id
+        );
         associatedRubrics.map((rubric: any) => {
           learningEvidenceList.push({
             learningObjectiveName: objective.name,
             topicName: topic.name,
             measurementName: rubric.name,
+            rubricId: rubric.id,
           });
         });
       });
@@ -94,7 +97,7 @@ const LearningEvidence = ({lessonId, institutionId}: any) => {
     temp[activeIndex] = {
       ...temp[activeIndex],
       learningEvidenceList,
-    }; 
+    };
     setSelectedCurriculumList(temp);
     setEvidenceListLoading(false);
   };
@@ -133,6 +136,45 @@ const LearningEvidence = ({lessonId, institutionId}: any) => {
     }
   };
 
+  const handleCheckboxChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    rubricId: string
+  ) => {
+    const checked: boolean = (event.target as HTMLInputElement).checked;
+    let rubrics = [];
+    if (checked) {
+      rubrics = [...selectedMeasurements, rubricId];
+      setSelectedMeasurements((prev) => [...prev, rubricId]);
+    } else {
+      rubrics = selectedMeasurements.filter((item) => item !== rubricId);
+      setSelectedMeasurements((prev) => prev.filter((item) => item !== rubricId));
+    }
+    updateMeasurementList(rubrics);
+  };
+
+  const updateMeasurementList = async (rubrics: string[] | null) => {
+    await API.graphql(
+      graphqlOperation(customMutations.updateUniversalLesson, {
+        input: {
+          id: lessonId,
+          rubrics,
+        },
+      })
+    );
+  };
+
+  const renderTableView = (learningEvidenceList: any) => {
+    return (
+      <MeasurementsList
+        handleCheckboxChange={handleCheckboxChange}
+        learningEvidenceList={learningEvidenceList}
+        loading={evidenceListLoading}
+        selectedMeasurements={selectedMeasurements}
+        setAddModalShow={setAddModalShow}
+      />
+    );
+  };
+
   const titleList = selectedCurriculumList.map((curriculum, index) => ({
     id: index,
     title: curriculum.name,
@@ -150,10 +192,7 @@ const LearningEvidence = ({lessonId, institutionId}: any) => {
             </div>
           ) : titleList.length ? (
             <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-              <Accordion
-                titleList={titleList}
-                actionOnAccordionClick={fetchObjectives}
-              />
+              <Accordion titleList={titleList} actionOnAccordionClick={fetchObjectives} />
             </div>
           ) : (
             <div className="py-12 my-6 text-center">
