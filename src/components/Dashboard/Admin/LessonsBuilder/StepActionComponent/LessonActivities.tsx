@@ -124,9 +124,9 @@ const LessonActivities = ({
     <div className="flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-8 border-0 border-gray-200">
-          <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
+          {/* <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
             {lessonName}
-          </h3>
+          </h3> */}
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
               <div className="items-center flex justify-center flex-col">
