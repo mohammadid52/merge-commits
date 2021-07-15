@@ -685,26 +685,6 @@ const Dashboard = (props: DashboardProps) => {
    *      - LESSONS                         *
    ******************************************/
 
-  // const getSyllabusLessonCSequence = async (syllabusID: string) => {
-  //   try {
-  //     const queryObj = {
-  //       name: 'queries.getCSequences',
-  //       valueObj: {id: `lesson_${syllabusID}`},
-  //     };
-  //
-  //     // const syllabusLessonCSequenceFetch = handleFetchAndCache(queryObj);
-  //     const syllabusLessonCSequenceFetch = await API.graphql(
-  //       graphqlOperation(queries.getCSequences, queryObj.valueObj)
-  //     );
-  //     const response = await syllabusLessonCSequenceFetch;
-  //     //@ts-ignore
-  //     const arrayOfResponseObjects = response?.data.getCSequences?.sequence;
-  //     setSyllabusLessonSequence(arrayOfResponseObjects);
-  //   } catch (e) {
-  //     console.error('getSyllabusLessonCSequence -> ', e);
-  //   }
-  // };
-
   const listSyllabusLessons = async () => {
     setLessonLoading(true);
     dispatch({
