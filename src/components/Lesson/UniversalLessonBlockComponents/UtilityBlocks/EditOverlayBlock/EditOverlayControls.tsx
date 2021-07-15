@@ -16,12 +16,19 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import useDictionary from '../../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {BiDownArrowAlt, BiUpArrowAlt} from 'react-icons/bi';
+import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {find, findIndex, findLastIndex, update} from 'lodash';
+import {reorder} from '../../../../../utilities/strings';
+import {useQuery} from '../../../../../customHooks/urlParam';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
   isComponent?: boolean;
   section?: string;
   handleEditBlockContent?: () => void;
+  pageContentID?: string;
+  partContentID?: string;
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
@@ -38,11 +45,91 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     createNewBlockULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
+    pageContentID,
+    partContentID,
   } = props;
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
   const [colDropdownActive, setColDropdownActive] = useState<boolean>(false);
-  const {previewMode} = useULBContext();
+  const {
+    previewMode,
+    getCurrentPage,
+    universalLessonDetails,
+    selectedPageID,
+    setUniversalLessonDetails,
+    selID,
+    setSelID,
+  } = useULBContext();
+
+  console.log('TCL: selID', selID.pageContentID);
+
+  const currentPage: UniversalLessonPage = getCurrentPage(selectedPageID);
+
+  const pageIdx = findIndex(
+    universalLessonDetails.lessonPlan,
+    (item: any) => item.id === selectedPageID
+  );
+
+  const pageContentLen = currentPage?.pageContent?.length;
+
+  const pageContentIdx = findIndex(
+    currentPage?.pageContent,
+    (d) => d.id === selID.pageContentID
+  );
+  const pageContent = find(currentPage?.pageContent, (d) => d.id === selID.pageContentID);
+
+  const partContentIdx = findIndex(
+    pageContent?.partContent,
+    (d) => d.id === selID.partContentID
+  );
+
+  const partContentLen = pageContent?.partContent?.length;
+
+  const params = useQuery(location.search);
+  const lessonId = params.get('lessonId');
+
+  const DISABLE = {
+    BLOCK_UP: pageContentIdx === 0,
+    BLOCK_DOWN: pageContentLen - 1 === pageContentIdx,
+    COMPONENT_UP: partContentIdx === 0,
+    COMPONENT_DOWN: partContentLen - 1 === partContentIdx,
+  };
+
+  const updateData = async (path: string, newArr: any) => {
+    update(universalLessonDetails, path, () => newArr);
+    setUniversalLessonDetails({...universalLessonDetails});
+    const input = {
+      id: lessonId,
+      lessonPlan: [...universalLessonDetails.lessonPlan],
+    };
+    await updateLessonPageToDB(input);
+  };
+
+  const moveComponent = (dir: 'up' | 'down') => {
+    const PATH_TO_PARTCONTENT = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent`;
+
+    updateData(
+      PATH_TO_PARTCONTENT,
+      reorder(
+        pageContent?.partContent,
+        partContentIdx,
+        dir === 'up' ? partContentIdx - 1 : partContentIdx + 1
+      )
+    );
+  };
+  const moveBlock = (dir: 'up' | 'down') => {
+    const PATH_TO_PATHCONTENT = `lessonPlan[${pageIdx}].pageContent`;
+    console.log('TCL: moveComponent -> PATH_TO_PATHCONTENT', PATH_TO_PATHCONTENT);
+
+    updateData(
+      PATH_TO_PATHCONTENT,
+      reorder(
+        currentPage?.pageContent,
+        pageContentIdx,
+        dir === 'up' ? pageContentIdx - 1 : pageContentIdx + 1
+      )
+    );
+  };
 
   useEffect(() => {
     if (isActive) {
@@ -52,6 +139,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     }
     if (!isActive) {
       if (overlayVisible) {
+        setSelID({pageContentID: '', partContentID: ''});
+
         setOverlayVisible(false);
       }
     }
@@ -102,9 +191,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const componentAlignmentToggleClass = 'justify-center';
   const rowAlignmentToggleClass = 'w-auto';
 
-  const actionClass = `flex items-center justify-start w-auto hover:${
+  const bgClass = `hover:${
     theme === 'dark' ? 'bg-white' : 'bg-gray-700'
-  } hover:bg-opacity-10 mx-2 px-4  my-2 py-1 font-bold uppercase text-xs rounded-lg`;
+  } hover:bg-opacity-10`;
+
+  const actionClass = `flex items-center justify-start w-auto   mx-2 px-2  my-2 py-1 font-bold uppercase text-xs rounded-lg`;
 
   const iconClass = 'w-8 h-8 flex items-center text-xl';
   const textClass = 'mx-2 w-auto tracking-widest';
@@ -157,9 +248,36 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     await addToDB(updatedList);
   };
 
+  const MoveButton = ({
+    text,
+    onClick,
+    moveDir,
+    disabled,
+  }: {
+    text: string;
+    onClick: () => void;
+    moveDir: 'up' | 'down';
+    disabled: boolean;
+  }) => {
+    return (
+      <button
+        disabled={disabled}
+        className={`${actionClass} ${disabled ? 'text-opacity-50' : ''} ${
+          disabled ? 'cursor-not-allowed' : bgClass
+        } ${themeTextColor}`}
+        onClick={onClick}>
+        <span className={iconClass}>
+          {moveDir === 'up' ? <BiUpArrowAlt /> : <BiDownArrowAlt />}
+        </span>
+        <span className={textClass}>{text}</span>
+      </button>
+    );
+  };
+
   const {message = '', show = false} = confirmationConfig;
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
+
   // isComponent === 'the left one'
   return (
     <div
@@ -170,7 +288,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           flex flex-row
           items-center
           bg-transparent rounded-lg
-          z-10
+          ${overlayVisible ? 'z-100' : 'z-10'}
           h-auto w-auto
           ${isComponent ? componentAlignmentToggleClass : ''}
           `}>
@@ -205,9 +323,42 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               )}
             </>
           ) : null} */}
+
+          {section === 'pageContent' ? (
+            <>
+              <MoveButton
+                disabled={DISABLE.BLOCK_UP}
+                moveDir="up"
+                text="Move Up"
+                onClick={() => moveBlock('up')}
+              />
+              <MoveButton
+                disabled={DISABLE.BLOCK_DOWN}
+                moveDir="down"
+                text="Move Down"
+                onClick={() => moveBlock('down')}
+              />
+            </>
+          ) : (
+            <>
+              <MoveButton
+                disabled={DISABLE.COMPONENT_UP}
+                moveDir="up"
+                text="Move Up"
+                onClick={() => moveComponent('up')}
+              />
+              <MoveButton
+                disabled={DISABLE.COMPONENT_DOWN}
+                moveDir="down"
+                text="Move Down"
+                onClick={() => moveComponent('down')}
+              />
+            </>
+          )}
+
           {section !== 'pageContent' && (
             <button
-              className={`${actionClass} ${themeTextColor}`}
+              className={`${actionClass} ${bgClass} ${themeTextColor}`}
               onClick={() => {
                 handleEditBlockContent();
                 setOverlayVisible(false);
@@ -224,9 +375,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               <button
                 onClick={() => {
                   setColorPickerActive(!colorPickerActive);
-                  setOverlayVisible(false);
                 }}
-                className={`${actionClass} ${themeTextColor}`}>
+                className={`${actionClass} ${bgClass} ${themeTextColor}`}>
                 <span className={iconClass}>
                   <AiOutlineBgColors />
                 </span>
@@ -241,19 +391,18 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               )}
             </div>
           )}
-          {section !== 'pageContent' && (
-            <button
-              onClick={() => {
-                onDeleteButtonClick(contentID, section === 'pageContent');
-                setOverlayVisible(false);
-              }}
-              className={`${actionClass} text-red-400`}>
-              <span className={iconClass}>
-                <AiOutlineDelete />
-              </span>
-              <span className={textClass}>Delete</span>
-            </button>
-          )}
+
+          <button
+            onClick={() => {
+              onDeleteButtonClick(contentID, section === 'pageContent');
+              setOverlayVisible(false);
+            }}
+            className={`${actionClass} ${bgClass} text-red-400`}>
+            <span className={iconClass}>
+              <AiOutlineDelete />
+            </span>
+            <span className={textClass}>Delete</span>
+          </button>
         </div>
       </ClickAwayListener>
 
@@ -261,18 +410,15 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         <button
           className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
           onClick={() => {
+            handleEditBlockToggle();
+
             if (isComponent) {
-              handleEditBlockToggle();
+              setSelID({pageContentID, partContentID});
             } else {
-              onDeleteButtonClick(contentID, section === 'pageContent');
-              setOverlayVisible(false);
+              setSelID({partContentID: '', pageContentID});
             }
           }}>
-          {isComponent ? (
-            <>{overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}</>
-          ) : (
-            <AiOutlineDelete className={`text-red-400`} />
-          )}
+          {overlayVisible ? <IoCloseSharp size={20} /> : <HiPencil size={20} />}
         </button>
       )}
       {show && (
