@@ -1,9 +1,15 @@
 import React, {useState} from 'react';
 import {v4 as uuidv4} from 'uuid';
+import {INPUT} from '../common/constants';
 import UniversalInput from '../FormElements/UniversalInput';
 
 const UniversalInputDialog = (props: any) => {
-  const [list, setList] = useState([{id: uuidv4(), label: '', value: ''}]);
+  const {selectedForm} = props;
+  const initState =
+    selectedForm === INPUT
+      ? {id: uuidv4(), textArea: false, label: '', value: ''}
+      : {id: uuidv4(), label: '', value: ''};
+  const [list, setList] = useState([{...initState}]);
 
   const [numbered, setNumbered] = useState(false);
 

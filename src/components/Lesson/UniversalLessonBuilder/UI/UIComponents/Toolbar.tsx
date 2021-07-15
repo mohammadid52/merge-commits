@@ -104,12 +104,12 @@ const Toolbar = ({
               />
 
               <>
-                <Button
+                {/* <Button
                   color={themeTextColor}
                   onClick={() => setEnableDnD(!enableDnD)}
                   tooltip="Enable Drag"
                   icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-                />
+                /> */}
                 <Button
                   color={themeTextColor}
                   tooltip="Add New Page"
@@ -135,11 +135,11 @@ const Toolbar = ({
             </Container>
 
             <Container>
-              <Button
+              {/* <Button
                 color={themeTextColor}
                 tooltip="Enable Drag"
                 icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-              />
+              /> */}
               <Button
                 color={themeTextColor}
                 tooltip="Search Page"

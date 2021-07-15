@@ -13,7 +13,7 @@ export interface lessonStateType {
   canContinue?: string;
   studentData?: UniversalLessonStudentData[];
   viewing?: boolean;
-  displayData?: UniversalLessonStudentData[];
+  displayData?: any;
   saveCount?: number;
   firstSave?: boolean;
   subscription?: any;

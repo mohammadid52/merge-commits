@@ -1,4 +1,4 @@
-import {lessonState} from '../state/LessonState';
+import {lessonState, lessonStateType} from '../state/LessonState';
 export type LessonActions =
   | {
       type: 'TEST';
@@ -19,6 +19,10 @@ export type LessonActions =
   | {
       type: 'UPDATE_STUDENT_DATA';
       payload: {pageIdx: number; data: StudentPageInput};
+    }
+  | {
+      type: 'SET_DISPLAY_DATA';
+      payload: UniversalLessonStudentData;
     }
   | {
       type: 'SET_CURRENT_PAGE';
@@ -89,6 +93,8 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
       return {...state, studentData: mappedStudentData};
+    case 'SET_DISPLAY_DATA':
+      return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
     case 'TOGGLE_OPEN_PAGE':
