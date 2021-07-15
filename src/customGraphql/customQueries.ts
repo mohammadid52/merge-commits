@@ -2181,6 +2181,7 @@ export const listRubrics = /* GraphQL */ `
         id
         name
         criteria
+        curriculumID
         topicID
         topic {
           id

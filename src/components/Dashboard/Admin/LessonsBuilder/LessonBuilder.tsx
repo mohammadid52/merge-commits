@@ -452,7 +452,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       case 'courses':
         return <LessonCourse institution={formData?.institution} lessonId={lessonId} />;
       case 'learning-evidence':
-        return <LearningEvidence />;
+        return (
+          <LearningEvidence
+            institutionId={formData?.institution?.id}
+            lessonId={lessonId}
+          />
+        );
       // default:
       //   return <AddNewLessonForm
       //     changeLessonType={changeLessonType}
@@ -576,7 +581,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       last: false,
     },
     {
-      title: formData?.name,
+      title: loading ? 'Loading...' : formData?.name,
       url: `${match.url}`,
       last: true,
     },
