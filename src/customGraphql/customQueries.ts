@@ -1727,13 +1727,44 @@ export const getUniversalSyllabus = /* GraphQL */ `
           viewing
           lesson {
             id
-            coverImage
-            summaryTitle
-            introductionTitle
+            type
+            label
+            title
+            institutionID
+            language
+            designers
+            objectives
+            purpose
             introduction
+            introductionTitle
+            instructions
+            instructionsTitle
+            summary
+            summaryTitle
+            duration
+            resources
+            notes
+            cardImage
+            cardCaption
             lessonPlan {
               id
+              title
+              label
+              description
+              class
+              active
+              disabled
+              displayMode
+              open
+              estTime
+              activityType
+              interactionType
+              tags
             }
+            darkMode
+            rubrics
+            createdAt
+            updatedAt
           }
           startDate
           endDate

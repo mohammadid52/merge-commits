@@ -721,7 +721,7 @@ const Dashboard = (props: DashboardProps) => {
     if (activeRoomInfo?.activeSyllabus) {
       try {
         const syllabusLessonFetch = await API.graphql(
-          graphqlOperation(queries.getUniversalSyllabus, {
+          graphqlOperation(customQueries.getUniversalSyllabus, {
             id: activeRoomInfo?.activeSyllabus,
           })
         );
