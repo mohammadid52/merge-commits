@@ -103,6 +103,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     updateMovableList(items, 'pageContent', selectedPageID, pageContentId);
   };
 
+  // this is only for header component
+  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-2' : '');
+
   return (
     <>
       {selectedPageID &&
@@ -187,7 +190,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                           updateFromULBHandler={updateFromULBHandler}>
                                           {content.value.length > 0 ? (
                                             <div
-                                              className={content.class}
+                                              className={`${paddingForHeader(
+                                                content.type
+                                              )} ${content.class}`}
                                               id={content.id}>
                                               {composePartContent(
                                                 content.id,

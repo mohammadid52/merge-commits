@@ -13,6 +13,8 @@ const EmojiInput = ({
   label,
   value,
   isInLesson,
+  numbered,
+  index,
   handleUpdateStudentData,
   getStudentDataValue,
 }: FormControlProps) => {
@@ -56,8 +58,7 @@ const EmojiInput = ({
     try {
       const studentDataValue = getStudentDataValue(inputID);
       const textWithEmoji = studentDataValue[0].concat(`${e.emoji} `);
-      
-      
+
       handleUpdateStudentData(inputID, [textWithEmoji]);
       setShowEmojiSelector(false);
     } catch (error) {
@@ -69,7 +70,7 @@ const EmojiInput = ({
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
       <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
-        {label}
+        {numbered && index} {label}
       </label>
 
       <div className="flex items-center relative">

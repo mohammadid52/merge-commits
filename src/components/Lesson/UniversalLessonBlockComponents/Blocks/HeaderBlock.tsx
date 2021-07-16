@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
@@ -17,14 +17,12 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
   const {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-       
+
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <h3
         id={inputID}
-        className={`
-            relative
-            w-full flex font-medium text-left flex-row items-center ${themeTextColor} mt-4`}>
+        className={`relative w-full flex font-medium text-left flex-row items-center ${themeTextColor} mt-4`}>
         {inputValue.value}
       </h3>
     );
@@ -60,9 +58,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
       {value &&
         value.length > 0 &&
         value.map((v: any, i: number) => (
-          <div key={id} className={`p-4`}>
-            {composeHeader(id, v, type)}
-          </div>
+          <div key={id}>{composeHeader(id, v, type)}</div>
         ))}
     </div>
   );

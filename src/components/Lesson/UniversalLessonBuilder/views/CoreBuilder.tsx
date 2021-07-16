@@ -28,8 +28,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
   galleryVisible?: boolean;
   hierarchyVisible?: boolean;
   initialUniversalLessonPagePartContent: PartContent;
-  pageDetailsModal: boolean;
-  setPageDetailsModal: React.Dispatch<React.SetStateAction<boolean>>;
+
   lessonId: string;
   handleModalPopToggle?: (dialogToToggle: string) => void;
   handleEditBlockContent?: (
@@ -39,7 +38,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
     targetId: string,
     indexToUpdate: number
   ) => void;
-  setEditModal: React.Dispatch<React.SetStateAction<any>>;
+
   activePageData: UniversalLessonPage;
 }
 
