@@ -6,7 +6,7 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
 import {StudentPageInput} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {FormControlProps} from '../FormBlock';
-
+import noop from 'lodash/noop';
 const EmojiInput = ({
   id,
   inputID,
@@ -82,7 +82,7 @@ const EmojiInput = ({
           }`}
           name="emoji"
           type="text"
-          onChange={isInLesson ? (e) => onChange(e) : undefined}
+          onChange={isInLesson ? (e) => onChange(e) : noop}
           value={isInLesson ? getStudentDataValue(inputID) : value}
         />
         {showEmojiSelector && (

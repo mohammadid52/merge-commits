@@ -701,10 +701,11 @@ const QuestionLookup = ({
         type,
 
         label: question.question,
-        value:
+        value: question.label,
+        options:
           type === FORM_TYPES.RADIO || type === FORM_TYPES.MULTIPLE
             ? question.options
-            : question.label,
+            : null,
       };
     });
     return dataToSend;
@@ -721,6 +722,7 @@ const QuestionLookup = ({
   };
   const addToULBObject = async () => {
     let valueArr = generateQuestionList();
+
     const formType = numbered ? 'form-numbered' : 'form-default';
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler('', '', formType, valueArr);
@@ -754,7 +756,7 @@ const QuestionLookup = ({
                 ? 'border-indigo-500 text-white bg-indigo-400'
                 : 'border-gray-300 text-dark'
             } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Ordered Form' : 'Unordered Form'}
+            {numbered ? 'Numbered' : 'Unnumbered'}
           </button>
         </div>
       )}
