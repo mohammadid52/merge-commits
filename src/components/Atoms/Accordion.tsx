@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useState } from 'react';
 import {IoChevronDownCircleOutline, IoChevronUpCircleOutline} from 'react-icons/io5';
-
 import {IconContext} from 'react-icons/lib/esm/iconContext';
+
 import { getAsset } from '../../assets';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
@@ -21,7 +21,7 @@ const Accordion = ({actionOnAccordionClick, titleList}: any) => {
     }
   };
   return (
-    <div className="bg-white mx-auto  border-0 border-gray-200">
+    <div className="bg-white mx-auto border-0 border-gray-200">
       <div>
         <ul className="rounded-xl">
           {titleList.map(
