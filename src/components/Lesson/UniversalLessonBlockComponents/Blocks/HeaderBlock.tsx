@@ -22,7 +22,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     return (
       <h3
         id={inputID}
-        className={`relative w-full flex font-medium text-left flex-row items-center ${themeTextColor} my-4`}>
+        className={`relative w-full flex font-medium text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
         {inputValue.value}
       </h3>
     );
