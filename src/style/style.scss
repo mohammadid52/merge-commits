@@ -976,3 +976,9 @@
 .customShadow {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 }
+.questionItemChild:first-child {
+  margin-top: 1.5rem;
+}
+.questionItemChild:last-child {
+  margin-bottom: 1.5rem;
+}

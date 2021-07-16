@@ -371,7 +371,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
       case FORM_TYPES.TEXT:
       case FORM_TYPES.DATE_PICKER:
         return (
-          <div id={id} key={id} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label}
             </label>
@@ -391,7 +391,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
       case FORM_TYPES.TEXTAREA:
         return (
-          <div id={id} key={id} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label}
             </label>
@@ -410,7 +410,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
       case FORM_TYPES.RADIO:
       case FORM_TYPES.MULTIPLE:
         return (
-          <div id={id} key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label}
             </label>
