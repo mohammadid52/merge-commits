@@ -16,9 +16,11 @@ import {
 import EmojiInput from './FormBlock/EmojiInputBlock';
 import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
+import noop from 'lodash/noop';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
+  numbered?: boolean;
   value?: {id: string; type: string; label: string; value: string}[];
 }
 
@@ -30,7 +32,8 @@ export interface FormControlProps {
   value?: any;
   options?: any;
   isInLesson?: boolean;
-
+  numbered?: boolean;
+  index?: string;
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
   getStudentDataValue?: (domID: string) => string[];
 }
@@ -104,7 +107,7 @@ const SelectOne = ({
     </div>
   );
 };
-export const FormBlock = ({id, mode, value}: FormBlockProps) => {
+export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   const {
     lessonState,
     lessonDispatch,
@@ -200,13 +203,13 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   );
 
   // ~~~~~~~~~~~~~~~~~ LINK ~~~~~~~~~~~~~~~~ //
-  const LinkInput = ({inputID, label, value}: any) => {
+  const LinkInput = ({inputID, label, value, numbered, index}: FormControlProps) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
         <label
           className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
           htmlFor="label">
-          {label}
+          {numbered && index} {label}
         </label>
         <input
           id={inputID}
@@ -226,7 +229,13 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
   };
 
   // ~~~~~~~~~~~~~~ ATTACHMENT ~~~~~~~~~~~~~ //
-  const AttachmentBlock = ({inputID, label, value}: any) => {
+  const AttachmentBlock = ({
+    inputID,
+    label,
+    value,
+    numbered,
+    index,
+  }: FormControlProps) => {
     const inputOther = useRef(null);
 
     const openFilesExplorer = () => inputOther.current.click();
@@ -276,13 +285,13 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {label}
+          {numbered && index} {label}
         </label>
         <div className="mt-2">
           <span
             role="button"
             tabIndex={-1}
-            onClick={isInLesson ? openFilesExplorer : undefined}
+            onClick={isInLesson ? openFilesExplorer : noop}
             className={`border-0 ${
               lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
             } flex items-center justify-center ${
@@ -327,7 +336,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     inputID: string
   ) => {
     if (values && Array.isArray(values)) {
-      const studentDataValue = getStudentDataValue(inputID);
+      const studentDataValue = getStudentDataValue(inputID) || [];
       let selectedOptionList: string[] = [...studentDataValue].filter((d) => d !== '');
 
       const getCheckValue = (id: string): boolean => studentDataValue.includes(id);
@@ -384,15 +393,17 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
     options?: any,
     isInLesson?: boolean,
     handleUpdateStudentData?: any,
-    getValue?: (domID: string) => any
+    getValue?: (domID: string) => any,
+    numbered?: boolean,
+    index?: string
   ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
       case FORM_TYPES.DATE_PICKER:
         return (
-          <div id={id} key={id} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {label}
+              {numbered && index} {label}
             </label>
             <input
               id={inputID}
@@ -410,9 +421,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
 
       case FORM_TYPES.TEXTAREA:
         return (
-          <div id={id} key={id} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {label}
+              {numbered && index} {label}
             </label>
             <textarea
               id={inputID}
@@ -429,9 +440,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
       case FORM_TYPES.RADIO:
       case FORM_TYPES.MULTIPLE:
         return (
-          <div id={id} key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {label}
+              {numbered && index} {label}
             </label>
             {generateCheckbox(
               options,
@@ -448,6 +459,8 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             inputID={inputID}
             value={value}
             label={label}
+            numbered={numbered}
+            index={index}
             isInLesson={isInLesson}
             handleUpdateStudentData={
               isStudent && isInLesson ? handleUpdateStudentData : undefined
@@ -461,6 +474,8 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
             id={id}
             inputID={inputID}
             label={label}
+            numbered={numbered}
+            index={index}
             isInLesson={isInLesson}
             handleUpdateStudentData={
               isStudent && isInLesson ? handleUpdateStudentData : undefined
@@ -469,9 +484,27 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
           />
         );
       case FORM_TYPES.LINK:
-        return <LinkInput id={id} value={value} inputID={inputID} label={label} />;
+        return (
+          <LinkInput
+            numbered={numbered}
+            index={index}
+            id={id}
+            value={value}
+            inputID={inputID}
+            label={label}
+          />
+        );
       case FORM_TYPES.ATTACHMENTS:
-        return <AttachmentBlock id={id} value={value} inputID={inputID} label={label} />;
+        return (
+          <AttachmentBlock
+            numbered={numbered}
+            index={index}
+            id={id}
+            value={value}
+            inputID={inputID}
+            label={label}
+          />
+        );
 
       default:
         return <p>No valid form input type</p>;
@@ -493,7 +526,9 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
                 v.options,
                 isInLesson,
                 handleUpdateStudentData,
-                getDataValue
+                getDataValue,
+                numbered,
+                `${i + 1}.`
               )}
             </React.Fragment>
           );

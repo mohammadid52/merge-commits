@@ -11267,10 +11267,11 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -11294,10 +11295,11 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -11321,10 +11323,11 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt

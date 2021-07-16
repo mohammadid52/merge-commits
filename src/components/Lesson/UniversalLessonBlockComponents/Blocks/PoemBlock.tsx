@@ -5,6 +5,7 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
+import {isString} from 'lodash';
 
 interface PoemBlockProps extends RowWrapperProps {
   id?: string;
@@ -50,7 +51,7 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   };
 
-  // init poemInput so the first linestarter shows up
+  // // init poemInput so the first linestarter shows up
   useEffect(() => {
     if (poemInput.length === 0 && value.length > 0) {
       setPoemInput([
@@ -62,7 +63,7 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   }, [value]);
 
-  // init poemWriting for WYSIWYG
+  // // init poemWriting for WYSIWYG
   useEffect(() => {
     if (isInLesson && isStudent) {
       if (poemInput.length > 0) {

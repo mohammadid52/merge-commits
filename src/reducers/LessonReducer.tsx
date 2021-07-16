@@ -74,16 +74,15 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
       // update single object
-      const updatedTargetStudentData = state.studentData[pageIdx].map(
-        (studentPageInput: StudentPageInput) => {
+      const updatedTargetStudentData =
+        state?.studentData[pageIdx].map((studentPageInput: StudentPageInput) => {
           return {
             domID: studentPageInput.domID,
             input: studentPageInput.domID === domID ? newInput : studentPageInput.input,
           };
-        }
-      );
+        }) || [];
       // merge updated object into original array
-      const mappedStudentData = state.studentData.map(
+      const mappedStudentData = state?.studentData.map(
         (pageData: StudentPageInput[], idx: number) => {
           if (idx === pageIdx) {
             return updatedTargetStudentData;

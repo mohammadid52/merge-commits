@@ -1437,16 +1437,52 @@ export const listCurriculums = /* GraphQL */ `
         description
         objectives
         languages
-        units {
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const listCurriculumsForLessons = /* GraphQL */ `
+  query ListCurriculums(
+    $id: ID
+    $filter: ModelCurriculumFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listCurriculums(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        name
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+        }
+        universalSyllabus {
           items {
             id
             name
-            description
+            lessons{
+              items{
+                lessonID
+              }
+            }
+            curriculumID
           }
           nextToken
         }
-        createdAt
-        updatedAt
       }
       nextToken
     }
@@ -1700,6 +1736,36 @@ export const listUniversalLessons = /* GraphQL */ `
     }
   }
 `;
+export const listUniversalLessonsOptions = /* GraphQL */ `
+  query ListUniversalLessons(
+    $id: ID
+    $filter: ModelUniversalLessonFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessons(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        lessonPlan {
+          id
+        }
+      }
+      nextToken
+    }
+  }
+`;
 
 export const getUniversalSyllabus = /* GraphQL */ `
   query GetUniversalSyllabus($id: ID!) {
@@ -1842,6 +1908,7 @@ export const getUniversalLesson = /* GraphQL */ `
           }
         }
       }
+      rubrics
       createdAt
       updatedAt
     }
@@ -2196,6 +2263,7 @@ export const listRubrics = /* GraphQL */ `
         id
         name
         criteria
+        curriculumID
         topicID
         topic {
           id
@@ -2296,8 +2364,38 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
+      universalSyllabus {
+        items {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      universalSyllabusSeq
       createdAt
       updatedAt
+    }
+  }
+`;
+
+export const getCurriculumUniversalSyllabusSequence = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      institutionID
+      universalSyllabusSeq
     }
   }
 `;
@@ -2933,6 +3031,64 @@ export const getSyllabus = /* GraphQL */ `
   }
 `;
 
+export const getUniversalSyllabus = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      lessons {
+        items {
+          id
+          syllabusID
+          lessonID
+          lesson {
+            title
+            measurements {
+              items {
+                id
+                lessonID
+                rubricID
+                rubric {
+                  id
+                  name
+                  criteria
+                  topicID
+                }
+                createdAt
+                updatedAt
+              }
+              nextToken
+            }
+          }
+          unit
+          sequence
+          status
+          complete
+          roster
+          viewing
+          startDate
+          endDate
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 // delete once lessons table updated in production
 // export const listLessonsIds = /* GraphQL */ `
 //   query ListLessons(
@@ -3072,6 +3228,10 @@ export const getInstClassRooms = /* GraphQL */ `
                 name
               }
             }
+          }
+          teacher{
+            firstName
+            lastName
           }
         }
         nextToken
