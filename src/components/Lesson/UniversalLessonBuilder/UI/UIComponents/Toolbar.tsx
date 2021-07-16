@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   AiOutlineDelete,
   AiOutlineEye,
@@ -13,6 +13,7 @@ import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 import {VscDiscard} from 'react-icons/vsc';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import useOnScreen from '../../../../../customHooks/useOnScreen';
 import Tooltip from '../../../../Atoms/Tooltip';
 
 const Button = ({
@@ -60,14 +61,17 @@ const Toolbar = ({
   deleteLesson,
   setEditMode,
   setFields,
+
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
+
   setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   setFields: React.Dispatch<React.SetStateAction<any>>;
 }) => {
-  const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
+  const {previewMode, setPreviewMode, setToolbarOnTop} = useULBContext();
+
   const {
     state: {
       lessonPage: {
@@ -77,6 +81,11 @@ const Toolbar = ({
       } = {},
     },
   } = useContext(GlobalContext);
+  const toolbarRef = useRef();
+  const isVisible = useOnScreen(toolbarRef);
+  useEffect(() => {
+    setToolbarOnTop(isVisible);
+  }, [isVisible]);
   return (
     <>
       {previewMode && (
@@ -90,9 +99,11 @@ const Toolbar = ({
           />
         </div>
       )}
+
       {!previewMode && (
         <div
           // hidden={previewMode}
+          ref={toolbarRef}
           className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
           <div className="flex items-center">
             <Container>

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
@@ -20,9 +20,22 @@ import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
+import useOnScreen from '../../../../customHooks/useOnScreen';
+import {IconType} from 'react-icons/lib';
+import Tooltip from '../../../Atoms/Tooltip';
+import {
+  AiOutlineDelete,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineFileAdd,
+  AiOutlineFileSearch,
+  AiOutlineSave,
+} from 'react-icons/ai';
+
+import {VscDiscard} from 'react-icons/vsc';
+
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
-
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
@@ -72,11 +85,24 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     fetchingLessonDetails,
     setLessonPlanFields,
     setEditMode,
+    toolbarOnTop,
+    previewMode,
+    setPreviewMode,
   } = useULBContext();
   const {
     clientKey,
     userLanguage,
     state: {lessonPage: {themeBackgroundColor = ''} = {}},
+  } = useContext(GlobalContext);
+
+  const {
+    state: {
+      lessonPage: {
+        theme = 'dark',
+        themeSecBackgroundColor = 'bg-gray-700',
+        themeTextColor = '',
+      } = {},
+    },
   } = useContext(GlobalContext);
 
   const params = useQuery(location.search);
@@ -97,7 +123,50 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       `/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`
     );
   };
+  const Button = ({
+    onClick,
+    icon: Icon,
+    text = '',
+    tooltip = '',
+    invert = false,
+    color = 'text-white',
+  }: {
+    onClick?: () => void;
+    icon?: IconType;
+    tooltip?: string;
+    text?: string;
+    color?: string;
+    invert?: boolean;
+  }) => {
+    return (
+      <Tooltip show={tooltip.length > 0} text={tooltip} placement="bottom">
+        <button
+          onClick={onClick}
+          type="button"
+          className={`${
+            invert ? 'bg-indigo-600' : 'bg-transparent'
+          } ${color} mx-2 hover:shadow-lg w-auto  inline-flex justify-center items-center p-2 border border-transparent rounded-md hover:text-white  transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+          {Icon && <Icon className="h-5 w-5" aria-hidden="true" />}
+          {text}
+        </button>
+      </Tooltip>
+    );
+  };
 
+  const Divider = ({theme = 'dark'}: any) => (
+    <span
+      style={{width: 1}}
+      className={`h-8 mx-2 ${
+        theme === 'dark' ? 'bg-white' : 'bg-gray-600'
+      } bg-opacity-50 `}
+    />
+  );
+
+  const Container = ({children}: {children: any}) => (
+    <div className={`flex items-center flex-col w-auto ${!toolbarOnTop ? 'mb-2' : ''}`}>
+      {children}
+    </div>
+  );
   // const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
   //   (lessonPage: UniversalLessonPage) => lessonPage.id === selectedPageID
   // );
@@ -153,7 +222,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       goToLessonPlan();
     }
   };
-
+  // 150px hide
+  // 0px show
   return (
     <>
       {activePageData && show && (
@@ -164,6 +234,79 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
+      <div style={{top: '30rem'}} className="w-16 bg-gray-800 fixed right-5 z-10">
+        {!previewMode && (
+          <div
+            className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+            <div className="flex items-center flex-col">
+              <Container>
+                <Button
+                  onClick={() => setPreviewMode(!previewMode)}
+                  tooltip="Preview"
+                  color={themeTextColor}
+                  icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+                />
+
+                <>
+                  <Button
+                    color={themeTextColor}
+                    tooltip="Add New Page"
+                    onClick={() => {
+                      setNewLessonPlanShow(true);
+                      setEditMode(false);
+                      // setFields({
+                      //   title: '',
+                      //   label: '',
+                      //   instructions: '',
+                      //   instructionsHtml: '',
+                      //   description: '', // ignore this field
+                      //   interactionType: [],
+                      //   tags: [],
+                      //   estTime: '1 min',
+                      //   classwork: true,
+                      // });
+                    }}
+                    icon={AiOutlineFileAdd}
+                  />
+                </>
+              </Container>
+
+              <Container>
+                {/* <Button
+                color={themeTextColor}
+                tooltip="Enable Drag"
+                icon={enableDnD ? RiDragDropFill : RiDragDropLine}
+              /> */}
+                <Button
+                  color={themeTextColor}
+                  tooltip="Search Page"
+                  icon={AiOutlineFileSearch}
+                />
+              </Container>
+
+              <Container>
+                <Button
+                  color={themeTextColor}
+                  tooltip="Save changes"
+                  icon={AiOutlineSave}
+                />
+                <Button
+                  color={themeTextColor}
+                  tooltip="Discard changes"
+                  icon={VscDiscard}
+                />
+
+                <Button
+                  color="text-red-500"
+                  tooltip="Delete this page"
+                  icon={AiOutlineDelete}
+                  onClick={() => {}}
+                />
+              </Container>
+            </div>
+          </div>
+        )}
+      </div>
 
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
