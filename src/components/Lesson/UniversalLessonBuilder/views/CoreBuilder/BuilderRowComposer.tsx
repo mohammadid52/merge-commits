@@ -192,7 +192,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                             <div
                                               className={`${paddingForHeader(
                                                 content.type
-                                              )} ${content.class}`}
+                                              )} ${content.class} `}
                                               id={content.id}>
                                               {composePartContent(
                                                 content.id,
