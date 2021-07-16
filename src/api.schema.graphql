@@ -111,10 +111,6 @@ type Room
   teacherEmail: String!
   name: String!
   maxPersons: Int!
-  institution: Institution @connection(fields: ["institutionID"])
-  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
-  class: Class @connection(fields: ["classID"])
-  curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
   filters: [String]
   location: String
   startDate: AWSDate
@@ -125,8 +121,18 @@ type Room
   repeat: String
   notes: String
   activeSyllabus: String
-  coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
   frequency: String
+  coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
+  institution: Institution @connection(fields: ["institutionID"])
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+  class: Class @connection(fields: ["classID"])
+  curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  activeLessonId: String
+  ClosedPages: [String]
+  disabledPages: [String]
+  studentViewing: String
+  displayData: [String]
+  currentPage: String
 }
 
 type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
@@ -180,6 +186,7 @@ type Curriculum
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
   universalSyllabus: [UniversalSyllabus] @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
+  universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 type Topic
@@ -933,6 +940,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   lessonPlan: [UniversalLessonPlan]
   homework: [UniversalLessonPlan]
   darkMode: Boolean
+  rubrics: [String]
 }
 
 type UniversalLessonPlan {
@@ -1032,6 +1040,7 @@ type UniversalSyllabus
   curriculumID: ID!
   languages: [Language]
   lessons: [UniversalSyllabusLesson] @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
+  universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
 }
@@ -1049,7 +1058,7 @@ type UniversalSyllabusLesson
   complete: Boolean
   roster: [String!]
   viewing: String
-  lesson: Lesson @connection(fields: ["lessonID"])
+  lesson: UniversalLesson @connection(fields: ["lessonID"])
   displayData: DisplayData
   lessonPlan: [ComponentSummary!]
   startDate: AWSDate
