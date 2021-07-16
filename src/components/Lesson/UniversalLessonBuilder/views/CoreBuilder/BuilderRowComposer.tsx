@@ -121,6 +121,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
+                pageContentID={pagePart.id}
                 editedID={editedID}
                 handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
                 section="pageContent">
@@ -162,6 +163,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                           classString={content.class}
                                           contentID={content.id}
                                           editedID={editedID}
+                                          pageContentID={pagePart.id}
+                                          partContentID={content.id}
                                           isComponent={true}
                                           isLast={idx2 === partContent?.length - 1}
                                           handleEditBlockToggle={() =>

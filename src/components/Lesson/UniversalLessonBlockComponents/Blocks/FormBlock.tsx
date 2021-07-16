@@ -174,7 +174,7 @@ export const FormBlock = ({id, mode, value}: FormBlockProps) => {
         <label
           className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
           htmlFor="label">
-          {label} <Type text="Link" />
+          {label}
         </label>
         <input
           id={inputID}

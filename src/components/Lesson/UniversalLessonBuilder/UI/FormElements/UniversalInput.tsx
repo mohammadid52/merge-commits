@@ -14,8 +14,22 @@ import {
   LINK,
 } from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {BiCheckbox, BiCheckboxChecked} from 'react-icons/bi';
 
-const Attachments = (props: any) => {
+const Checkbox = ({val}: {val: boolean}) => {
+  return (
+    <>
+      {val ? (
+        <BiCheckboxChecked className="w-auto text-3xl text-blue-600 cursor-pointer" />
+      ) : (
+        <BiCheckbox className="w-auto text-3xl text-blue-600 cursor-pointer" />
+      )}
+      <p className="w-auto cursor-pointer">textarea</p>
+    </>
+  );
+};
+
+const UniversalInput = (props: any) => {
   const {
     closeAction,
     numbered,
@@ -51,6 +65,11 @@ const Attachments = (props: any) => {
     setList([...list]);
   };
 
+  const changeCheckboxValue = (idx: number, currentValue: boolean) => {
+    update(list[idx], 'textArea', () => !currentValue);
+    setList([...list]);
+  };
+
   const removeItemFromList = (id: string) => {
     remove(list, (n: any) => n.id === id);
     setList([...list]);
@@ -82,8 +101,8 @@ const Attachments = (props: any) => {
             ? FORM_TYPES.LINK
             : selectedForm === DATE_PICKER
             ? FORM_TYPES.DATE_PICKER
-            : selectedForm === INPUT
-            ? FORM_TYPES.TEXT
+            : selectedForm === INPUT && d.textArea
+            ? FORM_TYPES.TEXTAREA
             : FORM_TYPES.TEXT,
         label: d.label,
         value: d.value,
@@ -141,13 +160,25 @@ const Attachments = (props: any) => {
                     />
                   </div>
                 )}
-                {idx !== 0 && (
+                {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto mx-3">
+                    <div
+                      onClick={() => changeCheckboxValue(idx, input.textArea)}
+                      className="flex items-center mr-2 justify-between self-end text-gray-500 font-medium w-auto">
+                      <Checkbox val={input.textArea} />
+                    </div>
+
                     <button
                       onClick={() => removeItemFromList(input.id)}
                       className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
                       Remove
                     </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => changeCheckboxValue(idx, input.textArea)}
+                    className="flex cursor-pointer items-center justify-end text-gray-500 font-medium w-auto mx-3 self-end mt-2">
+                    <Checkbox val={input.textArea} />
                   </div>
                 )}
               </div>
@@ -193,4 +224,4 @@ const Attachments = (props: any) => {
   );
 };
 
-export default Attachments;
+export default UniversalInput;
