@@ -114,6 +114,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   const [loading, setLoading] = useState(false);
+  const [curriculumLoading, setCurriculumLoading] = useState(false);
   const [formData, setFormData] = useState<InitialData>(initialData);
   const [measurementList, setMeasurementList] = useState([]);
   const [selectedMeasurement, setSelectedMeasurement] = useState([]);
@@ -122,6 +123,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     lessonInstructions: instructionInitialState,
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
+  const [curriculumList, setCurriculumList] = useState([]);
+  const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
   const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
@@ -194,7 +197,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
-
+        setSelectedMeasurement(savedData.rubrics);
         setFormData({
           ...formData,
           ...savedData,
@@ -245,7 +248,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (lessonId) {
       setLoading(true);
       fetchUniversalLessonDetails();
-    }else{
+    } else {
       setUniversalLessonDetails({
         id: '',
         summary: '',
@@ -416,6 +419,41 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const fetchCurriculum = async () => {
+    try {
+      setCurriculumLoading(true);
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listCurriculumsForLessons, {
+          filter: {
+            institutionID: {eq: formData?.institution?.id},
+          },
+        })
+      );
+      const curriculums = list.data?.listCurriculums?.items;
+      setCurriculumList(curriculums);
+      let selectedCurriculums: any = [];
+      curriculums.map((curriculum: any) => {
+        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
+          (syllabus: any) =>
+            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
+              .length
+        );
+        const isCourseAdded = Boolean(assignedSyllabi.length);
+        if (isCourseAdded) {
+          selectedCurriculums.push({
+            ...curriculum,
+            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+          });
+        }
+      });
+      setSelectedCurriculumList(selectedCurriculums);
+      setCurriculumLoading(false);
+    } catch (error) {
+      setCurriculumLoading(false);
+    }
+  };
+
   const handleTabSwitch = (step: string) => {
     history.push(`${match.url}?lessonId=${lessonId}&step=${step}`);
   };
@@ -450,9 +488,26 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           />
         );
       case 'courses':
-        return <LessonCourse />;
+        return (
+          <LessonCourse
+            curriculumList={curriculumList}
+            fetchCurriculum={fetchCurriculum}
+            institution={formData?.institution}
+            lessonId={lessonId}
+            lessonPlans={universalLessonDetails?.lessonPlan}
+            lessonType={formData.type?.value}
+            loading={curriculumLoading}
+            selectedCurriculums={selectedCurriculumList}
+          />
+        );
       case 'learning-evidence':
-        return <LearningEvidence />;
+        return (
+          <LearningEvidence
+            institutionId={formData?.institution?.id}
+            lessonId={lessonId}
+            rubrics={selectedMeasurement}
+          />
+        );
       // default:
       //   return <AddNewLessonForm
       //     changeLessonType={changeLessonType}
@@ -564,10 +619,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, [step]);
 
-  // useEffect(() => {
-  //   fetchMeasurementList();
-  // }, []);
-
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
@@ -576,7 +627,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       last: false,
     },
     {
-      title: formData?.name,
+      title: loading ? 'Loading...' : formData?.name,
       url: `${match.url}`,
       last: true,
     },
@@ -613,7 +664,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       description: 'Link measurements to activities',
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
-      disabled: true,
+      disabled: !(
+        Boolean(selectedMeasurement?.length) || Boolean(selectedCurriculumList.length)
+      ),
       isComplete: false,
       tooltipText: 'Assign your lesson to courses in step 3 to continue',
     },
