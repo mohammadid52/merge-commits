@@ -1122,3 +1122,15 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
 //     }
 //   }
 // `;
+
+export const updateCurriculumSyllabusSequence = /* GraphQL */ `
+  mutation UpdateCurriculum(
+    $input: UpdateCurriculumInput!
+    $condition: ModelCurriculumConditionInput
+  ) {
+    updateCurriculum(input: $input, condition: $condition) {
+      id
+      universalSyllabusSeq
+    }
+  }
+`;

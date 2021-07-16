@@ -40,6 +40,7 @@ interface InitialData {
     value: string;
   };
   syllabusList: any[];
+  syllabusSequence: any[];
 }
 
 const CurricularView = (props: CurricularViewProps) => {
@@ -67,6 +68,7 @@ const CurricularView = (props: CurricularViewProps) => {
       value: '',
     },
     syllabusList: [] as any,
+    syllabusSequence: [] as any,
     description: '',
     languages: [{ id: '1', name: 'English', value: 'EN' }],
     objectives: '',
@@ -105,10 +107,11 @@ const CurricularView = (props: CurricularViewProps) => {
       active: false,
       content: (
         <SyllabusList
-          savedSyllabi={curricularData.syllabusList}
           curricularId={currID}
-          loading={loading}
           institutionId={institutionId}
+          loading={loading}
+          syllabusList={curricularData.syllabusList}
+          syllabusSequence={curricularData.syllabusSequence}
         />
       ),
     },
@@ -151,7 +154,9 @@ const CurricularView = (props: CurricularViewProps) => {
           },
           description: savedData.description,
           objectives: savedData.objectives,
-          syllabusList: savedData.syllabi?.items,
+          // syllabusList: savedData.syllabi?.items,
+          syllabusList: savedData.universalSyllabus?.items,
+          syllabusSequence: savedData.universalSyllabusSeq,
           languages: savedLanguages ? savedLanguages : [],
         });
         setDesignersID(savedData?.designers);

@@ -5,18 +5,21 @@ import {IconContext} from 'react-icons/lib/esm/iconContext';
 import { getAsset } from '../../assets';
 import { GlobalContext } from '../../contexts/GlobalContext';
 
-const Accordion = ({titleList}: any) => {
-    const {theme, clientKey} = useContext(GlobalContext);
-    const themeColor = getAsset(clientKey, 'themeClassName');
-    const [selectedItem, setSelectedItem] = useState('');
+const Accordion = ({actionOnAccordionClick, titleList}: any) => {
+  const {theme, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const [selectedItem, setSelectedItem] = useState('');
 
-    const changeView = (step: string) => {
-      if (selectedItem !== step) {
-        setSelectedItem(step);
-      } else {
-        setSelectedItem('');
+  const changeView = (step: string, uniqueId?: string) => {
+    if (selectedItem !== step) {
+      setSelectedItem(step);
+      if (actionOnAccordionClick) {
+        actionOnAccordionClick(uniqueId);
       }
-    };
+    } else {
+      setSelectedItem('');
+    }
+  };
   return (
     <div className="bg-white mx-auto  border-0 border-gray-200">
       <div>
@@ -29,20 +32,20 @@ const Accordion = ({titleList}: any) => {
                 scope?: string;
                 subtitle?: string;
                 content: React.ReactNode;
+                uniqueId?: string;
               },
               index: number
             ) => (
               <Fragment key={item.id}>
                 <li className={`relative border-b-0 border-gray-200`}>
                   <div className="bg-gray-500">
-                    <div
-                      className={`w-full px-8 py-3 text-left ${theme.outlineNone}`}>
+                    <div className={`w-full px-8 py-3 text-left ${theme.outlineNone}`}>
                       <div className="flex items-center justify-between">
                         <span
                           className={`text-xs md:text-base font-bold cursor-pointer flex ${
                             selectedItem === item.id && theme.textColor[themeColor]
                           } `}
-                          onClick={() => changeView(item.id)}>
+                          onClick={() => changeView(item.id, item.uniqueId)}>
                           <div className="w-auto text-white">
                             <span className="mr-4">{index + 1}. </span>
                           </div>
@@ -52,7 +55,7 @@ const Accordion = ({titleList}: any) => {
                         </span>
                         <span
                           className="w-8 h-8 flex items-center cursor-pointer transition ease duration-500"
-                          onClick={() => changeView(item.id)}>
+                          onClick={() => changeView(item.id, item.uniqueId)}>
                           <IconContext.Provider
                             value={{
                               size: '2rem',
