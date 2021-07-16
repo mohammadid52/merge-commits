@@ -13,6 +13,9 @@ import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
 import Selector from '../../../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
+import Tooltip from '../../../../../../Atoms/Tooltip';
+import Loader from '../../../../../../Atoms/Loader';
+
 import {languageList, statusList} from '../../../../../../../utilities/staticData';
 import {reorder, getLessonType} from '../../../../../../../utilities/strings';
 
@@ -25,7 +28,6 @@ import {getAsset} from '../../../../../../../assets';
 import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-import Tooltip from '../../../../../../Atoms/Tooltip';
 import findIndex from 'lodash/findIndex';
 
 interface EditSyllabusProps {}
@@ -66,6 +68,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
+  const [fetchingDetails, setFetchingDetails] = useState(false);
   const [editState, setEditState] = useState<{id: string; action?: string}>({
     id: '',
     action: '',
@@ -241,15 +244,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           languages: languagesCode,
           designers: designers,
         };
-        const newSyllabus = await API.graphql(
-          graphqlOperation(mutations.updateSyllabus, {input: input})
+        await API.graphql(
+          graphqlOperation(mutations.updateUniversalSyllabus, {input: input})
         );
         setMessages({
           show: true,
           message: EditSyllabusDict[userLanguage]['messages']['unitupdate'],
           isError: false,
         });
-        setSyllabusData(initialData);
+        // setSyllabusData(initialData);
         setIsLoading(false);
         return true;
       } catch {
@@ -342,7 +345,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           status: val,
         };
         const result: any = await API.graphql(
-          graphqlOperation(customMutations.updateSyllabusLesson, {input: input})
+          graphqlOperation(mutations.updateUniversalSyllabus, {input: input})
         );
         const newLesson = result.data.updateSyllabusLesson;
         updateStatusOnTable(newLesson.lessonID, newLesson.status);
@@ -396,10 +399,10 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       };
 
       const result: any = await API.graphql(
-        graphqlOperation(customMutations.createSyllabusLesson, {input: input})
+        graphqlOperation(mutations.createUniversalSyllabusLesson, {input: input})
       );
-
-      const newLesson = result.data.createSyllabusLesson;
+        
+      const newLesson = result.data.createUniversalSyllabusLesson;
 
       if (!lessonsIds.length) {
         setLessonsIds([newLesson.id]);
@@ -469,9 +472,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     if (syllabusId) {
       try {
         const result: any = await API.graphql(
-          graphqlOperation(customQueries.getSyllabus, {id: syllabusId})
+          graphqlOperation(customQueries.getUniversalSyllabus, {
+            id: syllabusId,
+          })
         );
-        const savedData = result.data.getSyllabus;
+        const savedData = result.data.getUniversalSyllabus;
         setSyllabusData({
           ...syllabusData,
           name: savedData.name,
@@ -488,6 +493,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           setDesignerIds([...savedData?.designers]);
         }
         setSavedLessonsList([...savedData.lessons?.items]);
+        setFetchingDetails(false);
       } catch (err) {
         console.log('err', err);
         setMessages({
@@ -495,6 +501,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
           message: EditSyllabusDict[userLanguage]['messages']['fetcher'],
           isError: true,
         });
+        setFetchingDetails(false);
       }
     } else {
       console.log('can not find unit id');
@@ -505,11 +512,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   const fetchLessonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonsTitles, {
+        graphqlOperation(customQueries.listUniversalLessonsOptions, {
           filter: {institutionID: {eq: institutionId}},
         })
       );
-      const savedData = result.data.listLessons;
+      const savedData = result.data.listUniversalLessons;
       const sortedList = savedData?.items?.sort((a: any, b: any) =>
         a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
       );
@@ -532,6 +539,40 @@ const EditSyllabus = (props: EditSyllabusProps) => {
       });
     }
   };
+  
+  // Fetch associated lesson with syllabus/unit
+  // const fetchAssociatedLessonsList = async () => {
+  //   try {
+  //     const result: any = await API.graphql(
+  //       graphqlOperation(queries.listUniversalSyllabusLessons, {
+  //         filter: {syllabusID: {eq: syllabusId}},
+  //       })
+  //     );
+  //     console.log(result, 'resultresult+++++');
+      
+  //     const savedData = result.data.listUniversalLessons;
+  //     const sortedList = savedData?.items?.sort((a: any, b: any) =>
+  //       a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
+  //     );
+
+  //     const updatedList = sortedList
+  //       ?.filter((item: any) => (item.lessonPlan ? true : false))
+  //       .map((item: {id: string; title: string; type: string}) => ({
+  //         id: item.id,
+  //         name: `${item.title} - ${item.type && getLessonType(item.type)}`,
+  //         value: item.title,
+  //       }));
+  //     // setAllLessonsList([...sortedList]);
+  //     // setDropdownLessonsList([...updatedList]);
+  //   } catch {
+  //     setMessages({
+  //       show: true,
+  //       message: EditSyllabusDict[userLanguage]['messages']['fetchlist'],
+  //       isError: true,
+  //       lessonError: true,
+  //     });
+  //   }
+  // };
 
   const fetchPersonsList = async () => {
     try {
@@ -601,15 +642,16 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   };
 
   const backtoPreviousStep = () => {
-    if (unsavedChanges) {
-      setWarnModal({
-        ...warnModal,
-        show: true,
-        lessonEdit: true,
-      });
-    } else {
-      history.goBack();
-    }
+    history.goBack();
+    // if (unsavedChanges) {
+    //   setWarnModal({
+    //     ...warnModal,
+    //     show: true,
+    //     lessonEdit: true,
+    //   });
+    // } else {
+    //   history.goBack();
+    // }
   };
   const gotoLessonBuilder = (id: string, type: string) => {
     if (unsavedChanges) {
@@ -632,12 +674,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
     }
   };
   const saveAndGoback = async () => {
-    const result: boolean = await saveSyllabusDetails();
-    if (result) {
       history.goBack();
-    } else {
-      toggleModal();
-    }
+    // const result: boolean = await saveSyllabusDetails();
+    // if (result) {
+    //   history.goBack();
+    // } else {
+    //   toggleModal();
+    // }
   };
   const saveAndCreateNew = async () => {
     const result: boolean = await saveSyllabusDetails();
@@ -663,7 +706,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   };
 
   useEffect(() => {
-    Promise.all([fetchLessonsList(), fetchPersonsList(), fetchLessonsSequence()])
+    setFetchingDetails(true);
+    Promise.all([
+      fetchLessonsList(),
+      fetchPersonsList(),
+      fetchLessonsSequence(),
+      // fetchAssociatedLessonsList(),
+    ])
       .then(() => fetchSyllabusData())
       .catch((err) => console.log(err));
   }, []);
@@ -731,6 +780,12 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             onClick={backtoPreviousStep}
             Icon={IoArrowUndoCircleOutline}
           />
+          <Buttons
+            btnClass="py-3 px-2"
+            label={loading ? 'Saving...' : 'Save'}
+            onClick={saveSyllabusDetails}
+            disabled={loading ? true : false}
+          />
         </div>
       </div>
 
@@ -744,115 +799,131 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   {EditSyllabusDict[userLanguage]['heading']}
                 </h3>
               </div>
-              <div className="w-9/10 m-auto p-4">
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <FormInput
-                      value={name}
-                      id="name"
-                      onChange={onInputChange}
-                      name="name"
-                      label={EditSyllabusDict[userLanguage]['unitname']}
-                      isRequired
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      {EditSyllabusDict[userLanguage]['designer']}
-                    </label>
-                    <MultipleSelector
-                      selectedItems={selectedDesigners}
-                      placeholder={EditSyllabusDict[userLanguage]['pdesigner']}
-                      list={designersList}
-                      onChange={selectDesigner}
-                    />
-                  </div>
-                </div>
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                      {EditSyllabusDict[userLanguage]['selectlang']}
-                    </label>
-                    <MultipleSelector
-                      selectedItems={languages}
-                      placeholder={EditSyllabusDict[userLanguage]['language']}
-                      list={languageList}
-                      onChange={selectLanguage}
-                    />
-                  </div>
-                </div>
-
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <TextArea
-                      value={description}
-                      rows={5}
-                      id="description"
-                      onChange={onInputChange}
-                      name="description"
-                      label={EditSyllabusDict[userLanguage]['desc']}
-                    />
-                  </div>
-                  <div>
-                    <TextArea
-                      value={purpose}
-                      rows={5}
-                      id="purpose"
-                      onChange={onInputChange}
-                      name="purpose"
-                      label={EditSyllabusDict[userLanguage]['purpose']}
-                    />
-                  </div>
-                </div>
-
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <TextArea
-                      value={objectives}
-                      rows={5}
-                      id="objectives"
-                      onChange={onInputChange}
-                      name="objectives"
-                      label={EditSyllabusDict[userLanguage]['objective']}
-                    />
-                  </div>
-                  <div>
-                    <TextArea
-                      value={methodology}
-                      rows={5}
-                      id="methodology"
-                      onChange={onInputChange}
-                      name="methodology"
-                      label={EditSyllabusDict[userLanguage]['methodology']}
-                    />
-                  </div>
-                </div>
-                <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
-                  <div>
-                    <TextArea
-                      value={policies}
-                      rows={5}
-                      id="policies"
-                      onChange={onInputChange}
-                      name="policies"
-                      label={EditSyllabusDict[userLanguage]['policy']}
-                    />
-                  </div>
-                </div>
-                {messages.show && !messages.lessonError ? (
-                  <div className="py-2 m-auto text-center">
-                    <p
-                      className={`${
-                        messages.isError ? 'text-red-600' : 'text-green-600'
-                      }`}>
-                      {messages.message && messages.message}
+              {fetchingDetails ? (
+                <div className="h-100 flex justify-center items-center">
+                  <div className="w-5/10">
+                    <Loader />
+                    <p className="mt-2 text-center">
+                      Fetching syllabus details please wait...
                     </p>
                   </div>
-                ) : null}
-                {/* <div className="flex my-8 justify-center">
-                  <Buttons btnClass="py-3 px-10" label={loading ? 'Saving...' : 'Save'} onClick={saveSyllabusDetails} disabled={loading ? true : false} />
-                </div> */}
-              </div>
+                </div>
+              ) : (
+                <div className="w-9/10 m-auto p-4">
+                  <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                    <div>
+                      <FormInput
+                        value={name}
+                        id="name"
+                        onChange={onInputChange}
+                        name="name"
+                        label={EditSyllabusDict[userLanguage]['unitname']}
+                        isRequired
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                        {EditSyllabusDict[userLanguage]['designer']}
+                      </label>
+                      <MultipleSelector
+                        selectedItems={selectedDesigners}
+                        placeholder={EditSyllabusDict[userLanguage]['pdesigner']}
+                        list={designersList}
+                        onChange={selectDesigner}
+                      />
+                    </div>
+                  </div>
+                  <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                    <div>
+                      <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                        {EditSyllabusDict[userLanguage]['selectlang']}
+                      </label>
+                      <MultipleSelector
+                        selectedItems={languages}
+                        placeholder={EditSyllabusDict[userLanguage]['language']}
+                        list={languageList}
+                        onChange={selectLanguage}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                    <div>
+                      <TextArea
+                        value={description}
+                        rows={5}
+                        id="description"
+                        onChange={onInputChange}
+                        name="description"
+                        label={EditSyllabusDict[userLanguage]['desc']}
+                      />
+                    </div>
+                    <div>
+                      <TextArea
+                        value={purpose}
+                        rows={5}
+                        id="purpose"
+                        onChange={onInputChange}
+                        name="purpose"
+                        label={EditSyllabusDict[userLanguage]['purpose']}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                    <div>
+                      <TextArea
+                        value={objectives}
+                        rows={5}
+                        id="objectives"
+                        onChange={onInputChange}
+                        name="objectives"
+                        label={EditSyllabusDict[userLanguage]['objective']}
+                      />
+                    </div>
+                    <div>
+                      <TextArea
+                        value={methodology}
+                        rows={5}
+                        id="methodology"
+                        onChange={onInputChange}
+                        name="methodology"
+                        label={EditSyllabusDict[userLanguage]['methodology']}
+                      />
+                    </div>
+                  </div>
+                  <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
+                    <div>
+                      <TextArea
+                        value={policies}
+                        rows={5}
+                        id="policies"
+                        onChange={onInputChange}
+                        name="policies"
+                        label={EditSyllabusDict[userLanguage]['policy']}
+                      />
+                    </div>
+                  </div>
+                  {messages.show && !messages.lessonError ? (
+                    <div className="py-2 m-auto text-center">
+                      <p
+                        className={`${
+                          messages.isError ? 'text-red-600' : 'text-green-600'
+                        }`}>
+                        {messages.message && messages.message}
+                      </p>
+                    </div>
+                  ) : null}
+                  {/* <div className="flex my-8 justify-center">
+                    <Buttons
+                      btnClass="py-3 px-10"
+                      label={loading ? 'Saving...' : 'Save'}
+                      onClick={saveSyllabusDetails}
+                      disabled={loading ? true : false}
+                    />
+                  </div> */}
+                </div>
+              )}
             </div>
 
             <div className="bg-white shadow-5 sm:rounded-lg mb-4">

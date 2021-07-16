@@ -22,6 +22,43 @@ const Checkbox = ({val}: {val: boolean}) => {
   );
 };
 
+import {Switch} from '@headlessui/react';
+
+/**
+ * @param classes multipple classes separeted bt comma
+ * @returns multiple classes into a single class
+ * */
+export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
+
+const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
+  return (
+    <Switch
+      checked={checked}
+      onChange={onClick}
+      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <span className="sr-only">Text response type</span>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bg-white w-full h-full rounded-md"
+      />
+      <span
+        aria-hidden="true"
+        className={classNames(
+          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
+        )}
+      />
+      <span
+        aria-hidden="true"
+        className={classNames(
+          checked ? 'translate-x-5' : 'translate-x-0',
+          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
+        )}
+      />
+    </Switch>
+  );
+};
+
 const TextInput = ({
   closeAction,
   numbered,
@@ -105,11 +142,11 @@ const TextInput = ({
                 <div className="mb-2 ">
                   <FormInput
                     onChange={(e) => onChange(e, idx, false)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Form Title`}
+                    label={`${numbered ? `${idx + 1}. ` : ''}Label`}
                     isRequired
                     value={input.title}
                     id={`formFieldInput_${input.id}`}
-                    placeHolder={`Enter Form Field Title`}
+                    placeHolder={`Enter Label`}
                   />
                 </div>
                 <div>
@@ -118,15 +155,18 @@ const TextInput = ({
                     label={'Placeholder'}
                     value={input.placeholder}
                     id={`placeholder_${input.id}`}
-                    placeHolder={`Enter placeholder`}
+                    placeHolder={`Briefly explain how user should respond`}
                   />
                 </div>
                 {idx !== 0 ? (
-                  <div className="flex my-2 items-center justify-end w-auto mx-3">
-                    <div
-                      onClick={() => changeCheckboxValue(idx, input.textArea)}
-                      className="flex items-center mr-2 justify-between self-end text-gray-500 font-medium w-auto">
-                      <Checkbox val={input.textArea} />
+                  <div className="flex my-2 items-center justify-end w-auto">
+                    <div className="flex items-center mt-4 text-xs">
+                      Sentence
+                      <Toggle
+                        checked={input.textArea}
+                        onClick={() => changeCheckboxValue(idx, input.textArea)}
+                      />
+                      Paragraph
                     </div>
 
                     <button
@@ -136,10 +176,13 @@ const TextInput = ({
                     </button>
                   </div>
                 ) : (
-                  <div
-                    onClick={() => changeCheckboxValue(idx, input.textArea)}
-                    className="flex cursor-pointer items-center justify-end text-gray-500 font-medium w-auto mx-3 self-end mt-2">
-                    <Checkbox val={input.textArea} />
+                  <div className="flex items-center mt-4 text-xs">
+                    Sentence
+                    <Toggle
+                      checked={input.textArea}
+                      onClick={() => changeCheckboxValue(idx, input.textArea)}
+                    />
+                    Paragraph
                   </div>
                 )}
               </div>
@@ -164,7 +207,7 @@ const TextInput = ({
                 ? 'border-indigo-500 text-white bg-indigo-400'
                 : 'border-gray-300 text-dark'
             } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Ordered Form' : 'Unordered Form'}
+            {numbered ? 'Numbered' : 'Unnumbered'}
           </button>
         </div>
         <div className="flex items-center w-auto">

@@ -37,7 +37,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     {item.type === 'youtube' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#CA2222',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>
@@ -46,7 +46,7 @@ const LinksBlock = (props: LinksBlockProps) => {
                     ) : item.type === 'etc' ? (
                       <IconContext.Provider
                         value={{
-                          color: '#3d7cef',
+                          color: iconColor,
                           size: '2rem',
                           className: 'flex flex-grow',
                         }}>

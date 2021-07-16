@@ -292,6 +292,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           setOverlayVisible(false);
           setColorPickerActive(false);
           setColDropdownActive(false);
+          clearIds();
         }}>
         <div
           style={{zIndex: 9999999}}
