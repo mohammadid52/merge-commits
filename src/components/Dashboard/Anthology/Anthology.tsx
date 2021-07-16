@@ -1,17 +1,78 @@
 import React, {useContext, useEffect, useState} from 'react';
-import AnthologyContent from './AnthologyContent';
-import {GlobalContext} from '../../../contexts/GlobalContext';
+import {FaCaretDown, FaEdit, FaTasks} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
+
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {ContextMenuProvider} from '../../../contexts/TreeContext';
+import {Tree} from '../../TreeView/Tree';
+import useDictionary from '../../../customHooks/dictionary';
+
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import useDictionary from '../../../customHooks/dictionary';
-import HeroBanner from '../../Header/HeroBanner';
-import {getAsset} from '../../../assets';
+
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
 import Buttons from '../../Atoms/Buttons';
 
-import {FaEdit} from 'react-icons/fa';
+import HeroBanner from '../../Header/HeroBanner';
+import AnthologyContent from './AnthologyContent';
+import {getAsset} from '../../../assets';
+
+const data: any = {
+  title: 'root',
+  children: [
+    {
+      title: 'Course 1',
+      type: 'course',
+      children: [
+        {
+          title: 'Syllabus 1',
+          type: 'syllabus',
+          children: [
+            {
+              title: 'Lesson 1',
+              type: 'lesson',
+              children: [
+                {
+                  title: 'Page 1',
+                  type: 'pages',
+                  children: [],
+                },
+                {
+                  title: 'Page 2',
+                  type: 'pages',
+                  children: [],
+                },
+              ],
+            },
+            {
+              title: 'Lesson 2',
+              type: 'lesson',
+              children: [],
+            },
+          ],
+        },
+        {
+          title: 'Syllabus 2',
+          type: 'syllabus',
+          children: [
+            {
+              title: 'Lesson 2-1',
+              type: 'lesson',
+              children: [],
+            },
+            {
+              title: 'Lesson 2-2',
+              type: 'lesson',
+              children: [],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
 
 export interface AnthologyContentInterface {
   type: string;
@@ -373,58 +434,84 @@ const Anthology = () => {
       <div>
         <HeroBanner imgUrl={notebookBanner} title={'Notebook'} />
       </div>
+      <div className="px-10">
+        <div
+          className={`w-full mx-auto flex flex-col justify-between items-center z-50 -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+          <h2 className={`text-base text-center font-semibold`}>
+            All your work in place
+          </h2>
+        </div>
 
-      <div
-        className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-        <h2 className={`text-base text-center font-semibold`}>All your work in place</h2>
-      </div>
+        <SectionTitleV3
+          fontSize="2xl"
+          fontStyle="bold"
+          extraContainerClass="px-10"
+          extraClass="leading-6 text-gray-900"
+          withButton={
+            tab === 0 && (
+              <Buttons
+                Icon={FaEdit}
+                customStyles={{width: '14rem'}}
+                label={anthologyDict[userLanguage].ACTIONS.CREATE}
+                onClick={() =>
+                  handleEditToggle('create', newStudentData.syllabusLessonID, 0)
+                }
+                type="button"
+              />
+            )
+          }
+          title={anthologyDict[userLanguage].TITLE}
+        />
 
-      <SectionTitleV3
-        fontSize="2xl"
-        fontStyle="bold"
-        extraContainerClass="max-w-256"
-        extraClass="leading-6 text-gray-900"
-        withButton={
-          tab === 0 && (
-            <Buttons
-              Icon={FaEdit}
-              customStyles={{width: '14rem'}}
-              label={anthologyDict[userLanguage].ACTIONS.CREATE}
-              onClick={() =>
-                handleEditToggle('create', newStudentData.syllabusLessonID, 0)
-              }
-              type="button"
-            />
-          )
-        }
-        title={anthologyDict[userLanguage].TITLE}
-      />
+        <div
+          className={`px-10 min-h-48 pb-4 overflow-hidden bg-dark-gray rounded-lg shadow mb-4`}>
+          <div className="grid grid-cols-6 gap-2 p-4">
+            <div>
+              <div className="text-white">Notebook</div>
+              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}>
+                {/* <p className="w-auto p-4 font-bold text-sm text-white flex items-center">
+                <span className="inline-flex w-4 mr-2">
+                  <FaTasks size={16} />
+                </span>
+                <span>Classwork</span>
+              </p> */}
+                <ContextMenuProvider>
+                  <Tree root={data} />
+                </ContextMenuProvider>
+              </div>
+            </div>
+            <div className={`col-span-4`}>
+              <div className="text-white">Pages</div>
+              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
+            </div>
+            <div>
+              <div className="text-white">Feedback</div>
+              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
+            </div>{' '}
+          </div>
+          {/* <UnderlinedTabs tabs={tabs} updateTab={handleTabClick} /> */}
+        </div>
 
-      <div
-        className={`mx-auto max-w-256 min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-        <UnderlinedTabs tabs={tabs} updateTab={handleTabClick} />
-      </div>
-
-      {/*
+        {/*
         Tabs to select between:
           - Lesson Data
           - Journal
           - Your Stories & Poems
     */}
-      {/* <SubSectionTabs
+        {/* <SubSectionTabs
         subSection={subSection}
         handleTabClick={handleTabClick}
         subSectionList={Object.keys(subSectionKey)}
         translations={getTranslation}
       /> */}
-      {/*
+        {/*
         This section shows rows of:
           - ADD NEW ENTRY
           - Journal entries
           - Stories
           - Poems
     */}
-      {/* <AnthologyContent
+        {/* <AnthologyContent
         viewEditMode={viewEditMode}
         handleEditToggle={handleEditToggle}
         handleEditUpdate={handleEditUpdate}
@@ -434,6 +521,7 @@ const Anthology = () => {
         content={studentData.length > 0 && filterAnthologyContentBySubsection}
         getContentObjIndex={getContentObjIndex}
       /> */}
+      </div>
     </React.Fragment>
   );
 };
