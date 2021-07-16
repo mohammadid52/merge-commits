@@ -55,7 +55,9 @@ const composePartContent = (
       />
     );
   } else if (type.includes('form')) {
-    return <FormBlock id={id} value={value} mode={mode} />;
+    return (
+      <FormBlock numbered={type === 'form-numbered'} id={id} value={value} mode={mode} />
+    );
   } else if (type.includes('image')) {
     return (
       <ImageBlock

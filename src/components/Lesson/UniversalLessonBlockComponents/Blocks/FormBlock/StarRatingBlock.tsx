@@ -15,6 +15,8 @@ const StarRatingBlock = ({
   inputID,
   label,
   value,
+  numbered,
+  index,
   isInLesson,
   handleUpdateStudentData,
   getStudentDataValue,
@@ -61,7 +63,7 @@ const StarRatingBlock = ({
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
       <label className={`text-sm text-gray-200 my-2`} htmlFor="label">
-        {label}
+        {numbered && index} {label}
       </label>
       <div
         className="w-auto flex flex-row flex-start"

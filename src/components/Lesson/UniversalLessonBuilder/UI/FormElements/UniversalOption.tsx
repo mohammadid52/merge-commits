@@ -66,7 +66,6 @@ const SelectOne = ({
     const pageContentId: string = `${uuidv4()}_`;
     const partContentId: string = `${pageContentId}_radioInput`;
 
-   
     const inputObjArray = map(list, (d: any) => {
       return {
         id: partContentId,
@@ -134,11 +133,11 @@ const SelectOne = ({
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}Radio Input`}
+                    label={`${numbered ? `${idx + 1}. ` : ''}Label`}
                     isRequired
                     value={input.label}
                     id={`formField_${input.id}`}
-                    placeHolder={`Enter Title`}
+                    placeHolder={`Enter Label`}
                   />
                   {/* Options input fields */}
                   {input.options?.length &&
@@ -207,7 +206,7 @@ const SelectOne = ({
                 ? 'border-indigo-500 text-white bg-indigo-400'
                 : 'border-gray-300 text-dark'
             } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Ordered Form' : 'Unordered Form'}
+            {numbered ? 'Numbered' : 'Unnumbered'}
           </button>
         </div>
         <div className="flex items-center w-auto">
