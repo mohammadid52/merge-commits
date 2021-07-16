@@ -4,7 +4,6 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
-import * as queries from '../../../../../../graphql/queries';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import Accordion from '../../../../../Atoms/Accordion';
@@ -16,53 +15,77 @@ import PageWrapper from '../../../../../Atoms/PageWrapper';
 import DetailTable from './DetailTable';
 import AddCourse from './AddCourse';
 
-const LessonCourse = ({institution, lessonId}: any) => {
+interface ILessonCourseProps {
+  curriculumList: any[];
+  fetchCurriculum: () => void;
+  institution: any;
+  lessonId: string;
+  lessonType: string;
+  lessonPlans: any[];
+  loading: boolean;
+  selectedCurriculums: any[];
+}
+
+const LessonCourse = ({
+  curriculumList,
+  fetchCurriculum,
+  institution,
+  lessonId,
+  lessonType,
+  lessonPlans,
+  loading,
+  selectedCurriculums,
+}: ILessonCourseProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {UnitLookupDict} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [roomLoading, setRoomLoading] = useState(false);
-  const [curriculumList, setCurriculumList] = useState([]);
+  // const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
   useEffect(() => {
     fetchCurriculum();
   }, [institution]);
 
-  const fetchCurriculum = async () => {
-    try {
-      setLoading(true);
-      const list: any = await API.graphql(
-        graphqlOperation(customQueries.listCurriculumsForLessons, {
-          filter: {
-            institutionID: {eq: institution?.id},
-          },
-        })
-      );
-      const curriculums = list.data?.listCurriculums?.items;
-      setCurriculumList(curriculums);
-      let selectedCurriculums: any = [];
-      curriculums.map((curriculum: any) => {
-        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-          (syllabus: any) =>
-            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
-              .length
-        );
-        const isCourseAdded = Boolean(assignedSyllabi.length);
-        if (isCourseAdded) {
-          selectedCurriculums.push({
-            ...curriculum,
-            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
-            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
-          });
-        }
-      });
-      setSelectedCurriculumList(selectedCurriculums);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    setSelectedCurriculumList(selectedCurriculums);
+  }, [selectedCurriculums]);
+
+  // const fetchCurriculum = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const list: any = await API.graphql(
+  //       graphqlOperation(customQueries.listCurriculumsForLessons, {
+  //         filter: {
+  //           institutionID: {eq: institution?.id},
+  //         },
+  //       })
+  //     );
+  //     const curriculums = list.data?.listCurriculums?.items;
+  //     setCurriculumList(curriculums);
+  //     let selectedCurriculums: any = [];
+  //     curriculums.map((curriculum: any) => {
+  //       const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
+  //         (syllabus: any) =>
+  //           syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
+  //             .length
+  //       );
+  //       const isCourseAdded = Boolean(assignedSyllabi.length);
+  //       if (isCourseAdded) {
+  //         selectedCurriculums.push({
+  //           ...curriculum,
+  //           assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
+  //           assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+  //         });
+  //       }
+  //     });
+  //     setSelectedCurriculumList(selectedCurriculums);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //   }
+  // };
 
   const fetchClassRoomDetails = async (curricularId: string) => {
     // const result = await API.graphql(
@@ -87,7 +110,6 @@ const LessonCourse = ({institution, lessonId}: any) => {
             ).length
         );
         selectedCurriculum.associatedClassRoomData = associatedClassRoomData;
-        console.log(associatedClassRoomData, 'result*********');
         return selectedCurriculum;
       })
     );
@@ -102,7 +124,6 @@ const LessonCourse = ({institution, lessonId}: any) => {
   const renderTableView = (curriculum: any) => {
     return <DetailTable curriculum={curriculum} loading={roomLoading} />;
   };
-  console.log(selectedCurriculumList, 'selectedCurriculumList');
   const titleList = selectedCurriculumList.map((curriculum, index) => ({
     id: index,
     title: curriculum.name,
@@ -135,18 +156,6 @@ const LessonCourse = ({institution, lessonId}: any) => {
               <Accordion
                 titleList={titleList}
                 actionOnAccordionClick={fetchClassRoomDetails}
-                // titleList={[
-                //   {
-                //     id: '1',
-                //     title: 'Introduction to ICONOCLAST Artist',
-                //     content: <>Hello</>,
-                //   },
-                //   {
-                //     id: '2',
-                //     title: 'ICONOCLAST Artist Summer Program',
-                //     content: <>Hello</>,
-                //   },
-                // ]}
               />
             </div>
           ) : (
@@ -162,15 +171,16 @@ const LessonCourse = ({institution, lessonId}: any) => {
             showHeader
             showFooter={false}
             showHeaderBorder
-            title={'Add Lesson to Course'}
+            title={'Add Lesson to Syllabus'}
             closeOnBackdrop
             closeAction={onAddModalClose}>
             <div className="min-w-256">
               <AddCourse
                 curriculumList={curriculumList}
-                fetchCurriculum={fetchCurriculum}
                 institutionID={institution?.id}
                 lessonId={lessonId}
+                lessonType={lessonType}
+                lessonPlans={lessonPlans}
                 selectedCurriculumList={selectedCurriculumList}
               />
             </div>

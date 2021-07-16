@@ -20,7 +20,7 @@ interface ILearningEvidence {
   lessonId: string;
   institutionId: string;
   rubrics: string[] | null;
-} 
+}
 
 const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
@@ -40,66 +40,67 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
   }, [rubrics]);
 
   const fetchObjectives = async (curricularId: string) => {
-    setEvidenceListLoading(true);
     const learningEvidenceList: any[] = [];
     const activeIndex = selectedCurriculumList.findIndex(
       (item) => item.id === curricularId
     );
     const temp = [...selectedCurriculumList];
-
-    let rubricList: any = await API.graphql(
-      graphqlOperation(customQueries.listRubrics, {
-        filter: {
-          curriculumID: {eq: curricularId},
-        },
-      })
-    );
-    rubricList = rubricList.data.listRubrics?.items || [];
-
-    const [results, topics]: any = await Promise.all([
-      await API.graphql(
-        graphqlOperation(queries.listLearningObjectives, {
+    if (!temp[activeIndex].learningEvidenceList) {
+      setEvidenceListLoading(true);
+      let rubricList: any = await API.graphql(
+        graphqlOperation(customQueries.listRubrics, {
           filter: {
             curriculumID: {eq: curricularId},
           },
         })
-      ),
-      await API.graphql(
-        graphqlOperation(customQueries.listTopics, {
-          filter: {
-            curriculumID: {eq: curricularId},
-          },
-        })
-      ),
-    ]);
-
-    const topicsList = topics.data?.listTopics?.items;
-    const learningObjectives = results.data?.listLearningObjectives?.items;
-
-    learningObjectives?.map((objective: any) => {
-      const associatedTopics = topicsList.filter(
-        (topic: any) => topic.learningObjectiveID === objective.id
       );
-      associatedTopics.map((topic: any) => {
-        const associatedRubrics = rubricList.filter(
-          (rubric: any) => rubric.topicID === topic.id
+      rubricList = rubricList.data.listRubrics?.items || [];
+
+      const [results, topics]: any = await Promise.all([
+        await API.graphql(
+          graphqlOperation(queries.listLearningObjectives, {
+            filter: {
+              curriculumID: {eq: curricularId},
+            },
+          })
+        ),
+        await API.graphql(
+          graphqlOperation(customQueries.listTopics, {
+            filter: {
+              curriculumID: {eq: curricularId},
+            },
+          })
+        ),
+      ]);
+
+      const topicsList = topics.data?.listTopics?.items;
+      const learningObjectives = results.data?.listLearningObjectives?.items;
+
+      learningObjectives?.map((objective: any) => {
+        const associatedTopics = topicsList.filter(
+          (topic: any) => topic.learningObjectiveID === objective.id
         );
-        associatedRubrics.map((rubric: any) => {
-          learningEvidenceList.push({
-            learningObjectiveName: objective.name,
-            topicName: topic.name,
-            measurementName: rubric.name,
-            rubricId: rubric.id,
+        associatedTopics.map((topic: any) => {
+          const associatedRubrics = rubricList.filter(
+            (rubric: any) => rubric.topicID === topic.id
+          );
+          associatedRubrics.map((rubric: any) => {
+            learningEvidenceList.push({
+              learningObjectiveName: objective.name,
+              topicName: topic.name,
+              measurementName: rubric.name,
+              rubricId: rubric.id,
+            });
           });
         });
       });
-    });
-    temp[activeIndex] = {
-      ...temp[activeIndex],
-      learningEvidenceList,
-    };
-    setSelectedCurriculumList(temp);
-    setEvidenceListLoading(false);
+      temp[activeIndex] = {
+        ...temp[activeIndex],
+        learningEvidenceList,
+      };
+      setSelectedCurriculumList(temp);
+      setEvidenceListLoading(false);
+    }
   };
 
   const fetchCurriculum = async () => {

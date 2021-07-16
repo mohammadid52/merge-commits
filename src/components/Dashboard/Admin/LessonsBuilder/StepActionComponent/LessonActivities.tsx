@@ -17,11 +17,11 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 
 interface LessonPlansListProps {
   lessonId: string;
+  lessonName: string;
   loading: boolean;
   universalLessonDetails: {
     lessonPlan: UniversalLessonPage[];
   };
-  lessonName: string;
 }
 
 const LessonActivities = ({

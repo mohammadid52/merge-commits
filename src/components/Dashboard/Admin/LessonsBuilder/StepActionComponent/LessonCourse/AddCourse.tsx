@@ -11,7 +11,16 @@ import * as customMutations from '../../../../../../customGraphql/customMutation
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import {statusList} from '../../../../../../utilities/staticData';
 
-const AddCourse = (props: any) => {
+interface IAddCourse {
+  curriculumList: any[];
+  institutionID: string;
+  lessonId: string;
+  lessonType?: string;
+  lessonPlans: any[];
+  selectedCurriculumList: any[];
+}
+
+const AddCourse = (props: IAddCourse) => {
   const {
     curriculumList,
     selectedCurriculumList,
@@ -193,8 +202,6 @@ const AddCourse = (props: any) => {
         unitList: result?.length ? [...result] : [],
       };
     });
-    console.log(filteredList, 'filteredList', selectedSyllabusId);
-
     // setSelectedUnitsList([...selectedList]);
     setCurriculaList([...filteredList]);
     setLoading(false);
