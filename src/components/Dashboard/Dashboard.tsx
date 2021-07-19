@@ -742,12 +742,18 @@ const Dashboard = (props: DashboardProps) => {
     i: number,
     route = 'classroom'
   ) => {
+    const getRoomSyllabus = state.roomData.rooms.find(
+      (roomObj: any) => roomObj.id === id
+    );
     if (
       (state.activeRoom !== id && state.currentPage !== 'lesson-planner') ||
       (state.activeRoom !== id && state.currentPage !== 'classroom')
     ) {
       setActiveRoomName(name);
-      dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: id}});
+      dispatch({
+        type: 'UPDATE_ACTIVEROOM',
+        payload: {roomID: id, syllabusID: getRoomSyllabus.activeSyllabus},
+      });
       setSyllabusLoading(true);
       setLessonLoading(true);
       history.push(`/dashboard/${route}/${id}`);

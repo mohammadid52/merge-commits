@@ -184,8 +184,8 @@ const LessonApp = () => {
   const initializeStudentData = async () => {
     if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.map((page: UniversalLessonPage) => {
-        const allPageParts = page.pageContent;
-        const initialPageData = allPageParts.reduce(
+        const allessonPageageParts = page.pageContent;
+        const initialessonPageageData = allessonPageageParts.reduce(
           (pageData: StudentPageInput[], pagePart: PagePart) => {
             if (pagePart.hasOwnProperty('partContent')) {
               const pagePartContent = pagePart.partContent.reduce(
@@ -224,7 +224,7 @@ const LessonApp = () => {
           },
           []
         );
-        return initialPageData;
+        return initialessonPageageData;
       });
       console.log('PAGES - ', PAGES);
       lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
@@ -232,12 +232,32 @@ const LessonApp = () => {
     }
   };
 
-  // ~~ CREATE NEW OR UPDATE STUDENT DATA ~~ //
+  // ##################################################################### //
+  // ################# GET OR CREATE STUDENT DATA RECORDS ################ //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getOrCreateStudentData = async () => {
     const {lessonID} = urlParams;
     const user = await Auth.currentAuthenticatedUser();
     const authId = user.attributes.sub;
     const email = user.attributes.email;
+
+    // tempArray for new student data initialization
+    let tempArray: any = [];
+    // transform to data-id array, for updating
+    const studentDataIdArray = (studentDataArray: any[]) => {
+      return studentDataArray.map((dataObj: any, idx: number) => {
+        return {
+          id: dataObj.id,
+          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+            (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
+          ),
+          lessonPageID: dataObj.lessonPageID,
+          update: false,
+        };
+      });
+    };
 
     try {
       const listFilter = {filter: {lessonID: lessonID, studentAuthID: authId}};
@@ -246,15 +266,19 @@ const LessonApp = () => {
           listFilter,
         })
       );
+
+      // existing student rows???
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
 
       if (!(studentDataRows.length > 0)) {
+        // IF STUDENT DATA DOES NOT EXIST
         const loopCreateStudentData = async () => {
           return lessonState?.lessonData?.lessonPlan?.reduce(
-            async (prev: any, lp: UniversalLessonPage) => {
+            async (prev: any, lessonPage: UniversalLessonPage, pageIdx: number) => {
               const input = {
+                syllabusLessonID: state.activeSyllabus,
                 lessonID: lessonID,
-                lessonPageID: lp.id,
+                lessonPageID: lessonPage.id,
                 studentID: authId,
                 studentAuthID: authId,
                 studentEmail: email,
@@ -267,33 +291,25 @@ const LessonApp = () => {
                   input,
                 })
               );
-              console.log('newStudentData - ', newStudentData);
-              // dispatch({
-              //   type: 'SET_STUDENT_INFO',
-              //   payload: {
-              //     studentDataID: newStudentData.data.createUniversalLessonStudentData.id,
-              //     studentUsername:
-              //       newStudentData.data.createUniversalLessonStudentData.studentID,
-              //     studentAuthID:
-              //       newStudentData.data.createUniversalLessonStudentData.studentAuthID,
-              //   },
-              // });
+              const returnedData = newStudentData.data.createUniversalLessonStudentData;
+              tempArray.push({
+                id: returnedData.id,
+                pageIdx: pageIdx,
+                lessonPageID: lessonPage.id,
+                update: false,
+              });
             },
-            {}
+            []
           );
         };
-        await loopCreateStudentData();
-        // return setData(newStudentData.data.createStudentData);
+        const newStudentDataIdArray = await loopCreateStudentData();
+        if (tempArray && tempArray.length > 0)
+          lessonDispatch({type: 'LOAD_STUDENT_DATA', payload: tempArray});
+      } else {
+        // IF STUDENT DATA EXISTS
+        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
+        lessonDispatch({type: 'LOAD_STUDENT_DATA', payload: existStudentDataIdArray});
       }
-      // dispatch({
-      //   type: 'SET_STUDENT_INFO',
-      //   payload: {
-      //     studentDataID: studentData.data.getStudentData.id,
-      //     studentUsername: studentData.data.getStudentData.studentID,
-      //     studentAuthID: studentData.data.getStudentData.studentAuthID,
-      //   },
-      // });
-      // return setData(studentData.data.getStudentData);
     } catch (err) {
       console.error(err);
     }
@@ -317,6 +333,10 @@ const LessonApp = () => {
       );
     }
   }, [lessonState.studentData]);
+
+  // ##################################################################### //
+  // ####################### MANAGE PERSON LOCATION ###################### //
+  // ##################################################################### //
 
   const [personLocationObj, setPersonLocationObj] = useState<any>();
 

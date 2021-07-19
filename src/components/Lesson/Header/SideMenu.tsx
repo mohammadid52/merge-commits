@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
 import NotesWidget from './SideMenu/NotesWidget';
-import { LessonHeaderBarProps } from '../../../interfaces/LessonComponentsInterfaces';
+import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import HomeWidget from './SideMenu/HomeWidget';
-import { GlobalContext } from '../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 const SideMenu = (props: LessonHeaderBarProps) => {
   const {overlay, setOverlay} = props;
@@ -20,7 +20,9 @@ const SideMenu = (props: LessonHeaderBarProps) => {
    */
   const updateStudentData = async (saveType?: string) => {
     let lessonProgress =
-      lessonState.currentPage > lessonState.lessonProgress ? lessonState.currentPage : lessonState.lessonProgress;
+      lessonState.currentPage > lessonState.lessonProgress
+        ? lessonState.currentPage
+        : lessonState.lessonProgress;
 
     let data = {
       id: lessonState.studentDataID,
@@ -54,6 +56,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
     callback: updateStudentData,
     state: state,
     lessonState: lessonState,
+    lessonDispatch: lessonDispatch,
   });
 
   useEffect((): any => {
@@ -73,8 +76,7 @@ const SideMenu = (props: LessonHeaderBarProps) => {
   // @ts-ignore
   return (
     <>
-      <div
-        className={`absolute w-16 content-end`}>
+      <div className={`absolute w-16 content-end`}>
         {/**
          * AUTOSAVE
          */}

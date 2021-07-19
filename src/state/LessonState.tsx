@@ -4,13 +4,14 @@ export interface lessonStateType {
   status?: string;
   universalLessonID?: string;
   universalLessonPageID?: string;
-  universalStudentDataID?: string;
+  universalStudentDataID?: any[];
   studentAuthID?: string;
   studentUsername?: string;
   lessonData?: any;
   currentPage?: number;
   lessonProgress?: number;
   canContinue?: string;
+  updated?: boolean;
   studentData?: UniversalLessonStudentData[];
   viewing?: boolean;
   displayData?: any;
@@ -24,13 +25,14 @@ export const lessonState: lessonStateType = {
   status: '',
   universalLessonID: '',
   universalLessonPageID: '',
-  universalStudentDataID: '',
+  universalStudentDataID: [{}],
   studentAuthID: '',
   studentUsername: '',
   lessonData: {},
   currentPage: 0,
   lessonProgress: 0,
   canContinue: '',
+  updated: false,
   studentData: [],
   viewing: false,
   displayData: [],
