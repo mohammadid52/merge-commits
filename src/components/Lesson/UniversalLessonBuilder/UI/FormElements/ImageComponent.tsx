@@ -197,25 +197,6 @@ const ImageFormComponent = ({
     });
   };
 
-  const uploadAttachment = async (file: any, id: string, type: string) => {
-    // Upload Attachments
-    return new Promise((resolve, reject) => {
-      Storage.put(id, file, {
-        contentType: type,
-        progressCallback: ({loaded, total}: any) => {
-          console.log((loaded * 100) / total);
-        },
-      })
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((err) => {
-          console.log('Error in uploading file to s3', err);
-          reject(err);
-        });
-    });
-  };
-
   const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
   return (
     <div>
@@ -230,6 +211,7 @@ const ImageFormComponent = ({
               updateFileUrl={updateFileUrl}
               fileUrl={value}
               error={errors?.value}
+              customVideo={customVideo}
               showPreview={true}
             />
             <div className="flex flex-col items-center justify-center text-gray-400">
@@ -277,13 +259,25 @@ const ImageFormComponent = ({
           </div>
         </div>
         {value ? (
-          <div>
-            <img
-              src={imageData ? value : getImageFromS3Static(value)}
-              alt=""
-              className={`w-auto h-30 pt-4`}
-            />
-          </div>
+          customVideo ? (
+            <div className="w-72 h-auto mx-auto mt-6">
+              <video
+                controls
+                className="rounded-lg mx-auto"
+                src={imageData ? value : getImageFromS3Static(value)}>
+                <source />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          ) : (
+            <div>
+              <img
+                src={imageData ? value : getImageFromS3Static(value)}
+                alt=""
+                className={`w-auto h-30 pt-4`}
+              />
+            </div>
+          )
         ) : null}
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
