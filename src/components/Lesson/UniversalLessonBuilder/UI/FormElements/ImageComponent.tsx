@@ -27,6 +27,7 @@ interface IImageFormComponentProps extends IContentTypeComponentProps {
   handleGalleryModal: () => void;
   inputObj?: IImageInput[];
   selectedImageFromGallery?: string;
+  customVideo?: boolean;
 }
 
 const ImageFormComponent = ({
@@ -36,6 +37,7 @@ const ImageFormComponent = ({
   updateBlockContentULBHandler,
   handleGalleryModal,
   setUnsavedChanges,
+  customVideo = false,
   askBeforeClose,
   selectedImageFromGallery,
 }: IImageFormComponentProps) => {
@@ -52,6 +54,7 @@ const ImageFormComponent = ({
     height: 'auto',
     caption: '',
   });
+
   const [errors, setErrors] = useState<IImageInput>({
     value: '',
     width: '',
@@ -119,11 +122,21 @@ const ImageFormComponent = ({
           value: `ULB/${user.id}/content_image_${fileName}`,
         };
         if (isEditingMode) {
-          const updatedList = updateBlockContentULBHandler('', '', 'image', [payload]);
+          const updatedList = updateBlockContentULBHandler(
+            '',
+            '',
+            customVideo ? 'custom_video' : 'image',
+            [payload]
+          );
           console.log('updatedList ---- ', updatedList);
           await addToDB(updatedList);
         } else {
-          const updatedList = createNewBlockULBHandler('', '', 'image', [payload]);
+          const updatedList = createNewBlockULBHandler(
+            '',
+            '',
+            customVideo ? 'custom_video' : 'image',
+            [payload]
+          );
           console.log('updatedList ---- ', updatedList);
           await addToDB(updatedList);
         }
@@ -184,6 +197,25 @@ const ImageFormComponent = ({
     });
   };
 
+  const uploadAttachment = async (file: any, id: string, type: string) => {
+    // Upload Attachments
+    return new Promise((resolve, reject) => {
+      Storage.put(id, file, {
+        contentType: type,
+        progressCallback: ({loaded, total}: any) => {
+          console.log((loaded * 100) / total);
+        },
+      })
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
+
   const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
   return (
     <div>
@@ -194,11 +226,11 @@ const ImageFormComponent = ({
               'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
             }>
             <ULBFileUploader
-              acceptedFilesFormat={'image/*'}
+              acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
               updateFileUrl={updateFileUrl}
               fileUrl={value}
               error={errors?.value}
-              showPreview={false}
+              showPreview={true}
             />
             <div className="flex flex-col items-center justify-center text-gray-400">
               --- Or ---
@@ -239,7 +271,7 @@ const ImageFormComponent = ({
                 onChange={handleInputChange}
                 name="caption"
                 label={'Caption'}
-                placeHolder={'Enter image caption here'}
+                placeHolder={`Enter ${customVideo ? 'video' : 'image'} caption here`}
               />
             </div>
           </div>
