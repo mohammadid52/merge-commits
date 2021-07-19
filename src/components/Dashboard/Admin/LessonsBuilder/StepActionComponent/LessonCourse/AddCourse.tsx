@@ -231,7 +231,7 @@ const AddCourse = (props: IAddCourse) => {
     if (institutionID) {
       setRequiredData();
     }
-  }, [institutionID]);
+  }, [institutionID, selectedCurriculumList]);
 
   const {curriculum, unit} = formState;
   return (

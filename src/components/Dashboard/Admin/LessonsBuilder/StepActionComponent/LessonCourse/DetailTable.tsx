@@ -1,19 +1,71 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
+import {IoIosClose} from 'react-icons/io';
+import {API, graphqlOperation} from 'aws-amplify';
+
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
+import * as mutations from '../../../../../../graphql/mutations';
 
 import Loader from '../../../../../Atoms/Loader';
+import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 
-const DetailTable = ({curriculum, loading}: any) => {
+const DetailTable = ({curriculum, loading, postDeletion}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {assignedSyllabi, associatedClassRoomData, institution} = curriculum;
 
+  const [showDeleteModal, setShowDeleteModal] = useState({
+    id: '',
+    state: false,
+    message: 'This will remove the lesson from the unit, do you want to continue?',
+  });
+
+  const toggleModal = (id?: string) => {
+    setShowDeleteModal({
+      ...showDeleteModal,
+      message:
+        assignedSyllabi.length === 1
+          ? 'This will remove the lesson from the course, do you want to continue'
+          : 'This will remove the lesson from the unit, do you want to continue?',
+      id: id ? id : '',
+      state: !showDeleteModal.state,
+    });
+  };
+
+  const deleteSyllabus = async (id: string) => {
+    try {
+      const input = {
+        id,
+      };
+      const results: any = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalSyllabusLesson, {input: input})
+      );
+      console.log(results,'inside delete syllabus');
+      toggleModal();
+      postDeletion();
+    } catch {
+    }
+  };
+
   return (
     <>
       <div className="pl-4">
-        <span className="w-auto pt-5 font-bold text-lg items-center inline-flex">
-          Unit(s): {assignedSyllabi.join(', ')}
+        <span className="w-full pt-5 font-bold text-lg items-center inline-flex">
+          Unit(s):{' '}
+          <ul className="flex w-full ml-2 items-center">
+            {assignedSyllabi.map((syllabus: any, index: number) => (
+              <li
+                className="w-auto bg-indigo-500 text-white px-2 mx-1 flex rounded"
+                key={index}>
+                <span className="inline-flex w-auto items-center text-sm">{syllabus.name}</span>
+                <span
+                  className="inline-flex w-auto items-center cursor-pointer"
+                  onClick={() => toggleModal(syllabus.id)}>
+                  <IoIosClose className="w-6 h-6" />
+                </span>
+              </li>
+            ))}
+          </ul>
         </span>
       </div>
       <div className="w-full flex justify-between border-b-0 border-gray-200 mt-4">
@@ -79,6 +131,15 @@ const DetailTable = ({curriculum, loading}: any) => {
           </div>
         )}
       </div>
+      {showDeleteModal.state && (
+        <ModalPopUp
+          deleteModal
+          deleteLabel="Yes"
+          closeAction={toggleModal}
+          saveAction={() => deleteSyllabus(showDeleteModal.id)}
+          message={showDeleteModal.message}
+        />
+      )}
     </>
   );
 };

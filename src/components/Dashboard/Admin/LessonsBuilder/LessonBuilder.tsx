@@ -442,7 +442,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         if (isCourseAdded) {
           selectedCurriculums.push({
             ...curriculum,
-            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
+            assignedSyllabi,
+            // : assignedSyllabi.map((syllabus: any) => syllabus.name),
             assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
           });
         }
