@@ -4895,10 +4895,11 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -4932,7 +4933,8 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         currentLocation
         lessonProgress
         pageData {
-          pagePartID
+          domID
+          input
         }
         createdAt
         updatedAt

@@ -685,14 +685,14 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
             btnClass="mr-4"
             onClick={gobackToLessonsList}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body */}

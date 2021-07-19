@@ -185,7 +185,8 @@ type Curriculum
   institution: Institution @connection(fields: ["institutionID"])
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
-  universalSyllabus: [UniversalSyllabus] @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
+  universalSyllabus: [UniversalSyllabus]
+    @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
   universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
@@ -775,17 +776,17 @@ type AnthologyContent {
   content: String
   classID: ID
   feedbacks: [String]
-  edited: Boolean,
+  edited: Boolean
 }
 
-type AnthologyComment  @model {
+type AnthologyComment @model {
   id: ID!
   text: String
   email: String!
   authID: String!
   person: Person @connection(fields: ["email", "authID"])
   attachments: [Attachment]
-  edited: Boolean,
+  edited: Boolean
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
@@ -793,8 +794,8 @@ type AnthologyComment  @model {
 type Attachment {
   type: String
   url: String
-  filename:String,
-  size: Int,
+  filename: String
+  size: Int
 }
 
 type QuestionData @model {
@@ -997,16 +998,16 @@ type UniversalLessonStudentData
   @model
   @key(fields: ["id"])
   @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-    id: ID!
-    syllabusLessonID: ID!
-    lessonID: ID!
-    lessonPageID: ID!
-    studentID: ID!
-    studentAuthID: ID!
-    studentEmail: String!
-    currentLocation: String
-    lessonProgress: String
-    pageData: [StudentPageInput]
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  lessonPageID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  currentLocation: String
+  lessonProgress: String
+  pageData: [partInput]
 }
 
 type StudentPageInput {
@@ -1039,7 +1040,8 @@ type UniversalSyllabus
   objectives: String
   curriculumID: ID!
   languages: [Language]
-  lessons: [UniversalSyllabusLesson] @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
+  lessons: [UniversalSyllabusLesson]
+    @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
   universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
@@ -1095,5 +1097,5 @@ input CreateClassStudentInput {
 }
 
 type Mutation {
- batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
+  batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
 }

@@ -3553,12 +3553,7 @@ export type CreateUniversalLessonStudentDataInput = {
   studentEmail: string,
   currentLocation?: string | null,
   lessonProgress?: string | null,
-  pageData?: Array< StudentPageInputInput | null > | null,
-};
-
-export type StudentPageInputInput = {
-  pagePartID?: string | null,
-  pagePartInput?: Array< PartInputInput | null > | null,
+  pageData?: Array< PartInputInput | null > | null,
 };
 
 export type PartInputInput = {
@@ -3597,15 +3592,9 @@ export type UniversalLessonStudentData = {
   studentEmail?: string,
   currentLocation?: string | null,
   lessonProgress?: string | null,
-  pageData?:  Array<StudentPageInput | null > | null,
+  pageData?:  Array<partInput | null > | null,
   createdAt?: string,
   updatedAt?: string,
-};
-
-export type StudentPageInput = {
-  __typename: "StudentPageInput",
-  pagePartID?: string | null,
-  pagePartInput?:  Array<partInput | null > | null,
 };
 
 export type partInput = {
@@ -3631,7 +3620,7 @@ export type UpdateUniversalLessonStudentDataInput = {
   studentEmail?: string | null,
   currentLocation?: string | null,
   lessonProgress?: string | null,
-  pageData?: Array< StudentPageInputInput | null > | null,
+  pageData?: Array< PartInputInput | null > | null,
 };
 
 export type DeleteUniversalLessonStudentDataInput = {
@@ -17189,12 +17178,13 @@ export type CreateUniversalLessonStudentDataMutation = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
@@ -17220,12 +17210,13 @@ export type UpdateUniversalLessonStudentDataMutation = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
@@ -17251,12 +17242,13 @@ export type DeleteUniversalLessonStudentDataMutation = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
@@ -23494,12 +23486,13 @@ export type GetUniversalLessonStudentDataQuery = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
@@ -23530,8 +23523,9 @@ export type ListUniversalLessonStudentDatasQuery = {
       currentLocation?: string | null,
       lessonProgress?: string | null,
       pageData?:  Array< {
-        __typename: "StudentPageInput",
-        pagePartID?: string | null,
+        __typename: "partInput",
+        domID?: string | null,
+        input?: Array< string | null > | null,
       } | null > | null,
       createdAt: string,
       updatedAt: string,
@@ -36021,12 +36015,13 @@ export type OnCreateUniversalLessonStudentDataSubscription = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
@@ -36047,12 +36042,13 @@ export type OnUpdateUniversalLessonStudentDataSubscription = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
@@ -36073,12 +36069,13 @@ export type OnDeleteUniversalLessonStudentDataSubscription = {
     currentLocation?: string | null,
     lessonProgress?: string | null,
     pageData?:  Array< {
-      __typename: "StudentPageInput",
-      pagePartID?: string | null,
-      pagePartInput?:  Array< {
-        __typename: "partInput",
-        domID?: string | null,
-        input?: Array< string | null > | null,
+      __typename: "partInput",
+      domID?: string | null,
+      input?: Array< string | null > | null,
+      comments?:  Array< {
+        __typename: "InputComment",
+        commentBy?: string | null,
+        comment?: string | null,
       } | null > | null,
     } | null > | null,
     createdAt: string,
