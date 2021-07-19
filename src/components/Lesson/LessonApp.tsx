@@ -253,7 +253,6 @@ const LessonApp = () => {
           return lessonState?.lessonData?.lessonPlan?.reduce(
             async (prev: any, lp: UniversalLessonPage) => {
               const input = {
-                syllabusLessonID: '',
                 lessonID: lessonID,
                 lessonPageID: lp.id,
                 studentID: authId,
