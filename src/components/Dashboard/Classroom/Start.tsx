@@ -1,12 +1,15 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory} from 'react-router-dom';
 
-import {GlobalContext} from '../../../contexts/GlobalContext';
 import {dateString} from '../../../utilities/time';
 import {Lesson} from './Classroom';
+
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
+import * as mutations from '../../../graphql/mutations';
 import useDictionary from '../../../customHooks/dictionary';
+
 import Buttons from '../../Atoms/Buttons';
 
 interface StartProps {
@@ -23,6 +26,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const {classRoomDict} = useDictionary(clientKey);
   const {lessonKey, open, accessible, type, roomID} = props;
   const history = useHistory();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
@@ -55,9 +59,30 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     });
   };
 
-  const handleLink = () => {
+  const handleLink = async () => {
     if (!isTeacher && accessible && open) {
-      history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
+      try {
+        setLoading(true);
+        const syllabusData = state.roomData.syllabus.find(
+          (syllabus: any) => syllabus.active
+        );
+        const payload = {
+          studentID: state.user?.id,
+          curriculumID: syllabusData.curriculumID,
+          syllabusID: syllabusData.id,
+          lessonID: lessonKey,
+          time: new Date(),
+        };
+        await API.graphql(
+          graphqlOperation(mutations.createAttendance, {
+            input: payload,
+          })
+        );
+        history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
     }
 
     if (isTeacher) {
@@ -123,8 +148,12 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       <Buttons
         type="submit"
         onClick={handleLink}
-        label={`${firstPart()} ${secondPart()}`}
-        disabled={!open && !isTeacher}
+        label={
+          loading
+            ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
+            : `${firstPart()} ${secondPart()}`
+        }
+        disabled={loading || (!open && !isTeacher)}
         overrideClass={true}
         btnClass={`
         ${studentTeacherButtonTheme()}

@@ -9,7 +9,7 @@ import * as mutations from '../../../../../../graphql/mutations';
 import Loader from '../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 
-const DetailTable = ({curriculum, loading, postDeletion}: any) => {
+const DetailTable = ({curriculum, lessonId, loading, postDeletion}: any) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {assignedSyllabi, associatedClassRoomData, institution} = curriculum;
@@ -20,14 +20,16 @@ const DetailTable = ({curriculum, loading, postDeletion}: any) => {
     message: 'This will remove the lesson from the unit, do you want to continue?',
   });
 
-  const toggleModal = (id?: string) => {
+  const toggleModal = (syllabus?: any) => {
     setShowDeleteModal({
       ...showDeleteModal,
       message:
         assignedSyllabi.length === 1
           ? 'This will remove the lesson from the course, do you want to continue'
           : 'This will remove the lesson from the unit, do you want to continue?',
-      id: id ? id : '',
+      id: syllabus ? syllabus.lessons.items.find(
+        (lesson: any) => lesson.lessonID === lessonId
+      )?.id : '',
       state: !showDeleteModal.state,
     });
   };
@@ -43,14 +45,16 @@ const DetailTable = ({curriculum, loading, postDeletion}: any) => {
       console.log(results,'inside delete syllabus');
       toggleModal();
       postDeletion();
-    } catch {
+    } catch(e) {
+      console.log(e,'e inside catch');
+      
     }
   };
 
   return (
     <>
       <div className="pl-4">
-        <span className="w-full pt-5 font-bold text-lg items-center inline-flex">
+        <span className="w-full pt-5 font-medium text-md items-center inline-flex">
           Unit(s):{' '}
           <ul className="flex w-full ml-2 items-center">
             {assignedSyllabi.map((syllabus: any, index: number) => (
@@ -60,7 +64,7 @@ const DetailTable = ({curriculum, loading, postDeletion}: any) => {
                 <span className="inline-flex w-auto items-center text-sm">{syllabus.name}</span>
                 <span
                   className="inline-flex w-auto items-center cursor-pointer"
-                  onClick={() => toggleModal(syllabus.id)}>
+                  onClick={() => toggleModal(syllabus)}>
                   <IoIosClose className="w-6 h-6" />
                 </span>
               </li>

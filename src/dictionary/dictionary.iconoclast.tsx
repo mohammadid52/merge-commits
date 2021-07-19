@@ -570,6 +570,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
       SELECT_CLASSROOM_WIDGETS: '⬆ Select a room to see editable widgets...',
+      PLEASE_WAIT: 'Please wait',
     },
   },
   ES: {
@@ -598,6 +599,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
+      PLEASE_WAIT: 'TBD',
     },
   },
 };

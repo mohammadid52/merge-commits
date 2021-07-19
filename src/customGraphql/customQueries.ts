@@ -1476,6 +1476,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
             name
             lessons{
               items{
+                id
                 lessonID
               }
             }

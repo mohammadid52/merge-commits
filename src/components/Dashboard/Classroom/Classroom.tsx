@@ -395,7 +395,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {showClassDetails && (
               <div
                 className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-                <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
+                <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} activeTab={0}/>
               </div>
             )}
           </div>

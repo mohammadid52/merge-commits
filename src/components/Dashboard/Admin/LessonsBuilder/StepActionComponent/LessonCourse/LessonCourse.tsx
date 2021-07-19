@@ -111,6 +111,7 @@ const LessonCourse = ({
     return (
       <DetailTable
         curriculum={curriculum}
+        lessonId={lessonId}
         loading={roomLoading}
         postDeletion={postDeletion}
       />
