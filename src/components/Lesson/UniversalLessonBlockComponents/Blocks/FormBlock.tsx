@@ -14,6 +14,7 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EmojiInput from './FormBlock/EmojiInputBlock';
 import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
+import noop from 'lodash/noop';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -190,7 +191,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           name="url"
           type="text"
           placeholder={value.length > 0 ? value : 'Please input...'}
-          onChange={isInLesson ? (e) => onChange(e) : undefined}
+          onChange={isInLesson ? (e) => onChange(e) : noop}
           value={isInLesson ? getStudentDataValue(inputID) : value}
         />
       </div>
@@ -260,7 +261,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           <span
             role="button"
             tabIndex={-1}
-            onClick={isInLesson ? openFilesExplorer : undefined}
+            onClick={isInLesson ? openFilesExplorer : noop}
             className={`border-0 ${
               lessonPageTheme === 'light' ? 'border-gray-500' : 'border-white'
             } flex items-center justify-center ${
@@ -271,7 +272,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           </span>
           <input
             ref={inputOther}
-            onChange={isInLesson ? (e) => handleFileSelection(e) : undefined}
+            onChange={isInLesson ? (e) => handleFileSelection(e) : noop}
             type="file"
             className="hidden"
             multiple={false}
@@ -370,7 +371,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
       case FORM_TYPES.TEXT:
       case FORM_TYPES.DATE_PICKER:
         return (
-          <div id={id} key={id} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label}
             </label>
@@ -382,7 +383,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson ? (e) => onChange(e) : undefined}
+              onChange={isInLesson ? (e) => onChange(e) : noop}
               value={isInLesson ? getStudentDataValue(inputID) : value}
             />
           </div>
@@ -390,7 +391,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
       case FORM_TYPES.TEXTAREA:
         return (
-          <div id={id} key={id} className={`mb-4 p-4`}>
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label}
             </label>
@@ -401,7 +402,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               }`}
               name="story"
-              onChange={isInLesson ? (e) => onChange(e) : undefined}
+              onChange={isInLesson ? (e) => onChange(e) : noop}
               value={isInLesson ? getStudentDataValue(inputID) : value}
             />
           </div>
@@ -409,7 +410,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
       case FORM_TYPES.RADIO:
       case FORM_TYPES.MULTIPLE:
         return (
-          <div id={id} key={inputID} className={`mb-4 p-4`}>
+          <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label}
             </label>

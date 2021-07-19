@@ -1,6 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router';
 import {API, graphqlOperation} from 'aws-amplify';
+import {RiArrowRightSLine} from 'react-icons/ri';
+
+import Tooltip from '../../Atoms/Tooltip';
 import BreadCrums from '../../Atoms/BreadCrums';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -19,8 +22,7 @@ import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit'
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import * as customQueries from '../../../customGraphql/customQueries';
-import Tooltip from '../../Atoms/Tooltip';
-import {RiArrowRightSLine} from 'react-icons/ri';
+
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -111,7 +113,12 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
+      title: universalLessonDetails.title || "Loading...",
+      url: `/dashboard/lesson-builder/lesson/edit?lessonId=${universalLessonDetails.id}`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSON_EDITOR'],
       url: `${match.url}?${lessonId ? `lessonId=${lessonId}}` : ``}`,
       last: true,
     },
@@ -511,7 +518,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
-        <BreadCrums items={breadCrumsList} separateGoBackButton="Go to activities" />
+        <BreadCrums items={breadCrumsList} />
 
         {/* Body */}
         <div className="w-full h-full pb-8 m-auto">

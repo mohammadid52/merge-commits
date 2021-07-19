@@ -11267,10 +11267,11 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -11294,10 +11295,11 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -11321,10 +11323,11 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -11475,135 +11478,57 @@ export const createUniversalSyllabusLesson = /* GraphQL */ `
       viewing
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
+        title
+        institutionID
         language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
+        purpose
         introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        darkMode
+        rubrics
         createdAt
         updatedAt
       }
@@ -11672,135 +11597,57 @@ export const updateUniversalSyllabusLesson = /* GraphQL */ `
       viewing
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
+        title
+        institutionID
         language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
+        purpose
         introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        darkMode
+        rubrics
         createdAt
         updatedAt
       }
@@ -11869,135 +11716,57 @@ export const deleteUniversalSyllabusLesson = /* GraphQL */ `
       viewing
       lesson {
         id
-        title
         type
         label
-        instructions
-        instructionsTitle
-        theme {
-          type
-          name
-          summary
-          summaryLabel
-          connection
-          images
-        }
-        grades
-        artistID
-        artist {
-          id
-          images
-          name
-          type
-          bio
-          createdAt
-          updatedAt
-        }
+        title
+        institutionID
         language
-        SELStructure
-        keywords {
-          nextToken
-        }
-        connection
-        summary
-        purpose
         designers
         objectives
-        checkpoints {
-          nextToken
-        }
-        doFirstID
-        doFirst {
-          id
-          type
-          required
-          createdAt
-          updatedAt
-        }
-        warmUpId
-        warmUp {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        coreLessonId
-        coreLesson {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          createdAt
-          updatedAt
-        }
-        activityId
-        activity {
-          id
-          title
-          label
-          stage
-          type
-          language
-          SELTypes
-          lineNumber
-          createdAt
-          updatedAt
-        }
-        assessmentID
-        assessment {
-          id
-          title
-          type
-          openingMessage
-          closingMessage
-          createdAt
-          updatedAt
-        }
-        filters
-        coverImage
-        summaryTitle
-        introductionTitle
+        purpose
         introduction
-        connectionTitle
-        lessonPlan {
-          type
-          LessonComponentID
-          sequence
-          stage
-        }
-        measurements {
-          nextToken
-        }
-        institutionID
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
         duration
         resources
         notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        darkMode
+        rubrics
         createdAt
         updatedAt
       }
@@ -12071,35 +11840,27 @@ export const createUniversalLessonFeedback = /* GraphQL */ `
         viewing
         lesson {
           id
-          title
           type
           label
-          instructions
-          instructionsTitle
-          grades
-          artistID
+          title
+          institutionID
           language
-          SELStructure
-          connection
-          summary
-          purpose
           designers
           objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
+          purpose
           introduction
-          connectionTitle
-          institutionID
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
           duration
           resources
           notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
           createdAt
           updatedAt
         }
@@ -12150,35 +11911,27 @@ export const updateUniversalLessonFeedback = /* GraphQL */ `
         viewing
         lesson {
           id
-          title
           type
           label
-          instructions
-          instructionsTitle
-          grades
-          artistID
+          title
+          institutionID
           language
-          SELStructure
-          connection
-          summary
-          purpose
           designers
           objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
+          purpose
           introduction
-          connectionTitle
-          institutionID
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
           duration
           resources
           notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
           createdAt
           updatedAt
         }
@@ -12229,35 +11982,27 @@ export const deleteUniversalLessonFeedback = /* GraphQL */ `
         viewing
         lesson {
           id
-          title
           type
           label
-          instructions
-          instructionsTitle
-          grades
-          artistID
+          title
+          institutionID
           language
-          SELStructure
-          connection
-          summary
-          purpose
           designers
           objectives
-          doFirstID
-          warmUpId
-          coreLessonId
-          activityId
-          assessmentID
-          filters
-          coverImage
-          summaryTitle
-          introductionTitle
+          purpose
           introduction
-          connectionTitle
-          institutionID
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
           duration
           resources
           notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
           createdAt
           updatedAt
         }

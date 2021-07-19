@@ -10,8 +10,8 @@ interface EditingBlockProps {
 const EditingBlock = (props: EditingBlockProps) => {
   const {id, poemWriting, handleUpdateStudentData} = props;
 
-  const setEditorContent = (html: string, text: string, idKey: string) =>
-    handleUpdateStudentData(id, [html]);
+  const setEditorContent = (html: string, text: string, idKey: string) => {};
+  // handleUpdateStudentData(id, [html]);
 
   return (
     <div className="w-full flex flex-col">

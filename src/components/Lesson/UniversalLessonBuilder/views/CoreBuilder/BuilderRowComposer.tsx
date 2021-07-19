@@ -104,7 +104,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   };
 
   // this is only for header component
-  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-2' : '');
+  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
 
   return (
     <>
@@ -192,7 +192,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                             <div
                                               className={`${paddingForHeader(
                                                 content.type
-                                              )} ${content.class}`}
+                                              )} ${content.class} `}
                                               id={content.id}>
                                               {composePartContent(
                                                 content.id,

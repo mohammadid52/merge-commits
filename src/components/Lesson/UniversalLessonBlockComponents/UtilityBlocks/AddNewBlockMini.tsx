@@ -15,6 +15,7 @@ export const AddNewBlockMini = (props: RowWrapperProps) => {
     },
   } = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
+  const iconColor = theme === 'light' ? 'text-gray-600' : 'text-gray-400';
 
   return (
     <div className="relative">
@@ -37,7 +38,10 @@ export const AddNewBlockMini = (props: RowWrapperProps) => {
           } text-sm leading-5 font-medium rounded-full ${themeTextColor} ${
             theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'
           }  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-          <PlusSmIcon className="-ml-1.5 mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+          <PlusSmIcon
+            className={`-ml-1.5 mr-1 h-5 w-5 ${iconColor}`}
+            aria-hidden="true"
+          />
           <span>{LessonBuilderDict[userLanguage]['BUTTON']['ADD_ROW']}</span>
         </button>
       </div>

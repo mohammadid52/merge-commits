@@ -17,11 +17,11 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 
 interface LessonPlansListProps {
   lessonId: string;
+  lessonName: string;
   loading: boolean;
   universalLessonDetails: {
     lessonPlan: UniversalLessonPage[];
   };
-  lessonName: string;
 }
 
 const LessonActivities = ({
@@ -116,17 +116,17 @@ const LessonActivities = ({
       lessonPlan: [...universalLessonDetails.lessonPlan],
     };
     toggleDeleteModal(false);
-    history.goBack();
     await updateLessonPageToDB(input);
+    // history.goBack();
   };
 
   return (
     <div className="flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-8 border-0 border-gray-200">
-          <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
+          {/* <h3 className="text-lg leading-6 font-bold text-gray-900 pb-8 pl-4">
             {lessonName}
-          </h3>
+          </h3> */}
           {loading ? (
             <div className="py-20 text-center mx-auto flex justify-center items-center w-full">
               <div className="items-center flex justify-center flex-col">
@@ -260,7 +260,7 @@ const LessonActivities = ({
                                   </div>
 
                                   <div
-                                    className="flex w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
+                                    className="flex flex-col w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
                                     dangerouslySetInnerHTML={{__html: page.description}}
                                   />
 
