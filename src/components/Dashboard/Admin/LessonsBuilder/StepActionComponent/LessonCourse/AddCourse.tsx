@@ -1,15 +1,19 @@
 import {API, graphqlOperation} from 'aws-amplify';
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
+
 import Selector from '../../../../../Atoms/Form/Selector';
 import Buttons from '../../../../../Atoms/Buttons';
+import ModalPopUp from '../../../../../Molecules/ModalPopUp';
+
 import {getAsset} from '../../../../../../assets';
 import useDictionary from '../../../../../../customHooks/dictionary';
+
 import * as mutations from '../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
+
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
-import {statusList} from '../../../../../../utilities/staticData';
 
 interface IAddCourse {
   curriculumList: any[];
@@ -54,6 +58,11 @@ const AddCourse = (props: IAddCourse) => {
   const [message, setMessage] = useState({
     msg: '',
     isError: false,
+  });
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    goBack: false,
+    message: 'Do you want to save changes before moving forward?',
   });
 
   const gotoCurricularUnit = (syllabusId: string, curricularId: string) => {
@@ -233,6 +242,14 @@ const AddCourse = (props: IAddCourse) => {
     }
   }, [institutionID, selectedCurriculumList]);
 
+  const onCancel = () => {
+    setWarnModal({
+      show: true,
+      goBack: true,
+      message: 'Do you want to save changes before going back?',
+    });
+  }
+
   const {curriculum, unit} = formState;
   return (
     <>
@@ -270,17 +287,11 @@ const AddCourse = (props: IAddCourse) => {
           <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>{UnitLookupDict[userLanguage]['NO']}</span>
           </div>
-          <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>{UnitLookupDict[userLanguage]['CURRICULUMNAME']}</span>
           </div>
-          <div className="w-2.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+          <div className="w-4/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
             <span>{UnitLookupDict[userLanguage]['UNITNAME']}</span>
-          </div>
-          <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            <span>{UnitLookupDict[userLanguage]['STATUS']}</span>
-          </div>
-          <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            <span>{UnitLookupDict[userLanguage]['ACTION']}</span>
           </div>
         </div>
         <div className="mb-8 w-full m-auto max-h-88 overflow-y-auto">
@@ -295,50 +306,17 @@ const AddCourse = (props: IAddCourse) => {
                   {index + 1}.
                 </div>
                 <div
-                  className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
+                  className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
                   // onClick={() => gotoCurricularUnit(item.syllabusID, item.curricularId)}
                 >
                   {item.curricularName ? item.curricularName : ''}
                 </div>
                 <div
-                  className="flex w-2.5/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
+                  className="flex w-4/10 items-center px-8 py-3 text-left text-s leading-4 font-medium whitespace-normal cursor-pointer"
                   // onClick={() => gotoCurricularUnit(item.syllabusID, item.curricularId)}
                 >
                   {item.syllabusName ? item.syllabusName : ''}
                 </div>
-                <div className="flex w-3/10 items-center px-8 py-3 text-left text-s leading-4 font-medium ">
-                  {editState.id !== item.id ? (
-                    item.status ? (
-                      item.status
-                    ) : (
-                      '--'
-                    )
-                  ) : (
-                    <div className="text-gray-900">
-                      <Selector
-                        selectedItem={item.status}
-                        placeholder="Select Status"
-                        list={statusList}
-                        onChange={(val, name, id) =>
-                          onStatusChange(val, name, id, item.id)
-                        }
-                      />
-                    </div>
-                  )}
-                </div>
-                {editState.id !== item.id ? (
-                  <span
-                    className={`w-1/10 flex items-center text-left cursor-pointer px-8 py-3 ${theme.textColor[themeColor]}`}
-                    onClick={() => editCurrentUnit(item.id)}>
-                    Edit
-                  </span>
-                ) : (
-                  <span
-                    className={`w-1/10 flex items-center text-left px-8 py-3 ${theme.textColor[themeColor]}`}
-                    onClick={cancelEdit}>
-                    {editState.action ? editState.action : 'Cancel'}
-                  </span>
-                )}
               </div>
             ))
           ) : (
@@ -349,6 +327,34 @@ const AddCourse = (props: IAddCourse) => {
             </div>
           )}
         </div>
+      </div>
+      <div className="flex mt-8 justify-center px-6 pb-4">
+        <div className="flex justify-end">
+          <Buttons
+            btnClass="py-1 px-4 text-xs mr-2"
+            label={BUTTONS[userLanguage]['CANCEL']}
+            onClick={onCancel}
+            transparent
+          />
+          <Buttons
+            btnClass="py-1 px-8 text-xs ml-2"
+            label={
+              loading ? BUTTONS[userLanguage]['SAVING'] : BUTTONS[userLanguage]['SAVE']
+            }
+            type="submit"
+            // onClick={onSave}
+            disabled={loading}
+          />
+        </div>
+        {warnModal.show && (
+          <ModalPopUp
+            closeAction={() => console.log('dasdsdas')}
+            saveAction={() => console.log('save')}
+            saveLabel="SAVE"
+            cancelLabel="DISCARD"
+            message={warnModal.message}
+          />
+        )}
       </div>
     </>
   );

@@ -9,7 +9,19 @@ import * as mutations from '../../../../../../graphql/mutations';
 import Loader from '../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
 
-const DetailTable = ({curriculum, lessonId, loading, postDeletion}: any) => {
+interface IDetailTableProps {
+  curriculum: any;
+  lessonId: string;
+  loading: boolean;
+  postDeletion: () => void;
+}
+
+const DetailTable = ({
+  curriculum,
+  lessonId,
+  loading,
+  postDeletion,
+}: IDetailTableProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
   const {assignedSyllabi, associatedClassRoomData, institution} = curriculum;
@@ -27,9 +39,9 @@ const DetailTable = ({curriculum, lessonId, loading, postDeletion}: any) => {
         assignedSyllabi.length === 1
           ? 'This will remove the lesson from the course, do you want to continue'
           : 'This will remove the lesson from the unit, do you want to continue?',
-      id: syllabus ? syllabus.lessons.items.find(
-        (lesson: any) => lesson.lessonID === lessonId
-      )?.id : '',
+      id: syllabus
+        ? syllabus.lessons.items.find((lesson: any) => lesson.lessonID === lessonId)?.id
+        : '',
       state: !showDeleteModal.state,
     });
   };
@@ -42,12 +54,11 @@ const DetailTable = ({curriculum, lessonId, loading, postDeletion}: any) => {
       const results: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {input: input})
       );
-      console.log(results,'inside delete syllabus');
+      console.log(results, 'inside delete syllabus');
       toggleModal();
       postDeletion();
-    } catch(e) {
-      console.log(e,'e inside catch');
-      
+    } catch (e) {
+      console.log(e, 'e inside catch');
     }
   };
 
@@ -61,7 +72,9 @@ const DetailTable = ({curriculum, lessonId, loading, postDeletion}: any) => {
               <li
                 className="w-auto bg-indigo-500 text-white px-2 mx-1 flex rounded"
                 key={index}>
-                <span className="inline-flex w-auto items-center text-sm">{syllabus.name}</span>
+                <span className="inline-flex w-auto items-center text-sm">
+                  {syllabus.name}
+                </span>
                 <span
                   className="inline-flex w-auto items-center cursor-pointer"
                   onClick={() => toggleModal(syllabus)}>

@@ -84,16 +84,18 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const params = useQuery();
   const checkpointsList: any = [];
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
+    {title: curricularData.institute?.name, goBack: true, last: false},
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULARBUILDER'],
-      url: `/dashboard/manage-institutions/institution/curricular-creation?id=${params.get('id')}`,
+      url: `/dashboard/manage-institutions/institution/curricular-creation?id=${params.get(
+        'id'
+      )}`,
       last: true,
     },
   ];

@@ -82,20 +82,22 @@ const CurricularView = (props: CurricularViewProps) => {
   const { curricularviewdict, BreadcrumsTitles } = useDictionary(clientKey);
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: curricularData.institute?.name,
       url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
       last: false,
     },
     {
       title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
-      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get('id')}`,
+      url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${params.get(
+        'id'
+      )}`,
       last: true,
     },
   ];
