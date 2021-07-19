@@ -88,18 +88,6 @@ const Toolbar = ({
   }, [isVisible]);
   return (
     <>
-      {previewMode && (
-        <div
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} p-2 w-auto absolute right-2.5 top-2.5`}>
-          <Button
-            onClick={() => setPreviewMode(!previewMode)}
-            tooltip="Preview"
-            color={themeTextColor}
-            icon={AiOutlineEyeInvisible}
-          />
-        </div>
-      )}
-
       {!previewMode && (
         <div
           // hidden={previewMode}

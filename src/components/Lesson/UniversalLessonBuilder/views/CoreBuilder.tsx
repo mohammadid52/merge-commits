@@ -86,6 +86,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setLessonPlanFields,
     setEditMode,
     toolbarOnTop,
+    setToolbarOnTop,
     previewMode,
     setPreviewMode,
   } = useULBContext();
@@ -139,7 +140,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     invert?: boolean;
   }) => {
     return (
-      <Tooltip show={tooltip.length > 0} text={tooltip} placement="bottom">
+      <Tooltip show={tooltip.length > 0} text={tooltip} placement="left">
         <button
           onClick={onClick}
           type="button"
@@ -222,8 +223,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       goToLessonPlan();
     }
   };
-  // 150px hide
-  // 0px show
+
   return (
     <>
       {activePageData && show && (
@@ -234,7 +234,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-      <div style={{top: '30rem'}} className="w-16 bg-gray-800 fixed right-5 z-10">
+      <div
+        style={{top: '30rem'}}
+        className={`${
+          toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
+        } transform duration-200 transition-all w-16 bg-gray-800 fixed right-5 z-10`}>
         {!previewMode && (
           <div
             className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
@@ -254,17 +258,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                     onClick={() => {
                       setNewLessonPlanShow(true);
                       setEditMode(false);
-                      // setFields({
-                      //   title: '',
-                      //   label: '',
-                      //   instructions: '',
-                      //   instructionsHtml: '',
-                      //   description: '', // ignore this field
-                      //   interactionType: [],
-                      //   tags: [],
-                      //   estTime: '1 min',
-                      //   classwork: true,
-                      // });
                     }}
                     icon={AiOutlineFileAdd}
                   />
@@ -273,10 +266,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
               <Container>
                 {/* <Button
-                color={themeTextColor}
-                tooltip="Enable Drag"
-                icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-              /> */}
+              color={themeTextColor}
+              tooltip="Enable Drag"
+              icon={enableDnD ? RiDragDropFill : RiDragDropLine}
+            /> */}
                 <Button
                   color={themeTextColor}
                   tooltip="Search Page"
@@ -300,7 +293,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                   color="text-red-500"
                   tooltip="Delete this page"
                   icon={AiOutlineDelete}
-                  onClick={() => {}}
+                  onClick={onDeleteButtonClick}
                 />
               </Container>
             </div>
@@ -314,6 +307,22 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         }`}>
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
+          <div
+            style={{top: '12rem'}}
+            className={`${
+              !previewMode ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
+            } transform duration-200 transition-all bg-gray-700 fixed right-5 z-10 customShadow  rounded-lg toolbar p-2 w-16`}>
+            <Button
+              onClick={() => {
+                setPreviewMode(!previewMode);
+                setToolbarOnTop(true);
+              }}
+              tooltip="Preview"
+              color={themeTextColor}
+              icon={AiOutlineEyeInvisible}
+            />
+          </div>
+
           {!fetchingLessonDetails && (
             <Toolbar
               setFields={setLessonPlanFields}
