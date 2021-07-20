@@ -187,7 +187,7 @@ const useStudentTimer = (inputs?: inputs) => {
     const email = user.attributes.email;
 
     const loopOverDataId = lessonState.universalStudentDataID.reduce(
-      (acc: any[], currentIdObj: any, idx: number) => {
+      async (acc: any[], currentIdObj: any, idx: number) => {
         console.log('loopOverDataId - ', currentIdObj.update);
         if (currentIdObj.update) {
           let data = {
@@ -202,6 +202,14 @@ const useStudentTimer = (inputs?: inputs) => {
             // lessonProgress: '0',
             pageData: lessonState.studentData[currentIdObj.pageIdx],
           };
+
+          try {
+            let updatedStudentData: any = await API.graphql(
+              graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
+            );
+          } catch (e) {
+            console.error('update universal student data - ', encodeURI);
+          }
 
           console.log('updateStudentData - timer - ', data);
         }
