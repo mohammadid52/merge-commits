@@ -135,6 +135,17 @@ const JumbotronModalDialog = ({
 
     await updateLessonPageToDB(input);
   };
+
+  const onEdit = async () => {
+    const updatedList = updateBlockContentULBHandler(
+      '',
+      '',
+      'jumbotron',
+      inputFieldsArray
+    );
+    await addToDB(updatedList);
+  };
+
   const onSave = async () => {
     const isValid: boolean = validateFormFields();
     if (isValid) {
@@ -232,7 +243,11 @@ const JumbotronModalDialog = ({
   };
 
   const onJumbotronCreate = async () => {
-    await onSave();
+    if (isEditingMode) {
+      await onEdit();
+    } else {
+      await onSave();
+    }
 
     setUnsavedChanges(false);
 
@@ -245,7 +260,7 @@ const JumbotronModalDialog = ({
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2">
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
-            if (inputObj.id === 'background') {
+            if (inputObj.id === 'background' && !isEditingMode) {
               return (
                 <ULBFileUploader
                   key={`jumboform_${idx}`}
@@ -259,6 +274,7 @@ const JumbotronModalDialog = ({
                 />
               );
             } else {
+              if (isEditingMode && inputObj.id === 'background') return;
               const isDesc = inputObj.id === 'description';
               return (
                 <div className="mb-2" key={`jumboform_${idx}`}>

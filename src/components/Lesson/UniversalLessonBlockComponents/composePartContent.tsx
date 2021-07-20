@@ -68,6 +68,17 @@ const composePartContent = (
         mode={mode}
       />
     );
+  } else if (type.includes('custom_video')) {
+    return (
+      <ImageBlock
+        customVideo
+        key={inputKey}
+        id={id}
+        dataIdAttribute={inputKey}
+        value={value[0]}
+        mode={mode}
+      />
+    );
   } else if (type.includes('video')) {
     return (
       <VideoBlock

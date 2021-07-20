@@ -21,6 +21,7 @@ import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInte
 import {find, findIndex, findLastIndex, update} from 'lodash';
 import {reorder} from '../../../../../utilities/strings';
 import {useQuery} from '../../../../../customHooks/urlParam';
+import Storage from '@aws-amplify/storage';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -215,15 +216,23 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
     message: string;
-
+    type?: string;
+    key?: string;
     id: string;
   }>({
     show: false,
     message: '',
+    type: '',
     id: '',
+    key: '',
   });
 
-  const onDeleteButtonClick = (id: string, right?: boolean) => {
+  const onDeleteButtonClick = (
+    id: string,
+    right?: boolean,
+    type?: string,
+    key?: string
+  ) => {
     setConfirmationConfig({
       message: `Are you sure you want to delete this content? ${
         right
@@ -231,8 +240,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           : 'It will be permanently removed.'
       } This action cannot be undone.`,
       show: true,
-
+      type,
       id,
+      key,
     });
   };
 
@@ -243,9 +253,26 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       id: '',
     });
   };
+  const deletImageFromS3 = (key: string) => {
+    // Remove image from bucket
 
-  const deletePartContent = async (contentID: string) => {
+    return new Promise((resolve, reject) => {
+      Storage.remove(key)
+        .then((result) => {
+          resolve(result);
+        })
+        .catch((err) => {
+          console.log('Error in deleting file from s3', err);
+          reject(err);
+        });
+    });
+  };
+  const deletePartContent = async (contentID: string, type?: string, key?: string) => {
+    if (type === 'image' || type === 'custom_video') {
+      await deletImageFromS3(key);
+    }
     const updatedList = deleteFromULBHandler(contentID);
+
     await addToDB(updatedList);
   };
 
@@ -391,7 +418,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
           <button
             onClick={() => {
-              onDeleteButtonClick(contentID, section === 'pageContent');
+              onDeleteButtonClick(
+                contentID,
+                section === 'pageContent',
+                pageContent?.partContent[partContentIdx]?.type,
+                pageContent?.partContent[partContentIdx]?.value[0].value
+              );
+
               setOverlayVisible(false);
               clearIds();
             }}
@@ -424,7 +457,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           message={message}
           closeAction={closeAction}
           saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
-          saveAction={() => deletePartContent(confirmationConfig.id)}
+          saveAction={() =>
+            deletePartContent(
+              confirmationConfig.id,
+              confirmationConfig.type,
+              confirmationConfig.key
+            )
+          }
         />
       )}
     </div>
