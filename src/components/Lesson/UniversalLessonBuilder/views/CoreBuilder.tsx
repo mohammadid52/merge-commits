@@ -235,70 +235,71 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         />
       )}
       <div
+        hidden={previewMode}
         style={{top: '30rem'}}
         className={`${
           toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
         } transform duration-200 transition-all w-16 bg-gray-800 fixed right-5 z-10`}>
-        {!previewMode && (
-          <div
-            className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
-            <div className="flex items-center flex-col">
-              <Container>
+        {/* {!previewMode && ( */}
+        <div
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          <div className="flex items-center flex-col">
+            <Container>
+              <Button
+                onClick={() => setPreviewMode(!previewMode)}
+                tooltip="Preview"
+                color={themeTextColor}
+                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+              />
+
+              <>
                 <Button
-                  onClick={() => setPreviewMode(!previewMode)}
-                  tooltip="Preview"
                   color={themeTextColor}
-                  icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+                  tooltip="Add New Page"
+                  onClick={() => {
+                    setNewLessonPlanShow(true);
+                    setEditMode(false);
+                  }}
+                  icon={AiOutlineFileAdd}
                 />
+              </>
+            </Container>
 
-                <>
-                  <Button
-                    color={themeTextColor}
-                    tooltip="Add New Page"
-                    onClick={() => {
-                      setNewLessonPlanShow(true);
-                      setEditMode(false);
-                    }}
-                    icon={AiOutlineFileAdd}
-                  />
-                </>
-              </Container>
-
-              <Container>
-                {/* <Button
+            <Container>
+              {/* <Button
               color={themeTextColor}
               tooltip="Enable Drag"
               icon={enableDnD ? RiDragDropFill : RiDragDropLine}
             /> */}
-                <Button
-                  color={themeTextColor}
-                  tooltip="Search Page"
-                  icon={AiOutlineFileSearch}
-                />
-              </Container>
+              <Button
+                color={themeTextColor}
+                tooltip="Search Page"
+                icon={AiOutlineFileSearch}
+              />
+            </Container>
 
-              <Container>
-                <Button
-                  color={themeTextColor}
-                  tooltip="Save changes"
-                  icon={AiOutlineSave}
-                />
-                <Button
-                  color={themeTextColor}
-                  tooltip="Discard changes"
-                  icon={VscDiscard}
-                />
+            <Container>
+              <Button
+                color={themeTextColor}
+                tooltip="Save changes"
+                icon={AiOutlineSave}
+              />
+              <Button
+                color={themeTextColor}
+                tooltip="Discard changes"
+                icon={VscDiscard}
+              />
 
-                <Button
-                  color="text-red-500"
-                  tooltip="Delete this page"
-                  icon={AiOutlineDelete}
-                  onClick={onDeleteButtonClick}
-                />
-              </Container>
-            </div>
+              <Button
+                color="text-red-500"
+                tooltip="Delete this page"
+                icon={AiOutlineDelete}
+                onClick={onDeleteButtonClick}
+              />
+            </Container>
           </div>
-        )}
+        </div>
+        {/* )} */}
       </div>
 
       <div
@@ -315,7 +316,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             <Button
               onClick={() => {
                 setPreviewMode(!previewMode);
-                setToolbarOnTop(true);
+                // setToolbarOnTop(true);
               }}
               tooltip="Preview"
               color={themeTextColor}

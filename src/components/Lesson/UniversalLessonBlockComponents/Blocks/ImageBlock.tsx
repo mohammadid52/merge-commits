@@ -25,7 +25,6 @@ export const ImageBlock = (props: ImageBlockProps) => {
   const isVideoOnScreen = useOnScreen(videoRef);
 
   const [showPIP, setShowPIP] = useState(false);
-  console.log('🚀 ~ file: ImageBlock.tsx ~ line 28 ~ ImageBlock ~ showPIP', showPIP);
 
   useEffect(() => {
     if (isPlaying) {
