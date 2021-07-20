@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import * as queries from '../../../../../../graphql/queries';
+import * as mutations from '../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../customGraphql/customMutations';
 
@@ -28,17 +29,42 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
   const {AddNewLessonFormDict, BUTTONS} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [selectedMeasurements, setSelectedMeasurements] = useState<string[] | null>([]);
+  const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [serverMessage, setServerMessage] = useState({
+    isError: false,
+    message: '',
+  });
 
   useEffect(() => {
     fetchCurriculum();
+    fetchLessonRubrics();
   }, []);
 
   useEffect(() => {
-    setSelectedMeasurements(rubrics);
+    // setSelectedMeasurements(rubrics);
   }, [rubrics]);
+
+  const fetchLessonRubrics = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listLessonRubricss, {
+          filter: {
+            lessonID: {eq: lessonId},
+          },
+        })
+      );
+      const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
+        ...rubric,
+        checked: true,
+      }));
+      console.log(rubricList, 'rubricList+++++++++++');
+
+      setSelectedMeasurements(rubricList);
+    } catch (error) {}
+  };
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
@@ -143,30 +169,68 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
     rubricId: string
   ) => {
     const checked: boolean = (event.target as HTMLInputElement).checked;
-    let rubrics = [];
-    if (checked) {
-      rubrics = [...selectedMeasurements, rubricId];
-      setSelectedMeasurements((prev) => [...prev, rubricId]);
+    let rubrics = [...selectedMeasurements];
+    const index: number = selectedMeasurements.findIndex(
+      (item: any) => item.rubricID === rubricId
+    );
+    console.log(rubricId, index, 'rubricId');
+
+    if (index > -1) {
+      rubrics[index] = {
+        ...rubrics[index],
+        checked,
+      };
     } else {
-      rubrics = selectedMeasurements.filter((item) => item !== rubricId);
-      setSelectedMeasurements((prev) => prev.filter((item) => item !== rubricId));
+      rubrics.push({
+        rubricID: rubricId,
+        checked
+      });
     }
-    // updateMeasurementList(rubrics);
+    setSelectedMeasurements(rubrics);
   };
 
   const onSubmit = () => {
     updateMeasurementList(selectedMeasurements);
-  }
+  };
 
   const updateMeasurementList = async (rubrics: string[] | null) => {
-    await API.graphql(
-      graphqlOperation(customMutations.updateUniversalLesson, {
-        input: {
-          id: lessonId,
-          rubrics,
-        },
-      })
-    );
+    try {
+      setUpdating(true);
+      const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
+      if (newRubrics?.length) {
+        await API.graphql(
+          graphqlOperation(mutations.batchAddLessonRubrics, {
+            lessonRubrics: newRubrics.map((rubric: any) => ({
+              lessonID: lessonId,
+              rubricID: rubric.rubricID,
+            })),
+          })
+        );
+      }
+      const rubricsToBeRemoved = rubrics.filter(
+        (rubric: any) => rubric.id && !rubric.checked
+        );
+      if (rubricsToBeRemoved?.length) {
+        await API.graphql(
+          graphqlOperation(mutations.batchDeleteLessonRubrics, {
+            lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
+              id: rubric.id,
+            })),
+          })
+        );
+      }
+      setServerMessage({
+        isError: false,
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
+      });
+      setUpdating(false);
+    } catch (error) {
+      setUpdating(false);
+      setServerMessage({
+        isError: true,
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+      });
+    }
   };
 
   const renderTableView = (learningEvidenceList: any) => {
@@ -208,15 +272,25 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
                 <Buttons
                   btnClass="py-1 px-8 text-xs ml-2"
                   label={
-                    loading
+                    updating
                       ? BUTTONS[userLanguage]['SAVING']
                       : BUTTONS[userLanguage]['SAVE']
                   }
                   type="submit"
                   onClick={onSubmit}
-                  disabled={loading}
+                  disabled={updating}
                 />
               </div>
+              {serverMessage.message && (
+                <div className="py-2 m-auto mt-2 text-center">
+                  <p
+                    className={`${
+                      serverMessage.isError ? 'text-red-600' : 'text-green-600'
+                    }`}>
+                    {serverMessage.message}
+                  </p>
+                </div>
+              )}
             </>
           ) : (
             <div className="py-12 my-6 text-center">

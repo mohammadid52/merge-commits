@@ -1,16 +1,18 @@
-import React, {useContext, useState} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
-import {dateString} from '../../../utilities/time';
-import {Lesson} from './Classroom';
+import {awsFormatDate, dateString} from '../../../utilities/time';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
 import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import useDictionary from '../../../customHooks/dictionary';
 
 import Buttons from '../../Atoms/Buttons';
+
+import {Lesson} from './Classroom';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -29,6 +31,10 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+
+  useEffect(() => {
+    fetchAttendance();
+  }, []);
 
   const mutateToggleEnableDisable = async () => {
     const mutatedLessonData = {
@@ -59,6 +65,24 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     });
   };
 
+  const fetchAttendance = async () => {
+    try {
+      const syllabusData = state.roomData.syllabus.find(
+        (syllabus: any) => syllabus.active
+      );
+      const list: any = await API.graphql(
+        graphqlOperation(queries.listAttendances, {
+          filter: {
+            studentID: {eq: state.user?.id},
+            curriculumID: syllabusData.curriculumID,
+            syllabusID: syllabusData.id,
+          },
+        })
+      );
+      console.log(list, 'list');  
+    } catch (error) {}
+  };
+
   const handleLink = async () => {
     if (!isTeacher && accessible && open) {
       try {
@@ -71,7 +95,8 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           curriculumID: syllabusData.curriculumID,
           syllabusID: syllabusData.id,
           lessonID: lessonKey,
-          time: new Date(),
+          date: awsFormatDate(dateString('-', 'WORLD')),
+          time: new Date().toTimeString().split(' ')[0],
         };
         await API.graphql(
           graphqlOperation(mutations.createAttendance, {

@@ -10,7 +10,7 @@ interface IMeasurementList {
   handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>,rubricId: string) => void;
   learningEvidenceList: any[];
   loading: boolean;
-  selectedMeasurements: string[] | null;
+  selectedMeasurements: any[];
 }
 
 const MeasurementsList = ({
@@ -81,7 +81,11 @@ const MeasurementsList = ({
               </div>
               <div className="w-3/10 flex items-center px-8 py-3 whitespace-normal text-sm leading-5 text-gray-500">
                 <CheckBox
-                  value={selectedMeasurements.indexOf(item.rubricId) > -1}
+                  value={
+                    selectedMeasurements.find(
+                      (measurement:any) => measurement.rubricID === item.rubricId
+                    )?.checked
+                  }
                   onChange={(e) => handleCheckboxChange(e, item.rubricId)}
                   name="rubricId"
                 />
