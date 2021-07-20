@@ -31,6 +31,10 @@ export type LessonActions =
       payload: {id: string; pageIdx: number; lessonPageID: string; update: boolean}[];
     }
   | {
+      type: 'SET_UPDATE_STATUS';
+      payload: {pageIdx: number};
+    }
+  | {
       type: 'UPDATE_STUDENT_DATA';
       payload: {pageIdx: number; data: StudentPageInput};
     }
@@ -87,6 +91,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'LOAD_STUDENT_DATA':
       return {
         ...state,
+        loaded: true,
         universalStudentDataID: action.payload,
       };
     case 'UPDATE_STUDENT_DATA':
@@ -94,10 +99,9 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
 
-      // flag student data id to udpate = true
       const updatedStudentDataIdArray = state?.universalStudentDataID.map(
         (dataIdObj: any, idObjIdx: number) => {
-          if (dataIdObj.pageIdx === pageIdx) {
+          if (dataIdObj.pageIdx == pageIdx) {
             return {
               ...dataIdObj,
               update: true,
@@ -126,10 +130,11 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           }
         }
       );
+
       return {
         ...state,
         updated: true,
-        universalStudentDataID: updatedStudentDataIdArray,
+        universalStudentDataID: [...updatedStudentDataIdArray],
         studentData: mappedStudentData,
       };
     case 'COMPLETE_STUDENT_UPDATE':

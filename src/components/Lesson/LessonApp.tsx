@@ -315,24 +315,24 @@ const LessonApp = () => {
     }
   };
 
+  //  INITIALIZE STUDENT DATA AND DATA-ID ARRAY  //
   useEffect(() => {
     if (
       lessonState.lessonData.lessonPlan &&
-      lessonState.lessonData.lessonPlan.length > 0
+      lessonState.lessonData.lessonPlan.length > 0 &&
+      lessonState.studentData &&
+      !(lessonState.studentData.length > 0)
     ) {
       initializeStudentData().then((_: void) =>
         console.log('initializeStudentData - ', 'initiated')
       );
+      if (!lessonState.loaded) {
+        getOrCreateStudentData().then((_: void) =>
+          console.log('getOrCreateStudentData - ', 'getted')
+        );
+      }
     }
   }, [lessonState.lessonData.lessonPlan]);
-
-  useEffect(() => {
-    if (lessonState.studentData && lessonState.studentData.length > 0) {
-      getOrCreateStudentData().then((_: void) =>
-        console.log('getOrCreateStudentData - ', 'getted')
-      );
-    }
-  }, [lessonState.studentData]);
 
   // ##################################################################### //
   // ####################### MANAGE PERSON LOCATION ###################### //

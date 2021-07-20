@@ -1,7 +1,7 @@
 import {UniversalLessonStudentData} from '../interfaces/UniversalLessonInterfaces';
 
 export interface lessonStateType {
-  status?: string;
+  loaded?: boolean;
   universalLessonID?: string;
   universalLessonPageID?: string;
   universalStudentDataID?: any[];
@@ -22,10 +22,10 @@ export interface lessonStateType {
 }
 
 export const lessonState: lessonStateType = {
-  status: '',
+  loaded: false,
   universalLessonID: '',
   universalLessonPageID: '',
-  universalStudentDataID: [{}],
+  universalStudentDataID: [],
   studentAuthID: '',
   studentUsername: '',
   lessonData: {},

@@ -699,6 +699,7 @@ const Dashboard = (props: DashboardProps) => {
      * IF there are any syllabus active, do a fetch for lessons
      */
     if (activeRoomInfo?.activeSyllabus) {
+      console.log('activeRoomInfo - ', activeRoomInfo);
       try {
         const syllabusLessonFetch = await API.graphql(
           graphqlOperation(customQueries.getUniversalSyllabus, {

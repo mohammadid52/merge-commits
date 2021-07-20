@@ -188,7 +188,7 @@ const useStudentTimer = (inputs?: inputs) => {
 
     const loopOverDataId = lessonState.universalStudentDataID.reduce(
       async (acc: any[], currentIdObj: any, idx: number) => {
-        console.log('loopOverDataId - ', currentIdObj.update);
+        console.log('loopOverDataId - ', currentIdObj);
         if (currentIdObj.update) {
           let data = {
             id: currentIdObj.id,
@@ -209,30 +209,22 @@ const useStudentTimer = (inputs?: inputs) => {
             );
           } catch (e) {
             console.error('update universal student data - ', encodeURI);
+          } finally {
+            if (idx === lessonState.universalStudentDataID.length - 1) {
+              lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
+            }
           }
 
           console.log('updateStudentData - timer - ', data);
-        }
-        if (idx === lessonState.universalStudentDataID.length - 1) {
-          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
         }
       },
       []
     );
 
-    // if (lessonState.studentDataID && lessonState.syllabusLessonID !== '') {
-    //   try {
-    //     // TODO: enable this once all student data can be saved
-    //     // const dataObject: any = await API.graphql(
-    //     //   graphqlOperation(customMutations.updateStudentData, {input: data})
-    //     // );
-    //     // dispatch({type: 'SAVED_CHANGES'});
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // } else {
-    //   console.log('studentDataID not yet created');
-    // }
+    // console.log(
+    //   'lessonState.universalStudentDataID - ',
+    //   lessonState.universalStudentDataID
+    // );
   };
 
   /**
