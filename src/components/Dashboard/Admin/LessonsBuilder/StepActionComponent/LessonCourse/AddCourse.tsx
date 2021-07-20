@@ -250,7 +250,15 @@ const AddCourse = (props: IAddCourse) => {
     });
   }
 
+  const onDiscard = () => {
+    setWarnModal(prevValues => ({
+      ...prevValues,
+      show: false
+    }));
+  }
+
   const {curriculum, unit} = formState;
+
   return (
     <>
       <div className="px-4 py-4 grid gap-x-6 grid-cols-5">
@@ -348,7 +356,7 @@ const AddCourse = (props: IAddCourse) => {
         </div>
         {warnModal.show && (
           <ModalPopUp
-            closeAction={() => console.log('dasdsdas')}
+            closeAction={onDiscard}
             saveAction={() => console.log('save')}
             saveLabel="SAVE"
             cancelLabel="DISCARD"

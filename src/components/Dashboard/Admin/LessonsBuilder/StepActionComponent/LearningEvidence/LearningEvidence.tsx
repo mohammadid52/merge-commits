@@ -9,9 +9,10 @@ import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
 import Accordion from '../../../../../Atoms/Accordion';
-import PageWrapper from '../../../../../Atoms/PageWrapper';
-import Modal from '../../../../../Atoms/Modal';
+import Buttons from '../../../../../Atoms/Buttons';
 import Loader from '../../../../../Atoms/Loader';
+import Modal from '../../../../../Atoms/Modal';
+import PageWrapper from '../../../../../Atoms/PageWrapper';
 
 import AddEvidence from './AddEvidence';
 import MeasurementsList from './MeasurementsList';
@@ -24,7 +25,7 @@ interface ILearningEvidence {
 
 const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const {AddNewLessonFormDict, BUTTONS} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
   const [selectedMeasurements, setSelectedMeasurements] = useState<string[] | null>([]);
@@ -150,8 +151,12 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
       rubrics = selectedMeasurements.filter((item) => item !== rubricId);
       setSelectedMeasurements((prev) => prev.filter((item) => item !== rubricId));
     }
-    updateMeasurementList(rubrics);
+    // updateMeasurementList(rubrics);
   };
+
+  const onSubmit = () => {
+    updateMeasurementList(selectedMeasurements);
+  }
 
   const updateMeasurementList = async (rubrics: string[] | null) => {
     await API.graphql(
@@ -192,9 +197,27 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
               <Loader />
             </div>
           ) : titleList.length ? (
-            <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-              <Accordion titleList={titleList} actionOnAccordionClick={fetchObjectives} />
-            </div>
+            <>
+              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
+                <Accordion
+                  titleList={titleList}
+                  actionOnAccordionClick={fetchObjectives}
+                />
+              </div>
+              <div className="flex justify-end mt-8">
+                <Buttons
+                  btnClass="py-1 px-8 text-xs ml-2"
+                  label={
+                    loading
+                      ? BUTTONS[userLanguage]['SAVING']
+                      : BUTTONS[userLanguage]['SAVE']
+                  }
+                  type="submit"
+                  onClick={onSubmit}
+                  disabled={loading}
+                />
+              </div>
+            </>
           ) : (
             <div className="py-12 my-6 text-center">
               <p className="text-gray-600 font-medium">
