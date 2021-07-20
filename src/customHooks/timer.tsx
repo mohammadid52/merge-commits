@@ -147,7 +147,7 @@ const useStudentTimer = (inputs?: inputs) => {
       }
     }
     return () => resetParams();
-  }, [lessonState.viewing, lessonState.updated]);
+  }, [lessonState.viewing, lessonState.studentData]);
 
   /**
    *
@@ -188,7 +188,6 @@ const useStudentTimer = (inputs?: inputs) => {
 
     const loopOverDataId = lessonState.universalStudentDataID.reduce(
       async (acc: any[], currentIdObj: any, idx: number) => {
-        console.log('loopOverDataId - ', currentIdObj);
         if (currentIdObj.update) {
           let data = {
             id: currentIdObj.id,
@@ -210,6 +209,7 @@ const useStudentTimer = (inputs?: inputs) => {
           } catch (e) {
             console.error('update universal student data - ', encodeURI);
           } finally {
+            console.log('updateStudentData - finally - ', idx);
             if (idx === lessonState.universalStudentDataID.length - 1) {
               lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
             }
