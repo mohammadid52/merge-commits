@@ -239,7 +239,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         style={{top: '30rem'}}
         className={`${
           toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
-        } transform duration-200 transition-all w-16 bg-gray-800 fixed right-5 z-10`}>
+        } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
         {/* {!previewMode && ( */}
         <div
           className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
@@ -312,7 +312,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             style={{top: '12rem'}}
             className={`${
               !previewMode ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
-            } transform duration-200 transition-all bg-gray-700 fixed right-5 z-10 customShadow  rounded-lg toolbar p-2 w-16`}>
+            } transform duration-200 transition-all  ${themeSecBackgroundColor}  ${themeTextColor} fixed right-5 z-10 customShadow  rounded-lg toolbar p-2 w-16`}>
             <Button
               onClick={() => {
                 setPreviewMode(!previewMode);
