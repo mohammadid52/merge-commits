@@ -707,6 +707,7 @@ const Dashboard = (props: DashboardProps) => {
         );
         //@ts-ignore
         const response = await syllabusLessonFetch.data.getUniversalSyllabus;
+        console.log('getUniversalSyllabus response - ', response);
         const lessons = response.lessons.items;
         console.log('list universal lessons - ', lessons);
         dispatch({
