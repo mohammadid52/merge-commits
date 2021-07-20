@@ -10469,6 +10469,7 @@ export const onCreateAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -10483,6 +10484,7 @@ export const onUpdateAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -10497,6 +10499,7 @@ export const onDeleteAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -10786,10 +10789,11 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -10810,10 +10814,11 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -10834,10 +10839,11 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt

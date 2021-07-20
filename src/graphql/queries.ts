@@ -4665,6 +4665,7 @@ export const getAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -4684,6 +4685,7 @@ export const listAttendances = /* GraphQL */ `
         curriculumID
         syllabusID
         lessonID
+        date
         time
         createdAt
         updatedAt
@@ -4895,10 +4897,11 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
       currentLocation
       lessonProgress
       pageData {
-        pagePartID
-        pagePartInput {
-          domID
-          input
+        domID
+        input
+        comments {
+          commentBy
+          comment
         }
       }
       createdAt
@@ -4932,7 +4935,8 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         currentLocation
         lessonProgress
         pageData {
-          pagePartID
+          domID
+          input
         }
         createdAt
         updatedAt
