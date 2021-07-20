@@ -175,6 +175,7 @@ const QuickRegister = (props: QuickRegisterProps) => {
 
   const cognitoSignUp = async () => {
     let username = newUserInputs.email;
+    username = username.toLowerCase()
     try {
       const response = await axios.post(createUserUrl, {
         email: username

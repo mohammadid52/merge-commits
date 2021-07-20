@@ -1165,6 +1165,12 @@ export type ModelClassConnection = {
   nextToken?: string | null;
 };
 
+export type CreateLessonRubricsInput = {
+  id?: string | null;
+  lessonID: string;
+  rubricID: string;
+};
+
 export type CreatePersonInput = {
   id?: string | null;
   authId: string;
@@ -1275,7 +1281,7 @@ export type ModelLanguageInput = {
 };
 
 export type UpdatePersonInput = {
-  id: string;
+  id?: string | null;
   authId: string;
   status?: PersonStatus | null;
   email: string;
@@ -1400,7 +1406,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateStaffInput = {
@@ -1433,7 +1439,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateRoomInput = {
@@ -1532,7 +1538,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1562,7 +1568,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateClassInput = {
@@ -1589,7 +1595,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type ModelClassStudentConditionInput = {
@@ -1613,7 +1619,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateCurriculumInput = {
@@ -1820,7 +1826,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateArtistInput = {
@@ -1872,7 +1878,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateDoFirstInput = {
@@ -1896,7 +1902,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1920,7 +1926,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateWarmUpInput = {
@@ -2021,7 +2027,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateCoreLessonInput = {
@@ -2080,7 +2086,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateActivityInput = {
@@ -2125,7 +2131,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateCheckpointInput = {
@@ -2182,7 +2188,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2209,7 +2215,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2236,7 +2242,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateAssessmentInput = {
@@ -2266,7 +2272,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2290,7 +2296,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2314,7 +2320,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateQuestionInput = {
@@ -2365,7 +2371,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateQuestionSourceInput = {
@@ -2394,7 +2400,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateQuestionTypeInput = {
@@ -2423,7 +2429,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateWordInput = {
@@ -2447,7 +2453,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateRoomMsgsInput = {
@@ -2492,7 +2498,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateCourseInput = {
@@ -2533,7 +2539,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateLessonInput = {
@@ -2663,12 +2669,6 @@ export type DeleteLessonInput = {
   id: string;
 };
 
-export type CreateLessonRubricsInput = {
-  id?: string | null;
-  lessonID: string;
-  rubricID: string;
-};
-
 export type ModelLessonRubricsConditionInput = {
   lessonID?: ModelIDInput | null;
   rubricID?: ModelIDInput | null;
@@ -2684,7 +2684,7 @@ export type UpdateLessonRubricsInput = {
 };
 
 export type DeleteLessonRubricsInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateLessonCheckpointInput = {
@@ -2711,7 +2711,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2735,7 +2735,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateSyllabusInput = {
@@ -2922,7 +2922,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateStudentDataInput = {
@@ -2964,7 +2964,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id: string;
+  id?: string | null;
   lessonProgress?: string | null;
   currentLocation?: string | null;
   status?: string | null;
@@ -3046,7 +3046,7 @@ export type UpdateAnthologyCommentInput = {
 };
 
 export type DeleteAnthologyCommentInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateQuestionDataInput = {
@@ -3093,7 +3093,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -3117,7 +3117,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateFeedbackInput = {
@@ -3144,7 +3144,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreatePersonLocationInput = {
@@ -3184,7 +3184,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id: string;
+  id?: string | null;
   personAuthID: string;
   personEmail: string;
   syllabusLessonID?: string | null;
@@ -3295,15 +3295,16 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateAttendanceInput = {
   id?: string | null;
   studentID: string;
-  curriculumID?: string | null;
-  syllabusID?: string | null;
-  lessonID?: string | null;
+  curriculumID: string;
+  syllabusID: string;
+  lessonID: string;
+  date?: string | null;
   time?: string | null;
 };
 
@@ -3312,6 +3313,7 @@ export type ModelAttendanceConditionInput = {
   curriculumID?: ModelIDInput | null;
   syllabusID?: ModelIDInput | null;
   lessonID?: ModelIDInput | null;
+  date?: ModelStringInput | null;
   time?: ModelStringInput | null;
   and?: Array<ModelAttendanceConditionInput | null> | null;
   or?: Array<ModelAttendanceConditionInput | null> | null;
@@ -3322,9 +3324,10 @@ export type Attendance = {
   __typename: 'Attendance';
   id?: string;
   studentID?: string;
-  curriculumID?: string | null;
-  syllabusID?: string | null;
-  lessonID?: string | null;
+  curriculumID?: string;
+  syllabusID?: string;
+  lessonID?: string;
+  date?: string | null;
   time?: string | null;
   createdAt?: string;
   updatedAt?: string;
@@ -3336,11 +3339,12 @@ export type UpdateAttendanceInput = {
   curriculumID?: string | null;
   syllabusID?: string | null;
   lessonID?: string | null;
+  date?: string | null;
   time?: string | null;
 };
 
 export type DeleteAttendanceInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreatePlannerInput = {
@@ -3401,7 +3405,7 @@ export type UpdatePlannerInput = {
 };
 
 export type DeletePlannerInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateUniversalLessonInput = {
@@ -3726,7 +3730,7 @@ export type UpdateUniversalSyllabusLessonInput = {
 };
 
 export type DeleteUniversalSyllabusLessonInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type CreateUniversalLessonFeedbackInput = {
@@ -3753,7 +3757,7 @@ export type UpdateUniversalLessonFeedbackInput = {
 };
 
 export type DeleteUniversalLessonFeedbackInput = {
-  id?: string | null;
+  id: string;
 };
 
 export type ModelStringKeyConditionInput = {
@@ -4444,6 +4448,7 @@ export type ModelAttendanceFilterInput = {
   curriculumID?: ModelIDInput | null;
   syllabusID?: ModelIDInput | null;
   lessonID?: ModelIDInput | null;
+  date?: ModelStringInput | null;
   time?: ModelStringInput | null;
   and?: Array<ModelAttendanceFilterInput | null> | null;
   or?: Array<ModelAttendanceFilterInput | null> | null;
@@ -4655,6 +4660,192 @@ export type BatchAddClassStudentMutation = {
         __typename: 'ModelClassStudentConnection';
         nextToken?: string | null;
       } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    updatedAt: string;
+  } | null> | null;
+};
+
+export type BatchAddLessonRubricsMutationVariables = {
+  lessonRubrics?: Array<CreateLessonRubricsInput | null> | null;
+};
+
+export type BatchAddLessonRubricsMutation = {
+  batchAddLessonRubrics?: Array<{
+    __typename: 'LessonRubrics';
+    id: string;
+    lessonID: string;
+    rubricID: string;
+    lesson?: {
+      __typename: 'Lesson';
+      id: string;
+      title: string;
+      type: string;
+      label?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      theme?: {
+        __typename: 'Theme';
+        type?: string | null;
+        name: string;
+        summary: Array<string>;
+        summaryLabel: string;
+        connection?: string | null;
+        images: Array<string>;
+      } | null;
+      grades?: Array<number | null> | null;
+      artistID: string;
+      artist?: {
+        __typename: 'Artist';
+        id: string;
+        images?: Array<string> | null;
+        name: string;
+        type: string;
+        bio: Array<string>;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      language?: Array<Language> | null;
+      SELStructure?: string | null;
+      keywords?: {
+        __typename: 'ModelLessonKeyWordConnection';
+        nextToken?: string | null;
+      } | null;
+      connection?: string | null;
+      summary?: string | null;
+      purpose?: string | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelLessonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      doFirstID: string;
+      doFirst?: {
+        __typename: 'DoFirst';
+        id: string;
+        type: string;
+        required: boolean;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      warmUpId: string;
+      warmUp?: {
+        __typename: 'WarmUp';
+        id: string;
+        title: string;
+        label: string;
+        stage: string;
+        type: string;
+        language: Language;
+        SELTypes?: Array<string> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      coreLessonId: string;
+      coreLesson?: {
+        __typename: 'CoreLesson';
+        id: string;
+        title: string;
+        label: string;
+        stage: string;
+        type: string;
+        language: Language;
+        SELTypes?: Array<string> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      activityId: string;
+      activity?: {
+        __typename: 'Activity';
+        id: string;
+        title: string;
+        label: string;
+        stage: string;
+        type: string;
+        language: Language;
+        SELTypes?: Array<string> | null;
+        lineNumber?: number | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      assessmentID: string;
+      assessment?: {
+        __typename: 'Assessment';
+        id: string;
+        title: string;
+        type: string;
+        openingMessage?: Array<string | null> | null;
+        closingMessage?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      filters?: Array<string | null> | null;
+      coverImage?: string | null;
+      summaryTitle?: string | null;
+      introductionTitle?: string | null;
+      introduction?: string | null;
+      connectionTitle?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'LessonComponents';
+        type?: string | null;
+        LessonComponentID: string;
+        sequence?: number | null;
+        stage?: string | null;
+      } | null> | null;
+      measurements?: {
+        __typename: 'ModelLessonRubricsConnection';
+        nextToken?: string | null;
+      } | null;
+      institutionID: string;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    rubric?: {
+      __typename: 'Rubric';
+      id: string;
+      name?: string | null;
+      criteria?: string | null;
+      topicID: string;
+      topic?: {
+        __typename: 'Topic';
+        id: string;
+        curriculumID: string;
+        learningObjectiveID: string;
+        name: string;
+        description?: string | null;
+        distinguished?: string | null;
+        excelled?: string | null;
+        adequite?: string | null;
+        basic?: string | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      curriculumID: string;
       createdAt: string;
       updatedAt: string;
     } | null;
@@ -16796,9 +16987,10 @@ export type CreateAttendanceMutation = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;
@@ -16815,9 +17007,10 @@ export type UpdateAttendanceMutation = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;
@@ -16834,9 +17027,10 @@ export type DeleteAttendanceMutation = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;
@@ -23227,9 +23421,10 @@ export type GetAttendanceQuery = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;
@@ -23249,9 +23444,10 @@ export type ListAttendancesQuery = {
       __typename: 'Attendance';
       id: string;
       studentID: string;
-      curriculumID?: string | null;
-      syllabusID?: string | null;
-      lessonID?: string | null;
+      curriculumID: string;
+      syllabusID: string;
+      lessonID: string;
+      date?: string | null;
       time?: string | null;
       createdAt: string;
       updatedAt: string;
@@ -35678,9 +35874,10 @@ export type OnCreateAttendanceSubscription = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;
@@ -35692,9 +35889,10 @@ export type OnUpdateAttendanceSubscription = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;
@@ -35706,9 +35904,10 @@ export type OnDeleteAttendanceSubscription = {
     __typename: 'Attendance';
     id: string;
     studentID: string;
-    curriculumID?: string | null;
-    syllabusID?: string | null;
-    lessonID?: string | null;
+    curriculumID: string;
+    syllabusID: string;
+    lessonID: string;
+    date?: string | null;
     time?: string | null;
     createdAt: string;
     updatedAt: string;

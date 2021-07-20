@@ -359,6 +359,15 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <InputModalComponent {...commonProps} contentType={type} />;
       case 'video':
         return <YouTubeMediaDialog {...commonProps} />;
+      case 'custom_video':
+        return (
+          <ImageFormComponent
+            {...commonProps}
+            customVideo
+            handleGalleryModal={handleGalleryModal}
+            selectedImageFromGallery={selectedImageFromGallery}
+          />
+        );
       case 'tag':
         return <TagInputDialog {...commonProps} />;
       case 'jumbotron':
@@ -455,6 +464,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Multiple Options Component';
       case FORM_TYPES.DATE_PICKER:
         return 'Date Picker Component';
+      case 'custom_video':
+        return 'Video Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }

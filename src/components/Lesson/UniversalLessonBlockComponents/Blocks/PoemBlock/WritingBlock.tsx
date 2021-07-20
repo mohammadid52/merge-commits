@@ -81,7 +81,9 @@ const WritingBlock = (props: WritingBlockProps) => {
       </div>
 
       <div
-        className={`w-full flex flex-col border-2 border-white border-opacity-20 rounded-lg p-4`}>
+        className={`w-full flex flex-col border-2 ${
+          lessonPageTheme === 'light' ? 'border-dark-gray' : 'border-white'
+        } border-opacity-20 rounded-lg p-4`}>
         {/* MAP THE LINE PROMPTS */}
         {poemInput.map((inputObj: StudentPageInput, idx: number) => (
           <div key={`${inputObj.domID}`} className={`mb-4`}>

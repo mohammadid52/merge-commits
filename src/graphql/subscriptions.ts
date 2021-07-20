@@ -10469,6 +10469,7 @@ export const onCreateAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -10483,6 +10484,7 @@ export const onUpdateAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -10497,6 +10499,7 @@ export const onDeleteAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt

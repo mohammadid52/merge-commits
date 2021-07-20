@@ -8,6 +8,7 @@ import {
   AiOutlineLink,
   AiOutlineQuestionCircle,
   AiOutlineSwapRight,
+  AiOutlineVideoCameraAdd,
   AiOutlineYoutube,
 } from 'react-icons/ai';
 import {MdInput, MdTitle} from 'react-icons/md';
@@ -88,6 +89,14 @@ const AddContentDialog = ({
       icon: AiOutlineFileImage,
       iconForeground: 'text-teal-700',
       iconBackground: 'bg-teal-100',
+    },
+    {
+      subtitle: 'Add Video',
+      name: 'Video',
+      type: 'custom_video',
+      icon: AiOutlineVideoCameraAdd,
+      iconForeground: 'text-pink-700',
+      iconBackground: 'bg-pink-100',
     },
     {
       name: 'Youtube Video',

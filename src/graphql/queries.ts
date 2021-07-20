@@ -4665,6 +4665,7 @@ export const getAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      date
       time
       createdAt
       updatedAt
@@ -4684,6 +4685,7 @@ export const listAttendances = /* GraphQL */ `
         curriculumID
         syllabusID
         lessonID
+        date
         time
         createdAt
         updatedAt

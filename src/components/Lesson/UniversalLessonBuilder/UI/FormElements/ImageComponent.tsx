@@ -27,6 +27,7 @@ interface IImageFormComponentProps extends IContentTypeComponentProps {
   handleGalleryModal: () => void;
   inputObj?: IImageInput[];
   selectedImageFromGallery?: string;
+  customVideo?: boolean;
 }
 
 const ImageFormComponent = ({
@@ -36,6 +37,7 @@ const ImageFormComponent = ({
   updateBlockContentULBHandler,
   handleGalleryModal,
   setUnsavedChanges,
+  customVideo = false,
   askBeforeClose,
   selectedImageFromGallery,
 }: IImageFormComponentProps) => {
@@ -52,6 +54,7 @@ const ImageFormComponent = ({
     height: 'auto',
     caption: '',
   });
+
   const [errors, setErrors] = useState<IImageInput>({
     value: '',
     width: '',
@@ -119,11 +122,21 @@ const ImageFormComponent = ({
           value: `ULB/${user.id}/content_image_${fileName}`,
         };
         if (isEditingMode) {
-          const updatedList = updateBlockContentULBHandler('', '', 'image', [payload]);
+          const updatedList = updateBlockContentULBHandler(
+            '',
+            '',
+            customVideo ? 'custom_video' : 'image',
+            [payload]
+          );
           console.log('updatedList ---- ', updatedList);
           await addToDB(updatedList);
         } else {
-          const updatedList = createNewBlockULBHandler('', '', 'image', [payload]);
+          const updatedList = createNewBlockULBHandler(
+            '',
+            '',
+            customVideo ? 'custom_video' : 'image',
+            [payload]
+          );
           console.log('updatedList ---- ', updatedList);
           await addToDB(updatedList);
         }
@@ -194,11 +207,12 @@ const ImageFormComponent = ({
               'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
             }>
             <ULBFileUploader
-              acceptedFilesFormat={'image/*'}
+              acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
               updateFileUrl={updateFileUrl}
               fileUrl={value}
               error={errors?.value}
-              showPreview={false}
+              customVideo={customVideo}
+              showPreview={true}
             />
             <div className="flex flex-col items-center justify-center text-gray-400">
               --- Or ---
@@ -239,19 +253,31 @@ const ImageFormComponent = ({
                 onChange={handleInputChange}
                 name="caption"
                 label={'Caption'}
-                placeHolder={'Enter image caption here'}
+                placeHolder={`Enter ${customVideo ? 'video' : 'image'} caption here`}
               />
             </div>
           </div>
         </div>
         {value ? (
-          <div>
-            <img
-              src={imageData ? value : getImageFromS3Static(value)}
-              alt=""
-              className={`w-auto h-30 pt-4`}
-            />
-          </div>
+          customVideo ? (
+            <div className="w-72 h-auto mx-auto mt-6">
+              <video
+                controls
+                className="rounded-lg mx-auto"
+                src={imageData ? value : getImageFromS3Static(value)}>
+                <source />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          ) : (
+            <div>
+              <img
+                src={imageData ? value : getImageFromS3Static(value)}
+                alt=""
+                className={`w-auto h-30 pt-4`}
+              />
+            </div>
+          )
         ) : null}
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">

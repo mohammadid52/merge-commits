@@ -260,7 +260,7 @@ const LessonActivities = ({
                                   </div>
 
                                   <div
-                                    className="flex w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
+                                    className="flex flex-col w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
                                     dangerouslySetInnerHTML={{__html: page.description}}
                                   />
 
