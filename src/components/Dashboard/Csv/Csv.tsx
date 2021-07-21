@@ -223,6 +223,7 @@ const Csv = (props: Csv) => {
           syllabusLessonID: { eq: syllabusLessonID },
           ...createFilterToFetchSpecificItemsOnly(studentsEmails, 'email'),
         },
+        limit: 1000,
       })
     );
     let studentsAnswersDemographicsCheckpointsQuestions =
@@ -339,6 +340,7 @@ const Csv = (props: Csv) => {
             syllabusLessonID: { eq: syllabusLessonID },
             ...createFilterToFetchSpecificItemsOnly(studsEmails, 'email'),
           },
+          limit: 1000,
         })
       );
       let studentsAnswersSurveyCheckpointsQuestions =
