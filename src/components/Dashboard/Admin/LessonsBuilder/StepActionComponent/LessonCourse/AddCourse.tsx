@@ -337,7 +337,7 @@ const AddCourse = (props: IAddCourse) => {
         </div>
       </div>
       <div className="flex mt-8 justify-center px-6 pb-4">
-        <div className="flex justify-end">
+        {/* <div className="flex justify-end">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
             label={BUTTONS[userLanguage]['CANCEL']}
@@ -353,7 +353,7 @@ const AddCourse = (props: IAddCourse) => {
             // onClick={onSave}
             disabled={loading}
           />
-        </div>
+        </div> */}
         {warnModal.show && (
           <ModalPopUp
             closeAction={onDiscard}
