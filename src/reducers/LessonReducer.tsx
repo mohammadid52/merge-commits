@@ -51,6 +51,10 @@ export type LessonActions =
       payload: number;
     }
   | {
+      type: 'SET_CLOSED_PAGES';
+      payload: string[];
+    }
+  | {
       type: 'TOGGLE_OPEN_PAGE';
       payload: number;
     }
@@ -151,13 +155,24 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
+    case 'SET_CLOSED_PAGES':
+      const mappedClosedPages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (action.payload.includes(page.id)) {
+            return {...page, open: false};
+          } else {
+            return page;
+          }
+        }
+      );
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedClosedPages}};
     case 'TOGGLE_OPEN_PAGE':
       const mappedPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
           if (idx !== action.payload) {
             return page;
           } else {
-            return {...page, open: !page.open};
+            return {...page, open: page.open === false ? true : false};
           }
         }
       );

@@ -15,6 +15,12 @@ export const getDashboardData = /* GraphQL */ `
                 name
                 maxPersons
                 activeSyllabus
+                activeLessonId
+                ClosedPages
+                disabledPages
+                studentViewing
+                displayData
+                currentPage
                 teacher {
                   firstName
                   lastName
@@ -213,6 +219,12 @@ export const getDashboardDataForTeachers = /* GraphQL */ `
             }
           }
         }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }
@@ -638,6 +650,12 @@ export const listRooms = /* GraphQL */ `
           preferredName
           lastName
         }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
       }
       nextToken
     }
@@ -868,6 +886,12 @@ export const listRoomsDashboard = /* GraphQL */ `
         repeat
         notes
         activeSyllabus
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
         createdAt
         updatedAt
       }

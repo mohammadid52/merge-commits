@@ -13,24 +13,20 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import {useParams} from 'react-router';
-import {lessonControlState} from '../../state/LessonControlState';
 import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
 import usePrevious from '../../customHooks/previousProps';
 import {
   UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../../interfaces/UniversalLessonInterfaces';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customQueries from '../../customGraphql/customQueries';
+import {getSessionData} from '../../utilities/sessionData';
 
 const LessonControl = () => {
-  const {
-    state,
-    dispatch,
-    lessonState,
-    lessonDispatch,
-    controlState,
-    controlDispatch,
-    theme,
-  } = useContext(GlobalContext);
+  const {dispatch, lessonState, lessonDispatch, controlState, theme} = useContext(
+    GlobalContext
+  );
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
@@ -49,7 +45,7 @@ const LessonControl = () => {
     });
   };
 
-  const {visible, setVisible, ref} = useOutsideAlerter(false);
+  const {visible, setVisible} = useOutsideAlerter(false);
   const [quickRegister, setQuickRegister] = useState(false);
   const [homePopup, setHomePopup] = useState(false);
   const [lessonButton, setLessonButton] = useState(false);
@@ -74,27 +70,6 @@ const LessonControl = () => {
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
-  const subscribeToStudentData = (lessonID: string, authId: string) => {
-    //   const studentDataSubscription = API.graphql(
-    //     graphqlOperation(customSubscriptions.onChangeStudentData, {
-    //       syllabusLessonID: lessonID,
-    //     })
-    //     // @ts-ignore
-    //   ).subscribe({
-    //     next: (studentData: any) => {
-    //       let updatedData = studentData.value.data.onChangeStudentData;
-    //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
-    //     },
-    //   });
-    //
-    //   return studentDataSubscription;
-    /**
-     * TODO:
-     *  Ask Aman how to set this up...
-     *  Subscribe to studentData, but then 1 row at a time
-     *  based on these filters: lessonID, authId
-     */
-  };
 
   const transformStudentData = (dataArray: UniversalLessonStudentData[]) => {
     const newArray = lessonState.lessonData.lessonPlan.map(
@@ -134,13 +109,12 @@ const LessonControl = () => {
   const getSyllabusLesson = async (lessonID?: string) => {
     // lessonID will be undefined for testing
     if (lessonID !== '') {
-      console.log('getSyllabusLesson - ', lessonID);
-
-      // const lesson: any = await API.graphql(
-      //   graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
-      // );
+      const universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+      );
+      const response = universalLesson.data.getUniversalLesson;
       setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
       //
       // subscription = subscribeToStudentData(lessonID);
@@ -151,6 +125,7 @@ const LessonControl = () => {
     }
   };
 
+  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
@@ -164,17 +139,26 @@ const LessonControl = () => {
         subscription.unsubscribe();
       }
       lessonDispatch({type: 'CLEANUP'});
-      // lessonControlDispatch({type: 'CLEANUP'});
     };
   }, []);
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+  // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
       setLessonDataLoaded(true);
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
+
+      const getRoomData = getSessionData('room_info');
+
+      if (
+        lessonState.lessonData.lessonPlan &&
+        lessonState.lessonData.lessonPlan.length > 0
+      ) {
+        lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData.ClosedPages});
+      }
 
       // MODIFY REDUCER FOR THIS
       // lessonControlDispatch({

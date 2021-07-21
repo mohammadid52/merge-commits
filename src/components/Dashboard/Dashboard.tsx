@@ -20,7 +20,11 @@ import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
-import {handleFetchAndCache} from '../../utilities/sessionData';
+import {
+  getSessionData,
+  removeSessionData,
+  setSessionData,
+} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
@@ -30,10 +34,7 @@ import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuil
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
 import axios from 'axios';
-// const happyEmoji = require('')
 
-// import ClassroomControl from './ClassroomControl/ClassroomControl';
-// const DashboardHome = lazy(() => import('./DashboardHome/DashboardHome'))
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
 const Profile = lazy(() => import('./Profile/Profile'));
@@ -558,15 +559,16 @@ const Dashboard = (props: DashboardProps) => {
           valueObj: {filter: {roomID: {eq: state.activeRoom}}},
         };
 
-        const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
-        const response = await noticeboardWidgetsFetch;
-        const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+        // const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
+        // const response = await noticeboardWidgetsFetch;
+        // const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+        const keepEmptyForNow = [];
 
         dispatch({
           type: 'UPDATE_ROOM',
           payload: {
             property: 'widgets',
-            data: arrayOfResponseObjects,
+            data: keepEmptyForNow,
           },
         });
       } catch (e) {
@@ -625,14 +627,14 @@ const Dashboard = (props: DashboardProps) => {
 
   // Save info of selected room to cookie
   useEffect(() => {
-    const getRoomFromState = state.roomData.rooms.filter(
+    const getRoomFromState = state.roomData.rooms.find(
       (room: any) => room.id === state.activeRoom
     );
-    if (getRoomFromState.length === 1) {
-      setCookie('room_info', getRoomFromState[0]);
-      setActiveRoomInfo(getRoomFromState[0]);
+    if (getRoomFromState) {
+      setSessionData('room_info', getRoomFromState);
+      setActiveRoomInfo(getRoomFromState);
     } else {
-      setCookie('room_info', {});
+      removeSessionData('room_info');
     }
   }, [state.activeRoom]);
 
