@@ -226,7 +226,6 @@ const LessonApp = () => {
         );
         return initialessonPageageData;
       });
-      console.log('PAGES - ', PAGES);
       lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
       setStudentDataInitialized(true);
     }

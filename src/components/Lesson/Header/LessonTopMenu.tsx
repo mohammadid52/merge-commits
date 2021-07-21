@@ -19,9 +19,10 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
   //  ENABLE NAVIGATION DEPENDING ON PAGE POSITION
   const [canContinue, setCanContinue] = useState<boolean>(false);
   const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
+
   useEffect(() => {
     if (PAGES) {
-      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1]?.open;
+      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1]?.open !== false;
       const USER_AT_END = CURRENT_PAGE === PAGES.length - 1;
 
       if (CAN_CONTINUE && !USER_AT_END) {

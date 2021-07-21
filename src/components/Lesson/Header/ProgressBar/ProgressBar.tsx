@@ -14,37 +14,37 @@ interface Page {
 
 const ProgressBar = () => {
   const {lessonState, lessonDispatch} = useContext(GlobalContext);
-  const [clickable, setClickable] = useState<number>();
+  // const [clickable, setClickable] = useState<number>();
 
   const PAGES = lessonState.lessonData.lessonPlan;
   const LESSON_PROGRESS = lessonState.lessonProgress;
 
-  useEffect(() => {
-    /**
-     *
-     *
-     * STOPPING POINTS
-     * any circle should be clickable up until 1 before
-     * the next closed component, or breakdown which is not active
-     *
-     */
-    const stoppingPoints = PAGES
-      ? PAGES.reduce((acc: [], page: UniversalLessonPage, i: number) => {
-          const isDisabled = !page.enabled;
-          const isClosed = !page.open;
+  // useEffect(() => {
+  //   /**
+  //    *
+  //    *
+  //    * STOPPING POINTS
+  //    * any circle should be clickable up until 1 before
+  //    * the next closed component, or breakdown which is not active
+  //    *
+  //    */
+  //   const stoppingPoints = PAGES
+  //     ? PAGES.reduce((acc: [], page: UniversalLessonPage, i: number) => {
+  //         const isDisabled = !page.enabled;
+  //         const isClosed = !page.open;
 
-          //  Disabled or closed = don't go
-          if ((i !== 0 && isDisabled) || (i !== 0 && isClosed)) {
-            return [...acc, i];
-          } else {
-            return acc;
-          }
-        }, [])
-      : [];
+  //         //  Disabled or closed = don't go
+  //         if ((i !== 0 && isDisabled) || (i !== 0 && isClosed)) {
+  //           return [...acc, i];
+  //         } else {
+  //           return acc;
+  //         }
+  //       }, [])
+  //     : [];
 
-    const earliestStoppingPoint = Math.min(...stoppingPoints);
-    setClickable(earliestStoppingPoint);
-  }, [PAGES]);
+  //   const earliestStoppingPoint = Math.min(...stoppingPoints);
+  //   setClickable(earliestStoppingPoint);
+  // }, [PAGES]);
 
   const lessonProgressBar = () => {
     return (
@@ -90,8 +90,6 @@ const ProgressBar = () => {
    * Explanation
    *
    * state.currentPage = number of current page from 0 - total nr of pages
-   * state.pages = array of available pages
-   * state.pages[i].type = name of page type/story/breakdown
    */
 
   return (
