@@ -251,6 +251,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       message: '',
       show: false,
       id: '',
+      type: '',
+      key: ''
     });
   };
   const deletImageFromS3 = (key: string) => {
@@ -260,6 +262,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       Storage.remove(key)
         .then((result) => {
           resolve(result);
+          closeAction()
         })
         .catch((err) => {
           console.log('Error in deleting file from s3', err);
