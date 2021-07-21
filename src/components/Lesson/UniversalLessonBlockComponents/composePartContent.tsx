@@ -10,6 +10,7 @@ import {ImageBlock} from './Blocks/ImageBlock';
 import {VideoBlock} from './Blocks/VideoBlock';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import React from 'react';
+import CustomVideoBlock from './Blocks/CustomVideoBlock';
 
 const composePartContent = (
   id: string,
@@ -70,8 +71,7 @@ const composePartContent = (
     );
   } else if (type.includes('custom_video')) {
     return (
-      <ImageBlock
-        customVideo
+      <CustomVideoBlock
         key={inputKey}
         id={id}
         dataIdAttribute={inputKey}

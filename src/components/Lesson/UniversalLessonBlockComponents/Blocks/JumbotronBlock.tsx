@@ -11,19 +11,19 @@ interface JumbotronBlockProps extends RowWrapperProps {
 }
 
 interface JumbotronInterface {
-  src?: string;
-  title?: string;
-  subtitle?: string;
-  description?: string;
+  src?: string;                 
+  title?: string;                 
+  subtitle?: string;                  
+  description?: string;                 
 }
 
 export const JumbotronBlock = (props: JumbotronBlockProps) => {
   const {id, value} = props;
   const [jumbotronInfo, setJumbotronInfo] = useState<JumbotronInterface>({
-    src: '',
-    title: '',
-    subtitle: '',
-    description: '',
+    src: '',                                                        
+    title: '',                                                        
+    subtitle: '',                                           
+    description: '',                                                        
   });
 
   useEffect(() => {
@@ -57,7 +57,10 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
     <div
       id={id}
       className="h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg"
-      style={{backgroundImage: `url(${jumbotronInfo.src})`}}>
+      style={{
+        backgroundImage: ` url(${jumbotronInfo.src})`,
+       
+      }}>
       <QuoteBlock
         title={jumbotronInfo.title}
         subtitle={jumbotronInfo.subtitle}
