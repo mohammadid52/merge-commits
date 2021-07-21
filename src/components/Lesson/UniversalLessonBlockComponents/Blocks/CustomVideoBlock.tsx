@@ -76,7 +76,7 @@ export const CustomVideoBlock = (props: ImageBlockProps) => {
         <source />
         Your browser does not support the video tag.
       </video>
-      )<p className="text-center">{caption}</p>
+      <p className="text-center">{caption}</p>
     </div>
   );
 };

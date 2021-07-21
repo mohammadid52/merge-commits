@@ -36,10 +36,7 @@ const ParaModalComponent = ({
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      console.log(
-        '🚀 ~ file: ParaFormDialog.tsx ~ line 29 ~ inputObj',
-        inputObj[0].value
-      );
+    
 
       setEditorContent(inputObj[0].value, inputObj[0].value);
       setIsEditingMode(true);
@@ -53,6 +50,7 @@ const ParaModalComponent = ({
       id: list.id,
       lessonPlan: [...list.lessonPlan],
     };
+    console.log("🚀 ~ file: ParaFormDialog.tsx ~ line 53 ~ addToDB ~ input", input.lessonPlan[0])
 
     await updateLessonPageToDB(input);
   };
@@ -62,12 +60,12 @@ const ParaModalComponent = ({
     const partContentId: string = uniqueId(`${pageContentId}_`);
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), inputFieldValue},
+        {id: uuidv4().toString(), value:inputFieldValue},
       ]);
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), inputFieldValue},
+        {id: uuidv4().toString(), value:inputFieldValue},
       ]);
       await addToDB(updatedList);
     }
