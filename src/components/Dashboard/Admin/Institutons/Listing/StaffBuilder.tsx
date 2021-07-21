@@ -43,29 +43,15 @@ const StaffBuilder = (props: StaffBuilderProps) => {
   const { staffBuilderDict } = useDictionary(clientKey);
   const dictionary = staffBuilderDict[userLanguage];
   const [availableUsers, setAvailableUsers] = useState([]);
-  const [allAvailableUsers, setAllAvailableUsers] = useState([]);
-  const [newMember, setNewMember] = useState({
-    name: '',
-    id: '',
-    value: '',
-    avatar: '',
-  });
+  const [showAddSection, setShowAddSection] = useState(false);
+  const [newMember, setNewMember] = useState({ id: '', name: '', value: '', avatar: '' });
   const [activeStaffList, setActiveStaffList] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
-  const [showModal, setShowModal] = useState<{ show: boolean; item: any }>({
-    show: false,
-    item: {},
-  });
   const [statusEdit, setStatusEdit] = useState('');
   const [updateStatus, setUpdateStatus] = useState(false);
 
   const onChange = (str: string, name: string, id: string, avatar: string) => {
-    setNewMember({
-      name: name,
-      id: id,
-      value: str,
-      avatar: avatar,
-    });
+    setNewMember({ id, name, value: str, avatar });
   };
 
   const getStaffRole = (role: string) => {
@@ -85,18 +71,20 @@ const StaffBuilder = (props: StaffBuilderProps) => {
 
   const onDragEnd = async (result: any) => {
     // Change staff sequence
-    if (result.source.index !== result.destination.index) {
-      const previousList = [...activeStaffList];
-      let staffIDs = previousList?.map((item) => item.userId);
-      const list = reorder(staffIDs, result.source.index, result.destination.index);
-      let updatedList = previousList
-        .map((t: any) => {
-          let index = list.indexOf(t.userId);
-          return { ...t, index };
-        })
-        .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-      setActiveStaffList(updatedList);
-      updateStaffSequence(list);
+    if (result.source && result.destination) {
+      if (result.source.index !== result.destination.index) {
+        const previousList = [...activeStaffList];
+        let staffIDs = previousList?.map((item) => item.userId);
+        const list = reorder(staffIDs, result.source.index, result.destination.index);
+        let updatedList = previousList
+          .map((t: any) => {
+            let index = list.indexOf(t.userId);
+            return { ...t, index };
+          })
+          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+        setActiveStaffList(updatedList);
+        updateStaffSequence(list);
+      }
     }
   };
 
@@ -114,10 +102,8 @@ const StaffBuilder = (props: StaffBuilderProps) => {
       );
       const personsList = sortedList.map((item: any, i: any) => ({
         id: item.id,
-        name: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''
-          }`,
-        value: `${item.firstName ? item.firstName : ''} ${item.lastName ? item.lastName : ''
-          }`,
+        name: `${item.firstName || ''} ${item.lastName || '' }`,
+        value: `${item.firstName || ''} ${item.lastName || '' }`,
         authId: item.authId,
         email: item.email,
         avatar: item.image ? getImageFromS3(item.image) : '',
@@ -181,8 +167,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         if (member.staffMember && staffUserIds.indexOf(member.staffMember.id) < 0) {
           staffUserIds.push(member.staffMember.id);
           member.userId = member.staffMember.id;
-          member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || ''
-            }`;
+          member.name = `${member.staffMember.firstName || ''} ${member.staffMember.lastName || '' }`;
           member.image = member.staffMember.image
             ? getImageFromS3(member?.staffMember?.image)
             : null;
@@ -272,15 +257,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
         return { ...item, index };
       })
       .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-
-    let users = await getPersonsList();
-    let availableUsersList = users.filter(
-      (item: any) => staffMembersIds.indexOf(item.id) < 0
-    );
     setActiveStaffList(staffLists);
-    setAvailableUsers(availableUsersList);
-    // saving the initial all users list for future use. see removeStaff member function for use.
-    setAllAvailableUsers(users);
     setDataLoading(false);
   };
 
@@ -310,6 +287,16 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     setStatusEdit('');
   };
 
+  const showAddStaffSection = async () => {
+    let users = await getPersonsList();
+    const staffMembersIds = activeStaffList.map((item: any) => item.userId);
+    let availableUsersList = users.filter(
+      (item: any) => staffMembersIds.indexOf(item.id) < 0
+    );
+    setAvailableUsers(availableUsersList);
+    setShowAddSection(true);
+  }
+
   return (
     <div className="pb-8 flex m-auto justify-center">
       <div className="">
@@ -317,8 +304,14 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {instName?.toUpperCase()} {dictionary['TITLE']}
           </h3>
-          {!dataLoading ? (
-            <>
+          <Buttons
+            btnClass="ml-4 py-1"
+            label={'Add staff member'}
+            onClick={showAddStaffSection}
+          />
+
+          {
+            showAddSection ?
               <div className="flex items-center w-6/10 m-auto px-2 mb-8">
                 <SelectorWithAvatar
                   imageFromS3={false}
@@ -333,7 +326,10 @@ const StaffBuilder = (props: StaffBuilderProps) => {
                   onClick={addStaffMember}
                 />
               </div>
-
+              : null
+          }
+          {!dataLoading ? (
+            <>
               {activeStaffList?.length > 0 ? (
                 <Fragment>
                   <div className="flex justify-between w-full py-4 whitespace-nowrap border-b-0 border-gray-200">
