@@ -464,8 +464,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Multiple Options Component';
       case FORM_TYPES.DATE_PICKER:
         return 'Date Picker Component';
-      case 'custom_video':
+      case FORM_TYPES.CUSTOM_VIDEO:
         return 'Video Component';
+      case FORM_TYPES.HIGHLIGHTER:
+        return 'Highlighter Component';
+      case FORM_TYPES.POEM:
+        return 'Poem Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }
