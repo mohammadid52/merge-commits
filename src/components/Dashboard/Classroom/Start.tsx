@@ -29,11 +29,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const {lessonKey, open, accessible, type, roomID} = props;
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
+  const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
 
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
   useEffect(() => {
-    fetchAttendance();
+    if (type === 'lesson') {
+      fetchAttendance();
+    }
   }, []);
 
   const mutateToggleEnableDisable = async () => {
@@ -70,41 +73,49 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       const syllabusData = state.roomData.syllabus.find(
         (syllabus: any) => syllabus.active
       );
-      const list: any = await API.graphql(
-        graphqlOperation(queries.listAttendances, {
-          filter: {
-            studentID: {eq: state.user?.id},
-            curriculumID: syllabusData.curriculumID,
-            syllabusID: syllabusData.id,
-          },
-        })
-      );
-      console.log(list, 'list');  
-    } catch (error) {}
+      if (syllabusData) {
+        const list: any = await API.graphql(
+          graphqlOperation(queries.listAttendances, {
+            filter: {
+              studentID: {eq: state.user?.id},
+              curriculumID: {eq: syllabusData.curriculumID},
+              syllabusID: {eq: syllabusData.id},
+              lessonID: {eq: lessonKey},
+              date: {eq: awsFormatDate(dateString('-', 'WORLD'))},
+            },
+          })
+        );
+        setAttendanceRecorded(Boolean(list?.data.listAttendances?.items.length));
+      }
+    } catch (error) {
+      console.log(error, 'inside catch');
+    }
   };
 
   const handleLink = async () => {
     if (!isTeacher && accessible && open) {
       try {
-        setLoading(true);
-        const syllabusData = state.roomData.syllabus.find(
-          (syllabus: any) => syllabus.active
-        );
-        const payload = {
-          studentID: state.user?.id,
-          curriculumID: syllabusData.curriculumID,
-          syllabusID: syllabusData.id,
-          lessonID: lessonKey,
-          date: awsFormatDate(dateString('-', 'WORLD')),
-          time: new Date().toTimeString().split(' ')[0],
-        };
-        await API.graphql(
-          graphqlOperation(mutations.createAttendance, {
-            input: payload,
-          })
-        );
+        if (!attendanceRecorded) {
+          setLoading(true);
+          const syllabusData = state.roomData.syllabus.find(
+            (syllabus: any) => syllabus.active
+          );
+          const payload = {
+            studentID: state.user?.id,
+            curriculumID: syllabusData.curriculumID,
+            syllabusID: syllabusData.id,
+            lessonID: lessonKey,
+            date: awsFormatDate(dateString('-', 'WORLD')),
+            time: new Date().toTimeString().split(' ')[0],
+          };
+          await API.graphql(
+            graphqlOperation(mutations.createAttendance, {
+              input: payload,
+            })
+          );
+          setLoading(false);
+        }
         history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
-        setLoading(false);
       } catch (error) {
         setLoading(false);
       }
