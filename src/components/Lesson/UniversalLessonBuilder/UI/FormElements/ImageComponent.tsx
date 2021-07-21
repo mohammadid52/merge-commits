@@ -220,6 +220,8 @@ const ImageFormComponent = ({
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
+
+          setUploadProgress('done');
           resolve(true);
         })
         .catch((err: any) => {
@@ -232,6 +234,13 @@ const ImageFormComponent = ({
         });
     });
   };
+
+  console.log("🚀 ~ file: ImageComponent.tsx ~ line 238 ~ useEffect ~ uploadProgress", uploadProgress)
+  useEffect(() => {
+    if (uploadProgress === 'done') {
+      closeAction();
+    }
+  }, [uploadProgress]);
 
   const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
   return (
@@ -316,7 +325,7 @@ const ImageFormComponent = ({
           )
         ) : null}
 
-        {loading  && (
+        {loading && uploadProgress !== 'done' && (
           <ProgressBar
             status={uploadProgress < 99 ? 'Uploading Video' : 'Upload Done'}
             progress={uploadProgress}
