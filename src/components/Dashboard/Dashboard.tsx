@@ -550,36 +550,34 @@ const Dashboard = (props: DashboardProps) => {
    * 3.1 LIST ALL WIDGETS FOR ROOM          *
    ******************************************/
   useEffect(() => {
-    const listRoomWidgets = async () => {
-      setWidgetLoading(true);
-      //
-      try {
-        const queryObj = {
-          name: 'queries.listNoticeboardWidgets',
-          valueObj: {filter: {roomID: {eq: state.activeRoom}}},
-        };
-
-        // const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
-        // const response = await noticeboardWidgetsFetch;
-        // const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
-        const keepEmptyForNow = [];
-
-        dispatch({
-          type: 'UPDATE_ROOM',
-          payload: {
-            property: 'widgets',
-            data: keepEmptyForNow,
-          },
-        });
-      } catch (e) {
-        console.error('listNoticeboardWidgetsFetch: -> ', e);
-      } finally {
-        setWidgetLoading(false);
-      }
-    };
-    if (state.activeRoom && widgetLoading === false) {
-      listRoomWidgets();
-    }
+    // const listRoomWidgets = async () => {
+    //   setWidgetLoading(true);
+    //   //
+    //   try {
+    //     const queryObj = {
+    //       name: 'queries.listNoticeboardWidgets',
+    //       valueObj: {filter: {roomID: {eq: state.activeRoom}}},
+    //     };
+    //     // const noticeboardWidgetsFetch = await handleFetchAndCache(queryObj);
+    //     // const response = await noticeboardWidgetsFetch;
+    //     // const arrayOfResponseObjects = response?.data?.listNoticeboardWidgets?.items;
+    //     const keepEmptyForNow:any = [];
+    //     dispatch({
+    //       type: 'UPDATE_ROOM',
+    //       payload: {
+    //         property: 'widgets',
+    //         data: keepEmptyForNow,
+    //       },
+    //     });
+    //   } catch (e) {
+    //     console.error('listNoticeboardWidgetsFetch: -> ', e);
+    //   } finally {
+    //     setWidgetLoading(false);
+    //   }
+    // };
+    // if (state.activeRoom && widgetLoading === false) {
+    //   listRoomWidgets();
+    // }
   }, [state.activeRoom]);
 
   /**
