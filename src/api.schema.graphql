@@ -1085,6 +1085,7 @@ type Subscription {
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"])
+  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
 input CreateClassStudentInput {

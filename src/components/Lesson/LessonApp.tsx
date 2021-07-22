@@ -19,6 +19,7 @@ import * as mutations from '../../graphql/mutations';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as queries from '../../graphql/queries';
 import {Auth} from '@aws-amplify/auth';
+import {getSessionData} from '../../utilities/sessionData';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -144,6 +145,7 @@ const LessonApp = () => {
     }
   };
 
+  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
@@ -160,20 +162,33 @@ const LessonApp = () => {
     };
   }, []);
 
-  // ~~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+  // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+  // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
       setLessonDataLoaded(true);
+
+      // Initialize page url and context
+      if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
+        history.push(`${match.url}/${CURRENT_PAGE}`);
+      } else {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/${0}`);
+      }
+
+      // Initialize closed pages based on room-configuration
+      const getRoomData = getSessionData('room_info');
+
+      if (
+        lessonState.lessonData.lessonPlan &&
+        lessonState.lessonData.lessonPlan.length > 0
+      ) {
+        lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData.ClosedPages});
+      }
     }
-    if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
-      history.push(`${match.url}/${CURRENT_PAGE}`);
-    } else {
-      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-      history.push(`${match.url}/${0}`);
-    }
-  }, [lessonState.lessonData]);
+  }, [lessonState.lessonData.id]);
 
   // ##################################################################### //
   // ###################### INITIALIZE STUDENT DATA ###################### //
