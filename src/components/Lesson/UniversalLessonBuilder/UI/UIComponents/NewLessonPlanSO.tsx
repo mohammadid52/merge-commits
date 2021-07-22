@@ -331,6 +331,8 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                 interactionType: fields.interactionType || [],
                 activityType: classwork ? 'classwork' : 'homework',
                 pageContent: [],
+                disabled: false,
+                open: true,
               },
             ],
           };

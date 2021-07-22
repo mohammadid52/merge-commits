@@ -30,6 +30,36 @@ interface IImageFormComponentProps extends IContentTypeComponentProps {
   customVideo?: boolean;
 }
 
+const ProgressBar = ({
+  progress,
+  status = 'Task in progress',
+}: {
+  progress: string | number;
+  status?: string;
+}) => {
+  return (
+    <div className="relative pt-1 mt-4">
+      <div className="flex mb-2 items-center justify-between">
+        <div className="w-auto">
+          <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-indigo-600 bg-indigo-200">
+            {status}
+          </span>
+        </div>
+        <div className="text-right w-auto">
+          <span className="text-xs font-semibold inline-block text-indigo-600">
+            {progress}%
+          </span>
+        </div>
+      </div>
+      <div className="overflow-hidden w-auto h-2 mb-4 text-xs flex rounded bg-indigo-200">
+        <div
+          style={{width: `${progress}%`}}
+          className="shadow-none flex transition-width duration-100 flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500"></div>
+      </div>
+    </div>
+  );
+};
+
 const ImageFormComponent = ({
   inputObj,
   closeAction,
@@ -54,6 +84,8 @@ const ImageFormComponent = ({
     height: 'auto',
     caption: '',
   });
+
+  const [uploadProgress, setUploadProgress] = useState<string | number>(0);
 
   const [errors, setErrors] = useState<IImageInput>({
     value: '',
@@ -93,7 +125,7 @@ const ImageFormComponent = ({
   };
 
   const addToDB = async (list: any) => {
-    closeAction();
+    // closeAction();
 
     const input = {
       id: list.id,
@@ -128,7 +160,7 @@ const ImageFormComponent = ({
             customVideo ? 'custom_video' : 'image',
             [payload]
           );
-          console.log('updatedList ---- ', updatedList);
+
           await addToDB(updatedList);
         } else {
           const updatedList = createNewBlockULBHandler(
@@ -137,7 +169,7 @@ const ImageFormComponent = ({
             customVideo ? 'custom_video' : 'image',
             [payload]
           );
-          console.log('updatedList ---- ', updatedList);
+
           await addToDB(updatedList);
         }
       }
@@ -181,9 +213,15 @@ const ImageFormComponent = ({
       Storage.put(`ULB/${user.id}/content_image_${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
+        progressCallback: ({loaded, total}: any) => {
+          const progress = (loaded * 100) / total;
+          setUploadProgress(progress.toFixed(0));
+        },
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
+
+          setUploadProgress('done');
           resolve(true);
         })
         .catch((err: any) => {
@@ -196,6 +234,13 @@ const ImageFormComponent = ({
         });
     });
   };
+
+  console.log("🚀 ~ file: ImageComponent.tsx ~ line 238 ~ useEffect ~ uploadProgress", uploadProgress)
+  useEffect(() => {
+    if (uploadProgress === 'done') {
+      closeAction();
+    }
+  }, [uploadProgress]);
 
   const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
   return (
@@ -279,6 +324,14 @@ const ImageFormComponent = ({
             </div>
           )
         ) : null}
+
+        {loading && uploadProgress !== 'done' && (
+          <ProgressBar
+            status={uploadProgress < 99 ? 'Uploading Video' : 'Upload Done'}
+            progress={uploadProgress}
+          />
+        )}
+
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
             <Buttons

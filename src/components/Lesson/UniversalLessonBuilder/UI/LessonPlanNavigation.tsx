@@ -63,11 +63,9 @@ const LessonPlanNavigation = ({
     if (universalLessonDetails.darkMode) {
       setSettings({...settings, darkMode: true});
       handleThemeChange(true);
-      console.log('Show dark mode');
     } else {
       setSettings({...settings, darkMode: false});
       handleThemeChange(false);
-      console.log('Show light mode');
     }
   }, [universalLessonDetails]);
 

@@ -38,7 +38,6 @@ import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
 import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
 import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
 import {
-  FORM_TYPES,
   LINK,
   SELECT_MANY,
   SELECT_ONE,
@@ -46,6 +45,7 @@ import {
   ATTACHMENTS,
   DATE_PICKER,
   INPUT_WITH_EMOJI,
+  FORM_TYPES,
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
@@ -357,9 +357,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'form-numbered':
       case 'form-default':
         return <InputModalComponent {...commonProps} contentType={type} />;
-      case 'video':
+      case FORM_TYPES.VIDEO:
         return <YouTubeMediaDialog {...commonProps} />;
-      case 'custom_video':
+      case FORM_TYPES.CUSTOM_VIDEO:
         return (
           <ImageFormComponent
             {...commonProps}
@@ -368,17 +368,17 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             selectedImageFromGallery={selectedImageFromGallery}
           />
         );
-      case 'tag':
+      case FORM_TYPES.TAG:
         return <TagInputDialog {...commonProps} />;
-      case 'jumbotron':
+      case FORM_TYPES.JUMBOTRON:
         return <JumbotronFormDialog {...commonProps} />;
-      case 'highlighter':
+      case FORM_TYPES.HIGHLIGHTER:
         return <HighlighterFormDialog {...commonProps} />;
-      case 'poem':
+      case FORM_TYPES.POEM:
         return <LinestarterModalDialog {...commonProps} />;
-      case 'keywords':
+      case FORM_TYPES.KEYWORDS:
         return <KeywordModalDialog {...commonProps} />;
-      case 'links':
+      case FORM_TYPES.LINKS:
         return <LinksModalDialog {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
@@ -464,8 +464,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Multiple Options Component';
       case FORM_TYPES.DATE_PICKER:
         return 'Date Picker Component';
-      case 'custom_video':
+      case FORM_TYPES.CUSTOM_VIDEO:
         return 'Video Component';
+      case FORM_TYPES.HIGHLIGHTER:
+        return 'Highlighter Component';
+      case FORM_TYPES.POEM:
+        return 'Poem Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }
