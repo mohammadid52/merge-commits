@@ -11,6 +11,7 @@ import {VideoBlock} from './Blocks/VideoBlock';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import React from 'react';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
+import {FORM_TYPES} from '../UniversalLessonBuilder/UI/common/constants';
 
 const composePartContent = (
   id: string,
@@ -23,12 +24,20 @@ const composePartContent = (
   updateOnSave?: (inputID: string, updatedText: string, pagePartId: string) => void
 ): JSX.Element => {
   if (type.includes('jumbotron')) {
-    return <JumbotronBlock id={id} type={type} value={value} mode={mode} />;
+    return (
+      <JumbotronBlock
+        classString={classString}
+        id={id}
+        type={type}
+        value={value}
+        mode={mode}
+      />
+    );
   } else if (type.includes('keyword')) {
     return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
   } else if (type.includes('highlighter')) {
     return <HighlighterBlock id={id} type={type} value={value} mode={mode} />;
-  } else if (type.includes('poem')) {
+  } else if (type === FORM_TYPES.POEM) {
     return <PoemBlock id={id} type={type} value={value} mode={mode} />;
   } else if (type.includes('links')) {
     return <LinksBlock id={id} type={type} value={value} mode={mode} />;

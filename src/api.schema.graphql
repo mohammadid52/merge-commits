@@ -896,10 +896,11 @@ type NoticeboardWidget @model {
 type Attendance @model {
   id: ID!
   studentID: ID!
-  curriculumID: ID
-  syllabusID: ID
-  lessonID: ID
-  time: AWSDateTime
+  curriculumID: ID!
+  syllabusID: ID!
+  lessonID: ID!
+  date: AWSDate
+  time: AWSTime
 }
 
 type Planner @model {
@@ -1097,6 +1098,18 @@ input CreateClassStudentInput {
   status: String
 }
 
+input CreateLessonRubricsInput {
+  id: ID
+  lessonID: ID!
+  rubricID: ID!
+}
+
+input DeleteLessonRubricsInput {
+  id: ID!
+}
+
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
+  batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
+  batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }

@@ -8,6 +8,15 @@ export const FORM_TYPES = {
   MULTIPLE: 'multiple-options',
   RATING: 'rating-star',
   DATE_PICKER: 'date-picker',
+  POEM: 'poem-input',
+  KEYWORDS: 'keywords',
+  JUMBOTRON: 'jumbotron',
+  CUSTOM_VIDEO: 'custom_video',
+  VIDEO: 'video',
+  TAG: 'tag',
+  LINKS: 'links',
+  
+  HIGHLIGHTER: 'highlighter-input'
 };
 export const INPUT = 'Input';
 export const SELECT_ONE = 'Select One';

@@ -1285,7 +1285,7 @@ export type ModelLanguageInput = {
 };
 
 export type UpdatePersonInput = {
-  id?: string | null;
+  id: string;
   authId: string;
   status?: PersonStatus | null;
   email: string;
@@ -1410,7 +1410,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateStaffInput = {
@@ -1443,7 +1443,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateRoomInput = {
@@ -1542,7 +1542,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1572,7 +1572,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateClassInput = {
@@ -1599,7 +1599,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type ModelClassStudentConditionInput = {
@@ -1623,7 +1623,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateCurriculumInput = {
@@ -1830,7 +1830,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateArtistInput = {
@@ -1882,7 +1882,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateDoFirstInput = {
@@ -1906,7 +1906,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1930,7 +1930,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateWarmUpInput = {
@@ -2031,7 +2031,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateCoreLessonInput = {
@@ -2090,7 +2090,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateActivityInput = {
@@ -2135,7 +2135,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateCheckpointInput = {
@@ -2192,7 +2192,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2219,7 +2219,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2246,7 +2246,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateAssessmentInput = {
@@ -2276,7 +2276,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2300,7 +2300,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2324,7 +2324,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateQuestionInput = {
@@ -2375,7 +2375,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateQuestionSourceInput = {
@@ -2404,7 +2404,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateQuestionTypeInput = {
@@ -2433,7 +2433,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateWordInput = {
@@ -2457,7 +2457,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateRoomMsgsInput = {
@@ -2502,7 +2502,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateCourseInput = {
@@ -2543,7 +2543,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateLessonInput = {
@@ -2711,7 +2711,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2735,7 +2735,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateSyllabusInput = {
@@ -2922,7 +2922,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateStudentDataInput = {
@@ -2964,7 +2964,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id?: string | null;
+  id: string;
   lessonProgress?: string | null;
   currentLocation?: string | null;
   status?: string | null;
@@ -3046,7 +3046,7 @@ export type UpdateAnthologyCommentInput = {
 };
 
 export type DeleteAnthologyCommentInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateQuestionDataInput = {
@@ -3093,7 +3093,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -3117,7 +3117,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateFeedbackInput = {
@@ -3144,7 +3144,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreatePersonLocationInput = {
@@ -3184,7 +3184,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id?: string | null;
+  id: string;
   personAuthID: string;
   personEmail: string;
   syllabusLessonID?: string | null;
@@ -3295,7 +3295,7 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateAttendanceInput = {
@@ -3329,6 +3329,9 @@ export type Attendance = {
   lessonID?: string;
   date?: string | null;
   time?: string | null;
+  curriculum?: Curriculum;
+  syllabus?: UniversalSyllabus;
+  lesson?: UniversalLesson;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -3344,7 +3347,7 @@ export type UpdateAttendanceInput = {
 };
 
 export type DeleteAttendanceInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreatePlannerInput = {
@@ -3405,7 +3408,7 @@ export type UpdatePlannerInput = {
 };
 
 export type DeletePlannerInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateUniversalLessonInput = {
@@ -3730,7 +3733,7 @@ export type UpdateUniversalSyllabusLessonInput = {
 };
 
 export type DeleteUniversalSyllabusLessonInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type CreateUniversalLessonFeedbackInput = {
@@ -3757,7 +3760,7 @@ export type UpdateUniversalLessonFeedbackInput = {
 };
 
 export type DeleteUniversalLessonFeedbackInput = {
-  id: string;
+  id?: string | null;
 };
 
 export type ModelStringKeyConditionInput = {
@@ -17178,6 +17181,134 @@ export type CreateAttendanceMutation = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -17198,6 +17329,134 @@ export type UpdateAttendanceMutation = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -17218,6 +17477,134 @@ export type DeleteAttendanceMutation = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -23612,6 +23999,134 @@ export type GetAttendanceQuery = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -23635,6 +24150,67 @@ export type ListAttendancesQuery = {
       lessonID: string;
       date?: string | null;
       time?: string | null;
+      curriculum?: {
+        __typename: 'Curriculum';
+        id: string;
+        institutionID: string;
+        name: string;
+        type?: string | null;
+        image?: string | null;
+        summary?: string | null;
+        description?: string | null;
+        objectives?: Array<string | null> | null;
+        languages?: Array<Language | null> | null;
+        designers?: Array<string | null> | null;
+        universalSyllabusSeq?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      syllabus?: {
+        __typename: 'UniversalSyllabus';
+        id: string;
+        name: string;
+        type?: string | null;
+        description?: string | null;
+        methodology?: string | null;
+        policies?: string | null;
+        pupose?: string | null;
+        objectives?: string | null;
+        curriculumID: string;
+        languages?: Array<Language | null> | null;
+        universalLessonsSeq?: Array<string | null> | null;
+        designers?: Array<string | null> | null;
+        status?: boolean | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      lesson?: {
+        __typename: 'UniversalLesson';
+        id: string;
+        type: string;
+        label?: string | null;
+        title: string;
+        institutionID: string;
+        language?: Array<Language> | null;
+        designers?: Array<string | null> | null;
+        objectives?: Array<string | null> | null;
+        purpose?: string | null;
+        introduction?: string | null;
+        introductionTitle?: string | null;
+        instructions?: Array<string | null> | null;
+        instructionsTitle?: string | null;
+        summary?: string | null;
+        summaryTitle?: string | null;
+        duration?: number | null;
+        resources?: string | null;
+        notes?: string | null;
+        cardImage?: string | null;
+        cardCaption?: string | null;
+        darkMode?: boolean | null;
+        rubrics?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
       createdAt: string;
       updatedAt: string;
     } | null> | null;
@@ -24576,6 +25152,95 @@ export type PersonLocationBySyllabusLessonQuery = {
   } | null;
 };
 
+export type AttendanceByStudentQueryVariables = {
+  studentID?: string | null;
+  date?: ModelStringKeyConditionInput | null;
+  sortDirection?: ModelSortDirection | null;
+  filter?: ModelAttendanceFilterInput | null;
+  limit?: number | null;
+  nextToken?: string | null;
+};
+
+export type AttendanceByStudentQuery = {
+  attendanceByStudent?: {
+    __typename: 'ModelAttendanceConnection';
+    items?: Array<{
+      __typename: 'Attendance';
+      id: string;
+      studentID: string;
+      curriculumID: string;
+      syllabusID: string;
+      lessonID: string;
+      date?: string | null;
+      time?: string | null;
+      curriculum?: {
+        __typename: 'Curriculum';
+        id: string;
+        institutionID: string;
+        name: string;
+        type?: string | null;
+        image?: string | null;
+        summary?: string | null;
+        description?: string | null;
+        objectives?: Array<string | null> | null;
+        languages?: Array<Language | null> | null;
+        designers?: Array<string | null> | null;
+        universalSyllabusSeq?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      syllabus?: {
+        __typename: 'UniversalSyllabus';
+        id: string;
+        name: string;
+        type?: string | null;
+        description?: string | null;
+        methodology?: string | null;
+        policies?: string | null;
+        pupose?: string | null;
+        objectives?: string | null;
+        curriculumID: string;
+        languages?: Array<Language | null> | null;
+        universalLessonsSeq?: Array<string | null> | null;
+        designers?: Array<string | null> | null;
+        status?: boolean | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      lesson?: {
+        __typename: 'UniversalLesson';
+        id: string;
+        type: string;
+        label?: string | null;
+        title: string;
+        institutionID: string;
+        language?: Array<Language> | null;
+        designers?: Array<string | null> | null;
+        objectives?: Array<string | null> | null;
+        purpose?: string | null;
+        introduction?: string | null;
+        introductionTitle?: string | null;
+        instructions?: Array<string | null> | null;
+        instructionsTitle?: string | null;
+        summary?: string | null;
+        summaryTitle?: string | null;
+        duration?: number | null;
+        resources?: string | null;
+        notes?: string | null;
+        cardImage?: string | null;
+        cardCaption?: string | null;
+        darkMode?: boolean | null;
+        rubrics?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null> | null;
+    nextToken?: string | null;
+  } | null;
+};
+
 export type OnChangePersonLocationSubscriptionVariables = {
   syllabusLessonID?: string;
 };
@@ -25235,6 +25900,177 @@ export type OnChangeSyllabusLessonSubscription = {
       } | null> | null;
       nextToken?: string | null;
     } | null;
+    createdAt: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type OnChangeRoomSubscriptionVariables = {
+  id?: string;
+};
+
+export type OnChangeRoomSubscription = {
+  onChangeRoom?: {
+    __typename: 'Room';
+    id: string;
+    institutionID: string;
+    classID: string;
+    teacherAuthID: string;
+    teacherEmail: string;
+    name: string;
+    maxPersons: number;
+    filters?: Array<string | null> | null;
+    location?: string | null;
+    startDate?: string | null;
+    startTime?: string | null;
+    endDate?: string | null;
+    endTime?: string | null;
+    length?: number | null;
+    repeat?: string | null;
+    notes?: string | null;
+    activeSyllabus?: string | null;
+    frequency?: string | null;
+    coTeachers?: {
+      __typename: 'ModelRoomCoTeachersConnection';
+      items?: Array<{
+        __typename: 'RoomCoTeachers';
+        id: string;
+        roomID: string;
+        teacherID: string;
+        teacherEmail: string;
+        teacherAuthID: string;
+        createdAt: string;
+        updatedAt: string;
+      } | null> | null;
+      nextToken?: string | null;
+    } | null;
+    institution?: {
+      __typename: 'Institution';
+      id: string;
+      name: string;
+      type: string;
+      district?: string | null;
+      address: string;
+      addressLine2?: string | null;
+      city: string;
+      state?: string | null;
+      zip: string;
+      phone?: string | null;
+      website?: string | null;
+      image?: string | null;
+      isServiceProvider?: boolean | null;
+      serviceProviders?: {
+        __typename: 'ModelServiceProviderConnection';
+        nextToken?: string | null;
+      } | null;
+      staff?: {
+        __typename: 'ModelStaffConnection';
+        nextToken?: string | null;
+      } | null;
+      rooms?: {
+        __typename: 'ModelRoomConnection';
+        nextToken?: string | null;
+      } | null;
+      curricula?: {
+        __typename: 'ModelCurriculumConnection';
+        nextToken?: string | null;
+      } | null;
+      classes?: {
+        __typename: 'ModelClassConnection';
+        nextToken?: string | null;
+      } | null;
+      filters?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    teacher?: {
+      __typename: 'Person';
+      id: string;
+      authId: string;
+      status: PersonStatus;
+      email: string;
+      role: Role;
+      type?: string | null;
+      firstName: string;
+      preferredName?: string | null;
+      lastName: string;
+      externalId?: string | null;
+      grade?: string | null;
+      onBoardSurvey?: boolean | null;
+      offBoardSurvey?: boolean | null;
+      phone?: string | null;
+      birthdate?: string | null;
+      image?: string | null;
+      language: Language;
+      filters?: Array<string | null> | null;
+      lastLoggedIn?: string | null;
+      lastLoggedOut?: string | null;
+      onDemand?: boolean | null;
+      classes?: {
+        __typename: 'ModelClassStudentConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    class?: {
+      __typename: 'Class';
+      id: string;
+      institutionID: string;
+      type?: string | null;
+      name: string;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      rooms?: {
+        __typename: 'ModelRoomConnection';
+        nextToken?: string | null;
+      } | null;
+      students?: {
+        __typename: 'ModelClassStudentConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    curricula?: {
+      __typename: 'ModelRoomCurriculumConnection';
+      items?: Array<{
+        __typename: 'RoomCurriculum';
+        id: string;
+        roomID: string;
+        curriculumID: string;
+        createdAt: string;
+        updatedAt: string;
+      } | null> | null;
+      nextToken?: string | null;
+    } | null;
+    activeLessonId?: string | null;
+    ClosedPages?: Array<string | null> | null;
+    disabledPages?: Array<string | null> | null;
+    studentViewing?: string | null;
+    displayData?: Array<string | null> | null;
+    currentPage?: string | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -36065,6 +36901,134 @@ export type OnCreateAttendanceSubscription = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -36080,6 +37044,134 @@ export type OnUpdateAttendanceSubscription = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;
@@ -36095,6 +37187,134 @@ export type OnDeleteAttendanceSubscription = {
     lessonID: string;
     date?: string | null;
     time?: string | null;
+    curriculum?: {
+      __typename: 'Curriculum';
+      id: string;
+      institutionID: string;
+      name: string;
+      type?: string | null;
+      image?: string | null;
+      summary?: string | null;
+      description?: string | null;
+      objectives?: Array<string | null> | null;
+      languages?: Array<Language | null> | null;
+      institution?: {
+        __typename: 'Institution';
+        id: string;
+        name: string;
+        type: string;
+        district?: string | null;
+        address: string;
+        addressLine2?: string | null;
+        city: string;
+        state?: string | null;
+        zip: string;
+        phone?: string | null;
+        website?: string | null;
+        image?: string | null;
+        isServiceProvider?: boolean | null;
+        filters?: Array<string | null> | null;
+        createdAt: string;
+        updatedAt: string;
+      } | null;
+      designers?: Array<string | null> | null;
+      syllabi?: {
+        __typename: 'ModelSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabus?: {
+        __typename: 'ModelUniversalSyllabusConnection';
+        nextToken?: string | null;
+      } | null;
+      universalSyllabusSeq?: Array<string | null> | null;
+      checkpoints?: {
+        __typename: 'ModelcommonCheckpointConnection';
+        nextToken?: string | null;
+      } | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    syllabus?: {
+      __typename: 'UniversalSyllabus';
+      id: string;
+      name: string;
+      type?: string | null;
+      description?: string | null;
+      methodology?: string | null;
+      policies?: string | null;
+      pupose?: string | null;
+      objectives?: string | null;
+      curriculumID: string;
+      languages?: Array<Language | null> | null;
+      lessons?: {
+        __typename: 'ModelUniversalSyllabusLessonConnection';
+        nextToken?: string | null;
+      } | null;
+      universalLessonsSeq?: Array<string | null> | null;
+      designers?: Array<string | null> | null;
+      status?: boolean | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
+    lesson?: {
+      __typename: 'UniversalLesson';
+      id: string;
+      type: string;
+      label?: string | null;
+      title: string;
+      institutionID: string;
+      language?: Array<Language> | null;
+      designers?: Array<string | null> | null;
+      objectives?: Array<string | null> | null;
+      purpose?: string | null;
+      introduction?: string | null;
+      introductionTitle?: string | null;
+      instructions?: Array<string | null> | null;
+      instructionsTitle?: string | null;
+      summary?: string | null;
+      summaryTitle?: string | null;
+      duration?: number | null;
+      resources?: string | null;
+      notes?: string | null;
+      cardImage?: string | null;
+      cardCaption?: string | null;
+      lessonPlan?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      homework?: Array<{
+        __typename: 'UniversalLessonPlan';
+        id?: string | null;
+        title?: string | null;
+        label?: string | null;
+        description?: string | null;
+        class?: string | null;
+        active?: boolean | null;
+        disabled?: boolean | null;
+        displayMode?: string | null;
+        open?: boolean | null;
+        estTime?: string | null;
+        activityType?: string | null;
+        interactionType?: Array<string | null> | null;
+        tags?: Array<string | null> | null;
+      } | null> | null;
+      darkMode?: boolean | null;
+      rubrics?: Array<string | null> | null;
+      createdAt: string;
+      updatedAt: string;
+    } | null;
     createdAt: string;
     updatedAt: string;
   } | null;

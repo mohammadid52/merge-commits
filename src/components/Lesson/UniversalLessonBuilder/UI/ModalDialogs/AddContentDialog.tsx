@@ -58,7 +58,7 @@ const AddContentDialog = ({
     },
     {
       name: 'Jumbotron',
-      type: 'jumbotron',
+      type: FORM_TYPES.JUMBOTRON,
       subtitle: 'Add image with details',
       icon: BsImages,
       iconForeground: 'text-yellow-700',
@@ -67,7 +67,7 @@ const AddContentDialog = ({
     {
       name: 'Word Tiles',
       subtitle: 'Add keywords',
-      type: 'keywords',
+      type: FORM_TYPES.KEYWORDS,
       icon: VscSymbolKeyword,
       iconForeground: 'text-blue-700',
       iconBackground: 'bg-blue-100',
@@ -75,7 +75,8 @@ const AddContentDialog = ({
     {
       name: 'Links',
       subtitle: 'Add links',
-      type: 'links',
+      type: FORM_TYPES.LINKS,
+
       icon: AiOutlineLink,
       iconForeground: 'text-pink-700',
       iconBackground: 'bg-pink-100',
@@ -93,7 +94,7 @@ const AddContentDialog = ({
     {
       subtitle: 'Add Video',
       name: 'Video',
-      type: 'custom_video',
+      type: FORM_TYPES.CUSTOM_VIDEO,
       icon: AiOutlineVideoCameraAdd,
       iconForeground: 'text-pink-700',
       iconBackground: 'bg-pink-100',
@@ -101,7 +102,8 @@ const AddContentDialog = ({
     {
       name: 'Youtube Video',
       subtitle: 'Add youtube video link',
-      type: 'video',
+      type: FORM_TYPES.VIDEO,
+
       icon: AiOutlineYoutube,
       iconForeground: 'text-red-700',
       iconBackground: 'bg-red-100',
@@ -134,7 +136,7 @@ const AddContentDialog = ({
     },
     {
       name: 'Highlighter',
-      type: 'highlighter',
+      type: FORM_TYPES.HIGHLIGHTER,
       subtitle: 'Add highlighter',
       icon: AiOutlineHighlight,
       iconForeground: 'text-yellow-700',
@@ -143,7 +145,7 @@ const AddContentDialog = ({
     {
       name: 'Linestarter',
       subtitle: 'Add poem',
-      type: 'poem',
+      type:  FORM_TYPES.POEM,
       icon: BsNewspaper,
       iconForeground: 'text-red-700',
       iconBackground: 'bg-red-100',

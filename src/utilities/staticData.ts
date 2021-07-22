@@ -9,6 +9,23 @@ export const lessonTypeList: any = [
   {id: '3', name: 'Survey', value: 'survey'},
 ];
 
+export const tinting: any = [
+  {id: '1', name: 'None'},
+  {id: '2', name: 'Light'},
+  {id: '3', name: 'Medium'},
+  {id: '4', name: 'Dark'},
+];
+export const blur: any = [
+  {id: '1', name: 'Low'},
+  {id: '2', name: 'Medium'},
+  {id: '3', name: 'High'},
+];
+export const scrim: any = [
+  {id: '1', name: 'Bottom'},
+  {id: '2', name: 'Center'},
+  {id: '3', name: 'Top'},
+];
+
 export const estimatedTimeList = Array(30)
   .fill({})
   .map((_, index: number) => ({
