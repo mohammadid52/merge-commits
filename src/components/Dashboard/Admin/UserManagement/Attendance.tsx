@@ -223,7 +223,7 @@ const Attendance = ({id}: any) => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan={5} className="py-4">
+                      <td colSpan={5} className="py-4 text-dark-gray text-center">
                           No records found
                       </td>
                     </tr>
