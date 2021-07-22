@@ -316,7 +316,7 @@ const JumbotronModalDialog = ({
   };
 
   const tabs = [
-    {name: 'Add Component', current: true},
+    {name: 'Component Details', current: true},
     {name: 'Preview', current: false},
   ];
 
@@ -383,7 +383,7 @@ const JumbotronModalDialog = ({
     <>
       <Tabs />
 
-      {curTab === 'Add Component' && (
+      {curTab === 'Component Details' && (
         <div className="grid grid-cols-2 my-2 gap-4">
           <div className="col-span-2">
             {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
