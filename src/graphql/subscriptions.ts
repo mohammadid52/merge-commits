@@ -594,6 +594,156 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+export const onChangeRoom = /* GraphQL */ `
+  subscription OnChangeRoom($id: ID!) {
+    onChangeRoom(id: $id) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      maxPersons
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreatePerson = /* GraphQL */ `
   subscription OnCreatePerson {
     onCreatePerson {
