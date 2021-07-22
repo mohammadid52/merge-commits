@@ -14,7 +14,6 @@ interface IMeasurementList {
 }
 
 const MeasurementsList = ({
-  setAddModalShow,
   handleCheckboxChange,
   learningEvidenceList,
   loading,
@@ -56,7 +55,7 @@ const MeasurementsList = ({
         </div>
         <div className="w-3/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
-            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['ACTION']}
+            {LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS']['MEASURED']}
           </span>
         </div>
       </div>
@@ -83,7 +82,7 @@ const MeasurementsList = ({
                 <CheckBox
                   value={
                     selectedMeasurements.find(
-                      (measurement:any) => measurement.rubricID === item.rubricId
+                      (measurement: any) => measurement.rubricID === item.rubricId
                     )?.checked
                   }
                   onChange={(e) => handleCheckboxChange(e, item.rubricId)}

@@ -99,7 +99,7 @@ const User = () => {
     {name: 'User Information', current: true},
     {name: 'Associated Classrooms', current: false},
     {name: 'Notebook', current: false},
-    {name: 'Timeview', current: false},
+    {name: 'Timeline', current: false},
   ];
 
   const [curTab, setCurTab] = useState<string>(tabs[0].name);
@@ -1513,7 +1513,7 @@ const User = () => {
               </div>
             ))}
 
-          {curTab === 'Timeview' && (
+          {curTab === 'Timeline' && (
             <div
               className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
               <Attendance id={id} />

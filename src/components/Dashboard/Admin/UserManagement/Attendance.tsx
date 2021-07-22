@@ -3,6 +3,7 @@ import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import orderBy from 'lodash/orderBy';
 import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -109,7 +110,7 @@ const Attendance = ({id}: any) => {
             placeholderText={'Search by date'}
             onChange={handleDateChange}
             className="text-dark-gray"
-            // isClearable={true}
+            isClearable={true}
           />
 
           {/* <SingleDatePicker
@@ -215,7 +216,7 @@ const Attendance = ({id}: any) => {
                             {new Date(item.date).toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item?.time}
+                            {moment(item?.time, 'HH:mm:ss').format("hh:mm A")}
                           </td>
                         </tr>
                       );

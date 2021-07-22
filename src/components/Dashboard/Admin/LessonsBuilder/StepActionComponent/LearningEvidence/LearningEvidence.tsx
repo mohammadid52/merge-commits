@@ -2,9 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import * as queries from '../../../../../../graphql/queries';
-import * as mutations from '../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
-import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
@@ -19,52 +17,52 @@ import AddEvidence from './AddEvidence';
 import MeasurementsList from './MeasurementsList';
 
 interface ILearningEvidence {
+  fetchLessonRubrics: () => void;
   lessonId: string;
   institutionId: string;
-  rubrics: string[] | null;
+  serverMessage: {
+    isError: boolean;
+    message: string;
+  };
+  setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedMeasurements: any[];
+  setSelectedMeasurements: React.Dispatch<React.SetStateAction<any>>;
+  updating: boolean;
+  updateMeasurementList: (rubrics: any) => void;
 }
 
-const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence) => {
+const LearningEvidence = ({
+  fetchLessonRubrics,
+  lessonId,
+  institutionId,
+  serverMessage,
+  setUnsavedChanges,
+  selectedMeasurements, setSelectedMeasurements,
+  updating,
+  updateMeasurementList,
+}: ILearningEvidence) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {AddNewLessonFormDict, BUTTONS} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
-  const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
+  // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [evidenceListLoading, setEvidenceListLoading] = useState(false);
-  const [updating, setUpdating] = useState(false);
-  const [serverMessage, setServerMessage] = useState({
-    isError: false,
-    message: '',
-  });
+  // const [updating, setUpdating] = useState(false);
+
+  // const [serverMessage, setServerMessage] = useState({
+  //   isError: false,
+  //   message: '',
+  // });
 
   useEffect(() => {
     fetchCurriculum();
     fetchLessonRubrics();
   }, []);
 
-  useEffect(() => {
-    // setSelectedMeasurements(rubrics);
-  }, [rubrics]);
-
-  const fetchLessonRubrics = async () => {
-    try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listLessonRubricss, {
-          filter: {
-            lessonID: {eq: lessonId},
-          },
-        })
-      );
-      const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
-        ...rubric,
-        checked: true,
-      }));
-      console.log(rubricList, 'rubricList+++++++++++');
-
-      setSelectedMeasurements(rubricList);
-    } catch (error) {}
-  };
+  // useEffect(() => {
+  //   // setSelectedMeasurements(rubrics);
+  // }, [rubrics]);
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
@@ -168,12 +166,12 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
     event: React.ChangeEvent<HTMLInputElement>,
     rubricId: string
   ) => {
+    setUnsavedChanges(true);
     const checked: boolean = (event.target as HTMLInputElement).checked;
     let rubrics = [...selectedMeasurements];
     const index: number = selectedMeasurements.findIndex(
       (item: any) => item.rubricID === rubricId
     );
-    console.log(rubricId, index, 'rubricId');
 
     if (index > -1) {
       rubrics[index] = {
@@ -183,7 +181,7 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
     } else {
       rubrics.push({
         rubricID: rubricId,
-        checked
+        checked,
       });
     }
     setSelectedMeasurements(rubrics);
@@ -191,46 +189,6 @@ const LearningEvidence = ({lessonId, institutionId, rubrics}: ILearningEvidence)
 
   const onSubmit = () => {
     updateMeasurementList(selectedMeasurements);
-  };
-
-  const updateMeasurementList = async (rubrics: string[] | null) => {
-    try {
-      setUpdating(true);
-      const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
-      if (newRubrics?.length) {
-        await API.graphql(
-          graphqlOperation(mutations.batchAddLessonRubrics, {
-            lessonRubrics: newRubrics.map((rubric: any) => ({
-              lessonID: lessonId,
-              rubricID: rubric.rubricID,
-            })),
-          })
-        );
-      }
-      const rubricsToBeRemoved = rubrics.filter(
-        (rubric: any) => rubric.id && !rubric.checked
-        );
-      if (rubricsToBeRemoved?.length) {
-        await API.graphql(
-          graphqlOperation(mutations.batchDeleteLessonRubrics, {
-            lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
-              id: rubric.id,
-            })),
-          })
-        );
-      }
-      setServerMessage({
-        isError: false,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
-      });
-      setUpdating(false);
-    } catch (error) {
-      setUpdating(false);
-      setServerMessage({
-        isError: true,
-        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
-      });
-    }
   };
 
   const renderTableView = (learningEvidenceList: any) => {
