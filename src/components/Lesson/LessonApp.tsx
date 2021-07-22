@@ -16,16 +16,18 @@ import {
 } from '../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
+import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as queries from '../../graphql/queries';
 import {Auth} from '@aws-amplify/auth';
-import {getSessionData} from '../../utilities/sessionData';
+import {getSessionData, setSessionData} from '../../utilities/sessionData';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
+  const getRoomData = getSessionData('room_info');
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -44,68 +46,43 @@ const LessonApp = () => {
   // ----------- 1 ---------- //
   //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
 
-  // useEffect(() => {
-  //   if (lesson) {
-  //     dispatch({
-  //       type: 'SET_INITIAL_STATE',
-  //       payload: {
-  //         subscribeFunc: subscribeToPlanner,
-  //       },
-  //     });
-  //   }
-  // }, [lesson]);
+  useEffect(() => {
+    if (lessonState.lessonData.id) {
+      lessonDispatch({
+        type: 'SET_SUBSCRIBE_FUNCTION',
+        payload: {
+          subscribeFunc: subscribeToRoom,
+        },
+      });
+    }
+  }, [lessonState.lessonData.id]);
 
   // ----------- 2 ---------- //
   //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
 
-  const subscribeToPlanner = () => {
-    // const {lessonID} = urlParams;
-    //
-    // const syllabusLessonSubscription = API.graphql(
-    //   graphqlOperation(customSubscriptions.onChangeSyllabusLesson, {id: lessonID})
-    //   // @ts-ignore
-    // ).subscribe({
-    //   next: (syllabusLessonData: any) => {
-    //     const updatedLessonPlan = syllabusLessonData.value.data.onChangeSyllabusLesson;
-    //     // @ts-ignore
-    //     API.graphql(
-    //       graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
-    //       // @ts-ignore
-    //     ).then((sLessonData: any) => {
-    //       const sLessonDataData = sLessonData.data.getSyllabusLesson;
-    //       setSubscriptionData(sLessonDataData);
-    //     });
-    //   },
-    // });
-    //
-    // dispatch({
-    //   type: 'SET_SUBSCRIPTION',
-    //   payload: {
-    //     subscription: syllabusLessonSubscription,
-    //   },
-    // });
-    //
-    // return syllabusLessonSubscription;
+  const subscribeToRoom = () => {
+    const roomSubscription = API.graphql(
+      graphqlOperation(customSubscriptions.onChangeRoom, {id: getRoomData.id})
+      // @ts-ignore
+    ).subscribe({
+      next: (roomData: any) => {
+        const updatedRoomData = roomData.value.data.onChangeRoom;
+        setSubscriptionData(updatedRoomData);
+      },
+    });
+
+    return roomSubscription;
   };
 
   // ----------- 3 ---------- //
 
   const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
-    // dispatch({
-    //   type: 'UPDATE_LESSON_PLAN',
-    //   payload: {
-    //     pages: subscriptionData.lessonPlan.filter(
-    //       (item: {disabled: boolean; [key: string]: any}) => {
-    //         return !item.disabled;
-    //       }
-    //     ),
-    //
-    //     displayData: {
-    //       ...subscriptionData.displayData
-    //     },
-    //     viewing: subscriptionData.viewing,
-    //   },
-    // });
+    console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
+    setSessionData('room_info', {
+      ...getRoomData,
+      ClosedPages: subscriptionData.ClosedPages,
+    });
+    lessonDispatch({type: 'SET_SUBSCRIPTION_DATA', payload: subscriptionData});
   };
 
   // ----------- 4 ---------- //
@@ -116,11 +93,11 @@ const LessonApp = () => {
    *
    */
 
-  // useEffect(() => {
-  //   if (subscriptionData) {
-  //     updateOnIncomingSubscriptionData(subscriptionData);
-  //   }
-  // }, [subscriptionData]);
+  useEffect(() => {
+    if (subscriptionData) {
+      updateOnIncomingSubscriptionData(subscriptionData);
+    }
+  }, [subscriptionData]);
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
@@ -137,7 +114,7 @@ const LessonApp = () => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
 
-      // subscription = subscribeToStudentData(lessonID);
+      subscription = subscribeToRoom();
     } else {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
@@ -179,7 +156,6 @@ const LessonApp = () => {
       }
 
       // Initialize closed pages based on room-configuration
-      const getRoomData = getSessionData('room_info');
 
       if (
         lessonState.lessonData.lessonPlan &&

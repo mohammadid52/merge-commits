@@ -19,6 +19,28 @@ export type LessonActions =
       payload: boolean;
     }
   | {
+      type: 'SET_SUBSCRIBE_FUNCTION';
+      payload: {subscribeFunc: Function};
+    }
+  | {
+      type: 'SET_SUBSCRIPTION';
+      payload: {subscription: any};
+    }
+  | {
+      type: 'SET_SUBSCRIPTION_DATA';
+      payload: {
+        ClosedPages?: string[] | any;
+        activeLessonId?: string | null;
+        createdAt?: string;
+        currentPage?: number | null;
+        disabledPages?: string[] | any;
+        displayData?: UniversalLessonStudentData[] | null;
+        id: string;
+        studentViewing?: string | null;
+        updatedAt?: string;
+      };
+    }
+  | {
       type: 'SET_LESSON_DATA';
       payload: UniversalLesson;
     }
@@ -82,6 +104,36 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         updated: action.payload,
       };
+    case 'SET_SUBSCRIBE_FUNCTION':
+      return {
+        ...state,
+        subscribeFunc: action.payload.subscribeFunc,
+      };
+    case 'SET_SUBSCRIPTION':
+      return {
+        ...state,
+        subscription: action.payload.subscription,
+      };
+    case 'SET_SUBSCRIPTION_DATA':
+      const mappedClosedPages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (action.payload.ClosedPages.includes(page.id)) {
+            return {...page, open: false};
+          } else {
+            return {...page, open: true};
+          }
+        }
+      );
+      return {
+        ...state,
+        lessonData: {...state.lessonData, lessonPlan: mappedClosedPages},
+        displayData: action.payload.displayData
+          ? action.payload.displayData
+          : state.displayData,
+        studentViewing: action.payload.studentViewing
+          ? action.payload.studentViewing
+          : state.studentViewing,
+      };
     case 'SET_LESSON_DATA':
       return {
         ...state,
@@ -142,7 +194,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: mappedStudentData,
       };
     case 'COMPLETE_STUDENT_UPDATE':
-      console.log('complete student update');
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
         return {...obj, update: false};
       });
@@ -155,17 +206,6 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
-    case 'SET_CLOSED_PAGES':
-      const mappedClosedPages = state.lessonData.lessonPlan.map(
-        (page: UniversalLessonPage, idx: number) => {
-          if (action.payload.includes(page.id)) {
-            return {...page, open: false};
-          } else {
-            return page;
-          }
-        }
-      );
-      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedClosedPages}};
     case 'TOGGLE_OPEN_PAGE':
       const mappedPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
