@@ -3,6 +3,7 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 import QuoteBlock from './JumbotronBlock/QuoteBlock';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import CustomizedQuoteBlock from './JumbotronBlock/CustomizeQuoteBlock';
 
 interface JumbotronBlockProps extends RowWrapperProps {
   id?: string;
@@ -11,19 +12,19 @@ interface JumbotronBlockProps extends RowWrapperProps {
 }
 
 interface JumbotronInterface {
-  src?: string;                 
-  title?: string;                 
-  subtitle?: string;                  
-  description?: string;                 
+  src?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
 }
 
 export const JumbotronBlock = (props: JumbotronBlockProps) => {
-  const {id, value} = props;
+  const {id, value, classString} = props;
   const [jumbotronInfo, setJumbotronInfo] = useState<JumbotronInterface>({
-    src: '',                                                        
-    title: '',                                                        
-    subtitle: '',                                           
-    description: '',                                                        
+    src: '',
+    title: '',
+    subtitle: '',
+    description: '',
   });
 
   useEffect(() => {
@@ -53,15 +54,19 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
     }
   }, [value]);
 
+  const bgClass = classString?.split(' || ')[0] || '';
+  const textClass = classString?.split(' || ')[1] || '';
+
   return (
     <div
       id={id}
       className="h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg"
       style={{
         backgroundImage: ` url(${jumbotronInfo.src})`,
-       
       }}>
-      <QuoteBlock
+      <CustomizedQuoteBlock
+        bgClass={bgClass}
+        textClass={textClass}
         title={jumbotronInfo.title}
         subtitle={jumbotronInfo.subtitle}
         description={jumbotronInfo.description}
