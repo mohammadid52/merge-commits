@@ -26,6 +26,7 @@ const ULBFileUploader = ({
   updateFileUrl,
   customVideo = false,
 }: IULBFileUploader) => {
+  
   const {userLanguage} = useContext(GlobalContext);
   const otherProps: any = {};
   if (acceptedFilesFormat) {

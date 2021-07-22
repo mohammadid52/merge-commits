@@ -4667,6 +4667,124 @@ export const getAttendance = /* GraphQL */ `
       lessonID
       date
       time
+      curriculum {
+        id
+        institutionID
+        name
+        type
+        image
+        summary
+        description
+        objectives
+        languages
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        designers
+        syllabi {
+          nextToken
+        }
+        universalSyllabus {
+          nextToken
+        }
+        universalSyllabusSeq
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      syllabus {
+        id
+        name
+        type
+        description
+        methodology
+        policies
+        pupose
+        objectives
+        curriculumID
+        languages
+        lessons {
+          nextToken
+        }
+        universalLessonsSeq
+        designers
+        status
+        createdAt
+        updatedAt
+      }
+      lesson {
+        id
+        type
+        label
+        title
+        institutionID
+        language
+        designers
+        objectives
+        purpose
+        introduction
+        introductionTitle
+        instructions
+        instructionsTitle
+        summary
+        summaryTitle
+        duration
+        resources
+        notes
+        cardImage
+        cardCaption
+        lessonPlan {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        homework {
+          id
+          title
+          label
+          description
+          class
+          active
+          disabled
+          displayMode
+          open
+          estTime
+          activityType
+          interactionType
+          tags
+        }
+        darkMode
+        rubrics
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -4687,6 +4805,64 @@ export const listAttendances = /* GraphQL */ `
         lessonID
         date
         time
+        curriculum {
+          id
+          institutionID
+          name
+          type
+          image
+          summary
+          description
+          objectives
+          languages
+          designers
+          universalSyllabusSeq
+          createdAt
+          updatedAt
+        }
+        syllabus {
+          id
+          name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
+        }
+        lesson {
+          id
+          type
+          label
+          title
+          institutionID
+          language
+          designers
+          objectives
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          createdAt
+          updatedAt
+        }
         createdAt
         updatedAt
       }

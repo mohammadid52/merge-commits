@@ -320,6 +320,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             designers: selectedDesigners.map((item) => item.id),
             summary: formData.studentSummary,
             cardImage: fileName,
+            darkMode: true,
             cardCaption: formData.imageCaption,
           };
           const results: any = await API.graphql(
