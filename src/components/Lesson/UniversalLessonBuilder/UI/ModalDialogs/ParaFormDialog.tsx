@@ -31,11 +31,12 @@ const ParaModalComponent = ({
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const FIELD_ID = 'paragraph';
-  const [fields, setFields] = useState<{paragraph: string}>({paragraph: ''});
+  const [fields, setFields] = useState<{paragraph: string}>({
+    paragraph: !isEmpty(inputObj) ? inputObj[0].value : '',
+  });
 
   useEffect(() => {
     if (!isEmpty(inputObj)) {
-      setFields({...fields, paragraph: inputObj[0].value});
       setIsEditingMode(true);
     }
   }, [inputObj]);
@@ -90,7 +91,7 @@ const ParaModalComponent = ({
           <RichTextEditor
             initialValue={paragraph}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(htmlContent, plainText, 'instructionsHtml', 'paragraph')
+              onEditorStateChange(htmlContent, plainText, '', 'paragraph')
             }
           />
         </div>
