@@ -7,7 +7,10 @@ import CheckBox from '../../../../../Atoms/Form/CheckBox';
 
 interface IMeasurementList {
   setAddModalShow?: any;
-  handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>,rubricId: string) => void;
+  handleCheckboxChange: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    rubricId: string
+  ) => void;
   learningEvidenceList: any[];
   loading: boolean;
   selectedMeasurements: any[];
@@ -64,11 +67,12 @@ const MeasurementsList = ({
           <Loader />
         </div>
       ) : (
-        learningEvidenceList?.map((item: any) => (
-          <div
-            className="mb-8 w-full m-auto max-h-88 overflow-y-auto"
-            key={item.rubricId}>
-            <div className="flex justify-between bg-white w-full border-b-0 border-gray-200">
+        learningEvidenceList?.map((item: any, index: number) => (
+          <div className="w-full m-auto max-h-88 overflow-y-auto" key={item.rubricId}>
+            <div
+              className={`flex justify-between bg-white w-full border-b-0 ${
+                index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
+              }`}>
               <div className="w-6/10 flex items-center px-4 py-3 hover:text-gray-600 cursor-pointer text-sm leading-5 font-medium text-gray-900 whitespace-normal">
                 <span>{item.learningObjectiveName}</span>
               </div>

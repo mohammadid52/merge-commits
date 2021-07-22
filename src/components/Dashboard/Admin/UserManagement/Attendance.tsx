@@ -197,7 +197,7 @@ const Attendance = ({id}: any) => {
                         <Loader />
                       </td>
                     </tr>
-                  ) : (
+                  ) : attendanceList.length ? (
                     attendanceList.map((item: any, idx: number) => {
                       return (
                         <tr
@@ -216,11 +216,17 @@ const Attendance = ({id}: any) => {
                             {new Date(item.date).toLocaleDateString()}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {moment(item?.time, 'HH:mm:ss').format("hh:mm A")}
+                            {moment(item?.time, 'HH:mm:ss').format('hh:mm A')}
                           </td>
                         </tr>
                       );
                     })
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="py-4">
+                          No records found
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>

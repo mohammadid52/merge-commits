@@ -46,7 +46,7 @@ const BreadcrumsTitles: any = {
     EDITCLASSROOM: 'Edit Classroom',
     CURRICULUMBUILDER: 'Curriculum Builder',
     LEARINGOBJECTIVE: 'Add Learning objective',
-    AddMesurement: 'Add Measurement',
+    AddMeasurement: 'Add Measurement',
     AddCheckpint: 'Add Checkpoint',
     UnitBuilder: 'Unit Builder',
     AddTopic: 'Add Topic',
