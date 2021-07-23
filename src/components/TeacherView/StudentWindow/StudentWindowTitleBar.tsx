@@ -5,7 +5,6 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../../graphql/mutations';
-import {setSessionData} from '../../../utilities/sessionData';
 import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
 
 interface StudentWindowTitleBarProps {

@@ -20,11 +20,6 @@ import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
-import {
-  getSessionData,
-  removeSessionData,
-  setSessionData,
-} from '../../utilities/sessionData';
 import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
@@ -768,12 +763,15 @@ const Dashboard = (props: DashboardProps) => {
       <HomeForTeachers
         homeData={homeDataForTeachers}
         isTeacher={isTeacher}
+        activeRoomInfo={activeRoomInfo}
+        setActiveRoomInfo={setActiveRoomInfo}
         handleRoomSelection={handleRoomSelection}
       />
     ) : (
       <Home
         homeData={homeData}
         classList={classList}
+        activeRoomInfo={activeRoomInfo}
         setActiveRoomInfo={setActiveRoomInfo}
         handleRoomSelection={handleRoomSelection}
       />
