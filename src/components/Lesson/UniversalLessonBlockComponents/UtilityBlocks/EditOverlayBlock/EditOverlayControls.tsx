@@ -271,9 +271,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     });
   };
   const deletePartContent = async (contentID: string, type?: string, key?: string) => {
-    if (type === 'image' || type === 'custom_video') {
-      await deletImageFromS3(key);
-    }
+    // if (type === 'image' || type === 'custom_video') {
+    //   await deletImageFromS3(key);
+    // }
     const updatedList = deleteFromULBHandler(contentID);
 
     await addToDB(updatedList);

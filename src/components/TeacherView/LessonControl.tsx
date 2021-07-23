@@ -157,7 +157,10 @@ const LessonControl = () => {
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan.length > 0
       ) {
-        lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData.ClosedPages});
+        lessonDispatch({
+          type: 'SET_SUBSCRIPTION_DATA',
+          payload: {ClosedPages: getRoomData.ClosedPages},
+        });
       }
 
       // MODIFY REDUCER FOR THIS

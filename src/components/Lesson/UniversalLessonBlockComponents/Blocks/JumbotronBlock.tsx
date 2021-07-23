@@ -54,13 +54,17 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
     }
   }, [value]);
 
+  // because we are concatenating all the classes for different elements in one string
+  // so we have to split theme to use it at different places
   const bgClass = classString?.split(' || ')[0] || '';
   const textClass = classString?.split(' || ')[1] || '';
+  const animationClass =
+    classString?.split(' || ').length === 3 ? classString?.split(' || ')[2] : '';
 
   return (
     <div
       id={id}
-      className="h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg"
+      className={`${animationClass} h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg`}
       style={{
         backgroundImage: ` url(${jumbotronInfo.src})`,
       }}>

@@ -13,7 +13,7 @@ import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBl
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -198,7 +198,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                 content.type
                                               )}`}>
                                               <div
-                                                className={`${content.class}`}
+                                                // className={`${content.class}`}
                                                 id={content.id}>
                                                 {composePartContent(
                                                   content.id,

@@ -21,7 +21,46 @@ import {getAsset} from '../../../../../assets';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import QuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/QuoteBlock';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
+import {Switch} from '@headlessui/react';
+import {classNames} from '../FormElements/TextInput';
+import ProgressBar from '../ProgressBar';
 
+const Toggle = ({
+  checked,
+  onClick,
+  text,
+  disabled,
+}: {
+  text?: string;
+
+  checked: boolean;
+  onClick: any;
+  disabled?: boolean;
+}) => {
+  return (
+    <Switch.Group as="div" className="flex items-center">
+      <Switch.Label as="span" className="mr-3 w-auto">
+        <span className="text-sm font-medium text-gray-900">{text}</span>
+      </Switch.Label>
+      <Switch
+        disabled={disabled}
+        checked={checked}
+        onChange={onClick}
+        className={classNames(
+          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+        )}>
+        <span
+          aria-hidden="true"
+          className={classNames(
+            checked ? 'translate-x-5' : 'translate-x-0',
+            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+          )}
+        />
+      </Switch>
+    </Switch.Group>
+  );
+};
 interface IImageInput {
   url: string;
   width: string;
@@ -81,6 +120,7 @@ const JumbotronModalDialog = ({
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
+  const [isAnimationOn, setIsAnimationOn] = useState(false);
 
   //////////////////////////
   //  DATA STORAG         //
@@ -94,10 +134,13 @@ const JumbotronModalDialog = ({
     blur: 'Medium',
   };
   const [selectedStyles, setSelectedStyles] = useState(initialStyles);
+  const [uploadProgress, setUploadProgress] = useState<string | number>(0);
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      const imageUrl: string | undefined = inputObj.find((input: any) => input.type === 'background')?.value;
+      const imageUrl: string | undefined = inputObj.find(
+        (input: any) => input.type === 'background'
+      )?.value;
       setInputFieldsArray(inputObj);
       setImageInputs((prevValues) => ({
         ...prevValues,
@@ -205,7 +248,9 @@ const JumbotronModalDialog = ({
 
   const generateClassString = `${generateTinting(selectedStyles.tinting)} bg-${
     selectedStyles.bgColor
-  } || backdrop-filter ${generateBlur(selectedStyles.blur)}`;
+  } || backdrop-filter ${generateBlur(selectedStyles.blur)} ${
+    isAnimationOn ? ' || fade__animation-longer ' : ''
+  }`;
   const onSave = async () => {
     const isValid: boolean = validateFormFields();
     if (isValid) {
@@ -284,9 +329,15 @@ const JumbotronModalDialog = ({
       Storage.put(`ULB/content_image_${id}`, file, {
         contentType: type,
         ContentEncoding: 'base64',
+        progressCallback: ({loaded, total}: any) => {
+          const progress = (loaded * 100) / total;
+          setUploadProgress(progress.toFixed(0));
+        },
       })
         .then((result: any) => {
           console.log('File successfully uploaded to s3', result);
+          setUploadProgress('done');
+
           resolve(true);
         })
         .catch((err: any) => {
@@ -423,7 +474,7 @@ const JumbotronModalDialog = ({
                       id={inputFieldsArray[idx]?.id}
                       placeHolder={inputFieldsArray[idx]?.placeholderText}
                       type="text"
-                      rows={2}
+                      rows={5}
                       showCharacterUsage={isDesc}
                       maxLength={650}
                     />
@@ -439,7 +490,7 @@ const JumbotronModalDialog = ({
         (previewAvailable ? (
           <div className="my-4">
             <div
-              className={`h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg`}
+              className={`h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover max-w-256 bg-center rounded-lg`}
               style={{backgroundImage: `url(${url})`}}>
               <CustomizedQuoteBlock
                 bgClass={`${generateTinting(selectedStyles.tinting)} bg-${
@@ -503,6 +554,14 @@ const JumbotronModalDialog = ({
                 />
               </div>
             </div>
+            <div className="col-span-1 my-4 flex items-center w-auto">
+              <Toggle
+                checked={isAnimationOn}
+                text="Animated Jumbotron"
+                // disabled={NO_BORDER_SELECTED}
+                onClick={() => setIsAnimationOn(!isAnimationOn)}
+              />
+            </div>
           </div>
         ) : (
           <div className="text-center text-gray-500 my-4">
@@ -518,10 +577,17 @@ const JumbotronModalDialog = ({
           </div>
         ))}
 
+      {loading && uploadProgress !== 'done' && (
+        <ProgressBar
+          status={uploadProgress < 99 ? 'Uploading Image' : 'Upload Done'}
+          progress={uploadProgress}
+        />
+      )}
+
       <div className="flex mt-8 justify-between items-center px-6 pb-4">
         {curTab === 'Preview' && previewAvailable ? (
           <Buttons
-            btnClass="py-1 px-8 text-xs ml-2"
+            btnClass="py-1 px-8 text-xs"
             label={'Reset to default'}
             onClick={() => setSelectedStyles(initialStyles)}
           />
