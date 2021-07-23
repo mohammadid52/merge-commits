@@ -1,8 +1,9 @@
-import React, {useContext} from 'react';
+import './styles/HeaderStyles.scss';
+import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
+import useOnScreen from '../../../../customHooks/useOnScreen';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
@@ -22,7 +23,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     return (
       <h3
         id={inputID}
-        className={`relative w-full flex font-medium text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
         {inputValue.value}
       </h3>
     );

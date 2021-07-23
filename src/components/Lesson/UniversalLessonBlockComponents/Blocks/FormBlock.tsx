@@ -119,7 +119,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     },
   } = useContext(GlobalContext);
 
-  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  const themePlaceholderColor =
+    lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -215,7 +216,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           id={inputID}
           disabled={mode === 'building'}
           pattern="https://.*"
-          className={`w-full py-2 px-4 mt-2 rounded-xl ${themeTextColor} ${themePlaceholderColor} ${
+          className={`w-full py-2 px-4 mt-2 rounded-xl ${themePlaceholderColor} ${
             lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           }`}
           name="url"

@@ -982,6 +982,19 @@
 .questionItemChild:last-child {
   margin-bottom: 1.5rem;
 }
-.react-datepicker__close-icon{
+.react-datepicker__close-icon {
   width: auto;
+}
+
+.animated-border {
+  width: 100%;
+}
+
+.animate__border::after {
+  position: absolute;
+  content: '';
+  bottom: 0;
+  height: 1px;
+  background-color: red;
+  width: 100%;
 }

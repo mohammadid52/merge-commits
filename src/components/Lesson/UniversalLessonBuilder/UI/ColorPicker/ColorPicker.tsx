@@ -28,7 +28,6 @@ const ColorPicker = (props: ColorPickerProps) => {
     {value: 'pink', label: 'Pink'},
   ];
   const colorCodes: ColorObject[] = [
-    {value: 50, label: 50},
     {value: 100, label: 100},
     {value: 200, label: 200},
     {value: 300, label: 300},
