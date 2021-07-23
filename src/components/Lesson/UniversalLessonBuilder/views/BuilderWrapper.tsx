@@ -470,6 +470,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Highlighter Component';
       case FORM_TYPES.POEM:
         return 'Poem Component';
+      case FORM_TYPES.LINK:
+        return 'Link Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }

@@ -91,7 +91,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
               <div className="flex-1 flex flex-col">
                 <ProfileLink
                   handleRoomSelection={handleRoomSelection}
-                  setActiveRoomSyllabus={setActiveRoomSyllabus}
+                  // setActiveRoomSyllabus={setActiveRoomSyllabus}
                   setLessonLoading={setLessonLoading}
                   setSyllabusLoading={setSyllabusLoading}
                   setActiveRoomName={setActiveRoomName}
@@ -102,7 +102,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                 <nav className="flex-1 py-4 space-y-1">
                   <Links
                     handleRoomSelection={handleRoomSelection}
-                    setActiveRoomSyllabus={setActiveRoomSyllabus}
+                    // setActiveRoomSyllabus={setActiveRoomSyllabus}
                     setLessonLoading={setLessonLoading}
                     setSyllabusLoading={setSyllabusLoading}
                     setActiveRoomName={setActiveRoomName}

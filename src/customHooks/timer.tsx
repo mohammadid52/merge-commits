@@ -8,6 +8,7 @@ import {useParams} from 'react-router-dom';
 import {lessonStateOLD} from '../state/LessonStateOLD';
 import {lessonState} from '../state/LessonState';
 import {globalState} from '../state/GlobalState';
+import {Auth} from '@aws-amplify/auth';
 
 interface inputs {
   subscription?: any;
@@ -16,6 +17,7 @@ interface inputs {
   callback?: () => Promise<void>;
   state?: any;
   lessonState?: any;
+  lessonDispatch?: any;
 }
 
 interface timerStateType {
@@ -44,7 +46,15 @@ const timerInitialParams: timerStateType = {
 
 const useStudentTimer = (inputs?: inputs) => {
   const urlParams: any = useParams();
-  const {subscription, subscribeFunc, dispatch, callback, state, lessonState} = inputs;
+  const {
+    subscription,
+    subscribeFunc,
+    dispatch,
+    callback,
+    state,
+    lessonState,
+    lessonDispatch,
+  } = inputs;
   const [params, setParams] = useState<timerStateType>({
     subscription: subscription,
     subscribeFunc: subscribeFunc,
@@ -114,7 +124,7 @@ const useStudentTimer = (inputs?: inputs) => {
             console.log('VIEWING -> EDIT -> save');
           }, 2000)
         );
-      } else if (!lessonState.viewing) {
+      } else if (!lessonState.viewing && lessonState.updated) {
         if (typeOfTimeout === '') {
           console.log(
             '%c save timer: ',
@@ -132,16 +142,12 @@ const useStudentTimer = (inputs?: inputs) => {
               'background: #00FF00; color: #bada55',
               'saved'
             );
-          }, 30000);
+          }, 2000);
         }
       }
     }
     return () => resetParams();
-  }, [
-    params.lessonState.viewing,
-    params.lessonState.componentState,
-    params.lessonState.questionData,
-  ]);
+  }, [lessonState.viewing, lessonState.studentData]);
 
   /**
    *
@@ -152,26 +158,12 @@ const useStudentTimer = (inputs?: inputs) => {
     if (!lessonState.viewing && currentSaveCount < lessonState.saveCount) {
       setCurrentSaveCount(lessonState.saveCount);
       updateStudentData('autosave');
-
-      // TODO: put normal exercise data and question data in context
-      //////////////////////////////
-      //////////////////////////////
-      //////////////////////////////
-      //////////////////////////////
-      ////////////////////////////// handleUpdateQuestionData();
     }
     if (lessonState.viewing) {
       if (currentSaveCount < lessonState.saveCount) {
         setCurrentSaveCount(lessonState.saveCount);
       }
       updateStudentData('autosave');
-
-      // TODO: put normal exercise data and question data in context
-      //////////////////////////////
-      //////////////////////////////
-      //////////////////////////////
-      //////////////////////////////
-      ////////////////////////////// handleUpdateQuestionData();
     }
 
     return () => resetParams();
@@ -182,86 +174,6 @@ const useStudentTimer = (inputs?: inputs) => {
    * COLLECT DATA & CONTENT FROM CONTEXT - SAVE
    *
    */
-  // const getWarmupDataSource = () => {
-  //   const warmupType = lessonState.data.lesson.warmUp.type;
-  //   switch (warmupType) {
-  //     case 'story':
-  //     case 'list':
-  //       return params.lessonState.componentState.story;
-  //     case 'truthgame':
-  //       return {truthGame: params.lessonState.componentState.truthGame.truthGameArray};
-  //     case 'poll':
-  //       return {
-  //         poll: params.lessonState.componentState.poll.pollInputs,
-  //         additional: params.lessonState.componentState.poll.additional,
-  //       };
-  //     case 'adventure':
-  //     default:
-  //       return {};
-  //   }
-  // };
-
-  // const getAnthologyContent = () => {
-  //   const template: AnthologyContentInterface = {
-  //     type: 'work',
-  //     subType: '',
-  //     title: '',
-  //     subTitle: '',
-  //     description: '',
-  //     content: '',
-  //   };
-  //   return Object.keys(params.lessonState.componentState).reduce(
-  //     (acc: AnthologyContentInterface[], componentKey: string) => {
-  //       const output = () => {
-  //         switch (componentKey) {
-  //           case 'story':
-  //             return {
-  //               ...template,
-  //               subType: 'story',
-  //               title: params.lessonState.componentState?.story
-  //                 ? params.lessonState.componentState?.story.title
-  //                 : '',
-  //               content: params.lessonState.componentState?.story
-  //                 ? params.lessonState.componentState.story.story
-  //                 : '',
-  //             };
-  //           case 'poem':
-  //             return {
-  //               ...template,
-  //               subType: 'poem',
-  //               title: params.lessonState.componentState?.poem
-  //                 ? params.lessonState.componentState?.poem.title
-  //                 : '',
-  //               content: params.lessonState.componentState?.poem
-  //                 ? params.lessonState.componentState.poem?.editInput
-  //                 : '',
-  //             };
-  //           case 'notes':
-  //             return {
-  //               ...template,
-  //               type: 'notes',
-  //               subType: 'notes',
-  //               title: params.lessonState.componentState?.notes
-  //                 ? params.lessonState.data.lesson.title
-  //                 : '',
-  //               content: params.lessonState.componentState?.notes
-  //                 ? params.lessonState.componentState.notes?.content
-  //                 : '',
-  //             };
-  //           default:
-  //             return {};
-  //         }
-  //       };
-  //
-  //       if (Object.keys(output()).length > 0) {
-  //         return [...acc, output()];
-  //       } else {
-  //         return acc;
-  //       }
-  //     },
-  //     []
-  //   );
-  // };
 
   /**
    *
@@ -269,72 +181,50 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   const updateStudentData = async (saveType?: string) => {
-    let data = {
-      id: params.lessonState.studentDataID,
-      universalLessonID: params.lessonState.id,
-      // universalLessonPageID: params.lessonState.lessonPlan[params.lessonState.currentPage]?.id,
-      saveType: saveType,
-      status: 'ACTIVE',
-      syllabusLessonID: params.lessonState.syllabusLessonID,
-      studentAuthID: params.state.user.authId,
-      studentID: params.state.user.email,
-      currentLocation: params.lessonState.currentPage,
-      lessonProgress: params.lessonState.lessonProgress,
-      pageData: params.lessonState.studentData[params.lessonState.currentPage]
-    };
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const authId = user.attributes.sub;
+    const email = user.attributes.email;
 
-    // console.log('updateStudentData - timer - ', data);
-
-    if (lessonState.studentDataID && lessonState.syllabusLessonID !== '') {
-      try {
-        // TODO: enable this once all student data can be saved
-        // const dataObject: any = await API.graphql(
-        //   graphqlOperation(customMutations.updateStudentData, {input: data})
-        // );
-        dispatch({type: 'SAVED_CHANGES'});
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      console.log('studentDataID not yet created');
-    }
-  };
-
-  /**
-   * GET or CREATE QUESTION DATA
-   */
-  const updateQuestionData = async (responseObj: any) => {
-    try {
-      // TODO: enable this once all student data can be saved
-      // const updatedQuestionData = await API.graphql(
-      //   graphqlOperation(mutations.updateQuestionData, {input: responseObj})
-      // );
-      console.log('updateQuestionData responseObj -> ', responseObj);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleUpdateQuestionData = async () => {
-    if (Object.keys(lessonState.questionData).length > 0) {
-      let questionDataUpdateArray = lessonState.questionDataUpdate;
-      if (questionDataUpdateArray) {
-        await questionDataUpdateArray.reduce((_: any, val: any) => {
-          let responseObject = {
-            id: val.id,
-            syllabusLessonID: lessonState.syllabusLessonID,
-            checkpointID: val.checkpointID,
-            componentType: lessonState.data.lesson.type,
-            lessonID: lessonState.data.lesson.id,
-            authID: lessonState.studentAuthID,
-            email: lessonState.studentUsername,
-            responseObject: lessonState.questionData[val.checkpointID],
+    const loopOverDataId = lessonState.universalStudentDataID.reduce(
+      async (acc: any[], currentIdObj: any, idx: number) => {
+        if (currentIdObj.update) {
+          let data = {
+            id: currentIdObj.id,
+            // syllabusLessonID: state.activeSyllabus,
+            // lessonID: lessonID,
+            // lessonPageID: lessonState.lessonData.lessonPlan[lessonState.currentPage].id,
+            // studentID: authId,
+            // studentAuthID: authId,
+            // studentEmail: email,
+            // currentLocation: lessonState.currentPage,
+            // lessonProgress: '0',
+            pageData: lessonState.studentData[currentIdObj.pageIdx],
           };
 
-          updateQuestionData(responseObject);
-        }, null);
-      }
-    }
+          try {
+            let updatedStudentData: any = await API.graphql(
+              graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
+            );
+          } catch (e) {
+            console.error('update universal student data - ', encodeURI);
+          } finally {
+            console.log('updateStudentData - finally - ', idx);
+            if (idx === lessonState.universalStudentDataID.length - 1) {
+              lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
+            }
+          }
+
+          console.log('updateStudentData - timer - ', data);
+        }
+      },
+      []
+    );
+
+    // console.log(
+    //   'lessonState.universalStudentDataID - ',
+    //   lessonState.universalStudentDataID
+    // );
   };
 
   /**

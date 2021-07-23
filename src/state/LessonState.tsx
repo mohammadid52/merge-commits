@@ -1,19 +1,20 @@
 import {UniversalLessonStudentData} from '../interfaces/UniversalLessonInterfaces';
 
 export interface lessonStateType {
-  status?: string;
+  loaded?: boolean;
   universalLessonID?: string;
   universalLessonPageID?: string;
-  universalStudentDataID?: string;
+  universalStudentDataID?: any[];
   studentAuthID?: string;
   studentUsername?: string;
   lessonData?: any;
   currentPage?: number;
   lessonProgress?: number;
   canContinue?: string;
+  updated?: boolean;
   studentData?: UniversalLessonStudentData[];
   viewing?: boolean;
-  displayData?: UniversalLessonStudentData[];
+  displayData?: any;
   saveCount?: number;
   firstSave?: boolean;
   subscription?: any;
@@ -21,16 +22,17 @@ export interface lessonStateType {
 }
 
 export const lessonState: lessonStateType = {
-  status: '',
+  loaded: false,
   universalLessonID: '',
   universalLessonPageID: '',
-  universalStudentDataID: '',
+  universalStudentDataID: [],
   studentAuthID: '',
   studentUsername: '',
   lessonData: {},
   currentPage: 0,
   lessonProgress: 0,
   canContinue: '',
+  updated: false,
   studentData: [],
   viewing: false,
   displayData: [],

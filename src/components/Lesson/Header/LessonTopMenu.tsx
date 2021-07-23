@@ -19,10 +19,10 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
   //  ENABLE NAVIGATION DEPENDING ON PAGE POSITION
   const [canContinue, setCanContinue] = useState<boolean>(false);
   const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
-  useEffect(() => {
 
+  useEffect(() => {
     if (PAGES) {
-      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1].open;
+      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1]?.open !== false;
       const USER_AT_END = CURRENT_PAGE === PAGES.length - 1;
 
       if (CAN_CONTINUE && !USER_AT_END) {
@@ -37,10 +37,10 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
   //  NAVIGATION CONTROLS
   const handleForward = () => {
     if (canContinue && !userAtEnd) {
-      history.push(`${match.url}/${CURRENT_PAGE+1}`);
+      history.push(`${match.url}/${CURRENT_PAGE + 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: CURRENT_PAGE+1,
+        payload: CURRENT_PAGE + 1,
       });
     }
     if (userAtEnd) {
@@ -50,10 +50,10 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
 
   const handleBack = () => {
     if (CURRENT_PAGE > 0) {
-      history.push(`${match.url}/${CURRENT_PAGE-1}`);
+      history.push(`${match.url}/${CURRENT_PAGE - 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: CURRENT_PAGE-1,
+        payload: CURRENT_PAGE - 1,
       });
     }
   };
@@ -64,9 +64,6 @@ const LessonTopMenu = (props: {handlePopup: () => void}) => {
         className={` ${theme.toolbar.bg} shadow-1 h-16 w-full flex justify-center items-center content-center py-4 px-6`}>
         <div className="w-full flex flex-row items-center justify-between">
           <div className="flex flex-row justify-center">
-
-
-
             {/* BACK BUTTON */}
 
             <div

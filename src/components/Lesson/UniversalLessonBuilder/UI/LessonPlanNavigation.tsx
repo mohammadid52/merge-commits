@@ -60,14 +60,19 @@ const LessonPlanNavigation = ({
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
 
   useEffect(() => {
-    if (universalLessonDetails.darkMode) {
+    if (fetchingLessonDetails) {
       setSettings({...settings, darkMode: true});
       handleThemeChange(true);
     } else {
-      setSettings({...settings, darkMode: false});
-      handleThemeChange(false);
+      if (universalLessonDetails.darkMode) {
+        setSettings({...settings, darkMode: true});
+        handleThemeChange(true);
+      } else {
+        setSettings({...settings, darkMode: false});
+        handleThemeChange(false);
+      }
     }
-  }, [universalLessonDetails]);
+  }, [universalLessonDetails, fetchingLessonDetails]);
 
   // useEffect(() => {
   //   if (universalLessonDetails.darkMode !== undefined) {

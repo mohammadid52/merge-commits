@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import * as customQueries from '../../../customGraphql/customQueries';
+import React, {useContext} from 'react';
+import {useHistory} from 'react-router-dom';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 import * as customMutations from '../../../customGraphql/customMutations';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import ComponentLoading from '../../Lesson/Loading/ComponentLoading';
-import Classroom, { Syllabus } from '../Classroom/Classroom';
-import { DashboardProps } from '../Dashboard';
+import * as mutations from '../../../graphql/mutations';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import Classroom, {Syllabus} from '../Classroom/Classroom';
+import {DashboardProps} from '../Dashboard';
 
 export interface Artist {
   id: string;
@@ -36,53 +35,54 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     handleRoomSelection,
   } = props;
 
-  const { state, dispatch } = useContext(GlobalContext);
-  useHistory();
+  // const {state, dispatch} = useContext(GlobalContext);
+  // useHistory();
 
-  const handleSyllabusActivation = async (syllabusID: string) => {
-    const roomID = state.activeRoom;
-    const syllabusArray = state.roomData.syllabus;
-    const updatedSyllabusArray = syllabusArray.map((syllabus: Syllabus) => {
-      if (syllabus.id === syllabusID) {
-        return { ...syllabus, active: true };
-      } else {
-        return { ...syllabus, active: false };
-      }
-    });
-    const roomStateObject = state.roomData.rooms.reduce((acc: {}, room: any) => {
-      if (room.id === roomID) {
-        return { ...acc, room };
-      } else {
-        return acc;
-      }
-    }, {});
-    const input = {
-      id: roomID,
-      institutionID: roomStateObject.room.institutionID,
-      classID: roomStateObject.room.classID,
-      teacherAuthID: roomStateObject.room.teacherAuthID,
-      teacherEmail: roomStateObject.room.teacherEmail,
-      name: roomStateObject.room.name,
-      maxPersons: roomStateObject.room.maxPersons,
-      activeSyllabus: syllabusID,
-    };
-    // console.log('lessonplanhome activateSyl --> ', input);
+  /**
+   *
+   * THIS COMPONENT HAS BECOME REDUNDANT
+   * SYLLABUSACTIVATION PUSHED TO CLASSROOM.tsx
+   *
+   */
 
-    try {
-      const updateRoomMutation: any = API.graphql(graphqlOperation(customMutations.updateRoom, { input }));
-      await updateRoomMutation;
-    } catch (e) {
-      console.error('handleSyllabusActivation: ', e);
-    } finally {
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'syllabus',
-          data: updatedSyllabusArray,
-        },
-      });
-    }
-  };
+  // const handleSyllabusActivation = async (syllabusID: string) => {
+  //   const roomID = activeRoomInfo.id;
+  //   const syllabusArray = state.roomData.syllabus;
+  //   const updatedSyllabusArray = syllabusArray.map((syllabus: Syllabus) => {
+  //     if (syllabus.id === syllabusID) {
+  //       return {...syllabus, active: true};
+  //     } else {
+  //       return {...syllabus, active: false};
+  //     }
+  //   });
+  //   const roomStateObject = state.roomData.rooms.reduce((acc: {}, room: any) => {
+  //     if (room.id === activeRoomInfo.id) {
+  //       return {...acc, room};
+  //     } else {
+  //       return acc;
+  //     }
+  //   }, {});
+  //
+  //   try {
+  //     const updateRoomMutation: any = API.graphql(
+  //       graphqlOperation(mutations.updateRoom, {
+  //         id: activeRoomInfo.id,
+  //         activeSyllabus: syllabusID,
+  //       })
+  //     );
+  //     await updateRoomMutation;
+  //   } catch (e) {
+  //     console.error('handleSyllabusActivation: ', e);
+  //   } finally {
+  //     dispatch({
+  //       type: 'UPDATE_ROOM',
+  //       payload: {
+  //         property: 'syllabus',
+  //         data: updatedSyllabusArray,
+  //       },
+  //     });
+  //   }
+  // };
 
   return (
     <Classroom
@@ -93,7 +93,6 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
       isTeacher={true}
       visibleLessonGroup={visibleLessonGroup}
       setVisibleLessonGroup={setVisibleLessonGroup}
-      handleSyllabusActivation={handleSyllabusActivation}
       lessonLoading={lessonLoading}
       setLessonLoading={setLessonLoading}
       syllabusLoading={syllabusLoading}

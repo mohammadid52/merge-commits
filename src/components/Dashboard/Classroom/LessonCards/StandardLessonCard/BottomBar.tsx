@@ -65,7 +65,7 @@ const BottomBar = (props: LessonCardProps) => {
         <Start
           roomID={roomID}
           isTeacher={isTeacher}
-          lessonKey={lessonProps ? lessonProps.id : null}
+          lessonKey={lessonProps ? lessonProps.lessonID : null}
           open={lessonProps && lessonProps.status === 'Active' ? true : false}
           accessible={accessible}
           type={lessonType}
