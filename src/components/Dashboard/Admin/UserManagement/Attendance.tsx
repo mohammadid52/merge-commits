@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as queries from '../../../../graphql/queries';
 
 import Loader from '../../../Atoms/Loader';
+import SearchInput from '../../../Atoms/Form/SearchInput';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
@@ -103,6 +104,13 @@ const Attendance = ({id}: any) => {
   return (
     <div className="">
       <div className="flex justify-end mb-2">
+          <SearchInput
+            value={''}
+            onChange={() => console.log("on change")}
+            // onKeyDown={searchUserFromList}
+            // closeAction={removeSearchAction}
+            style="mr-4"
+          />
         <div className="w-64 relative ulb-datepicker">
           <DatePicker
             dateFormat={'dd/MM/yyyy'}
