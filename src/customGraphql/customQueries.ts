@@ -2970,22 +2970,6 @@ export const getUniversalSyllabus = /* GraphQL */ `
           lessonID
           lesson {
             title
-            measurements {
-              items {
-                id
-                lessonID
-                rubricID
-                rubric {
-                  id
-                  name
-                  criteria
-                  topicID
-                }
-                createdAt
-                updatedAt
-              }
-              nextToken
-            }
           }
           unit
           sequence
