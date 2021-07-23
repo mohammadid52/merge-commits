@@ -71,6 +71,7 @@ export interface PartContentSub {
   label?: string;
   value?: string;
   options?: Options[];
+  placeholderText?: string;
 }
 
 export interface Options {

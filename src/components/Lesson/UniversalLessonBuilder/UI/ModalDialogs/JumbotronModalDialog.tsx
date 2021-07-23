@@ -37,7 +37,7 @@ interface IJumbotronModalComponentProps extends IContentTypeComponentProps {
   selectedPageID?: string;
 }
 
-const initialInputFieldsState = [
+const initialInputFieldsState: PartContentSub[] = [
   {
     id: 'background',
     type: 'background',
@@ -50,18 +50,21 @@ const initialInputFieldsState = [
     type: 'title',
     label: 'Title',
     value: 'Jumbo Title placeholder',
+    placeholderText: 'Jumbo Title placeholder',
   },
   {
     id: 'subtitle',
     type: 'subtitle',
     label: 'Subtitle',
     value: 'This is the subtitle placeholder',
+    placeholderText: 'This is the subtitle placeholder',
   },
   {
     id: 'description',
     type: 'description',
     label: 'Description',
     value: '',
+    placeholderText: 'This is the description text placeholder',
   },
 ];
 
@@ -78,7 +81,7 @@ const JumbotronModalDialog = ({
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
-  
+
   //////////////////////////
   //  DATA STORAG         //
   //////////////////////////
@@ -418,7 +421,7 @@ const JumbotronModalDialog = ({
                       textarea={isDesc}
                       value={inputFieldsArray[idx]?.value}
                       id={inputFieldsArray[idx]?.id}
-                      placeHolder={inputFieldsArray[idx]?.value}
+                      placeHolder={inputFieldsArray[idx]?.placeholderText}
                       type="text"
                       rows={2}
                       showCharacterUsage={isDesc}
