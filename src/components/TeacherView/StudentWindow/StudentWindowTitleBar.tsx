@@ -5,7 +5,8 @@ import {GlobalContext} from '../../../contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../../graphql/mutations';
-import {getSessionData, setSessionData} from '../../../utilities/sessionData';
+import {setSessionData} from '../../../utilities/sessionData';
+import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
 
 interface StudentWindowTitleBarProps {
   handleFullscreen: () => void;
@@ -33,7 +34,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   // ##################################################################### //
   const handleOpenCloseComponent = async (pageNr: number) => {
     // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
-    const getRoomData = getSessionData('room_info');
+    const getRoomData = getLocalStorageData('room_info');
 
     // ~~~~~~~ GET CURRENT CLOSED PAGES ~~~~~~ //
     const getClosedPages = lessonState.lessonData.lessonPlan.reduce(
@@ -60,7 +61,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
       : [...getClosedPages, activePageData.id];
 
     // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
-    setSessionData('room_info', {...getRoomData, ClosedPages: finalClosedPages});
+    setLocalStorageData('room_info', {...getRoomData, ClosedPages: finalClosedPages});
 
     // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
     try {

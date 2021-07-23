@@ -1,3 +1,4 @@
+import {UniversalLessonStudentData} from '../interfaces/UniversalLessonInterfaces';
 import {lessonControlStateType} from '../state/LessonControlState';
 
 type lessonControlActions =

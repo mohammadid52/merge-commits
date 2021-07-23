@@ -115,18 +115,22 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         subscription: action.payload.subscription,
       };
     case 'SET_SUBSCRIPTION_DATA':
-      const mappedClosedPages = state.lessonData.lessonPlan.map(
-        (page: UniversalLessonPage, idx: number) => {
-          if (action.payload.ClosedPages.includes(page.id)) {
-            return {...page, open: false};
-          } else {
-            return {...page, open: true};
-          }
-        }
-      );
+      const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
+      const mappedClosedPages = havePagesChanged
+        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
+            if (action.payload.ClosedPages.includes(page.id)) {
+              return {...page, open: false};
+            } else {
+              return {...page, open: true};
+            }
+          })
+        : state.lessonData.lessonPlan;
       return {
         ...state,
-        lessonData: {...state.lessonData, lessonPlan: mappedClosedPages},
+        lessonData: {
+          ...state.lessonData,
+          lessonPlan: mappedClosedPages,
+        },
         displayData: action.payload.displayData
           ? action.payload.displayData
           : state.displayData,

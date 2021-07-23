@@ -34,6 +34,7 @@ import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuil
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
 import axios from 'axios';
+import {removeLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -629,10 +630,10 @@ const Dashboard = (props: DashboardProps) => {
       (room: any) => room.id === state.activeRoom
     );
     if (getRoomFromState) {
-      setSessionData('room_info', getRoomFromState);
+      setLocalStorageData('room_info', getRoomFromState);
       setActiveRoomInfo(getRoomFromState);
     } else {
-      removeSessionData('room_info');
+      removeLocalStorageData('room_info');
     }
   }, [state.activeRoom]);
 

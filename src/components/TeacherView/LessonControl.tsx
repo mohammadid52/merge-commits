@@ -22,6 +22,7 @@ import {
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
 import {getSessionData} from '../../utilities/sessionData';
+import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonControl = () => {
   const {dispatch, lessonState, lessonDispatch, controlState, theme} = useContext(
@@ -151,7 +152,7 @@ const LessonControl = () => {
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
 
-      const getRoomData = getSessionData('room_info');
+      const getRoomData = getLocalStorageData('room_info');
 
       if (
         lessonState.lessonData.lessonPlan &&
