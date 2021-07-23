@@ -196,18 +196,21 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                             <div
                                               className={`${paddingForHeader(
                                                 content.type
-                                              )} ${content.class} `}
-                                              id={content.id}>
-                                              {composePartContent(
-                                                content.id,
-                                                content.type,
-                                                content.value,
-                                                `pp_${idx}_pc_${idx2}`,
-                                                content.class,
-                                                pagePart.id,
-                                                mode,
-                                                updateOnSave
-                                              )}
+                                              )}`}>
+                                              <div
+                                                className={`${content.class}`}
+                                                id={content.id}>
+                                                {composePartContent(
+                                                  content.id,
+                                                  content.type,
+                                                  content.value,
+                                                  `pp_${idx}_pc_${idx2}`,
+                                                  content.class,
+                                                  pagePart.id,
+                                                  mode,
+                                                  updateOnSave
+                                                )}
+                                              </div>
                                             </div>
                                           ) : (
                                             <AddNewBlock

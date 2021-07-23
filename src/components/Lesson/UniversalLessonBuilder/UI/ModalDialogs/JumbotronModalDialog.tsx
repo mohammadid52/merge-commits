@@ -1,24 +1,25 @@
 import React, {useContext, useEffect, useState} from 'react';
+import Storage from '@aws-amplify/storage';
 
 import FormInput from '../../../../Atoms/Form/FormInput';
+import Buttons from '../../../../Atoms/Buttons';
+import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
+import Loader from '../../../../Atoms/Loader';
+import Selector from '../../../../Atoms/Form/Selector';
+
 import {
   EditQuestionModalDict,
   UniversalBuilderDict,
 } from '../../../../../dictionary/dictionary.iconoclast';
-import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterfaces';
-import Storage from '@aws-amplify/storage';
-import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
-import Loader from '../../../../Atoms/Loader';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {getImageFromS3} from '../../../../../utilities/services';
-import {getAsset} from '../../../../../assets';
-import QuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/QuoteBlock';
-import Selector from '../../../../Atoms/Form/Selector';
+import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
 import {blur, scrim, tinting} from '../../../../../utilities/staticData';
+import {getAsset} from '../../../../../assets';
 import ColorPicker from '../ColorPicker/ColorPicker';
+import QuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/QuoteBlock';
 import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks/JumbotronBlock/CustomizeQuoteBlock';
 
 interface IImageInput {
@@ -60,7 +61,7 @@ const initialInputFieldsState = [
     id: 'description',
     type: 'description',
     label: 'Description',
-    value: 'This is the description text placeholder',
+    value: '',
   },
 ];
 
@@ -77,7 +78,7 @@ const JumbotronModalDialog = ({
   const {userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
-
+  
   //////////////////////////
   //  DATA STORAG         //
   //////////////////////////
@@ -93,7 +94,12 @@ const JumbotronModalDialog = ({
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
+      const imageUrl: string | undefined = inputObj.find((input: any) => input.type === 'background')?.value;
       setInputFieldsArray(inputObj);
+      setImageInputs((prevValues) => ({
+        ...prevValues,
+        url: imageUrl ? getImageFromS3Static(imageUrl) : '',
+      }));
       setIsEditingMode(true);
     }
   }, [inputObj]);
@@ -408,7 +414,7 @@ const JumbotronModalDialog = ({
                     <FormInput
                       onChange={onChange}
                       label={inputFieldsArray[idx]?.label}
-                      isRequired
+                      isRequired={!isDesc}
                       textarea={isDesc}
                       value={inputFieldsArray[idx]?.value}
                       id={inputFieldsArray[idx]?.id}
