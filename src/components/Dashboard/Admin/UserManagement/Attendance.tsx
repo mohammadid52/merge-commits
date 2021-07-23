@@ -103,7 +103,7 @@ const Attendance = ({id}: any) => {
   return (
     <div className="">
       <div className="flex justify-end mb-2">
-        <div className="w-64 relative">
+        <div className="w-64 relative ulb-datepicker">
           <DatePicker
             dateFormat={'dd/MM/yyyy'}
             selected={date}

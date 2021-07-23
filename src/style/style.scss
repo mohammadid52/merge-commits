@@ -982,19 +982,17 @@
 .questionItemChild:last-child {
   margin-bottom: 1.5rem;
 }
-.react-datepicker__close-icon {
-  width: auto;
-}
-
-.animated-border {
-  width: 100%;
-}
-
-.animate__border::after {
-  position: absolute;
-  content: '';
-  bottom: 0;
-  height: 1px;
-  background-color: red;
-  width: 100%;
+.ulb-datepicker {
+  .react-datepicker__close-icon {
+    &::after {
+      height: 26px;
+      width: 26px;
+      font-size: 18px;
+    }
+    width: auto;
+  }
+  .react-datepicker__navigation-icon::before {
+    width: 16px;
+    height: 16px;
+  }
 }

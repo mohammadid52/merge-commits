@@ -53,20 +53,22 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
       onMouseEnter={toggleHeroDescription}
       onMouseLeave={toggleHeroDescription}>
       {/* READ ICON */}
-      <div
-        id="read-icon"
-        className="absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50">
-        <IconContext.Provider
-          value={{size: '2rem', style: {width: 'auto', cursor: 'pointer'}}}>
-          <AiOutlineRead
-            style={{
-              MozUserSelect: 'none',
-              WebkitUserSelect: 'none',
-              msUserSelect: 'none',
-            }}
-          />
-        </IconContext.Provider>
-      </div>
+      {description ? (
+        <div
+          id="read-icon"
+          className="absolute top-1 right-1 w-auto h-auto flex flex-row text-gray-200 z-50">
+          <IconContext.Provider
+            value={{size: '2rem', style: {width: 'auto', cursor: 'pointer'}}}>
+            <AiOutlineRead
+              style={{
+                MozUserSelect: 'none',
+                WebkitUserSelect: 'none',
+                msUserSelect: 'none',
+              }}
+            />
+          </IconContext.Provider>
+        </div>
+      ) : null}
 
       <div className="h-full text-left flex flex-col rounded-lg items-start">
         {/* HOVER OVERLAY */}
@@ -79,7 +81,9 @@ const CustomizedQuoteBlock = (props: QuoteBlockProps) => {
           } 
           h-full w-full flex flex-col justify-start  p-4 transition-all duration-500 ease-in-out overflow-hidden rounded-lg`}>
           <p className="w-full text-xl leading-7 font-semibold">{title}</p>
-          <div className="header-font font-light">"{description}"</div>
+          {description ? (
+            <div className="header-font font-light">"{description}"</div>
+          ) : null}
         </div>
 
         {/* STANDARD HERO TEXT */}

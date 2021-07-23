@@ -31,8 +31,9 @@ const ParaModalComponent = ({
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const FIELD_ID = 'paragraph';
-  const [fields, setFields] = useState<{paragraph: string}>({
+  const [fields, setFields] = useState<{paragraph: string; paragraphHtml: string}>({
     paragraph: !isEmpty(inputObj) ? inputObj[0].value : '',
+    paragraphHtml: !isEmpty(inputObj) ? inputObj[0].value : '',
   });
 
   useEffect(() => {
@@ -57,19 +58,19 @@ const ParaModalComponent = ({
     const partContentId: string = uniqueId(`${pageContentId}_`);
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), value: fields[FIELD_ID]},
+        {id: uuidv4().toString(), value: fields['paragraphHtml']},
       ]);
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), value: fields[FIELD_ID]},
+        {id: uuidv4().toString(), value: fields['paragraphHtml']},
       ]);
       await addToDB(updatedList);
     }
     // close modal after saving
 
     // clear fields
-    setFields({paragraph: ''});
+    setFields({paragraph: '', paragraphHtml: ''});
   };
   const onEditorStateChange = (
     html: string,
@@ -78,8 +79,7 @@ const ParaModalComponent = ({
     field: string
   ) => {
     setUnsavedChanges(true);
-
-    setFields({...fields, [field]: text});
+    setFields({...fields, [field]: text, [fieldHtml]: html});
   };
 
   const {paragraph} = fields;
@@ -91,7 +91,7 @@ const ParaModalComponent = ({
           <RichTextEditor
             initialValue={paragraph}
             onChange={(htmlContent, plainText) =>
-              onEditorStateChange(htmlContent, plainText, '', 'paragraph')
+              onEditorStateChange(htmlContent, plainText, 'paragraphHtml', 'paragraph')
             }
           />
         </div>
