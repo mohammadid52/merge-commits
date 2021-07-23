@@ -21,6 +21,7 @@ import {UniversalLessonPage} from '../../../../../interfaces/UniversalLessonInte
 import {find, findIndex, findLastIndex, update} from 'lodash';
 import {reorder} from '../../../../../utilities/strings';
 import {useQuery} from '../../../../../customHooks/urlParam';
+import Storage from '@aws-amplify/storage';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -215,15 +216,23 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
     message: string;
-
+    type?: string;
+    key?: string;
     id: string;
   }>({
     show: false,
     message: '',
+    type: '',
     id: '',
+    key: '',
   });
 
-  const onDeleteButtonClick = (id: string, right?: boolean) => {
+  const onDeleteButtonClick = (
+    id: string,
+    right?: boolean,
+    type?: string,
+    key?: string
+  ) => {
     setConfirmationConfig({
       message: `Are you sure you want to delete this content? ${
         right
@@ -231,8 +240,9 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           : 'It will be permanently removed.'
       } This action cannot be undone.`,
       show: true,
-
+      type,
       id,
+      key,
     });
   };
 
@@ -241,11 +251,31 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       message: '',
       show: false,
       id: '',
+      type: '',
+      key: '',
     });
   };
+  const deletImageFromS3 = (key: string) => {
+    // Remove image from bucket
 
-  const deletePartContent = async (contentID: string) => {
+    return new Promise((resolve, reject) => {
+      Storage.remove(key)
+        .then((result) => {
+          resolve(result);
+          closeAction();
+        })
+        .catch((err) => {
+          console.log('Error in deleting file from s3', err);
+          reject(err);
+        });
+    });
+  };
+  const deletePartContent = async (contentID: string, type?: string, key?: string) => {
+    if (type === 'image' || type === 'custom_video') {
+      await deletImageFromS3(key);
+    }
     const updatedList = deleteFromULBHandler(contentID);
+
     await addToDB(updatedList);
   };
 
@@ -287,20 +317,22 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
       className={`absolute flex flex-row items-center bg-transparent rounded-lg ${
         overlayVisible ? 'z-100' : 'z-10'
       } h-auto w-auto ${isComponent ? componentAlignmentToggleClass : ''}`}>
-      <ClickAwayListener
-        onClickAway={() => {
-          setOverlayVisible(false);
-          setColorPickerActive(false);
-          setColDropdownActive(false);
-        }}>
-        <div
-          style={{zIndex: 9999999}}
-          className={`flex ulb_action ${
-            overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
-          }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
-            isComponent ? 'left-2' : 'right-2'
-          } ${themeSecBackgroundColor} rounded-lg shadow-lg `}>
-          {/* {section === 'pageContent' ? (
+      {!previewMode && (
+        <ClickAwayListener
+          onClickAway={() => {
+            setOverlayVisible(false);
+            setColorPickerActive(false);
+            setColDropdownActive(false);
+            clearIds();
+          }}>
+          <div
+            style={{zIndex: 9999999}}
+            className={`flex ulb_action ${
+              overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
+            }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
+              isComponent ? 'left-2' : 'right-2'
+            } ${themeSecBackgroundColor} rounded-lg shadow-lg `}>
+            {/* {section === 'pageContent' ? (
             <>
               <button
                 className={`${actionClass} ${themeTextColor}`}
@@ -319,89 +351,96 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             </>
           ) : null} */}
 
-          {section === 'pageContent' ? (
-            <>
-              <MoveButton
-                disabled={DISABLE.BLOCK_UP}
-                moveDir="up"
-                text="Move Up"
-                onClick={() => moveBlock('up')}
-              />
-              <MoveButton
-                disabled={DISABLE.BLOCK_DOWN}
-                moveDir="down"
-                text="Move Down"
-                onClick={() => moveBlock('down')}
-              />
-            </>
-          ) : (
-            <>
-              <MoveButton
-                disabled={DISABLE.COMPONENT_UP}
-                moveDir="up"
-                text="Move Up"
-                onClick={() => moveComponent('up')}
-              />
-              <MoveButton
-                disabled={DISABLE.COMPONENT_DOWN}
-                moveDir="down"
-                text="Move Down"
-                onClick={() => moveComponent('down')}
-              />
-            </>
-          )}
+            {section === 'pageContent' ? (
+              <>
+                <MoveButton
+                  disabled={DISABLE.BLOCK_UP}
+                  moveDir="up"
+                  text="Move Up"
+                  onClick={() => moveBlock('up')}
+                />
+                <MoveButton
+                  disabled={DISABLE.BLOCK_DOWN}
+                  moveDir="down"
+                  text="Move Down"
+                  onClick={() => moveBlock('down')}
+                />
+              </>
+            ) : (
+              <>
+                <MoveButton
+                  disabled={DISABLE.COMPONENT_UP}
+                  moveDir="up"
+                  text="Move Up"
+                  onClick={() => moveComponent('up')}
+                />
+                <MoveButton
+                  disabled={DISABLE.COMPONENT_DOWN}
+                  moveDir="down"
+                  text="Move Down"
+                  onClick={() => moveComponent('down')}
+                />
+              </>
+            )}
 
-          {section !== 'pageContent' && (
+            {section !== 'pageContent' && (
+              <button
+                className={`${actionClass} ${bgClass} ${themeTextColor}`}
+                onClick={() => {
+                  handleEditBlockContent();
+                  setOverlayVisible(false);
+                  clearIds();
+                }}>
+                <span className={iconClass}>
+                  <AiOutlineEdit />
+                </span>
+                <span className={textClass}>Edit</span>
+              </button>
+            )}
+
+            {section !== 'pageContent' && (
+              <div className={`relative`}>
+                <button
+                  onClick={() => {
+                    setColorPickerActive(!colorPickerActive);
+                  }}
+                  className={`${actionClass} ${bgClass} ${themeTextColor}`}>
+                  <span className={iconClass}>
+                    <AiOutlineBgColors />
+                  </span>
+                  <span className={textClass}>BG Color</span>
+                </button>
+                {colorPickerActive && (
+                  <ColorPicker
+                    classString={classString}
+                    callbackColor={handleColorPickerSelect}
+                    isPagePart={isPagePart}
+                  />
+                )}
+              </div>
+            )}
+
             <button
-              className={`${actionClass} ${bgClass} ${themeTextColor}`}
               onClick={() => {
-                handleEditBlockContent();
+                onDeleteButtonClick(
+                  contentID,
+                  section === 'pageContent',
+                  pageContent?.partContent[partContentIdx]?.type,
+                  pageContent?.partContent[partContentIdx]?.value[0].value
+                );
+
                 setOverlayVisible(false);
                 clearIds();
-              }}>
+              }}
+              className={`${actionClass} ${bgClass} text-red-400`}>
               <span className={iconClass}>
-                <AiOutlineEdit />
+                <AiOutlineDelete />
               </span>
-              <span className={textClass}>Edit</span>
+              <span className={textClass}>Delete</span>
             </button>
-          )}
-
-          {section !== 'pageContent' && (
-            <div className={`relative`}>
-              <button
-                onClick={() => {
-                  setColorPickerActive(!colorPickerActive);
-                }}
-                className={`${actionClass} ${bgClass} ${themeTextColor}`}>
-                <span className={iconClass}>
-                  <AiOutlineBgColors />
-                </span>
-                <span className={textClass}>BG Color</span>
-              </button>
-              {colorPickerActive && (
-                <ColorPicker
-                  classString={classString}
-                  callbackColor={handleColorPickerSelect}
-                  isPagePart={isPagePart}
-                />
-              )}
-            </div>
-          )}
-
-          <button
-            onClick={() => {
-              onDeleteButtonClick(contentID, section === 'pageContent');
-              setOverlayVisible(false);
-              clearIds();
-            }}
-            className={`${actionClass} ${bgClass} text-red-400`}>
-            <span className={iconClass}>
-              <AiOutlineDelete />
-            </span>
-            <span className={textClass}>Delete</span>
-          </button>
-        </div>
-      </ClickAwayListener>
+          </div>
+        </ClickAwayListener>
+      )}
 
       {!previewMode && (
         <button
@@ -423,7 +462,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
           message={message}
           closeAction={closeAction}
           saveLabel={LessonBuilderDict[userLanguage]['BUTTON']['DELETE']}
-          saveAction={() => deletePartContent(confirmationConfig.id)}
+          saveAction={() =>
+            deletePartContent(
+              confirmationConfig.id,
+              confirmationConfig.type,
+              confirmationConfig.key
+            )
+          }
         />
       )}
     </div>

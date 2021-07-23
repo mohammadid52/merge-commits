@@ -18,11 +18,15 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const options: string[] = [
     'inline',
-    'list',
-    'textAlign',
     'blockType',
     'fontSize',
     'fontFamily',
+    'list',
+    'textAlign',
+    'colorPicker',
+    'link',
+    'emoji',
+    'remove',
     'history',
   ];
   const onEditorStateChange = (editorState: any) => {
@@ -59,7 +63,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         options: options,
         inline: {
           inDropdown: false,
-          options: ['bold', 'italic', 'underline'],
+          options: ['bold', 'italic', 'underline','superscript', 'subscript'],
           className: 'toolItemClassName',
         },
         list: {inDropdown: true, className: 'dropdownClassName'},
@@ -85,6 +89,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         },
         colorPicker: {
           className: 'toolItemClassName',
+          colors: ['#DC2626', '#D97706','#34D399','#3B82F6'],
         },
       }}
     />

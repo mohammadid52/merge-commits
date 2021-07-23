@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   AiOutlineDelete,
   AiOutlineEye,
@@ -13,6 +13,7 @@ import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
 import {VscDiscard} from 'react-icons/vsc';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import useOnScreen from '../../../../../customHooks/useOnScreen';
 import Tooltip from '../../../../Atoms/Tooltip';
 
 const Button = ({
@@ -60,14 +61,17 @@ const Toolbar = ({
   deleteLesson,
   setEditMode,
   setFields,
+
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
+
   setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   setFields: React.Dispatch<React.SetStateAction<any>>;
 }) => {
-  const {previewMode, setPreviewMode, enableDnD, setEnableDnD} = useULBContext();
+  const {previewMode, setPreviewMode, setToolbarOnTop} = useULBContext();
+
   const {
     state: {
       lessonPage: {
@@ -77,99 +81,87 @@ const Toolbar = ({
       } = {},
     },
   } = useContext(GlobalContext);
+  const toolbarRef = useRef();
+  const isVisible = useOnScreen(toolbarRef);
+
+  useEffect(() => {
+    setToolbarOnTop(isVisible);
+  }, [isVisible]);
   return (
     <>
-      {previewMode && (
-        <div
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} p-2 w-auto absolute right-2.5 top-2.5`}>
-          <Button
-            onClick={() => setPreviewMode(!previewMode)}
-            tooltip="Preview"
-            color={themeTextColor}
-            icon={AiOutlineEyeInvisible}
-          />
-        </div>
-      )}
-      {!previewMode && (
-        <div
-          // hidden={previewMode}
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
-          <div className="flex items-center">
-            <Container>
-              <Button
-                onClick={() => setPreviewMode(!previewMode)}
-                tooltip="Preview"
-                color={themeTextColor}
-                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
-              />
+      {/* {!previewMode && ( */}
+      <div
+        hidden={previewMode}
+        ref={toolbarRef}
+        className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+        <div className="flex items-center">
+          <Container>
+            <Button
+              onClick={() => setPreviewMode(!previewMode)}
+              tooltip="Preview"
+              color={themeTextColor}
+              icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+            />
 
-              <>
-                {/* <Button
+            <>
+              {/* <Button
                   color={themeTextColor}
                   onClick={() => setEnableDnD(!enableDnD)}
                   tooltip="Enable Drag"
                   icon={enableDnD ? RiDragDropFill : RiDragDropLine}
                 /> */}
-                <Button
-                  color={themeTextColor}
-                  tooltip="Add New Page"
-                  onClick={() => {
-                    setNewLessonPlanShow(true);
-                    setEditMode(false);
-                    setFields({
-                      title: '',
-                      label: '',
-                      instructions: '',
-                      instructionsHtml: '',
-                      description: '', // ignore this field
-                      interactionType: [],
-                      tags: [],
-                      estTime: '1 min',
-                      classwork: true,
-                    });
-                  }}
-                  icon={AiOutlineFileAdd}
-                />
-                <Divider theme={theme} />
-              </>
-            </Container>
+              <Button
+                color={themeTextColor}
+                tooltip="Add New Page"
+                onClick={() => {
+                  setNewLessonPlanShow(true);
+                  setEditMode(false);
+                  setFields({
+                    title: '',
+                    label: '',
+                    instructions: '',
+                    instructionsHtml: '',
+                    description: '', // ignore this field
+                    interactionType: [],
+                    tags: [],
+                    estTime: '1 min',
+                    classwork: true,
+                  });
+                }}
+                icon={AiOutlineFileAdd}
+              />
+              <Divider theme={theme} />
+            </>
+          </Container>
 
-            <Container>
-              {/* <Button
+          <Container>
+            {/* <Button
                 color={themeTextColor}
                 tooltip="Enable Drag"
                 icon={enableDnD ? RiDragDropFill : RiDragDropLine}
               /> */}
-              <Button
-                color={themeTextColor}
-                tooltip="Search Page"
-                icon={AiOutlineFileSearch}
-              />
-              <Divider theme={theme} />
-            </Container>
+            <Button
+              color={themeTextColor}
+              tooltip="Search Page"
+              icon={AiOutlineFileSearch}
+            />
+            <Divider theme={theme} />
+          </Container>
 
-            <Container>
-              <Button
-                color={themeTextColor}
-                tooltip="Save changes"
-                icon={AiOutlineSave}
-              />
-              <Button
-                color={themeTextColor}
-                tooltip="Discard changes"
-                icon={VscDiscard}
-              />
+          <Container>
+            <Button color={themeTextColor} tooltip="Save changes" icon={AiOutlineSave} />
+            <Button color={themeTextColor} tooltip="Discard changes" icon={VscDiscard} />
 
-              <Button
-                color="text-red-500"
-                tooltip="Delete this page"
-                icon={AiOutlineDelete}
-                onClick={deleteLesson}
-              />
-            </Container>
-          </div>
+            <Button
+              color="text-red-500"
+              tooltip="Delete this page"
+              icon={AiOutlineDelete}
+              onClick={deleteLesson}
+            />
+          </Container>
         </div>
-      )}
+      </div>
+      {/* )} */}
     </>
   );
 };

@@ -11,7 +11,8 @@ interface IULBFileUploader {
   error?: string;
   fileUrl: string;
   multiple?: boolean;
-  showPreview?: boolean
+  showPreview?: boolean;
+  customVideo?: boolean;
   updateFileUrl: (url: string, imageData: File | null) => void;
 }
 
@@ -23,7 +24,9 @@ const ULBFileUploader = ({
   multiple = false,
   showPreview = true,
   updateFileUrl,
+  customVideo = false,
 }: IULBFileUploader) => {
+  
   const {userLanguage} = useContext(GlobalContext);
   const otherProps: any = {};
   if (acceptedFilesFormat) {
@@ -48,15 +51,22 @@ const ULBFileUploader = ({
     ...otherProps,
   });
   const label: string = multiple ? 'some files' : 'file';
+
   return (
-    <div
-      {...getRootProps()}
-      className={classString}
-      >
+    <div {...getRootProps()} className={classString}>
       <input {...getInputProps()} />
       <div className={'flex flex-col items-center justify-center h-full'}>
         {showPreview && fileUrl ? (
-          <img src={fileUrl} alt="" className={`w-30 h-30 mx-auto`} />
+          customVideo ? (
+            <div className="w-36 h-auto mx-auto">
+              <video className="rounded-lg mx-auto" src={fileUrl}>
+                <source />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          ) : (
+            <img src={fileUrl} alt="" className={`w-30 h-30 mx-auto`} />
+          )
         ) : (
           <>
             <FaCloudUploadAlt size="50" className="text-gray-400" />
@@ -67,7 +77,7 @@ const ULBFileUploader = ({
               )}
             </p>
           </>
-        )} 
+        )}
       </div>
       <p className="text-red-500 text-xs">
         {fileRejections && fileRejections.length

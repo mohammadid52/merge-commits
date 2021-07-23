@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
 
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
@@ -20,16 +20,28 @@ import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
+import useOnScreen from '../../../../customHooks/useOnScreen';
+import {IconType} from 'react-icons/lib';
+import Tooltip from '../../../Atoms/Tooltip';
+import {
+  AiOutlineDelete,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineFileAdd,
+  AiOutlineFileSearch,
+  AiOutlineSave,
+} from 'react-icons/ai';
+
+import {VscDiscard} from 'react-icons/vsc';
+
 interface CoreBuilderProps extends ULBSelectionProps {
   mode: 'building' | 'viewing' | 'lesson';
-
   universalLessonDetails: UniversalLesson;
   selectedPageDetails?: UniversalLessonPage;
   galleryVisible?: boolean;
   hierarchyVisible?: boolean;
   initialUniversalLessonPagePartContent: PartContent;
-  pageDetailsModal: boolean;
-  setPageDetailsModal: React.Dispatch<React.SetStateAction<boolean>>;
+
   lessonId: string;
   handleModalPopToggle?: (dialogToToggle: string) => void;
   handleEditBlockContent?: (
@@ -39,7 +51,7 @@ interface CoreBuilderProps extends ULBSelectionProps {
     targetId: string,
     indexToUpdate: number
   ) => void;
-  setEditModal: React.Dispatch<React.SetStateAction<any>>;
+
   activePageData: UniversalLessonPage;
 }
 
@@ -73,11 +85,25 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     fetchingLessonDetails,
     setLessonPlanFields,
     setEditMode,
+    toolbarOnTop,
+    setToolbarOnTop,
+    previewMode,
+    setPreviewMode,
   } = useULBContext();
   const {
     clientKey,
     userLanguage,
     state: {lessonPage: {themeBackgroundColor = ''} = {}},
+  } = useContext(GlobalContext);
+
+  const {
+    state: {
+      lessonPage: {
+        theme = 'dark',
+        themeSecBackgroundColor = 'bg-gray-700',
+        themeTextColor = '',
+      } = {},
+    },
   } = useContext(GlobalContext);
 
   const params = useQuery(location.search);
@@ -98,7 +124,50 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       `/dashboard/lesson-builder/lesson/edit?lessonId=${lessonId}&step=activities`
     );
   };
+  const Button = ({
+    onClick,
+    icon: Icon,
+    text = '',
+    tooltip = '',
+    invert = false,
+    color = 'text-white',
+  }: {
+    onClick?: () => void;
+    icon?: IconType;
+    tooltip?: string;
+    text?: string;
+    color?: string;
+    invert?: boolean;
+  }) => {
+    return (
+      <Tooltip show={tooltip.length > 0} text={tooltip} placement="left">
+        <button
+          onClick={onClick}
+          type="button"
+          className={`${
+            invert ? 'bg-indigo-600' : 'bg-transparent'
+          } ${color} mx-2 hover:shadow-lg w-auto  inline-flex justify-center items-center p-2 border border-transparent rounded-md hover:text-white  transition-all hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+          {Icon && <Icon className="h-5 w-5" aria-hidden="true" />}
+          {text}
+        </button>
+      </Tooltip>
+    );
+  };
 
+  const Divider = ({theme = 'dark'}: any) => (
+    <span
+      style={{width: 1}}
+      className={`h-8 mx-2 ${
+        theme === 'dark' ? 'bg-white' : 'bg-gray-600'
+      } bg-opacity-50 `}
+    />
+  );
+
+  const Container = ({children}: {children: any}) => (
+    <div className={`flex items-center flex-col w-auto ${!toolbarOnTop ? 'mb-2' : ''}`}>
+      {children}
+    </div>
+  );
   // const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
   //   (lessonPage: UniversalLessonPage) => lessonPage.id === selectedPageID
   // );
@@ -165,6 +234,73 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
+      <div
+        hidden={previewMode}
+        style={{top: '30rem'}}
+        className={`${
+          toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
+        } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
+        {/* {!previewMode && ( */}
+        <div
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          <div className="flex items-center flex-col">
+            <Container>
+              <Button
+                onClick={() => setPreviewMode(!previewMode)}
+                tooltip="Preview"
+                color={themeTextColor}
+                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+              />
+
+              <>
+                <Button
+                  color={themeTextColor}
+                  tooltip="Add New Page"
+                  onClick={() => {
+                    setNewLessonPlanShow(true);
+                    setEditMode(false);
+                  }}
+                  icon={AiOutlineFileAdd}
+                />
+              </>
+            </Container>
+
+            <Container>
+              {/* <Button
+              color={themeTextColor}
+              tooltip="Enable Drag"
+              icon={enableDnD ? RiDragDropFill : RiDragDropLine}
+            /> */}
+              <Button
+                color={themeTextColor}
+                tooltip="Search Page"
+                icon={AiOutlineFileSearch}
+              />
+            </Container>
+
+            <Container>
+              <Button
+                color={themeTextColor}
+                tooltip="Save changes"
+                icon={AiOutlineSave}
+              />
+              <Button
+                color={themeTextColor}
+                tooltip="Discard changes"
+                icon={VscDiscard}
+              />
+
+              <Button
+                color="text-red-500"
+                tooltip="Delete this page"
+                icon={AiOutlineDelete}
+                onClick={onDeleteButtonClick}
+              />
+            </Container>
+          </div>
+        </div>
+        {/* )} */}
+      </div>
 
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
@@ -172,6 +308,22 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         }`}>
         <div
           className={`col-start-2 items-center col-end-5 w-full h-full col-span-3 flex flex-col mx-auto`}>
+          <div
+            style={{top: '12rem'}}
+            className={`${
+              !previewMode ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
+            } transform duration-200 transition-all  ${themeSecBackgroundColor}  ${themeTextColor} fixed right-5 z-10 customShadow  rounded-lg toolbar p-2 w-16`}>
+            <Button
+              onClick={() => {
+                setPreviewMode(!previewMode);
+                // setToolbarOnTop(true);
+              }}
+              tooltip="Preview"
+              color={themeTextColor}
+              icon={AiOutlineEyeInvisible}
+            />
+          </div>
+
           {!fetchingLessonDetails && (
             <Toolbar
               setFields={setLessonPlanFields}
