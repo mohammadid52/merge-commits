@@ -138,6 +138,21 @@ const Attendance = ({id}: any) => {
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
+                          'classroom',
+                          sortConfig.fieldName === 'syllabus'
+                            ? sortConfig.order === 'desc'
+                              ? 'asc'
+                              : 'desc'
+                            : 'desc'
+                        )
+                      }>
+                      {withOrderBy('ClassName', 'classroom')}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                      onClick={() =>
+                        handleOrderBy(
                           'curriculum',
                           sortConfig.fieldName === 'curriculum'
                             ? sortConfig.order === 'desc'
@@ -203,6 +218,9 @@ const Attendance = ({id}: any) => {
                         <tr
                           key={`${item.class?.name}_${idx}`}
                           className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
+                            {'-'}
+                          </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-medium text-gray-900">
                             {item.curriculum?.name || '-'}
                           </td>
@@ -224,7 +242,7 @@ const Attendance = ({id}: any) => {
                   ) : (
                     <tr>
                       <td colSpan={5} className="py-4 text-dark-gray text-center">
-                          No records found
+                        No records found
                       </td>
                     </tr>
                   )}

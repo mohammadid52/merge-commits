@@ -98,8 +98,8 @@ const User = () => {
   const tabs = [
     {name: 'User Information', current: true},
     {name: 'Associated Classrooms', current: false},
-    {name: 'Notebook', current: false},
     {name: 'Timeline', current: false},
+    {name: 'Notebook', current: false},
   ];
 
   const [curTab, setCurTab] = useState<string>(tabs[0].name);
@@ -149,8 +149,10 @@ const User = () => {
       last: false,
     },
     {
-      title: curTab,
-
+      title: [
+        user.preferredName ? user.preferredName : user.firstName,
+        user.lastName,
+      ].join(' '),
       url: `${location.pathname}${location.search}`,
       last: true,
     },
