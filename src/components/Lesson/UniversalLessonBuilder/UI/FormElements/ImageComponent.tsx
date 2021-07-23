@@ -301,7 +301,11 @@ const ImageFormComponent = ({
 
         {loading && uploadProgress !== 'done' && (
           <ProgressBar
-            status={uploadProgress < 99 ? 'Uploading Video' : 'Upload Done'}
+            status={
+              uploadProgress < 99
+                ? `Uploading ${customVideo ? 'Video' : 'Image'}`
+                : 'Upload Done'
+            }
             progress={uploadProgress}
           />
         )}

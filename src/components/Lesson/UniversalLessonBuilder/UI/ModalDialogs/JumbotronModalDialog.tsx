@@ -24,6 +24,7 @@ import CustomizedQuoteBlock from '../../../UniversalLessonBlockComponents/Blocks
 import {Switch} from '@headlessui/react';
 import {classNames} from '../FormElements/TextInput';
 import ProgressBar from '../ProgressBar';
+import {update} from 'lodash';
 
 const Toggle = ({
   checked,
@@ -89,21 +90,21 @@ const initialInputFieldsState: PartContentSub[] = [
     type: 'title',
     label: 'Title',
     value: 'Jumbo Title placeholder',
-    placeholderText: 'Jumbo Title placeholder',
+    // placeholderText: 'Jumbo Title placeholder',
   },
   {
     id: 'subtitle',
     type: 'subtitle',
     label: 'Subtitle',
     value: 'This is the subtitle placeholder',
-    placeholderText: 'This is the subtitle placeholder',
+    // placeholderText: 'This is the subtitle placeholder',
   },
   {
     id: 'description',
     type: 'description',
     label: 'Description',
     value: '',
-    placeholderText: 'This is the description text placeholder',
+    // placeholderText: 'This is the description text placeholder',
   },
 ];
 
@@ -130,10 +131,9 @@ const JumbotronModalDialog = ({
   );
   const initialStyles = {
     tinting: 'Light',
-    bgColor: 'black',
+    bgColor: 'bg-black',
     blur: 'Medium',
   };
-  const [selectedStyles, setSelectedStyles] = useState(initialStyles);
   const [uploadProgress, setUploadProgress] = useState<string | number>(0);
 
   useEffect(() => {
@@ -141,14 +141,28 @@ const JumbotronModalDialog = ({
       const imageUrl: string | undefined = inputObj.find(
         (input: any) => input.type === 'background'
       )?.value;
+
       setInputFieldsArray(inputObj);
       setImageInputs((prevValues) => ({
         ...prevValues,
-        url: imageUrl ? getImageFromS3Static(imageUrl) : '',
+        url: imageUrl || '',
       }));
+      if (classString.length > 0) {
+        const tint = classString?.split(' || ')[0].split(' ')[0] || '';
+        const bgColor = classString?.split(' || ')[0].split(' ')[1] || '';
+        const blurClass = classString?.split(' || ')[1].split(' ')[1] || '';
+        const isAnimationEnabled = classString?.split(' || ').length === 3;
+        setSelectedStyles({
+          tinting: getReversedTint(tint),
+          bgColor: bgColor,
+          blur: generateReverseBlur(blurClass),
+        });
+        setIsAnimationOn(isAnimationEnabled);
+      }
       setIsEditingMode(true);
     }
   }, [inputObj]);
+  const [selectedStyles, setSelectedStyles] = useState(initialStyles);
 
   const [imageInputs, setImageInputs] = useState<IImageInput>({
     url: '',
@@ -157,11 +171,31 @@ const JumbotronModalDialog = ({
     height: 'auto',
     caption: '',
   });
+  console.log(
+    '🚀 ~ file: JumbotronModalDialog.tsx ~ line 166 ~ imageInputs',
+    imageInputs
+  );
   useEffect(() => {
     if (url !== '') {
       handleUpdateInputFields('background', imageInputs.url);
     }
   }, [imageInputs]);
+
+  const imageRef = React.useRef();
+
+  const onAnimationToggle = () => {
+    if (imageRef && imageRef?.current) {
+      if (!isAnimationOn) {
+        // @ts-ignore
+        imageRef?.current?.classList.add('fade__animation');
+        setIsAnimationOn(true);
+      } else {
+        // @ts-ignore
+        imageRef?.current?.classList.remove('fade__animation');
+        setIsAnimationOn(false);
+      }
+    }
+  };
 
   //////////////////////////
   //  FOR DATA UPDATE     //
@@ -213,6 +247,7 @@ const JumbotronModalDialog = ({
       null,
       generateClassString
     );
+
     await addToDB(updatedList);
   };
 
@@ -234,6 +269,24 @@ const JumbotronModalDialog = ({
     }
   };
 
+  const getReversedTint = (opacity: string) => {
+    switch (opacity) {
+      case `bg-opacity-0`:
+        return 'None';
+      case 'bg-opacity-10':
+        return `Light`;
+
+      case 'bg-opacity-50':
+        return `Medium`;
+
+      case 'bg-opacity-75':
+        return `Dark`;
+
+      default:
+        return `None`;
+    }
+  };
+
   const generateBlur = (level: string) => {
     switch (level) {
       case 'Low':
@@ -245,11 +298,22 @@ const JumbotronModalDialog = ({
         return 'backdrop-blur-lg';
     }
   };
+  const generateReverseBlur = (level: string) => {
+    switch (level) {
+      case 'backdrop-blur-sm':
+        return 'Low';
+      case 'backdrop-blur-md':
+        return 'Medium';
 
-  const generateClassString = `${generateTinting(selectedStyles.tinting)} bg-${
+      case 'backdrop-blur-lg':
+        return 'High';
+    }
+  };
+
+  const generateClassString = `${generateTinting(selectedStyles.tinting)} ${
     selectedStyles.bgColor
   } || backdrop-filter ${generateBlur(selectedStyles.blur)} ${
-    isAnimationOn ? ' || fade__animation-longer ' : ''
+    isAnimationOn ? ' || fade__animation ' : ''
   }`;
   const onSave = async () => {
     const isValid: boolean = validateFormFields();
@@ -261,9 +325,9 @@ const JumbotronModalDialog = ({
         .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
       setIsLoading(true);
       await uploadImageToS3(imageInputs.imageData, `${fileName}`, 'image/jpeg');
-
+      const image = getImageFromS3Static(`ULB/content_image_${fileName}`);
       const input = {
-        value: `ULB/content_image_${fileName}`,
+        value: image,
         height: imageInputs.height,
         width: imageInputs.width,
         caption: imageInputs.caption,
@@ -435,7 +499,7 @@ const JumbotronModalDialog = ({
 
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
   const handleColorPickerSelect = (pickedColor: string) => {
-    setSelectedStyles({...selectedStyles, bgColor: pickedColor});
+    setSelectedStyles({...selectedStyles, bgColor: `bg-${pickedColor}`});
     setColorPickerActive(false);
   };
 
@@ -490,10 +554,11 @@ const JumbotronModalDialog = ({
         (previewAvailable ? (
           <div className="my-4">
             <div
+              ref={imageRef}
               className={`h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover max-w-256 bg-center rounded-lg`}
               style={{backgroundImage: `url(${url})`}}>
               <CustomizedQuoteBlock
-                bgClass={`${generateTinting(selectedStyles.tinting)} bg-${
+                bgClass={`${generateTinting(selectedStyles.tinting)} ${
                   selectedStyles.bgColor
                 }`}
                 textClass={`backdrop-filter ${generateBlur(selectedStyles.blur)}`}
@@ -527,11 +592,11 @@ const JumbotronModalDialog = ({
                   onClick={() => setColorPickerActive(!colorPickerActive)}
                   className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
                   <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                    {selectedStyles.bgColor.split('-')[0]}
+                    {selectedStyles.bgColor.split('-')[1]}
                   </span>
 
                   <span
-                    className={`h-4 block w-4 bg-${selectedStyles.bgColor} rounded-full border-3 border-gray-400`}></span>
+                    className={`h-4 block w-4 ${selectedStyles.bgColor} rounded-full border-3 border-gray-400`}></span>
                 </button>
                 {colorPickerActive && (
                   <ColorPicker
@@ -559,7 +624,7 @@ const JumbotronModalDialog = ({
                 checked={isAnimationOn}
                 text="Animated Jumbotron"
                 // disabled={NO_BORDER_SELECTED}
-                onClick={() => setIsAnimationOn(!isAnimationOn)}
+                onClick={onAnimationToggle}
               />
             </div>
           </div>

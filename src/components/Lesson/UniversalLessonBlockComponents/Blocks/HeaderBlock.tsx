@@ -1,5 +1,5 @@
 import './styles/HeaderStyles.scss';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
@@ -19,11 +19,35 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
+  const [isAnimationDone, setIsAnimationDone] = useState(false);
+  // console.log(
+  //   '🚀 ~ file: HeaderBlock.tsx ~ line 23 ~ HeaderBlock ~ isAnimationDone',
+  //   isAnimationDone
+  // );
+  const [animatedClass, setAnimatedClass] = useState(classString);
+  // console.log(
+  //   '🚀 ~ file: HeaderBlock.tsx ~ line 25 ~ HeaderBlock ~ animatedClass',
+  //   animatedClass
+  // );
+
+  const headerRef = React.useRef(null);
+  // const isVisible = useOnScreen(headerRef);
+  // const animationClass = 'animated-border-on fade__animation';
+
+  // useEffect(() => {
+  //   if (isVisible && !isAnimationDone) {
+  //     setAnimatedClass(classString);
+  //     // setIsAnimationDone(true);
+  //   } else {
+  //     setAnimatedClass(classString.replace(animationClass, ''));
+  //   }
+  // }, [isVisible, isAnimationDone]);
+
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <h3
         id={inputID}
-        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
+        className={`relative ${animatedClass} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
         {inputValue.value}
       </h3>
     );

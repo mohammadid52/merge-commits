@@ -168,7 +168,7 @@ const HeaderModalComponent = ({
     return sizeName;
   };
 
-  const animationClass = 'animated-border-on fade__animation';
+  const animationClass = 'animated-border-on fade__animation-short';
 
   const generateBorderCSS = () =>
     `animated-border animated-border-${selectedValues.color} ${

@@ -371,7 +371,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.TAG:
         return <TagInputDialog {...commonProps} />;
       case FORM_TYPES.JUMBOTRON:
-        return <JumbotronFormDialog {...commonProps} />;
+        return (
+          <JumbotronFormDialog classString={selectedContentClass} {...commonProps} />
+        );
       case FORM_TYPES.HIGHLIGHTER:
         return <HighlighterFormDialog {...commonProps} />;
       case FORM_TYPES.POEM:
