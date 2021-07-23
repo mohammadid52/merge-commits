@@ -65,7 +65,7 @@ const LessonControl = () => {
   };
   const handleHome = async () => {
     await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
-    history.push('/dashboard/home');
+    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
   };
 
   // ##################################################################### //

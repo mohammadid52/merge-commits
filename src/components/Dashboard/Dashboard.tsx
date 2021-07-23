@@ -29,7 +29,12 @@ import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuil
 import Modal from '../Atoms/Modal';
 import Tooltip from '../Atoms/Tooltip';
 import axios from 'axios';
-import {removeLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import usePrevious from '../../customHooks/previousProps';
+import {
+  getLocalStorageData,
+  removeLocalStorageData,
+  setLocalStorageData,
+} from '../../utilities/localStorage';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -244,6 +249,8 @@ const Dashboard = (props: DashboardProps) => {
   const match = useRouteMatch();
   const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(['auth']);
+
+  const getRoomData = getLocalStorageData('room_info');
 
   const [activeRoomInfo, setActiveRoomInfo] = useState<any>();
   const [activeRoomName, setActiveRoomName] = useState<string>('');
@@ -576,6 +583,8 @@ const Dashboard = (props: DashboardProps) => {
     // }
   }, [state.activeRoom]);
 
+  const previousRoom = usePrevious(state.activeRoom);
+
   /**
    * 4. LIST ALL CURRICULUMS ASSOCIATED WITH ROOM of ID
    */
@@ -608,11 +617,14 @@ const Dashboard = (props: DashboardProps) => {
           const response = await roomCurriculumsFetch;
           // @ts-ignore
           const arrayOfResponseObjects = response?.data?.listRoomCurriculums?.items;
+
           if (arrayOfResponseObjects.length > 0) {
             setCurriculumIds(arrayOfResponseObjects[0]?.curriculumID);
           }
         } catch (e) {
           console.error('RoomCurriculums fetch ERR: ', e);
+        } finally {
+          console.log('curriciulum ids - ', curriculumIds);
         }
       }
     };
@@ -627,8 +639,6 @@ const Dashboard = (props: DashboardProps) => {
     if (getRoomFromState) {
       setLocalStorageData('room_info', getRoomFromState);
       setActiveRoomInfo(getRoomFromState);
-    } else {
-      removeLocalStorageData('room_info');
     }
   }, [state.activeRoom]);
 
@@ -636,6 +646,8 @@ const Dashboard = (props: DashboardProps) => {
    * 5. LIST AVAILABLE SYLLABUS
    */
   useEffect(() => {
+    setSyllabusLoading(true);
+
     const listSyllabus = async () => {
       if (curriculumIds.length > 0) {
         try {
@@ -666,15 +678,16 @@ const Dashboard = (props: DashboardProps) => {
           });
 
           setSyllabusLoading(false);
-          setLessonLoading(false);
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);
+        } finally {
+          setSyllabusLoading(false);
         }
       }
     };
 
     listSyllabus();
-  }, [curriculumIds]);
+  }, [state.activeRoom, curriculumIds]);
 
   /******************************************
    * 6.1 LIST ALL THE SYLLABUS LESSON       *
@@ -695,7 +708,6 @@ const Dashboard = (props: DashboardProps) => {
      * IF there are any syllabus active, do a fetch for lessons
      */
     if (activeRoomInfo?.activeSyllabus) {
-      console.log('activeRoomInfo - ', activeRoomInfo);
       try {
         const syllabusLessonFetch = await API.graphql(
           graphqlOperation(customQueries.getUniversalSyllabus, {
@@ -704,9 +716,7 @@ const Dashboard = (props: DashboardProps) => {
         );
         //@ts-ignore
         const response = await syllabusLessonFetch.data.getUniversalSyllabus;
-        console.log('getUniversalSyllabus response - ', response);
         const lessons = response.lessons.items;
-        console.log('list universal lessons - ', lessons);
         dispatch({
           type: 'UPDATE_ROOM',
           payload: {
@@ -714,7 +724,6 @@ const Dashboard = (props: DashboardProps) => {
             data: lessons,
           },
         });
-        console.log('syllabusLessonFetch - ', response);
       } catch (e) {
         console.error('syllabus lessons: ', e);
       } finally {
@@ -752,8 +761,14 @@ const Dashboard = (props: DashboardProps) => {
         type: 'UPDATE_ACTIVEROOM',
         payload: {roomID: id, syllabusID: getRoomSyllabus.activeSyllabus},
       });
-      setSyllabusLoading(true);
-      setLessonLoading(true);
+
+      dispatch({
+        type: 'UPDATE_ROOM',
+        payload: {
+          property: 'syllabus',
+          data: [],
+        },
+      });
       history.push(`/dashboard/${route}/${id}`);
     }
   };
