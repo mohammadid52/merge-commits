@@ -79,7 +79,7 @@ const HeaderModalComponent = ({
 
   const [errors, setErrors] = useState({animation: '', title: ''});
   const [selectedValues, setSelectedValues] = useState({
-    size: 'Medium',
+    size: 'medium',
     color: 'No Border',
   });
 
@@ -134,15 +134,15 @@ const HeaderModalComponent = ({
 
   const convertSizeNameToClass = (sizeName: string) => {
     switch (sizeName) {
-      case 'Smallest':
+      case 'smallest':
         return 'text-base';
-      case 'Small':
+      case 'small':
         return 'text-lg';
-      case 'Medium':
+      case 'medium':
         return 'text-xl';
-      case 'Large':
+      case 'large':
         return 'text-2xl';
-      case 'Largest':
+      case 'largest':
         return 'text-3xl';
       default:
         return 'text-xl';
@@ -230,11 +230,11 @@ const HeaderModalComponent = ({
   };
 
   const fontSizeList = [
-    {id: 1, name: 'Smallest'},
-    {id: 2, name: 'Small'},
-    {id: 3, name: 'Medium'},
-    {id: 4, name: 'Large'},
-    {id: 5, name: 'Largest'},
+    {id: 1, name: 'smallest'},
+    {id: 2, name: 'small'},
+    {id: 3, name: 'medium'},
+    {id: 4, name: 'large'},
+    {id: 5, name: 'largest'},
   ];
 
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);

@@ -171,10 +171,7 @@ const JumbotronModalDialog = ({
     height: 'auto',
     caption: '',
   });
-  console.log(
-    '🚀 ~ file: JumbotronModalDialog.tsx ~ line 166 ~ imageInputs',
-    imageInputs
-  );
+
   useEffect(() => {
     if (url !== '') {
       handleUpdateInputFields('background', imageInputs.url);

@@ -15,6 +15,7 @@ interface HeaderBlockProps extends RowWrapperProps {
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
   const {id, value, type, classString} = props;
+
   const {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
@@ -24,7 +25,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
   //   '🚀 ~ file: HeaderBlock.tsx ~ line 23 ~ HeaderBlock ~ isAnimationDone',
   //   isAnimationDone
   // );
-  const [animatedClass, setAnimatedClass] = useState(classString);
+
   // console.log(
   //   '🚀 ~ file: HeaderBlock.tsx ~ line 25 ~ HeaderBlock ~ animatedClass',
   //   animatedClass
@@ -47,7 +48,7 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     return (
       <h3
         id={inputID}
-        className={`relative ${animatedClass} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
         {inputValue.value}
       </h3>
     );
