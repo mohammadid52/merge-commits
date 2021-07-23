@@ -125,6 +125,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
             }
           })
         : state.lessonData.lessonPlan;
+
       return {
         ...state,
         lessonData: {
@@ -134,9 +135,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         displayData: action.payload.displayData
           ? action.payload.displayData
           : state.displayData,
-        studentViewing: action.payload.studentViewing
-          ? action.payload.studentViewing
-          : state.studentViewing,
+        studentViewing:
+          action.payload.studentViewing === ''
+            ? ''
+            : action.payload.studentViewing
+            ? action.payload.studentViewing
+            : state.studentViewing,
       };
     case 'SET_LESSON_DATA':
       return {

@@ -13,7 +13,6 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import {useParams} from 'react-router';
-import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
 import usePrevious from '../../customHooks/previousProps';
 import {
   UniversalLessonPage,
@@ -21,7 +20,7 @@ import {
 } from '../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
-import {getSessionData} from '../../utilities/sessionData';
+import * as mutations from '../../graphql/mutations';
 import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonControl = () => {
@@ -31,6 +30,7 @@ const LessonControl = () => {
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -63,7 +63,8 @@ const LessonControl = () => {
   const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
-  const handleHome = () => {
+  const handleHome = async () => {
+    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
     history.push('/dashboard/home');
   };
 
@@ -71,6 +72,7 @@ const LessonControl = () => {
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
+  const previousViewing = usePrevious(lessonState.studentViewing);
 
   const transformStudentData = (dataArray: UniversalLessonStudentData[]) => {
     const newArray = lessonState.lessonData.lessonPlan.map(
@@ -93,16 +95,56 @@ const LessonControl = () => {
   };
 
   //~~~~~~TEMPORARY STUDENT DATA FETCH~~~~~~//
-  const previousViewing = usePrevious(controlState.studentViewing);
-  useEffect(() => {
-    if (
-      controlState.studentViewing !== '' &&
-      controlState.studentViewing !== previousViewing
-    ) {
-      const transformedStudentData = transformStudentData([exampleStudentDataMutation]);
-      lessonDispatch({type: 'SET_DISPLAY_DATA', payload: transformedStudentData});
+
+  // useEffect(() => {
+  //   if (
+  //     controlState.studentViewing !== '' &&
+  //     controlState.studentViewing !== previousViewing
+  //   ) {
+  //     const transformedStudentData = transformStudentData([exampleStudentDataMutation]);
+  //     lessonDispatch({type: 'SET_DISPLAY_DATA', payload: transformedStudentData});
+  //   }
+  // }, [lessonState.studentViewing]);
+
+  // ##################################################################### //
+  // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
+  // ##################################################################### //
+  const handleQuitShare = () => {
+    dispatch({type: 'QUIT_SHARE_MODE'});
+    setIsSameStudentShared(false);
+  };
+
+  const handleQuitViewing = () => {
+    dispatch({type: 'QUIT_STUDENT_VIEWING'});
+    setIsSameStudentShared(false);
+  };
+
+  /**
+   * VIEWING A STUDENT
+   *  1. compare new studentViewing ID
+   *  2. if it's not the same as before, and not ''
+   *  3. unsubscribe
+   *  4. mutate the room table
+   *
+   *  --then--
+   *  5. subscribe
+   */
+
+  const handleRoomUpdate = async (payload: any) => {
+    if (typeof payload === 'object' && Object.keys(payload).length > 0) {
+      try {
+        const updateRoom: any = await API.graphql(
+          graphqlOperation(mutations.updateRoom, {
+            input: payload,
+          })
+        );
+      } catch (e) {
+        console.error('handleRoomUpdate - ', e);
+      }
+    } else {
+      console.log('incorrect data for handleRoomUpdate() - ', payload);
     }
-  }, [controlState.studentViewing]);
+  };
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
@@ -148,7 +190,7 @@ const LessonControl = () => {
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
-      setLessonDataLoaded(true);
+      // setLessonDataLoaded(true);
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
 
@@ -182,24 +224,8 @@ const LessonControl = () => {
   }, [lessonState.lessonData.id]);
 
   // ##################################################################### //
-  // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
+  // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
-  const handleQuitShare = () => {
-    dispatch({type: 'QUIT_SHARE_MODE'});
-    setIsSameStudentShared(false);
-  };
-
-  const handleQuitViewing = () => {
-    dispatch({type: 'QUIT_STUDENT_VIEWING'});
-    setIsSameStudentShared(false);
-  };
-
-  /**
-   * VIEWING A STUDENT
-   *  update lessonState.lessonData if viewing a student through subscription
-   *  this logic is used for viewing student typing, and
-   *  also for pushing a page switch
-   */
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
@@ -479,6 +505,7 @@ const LessonControl = () => {
                     handleQuitShare={handleQuitShare}
                     handleQuitViewing={handleQuitViewing}
                     handlePageChange={handlePageChange}
+                    handleRoomUpdate={handleRoomUpdate}
                   />
                 </ErrorBoundary>
               </div>

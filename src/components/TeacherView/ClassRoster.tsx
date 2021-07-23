@@ -21,6 +21,7 @@ interface classRosterProps {
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
   handlePageChange?: any;
+  handleRoomUpdate?: (payload: any) => void;
 }
 
 enum SortByEnum {
@@ -38,6 +39,7 @@ const ClassRoster = (props: classRosterProps) => {
     handleQuitShare,
     handleQuitViewing,
     handlePageChange,
+    handleRoomUpdate,
   } = props;
   const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(
     GlobalContext
@@ -71,7 +73,7 @@ const ClassRoster = (props: classRosterProps) => {
         subscription.unsubscribe();
       }
       setViewedStudent('');
-      controlDispatch({
+      lessonDispatch({
         type: 'SET_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
       });
@@ -220,16 +222,24 @@ const ClassRoster = (props: classRosterProps) => {
   // ##################################################################### //
   const handleSelect = async (e: any) => {
     const {id} = e.target;
-    const selected = controlState.roster.filter((student: any) => {
-      return student.personAuthID === id;
-    });
 
-    setViewedStudent(id);
-    lessonDispatch({
-      type: 'SET_SUBSCRIPTION_DATA',
-      payload: {id: getRoomData.id, studentViewing: id},
-    });
-    setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
+    if (lessonState.studentViewing === id) {
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+      setViewedStudent('');
+      lessonDispatch({
+        type: 'SET_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: ''},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+    } else {
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
+      setViewedStudent(id);
+      lessonDispatch({
+        type: 'SET_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: id},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
+    }
   };
 
   const handleManualRefresh = () => {
