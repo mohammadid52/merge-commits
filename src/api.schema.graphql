@@ -893,14 +893,20 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Attendance @model {
+type Attendance @model
+@key(name: "byStudent", fields: ["studentID", "date"], queryField: "attendanceByStudent") {
   id: ID!
   studentID: ID!
   curriculumID: ID!
   syllabusID: ID!
   lessonID: ID!
+  roomID: ID!
   date: AWSDate
   time: AWSTime
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  syllabus: UniversalSyllabus @connection(fields: ["syllabusID"])
+  lesson: UniversalLesson @connection(fields: ["lessonID"])
+  room: Room @connection(fields: ["roomID"])
 }
 
 type Planner @model {
