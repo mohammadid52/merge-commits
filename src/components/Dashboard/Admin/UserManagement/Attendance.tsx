@@ -3,7 +3,6 @@ import {IconContext} from 'react-icons';
 import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
@@ -23,7 +22,7 @@ const pad = (num: any) => {
 
 const limit: number = 10;
 
-const Attendance = ({id, goToClassroom}: any) => {
+const Attendance = ({id, goToClassroom, selectedRoomId}: any) => {
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -60,6 +59,9 @@ const Attendance = ({id, goToClassroom}: any) => {
       if (nextToken) {
         payload.nextToken = nextToken;
       }
+      if (selectedRoomId) {
+        payload.filter = {roomID: {eq: selectedRoomId}};
+      }
       if (date) {
         const dayNumber = date.getDate();
         const monthNumber = date.getMonth();
@@ -81,10 +83,7 @@ const Attendance = ({id, goToClassroom}: any) => {
       if (fetchNewRecords) {
         setAttendanceList(temp);
       } else {
-        setAttendanceList((prevAttendance: any) => [
-          ...prevAttendance,
-          ...temp,
-        ]);
+        setAttendanceList((prevAttendance: any) => [...prevAttendance, ...temp]);
       }
       setNextToken(list?.data.attendanceByStudent?.nextToken);
       setLoading(false);
@@ -255,7 +254,7 @@ const Attendance = ({id, goToClassroom}: any) => {
                         <tr
                           key={`${item.class?.name}_${idx}`}
                           className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-medium text-gray-900">
+                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-bold text-gray-600">
                             {item.roomName || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">

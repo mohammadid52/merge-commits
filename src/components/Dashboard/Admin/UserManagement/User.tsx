@@ -96,10 +96,11 @@ const User = () => {
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState<string>('');
 
   const tabs = [
     {name: 'User Information', current: true},
-    {name: 'Associated Classrooms', current: false},
+    {name: 'Coursework & Attendance', current: false},
     {name: 'Notebook', current: false},
   ];
 
@@ -418,6 +419,16 @@ const User = () => {
     history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
   };
 
+  const handleClassRoomClick = (roomId: string) => {
+    setSelectedRoomId(roomId);
+    setIsTimelineOpen(true)
+  };
+
+  const goToClassroom = () => {
+    setSelectedRoomId('');
+    setIsTimelineOpen(false)
+  }
+
   const AssociatedClasses = ({list}: any) => {
     return (
       <div className="flex flex-col">
@@ -466,7 +477,9 @@ const User = () => {
                       <tr
                         key={`${item.class?.name}_${idx}`}
                         className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td
+                          className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900 cursor-pointer"
+                          onClick={() => handleClassRoomClick(item?.class?.id)}>
                           {item?.class?.name}
                         </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
@@ -1498,14 +1511,18 @@ const User = () => {
               </div>
             </div>
           )}
-          {curTab === 'Associated Classrooms' &&
+          {curTab === 'Coursework & Attendance' &&
             user?.classes?.items.length > 0 &&
             user.role === 'ST' && (
               <div
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
                 {isTimelineOpen ? (
-                  <Attendance id={id} goToClassroom={() => setIsTimelineOpen(false)} />
-                  ) : (
+                  <Attendance
+                    id={id}
+                    goToClassroom={goToClassroom}
+                    selectedRoomId={selectedRoomId}
+                  />
+                ) : (
                   <AssociatedClasses list={user?.classes?.items} />
                 )}
               </div>
