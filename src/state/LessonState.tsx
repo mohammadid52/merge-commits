@@ -1,4 +1,7 @@
-import {UniversalLessonStudentData} from '../interfaces/UniversalLessonInterfaces';
+import {
+  StudentPageInput,
+  UniversalLessonStudentData,
+} from '../interfaces/UniversalLessonInterfaces';
 
 export interface lessonStateType {
   loaded?: boolean;
@@ -12,13 +15,14 @@ export interface lessonStateType {
   lessonProgress?: number;
   canContinue?: string;
   updated?: boolean;
-  studentData?: UniversalLessonStudentData[];
+  studentData?: [StudentPageInput[]];
   viewing?: boolean;
-  displayData?: any;
+  displayData?: string[];
   saveCount?: number;
   firstSave?: boolean;
   subscription?: any;
   subscribeFunc?: any;
+  studentViewing?: string;
 }
 
 export const lessonState: lessonStateType = {
@@ -33,11 +37,12 @@ export const lessonState: lessonStateType = {
   lessonProgress: 0,
   canContinue: '',
   updated: false,
-  studentData: [],
+  studentData: [[]],
   viewing: false,
   displayData: [],
   saveCount: 0,
   firstSave: true,
   subscription: {},
   subscribeFunc: () => {},
+  studentViewing: '',
 };

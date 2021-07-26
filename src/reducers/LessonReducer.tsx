@@ -4,6 +4,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
+import {lessonStateType} from '../state/LessonState';
 
 export type LessonActions =
   | {
@@ -59,6 +60,10 @@ export type LessonActions =
         }[];
         filteredStudentData?: StudentPageInput[];
       };
+    }
+  | {
+      type: 'UNLOAD_STUDENT_DATA';
+      payload: any;
     }
   | {
       type: 'SET_UPDATE_STATUS';
@@ -166,6 +171,13 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         loaded: true,
         universalStudentDataID: action.payload.dataIdReferences,
         studentData: action.payload.filteredStudentData,
+      };
+    case 'UNLOAD_STUDENT_DATA':
+      return {
+        ...state,
+        loaded: false,
+        universalStudentDataID: [],
+        studentData: [],
       };
     case 'UPDATE_STUDENT_DATA':
       const pageIdx = action.payload.pageIdx;
