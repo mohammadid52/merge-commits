@@ -42,10 +42,12 @@ const SelectMany = ({
   item,
   getCheckValue,
   onChange,
+  isStudent,
 }: {
   getCheckValue: (id: string) => boolean;
   onChange: (e: any) => void;
   item: {text: string; label: string; id: string};
+  isStudent: boolean;
 }) => {
   const {label, text, id} = item;
   const {
@@ -77,9 +79,11 @@ const SelectOne = ({
   item,
   onChange,
   getCheckValue,
+  isStudent,
 }: {
   onChange: (e: any) => void;
   getCheckValue: (id: string) => boolean;
+  isStudent: boolean;
 
   item: {text: string; label: string; id: string};
 }) => {
@@ -222,7 +226,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           name="url"
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
-          onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
           value={isInLesson ? getDataValue(inputID) : value}
         />
       </div>
@@ -303,7 +307,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           </span>
           <input
             ref={inputOther}
-            onChange={isInLesson && isStudent ? handleFileSelection : undefined}
+            onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
             type="file"
             className="hidden"
             multiple={false}
@@ -365,15 +369,17 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             selectMany ? (
               <SelectMany
                 key={`question_${id}_${idx}`}
-                onChange={isStudent && isInLesson ? onChange : undefined}
+                isStudent={isStudent}
+                onChange={isStudent && isInLesson ? onChange : () => {}}
                 getCheckValue={getCheckValue}
                 item={item}
               />
             ) : (
               <SelectOne
-                onChange={isStudent && isInLesson ? onChange : undefined}
-                getCheckValue={getCheckValue}
                 key={`question_${id}_${idx}`}
+                isStudent={isStudent}
+                onChange={isStudent && isInLesson ? onChange : () => {}}
+                getCheckValue={getCheckValue}
                 item={item}
               />
             )
@@ -414,7 +420,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
               value={isInLesson ? getValue(inputID) : value}
             />
           </div>
@@ -433,7 +439,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               }`}
               name="story"
-              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
               value={isInLesson ? getValue(inputID) : value}
             />
           </div>
@@ -464,7 +470,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             index={index}
             isInLesson={isInLesson}
             handleUpdateStudentData={
-              isStudent && isInLesson ? handleUpdateStudentData : undefined
+              isStudent && isInLesson ? handleUpdateStudentData : () => {}
             }
             getStudentDataValue={getValue}
           />
@@ -479,7 +485,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             index={index}
             isInLesson={isInLesson}
             handleUpdateStudentData={
-              isStudent && isInLesson ? handleUpdateStudentData : undefined
+              isStudent && isInLesson ? handleUpdateStudentData : () => {}
             }
             getStudentDataValue={getValue}
           />
