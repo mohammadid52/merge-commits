@@ -14,6 +14,7 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {FORM_TYPES} from '../../UI/common/constants';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -198,7 +199,11 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                 content.type
                                               )}`}>
                                               <div
-                                                // className={`${content.class}`}
+                                                className={`${
+                                                  content.type === FORM_TYPES.JUMBOTRON
+                                                    ? 'px-4 pt-4'
+                                                    : ''
+                                                }`}
                                                 id={content.id}>
                                                 {composePartContent(
                                                   content.id,

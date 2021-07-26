@@ -15,6 +15,8 @@ import {IconType} from 'react-icons';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import CustomToggle from './Toggle';
+import {ChevronRightIcon} from '@heroicons/react/outline';
+import {BiBook} from 'react-icons/bi';
 
 interface ILessonPlanNavigationProps {
   selectedPageID: string;
@@ -110,8 +112,8 @@ const LessonPlanNavigation = ({
   const {darkMode, classwork} = settings;
 
   return (
-    <div className="px-4 py-5 flex items-center border-b-0 border-gray-200 sm:px-6 bg-gray-200">
-      <div className="w-8/10">
+    <div className="px-0 py-5 flex items-center border-b-0 border-gray-200 bg-gray-200">
+      {/* <div className="w-8/10">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <Droppable droppableId="partContent" direction="horizontal">
             {(provided) => (
@@ -124,14 +126,16 @@ const LessonPlanNavigation = ({
                     {(provided) => (
                       <div
                         key={index}
-                        className={`my-2 flex items-center justify-between cursor-pointer`}
+                        className={`my-2 px-4 flex items-center justify-start cursor-pointer`}
                         onClick={() => updatePage(page.id)}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}>
                         <span
-                          className={`inline-flex items-center justify-center font-bold ${
-                            selectedPageID === page.id ? 'underline font-bold' : ''
+                          className={`font-bold w-auto ${
+                            selectedPageID === page.id
+                              ? 'border-b-2 border-blue-400 hover:border-blue-600 '
+                              : ''
                           }${
                             index == 0
                               ? ' text-blue-500'
@@ -155,9 +159,68 @@ const LessonPlanNavigation = ({
             )}
           </Droppable>
         </DragDropContext>
-      </div>
+      </div> */}
+
+      <DragDropContext onDragEnd={handleOnDragEnd}>
+        <Droppable droppableId="partContent" direction="horizontal">
+          {(provided) => (
+            <nav
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="bg-white border-b border-gray-200 flex"
+              aria-label="Breadcrumb">
+              <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 sm:px-6 lg:px-8">
+                <li className="flex w-auto">
+                  <div className="flex items-center">
+                    <a href="#" className="text-gray-600">
+                      <BiBook className="flex-shrink-0 h-5 w-5" aria-hidden="true" />
+                      <span className="sr-only">Home</span>
+                    </a>
+                  </div>
+                </li>
+                {lessonPlan.map((page, index) => (
+                  <Draggable draggableId={`${page.id}`} index={index} key={`${page.id}`}>
+                    {(provided) => (
+                      <li
+                        key={index}
+                        className="flex w-auto"
+                        onClick={() => updatePage(page.id)}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}>
+                        <div className="flex items-center w-auto group">
+                          <svg
+                            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+                            viewBox="0 0 24 44"
+                            preserveAspectRatio="none"
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true">
+                            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                          </svg>
+
+                          <a
+                            href={page.href}
+                            className={` ${
+                              selectedPageID === page.id
+                                ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+                                : 'text-gray-600 hover:text-gray-700'
+                            }   ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+                            {page.label}
+                          </a>
+                        </div>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+              </ol>
+            </nav>
+          )}
+        </Droppable>
+      </DragDropContext>
+
       <div className="ml-2 w-2/10 bg-white h-12 flex items-center p-4">
-        <div className="flex items-center">
+        <div className="flex items-center text-xs">
           Theme:{' '}
           <CustomToggle
             enabledColor={'bg-yellow-400 text-yellow-500'}
@@ -166,7 +229,7 @@ const LessonPlanNavigation = ({
             enabled={!darkMode}
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center text-xs">
           Classwork:{' '}
           <CustomToggle
             enabledColor={'bg-indigo-600'}

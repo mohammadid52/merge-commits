@@ -110,10 +110,8 @@ const LinksModalDialog = ({
   };
 
   const validateUrl = (inputUrl: string) => {
-    const isYoutubeLink = inputUrl.match(
-      /^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/g
-    );
-    return isYoutubeLink === null;
+    const isUrl = inputUrl.match(/^https?:\/\//);
+    return isUrl === null;
   };
   const addToDB = async (list: any) => {
     closeAction();
@@ -182,14 +180,19 @@ const LinksModalDialog = ({
                     onChange={(e) => onChange(e, idx)}
                     value={inputFieldsArray[idx]?.value}
                     name={'value'}
+                    label="Enter url"
+                    isRequired
+                    error={
+                      !validateUrl(inputFieldsArray[idx]?.value)
+                        ? ''
+                        : // <p className={`text-red-400 text-xs`}>
+                          'Please enter a valid link'
+                      // </p>
+                    }
                     placeHolder={inputFieldsArray[idx]?.value}
                   />
                 </div>
-                {!validateUrl(inputFieldsArray[idx]?.value) ? null : (
-                  <p className={`text-red-400 text-xs`}>
-                    Please enter a valid Youtube link :)
-                  </p>
-                )}
+
                 <RemoveInput
                   idx={idx}
                   inputId={inputObj.id}
