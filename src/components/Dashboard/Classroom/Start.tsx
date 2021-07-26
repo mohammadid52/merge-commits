@@ -100,11 +100,13 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           const syllabusData = state.roomData.syllabus.find(
             (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
           );
+
           const payload = {
             studentID: state.user?.id,
             curriculumID: syllabusData.curriculumID,
             syllabusID: syllabusData.id,
             lessonID: lessonKey,
+            roomID,
             date: awsFormatDate(dateString('-', 'WORLD')),
             time: new Date().toTimeString().split(' ')[0],
           };

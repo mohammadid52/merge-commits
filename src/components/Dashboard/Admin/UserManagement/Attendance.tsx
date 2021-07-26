@@ -3,16 +3,16 @@ import {IconContext} from 'react-icons';
 import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import orderBy from 'lodash/orderBy';
 import moment from 'moment';
 
-import * as queries from '../../../../graphql/queries';
+import * as customQueries from '../../../../customGraphql/customQueries';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
-import Pagination from '../../../Atoms/Pagination';
+import Buttons from '../../../Atoms/Buttons';
 
 import {getAsset} from '../../../../assets';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -20,6 +20,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
 };
+
+const limit: number = 10;
 
 const Attendance = ({id, goToClassroom}: any) => {
   const {theme, clientKey} = useContext(GlobalContext);
@@ -35,7 +37,7 @@ const Attendance = ({id, goToClassroom}: any) => {
     fieldName: '',
     order: false,
   });
-  const [currentPage, setCurrentPage] = useState(0);
+  const [nextToken, setNextToken] = useState<string>('');
 
   useEffect(() => {
     if (id) {
@@ -50,7 +52,11 @@ const Attendance = ({id, goToClassroom}: any) => {
         studentID: id,
         sortDirection: 'DESC',
         date,
+        limit,
       };
+      if (nextToken) {
+        payload.nextToken = nextToken;
+      }
       if (date) {
         const dayNumber = date.getDate();
         const monthNumber = date.getMonth();
@@ -61,13 +67,21 @@ const Attendance = ({id, goToClassroom}: any) => {
         };
       }
       const list: any = await API.graphql(
-        graphqlOperation(queries.attendanceByStudent, payload)
+        graphqlOperation(customQueries.attendanceByStudent, payload)
       );
-      setAttendanceList(list?.data.attendanceByStudent?.items);
+      setAttendanceList((prevAttendance: any) => [
+        ...prevAttendance,
+        ...list?.data.attendanceByStudent?.items,
+      ]);
+      setNextToken(list?.data.attendanceByStudent?.nextToken);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
+  };
+
+  const onLoadMore = () => {
+    fetchAttendance(date);
   };
 
   const handleDateChange = (date: Date | null) => {
@@ -191,21 +205,6 @@ const Attendance = ({id, goToClassroom}: any) => {
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'syllabus',
-                          sortConfig.fieldName === 'syllabus'
-                            ? sortConfig.order === 'desc'
-                              ? 'asc'
-                              : 'desc'
-                            : 'desc'
-                        )
-                      }>
-                      {withOrderBy('Syllabus', 'syllabus')}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                      onClick={() =>
-                        handleOrderBy(
                           'lesson',
                           sortConfig.fieldName === 'lesson'
                             ? sortConfig.order === 'desc'
@@ -229,7 +228,7 @@ const Attendance = ({id, goToClassroom}: any) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {loading && !attendanceList.length ? (
                     <tr>
                       <td colSpan={5} className="py-4">
                         <Loader />
@@ -242,13 +241,10 @@ const Attendance = ({id, goToClassroom}: any) => {
                           key={`${item.class?.name}_${idx}`}
                           className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {'-'}
+                            {item.room?.name || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-medium text-gray-900">
                             {item.curriculum?.name || '-'}
-                          </td>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.syllabus?.name || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
                             {item.lesson?.title || '-'}
@@ -271,13 +267,16 @@ const Attendance = ({id, goToClassroom}: any) => {
                   )}
                 </tbody>
               </table>
-              {/* <Pagination
-                                                                                                                                    currentPage={currentPage}
-                                                                                                                                    setNext={loadNextPage}
-                                                                                                                                    setPrev={loadPrevPage}
-                                                                                                                                    firstPage={firstPage}
-                                                                                                                                    lastPage={lastPage}
-                                                                                                                                  /> */}
+              {nextToken ? (
+                <div className="flex justify-center w-full">
+                  <Buttons
+                    label={loading ? 'loading' : 'Load more'}
+                    btnClass="text-center my-2"
+                    disabled={loading}
+                    onClick={onLoadMore}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

@@ -39,7 +39,7 @@ import ProfileCropModal from '../../Profile/ProfileCropModal';
 import {getAsset} from '../../../../assets';
 import Feedback from './Feedback';
 import Attendance from './Attendance';
-import { IoIosTime } from 'react-icons/io';
+import {IoIosTime} from 'react-icons/io';
 
 export interface UserInfo {
   authId: string;
@@ -95,11 +95,11 @@ const User = () => {
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
 
   const tabs = [
     {name: 'User Information', current: true},
     {name: 'Associated Classrooms', current: false},
-    {name: 'Timeline', current: false},
     {name: 'Notebook', current: false},
   ];
 
@@ -416,7 +416,7 @@ const User = () => {
   const switchMainTab = (tab: string) => {
     setCurTab(tab);
     history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
-  }
+  };
 
   const AssociatedClasses = ({list}: any) => {
     return (
@@ -424,7 +424,7 @@ const User = () => {
         <div className="flex justify-end mb-4">
           <Buttons
             label={'Timeline'}
-            onClick={() => switchMainTab('Timeline')}
+            onClick={() => setIsTimelineOpen(true)}
             btnClass="mr-4"
             Icon={IoIosTime}
           />
@@ -500,7 +500,7 @@ const User = () => {
     const tabsData = !isTeacher ? slice(tabs, 0, 2) : tabs;
 
     return (
-      <div className="w-9/10 bg-white rounded-lg p-2">
+      <div className="w-8/10 bg-white rounded-lg p-2">
         <div className="sm:hidden">
           <label htmlFor="tabs" className="sr-only">
             Select a tab
@@ -1369,7 +1369,7 @@ const User = () => {
               /> */}
               {currentPath !== 'edit' && curTab === 'User Information' && (
                 <Buttons
-                  btnClass="ml-2 px-6"
+                  btnClass="mr-4 px-6"
                   label="Edit"
                   onClick={() => {
                     setCurTab(tabs[0].name);
@@ -1503,7 +1503,11 @@ const User = () => {
             user.role === 'ST' && (
               <div
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-                <AssociatedClasses list={user?.classes?.items} />
+                {isTimelineOpen ? (
+                  <Attendance id={id} goToClassroom={() => setIsTimelineOpen(false)} />
+                  ) : (
+                  <AssociatedClasses list={user?.classes?.items} />
+                )}
               </div>
             )}
 
