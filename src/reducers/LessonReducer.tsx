@@ -57,7 +57,7 @@ export type LessonActions =
           lessonPageID: string;
           update: boolean;
         }[];
-        filteredStudentData: StudentPageInput[];
+        filteredStudentData?: StudentPageInput[];
       };
     }
   | {

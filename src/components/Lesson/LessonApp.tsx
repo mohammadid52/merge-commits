@@ -237,16 +237,25 @@ const LessonApp = () => {
     let tempArray: any = [];
     // transform to data-id array, for updating
     const studentDataIdArray = (studentDataArray: any[]) => {
-      return studentDataArray.map((dataObj: any, idx: number) => {
-        return {
-          id: dataObj.id,
-          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
-            (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
-          ),
-          lessonPageID: dataObj.lessonPageID,
-          update: false,
-        };
-      });
+      return studentDataArray
+        .map((dataObj: any, idx: number) => {
+          return {
+            id: dataObj.id,
+            pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+              (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
+            ),
+            lessonPageID: dataObj.lessonPageID,
+            update: false,
+          };
+        })
+        .sort((dataID1: any, dataID2: any) => {
+          if (dataID1.pageIdx < dataID2.pageIdx) {
+            return -1;
+          }
+          if (dataID1.pageIdx > dataID2.pageIdx) {
+            return 1;
+          }
+        });
     };
 
     try {
@@ -298,7 +307,10 @@ const LessonApp = () => {
       } else {
         // IF STUDENT DATA EXISTS
         const existStudentDataIdArray = studentDataIdArray(studentDataRows);
-        lessonDispatch({type: 'LOAD_STUDENT_DATA', payload: existStudentDataIdArray});
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {dataIdReferences: existStudentDataIdArray},
+        });
       }
     } catch (err) {
       console.error(err);
