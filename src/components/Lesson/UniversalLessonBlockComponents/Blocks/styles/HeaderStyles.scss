@@ -11,6 +11,9 @@
 .fade__animation-longer {
   animation: fade 3s ease-in-out;
 }
+.fade__animation-short {
+  animation: fade 1s ease-in-out;
+}
 
 @keyframes fade {
   from {

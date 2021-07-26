@@ -1,5 +1,5 @@
 import './styles/HeaderStyles.scss';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
@@ -15,9 +15,34 @@ interface HeaderBlockProps extends RowWrapperProps {
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
   const {id, value, type, classString} = props;
+
   const {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
+
+  const [isAnimationDone, setIsAnimationDone] = useState(false);
+  // console.log(
+  //   '🚀 ~ file: HeaderBlock.tsx ~ line 23 ~ HeaderBlock ~ isAnimationDone',
+  //   isAnimationDone
+  // );
+
+  // console.log(
+  //   '🚀 ~ file: HeaderBlock.tsx ~ line 25 ~ HeaderBlock ~ animatedClass',
+  //   animatedClass
+  // );
+
+  const headerRef = React.useRef(null);
+  // const isVisible = useOnScreen(headerRef);
+  // const animationClass = 'animated-border-on fade__animation';
+
+  // useEffect(() => {
+  //   if (isVisible && !isAnimationDone) {
+  //     setAnimatedClass(classString);
+  //     // setIsAnimationDone(true);
+  //   } else {
+  //     setAnimatedClass(classString.replace(animationClass, ''));
+  //   }
+  // }, [isVisible, isAnimationDone]);
 
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (

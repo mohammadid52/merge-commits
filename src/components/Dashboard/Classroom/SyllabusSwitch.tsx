@@ -23,7 +23,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
   };
   return (
     <>
-      {syllabusLoading ? (
+      {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
         <div
           className={`shadow text-center bg-white rounded-lg p-6 ${theme.elem.textDark}`}>
           Loading units...

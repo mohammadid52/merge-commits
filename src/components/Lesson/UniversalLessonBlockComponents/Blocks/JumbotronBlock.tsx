@@ -33,8 +33,8 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
         const newJumbotronInfo = value.reduce(
           (acc: JumbotronInterface, val: PartContentSub) => {
             if (val.type === 'background') {
-              const url = getImageFromS3Static(val.value);
-              return {...acc, src: url};
+              // const url = getImageFromS3Static(val.value);
+              return {...acc, src: val.value};
             } else if (val.type === 'title') {
               return {...acc, title: val.value};
             } else if (val.type === 'subtitle') {

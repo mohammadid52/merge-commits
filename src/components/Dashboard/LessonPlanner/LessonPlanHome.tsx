@@ -26,6 +26,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     currentPage,
     setCurrentPage,
     activeRoomInfo,
+    setActiveRoomInfo,
     visibleLessonGroup,
     setVisibleLessonGroup,
     lessonLoading,
@@ -88,6 +89,7 @@ const LessonPlanHome: React.FC<DashboardProps> = (props: DashboardProps) => {
     <Classroom
       handleRoomSelection={handleRoomSelection}
       activeRoomInfo={activeRoomInfo}
+      setActiveRoomInfo={setActiveRoomInfo}
       currentPage={currentPage}
       setCurrentPage={setCurrentPage}
       isTeacher={true}

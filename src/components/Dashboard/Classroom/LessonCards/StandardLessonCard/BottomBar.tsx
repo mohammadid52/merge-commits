@@ -6,7 +6,6 @@ import {LessonCardProps} from '../../Classroom';
 import Start from '../../Start';
 
 const BottomBar = (props: LessonCardProps) => {
-  const {theme} = useContext(GlobalContext);
   const {isTeacher, activeRoomInfo, roomID, lessonProps, accessible, lessonType} = props;
 
   return (
@@ -68,7 +67,7 @@ const BottomBar = (props: LessonCardProps) => {
           lessonKey={lessonProps ? lessonProps.lessonID : null}
           open={lessonProps && lessonProps.status === 'Active' ? true : false}
           accessible={accessible}
-          type={lessonType}
+          type={lessonProps.lesson.type}
         />
       </div>
     </div>

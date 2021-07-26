@@ -71,7 +71,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const fetchAttendance = async () => {
     try {
       const syllabusData = state.roomData.syllabus.find(
-        (syllabus: any) => syllabus.active
+        (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
       );
       if (syllabusData) {
         const list: any = await API.graphql(
@@ -98,7 +98,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         if (!attendanceRecorded) {
           setLoading(true);
           const syllabusData = state.roomData.syllabus.find(
-            (syllabus: any) => syllabus.active
+            (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
           );
           const payload = {
             studentID: state.user?.id,

@@ -2,23 +2,17 @@ import React, {useState, useContext, useEffect} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {IoMdRefresh} from 'react-icons/io';
 
-import {LessonControlContext} from '../../contexts/LessonControlContext';
 import useDictionary from '../../customHooks/dictionary';
 import {GlobalContext} from '../../contexts/GlobalContext';
-
+import {getSessionData} from '../../utilities/sessionData';
 import RosterRow from './ClassRoster/RosterRow';
 
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
 
-/**
- * Function imports
- */
-import {lc} from '../../utilities/strings';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import exp from 'constants';
 import {useCookies} from 'react-cookie';
-import {getClass} from '../../graphql/queries';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 
 interface classRosterProps {
   handleUpdateSyllabusLesson: () => Promise<void>;
@@ -27,6 +21,7 @@ interface classRosterProps {
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
   handlePageChange?: any;
+  handleRoomUpdate?: (payload: any) => void;
 }
 
 enum SortByEnum {
@@ -44,19 +39,23 @@ const ClassRoster = (props: classRosterProps) => {
     handleQuitShare,
     handleQuitViewing,
     handlePageChange,
+    handleRoomUpdate,
   } = props;
   const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(
     GlobalContext
   );
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonPlannerDict} = useDictionary(clientKey);
+  const getRoomData = getLocalStorageData('room_info');
 
-  const [cookies] = useCookies(['room_info']);
-
-  // Loading state
+  // ##################################################################### //
+  // ########################### LOADING STATE ########################### //
+  // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Roster related
+  // ##################################################################### //
+  // ############################ ALL STUDENTS ########################### //
+  // ##################################################################### //
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
@@ -64,13 +63,34 @@ const ClassRoster = (props: classRosterProps) => {
 
   let subscription: any;
 
-  // Load students from the class associated with the current Room,
-  // with this we'll be able to compared which students are online/offline
-  const getClassStudents = async (cookieClassID: string) => {
+  // ~~~~~~~~~~~~~~ INITIALIZE ~~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (Object.keys(getRoomData).length > 0 && getRoomData.hasOwnProperty('classID')) {
+      getClassStudents(getRoomData?.classID);
+    }
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      setViewedStudent('');
+      lessonDispatch({
+        type: 'SET_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: ''},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+    };
+  }, []);
+
+  // ##################################################################### //
+  // ########################## GETTING STUDENTS ######################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~ FETCH CLASS STUDENTS ~~~~~~~~ //
+  const getClassStudents = async (sessionClassID: string) => {
     try {
       const classStudents: any = await API.graphql(
         graphqlOperation(queries.listClassStudents, {
-          filter: {classID: {contains: cookieClassID}},
+          filter: {classID: {contains: sessionClassID}},
         })
       );
       const classStudentList = classStudents.data.listClassStudents.items;
@@ -101,19 +121,7 @@ const ClassRoster = (props: classRosterProps) => {
     }
   };
 
-  useEffect(() => {
-    if (cookies['room_info']) {
-      const roomInfoCookie = cookies['room_info'];
-      if (
-        Object.keys(roomInfoCookie).length > 0 &&
-        roomInfoCookie.hasOwnProperty('classID')
-      ) {
-        getClassStudents(roomInfoCookie['classID']);
-      }
-    }
-  }, [cookies]);
-
-  // load students from PersonLocation -> syllabusLessonID into roster
+  // ~~~~ FETCH STUDENTS IN THIS LESSON ~~~~ //
   const getSyllabusLessonStudents = async () => {
     setLoading(true);
     try {
@@ -128,7 +136,9 @@ const ClassRoster = (props: classRosterProps) => {
         const findStudentInClasslist = classStudents.find(
           (student2: any) => student2.personEmail === student.personEmail
         );
-        if (findStudentInClasslist) return findStudentInClasslist;
+        if (findStudentInClasslist) {
+          return findStudentInClasslist;
+        }
       });
       setPersonLocationStudents(studentsFromThisClass);
       controlDispatch({
@@ -149,7 +159,9 @@ const ClassRoster = (props: classRosterProps) => {
     }
   }, [lessonState.universalLessonID]);
 
-  // Subscriptions and updating
+  // ##################################################################### //
+  // #################### SUBSCRIBE TO LOCATION CHANGE ################### //
+  // ##################################################################### //
   const subscribeToPersonLocations = () => {
     const syllabusLessonID = lessonState.universalLessonID;
     // @ts-ignore
@@ -169,9 +181,7 @@ const ClassRoster = (props: classRosterProps) => {
     return personLocationSubscription;
   };
 
-  //
-
-  // Update the student roster
+  // ~~~~~~~~~~~~ UPDATE ROSTER ~~~~~~~~~~~~ //
   useEffect(() => {
     const updateStudentRoster = (newStudent: any) => {
       const studentExists =
@@ -207,14 +217,29 @@ const ClassRoster = (props: classRosterProps) => {
     }
   }, [updatedStudent]);
 
+  // ##################################################################### //
+  // ########################### FUNCTIONALITY ########################### //
+  // ##################################################################### //
   const handleSelect = async (e: any) => {
     const {id} = e.target;
-    const selected = controlState.roster.filter((student: any) => {
-      return student.personAuthID === id;
-    });
 
-    setViewedStudent(id);
-    controlDispatch({type: 'SET_STUDENT_VIEWING', payload: id});
+    if (lessonState.studentViewing === id) {
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+      setViewedStudent('');
+      lessonDispatch({
+        type: 'SET_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: ''},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+    } else {
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
+      setViewedStudent(id);
+      lessonDispatch({
+        type: 'SET_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: id},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
+    }
   };
 
   const handleManualRefresh = () => {

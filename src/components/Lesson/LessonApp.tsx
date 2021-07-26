@@ -20,14 +20,14 @@ import * as customSubscriptions from '../../customGraphql/customSubscriptions';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as queries from '../../graphql/queries';
 import {Auth} from '@aws-amplify/auth';
-import {getSessionData, setSessionData} from '../../utilities/sessionData';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
   const urlParams: any = useParams();
-  const getRoomData = getSessionData('room_info');
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -78,7 +78,7 @@ const LessonApp = () => {
 
   const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
     console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
-    setSessionData('room_info', {
+    setLocalStorageData('room_info', {
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages,
     });
@@ -375,8 +375,8 @@ const LessonApp = () => {
       id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
       personAuthID: state.user.authId,
       personEmail: state.user.email,
-      syllabusLessonID: lessonState.syllabusLessonID,
-      roomID: '0',
+      syllabusLessonID: lessonState.universalLessonID,
+      roomID: getRoomData.id,
       currentLocation: lessonState.currentPage,
       lessonProgress: lessonState.lessonProgress,
     };
