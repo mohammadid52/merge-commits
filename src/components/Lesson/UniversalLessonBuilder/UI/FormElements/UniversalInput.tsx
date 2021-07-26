@@ -66,6 +66,7 @@ const UniversalInput = (props: any) => {
     selectedForm,
     createNewContent,
   } = props;
+
   const {userLanguage} = useContext(GlobalContext);
 
   const addToDB = async (list: any) => {
@@ -80,6 +81,11 @@ const UniversalInput = (props: any) => {
   };
   const addOneInputField = () => {
     setList([...list, {id: uuidv4(), label: '', value: ''}]);
+  };
+
+  const makeRequired = (idx: number, required: boolean = false) => {
+    update(list[idx], `required`, () => !required);
+    setList([...list]);
   };
 
   const onChange = (e: any, idx: number, label: boolean = true) => {
@@ -132,6 +138,10 @@ const UniversalInput = (props: any) => {
         value: d.value,
       };
     });
+    console.log(
+      '🚀 ~ file: UniversalInput.tsx ~ line 141 ~ inputObjArray ~ inputObjArray',
+      inputObjArray
+    );
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
       const updatedList = updateContent('', '', type, inputObjArray);
@@ -175,13 +185,23 @@ const UniversalInput = (props: any) => {
                 )}
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto">
-                    <div className="flex items-center mt-4 text-xs">
-                      Sentence
-                      <Toggle
-                        checked={input.textArea}
-                        onClick={() => changeCheckboxValue(idx, input.textArea)}
-                      />
-                      Paragraph
+                    <div className="flex items-center mt-4 ">
+                      <div className="flex items-center text-xs w-auto">
+                        Sentence
+                        <Toggle
+                          checked={input.textArea}
+                          onClick={() => changeCheckboxValue(idx, input.textArea)}
+                        />
+                        Paragraph
+                      </div>
+                      <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+                      <div className="flex items-center text-xs w-auto">
+                        Required
+                        <Toggle
+                          checked={input.required}
+                          onClick={() => makeRequired(idx, input.required)}
+                        />
+                      </div>
                     </div>
 
                     <button
@@ -191,13 +211,23 @@ const UniversalInput = (props: any) => {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex items-center mt-4 text-xs">
-                    Sentence
-                    <Toggle
-                      checked={input.textArea}
-                      onClick={() => changeCheckboxValue(idx, input.textArea)}
-                    />
-                    Paragraph
+                  <div className="flex items-center mt-4 ">
+                    <div className="flex items-center text-xs w-auto">
+                      Sentence
+                      <Toggle
+                        checked={input.textArea}
+                        onClick={() => changeCheckboxValue(idx, input.textArea)}
+                      />
+                      Paragraph
+                    </div>
+                    <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+                    <div className="flex items-center text-xs w-auto">
+                      Required
+                      <Toggle
+                        checked={input.required}
+                        onClick={() => makeRequired(idx, input.required)}
+                      />
+                    </div>
                   </div>
                 )}
               </div>

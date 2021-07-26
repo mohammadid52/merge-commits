@@ -203,6 +203,10 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     </span>
   );
 
+  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
+    <span className="text-red-500"> {isRequired ? '*' : null}</span>
+  );
+
   // ~~~~~~~~~~~~~~~~~ LINK ~~~~~~~~~~~~~~~~ //
   const LinkInput = ({inputID, label, value, numbered, index}: FormControlProps) => {
     return (
@@ -210,7 +214,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         <label
           className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
           htmlFor="label">
-          {numbered && index} {label}
+          {numbered && index} {label} <RequiredMark isRequired={false} />
         </label>
         <input
           id={inputID}
@@ -286,7 +290,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label}
+          {numbered && index} {label} <RequiredMark isRequired={false} />
         </label>
         <div className="mt-2">
           <span
@@ -404,7 +408,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={false} />
             </label>
             <input
               id={inputID}
@@ -424,7 +428,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={false} />
             </label>
             <textarea
               id={inputID}
@@ -443,7 +447,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={false} />
             </label>
             {generateCheckbox(
               options,
