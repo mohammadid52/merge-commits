@@ -15,7 +15,7 @@ interface ParagraphBlockProps extends RowWrapperProps {
 export const ParagraphBlock = (props: ParagraphBlockProps) => {
   const {id, value, type} = props;
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}},
+    state: {lessonPage: {lessonPageTheme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const Paragraph = ({inputID, inputValue}: any) => {

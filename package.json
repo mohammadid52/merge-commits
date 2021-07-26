@@ -67,6 +67,7 @@
     "@aws-amplify/auth": "^3.4.6",
     "@aws-amplify/core": "^3.6.0",
     "@aws-amplify/storage": "^3.3.14",
+    "@dhaiwat10/react-link-preview": "^1.7.2",
     "@headlessui/react": "^1.0.0",
     "@heroicons/react": "^1.0.1",
     "@pathofdev/react-tag-input": "^1.0.7",
