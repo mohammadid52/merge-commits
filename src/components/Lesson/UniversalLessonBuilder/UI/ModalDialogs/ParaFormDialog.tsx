@@ -1,6 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
 
-import FormInput from '../../../../Atoms/Form/FormInput';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -8,6 +7,8 @@ import {uniqueId} from 'lodash';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
+import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import {isEmpty} from '@aws-amplify/core';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -30,26 +31,16 @@ const ParaModalComponent = ({
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const FIELD_ID = 'paragraph';
+  const [fields, setFields] = useState<{paragraph: string; paragraphHtml: string}>({
+    paragraph: !isEmpty(inputObj) ? inputObj[0].value : '',
+    paragraphHtml: !isEmpty(inputObj) ? inputObj[0].value : '',
+  });
 
   useEffect(() => {
-    if (inputObj && inputObj.length) {
-      setInputFields((prevInputFields: any) => ({
-        ...prevInputFields,
-        [FIELD_ID]: inputObj[0].value,
-      }));
+    if (!isEmpty(inputObj)) {
       setIsEditingMode(true);
     }
   }, [inputObj]);
-
-  const onChange = (e: any) => {
-    setUnsavedChanges(true);
-    const {value, id} = e.target;
-    setInputFields({
-      ...inputFields,
-      [id]: value,
-    });
-  };
-  const [inputFields, setInputFields] = useState<any>({});
 
   const addToDB = async (list: any) => {
     closeAction();
@@ -63,43 +54,45 @@ const ParaModalComponent = ({
   };
 
   const onParaCreate = async () => {
-    const value: string = inputFields[FIELD_ID];
     const pageContentId: string = uniqueId(`${selectedPageID}_`);
     const partContentId: string = uniqueId(`${pageContentId}_`);
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), value},
+        {id: uuidv4().toString(), value: fields['paragraphHtml']},
       ]);
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler('', '', FIELD_ID, [
-        {id: uuidv4().toString(), value},
+        {id: uuidv4().toString(), value: fields['paragraphHtml']},
       ]);
       await addToDB(updatedList);
     }
     // close modal after saving
 
     // clear fields
-    setInputFields({
-      ...inputFields,
-      [FIELD_ID]: '',
-    });
+    setFields({paragraph: '', paragraphHtml: ''});
   };
+  const onEditorStateChange = (
+    html: string,
+    text: string,
+    fieldHtml: string,
+    field: string
+  ) => {
+    setUnsavedChanges(true);
+    setFields({...fields, [field]: text, [fieldHtml]: html});
+  };
+
+  const {paragraph} = fields;
 
   return (
     <div>
       <div className="grid grid-cols-2 my-2 gap-4">
-        <div className="col-span-2">
-          <FormInput
-            onChange={onChange}
-            label={'Paragraph'}
-            isRequired
-            value={inputFields[FIELD_ID]}
-            id={FIELD_ID}
-            placeHolder={`Enter text`}
-            textarea
-            rows={2}
-            cols={100}
+        <div className="col-span-2 max-w-256">
+          <RichTextEditor
+            initialValue={paragraph}
+            onChange={(htmlContent, plainText) =>
+              onEditorStateChange(htmlContent, plainText, 'paragraphHtml', 'paragraph')
+            }
           />
         </div>
       </div>

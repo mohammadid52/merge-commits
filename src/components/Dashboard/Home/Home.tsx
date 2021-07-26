@@ -49,7 +49,7 @@ const Home = (props: ClassroomControlProps) => {
         // dispatch({ type: 'UPDATE_CURRENTPAGE', payload: { data: 'home' } });
       }
       if (state.activeRoom && state.activeRoom.length > 0) {
-        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {data: null}});
+        dispatch({type: 'UPDATE_ACTIVEROOM', payload: {roomID: '', syllabusID: ''}});
       }
     }
   }, [state.user.role]);

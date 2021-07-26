@@ -5,6 +5,7 @@ import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
+import * as mutations from '../../../../../../graphql/mutations';
 
 import Accordion from '../../../../../Atoms/Accordion';
 import Buttons from '../../../../../Atoms/Buttons';
@@ -52,50 +53,7 @@ const LessonCourse = ({
     setSelectedCurriculumList(selectedCurriculums);
   }, [selectedCurriculums]);
 
-  // const fetchCurriculum = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const list: any = await API.graphql(
-  //       graphqlOperation(customQueries.listCurriculumsForLessons, {
-  //         filter: {
-  //           institutionID: {eq: institution?.id},
-  //         },
-  //       })
-  //     );
-  //     const curriculums = list.data?.listCurriculums?.items;
-  //     setCurriculumList(curriculums);
-  //     let selectedCurriculums: any = [];
-  //     curriculums.map((curriculum: any) => {
-  //       const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
-  //         (syllabus: any) =>
-  //           syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
-  //             .length
-  //       );
-  //       const isCourseAdded = Boolean(assignedSyllabi.length);
-  //       if (isCourseAdded) {
-  //         selectedCurriculums.push({
-  //           ...curriculum,
-  //           assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
-  //           assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
-  //         });
-  //       }
-  //     });
-  //     setSelectedCurriculumList(selectedCurriculums);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchClassRoomDetails = async (curricularId: string) => {
-    // const result = await API.graphql(
-    //   graphqlOperation(queries.listRoomCurriculums, {
-    //     filter: {
-    //       curriculumID: {eq: curricularId},
-    //     },
-    //   })
-    // );
-    // console.log(result, 'result++++++');
     setRoomLoading(true);
     const classroomsResult: any = await API.graphql(
       graphqlOperation(customQueries.getInstClassRooms, {id: institution?.id})
@@ -116,14 +74,50 @@ const LessonCourse = ({
     setRoomLoading(false);
   };
 
+  const deleteSyllabus = async (id: string) => {
+    try {
+      const input = {
+        id,
+      };
+      const results: any = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalSyllabus, {input: input})
+      );
+      const lessonRubric = results.data.deleteLessonRubrics;
+      // if (lessonRubric?.id) {
+      //   setLessonMeasurements((prevLessonMeasurements: any) =>
+      //     prevLessonMeasurements.filter((item: any) => item.id !== lessonRubric?.id)
+      //   );
+      // }
+      // toggleModal();
+    } catch {
+      // setMessages({
+      //   measurementError: '',
+      //   serverError: GeneralInformationDict[userLanguage]['MESSAGES']['DELETEERR'],
+      //   addSuccess: '',
+      // });
+    }
+  };
+
   const onAddModalClose = () => {
     setAddModalShow(false);
     fetchCurriculum();
   };
 
+  const postDeletion = () => {
+    fetchCurriculum();
+  }
+
   const renderTableView = (curriculum: any) => {
-    return <DetailTable curriculum={curriculum} loading={roomLoading} />;
+    return (
+      <DetailTable
+        curriculum={curriculum}
+        lessonId={lessonId}
+        loading={roomLoading}
+        postDeletion={postDeletion}
+      />
+    );
   };
+  
   const titleList = selectedCurriculumList.map((curriculum, index) => ({
     id: index,
     title: curriculum.name,

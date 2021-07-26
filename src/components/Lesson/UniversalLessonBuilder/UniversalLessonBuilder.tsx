@@ -209,6 +209,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
    *  - If target ID is not found, continues loop but does nothing
    *
    * */
+
   const crudULBHandler = (
     inputObj: any,
     operation: 'create' | 'update' | 'delete',
@@ -517,7 +518,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
       <div className="w-full overflow-hidden h-full bg-gray-200">
         {/* Section Header */}
-        <BreadCrums items={breadCrumsList} separateGoBackButton="Go to activities" />
+        <BreadCrums items={breadCrumsList} />
 
         {/* Body */}
         <div className="w-full h-full pb-8 m-auto">

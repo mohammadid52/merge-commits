@@ -1,6 +1,5 @@
-import {lessonControlState, lessonControlStateType} from '../state/LessonControlState';
-import {StudentData} from '../API';
 import {UniversalLessonStudentData} from '../interfaces/UniversalLessonInterfaces';
+import {lessonControlStateType} from '../state/LessonControlState';
 
 type lessonControlActions =
   | {
@@ -20,10 +19,6 @@ type lessonControlActions =
       payload: string;
     }
   | {
-      type: 'UPDATE_STUDENT_DATA';
-      payload: UniversalLessonStudentData;
-    }
-  | {
       type: 'CLEANUP';
       payload: any;
     };
@@ -39,8 +34,6 @@ export const lessonControlReducer = (
       return {...state, roster: action.payload.students};
     case 'SET_STUDENT_VIEWING':
       return {...state, studentViewing: action.payload};
-    case 'UPDATE_STUDENT_DATA':
-      return {...state, studentData: action.payload};
     default:
       return state;
   }

@@ -21,7 +21,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
 
   const goToUrl = (url: string) => {
     if (unsavedChanges) {
-      toggleModal();
+      toggleModal(url);
     } else {
       history.push(url);
     }

@@ -10,6 +10,7 @@ export interface globalStateType {
   };
   currentPage: string;
   activeRoom: string;
+  activeSyllabus: string;
   status: string;
   error: string;
   isAuthenticated: boolean;
@@ -44,6 +45,7 @@ export const globalState: globalStateType = {
   },
   currentPage: '',
   activeRoom: '',
+  activeSyllabus: '',
   status: '',
   error: '',
   isAuthenticated: false,

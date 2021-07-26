@@ -976,12 +976,23 @@
 .customShadow {
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
 }
-
-// .rightMenu {
-//   .builderWrapper {
-//     border-color: #3b82f6;
-//   }
-// }
-// .builderWrapper {
-//   border-color: #d1d5db;
-// }
+.questionItemChild:first-child {
+  margin-top: 1.5rem;
+}
+.questionItemChild:last-child {
+  margin-bottom: 1.5rem;
+}
+.ulb-datepicker {
+  .react-datepicker__close-icon {
+    &::after {
+      height: 26px;
+      width: 26px;
+      font-size: 18px;
+    }
+    width: auto;
+  }
+  .react-datepicker__navigation-icon::before {
+    width: 16px;
+    height: 16px;
+  }
+}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {
   PagePart,
@@ -13,6 +13,7 @@ import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBl
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -25,6 +26,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     handleTagModalOpen,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const {previewMode, updateMovableList, enableDnD} = useULBContext();
 
   const handleEditBlockToggle = (dataID: string) => {
@@ -103,6 +107,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     updateMovableList(items, 'pageContent', selectedPageID, pageContentId);
   };
 
+  // this is only for header component
+  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
+
   return (
     <>
       {selectedPageID &&
@@ -121,6 +128,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}
                 contentID={`${pagePart.id}`}
+                pageContentID={pagePart.id}
                 editedID={editedID}
                 handleEditBlockToggle={() => handleEditBlockToggle(pagePart.id)}
                 section="pageContent">
@@ -162,6 +170,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                           classString={content.class}
                                           contentID={content.id}
                                           editedID={editedID}
+                                          pageContentID={pagePart.id}
+                                          partContentID={content.id}
                                           isComponent={true}
                                           isLast={idx2 === partContent?.length - 1}
                                           handleEditBlockToggle={() =>
@@ -184,18 +194,23 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                           updateFromULBHandler={updateFromULBHandler}>
                                           {content.value.length > 0 ? (
                                             <div
-                                              className={content.class}
-                                              id={content.id}>
-                                              {composePartContent(
-                                                content.id,
-                                                content.type,
-                                                content.value,
-                                                `pp_${idx}_pc_${idx2}`,
-                                                content.class,
-                                                pagePart.id,
-                                                mode,
-                                                updateOnSave
-                                              )}
+                                              className={`${paddingForHeader(
+                                                content.type
+                                              )}`}>
+                                              <div
+                                                // className={`${content.class}`}
+                                                id={content.id}>
+                                                {composePartContent(
+                                                  content.id,
+                                                  content.type,
+                                                  content.value,
+                                                  `pp_${idx}_pc_${idx2}`,
+                                                  content.class,
+                                                  pagePart.id,
+                                                  mode,
+                                                  updateOnSave
+                                                )}
+                                              </div>
                                             </div>
                                           ) : (
                                             <AddNewBlock
@@ -267,10 +282,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         ]
       ) : (
         <>
-          <h1 className={`w-full my-2 text-center`}>
+          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
             This page has no layout information.
           </h1>
-          <h1 className={`w-full my-2 text-center`}>
+          <h1 className={`w-full ${themeTextColor} my-2 text-center`}>
             Click on the below button to add components
           </h1>
           <EditOverlayBlock

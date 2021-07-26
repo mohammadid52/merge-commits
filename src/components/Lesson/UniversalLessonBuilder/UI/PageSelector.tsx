@@ -23,9 +23,6 @@ interface PageSelectorProps extends ULBSelectionProps {
   loading: boolean;
   handleModalPopToggle?: (dialogToToggle: string) => void;
   hideAllModals?: () => void;
-  setEditModal?: React.Dispatch<
-    React.SetStateAction<{show: boolean; content: any; editOnlyId: boolean}>
-  >;
 }
 
 const PageSelector = (props: PageSelectorProps) => {
@@ -34,7 +31,7 @@ const PageSelector = (props: PageSelectorProps) => {
     setSelectedPageID,
     deleteFromULBHandler,
     handleModalPopToggle,
-    setEditModal,
+
     selectedPageID,
     hideAllModals,
   } = props;
@@ -173,16 +170,6 @@ const PageSelector = (props: PageSelectorProps) => {
                           <button
                             onClick={(e: any) => {
                               e.stopPropagation();
-                              setEditModal({
-                                show: true,
-                                content: {
-                                  id: page.id,
-                                  title: page.title,
-                                  description: page.description,
-                                  label: page.label,
-                                },
-                                editOnlyId: false,
-                              });
                             }}
                             className={`text-center text-xs font-semibold border-indigo-200  border-3 hover:bg-indigo-200 p-1 cursor-pointer rounded mt-2`}>
                             <HiPencil

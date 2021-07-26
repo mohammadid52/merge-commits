@@ -111,10 +111,6 @@ type Room
   teacherEmail: String!
   name: String!
   maxPersons: Int!
-  institution: Institution @connection(fields: ["institutionID"])
-  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
-  class: Class @connection(fields: ["classID"])
-  curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
   filters: [String]
   location: String
   startDate: AWSDate
@@ -125,8 +121,18 @@ type Room
   repeat: String
   notes: String
   activeSyllabus: String
-  coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
   frequency: String
+  coTeachers: [RoomCoTeachers] @connection(keyName: "byRoom", fields: ["id"])
+  institution: Institution @connection(fields: ["institutionID"])
+  teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
+  class: Class @connection(fields: ["classID"])
+  curricula: [RoomCurriculum] @connection(keyName: "curriculumByRoom", fields: ["id"])
+  activeLessonId: String
+  ClosedPages: [String]
+  disabledPages: [String]
+  studentViewing: String
+  displayData: [String]
+  currentPage: String
 }
 
 type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
@@ -179,7 +185,9 @@ type Curriculum
   institution: Institution @connection(fields: ["institutionID"])
   designers: [String]
   syllabi: [Syllabus] @connection(keyName: "syllabusByCurriculum", fields: ["id"])
-  universalSyllabus: [UniversalSyllabus] @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
+  universalSyllabus: [UniversalSyllabus]
+    @connection(keyName: "uniSyllabusByCurriculum", fields: ["id"])
+  universalSyllabusSeq: [String]
   checkpoints: [commonCheckpoint] @connection(keyName: "byType", fields: ["id"])
 }
 type Topic
@@ -768,17 +776,17 @@ type AnthologyContent {
   content: String
   classID: ID
   feedbacks: [String]
-  edited: Boolean,
+  edited: Boolean
 }
 
-type AnthologyComment  @model {
+type AnthologyComment @model {
   id: ID!
   text: String
   email: String!
   authID: String!
   person: Person @connection(fields: ["email", "authID"])
   attachments: [Attachment]
-  edited: Boolean,
+  edited: Boolean
   createdAt: AWSDateTime
   updatedAt: AWSDateTime
 }
@@ -786,8 +794,8 @@ type AnthologyComment  @model {
 type Attachment {
   type: String
   url: String
-  filename:String,
-  size: Int,
+  filename: String
+  size: Int
 }
 
 type QuestionData @model {
@@ -888,10 +896,11 @@ type NoticeboardWidget @model {
 type Attendance @model {
   id: ID!
   studentID: ID!
-  curriculumID: ID
-  syllabusID: ID
-  lessonID: ID
-  time: AWSDateTime
+  curriculumID: ID!
+  syllabusID: ID!
+  lessonID: ID!
+  date: AWSDate
+  time: AWSTime
 }
 
 type Planner @model {
@@ -933,6 +942,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   lessonPlan: [UniversalLessonPlan]
   homework: [UniversalLessonPlan]
   darkMode: Boolean
+  rubrics: [String]
 }
 
 type UniversalLessonPlan {
@@ -985,20 +995,23 @@ type UniversalContentOptions {
   text: String
 }
 
+# Comments array property added to student-data record level
+# This will allow teachers/students to comment on a per-page basis
 type UniversalLessonStudentData
   @model
   @key(fields: ["id"])
   @key(name: "bySyllabusLessonAndStudent", fields: ["syllabusLessonID", "studentID"]) {
-    id: ID!
-    syllabusLessonID: ID!
-    lessonID: ID!
-    lessonPageID: ID!
-    studentID: ID!
-    studentAuthID: ID!
-    studentEmail: String!
-    currentLocation: String
-    lessonProgress: String
-    pageData: [StudentPageInput]
+  id: ID!
+  syllabusLessonID: ID!
+  lessonID: ID!
+  lessonPageID: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  currentLocation: String
+  lessonProgress: String
+  pageData: [partInput]
+  comments: [InputComment]
 }
 
 type StudentPageInput {
@@ -1006,6 +1019,7 @@ type StudentPageInput {
   pagePartInput: [partInput]
 }
 
+# We might remove 'comments' on partInput level...
 type partInput {
   domID: String
   input: [String]
@@ -1031,7 +1045,9 @@ type UniversalSyllabus
   objectives: String
   curriculumID: ID!
   languages: [Language]
-  lessons: [UniversalSyllabusLesson] @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
+  lessons: [UniversalSyllabusLesson]
+    @connection(keyName: "UniversalLessonsBySyllabus", fields: ["id"])
+  universalLessonsSeq: [String]
   designers: [String]
   status: Boolean
 }
@@ -1049,7 +1065,7 @@ type UniversalSyllabusLesson
   complete: Boolean
   roster: [String!]
   viewing: String
-  lesson: Lesson @connection(fields: ["lessonID"])
+  lesson: UniversalLesson @connection(fields: ["lessonID"])
   displayData: DisplayData
   lessonPlan: [ComponentSummary!]
   startDate: AWSDate
@@ -1074,6 +1090,7 @@ type Subscription {
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"])
+  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
 input CreateClassStudentInput {
@@ -1085,6 +1102,18 @@ input CreateClassStudentInput {
   status: String
 }
 
+input CreateLessonRubricsInput {
+  id: ID
+  lessonID: ID!
+  rubricID: ID!
+}
+
+input DeleteLessonRubricsInput {
+  id: ID!
+}
+
 type Mutation {
- batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
+  batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
+  batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
+  batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }

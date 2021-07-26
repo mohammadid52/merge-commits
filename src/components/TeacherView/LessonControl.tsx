@@ -13,23 +13,24 @@ import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
 import {useParams} from 'react-router';
-import {lessonControlState} from '../../state/LessonControlState';
-import {exampleStudentDataMutation} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonStudentData';
 import usePrevious from '../../customHooks/previousProps';
+import {
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../../interfaces/UniversalLessonInterfaces';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as customQueries from '../../customGraphql/customQueries';
+import * as mutations from '../../graphql/mutations';
+import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonControl = () => {
-  const {
-    state,
-    dispatch,
-    lessonState,
-    lessonDispatch,
-    controlState,
-    controlDispatch,
-    theme,
-  } = useContext(GlobalContext);
+  const {dispatch, lessonState, lessonDispatch, controlState, theme} = useContext(
+    GlobalContext
+  );
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -45,7 +46,7 @@ const LessonControl = () => {
     });
   };
 
-  const {visible, setVisible, ref} = useOutsideAlerter(false);
+  const {visible, setVisible} = useOutsideAlerter(false);
   const [quickRegister, setQuickRegister] = useState(false);
   const [homePopup, setHomePopup] = useState(false);
   const [lessonButton, setLessonButton] = useState(false);
@@ -62,44 +63,88 @@ const LessonControl = () => {
   const handleGoToUserManagement = () => {
     history.push('/dashboard/manage-users');
   };
-  const handleHome = () => {
-    history.push('/dashboard/home');
+  const handleHome = async () => {
+    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
   };
 
   // ##################################################################### //
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
-  const subscribeToStudentData = (lessonID: string, authId: string) => {
-    //   const studentDataSubscription = API.graphql(
-    //     graphqlOperation(customSubscriptions.onChangeStudentData, {
-    //       syllabusLessonID: lessonID,
-    //     })
-    //     // @ts-ignore
-    //   ).subscribe({
-    //     next: (studentData: any) => {
-    //       let updatedData = studentData.value.data.onChangeStudentData;
-    //       dispatch({type: 'UPDATE_STUDENT_DATA', payload: updatedData}); // LESSONDISPATCH
-    //     },
-    //   });
-    //
-    //   return studentDataSubscription;
-    /**
-     * TODO:
-     *  Ask Aman how to set this up...
-     *  Subscribe to studentData, but then 1 row at a time
-     *  based on these filters: lessonID, authId
-     */
+  const previousViewing = usePrevious(lessonState.studentViewing);
+
+  const transformStudentData = (dataArray: UniversalLessonStudentData[]) => {
+    const newArray = lessonState.lessonData.lessonPlan.map(
+      (page: UniversalLessonPage) => {
+        const matchPageWithData = dataArray.find(
+          (dataObj: UniversalLessonStudentData) =>
+            dataObj.universalLessonPageID === page.id
+        );
+        if (matchPageWithData) {
+          return matchPageWithData.pageData;
+        } else {
+          return [{}];
+        }
+      }
+    );
+    return {
+      studentAuthId: controlState.studentViewing,
+      studentData: newArray,
+    };
   };
 
   //~~~~~~TEMPORARY STUDENT DATA FETCH~~~~~~//
-  const previousViewing = usePrevious(controlState.studentViewing);
-  useEffect(() => {
-    if (controlState.studentViewing !== previousViewing) {
-      console.log('setting student data...');
-      controlDispatch({type: 'UPDATE_STUDENT_DATA', payload: exampleStudentDataMutation});
+
+  // useEffect(() => {
+  //   if (
+  //     controlState.studentViewing !== '' &&
+  //     controlState.studentViewing !== previousViewing
+  //   ) {
+  //     const transformedStudentData = transformStudentData([exampleStudentDataMutation]);
+  //     lessonDispatch({type: 'SET_DISPLAY_DATA', payload: transformedStudentData});
+  //   }
+  // }, [lessonState.studentViewing]);
+
+  // ##################################################################### //
+  // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
+  // ##################################################################### //
+  const handleQuitShare = () => {
+    dispatch({type: 'QUIT_SHARE_MODE'});
+    setIsSameStudentShared(false);
+  };
+
+  const handleQuitViewing = () => {
+    dispatch({type: 'QUIT_STUDENT_VIEWING'});
+    setIsSameStudentShared(false);
+  };
+
+  /**
+   * VIEWING A STUDENT
+   *  1. compare new studentViewing ID
+   *  2. if it's not the same as before, and not ''
+   *  3. unsubscribe
+   *  4. mutate the room table
+   *
+   *  --then--
+   *  5. subscribe
+   */
+
+  const handleRoomUpdate = async (payload: any) => {
+    if (typeof payload === 'object' && Object.keys(payload).length > 0) {
+      try {
+        const updateRoom: any = await API.graphql(
+          graphqlOperation(mutations.updateRoom, {
+            input: payload,
+          })
+        );
+      } catch (e) {
+        console.error('handleRoomUpdate - ', e);
+      }
+    } else {
+      console.log('incorrect data for handleRoomUpdate() - ', payload);
     }
-  }, [controlState.studentViewing]);
+  };
 
   // ##################################################################### //
   // ############################ LESSON FETCH ########################### //
@@ -107,13 +152,12 @@ const LessonControl = () => {
   const getSyllabusLesson = async (lessonID?: string) => {
     // lessonID will be undefined for testing
     if (lessonID !== '') {
-      console.log('getSyllabusLesson - ', lessonID);
-
-      // const lesson: any = await API.graphql(
-      //   graphqlOperation(customQueries.getSyllabusLesson, {id: lessonID})
-      // );
+      const universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+      );
+      const response = universalLesson.data.getUniversalLesson;
       setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
       //
       // subscription = subscribeToStudentData(lessonID);
@@ -124,6 +168,7 @@ const LessonControl = () => {
     }
   };
 
+  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
     if (lessonID) {
@@ -137,17 +182,29 @@ const LessonControl = () => {
         subscription.unsubscribe();
       }
       lessonDispatch({type: 'CLEANUP'});
-      // lessonControlDispatch({type: 'CLEANUP'});
     };
   }, []);
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+  // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
-      setLessonDataLoaded(true);
+      // setLessonDataLoaded(true);
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
+
+      const getRoomData = getLocalStorageData('room_info');
+
+      if (
+        lessonState.lessonData.lessonPlan &&
+        lessonState.lessonData.lessonPlan.length > 0
+      ) {
+        lessonDispatch({
+          type: 'SET_SUBSCRIPTION_DATA',
+          payload: {ClosedPages: getRoomData.ClosedPages},
+        });
+      }
 
       // MODIFY REDUCER FOR THIS
       // lessonControlDispatch({
@@ -167,40 +224,24 @@ const LessonControl = () => {
   }, [lessonState.lessonData.id]);
 
   // ##################################################################### //
-  // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
+  // ################### OTHER SHARING / VIEWING LOGIC ################### //
   // ##################################################################### //
-  const handleQuitShare = () => {
-    dispatch({type: 'QUIT_SHARE_MODE'});
-    setIsSameStudentShared(false);
-  };
-
-  const handleQuitViewing = () => {
-    dispatch({type: 'QUIT_STUDENT_VIEWING'});
-    setIsSameStudentShared(false);
-  };
-
-  /**
-   * VIEWING A STUDENT
-   *  update lessonState.lessonData if viewing a student through subscription
-   *  this logic is used for viewing student typing, and
-   *  also for pushing a page switch
-   */
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
-    if (controlState.studentViewing !== '') {
-      const viewedStudentLocation = controlState.roster.find(
-        (student: any) => student.personAuthID === controlState.studentViewing
-      )?.currentLocation;
-
-      if (viewedStudentLocation !== '') {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-        history.push(`${match.url}/${viewedStudentLocation}`);
-      } else {
-        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-        history.push(`${match.url}/0`);
-      }
-    }
+    // if (controlState.studentViewing !== '') {
+    //   const viewedStudentLocation = controlState.roster.find(
+    //     (student: any) => student.personAuthID === controlState.studentViewing
+    //   )?.currentLocation;
+    //
+    //   if (viewedStudentLocation !== '') {
+    //     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+    //     history.push(`${match.url}/${viewedStudentLocation}`);
+    //   } else {
+    //     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+    //     history.push(`${match.url}/0`);
+    //   }
+    // }
   }, [controlState.roster]);
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
@@ -464,6 +505,7 @@ const LessonControl = () => {
                     handleQuitShare={handleQuitShare}
                     handleQuitViewing={handleQuitViewing}
                     handlePageChange={handlePageChange}
+                    handleRoomUpdate={handleRoomUpdate}
                   />
                 </ErrorBoundary>
               </div>

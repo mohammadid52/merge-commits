@@ -5,6 +5,7 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
+import {isString} from 'lodash';
 
 interface PoemBlockProps extends RowWrapperProps {
   id?: string;
@@ -22,7 +23,9 @@ const PoemBlock = (props: PoemBlockProps) => {
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
+  const isStudent = state.user.role === 'ST';
   const isInLesson = useInLessonCheck();
+
   const handleUpdateStudentData = (domID: string, input: string[]) => {
     lessonDispatch({
       type: 'UPDATE_STUDENT_DATA',
@@ -48,7 +51,7 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   };
 
-  // init poemInput so the first linestarter shows up
+  // // init poemInput so the first linestarter shows up
   useEffect(() => {
     if (poemInput.length === 0 && value.length > 0) {
       setPoemInput([
@@ -60,16 +63,18 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   }, [value]);
 
-  // init poemWriting for WYSIWYG
+  // // init poemWriting for WYSIWYG
   useEffect(() => {
-    if (poemInput.length > 0) {
-      const concatenated = poemInput.reduce(
-        (acc: string, poemInputObj: StudentPageInput) => {
-          return `${acc}<p>${poemInputObj.input[0]}</p>`;
-        },
-        ''
-      );
-      handleUpdateStudentData(id, [concatenated]);
+    if (isInLesson && isStudent) {
+      if (poemInput.length > 0) {
+        const concatenated = poemInput.reduce(
+          (acc: string, poemInputObj: StudentPageInput) => {
+            return `${acc}<p>${poemInputObj.input[0]}</p>`;
+          },
+          ''
+        );
+        handleUpdateStudentData(id, [concatenated]);
+      }
     }
   }, [poemInput]);
 
@@ -94,7 +99,9 @@ const PoemBlock = (props: PoemBlockProps) => {
           <EditingBlock
             id={id}
             poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
-            handleUpdateStudentData={handleUpdateStudentData}
+            handleUpdateStudentData={
+              isInLesson && isStudent ? handleUpdateStudentData : undefined
+            }
           />
         )}
       </div>

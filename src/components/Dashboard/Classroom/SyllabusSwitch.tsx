@@ -7,7 +7,13 @@ import Tooltip from '../../Atoms/Tooltip';
 import {getAsset} from '../../../assets';
 
 const SyllabusSwitch = (props: DashboardProps) => {
-  const {activeRoom, currentPage, syllabusLoading, handleSyllabusActivation} = props;
+  const {
+    classRoomActiveSyllabus,
+    activeRoom,
+    currentPage,
+    syllabusLoading,
+    handleSyllabusActivation,
+  } = props;
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -17,7 +23,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
   };
   return (
     <>
-      {syllabusLoading ? (
+      {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
         <div
           className={`shadow text-center bg-white rounded-lg p-6 ${theme.elem.textDark}`}>
           Loading units...
@@ -41,7 +47,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
                     </p>
                   </div>
 
-                  {!syllabus.active ? (
+                  {classRoomActiveSyllabus !== syllabus.id ? (
                     <div
                       className={`${getBG(
                         themeColor === 'iconoclast' ? 'indigo' : 'blue'

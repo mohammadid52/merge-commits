@@ -38,7 +38,6 @@ import KeywordModalDialog from '../UI/ModalDialogs/KeywordModalDialog';
 import HighlighterFormDialog from '../UI/ModalDialogs/HighlighterFormDialog';
 import LinksModalDialog from '../UI/ModalDialogs/LinksModalDialog';
 import {
-  FORM_TYPES,
   LINK,
   SELECT_MANY,
   SELECT_ONE,
@@ -46,6 +45,7 @@ import {
   ATTACHMENTS,
   DATE_PICKER,
   INPUT_WITH_EMOJI,
+  FORM_TYPES,
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
@@ -240,7 +240,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             userLanguage={userLanguage}
             galleryVisible={galleryVisible}
             loading={loading}
-            setEditModal={setEditModal}
             selectedPageID={selectedPageID}
             setSelectedPageID={setSelectedPageID}
             handleModalPopToggle={handleModalPopToggle}
@@ -358,19 +357,30 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case 'form-numbered':
       case 'form-default':
         return <InputModalComponent {...commonProps} contentType={type} />;
-      case 'video':
+      case FORM_TYPES.VIDEO:
         return <YouTubeMediaDialog {...commonProps} />;
-      case 'tag':
+      case FORM_TYPES.CUSTOM_VIDEO:
+        return (
+          <ImageFormComponent
+            {...commonProps}
+            customVideo
+            handleGalleryModal={handleGalleryModal}
+            selectedImageFromGallery={selectedImageFromGallery}
+          />
+        );
+      case FORM_TYPES.TAG:
         return <TagInputDialog {...commonProps} />;
-      case 'jumbotron':
-        return <JumbotronFormDialog {...commonProps} />;
-      case 'highlighter':
+      case FORM_TYPES.JUMBOTRON:
+        return (
+          <JumbotronFormDialog classString={selectedContentClass} {...commonProps} />
+        );
+      case FORM_TYPES.HIGHLIGHTER:
         return <HighlighterFormDialog {...commonProps} />;
-      case 'poem':
+      case FORM_TYPES.POEM:
         return <LinestarterModalDialog {...commonProps} />;
-      case 'keywords':
+      case FORM_TYPES.KEYWORDS:
         return <KeywordModalDialog {...commonProps} />;
-      case 'links':
+      case FORM_TYPES.LINKS:
         return <LinksModalDialog {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
@@ -423,6 +433,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   };
 
+  /**
+   *
+   * @param dialogLabel string
+   * @returns modal title name for parent level modals
+   */
   const getTitleByType = (dialogLabel: string) => {
     switch (dialogLabel) {
       case dialogLabelList.ADD_CONTENT:
@@ -439,24 +454,31 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     }
   };
 
-  // For Edit Page Names
-  const [pageDetailsModal, setPageDetailsModal] = useState(false);
-
-  const [editModal, setEditModal] = useState({
-    show: false,
-    content: {},
-    editOnlyId: true,
-  });
-  const closeEditModal = () => setEditModal({show: false, content: {}, editOnlyId: true});
-
-  const content: any = editModal.content;
-  const getEditModalTitle = () => {
-    if (!editModal.editOnlyId) {
-      return `Edit ${`- ${content.title}` || 'Lesson Page'}`;
-    } else {
-      return `Edit - ${content.partContentId || content.pageContentId}`;
+  const getComponentTitle = (type: string) => {
+    switch (type) {
+      case FORM_TYPES.TEXT:
+        return 'Input Component';
+      case FORM_TYPES.EMOJI:
+        return 'Emoji Component';
+      case FORM_TYPES.RADIO:
+        return 'Single Option Component';
+      case FORM_TYPES.MULTIPLE:
+        return 'Multiple Options Component';
+      case FORM_TYPES.DATE_PICKER:
+        return 'Date Picker Component';
+      case FORM_TYPES.CUSTOM_VIDEO:
+        return 'Video Component';
+      case FORM_TYPES.HIGHLIGHTER:
+        return 'Highlighter Component';
+      case FORM_TYPES.POEM:
+        return 'Poem Component';
+      case FORM_TYPES.LINK:
+        return 'Link Component';
+      default:
+        return `${capitalizeFirstLetter(type)} Component`;
     }
   };
+
   const {
     UnsavedModal,
     askBeforeClose,
@@ -488,9 +510,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       {addContentModal.show && (
         <Modal
           showHeader={true}
-          title={`Add ${capitalizeFirstLetter(addContentModal.type)} ${
-            addContentModal.type === 'questions' ? 'To Lesson' : ''
-          }`}
+          title={getComponentTitle(addContentModal.type)}
           showHeaderBorder={true}
           showFooter={false}
           titleButton={
@@ -517,33 +537,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
 
-      {editModal.show && (
-        <Modal
-          showHeader={true}
-          title={getEditModalTitle()}
-          showHeaderBorder={true}
-          showFooter={false}
-          titleButton={
-            <span
-              onClick={() => {
-                setEditModal({show: false, content: {}, editOnlyId: false});
-                setPageDetailsModal(true);
-              }}
-              className="ml-4 inline-flex items-center px-3 py-0.5 rounded-md cursor-pointer text-sm font-medium bg-gray-200 text-gray-800 w-auto">
-              Go back to page details
-            </span>
-          }
-          closeAction={closeEditModal}>
-          <div className="min-w-256">
-            <EditPageNameDialog
-              backToDetails={() => setPageDetailsModal(true)}
-              editOnlyId={editModal.editOnlyId}
-              closeAction={closeEditModal}
-              content={content}
-            />
-          </div>
-        </Modal>
-      )}
       {openGallery && (
         <Modal
           showHeader={true}
@@ -557,12 +550,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         </Modal>
       )}
 
-      <BuilderMenu
+      {/* NO LONGER IN USE*/}
+      {/* <BuilderMenu
         galleryVisible={galleryVisible}
         setGalleryVisible={setGalleryVisible}
         builderMenuVisible={builderMenuVisible}
         setBuilderMenuVisible={setBuilderMenuVisible}
-      />
+      /> */}
 
       <CoreBuilder
         mode={mode}
@@ -574,14 +568,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         hierarchyVisible={hierarchyVisible}
         lessonId={lessonId}
         selectedPageID={selectedPageID}
-        pageDetailsModal={pageDetailsModal}
-        setPageDetailsModal={setPageDetailsModal}
         setSelectedPageID={setSelectedPageID}
         initialUniversalLessonPagePartContent={initialUniversalLessonPagePartContent}
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}
-        setEditModal={setEditModal}
         activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
       />
     </div>

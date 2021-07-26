@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
+import {IoDocumentText, IoCardSharp} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as mutations from '../../../../graphql/mutations';
-import * as queries from '../../../../graphql/queries';
 import * as customQueries from '../../../../customGraphql/customQueries';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
@@ -16,15 +15,11 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import Loader from '../../../Atoms/Loader';
 import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
-import WizardScroller from '../../../Atoms/WizardScroller';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
-import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
-import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
 import LessonActivities from './StepActionComponent/LessonActivities';
 import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
 import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
-import PreviewForm from './StepActionComponent/PreviewForm';
 import {
   InstructionInitialState,
   SavedLessonDetailsProps,
@@ -36,7 +31,6 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
-import DragableAccordion from '../../../Atoms/DragableAccordion';
 
 export interface InitialData {
   name: string;
@@ -74,6 +68,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const step = params.get('step');
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
+  const {AddNewLessonFormDict} = useDictionary(clientKey);
   const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
 
   const initialData = {
@@ -114,10 +109,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const [curriculumLoading, setCurriculumLoading] = useState(false);
   const [formData, setFormData] = useState<InitialData>(initialData);
   const [measurementList, setMeasurementList] = useState([]);
-  const [selectedMeasurement, setSelectedMeasurement] = useState([]);
+  const [selectedMeasurements, setSelectedMeasurements] = useState([]);
   const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
     lessonPlans: null,
     lessonInstructions: instructionInitialState,
@@ -132,6 +128,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
+    url: '',
+  });
+  const [serverMessage, setServerMessage] = useState({
+    isError: false,
+    message: '',
   });
 
   const [checkpointSaveModal, setCheckpointSaveModal] = useState({
@@ -197,7 +198,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
-        setSelectedMeasurement(savedData.rubrics);
+        setSelectedMeasurements(savedData.rubrics);
         setFormData({
           ...formData,
           ...savedData,
@@ -442,7 +443,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         if (isCourseAdded) {
           selectedCurriculums.push({
             ...curriculum,
-            assignedSyllabi: assignedSyllabi.map((syllabus: any) => syllabus.name),
+            assignedSyllabi,
+            // : assignedSyllabi.map((syllabus: any) => syllabus.name),
             assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
           });
         }
@@ -455,7 +457,60 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   };
 
   const handleTabSwitch = (step: string) => {
-    history.push(`${match.url}?lessonId=${lessonId}&step=${step}`);
+    const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=${step}`;
+    setServerMessage({
+      isError: false,
+      message: ''
+    })
+    if (unsavedChanges) {
+      setWarnModal({
+        show: true,
+        message: 'Do you want to save changes before going?',
+        url: redirectionUrl,
+      });
+    } else {
+      history.push(redirectionUrl);
+    }
+  };
+  const updateMeasurementList = async (rubrics: string[] | null) => {
+    try {
+      setUpdating(true);
+      const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
+      if (newRubrics?.length) {
+        await API.graphql(
+          graphqlOperation(mutations.batchAddLessonRubrics, {
+            lessonRubrics: newRubrics.map((rubric: any) => ({
+              lessonID: lessonId,
+              rubricID: rubric.rubricID,
+            })),
+          })
+        );
+      }
+      const rubricsToBeRemoved = rubrics.filter(
+        (rubric: any) => rubric.id && !rubric.checked
+      );
+      if (rubricsToBeRemoved?.length) {
+        await API.graphql(
+          graphqlOperation(mutations.batchDeleteLessonRubrics, {
+            lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
+              id: rubric.id,
+            })),
+          })
+        );
+      }
+      setServerMessage({
+        isError: false,
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
+      });
+      setUnsavedChanges(false);
+      setUpdating(false);
+    } catch (error) {
+      setUpdating(false);
+      setServerMessage({
+        isError: true,
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+      });
+    }
   };
 
   const currentStepComp = (currentStep: string) => {
@@ -472,8 +527,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             setSelectedDesigners={setSelectedDesigners}
             postLessonCreation={postLessonCreation}
             allMeasurement={measurementList}
-            lessonMeasurements={selectedMeasurement}
-            setLessonMeasurements={setSelectedMeasurement}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
           />
@@ -503,21 +556,17 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       case 'learning-evidence':
         return (
           <LearningEvidence
+            fetchLessonRubrics={fetchLessonRubrics}
             institutionId={formData?.institution?.id}
             lessonId={lessonId}
-            rubrics={selectedMeasurement}
+            selectedMeasurements={selectedMeasurements}
+            setSelectedMeasurements={setSelectedMeasurements}
+            setUnsavedChanges={setUnsavedChanges}
+            serverMessage={serverMessage}
+            updating={updating}
+            updateMeasurementList={updateMeasurementList}
           />
         );
-      // default:
-      //   return <AddNewLessonForm
-      //     changeLessonType={changeLessonType}
-      //     formData={formData}
-      //     setFormData={setFormData}
-      //     designersList={designersList}
-      //     selectedDesigners={selectedDesigners}
-      //     setSelectedDesigners={setSelectedDesigners}
-      //     postLessonCreation={postLessonCreation}
-      //   />;
     }
   };
 
@@ -550,31 +599,59 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     toggleModal();
   };
 
+  const saveBeforeLeave = async () => {
+    if (activeStep === 'learning-evidence') {
+      await updateMeasurementList(selectedMeasurements);
+      setServerMessage({
+        isError: false,
+        message: '',
+      });
+      discardChanges();
+    }
+  };
+
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
       show: !warnModal.show,
     });
   };
-  const fetchMeasurementList = async () => {
+
+  const toggleUnSaveModal = (url?: string) => {
+    setWarnModal({
+      ...warnModal,
+      message: 'Do you want to save changes before going?',
+      show: !warnModal.show,
+      url,
+    });
+  };
+
+  const discardChanges = () => {
+    history.push(warnModal.url);
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show,
+    });
+    setUnsavedChanges(false);
+  };
+
+  const fetchLessonRubrics = async () => {
     try {
-      let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
-      list = list.data.listRubrics?.items || [];
-      const measuList = list.sort((a: any, b: any) =>
-        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listLessonRubricss, {
+          filter: {
+            lessonID: {eq: lessonId},
+          },
+        })
       );
-      const filteredList = measuList.map((item: any) => {
-        return {
-          id: item.id,
-          name: item.name,
-          value: item.name,
-          topic: item?.topic?.name,
-        };
-      });
-      setMeasurementList(filteredList);
-    } catch {
-      console.log('Error while fetching lesson data');
-    }
+      const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
+        ...rubric,
+        checked: true,
+      }));
+      console.log(rubricList, 'rubricList+++++++++++');
+
+      setSelectedMeasurements(rubricList);
+    } catch (error) {}
   };
 
   const postLessonCreation = (lessonId: string, action?: string) => {
@@ -665,7 +742,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       stepValue: 'learning-evidence',
       icon: <FaQuestionCircle />,
       disabled: !(
-        Boolean(selectedMeasurement?.length) || Boolean(selectedCurriculumList.length)
+        Boolean(selectedMeasurements?.length) || Boolean(selectedCurriculumList.length)
       ),
       isComplete: false,
       tooltipText: 'Assign your lesson to courses in step 3 to continue',
@@ -678,21 +755,21 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       <BreadCrums
         items={breadCrumsList}
         unsavedChanges={unsavedChanges}
-        toggleModal={toggleModal}
+        toggleModal={toggleUnSaveModal}
       />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
             btnClass="mr-4"
             onClick={gobackToLessonsList}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body */}
@@ -718,68 +795,12 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             ) : (
               <div className="">{currentStepComp(activeStep)}</div>
             )}
-            {/* <div className="sm:col-span-1"> */}
-            {/* <WizardScroller
-                stepsList={lessonBuilderSteps}
-                activeStep={activeStep}
-                setActiveStep={(step) => {
-                  if (individualFieldEmpty) {
-                    setWarnModal2({
-                      stepOnHold: step,
-                      show: true,
-                      message: 'Please fill all required fields to save this checkpoint',
-                    });
-                  } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
-                    setIndividualFieldEmpty(false);
-                    setWarnModal2({
-                      ...warnModal2,
-                      stepOnHold: step,
-                      show: true,
-                      message: 'You have unsaved checkpoint. Do you want to save it?',
-                    });
-                  } else {
-                    setIndividualFieldEmpty(false);
-
-                    setActiveStep(step);
-                    setHistoryList([...historyList, step]);
-                  }
-                }}
-              /> */}
-            {/* </div> */}
-            {/* <div>
-              {loading ? (
-                <div className="h-100 flex justify-center items-center">
-                  <div className="w-5/10">
-                    <Loader />
-                    <p className="mt-2 text-center">
-                      Fetching lesson details please wait...
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <AddNewLessonForm
-                  lessonId={lessonId}
-                  changeLessonType={changeLessonType}
-                  formData={formData}
-                  setFormData={setFormData}
-                  designersList={designersList}
-                  selectedDesigners={selectedDesigners}
-                  setSelectedDesigners={setSelectedDesigners}
-                  postLessonCreation={postLessonCreation}
-                  allMeasurement={measurementList}
-                  lessonMeasurements={selectedMeasurement}
-                  setLessonMeasurements={setSelectedMeasurement}
-                  institutionList={institutionList}
-                  setUnsavedChanges={setUnsavedChanges}
-                />
-              )}
-            </div> */}
           </div>
         </div>
         {warnModal.show && (
           <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={onModalSave}
+            closeAction={discardChanges}
+            saveAction={saveBeforeLeave}
             saveLabel="Yes"
             message={warnModal.message}
           />

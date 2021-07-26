@@ -72,7 +72,7 @@ const Accordion = ({actionOnAccordionClick, titleList}: any) => {
                     </div>
                   </div>
                   {selectedItem === item.id && (
-                    <div className="px-8 py-3 max-h-140 overflow-auto ease duration-500">
+                    <div className="px-8 py-3 max-h-140 ease duration-500">
                       {item.content}
                     </div>
                   )}

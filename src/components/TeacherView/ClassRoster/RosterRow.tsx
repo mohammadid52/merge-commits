@@ -51,18 +51,18 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   };
 
   const studentIsViewed = () => {
-    if (controlState.studentViewing) {
-      return viewedStudent === id;
-    }
+    return viewedStudent === id;
   };
 
   const handleRowSelection = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
     const button = t.hasAttribute('aria-label');
 
-    if (!studentIsViewed() && !button) {
+    if (!button) {
       handleSelect(e);
-      handlePageChange(parseInt(currentLocation));
+      if (!studentIsViewed()) {
+        handlePageChange(parseInt(currentLocation));
+      }
     }
   };
 

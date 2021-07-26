@@ -15,7 +15,44 @@ import {
 } from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 
-const Attachments = (props: any) => {
+import {Switch} from '@headlessui/react';
+
+/**
+ * @param classes multipple classes separeted bt comma
+ * @returns multiple classes into a single class
+ * */
+export const classNames = (...classes: any[]) => classes.filter(Boolean).join(' ');
+
+const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
+  return (
+    <Switch
+      checked={checked}
+      onChange={onClick}
+      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <span className="sr-only">Text response type</span>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bg-white w-full h-full rounded-md"
+      />
+      <span
+        aria-hidden="true"
+        className={classNames(
+          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
+        )}
+      />
+      <span
+        aria-hidden="true"
+        className={classNames(
+          checked ? 'translate-x-5' : 'translate-x-0',
+          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
+        )}
+      />
+    </Switch>
+  );
+};
+
+const UniversalInput = (props: any) => {
   const {
     closeAction,
     numbered,
@@ -30,6 +67,7 @@ const Attachments = (props: any) => {
     createNewContent,
   } = props;
   const {userLanguage} = useContext(GlobalContext);
+
   const addToDB = async (list: any) => {
     closeAction();
 
@@ -48,6 +86,11 @@ const Attachments = (props: any) => {
     setUnsavedChanges(true);
     const {value} = e.target;
     update(list[idx], label ? `label` : 'value', () => value);
+    setList([...list]);
+  };
+
+  const changeCheckboxValue = (idx: number, currentValue: boolean) => {
+    update(list[idx], 'textArea', () => !currentValue);
     setList([...list]);
   };
 
@@ -82,8 +125,8 @@ const Attachments = (props: any) => {
             ? FORM_TYPES.LINK
             : selectedForm === DATE_PICKER
             ? FORM_TYPES.DATE_PICKER
-            : selectedForm === INPUT
-            ? FORM_TYPES.TEXT
+            : selectedForm === INPUT && d.textArea
+            ? FORM_TYPES.TEXTAREA
             : FORM_TYPES.TEXT,
         label: d.label,
         value: d.value,
@@ -101,17 +144,6 @@ const Attachments = (props: any) => {
     setUnsavedChanges(false);
   };
 
-  const title =
-    selectedForm === ATTACHMENTS
-      ? ATTACHMENTS
-      : selectedForm === INPUT_WITH_EMOJI
-      ? INPUT_WITH_EMOJI
-      : selectedForm === DATE_PICKER
-      ? DATE_PICKER
-      : selectedForm === LINK
-      ? LINK
-      : '';
-
   return (
     <>
       <div>
@@ -123,31 +155,49 @@ const Attachments = (props: any) => {
                 <div className="mb-2">
                   <FormInput
                     onChange={(e) => onChange(e, idx)}
-                    label={`${numbered ? `${idx + 1}. ` : ''}${title} Title`}
+                    label={`${numbered ? `${idx + 1}. ` : ''}Label`}
                     isRequired
                     value={input.label}
                     id={`formFieldInput_${input.id}`}
-                    placeHolder={`Enter Title`}
+                    placeHolder={`Enter Label`}
                   />
                 </div>
                 {selectedForm !== DATE_PICKER && (
                   <div>
                     <FormInput
                       onChange={(e) => onChange(e, idx, false)}
-                      label={`${title} Placeholder`}
+                      label={`Placeholder`}
                       value={input.value}
                       id={`placeholder_${input.id}`}
-                      placeHolder={`Enter Placeholder`}
+                      placeHolder={`Briefly explain how user should respond`}
                     />
                   </div>
                 )}
-                {idx !== 0 && (
-                  <div className="flex my-2 items-center justify-end w-auto mx-3">
+                {idx !== 0 ? (
+                  <div className="flex my-2 items-center justify-end w-auto">
+                    <div className="flex items-center mt-4 text-xs">
+                      Sentence
+                      <Toggle
+                        checked={input.textArea}
+                        onClick={() => changeCheckboxValue(idx, input.textArea)}
+                      />
+                      Paragraph
+                    </div>
+
                     <button
                       onClick={() => removeItemFromList(input.id)}
                       className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
                       Remove
                     </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center mt-4 text-xs">
+                    Sentence
+                    <Toggle
+                      checked={input.textArea}
+                      onClick={() => changeCheckboxValue(idx, input.textArea)}
+                    />
+                    Paragraph
                   </div>
                 )}
               </div>
@@ -172,7 +222,7 @@ const Attachments = (props: any) => {
                 ? 'border-indigo-500 text-white bg-indigo-400'
                 : 'border-gray-300 text-dark'
             } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
-            {numbered ? 'Ordered Form' : 'Unordered Form'}
+            {numbered ? 'Numbered' : 'Unnumbered'}
           </button>
         </div>
         <div className="flex items-center w-auto">
@@ -193,4 +243,4 @@ const Attachments = (props: any) => {
   );
 };
 
-export default Attachments;
+export default UniversalInput;

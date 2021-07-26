@@ -1,17 +1,17 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, {useEffect, useReducer, useState} from 'react';
+import {useHistory, useParams} from 'react-router-dom';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as mutations from '../graphql/mutations';
 import * as customQueries from '../customGraphql/customQueries';
 // import { API, graphqlOperation } from 'aws-amplify';
-import { Auth } from '@aws-amplify/auth';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { standardTheme } from './GlobalContext';
-import { getClientKey } from '../utilities/strings';
-import { handleFetchAndCache } from '../utilities/sessionData';
-import { lessonStateOLD } from '../state/LessonStateOLD';
-import { lessonReducerOLD } from '../reducers/LessonReducerOLD';
+import {Auth} from '@aws-amplify/auth';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {standardTheme} from './GlobalContext';
+import {getClientKey} from '../utilities/strings';
+// import { handleFetchAndCache } from '../utilities/sessionData';
+import {lessonStateOLD} from '../state/LessonStateOLD';
+import {lessonReducerOLD} from '../reducers/LessonReducerOLD';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -282,23 +282,23 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
    * GET SYLLABUS LESSON
    */
   async function getSyllabusLesson() {
-    const {lessonID} = urlParams;
-    const queryObj = {
-      name: 'customQueries.getSyllabusLesson',
-      valueObj: {id: lessonID},
-    };
-    if (lessonID) {
-      try {
-        const classroom = await handleFetchAndCache(queryObj);
-        setLesson(classroom.data.getSyllabusLesson);
-        getOrCreateStudentData();
-        subscription = subscribeToSyllabusLesson();
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      history.push('/dashboard');
-    }
+    // const {lessonID} = urlParams;
+    // const queryObj = {
+    //   name: 'customQueries.getSyllabusLesson',
+    //   valueObj: {id: lessonID},
+    // };
+    // if (lessonID) {
+    //   try {
+    //     const classroom = await handleFetchAndCache(queryObj);
+    //     setLesson(classroom.data.getSyllabusLesson);
+    //     getOrCreateStudentData();
+    //     subscription = subscribeToSyllabusLesson();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   history.push('/dashboard');
+    // }
   }
 
   useEffect(() => {

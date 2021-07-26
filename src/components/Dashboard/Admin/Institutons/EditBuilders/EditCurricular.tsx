@@ -86,18 +86,22 @@ const EditCurricular = (props: EditCurricularProps) => {
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: curricularData.institute?.name,
       url: `/dashboard/manage-institutions/institution?id=${param.institutionId}`,
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], goBack: true, last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
+      goBack: true,
+      last: false,
+    },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCURRICULUM'],
       url: `/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`,

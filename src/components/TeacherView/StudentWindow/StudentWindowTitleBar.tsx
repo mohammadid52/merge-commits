@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {LessonControlContext} from '../../../contexts/LessonControlContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {FaCompress, FaExpand, FaInfoCircle} from 'react-icons/fa';
+import {FaCompress, FaExpand} from 'react-icons/fa';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../../graphql/mutations';
+import {getLocalStorageData, setLocalStorageData} from '../../../utilities/localStorage';
 
 interface StudentWindowTitleBarProps {
   handleFullscreen: () => void;
@@ -14,7 +16,7 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
   props: StudentWindowTitleBarProps
 ) => {
   const {handleFullscreen, fullscreen} = props;
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const {lessonState, lessonDispatch} = useContext(GlobalContext);
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
 
   useEffect(() => {
@@ -26,20 +28,59 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
 
-  /**
-   * Variable referring to ^ function above
-   */
-  const isOpen = activePageData ? activePageData.open : false;
+  // ##################################################################### //
+  // ######################### OPEN / CLOSE PAGES ######################## //
+  // ##################################################################### //
+  const handleOpenCloseComponent = async (pageNr: number) => {
+    // ~~~~~~ GET ROOM INFO FROM SESSION ~~~~~ //
+    const getRoomData = getLocalStorageData('room_info');
 
-  /**
-   * Function for opening/closing components for students
-   * @param pageNr
-   */
-  const handleOpenCloseComponent = (pageNr: number) => {
+    // ~~~~~~~ GET CURRENT CLOSED PAGES ~~~~~~ //
+    const getClosedPages = lessonState.lessonData.lessonPlan.reduce(
+      (acc: string[], lessonPlanObj: UniversalLessonPage) => {
+        console.log(lessonPlanObj.open);
+        if (lessonPlanObj.open === false) {
+          return [...acc, lessonPlanObj.id];
+        } else {
+          return acc;
+        }
+      },
+      []
+    );
+
+    // ~~~~~~~~~~~~ UPDATE CONTEXT ~~~~~~~~~~~ //
     lessonDispatch({
       type: 'TOGGLE_OPEN_PAGE',
       payload: pageNr,
     });
+
+    // ~ APPEND PAGE ID TO CLOSED PAGES ARRAY  //
+    const finalClosedPages = getClosedPages.includes(activePageData.id)
+      ? getClosedPages.filter((str: string) => str !== activePageData.id)
+      : [...getClosedPages, activePageData.id];
+
+    // ~~~~~~~~~~~~ UPDATE SESSION ~~~~~~~~~~~ //
+    setLocalStorageData('room_info', {...getRoomData, ClosedPages: finalClosedPages});
+
+    // ~~~~~~~~~~~~~~ MUTATE DB ~~~~~~~~~~~~~~ //
+    try {
+      const updateOpenClosePages: any = await API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input: {
+            id: getRoomData.id,
+            institutionID: getRoomData.institutionID,
+            classID: getRoomData.classID,
+            teacherAuthID: getRoomData.teacherAuthID,
+            teacherEmail: getRoomData.teacherEmail,
+            name: getRoomData.name,
+            maxPersons: getRoomData.maxPersons,
+            ClosedPages: finalClosedPages,
+          },
+        })
+      );
+    } catch (e) {
+      console.error('handleOpenClose - updateRoom mutation - ', e);
+    }
   };
 
   return (
@@ -59,8 +100,8 @@ const StudentWindowTitleBar: React.FC<StudentWindowTitleBarProps> = (
          */}
         {lessonState.currentPage !== 0 &&
         activePageData &&
-        activePageData.enabled === true ? (
-          activePageData.open ? (
+        activePageData.disabled !== true ? (
+          activePageData.open !== false ? (
             <span
               className="mr-2 w-auto h-6 my-auto leading-4 text-xs text-white bg-red-600 hover:bg-red-500 hover:text-underline p-1 rounded-lg cursor-pointer"
               onClick={() => handleOpenCloseComponent(lessonState.currentPage)}>

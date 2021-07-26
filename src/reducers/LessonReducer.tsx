@@ -1,4 +1,10 @@
-import {lessonState} from '../state/LessonState';
+import {
+  StudentPageInput,
+  UniversalLesson,
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../interfaces/UniversalLessonInterfaces';
+
 export type LessonActions =
   | {
       type: 'TEST';
@@ -9,6 +15,32 @@ export type LessonActions =
       payload: {universalLessonID: string};
     }
   | {
+      type: 'SET_UPDATE_STATE';
+      payload: boolean;
+    }
+  | {
+      type: 'SET_SUBSCRIBE_FUNCTION';
+      payload: {subscribeFunc: Function};
+    }
+  | {
+      type: 'SET_SUBSCRIPTION';
+      payload: {subscription: any};
+    }
+  | {
+      type: 'SET_SUBSCRIPTION_DATA';
+      payload: {
+        ClosedPages?: string[] | any;
+        activeLessonId?: string | null;
+        createdAt?: string;
+        currentPage?: number | null;
+        disabledPages?: string[] | any;
+        displayData?: UniversalLessonStudentData[] | null;
+        id: string;
+        studentViewing?: string | null;
+        updatedAt?: string;
+      };
+    }
+  | {
       type: 'SET_LESSON_DATA';
       payload: UniversalLesson;
     }
@@ -17,12 +49,32 @@ export type LessonActions =
       payload: UniversalLessonStudentData[];
     }
   | {
+      type: 'LOAD_STUDENT_DATA';
+      payload: {id: string; pageIdx: number; lessonPageID: string; update: boolean}[];
+    }
+  | {
+      type: 'SET_UPDATE_STATUS';
+      payload: {pageIdx: number};
+    }
+  | {
       type: 'UPDATE_STUDENT_DATA';
       payload: {pageIdx: number; data: StudentPageInput};
     }
   | {
+      type: 'COMPLETE_STUDENT_UPDATE';
+      payload: any;
+    }
+  | {
+      type: 'SET_DISPLAY_DATA';
+      payload: UniversalLessonStudentData;
+    }
+  | {
       type: 'SET_CURRENT_PAGE';
       payload: number;
+    }
+  | {
+      type: 'SET_CLOSED_PAGES';
+      payload: string[];
     }
   | {
       type: 'TOGGLE_OPEN_PAGE';
@@ -36,14 +88,6 @@ export type LessonActions =
       type: 'CLEANUP';
       payload: any;
     };
-import {
-  StudentPageInput,
-  UniversalLesson,
-  UniversalLessonPage,
-  UniversalLessonStudentData,
-} from '../interfaces/UniversalLessonInterfaces';
-
-// import { useStudentTimer } from '../customHooks/timer'
 
 export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
@@ -55,6 +99,49 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         universalLessonID: action.payload.universalLessonID,
       };
+    case 'SET_UPDATE_STATE':
+      return {
+        ...state,
+        updated: action.payload,
+      };
+    case 'SET_SUBSCRIBE_FUNCTION':
+      return {
+        ...state,
+        subscribeFunc: action.payload.subscribeFunc,
+      };
+    case 'SET_SUBSCRIPTION':
+      return {
+        ...state,
+        subscription: action.payload.subscription,
+      };
+    case 'SET_SUBSCRIPTION_DATA':
+      const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
+      const mappedClosedPages = havePagesChanged
+        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
+            if (action.payload.ClosedPages.includes(page.id)) {
+              return {...page, open: false};
+            } else {
+              return {...page, open: true};
+            }
+          })
+        : state.lessonData.lessonPlan;
+
+      return {
+        ...state,
+        lessonData: {
+          ...state.lessonData,
+          lessonPlan: mappedClosedPages,
+        },
+        displayData: action.payload.displayData
+          ? action.payload.displayData
+          : state.displayData,
+        studentViewing:
+          action.payload.studentViewing === ''
+            ? ''
+            : action.payload.studentViewing
+            ? action.payload.studentViewing
+            : state.studentViewing,
+      };
     case 'SET_LESSON_DATA':
       return {
         ...state,
@@ -65,21 +152,40 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         studentData: action.payload,
       };
+    case 'LOAD_STUDENT_DATA':
+      return {
+        ...state,
+        loaded: true,
+        universalStudentDataID: action.payload,
+      };
     case 'UPDATE_STUDENT_DATA':
       const pageIdx = action.payload.pageIdx;
       const domID = action.payload.data.domID;
       const newInput = action.payload.data.input;
+
+      const updatedStudentDataIdArray = state?.universalStudentDataID.map(
+        (dataIdObj: any, idObjIdx: number) => {
+          if (dataIdObj.pageIdx == pageIdx) {
+            return {
+              ...dataIdObj,
+              update: true,
+            };
+          } else {
+            return dataIdObj;
+          }
+        }
+      );
+
       // update single object
-      const updatedTargetStudentData = state.studentData[pageIdx].map(
-        (studentPageInput: StudentPageInput) => {
+      const updatedTargetStudentData =
+        state?.studentData[pageIdx].map((studentPageInput: StudentPageInput) => {
           return {
             domID: studentPageInput.domID,
             input: studentPageInput.domID === domID ? newInput : studentPageInput.input,
           };
-        }
-      );
+        }) || [];
       // merge updated object into original array
-      const mappedStudentData = state.studentData.map(
+      const mappedStudentData = state?.studentData.map(
         (pageData: StudentPageInput[], idx: number) => {
           if (idx === pageIdx) {
             return updatedTargetStudentData;
@@ -88,7 +194,24 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           }
         }
       );
-      return {...state, studentData: mappedStudentData};
+
+      return {
+        ...state,
+        updated: true,
+        universalStudentDataID: [...updatedStudentDataIdArray],
+        studentData: mappedStudentData,
+      };
+    case 'COMPLETE_STUDENT_UPDATE':
+      const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
+        return {...obj, update: false};
+      });
+      return {
+        ...state,
+        universalStudentDataID: resetDataIdArray,
+        updated: false,
+      };
+    case 'SET_DISPLAY_DATA':
+      return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
       return {...state, currentPage: action.payload};
     case 'TOGGLE_OPEN_PAGE':
@@ -97,7 +220,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           if (idx !== action.payload) {
             return page;
           } else {
-            return {...page, open: !page.open};
+            return {...page, open: page.open === false ? true : false};
           }
         }
       );

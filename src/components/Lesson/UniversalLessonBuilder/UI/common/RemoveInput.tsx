@@ -16,7 +16,7 @@ const RemoveInput = ({
           <button
             onClick={() => removeItemFromList(inputId)}
             className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-            Remove
+            Remove Field
           </button>
         </div>
       ) : (

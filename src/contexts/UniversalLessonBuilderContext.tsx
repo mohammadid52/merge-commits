@@ -138,6 +138,9 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
    */
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
+
+  const [toolbarOnTop, setToolbarOnTop] = useState(true);
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -146,6 +149,10 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         setPreviewMode,
         selectedLessonID,
         editMode,
+        toolbarOnTop,
+        setToolbarOnTop,
+        selID,
+        setSelID,
         setEditMode,
         setSelectedLessonID,
         newBlockSeqId,
