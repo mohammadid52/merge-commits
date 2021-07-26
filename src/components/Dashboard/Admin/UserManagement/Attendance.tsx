@@ -72,12 +72,18 @@ const Attendance = ({id, goToClassroom}: any) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.attendanceByStudent, payload)
       );
+      const temp = list?.data.attendanceByStudent?.items.map((record: any) => ({
+        ...record,
+        lessonName: record.lesson?.title,
+        curriculumName: record.curriculum?.name,
+        roomName: record.room?.name,
+      }));
       if (fetchNewRecords) {
-        setAttendanceList(list?.data.attendanceByStudent?.items);
+        setAttendanceList(temp);
       } else {
         setAttendanceList((prevAttendance: any) => [
           ...prevAttendance,
-          ...list?.data.attendanceByStudent?.items,
+          ...temp,
         ]);
       }
       setNextToken(list?.data.attendanceByStudent?.nextToken);
@@ -184,45 +190,45 @@ const Attendance = ({id, goToClassroom}: any) => {
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'classroom',
-                          sortConfig.fieldName === 'syllabus'
+                          'roomName',
+                          sortConfig.fieldName === 'roomName'
                             ? sortConfig.order === 'desc'
                               ? 'asc'
                               : 'desc'
                             : 'desc'
                         )
                       }>
-                      {withOrderBy('ClassName', 'classroom')}
+                      {withOrderBy('ClassName', 'roomName')}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'curriculum',
-                          sortConfig.fieldName === 'curriculum'
+                          'curriculumName',
+                          sortConfig.fieldName === 'curriculumName'
                             ? sortConfig.order === 'desc'
                               ? 'asc'
                               : 'desc'
                             : 'desc'
                         )
                       }>
-                      {withOrderBy('Curriculum', 'curriculum')}
+                      {withOrderBy('Curriculum', 'curriculumName')}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'lesson',
-                          sortConfig.fieldName === 'lesson'
+                          'lessonName',
+                          sortConfig.fieldName === 'lessonName'
                             ? sortConfig.order === 'desc'
                               ? 'asc'
                               : 'desc'
                             : 'desc'
                         )
                       }>
-                      {withOrderBy('Lesson', 'lesson')}
+                      {withOrderBy('Lesson', 'lessonName')}
                     </th>
                     <th
                       scope="col"
@@ -249,14 +255,14 @@ const Attendance = ({id, goToClassroom}: any) => {
                         <tr
                           key={`${item.class?.name}_${idx}`}
                           className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.room?.name || '-'}
-                          </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-medium text-gray-900">
-                            {item.curriculum?.name || '-'}
+                            {item.roomName || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.lesson?.title || '-'}
+                            {item.curriculumName || '-'}
+                          </td>
+                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
+                            {item.lessonName || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
                             {new Date(item.date).toLocaleDateString()}
