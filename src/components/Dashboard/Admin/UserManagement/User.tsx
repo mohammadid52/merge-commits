@@ -39,6 +39,7 @@ import ProfileCropModal from '../../Profile/ProfileCropModal';
 import {getAsset} from '../../../../assets';
 import Feedback from './Feedback';
 import Attendance from './Attendance';
+import { IoIosTime } from 'react-icons/io';
 
 export interface UserInfo {
   authId: string;
@@ -412,9 +413,22 @@ const User = () => {
     setUrlState({t: value});
   };
 
+  const switchMainTab = (tab: string) => {
+    setCurTab(tab);
+    history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
+  }
+
   const AssociatedClasses = ({list}: any) => {
     return (
       <div className="flex flex-col">
+        <div className="flex justify-end mb-4">
+          <Buttons
+            label={'Timeline'}
+            onClick={() => switchMainTab('Timeline')}
+            btnClass="mr-4"
+            Icon={IoIosTime}
+          />
+        </div>
         <div className="overflow-x-auto">
           <div className="align-middle inline-block min-w-full">
             <div className=" overflow-hidden border-b-0 border-gray-200 sm:rounded-lg">
@@ -1518,7 +1532,7 @@ const User = () => {
           {curTab === 'Timeline' && (
             <div
               className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-              <Attendance id={id} />
+              <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
             </div>
           )}
         </div>

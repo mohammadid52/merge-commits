@@ -37,7 +37,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     if (type === 'lesson') {
       fetchAttendance();
     }
-  }, []);
+  }, [state.roomData.syllabus]);
 
   const mutateToggleEnableDisable = async () => {
     const mutatedLessonData = {

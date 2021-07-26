@@ -1,25 +1,32 @@
-import React, {useEffect, useState} from 'react';
+import React, {forwardRef, useContext, useEffect, useState} from 'react';
+import {IconContext} from 'react-icons';
+import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import orderBy from 'lodash/orderBy';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import 'react-datepicker/dist/react-datepicker.css';
-
 import * as queries from '../../../../graphql/queries';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
+import Buttons from '../../../Atoms/Buttons';
 import Loader from '../../../Atoms/Loader';
-import SearchInput from '../../../Atoms/Form/SearchInput';
+import Pagination from '../../../Atoms/Pagination';
+
+import {getAsset} from '../../../../assets';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
 };
 
-const Attendance = ({id}: any) => {
+const Attendance = ({id, goToClassroom}: any) => {
+  const {theme, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
-  const [focused, setFocused] = useState(false);
   const [date, setDate] = useState(null);
   const [sortConfig, setSortConfig] = useState<{
     fieldName: string;
@@ -28,6 +35,7 @@ const Attendance = ({id}: any) => {
     fieldName: '',
     order: false,
   });
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -40,14 +48,14 @@ const Attendance = ({id}: any) => {
       setLoading(true);
       let payload: any = {
         studentID: id,
-        sortDirection: 'ASC',
-        date
+        sortDirection: 'DESC',
+        date,
       };
       if (date) {
         const dayNumber = date.getDate();
         const monthNumber = date.getMonth();
         const year = date.getFullYear();
-        
+
         payload.date = {
           eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`,
         };
@@ -101,37 +109,44 @@ const Attendance = ({id}: any) => {
     );
   };
 
+  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
+    <div
+      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${theme.outlineNone}`}
+      onClick={onClick}>
+      <span className="w-6 mr-4 cursor-pointer">
+        <IconContext.Provider
+          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+          <IoIosCalendar />
+        </IconContext.Provider>
+      </span>
+      <input
+        placeholder={'Search by date...'}
+        id="searchInput"
+        className={`${theme.outlineNone}`}
+        value={value}
+        {...rest}
+      />
+    </div>
+  ));
+
   return (
     <div className="">
-      <div className="flex justify-end mb-2">
-        <SearchInput
-          value={''}
-          onChange={() => console.log('on change')}
-          // onKeyDown={searchUserFromList}
-          // closeAction={removeSearchAction}
-          style="mr-4"
-        />
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-indigo-400 flex cursor-pointer" onClick={goToClassroom}>
+          <span className="w-auto inline-flex items-center mr-2">
+            <IoMdArrowBack className="w-4 h-4" />
+          </span>
+          <span>Back to classroom</span>
+        </div>
         <div className="w-64 relative ulb-datepicker">
           <DatePicker
             dateFormat={'dd/MM/yyyy'}
             selected={date}
             placeholderText={'Search by date'}
             onChange={handleDateChange}
-            className="text-dark-gray"
+            customInput={<DateCustomInput />}
             isClearable={true}
           />
-
-          {/* <SingleDatePicker
-                  date={date}
-                  displayFormat={'DD/MM/YYYY'}
-                  focused={focused}
-                  id={id}
-                  readOnly={true}
-                  // isOutsideRange={(day) => !isInclusivelyAfterDay(day, new Date())}
-                  numberOfMonths={1}
-                  onDateChange={(date) => console.log(date, 'date')}
-                  onFocusChange={({focused}) => setFocused(focused)}
-                /> */}
         </div>
       </div>
       <div className="flex flex-col">
@@ -256,6 +271,13 @@ const Attendance = ({id}: any) => {
                   )}
                 </tbody>
               </table>
+              {/* <Pagination
+                                                                                                                                    currentPage={currentPage}
+                                                                                                                                    setNext={loadNextPage}
+                                                                                                                                    setPrev={loadPrevPage}
+                                                                                                                                    firstPage={firstPage}
+                                                                                                                                    lastPage={lastPage}
+                                                                                                                                  /> */}
             </div>
           </div>
         </div>
