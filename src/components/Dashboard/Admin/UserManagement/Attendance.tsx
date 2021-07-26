@@ -45,7 +45,10 @@ const Attendance = ({id, goToClassroom}: any) => {
     }
   }, [id]);
 
-  const fetchAttendance = async (date?: Date | null) => {
+  const fetchAttendance = async (
+    date?: Date | null,
+    fetchNewRecords: boolean = false
+  ) => {
     try {
       setLoading(true);
       let payload: any = {
@@ -69,10 +72,14 @@ const Attendance = ({id, goToClassroom}: any) => {
       const list: any = await API.graphql(
         graphqlOperation(customQueries.attendanceByStudent, payload)
       );
-      setAttendanceList((prevAttendance: any) => [
-        ...prevAttendance,
-        ...list?.data.attendanceByStudent?.items,
-      ]);
+      if (fetchNewRecords) {
+        setAttendanceList(list?.data.attendanceByStudent?.items);
+      } else {
+        setAttendanceList((prevAttendance: any) => [
+          ...prevAttendance,
+          ...list?.data.attendanceByStudent?.items,
+        ]);
+      }
       setNextToken(list?.data.attendanceByStudent?.nextToken);
       setLoading(false);
     } catch (error) {
@@ -86,7 +93,7 @@ const Attendance = ({id, goToClassroom}: any) => {
 
   const handleDateChange = (date: Date | null) => {
     setDate(date);
-    fetchAttendance(date);
+    fetchAttendance(date, true);
   };
 
   const handleOrderBy = (fieldName: string, order: boolean | 'desc' | 'asc') => {
@@ -146,7 +153,9 @@ const Attendance = ({id, goToClassroom}: any) => {
   return (
     <div className="">
       <div className="flex justify-between items-center mb-4">
-        <div className="text-indigo-400 flex cursor-pointer" onClick={goToClassroom}>
+        <div
+          className="text-indigo-400 flex cursor-pointer w-auto"
+          onClick={goToClassroom}>
           <span className="w-auto inline-flex items-center mr-2">
             <IoMdArrowBack className="w-4 h-4" />
           </span>
