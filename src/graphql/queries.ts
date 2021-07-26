@@ -4665,6 +4665,7 @@ export const getAttendance = /* GraphQL */ `
       curriculumID
       syllabusID
       lessonID
+      roomID
       date
       time
       curriculum {
@@ -4785,6 +4786,91 @@ export const getAttendance = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      room {
+        id
+        institutionID
+        classID
+        teacherAuthID
+        teacherEmail
+        name
+        maxPersons
+        filters
+        location
+        startDate
+        startTime
+        endDate
+        endTime
+        length
+        repeat
+        notes
+        activeSyllabus
+        frequency
+        coTeachers {
+          nextToken
+        }
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        teacher {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          createdAt
+          updatedAt
+        }
+        class {
+          id
+          institutionID
+          type
+          name
+          createdAt
+          updatedAt
+        }
+        curricula {
+          nextToken
+        }
+        activeLessonId
+        ClosedPages
+        disabledPages
+        studentViewing
+        displayData
+        currentPage
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -4803,6 +4889,7 @@ export const listAttendances = /* GraphQL */ `
         curriculumID
         syllabusID
         lessonID
+        roomID
         date
         time
         curriculum {
@@ -4860,6 +4947,34 @@ export const listAttendances = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
           createdAt
           updatedAt
         }
@@ -5788,19 +5903,94 @@ export const attendanceByStudent = /* GraphQL */ `
         curriculumID
         syllabusID
         lessonID
+        roomID
         date
         time
         curriculum {
           id
+          institutionID
           name
+          type
+          image
+          summary
+          description
+          objectives
+          languages
+          designers
+          universalSyllabusSeq
+          createdAt
+          updatedAt
         }
         syllabus {
           id
           name
+          type
+          description
+          methodology
+          policies
+          pupose
+          objectives
+          curriculumID
+          languages
+          universalLessonsSeq
+          designers
+          status
+          createdAt
+          updatedAt
         }
         lesson {
           id
+          type
+          label
           title
+          institutionID
+          language
+          designers
+          objectives
+          purpose
+          introduction
+          introductionTitle
+          instructions
+          instructionsTitle
+          summary
+          summaryTitle
+          duration
+          resources
+          notes
+          cardImage
+          cardCaption
+          darkMode
+          rubrics
+          createdAt
+          updatedAt
+        }
+        room {
+          id
+          institutionID
+          classID
+          teacherAuthID
+          teacherEmail
+          name
+          maxPersons
+          filters
+          location
+          startDate
+          startTime
+          endDate
+          endTime
+          length
+          repeat
+          notes
+          activeSyllabus
+          frequency
+          activeLessonId
+          ClosedPages
+          disabledPages
+          studentViewing
+          displayData
+          currentPage
+          createdAt
+          updatedAt
         }
         createdAt
         updatedAt
