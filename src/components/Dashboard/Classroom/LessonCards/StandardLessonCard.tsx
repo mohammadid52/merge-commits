@@ -28,14 +28,11 @@ const StandardLessonCard = (props: LessonCardProps) => {
       {/**
        *  LEFT SECTION IMAGE
        */}
-      {lessonType !== 'survey' && <SideImage lessonProps={lessonProps} />}
+      <SideImage lessonProps={lessonProps} />
       {/**
        *  RIGHT SECTION
        */}
-      <div
-        className={`${
-          lessonType !== 'survey' ? 'w-7.5/10' : 'w-full'
-        } flex flex-col rounded-b`}>
+      <div className={` w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
         <BottomBar

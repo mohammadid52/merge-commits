@@ -9,6 +9,8 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
+import {Switch} from '@headlessui/react';
+import {classNames} from '../FormElements/TextInput';
 
 interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -16,6 +18,52 @@ interface IHeaderModalComponentProps extends IContentTypeComponentProps {
   selectedPageID?: string;
   setUnsavedChanges: any;
   askBeforeClose: () => void;
+}
+
+const Toggle = ({
+  checked,
+  onClick,
+  text,
+  disabled,
+  error,
+}: {
+  text?: string;
+  error?: string;
+  checked: boolean;
+  onClick: any;
+  disabled?: boolean;
+}) => {
+  return (
+    <Switch.Group as="div" className="flex items-center">
+      <Switch.Label as="span" className="mr-3 w-auto">
+        <span className="text-sm font-medium text-gray-900">{text}</span>
+      </Switch.Label>
+      <Switch
+        disabled={disabled}
+        checked={checked}
+        onChange={onClick}
+        className={classNames(
+          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+        )}>
+        <span
+          aria-hidden="true"
+          className={classNames(
+            checked ? 'translate-x-5' : 'translate-x-0',
+            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
+          )}
+        />
+      </Switch>
+      <Switch.Label as="span" className="ml-3 w-auto">
+        <span className="text-sm font-medium text-red-500">{error}</span>
+      </Switch.Label>
+    </Switch.Group>
+  );
+};
+
+interface IInput {
+  title: string;
+  animated?: boolean;
 }
 
 const HeaderModalComponent = ({
@@ -29,6 +77,15 @@ const HeaderModalComponent = ({
 }: IHeaderModalComponentProps) => {
   const {userLanguage} = useContext(GlobalContext);
 
+  const [errors, setErrors] = useState({animation: '', title: ''});
+  const [selectedValues, setSelectedValues] = useState({
+    size: 'medium',
+    color: 'No Border',
+  });
+
+  // ---------- constants -------------
+  const NO_BORDER_SELECTED = selectedValues.color === 'No Border';
+
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
   const onChange = (e: any) => {
@@ -39,14 +96,28 @@ const HeaderModalComponent = ({
       [id]: value,
     });
   };
-  const [inputFields, setInputFields] = useState<any>({});
-  const FIELD_ID = 'header';
+
+  const onAnimationToggle = () => {
+    if (!NO_BORDER_SELECTED) {
+      setUnsavedChanges(true);
+
+      setInputFields({
+        ...inputFields,
+        animated: !inputFields.animated,
+      });
+    } else {
+      setErrors({...errors, animation: 'Please select border color first.'});
+    }
+  };
+
+  const [inputFields, setInputFields] = useState<IInput>({title: '', animated: false});
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setInputFields((prevInputFields: any) => ({
         ...prevInputFields,
-        [FIELD_ID]: inputObj[0].value,
+        title: inputObj[0].value,
+        animated: classString.includes('animated-border-on'),
       }));
       // retrieves the result of matching a string against border color
       const matchBorderColor: any[] | null = classString.match(/border-\w\w+-\d+/);
@@ -97,6 +168,13 @@ const HeaderModalComponent = ({
     return sizeName;
   };
 
+  const animationClass = 'animated-border-on fade__animation-short';
+
+  const generateBorderCSS = () =>
+    `animated-border animated-border-${selectedValues.color} ${
+      inputFields.animated ? animationClass : ''
+    } `;
+
   const addToDB = async (list: any) => {
     closeAction();
 
@@ -109,43 +187,46 @@ const HeaderModalComponent = ({
   };
 
   const onHeaderCreate = async () => {
-    const value: string = inputFields[FIELD_ID];
-    const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
+    const isValid = validate();
+    if (isValid) {
+      const value: string = inputFields.title;
+      const fontSizeClass: string = convertSizeNameToClass(selectedValues.size);
 
-    const bgColorClass: string = selectedValues.color;
-    const classValue = `${
-      bgColorClass ? `border-b-4 border-${bgColorClass}` : ''
-    } ${fontSizeClass}`;
+      // const borderColorCLass: string = selectedValues.color;
+      const classValue = `${generateBorderCSS()} ${fontSizeClass}`;
 
-    if (isEditingMode) {
-      const updatedList: any = updateBlockContentULBHandler(
-        '',
-        '',
-        FIELD_ID,
-        [{id: uuidv4().toString(), value}],
-        0,
-        classValue
-      );
+      if (isEditingMode) {
+        const updatedList: any = updateBlockContentULBHandler(
+          '',
+          '',
+          'header',
+          [{id: uuidv4().toString(), value}],
+          0,
+          classValue
+        );
 
-      await addToDB(updatedList);
-    } else {
-      const updatedList: any = createNewBlockULBHandler(
-        '',
-        '',
-        FIELD_ID,
-        [{id: uuidv4().toString(), value}],
-        0,
-        classValue
-      );
-      await addToDB(updatedList);
+        await addToDB(updatedList);
+      } else {
+        const updatedList: any = createNewBlockULBHandler(
+          '',
+          '',
+          'header',
+
+          [{id: uuidv4().toString(), value}],
+          0,
+          classValue
+        );
+        await addToDB(updatedList);
+      }
+
+      // close modal after saving
+      // clear fields
+      setInputFields({
+        ...inputFields,
+        animated: false,
+        title: '',
+      });
     }
-
-    // close modal after saving
-    // clear fields
-    setInputFields({
-      ...inputFields,
-      [FIELD_ID]: '',
-    });
   };
 
   const fontSizeList = [
@@ -156,15 +237,26 @@ const HeaderModalComponent = ({
     {id: 5, name: 'largest'},
   ];
 
-  const [selectedValues, setSelectedValues] = useState({
-    size: 'medium',
-    color: '',
-  });
-
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
   const handleColorPickerSelect = (pickedColor: string) => {
+    setErrors({...errors, animation: ''});
     setSelectedValues({...selectedValues, color: pickedColor});
     setColorPickerActive(false);
+  };
+
+  const validate = (): boolean => {
+    let isValid = true;
+
+    if (inputFields.title.trim().length <= 0) {
+      errors.title = 'Please add title';
+      isValid = false;
+    } else {
+      errors.title = '';
+      isValid = true;
+    }
+
+    setErrors({...errors});
+    return isValid;
   };
 
   return (
@@ -173,42 +265,60 @@ const HeaderModalComponent = ({
         <div className="col-span-2">
           <FormInput
             onChange={onChange}
-            label={'Header'}
+            label={'Title'}
             isRequired
-            value={inputFields[FIELD_ID]}
-            id={FIELD_ID}
-            placeHolder={`Enter header text`}
+            value={inputFields.title}
+            id={'title'}
+            placeHolder={`Enter title`}
             type="text"
+            error={errors.title}
           />
         </div>
-        <Selector
-          onChange={(c: any, name: string) =>
-            setSelectedValues({...selectedValues, size: name})
-          }
-          list={fontSizeList}
-          placeholder="Select font size"
-          selectedItem={selectedValues.size}
-        />
-        <div className="relative h-full">
+
+        <div className="col-span-1">
+          <Selector
+            label={'Select font size'}
+            onChange={(c: any, name: string) =>
+              setSelectedValues({...selectedValues, size: name})
+            }
+            list={fontSizeList}
+            placeholder="Select font size"
+            selectedItem={selectedValues.size}
+          />
+        </div>
+
+        <div className="col-span-1 relative h-full">
+          <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+            Select Border Color
+          </label>
           <button
             onClick={() => setColorPickerActive(!colorPickerActive)}
-            className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-center  h-full`}>
-            <span className={'text-gray-700 w-auto text-sm mr-2'}>
-              Select Border Color{' '}
+            className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
+            <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
+              {selectedValues.color.split('-')[0]}
             </span>
 
             <span
-              className={`h-4 block w-4 bg-${selectedValues.color} rounded-full`}></span>
+              className={`h-4 block w-4 bg-${selectedValues.color} rounded-full border-3 border-gray-400`}></span>
           </button>
           {colorPickerActive && (
             <ColorPicker
+              isMainPage
               classString={classString}
               callbackColor={handleColorPickerSelect}
-              isMainPage={true}
               styleString={{top: '100%'}}
             />
           )}
         </div>
+      </div>
+      <div className="col-span-1 my-4 flex items-center w-auto">
+        <Toggle
+          error={errors.animation}
+          checked={inputFields.animated}
+          text="Animated Title"
+          // disabled={NO_BORDER_SELECTED}
+          onClick={onAnimationToggle}
+        />
       </div>
       <div className="flex mt-8 justify-center px-6 pb-4">
         <div className="flex justify-end">

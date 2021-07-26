@@ -46,7 +46,7 @@ const BreadcrumsTitles: any = {
     EDITCLASSROOM: 'Edit Classroom',
     CURRICULUMBUILDER: 'Curriculum Builder',
     LEARINGOBJECTIVE: 'Add Learning objective',
-    AddMesurement: 'Add Measurement',
+    AddMeasurement: 'Add Measurement',
     AddCheckpint: 'Add Checkpoint',
     UnitBuilder: 'Unit Builder',
     AddTopic: 'Add Topic',
@@ -570,6 +570,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
       SELECT_CLASSROOM_WIDGETS: '⬆ Select a room to see editable widgets...',
+      PLEASE_WAIT: 'Please wait',
     },
   },
   ES: {
@@ -598,6 +599,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a classroom to see applicable lessons...',
       NO_LESSONS: 'No lessons...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
+      PLEASE_WAIT: 'TBD',
     },
   },
 };
@@ -3161,6 +3163,7 @@ const LessonBuilderDict: any = {
       EVIDENCE_ACTIVITY: 'Evidence Activity(Page)',
       EVIDENCE_PLACE: 'Evidence Place',
       ACTION: 'Action',
+      MEASURED: 'Measured',
       ADD_EVIDENCE: {
         OBJECTIVE: 'Objective',
         TOPICS: 'Topics',
@@ -3242,6 +3245,26 @@ const LessonBuilderDict: any = {
       ACTION: 'TBD',
       ADD_NEW_ACTIVITY: 'TBD',
       HEADING: 'TBD',
+    },
+    LESSON_COURSES_UNIT_DETAIL_VIEW: {
+      INSTITUTION: 'TBD',
+      CLASSROOM: 'TBD',
+      LEAD_INSTRUCTOR: 'TBD',
+    },
+    LEARNING_EVIDENCE_COLUMNS: {
+      LEARNING_OBJECTIVE: 'TBD',
+      TOPICS: 'TBD',
+      MEASUREMENTS: 'TBD',
+      EVIDENCE_ACTIVITY: 'TBD',
+      EVIDENCE_PLACE: 'TBD',
+      ACTION: 'TBD',
+      MEASURED: 'TBD',
+      ADD_EVIDENCE: {
+        OBJECTIVE: 'TBD',
+        TOPICS: 'TBD',
+        MEASUREMENTS: 'TBD',
+        ACTIVITY: 'TBD',
+      },
     },
     MESSAGES: {
       UNSAVE: 'TBD',

@@ -39,7 +39,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
       : getColorBorder(themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue');
 
   const customBorder =
-    selID.pageContentID === contentID && !selID.partContentID
+    selID?.pageContentID === contentID && !selID?.partContentID
       ? `border-2 ${themeBorder}`
       : 'border-0 border-gray-400';
 

@@ -25,7 +25,8 @@ type globalActions =
   | {
       type: 'UPDATE_ACTIVEROOM';
       payload: {
-        data: string;
+        roomID: string;
+        syllabusID: string;
       };
     }
   | {
@@ -95,10 +96,10 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         currentPage: action.payload.data,
       };
     case 'UPDATE_ACTIVEROOM':
-      // console.log('new activeroom - ', action.payload.data)
       return {
         ...state,
-        activeRoom: action.payload.data,
+        activeRoom: action.payload.roomID,
+        activeSyllabus: action.payload.syllabusID,
       };
     case 'TOGGLE_LESSON':
       return {

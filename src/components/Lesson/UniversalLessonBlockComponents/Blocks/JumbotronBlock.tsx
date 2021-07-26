@@ -3,6 +3,7 @@ import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInte
 import QuoteBlock from './JumbotronBlock/QuoteBlock';
 import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import CustomizedQuoteBlock from './JumbotronBlock/CustomizeQuoteBlock';
 
 interface JumbotronBlockProps extends RowWrapperProps {
   id?: string;
@@ -11,19 +12,19 @@ interface JumbotronBlockProps extends RowWrapperProps {
 }
 
 interface JumbotronInterface {
-  src?: string;                 
-  title?: string;                 
-  subtitle?: string;                  
-  description?: string;                 
+  src?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
 }
 
 export const JumbotronBlock = (props: JumbotronBlockProps) => {
-  const {id, value} = props;
+  const {id, value, classString} = props;
   const [jumbotronInfo, setJumbotronInfo] = useState<JumbotronInterface>({
-    src: '',                                                        
-    title: '',                                                        
-    subtitle: '',                                           
-    description: '',                                                        
+    src: '',
+    title: '',
+    subtitle: '',
+    description: '',
   });
 
   useEffect(() => {
@@ -32,8 +33,8 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
         const newJumbotronInfo = value.reduce(
           (acc: JumbotronInterface, val: PartContentSub) => {
             if (val.type === 'background') {
-              const url = getImageFromS3Static(val.value);
-              return {...acc, src: url};
+              // const url = getImageFromS3Static(val.value);
+              return {...acc, src: val.value};
             } else if (val.type === 'title') {
               return {...acc, title: val.value};
             } else if (val.type === 'subtitle') {
@@ -53,15 +54,23 @@ export const JumbotronBlock = (props: JumbotronBlockProps) => {
     }
   }, [value]);
 
+  // because we are concatenating all the classes for different elements in one string
+  // so we have to split theme to use it at different places
+  const bgClass = classString?.split(' || ')[0] || '';
+  const textClass = classString?.split(' || ')[1] || '';
+  const animationClass =
+    classString?.split(' || ').length === 3 ? classString?.split(' || ')[2] : '';
+
   return (
     <div
       id={id}
-      className="h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg"
+      className={`${animationClass} h-96 flex flex-col mb-4 justify-between z-10 items-center bg-cover bg-right-top rounded-lg`}
       style={{
         backgroundImage: ` url(${jumbotronInfo.src})`,
-       
       }}>
-      <QuoteBlock
+      <CustomizedQuoteBlock
+        bgClass={bgClass}
+        textClass={textClass}
         title={jumbotronInfo.title}
         subtitle={jumbotronInfo.subtitle}
         description={jumbotronInfo.description}

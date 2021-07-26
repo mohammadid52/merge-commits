@@ -1,13 +1,18 @@
-import React, {useContext} from 'react';
-import API, {graphqlOperation} from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
+
+import {awsFormatDate, dateString} from '../../../utilities/time';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {dateString} from '../../../utilities/time';
-import {Lesson} from './Classroom';
 import * as customMutations from '../../../customGraphql/customMutations';
+import * as mutations from '../../../graphql/mutations';
+import * as queries from '../../../graphql/queries';
 import useDictionary from '../../../customHooks/dictionary';
+
 import Buttons from '../../Atoms/Buttons';
+
+import {Lesson} from './Classroom';
 
 interface StartProps {
   isTeacher?: boolean;
@@ -23,8 +28,16 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const {classRoomDict} = useDictionary(clientKey);
   const {lessonKey, open, accessible, type, roomID} = props;
   const history = useHistory();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
 
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
+
+  useEffect(() => {
+    if (type === 'lesson') {
+      fetchAttendance();
+    }
+  }, []);
 
   const mutateToggleEnableDisable = async () => {
     const mutatedLessonData = {
@@ -55,9 +68,57 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     });
   };
 
-  const handleLink = () => {
+  const fetchAttendance = async () => {
+    try {
+      const syllabusData = state.roomData.syllabus.find(
+        (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
+      );
+      if (syllabusData) {
+        const list: any = await API.graphql(
+          graphqlOperation(queries.listAttendances, {
+            filter: {
+              studentID: {eq: state.user?.id},
+              curriculumID: {eq: syllabusData.curriculumID},
+              syllabusID: {eq: syllabusData.id},
+              lessonID: {eq: lessonKey},
+              date: {eq: awsFormatDate(dateString('-', 'WORLD'))},
+            },
+          })
+        );
+        setAttendanceRecorded(Boolean(list?.data.listAttendances?.items.length));
+      }
+    } catch (error) {
+      console.log(error, 'inside catch');
+    }
+  };
+
+  const handleLink = async () => {
     if (!isTeacher && accessible && open) {
-      history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
+      try {
+        if (!attendanceRecorded) {
+          setLoading(true);
+          const syllabusData = state.roomData.syllabus.find(
+            (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
+          );
+          const payload = {
+            studentID: state.user?.id,
+            curriculumID: syllabusData.curriculumID,
+            syllabusID: syllabusData.id,
+            lessonID: lessonKey,
+            date: awsFormatDate(dateString('-', 'WORLD')),
+            time: new Date().toTimeString().split(' ')[0],
+          };
+          await API.graphql(
+            graphqlOperation(mutations.createAttendance, {
+              input: payload,
+            })
+          );
+          setLoading(false);
+        }
+        history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
+      } catch (error) {
+        setLoading(false);
+      }
     }
 
     if (isTeacher) {
@@ -123,8 +184,12 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       <Buttons
         type="submit"
         onClick={handleLink}
-        label={`${firstPart()} ${secondPart()}`}
-        disabled={!open && !isTeacher}
+        label={
+          loading
+            ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
+            : `${firstPart()} ${secondPart()}`
+        }
+        disabled={loading || (!open && !isTeacher)}
         overrideClass={true}
         btnClass={`
         ${studentTeacherButtonTheme()}

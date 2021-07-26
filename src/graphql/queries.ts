@@ -5792,61 +5792,15 @@ export const attendanceByStudent = /* GraphQL */ `
         time
         curriculum {
           id
-          institutionID
           name
-          type
-          image
-          summary
-          description
-          objectives
-          languages
-          designers
-          universalSyllabusSeq
-          createdAt
-          updatedAt
         }
         syllabus {
           id
           name
-          type
-          description
-          methodology
-          policies
-          pupose
-          objectives
-          curriculumID
-          languages
-          universalLessonsSeq
-          designers
-          status
-          createdAt
-          updatedAt
         }
         lesson {
           id
-          type
-          label
           title
-          institutionID
-          language
-          designers
-          objectives
-          purpose
-          introduction
-          introductionTitle
-          instructions
-          instructionsTitle
-          summary
-          summaryTitle
-          duration
-          resources
-          notes
-          cardImage
-          cardCaption
-          darkMode
-          rubrics
-          createdAt
-          updatedAt
         }
         createdAt
         updatedAt

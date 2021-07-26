@@ -145,7 +145,7 @@ const AddContentDialog = ({
     {
       name: 'Linestarter',
       subtitle: 'Add poem',
-      type:  FORM_TYPES.POEM,
+      type: FORM_TYPES.POEM,
       icon: BsNewspaper,
       iconForeground: 'text-red-700',
       iconBackground: 'bg-red-100',

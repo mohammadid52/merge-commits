@@ -7,38 +7,38 @@ import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
 import ReactHtmlParser from 'react-html-parser';
+import {find, findIndex} from 'lodash';
+import slice from 'lodash/slice';
+import sortBy from 'lodash/sortBy';
+import {MdCancel, MdImage} from 'react-icons/md';
+import {BsCameraVideoFill} from 'react-icons/bs';
+import {BiLinkAlt} from 'react-icons/bi';
+import {HiEmojiHappy} from 'react-icons/hi';
+import EmojiPicker from 'emoji-picker-react';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
 import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
-
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import UserInformation from './UserInformation';
-import UserEdit from './UserEdit';
+import useDictionary from '../../../../customHooks/dictionary';
+import {getImageFromS3} from '../../../../utilities/services';
+import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
+import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
+
 import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {getImageFromS3} from '../../../../utilities/services';
-import useDictionary from '../../../../customHooks/dictionary';
-import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
-import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
-import slice from 'lodash/slice';
-import sortBy from 'lodash/sortBy';
-import {BiLinkAlt} from 'react-icons/bi';
-import {find, findIndex} from 'lodash';
-import {MdCancel, MdImage} from 'react-icons/md';
-import {BsCameraVideoFill} from 'react-icons/bs';
-import {getAsset} from '../../../../assets';
 import Modal from '../../../Atoms/Modal';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+
+import UserInformation from './UserInformation';
+import UserEdit from './UserEdit';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import ProfileCropModal from '../../Profile/ProfileCropModal';
+import {getAsset} from '../../../../assets';
 import Feedback from './Feedback';
-import FormInput from '../../../Atoms/Form/FormInput';
-import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-import {HiEmojiHappy} from 'react-icons/hi';
-import EmojiPicker from 'emoji-picker-react';
-import ClickAwayListener from 'react-click-away-listener';
+import Attendance from './Attendance';
 
 export interface UserInfo {
   authId: string;
@@ -98,6 +98,7 @@ const User = () => {
   const tabs = [
     {name: 'User Information', current: true},
     {name: 'Associated Classrooms', current: false},
+    {name: 'Timeline', current: false},
     {name: 'Notebook', current: false},
   ];
 
@@ -148,8 +149,10 @@ const User = () => {
       last: false,
     },
     {
-      title: curTab,
-
+      title: [
+        user.preferredName ? user.preferredName : user.firstName,
+        user.lastName,
+      ].join(' '),
       url: `${location.pathname}${location.search}`,
       last: true,
     },
@@ -483,7 +486,7 @@ const User = () => {
     const tabsData = !isTeacher ? slice(tabs, 0, 2) : tabs;
 
     return (
-      <div className="w-8/10 bg-white rounded-lg p-2">
+      <div className="w-9/10 bg-white rounded-lg p-2">
         <div className="sm:hidden">
           <label htmlFor="tabs" className="sr-only">
             Select a tab
@@ -1352,7 +1355,7 @@ const User = () => {
               /> */}
               {currentPath !== 'edit' && curTab === 'User Information' && (
                 <Buttons
-                  btnClass="mr-4 px-6"
+                  btnClass="ml-2 px-6"
                   label="Edit"
                   onClick={() => {
                     setCurTab(tabs[0].name);
@@ -1511,6 +1514,13 @@ const User = () => {
                 </div>
               </div>
             ))}
+
+          {curTab === 'Timeline' && (
+            <div
+              className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
+              <Attendance id={id} />
+            </div>
+          )}
         </div>
         {showCropper && (
           <ProfileCropModal

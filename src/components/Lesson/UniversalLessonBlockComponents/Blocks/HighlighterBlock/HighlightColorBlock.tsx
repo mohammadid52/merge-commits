@@ -12,7 +12,7 @@ interface HighlightColorBlockProps {
 const HighlightColorBlock = (props: HighlightColorBlockProps) => {
   const {setColor, color} = props;
   const {
-    state: {lessonPage: {themeTextColor = ''} = {}},
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
   const buttons = [{color: 'mustard', name: 'Yellow'}];
@@ -52,7 +52,13 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
                         key={key}
                         id={button.color}
                         className={`${
-                          color === button.color ? 'border-2 border-white' : ''
+                          color === button.color
+                            ? `border-2 ${
+                                lessonPageTheme === 'light'
+                                  ? 'border-dark-gray'
+                                  : 'border-white'
+                              }}`
+                            : ''
                         } 
                       bg-${button.color} 
                       relative h-12 w-12 text-3xl rounded-lg mx-2 flex flex-row justify-center items-center
@@ -109,7 +115,10 @@ const HighlightColorBlock = (props: HighlightColorBlockProps) => {
         </div>
       </div>
 
-      <div className="w-full leading-6 border-b-0 border-white border-opacity-10 mb-4">
+      <div
+        className={`w-full leading-6 border-b-0 ${
+          lessonPageTheme === 'light' ? 'border-dark-gray' : 'border-white'
+        } border-opacity-10 mb-4`}>
         <p className={`pl-2 text-sm text-left ${themeTextColor}`}>
           1. <b>Click 2 separate words</b> to select a sentence.
         </p>

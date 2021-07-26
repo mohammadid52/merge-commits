@@ -29,8 +29,6 @@ interface AddNewLessonFormProps {
   setSelectedDesigners: (designer: InputValueObject[]) => void;
   postLessonCreation: (lessonId: string, action?: string) => void;
   allMeasurement: {id: number; name: string; value: string; topic?: string}[];
-  lessonMeasurements: any[];
-  setLessonMeasurements: (obj: any[]) => void;
   lessonId: string;
   institutionList: any[];
   setUnsavedChanges: Function;
@@ -55,8 +53,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     setFormData,
     postLessonCreation,
     allMeasurement,
-    lessonMeasurements,
-    setLessonMeasurements,
     lessonId,
     institutionList,
   } = props;
@@ -359,16 +355,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       }
     }
   };
-
-  useEffect(() => {
-    if (allMeasurement?.length > 0) {
-      const measurementID = lessonMeasurements?.map((meas) => meas.id);
-      const measurementList = allMeasurement.filter(
-        (item) => !measurementID.includes(item.id)
-      );
-      setMeasurementList(measurementList);
-    }
-  }, [lessonMeasurements, allMeasurement]);
 
   const {
     name,

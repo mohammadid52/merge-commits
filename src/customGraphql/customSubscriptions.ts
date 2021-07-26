@@ -81,6 +81,22 @@ export const onUpdateClassroom = /* GraphQL */ `
   }
 `;
 
+export const onChangeRoom = /* GraphQL */ `
+  subscription OnChangeRoom($id: ID!) {
+    onChangeRoom(id: $id) {
+      id
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const onChangeSyllabusLesson = /* GraphQL */ `
   subscription OnChangeSyllabusLesson($id: ID!) {
     onChangeSyllabusLesson(id: $id) {

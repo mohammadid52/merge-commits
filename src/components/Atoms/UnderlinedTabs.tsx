@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
@@ -25,7 +25,7 @@ const UnderlinedTabs = (props: TabsProps) => {
   const {tabs, activeTab} = props;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const [openTab, setOpenTab] = React.useState(activeTab || 0);
+  const [openTab, setOpenTab] = useState<number>(0);
 
   const changeActiveTab = (tab: number, e: React.MouseEvent<Element>) => {
     setOpenTab(tab);

@@ -35,10 +35,10 @@ export interface LinkProps {
   currentPage: string;
   image?: string;
   role?: string;
-  setActiveRoomName: Function;
+  setActiveRoomName?: Function;
   updateAuthState?: Function;
-  setActiveRoomSyllabus: Function;
-  setLessonLoading: Function;
+  setActiveRoomSyllabus?: Function;
+  setLessonLoading?: Function;
   setSyllabusLoading: Function;
   handleRoomSelection: Function;
 }

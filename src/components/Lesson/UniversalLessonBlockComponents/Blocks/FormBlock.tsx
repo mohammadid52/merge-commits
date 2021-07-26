@@ -1,6 +1,4 @@
-import EmojiPicker from 'emoji-picker-react';
-import React, {useContext, useEffect, useRef, useState} from 'react';
-import ClickAwayListener from 'react-click-away-listener';
+import React, {useContext, useRef, useState} from 'react';
 import {BiImageAdd} from 'react-icons/bi';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -10,7 +8,11 @@ import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
+import {
+  StudentPageInput,
+  UniversalLessonStudentData,
+} from '../../../../interfaces/UniversalLessonInterfaces';
+
 import EmojiInput from './FormBlock/EmojiInputBlock';
 import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
@@ -38,13 +40,11 @@ export interface FormControlProps {
 
 const SelectMany = ({
   item,
-
   getCheckValue,
   onChange,
 }: {
   getCheckValue: (id: string) => boolean;
   onChange: (e: any) => void;
-
   item: {text: string; label: string; id: string};
 }) => {
   const {label, text, id} = item;
@@ -75,7 +75,6 @@ const SelectMany = ({
 
 const SelectOne = ({
   item,
-
   onChange,
   getCheckValue,
 }: {
@@ -112,15 +111,21 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   const {
     lessonState,
     lessonDispatch,
+    controlState,
     theme,
-    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    state: {
+      user,
+      lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {},
+    },
   } = useContext(GlobalContext);
 
-  const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  const themePlaceholderColor =
+    lessonPageTheme === 'light' ? 'placeholder-gray-800' : 'text-gray-400';
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
+  const isStudent = user.role === 'ST';
   const isInLesson = useInLessonCheck();
 
   const handleUpdateStudentData = (domID: string, input: string[]) => {
@@ -137,17 +142,43 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   };
 
   const getStudentDataValue = (domID: string) => {
-    const pageData = lessonState?.studentData[lessonState.currentPage];
-    if (pageData) {
-      const getInput = pageData.find(
-        (inputObj: StudentPageInput) => inputObj.domID === domID
-      );
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
+    if (getInput) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
 
-      if (getInput) {
-        return getInput.input;
+  const getDisplayDataStudentValue = (domID: string) => {
+    const viewingStudentData = lessonState.displayData.reduce((acc: any, obj: any) => {
+      if (obj.studentAuthId === controlState.studentViewing) {
+        return obj.studentData;
       } else {
-        return [''];
+        return acc;
       }
+    }, []);
+    const pageData = viewingStudentData[lessonState.currentPage];
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
+    console.log('getInput - ', getInput);
+    if (getInput) {
+      return getInput.input;
+    } else {
+      return [''];
+    }
+  };
+
+  const getDataValue = (domID: string) => {
+    const isDisplayData = lessonState.displayData.length > 0;
+    if (!isDisplayData) {
+      return getStudentDataValue(domID);
+    } else {
+      return getDisplayDataStudentValue(domID);
     }
   };
 
@@ -185,14 +216,14 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           id={inputID}
           disabled={mode === 'building'}
           pattern="https://.*"
-          className={`w-full py-2 px-4 mt-2 rounded-xl ${themeTextColor} ${themePlaceholderColor} ${
+          className={`w-full py-2 px-4 mt-2 rounded-xl ${themePlaceholderColor} ${
             lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           }`}
           name="url"
           type="text"
-          placeholder={value.length > 0 ? value : 'Please input...'}
-          onChange={isInLesson ? (e) => onChange(e) : noop}
-          value={isInLesson ? getStudentDataValue(inputID) : value}
+          defaultValue={value.length > 0 ? value : 'Please input...'}
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+          value={isInLesson ? getDataValue(inputID) : value}
         />
       </div>
     );
@@ -272,7 +303,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           </span>
           <input
             ref={inputOther}
-            onChange={isInLesson ? (e) => handleFileSelection(e) : noop}
+            onChange={isInLesson && isStudent ? handleFileSelection : undefined}
             type="file"
             className="hidden"
             multiple={false}
@@ -334,13 +365,13 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             selectMany ? (
               <SelectMany
                 key={`question_${id}_${idx}`}
-                onChange={onChange}
+                onChange={isStudent && isInLesson ? onChange : undefined}
                 getCheckValue={getCheckValue}
                 item={item}
               />
             ) : (
               <SelectOne
-                onChange={onChange}
+                onChange={isStudent && isInLesson ? onChange : undefined}
                 getCheckValue={getCheckValue}
                 key={`question_${id}_${idx}`}
                 item={item}
@@ -363,7 +394,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     options?: any,
     isInLesson?: boolean,
     handleUpdateStudentData?: any,
-    getStudentDataValue?: any,
+    getValue?: (domID: string) => any,
     numbered?: boolean,
     index?: string
   ) => {
@@ -383,8 +414,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson ? (e) => onChange(e) : noop}
-              value={isInLesson ? getStudentDataValue(inputID) : value}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              value={isInLesson ? getValue(inputID) : value}
             />
           </div>
         );
@@ -402,8 +433,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               }`}
               name="story"
-              onChange={isInLesson ? (e) => onChange(e) : noop}
-              value={isInLesson ? getStudentDataValue(inputID) : value}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              value={isInLesson ? getValue(inputID) : value}
             />
           </div>
         );
@@ -432,8 +463,10 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
-            handleUpdateStudentData={handleUpdateStudentData}
-            getStudentDataValue={getStudentDataValue}
+            handleUpdateStudentData={
+              isStudent && isInLesson ? handleUpdateStudentData : undefined
+            }
+            getStudentDataValue={getValue}
           />
         );
       case FORM_TYPES.RATING:
@@ -445,8 +478,10 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
-            handleUpdateStudentData={handleUpdateStudentData}
-            getStudentDataValue={getStudentDataValue}
+            handleUpdateStudentData={
+              isStudent && isInLesson ? handleUpdateStudentData : undefined
+            }
+            getStudentDataValue={getValue}
           />
         );
       case FORM_TYPES.LINK:
@@ -492,7 +527,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 v.options,
                 isInLesson,
                 handleUpdateStudentData,
-                getStudentDataValue,
+                getDataValue,
                 numbered,
                 `${i + 1}.`
               )}
