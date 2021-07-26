@@ -893,14 +893,20 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Attendance @model {
+type Attendance @model
+@key(name: "byStudent", fields: ["studentID", "date"], queryField: "attendanceByStudent") {
   id: ID!
   studentID: ID!
   curriculumID: ID!
   syllabusID: ID!
   lessonID: ID!
+  roomID: ID!
   date: AWSDate
   time: AWSTime
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  syllabus: UniversalSyllabus @connection(fields: ["syllabusID"])
+  lesson: UniversalLesson @connection(fields: ["lessonID"])
+  room: Room @connection(fields: ["roomID"])
 }
 
 type Planner @model {
@@ -1086,7 +1092,6 @@ type Subscription {
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"])
-  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
 input CreateClassStudentInput {
@@ -1110,6 +1115,6 @@ input DeleteLessonRubricsInput {
 
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
-  batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
-  batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
+  batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]) : [LessonRubrics]
+  batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]) : [LessonRubrics]
 }
