@@ -17,6 +17,7 @@ import Buttons from '../../Atoms/Buttons';
 import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
 import {getAsset} from '../../../assets';
+import LessonDataViewer from './LessonDataViewer';
 
 const data: any = {
   title: 'root',
@@ -72,7 +73,6 @@ const data: any = {
     },
   ],
 };
-
 
 export interface AnthologyContentInterface {
   type: string;
@@ -482,7 +482,9 @@ const Anthology = () => {
             </div>
             <div className={`col-span-4`}>
               <div className="text-white">Pages</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
+              <div className={`${theme.backGround[themeColor]} mt-2 min-h-96`}>
+                <LessonDataViewer />
+              </div>
             </div>
             <div>
               <div className="text-white">Feedback</div>

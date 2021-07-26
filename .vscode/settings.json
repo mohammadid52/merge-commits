@@ -8,16 +8,10 @@
     "amplify/backend/amplify-meta.json": true,
     "amplify/backend/awscloudformation": true
   },
-  "cSpell.words": [
-    "birthdate",
-    "esnext",
-    "interop",
-    "semibold",
-    "outro"
-  ],
+  "cSpell.words": ["birthdate", "esnext", "interop", "semibold", "outro"],
   "css.validate": false,
   "less.validate": false,
   "scss.validate": false,
-  "workbench.tree.indent": 24,
+  "workbench.tree.indent": 16,
   "editor.showFoldingControls": "always"
 }

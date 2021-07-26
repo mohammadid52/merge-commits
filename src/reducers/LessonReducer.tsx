@@ -50,7 +50,15 @@ export type LessonActions =
     }
   | {
       type: 'LOAD_STUDENT_DATA';
-      payload: {id: string; pageIdx: number; lessonPageID: string; update: boolean}[];
+      payload: {
+        dataIdReferences: {
+          id: string;
+          pageIdx: number;
+          lessonPageID: string;
+          update: boolean;
+        }[];
+        filteredStudentData: StudentPageInput[];
+      };
     }
   | {
       type: 'SET_UPDATE_STATUS';
@@ -156,7 +164,8 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         loaded: true,
-        universalStudentDataID: action.payload,
+        universalStudentDataID: action.payload.dataIdReferences,
+        studentData: action.payload.filteredStudentData,
       };
     case 'UPDATE_STUDENT_DATA':
       const pageIdx = action.payload.pageIdx;
