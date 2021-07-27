@@ -28,7 +28,7 @@ const DashboardContainer = ({
     : null;
   const currentUnit = () => {
     if (!isEmpty(state)) {
-      const filtered = state.roomData.syllabus.find(
+      const filtered = state.roomData.syllabus?.find(
         (syllabusObj: any) => syllabusObj.active
       );
       if (filtered) {
