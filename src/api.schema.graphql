@@ -893,8 +893,13 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Attendance @model
-@key(name: "byStudent", fields: ["studentID", "date"], queryField: "attendanceByStudent") {
+type Attendance
+  @model
+  @key(
+    name: "byStudent"
+    fields: ["studentID", "date"]
+    queryField: "attendanceByStudent"
+  ) {
   id: ID!
   studentID: ID!
   curriculumID: ID!
@@ -993,6 +998,7 @@ type UniversalContent {
   caption: String
   height: String
   width: String
+  isRequired: Boolean
 }
 
 type UniversalContentOptions {
