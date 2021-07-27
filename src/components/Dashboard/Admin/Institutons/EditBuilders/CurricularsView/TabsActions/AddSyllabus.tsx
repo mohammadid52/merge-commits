@@ -19,7 +19,7 @@ import * as customQueries from '../../../../../../../customGraphql/customQueries
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-
+import { fetchDesigners } from '../../../../../../../utilities/utils';
 interface AddSyllabusProps { }
 interface InitialData {
   name: string;
@@ -134,19 +134,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
   const fetchPersonsList = async () => {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.fetchPersons, {
-          filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
-          limit: 300
-        })
-      );
-      const savedData = result.data.listPersons;
-      const updatedList = savedData?.items.map((item: { id: string; firstName: string; lastName: string }) => ({
-        id: item?.id,
-        name: `${item?.firstName || ''} ${item.lastName || ''}`,
-        value: `${item?.firstName || ''} ${item.lastName || ''}`,
-      }));
-      setDesignersList(updatedList);
+      const designers: any = await fetchDesigners();
+      setDesignersList(designers);
     } catch {
       setMessages({
         show: true,
@@ -157,14 +146,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   };
 
   const fetchSyllabusSequence = async () => {
-    // use custom query : getCurriculumUniversalSyllabusSequence
     let result: any = await API.graphql(graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, { id: `${curricularId}` }));
     setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
-    // let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `s_${curricularId}` }));
-    // item = item?.data.getCSequences?.sequence || [];
-    // if (item) {
-    //   setSyllabusIds(item);
-    // }
   };
 
   const saveSyllabusDetails = async () => {
