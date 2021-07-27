@@ -1873,6 +1873,28 @@ export const getUniversalSyllabus = /* GraphQL */ `
   }
 `;
 
+export const getUniversalSyllabusData = /* GraphQL */ `
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
+      id
+      name
+      type
+      description
+      methodology
+      policies
+      pupose
+      objectives
+      curriculumID
+      languages
+      universalLessonsSeq
+      designers
+      status
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const getUniversalLesson = /* GraphQL */ `
   query GetUniversalLesson($id: ID!) {
     getUniversalLesson(id: $id) {
