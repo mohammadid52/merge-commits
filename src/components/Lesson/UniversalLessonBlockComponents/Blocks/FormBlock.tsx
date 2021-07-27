@@ -147,10 +147,12 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
+    console.log('pageData - ', pageData);
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
-    if (getInput) {
+    console.log('getInput - ', getInput);
+    if (getInput !== undefined) {
       return getInput.input;
     } else {
       return [''];
@@ -169,8 +171,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
-    console.log('getInput - ', getInput);
-    if (getInput) {
+    if (getInput !== undefined) {
       return getInput.input;
     } else {
       return [''];
@@ -178,12 +179,13 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   };
 
   const getDataValue = (domID: string) => {
-    const isDisplayData = lessonState.displayData.length > 0;
-    if (!isDisplayData) {
-      return getStudentDataValue(domID);
-    } else {
-      return getDisplayDataStudentValue(domID);
-    }
+    return getStudentDataValue(domID);
+    // const isDisplayData = lessonState.displayData.length > 0;
+    // if (!isDisplayData) {
+    //   return getStudentDataValue(domID);
+    // } else {
+    //   return getDisplayDataStudentValue(domID);
+    // }
   };
 
   const [fields, setFields] = useState<any>({});

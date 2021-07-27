@@ -110,7 +110,6 @@ const LessonApp = () => {
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
-      console.log('first custom lesson load ::', response);
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
@@ -277,8 +276,6 @@ const LessonApp = () => {
         lessonProgress: '0',
         pageData: lessonState.studentData[indexOfPage],
       };
-
-      console.log('lessonState.studentData -- ', lessonState.studentData);
 
       const newStudentData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalLessonStudentData, {
