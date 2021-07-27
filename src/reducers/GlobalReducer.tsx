@@ -100,6 +100,10 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         ...state,
         activeRoom: action.payload.roomID,
         activeSyllabus: action.payload.syllabusID,
+        roomData: {
+          ...state.roomData,
+          syllabus: [],
+        },
       };
     case 'TOGGLE_LESSON':
       return {
