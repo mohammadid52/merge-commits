@@ -35,7 +35,7 @@ const LessonsListRow = (props: LessonsListRow) => {
     <div
       id={id}
       className="flex justify-between bg-white w-full border-b-0 border-gray-200">
-      <div className="w-.5/10 flex justify-center items-center px-4 py-4 whitespace-normal text-sm leading-5 font-medium">
+      <div className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
         {index + 1}.
       </div>
       <div
@@ -48,7 +48,7 @@ const LessonsListRow = (props: LessonsListRow) => {
           {type ? type : '--'}
         </span>
       </div> */}
-      <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
       </div>
 
@@ -64,7 +64,7 @@ const LessonsListRow = (props: LessonsListRow) => {
         </span>
       </div>
 
-      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
           {languages?.length
             ? languages.map(
