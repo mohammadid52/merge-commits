@@ -23,6 +23,7 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
+import * as subscriptions from '../../graphql/subscriptions';
 import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonControl = () => {
@@ -74,13 +75,57 @@ const LessonControl = () => {
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
+  const [subscriptionData, setSubscriptionData] = useState<any>();
 
   // ~~~~~~~~~~~~~ TEST VALUES ~~~~~~~~~~~~~ //
   const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
-  const SYLLABUS_ID = 'b0cd146b-6070-4a4a-ab23-b6f7db8f6d72';
+  const SYLLABUS_ID = '13fa95a7-0f71-4801-bd0c-f4c54fd2b8d8';
 
-  //~~~~~~INITIAL STUDENT DATA FETCH~~~~~~//
+  // ----------- 1 ---------- //
 
+  const subscribeToStudent = () => {
+    const studentDataSubscription = API.graphql(
+      graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
+        studentAuthID: lessonState.studentViewing,
+        syllabusLessonID: SYLLABUS_ID,
+        lessonID: LESSON_ID,
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (studentData: any) => {
+        const updatedStudentData =
+          studentData.value.data.onChangeUniversalLessonStudentData;
+        setSubscriptionData(updatedStudentData);
+      },
+    });
+
+    return studentDataSubscription;
+  };
+
+  // ----------- 2 ---------- //
+
+  const updateOnIncomingStudentSubscriptionData = (subscriptionData: any) => {
+    const getPageIdx = lessonState.universalStudentDataID.find(
+      (dataRef: any) => dataRef.id === subscriptionData.id
+    )?.pageIdx;
+    const getPageData = subscriptionData.pageData;
+    lessonDispatch({
+      type: 'LOAD_STUDENT_DATA_SUBSCRIPTION',
+      payload: {stDataIdx: getPageIdx, subData: getPageData},
+    });
+  };
+
+  // ----------- 3 ---------- //
+
+  useEffect(() => {
+    if (subscriptionData) {
+      updateOnIncomingStudentSubscriptionData(subscriptionData);
+    }
+  }, [subscriptionData]);
+
+  // ##################################################################### //
+  // ##################### INITIAL STUDENT DATA FETCH #################### //
+  // ##################################################################### //
   const getStudentData = async (studentAuthId: string) => {
     const lessonID = LESSON_ID;
     const syllabusID = SYLLABUS_ID; // in the table this is called SyllabusLessonID, but it's just the syllabusID
@@ -125,9 +170,9 @@ const LessonControl = () => {
       // existing student rows
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
 
-      if (!(studentDataRows.length > 0)) {
-        throw 'No student data records for this lesson...';
-      } else {
+      if (studentDataRows.length > 0) {
+        subscription = subscribeToStudent();
+
         const existStudentDataIdArray = studentDataIdArray(studentDataRows);
         const filteredStudentData = existStudentDataIdArray.reduce(
           (acc: StudentPageInput[], dataIdObj: any) => {
@@ -150,6 +195,8 @@ const LessonControl = () => {
             filteredStudentData: filteredStudentData,
           },
         });
+      } else {
+        throw 'No student data records for this lesson...';
       }
     } catch (err) {
       console.error(err);

@@ -147,11 +147,9 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
-    console.log('pageData - ', pageData);
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
-    console.log('getInput - ', getInput);
     if (getInput !== undefined) {
       return getInput.input;
     } else {

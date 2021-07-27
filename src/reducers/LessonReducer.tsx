@@ -62,6 +62,13 @@ export type LessonActions =
       };
     }
   | {
+      type: 'LOAD_STUDENT_DATA_SUBSCRIPTION';
+      payload: {
+        stDataIdx: number;
+        subData: StudentPageInput[];
+      };
+    }
+  | {
       type: 'UNLOAD_STUDENT_DATA';
       payload: any;
     }
@@ -173,6 +180,24 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: action.payload.filteredStudentData
           ? action.payload.filteredStudentData
           : state.studentData,
+      };
+    case 'LOAD_STUDENT_DATA_SUBSCRIPTION':
+      const stDataIdx = action.payload.stDataIdx;
+      const subData = action.payload.subData;
+      const newStudentData = state.studentData.map(
+        (inputArr: StudentPageInput[], inputArrIdx: number) => {
+          if (inputArrIdx === stDataIdx) {
+            return subData;
+          } else {
+            return inputArr;
+          }
+        }
+      );
+      console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
+      console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
+      return {
+        ...state,
+        studentData: newStudentData,
       };
     case 'UNLOAD_STUDENT_DATA':
       return {
