@@ -993,6 +993,7 @@ type UniversalContent {
   caption: String
   height: String
   width: String
+  isRequired: Boolean
 }
 
 type UniversalContentOptions {

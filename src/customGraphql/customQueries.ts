@@ -3267,8 +3267,8 @@ export const listUnits = /* GraphQL */ `
 `;
 
 export const listSurveys = /* GraphQL */ `
-  query GetSyllabus($id: ID!) {
-    getSyllabus(id: $id) {
+  query GetUniversalSyllabus($id: ID!) {
+    getUniversalSyllabus(id: $id) {
       id
       lessons {
         items {
