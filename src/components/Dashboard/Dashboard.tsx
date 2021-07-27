@@ -516,6 +516,8 @@ const Dashboard = (props: DashboardProps) => {
   //     }, [])
   //   : [];
 
+  // console.log('getRoomsFromClassList - ', getRoomsFromClassList);
+
   useEffect(() => {
     dispatch({
       type: 'UPDATE_ROOM',
@@ -777,13 +779,13 @@ const Dashboard = (props: DashboardProps) => {
         payload: {roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus},
       });
 
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'syllabus',
-          data: [],
-        },
-      });
+      // dispatch({
+      //   type: 'UPDATE_ROOM',
+      //   payload: {
+      //     property: 'syllabus',
+      //     data: [],
+      //   },
+      // });
       history.push(`/dashboard/${route}/${id}`);
     }
   };
