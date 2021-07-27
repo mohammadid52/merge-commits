@@ -160,7 +160,7 @@ const RoomTiles = (props: {
                               <p
                                 style={{maxWidth: '99%'}}
                                 className="overflow-hidden pr-2 overflow-ellipsis space-x-1 text-sm text-gray-500">
-                                <a>{email}</a>
+                                {roomName}
                               </p>
                             </div>
                           </div>
