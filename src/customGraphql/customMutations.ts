@@ -1134,3 +1134,15 @@ export const updateCurriculumSyllabusSequence = /* GraphQL */ `
     }
   }
 `;
+
+export const updateUniversalSyllabusLessonSequence = /* GraphQL */ `
+  mutation UpdateUniversalSyllabus(
+    $input: UpdateUniversalSyllabusInput!
+    $condition: ModelUniversalSyllabusConditionInput
+  ) {
+    updateUniversalSyllabus(input: $input, condition: $condition) {
+      id
+      universalLessonsSeq
+    }
+  }
+`;

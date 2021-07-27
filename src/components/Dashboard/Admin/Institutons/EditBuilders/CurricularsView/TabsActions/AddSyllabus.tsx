@@ -20,7 +20,7 @@ import * as customMutations from '../../../../../../../customGraphql/customMutat
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 
-interface AddSyllabusProps {}
+interface AddSyllabusProps { }
 interface InitialData {
   name: string;
   description: string;
@@ -32,7 +32,7 @@ interface InitialData {
 }
 
 const AddSyllabus = (props: AddSyllabusProps) => {
-  const {} = props;
+  const { } = props;
   const history = useHistory();
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
@@ -173,10 +173,10 @@ const AddSyllabus = (props: AddSyllabusProps) => {
       try {
         setIsLoading(true);
         const languagesCode = syllabusData.languages.map(
-          (item: {value: string}) => item.value
+          (item: { value: string }) => item.value
         );
         const designers = selectedDesigners.map((item) => item.id);
-        const input = {
+        const input: any = {
           name: syllabusData.name,
           curriculumID: curricularId,
           description: syllabusData.description,
@@ -186,10 +186,10 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           objectives: syllabusData.objectives,
           languages: languagesCode,
           designers: designers,
+          universalLessonsSeq: [],
         };
-        console.log('syllabus', input);
         const newSyllabus: any = await API.graphql(
-          graphqlOperation(mutations.createUniversalSyllabus, {input})
+          graphqlOperation(mutations.createUniversalSyllabus, { input })
         );
         const newItem = newSyllabus.data.createUniversalSyllabus;
         console.log('newItem', newItem);
