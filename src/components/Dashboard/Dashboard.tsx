@@ -494,12 +494,14 @@ const Dashboard = (props: DashboardProps) => {
     classList && classList.length > 0
       ? classList.reduce((acc: any[], classObj: any) => {
           if (classObj.rooms.items.length > 0) {
-            return [...acc, classObj.rooms.items[0]];
+            return [...acc, ...classObj.rooms.items];
           } else {
             return acc;
           }
         }, [])
       : [];
+
+  // console.log('getRoomsFromClassList - ', getRoomsFromClassList);
 
   useEffect(() => {
     dispatch({
@@ -762,13 +764,13 @@ const Dashboard = (props: DashboardProps) => {
         payload: {roomID: id, syllabusID: getRoomSyllabus.activeSyllabus},
       });
 
-      dispatch({
-        type: 'UPDATE_ROOM',
-        payload: {
-          property: 'syllabus',
-          data: [],
-        },
-      });
+      // dispatch({
+      //   type: 'UPDATE_ROOM',
+      //   payload: {
+      //     property: 'syllabus',
+      //     data: [],
+      //   },
+      // });
       history.push(`/dashboard/${route}/${id}`);
     }
   };
