@@ -170,7 +170,9 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         loaded: true,
         universalStudentDataID: action.payload.dataIdReferences,
-        studentData: action.payload.filteredStudentData,
+        studentData: action.payload.filteredStudentData
+          ? action.payload.filteredStudentData
+          : state.studentData,
       };
     case 'UNLOAD_STUDENT_DATA':
       return {

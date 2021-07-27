@@ -227,11 +227,14 @@ const LessonApp = () => {
   // ################# GET OR CREATE STUDENT DATA RECORDS ################ //
   // ##################################################################### //
 
-  // transform to data-id array, for updating
+  // tempDataIdArray for new student data initialization
+  let tempDataIdArray: any = [];
+
+  // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
-    return studentDataArray
-      .map((dataObj: any, idx: number) => {
-        return {
+    const idArr = studentDataArray
+      .reduce((acc: any[], dataObj: any, idx: number) => {
+        const idObj = {
           id: dataObj.id,
           pageIdx: lessonState.lessonData.lessonPlan.findIndex(
             (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
@@ -239,7 +242,8 @@ const LessonApp = () => {
           lessonPageID: dataObj.lessonPageID,
           update: false,
         };
-      })
+        return [...acc, idObj];
+      }, [])
       .sort((dataID1: any, dataID2: any) => {
         if (dataID1.pageIdx < dataID2.pageIdx) {
           return -1;
@@ -248,6 +252,43 @@ const LessonApp = () => {
           return 1;
         }
       });
+    return idArr;
+  };
+
+  // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
+  const loopCreateStudentData = async (
+    lessonPages: any[],
+    lessonID: string,
+    authId: string,
+    email: string
+  ) => {
+    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
+      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
+      );
+      const input = {
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        lessonPageID: lessonPage.id,
+        studentID: authId,
+        studentAuthID: authId,
+        studentEmail: email,
+        currentLocation: indexOfPage,
+        lessonProgress: '0',
+        pageData: lessonState.studentData[indexOfPage],
+      };
+
+      console.log('lessonState.studentData -- ', lessonState.studentData);
+
+      const newStudentData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalLessonStudentData, {
+          input,
+        })
+      );
+      const returnedData = newStudentData.data.createUniversalLessonStudentData;
+      return returnedData;
+    });
+    return createdRecords;
   };
 
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
@@ -256,9 +297,6 @@ const LessonApp = () => {
     const user = await Auth.currentAuthenticatedUser();
     const authId = user.attributes.sub;
     const email = user.attributes.email;
-
-    // tempArray for new student data initialization
-    let tempArray: any = [];
 
     try {
       const listFilter = {filter: {lessonID: lessonID, studentAuthID: authId}};
@@ -270,101 +308,58 @@ const LessonApp = () => {
 
       // existing student rows
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-
-      // -- IF NO STUDENT DATA -- //
-      if (!(studentDataRows.length > 0)) {
-        const loopCreateStudentData = async () => {
-          return lessonState?.lessonData?.lessonPlan?.reduce(
-            async (prev: any, lessonPage: UniversalLessonPage, pageIdx: number) => {
-              const input = {
-                syllabusLessonID: state.activeSyllabus,
-                lessonID: lessonID,
-                lessonPageID: lessonPage.id,
-                studentID: authId,
-                studentAuthID: authId,
-                studentEmail: email,
-                currentLocation: lessonState.currentPage,
-                lessonProgress: '0',
-                pageData: lessonState.studentData[pageIdx],
-              };
-              const newStudentData: any = await API.graphql(
-                graphqlOperation(mutations.createUniversalLessonStudentData, {
-                  input,
-                })
-              );
-              const returnedData = newStudentData.data.createUniversalLessonStudentData;
-              tempArray.push({
-                id: returnedData.id,
-                pageIdx: pageIdx,
-                lessonPageID: lessonPage.id,
-                update: false,
-              });
-            },
-            []
+      // find out if there are any missing records for pages
+      const extraPages = PAGES.reduce(
+        (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
+          const findInStudentDataRows = studentDataRows.find(
+            (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
           );
-        };
-        await loopCreateStudentData();
-        if (tempArray && tempArray.length > 0) {
-          lessonDispatch({type: 'LOAD_STUDENT_DATA', payload: tempArray});
-        }
-      }
+          if (findInStudentDataRows === undefined) {
+            return [...extraPageArray, lessonPage];
+          } else {
+            return extraPageArray;
+          }
+        },
+        []
+      );
 
-      //  IF STUDENT DATA BUT EXTRA LESSON PAGES  //
-      if (studentDataRows.length > 0 && studentDataRows.length < PAGES.length) {
-        const extraPages = PAGES
-          ? PAGES.filter((lessonPage: UniversalLessonPage) => {
-              const findInStudentDataRows = studentDataRows.find(
-                (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
-              );
-              if (findInStudentDataRows === undefined) {
-                return lessonPage;
-              }
-            })
-          : [];
-        const loopCreateExtraStudentData = async (extraPages: UniversalLessonPage[]) => {
-          return extraPages.reduce(
-            async (prev: any, lessonPage: UniversalLessonPage, pageIdx: number) => {
-              const indexOfExtraPage = lessonState?.lessonData?.lessonPlan?.findIndex(
-                (lessonPlanPage: UniversalLessonPage) =>
-                  lessonPlanPage.id === lessonPage.id
-              );
-              const input = {
-                syllabusLessonID: state.activeSyllabus,
-                lessonID: lessonID,
-                lessonPageID: lessonPage.id,
-                studentID: authId,
-                studentAuthID: authId,
-                studentEmail: email,
-                currentLocation: '0',
-                lessonProgress: '0',
-                pageData: lessonState.studentData[indexOfExtraPage],
-              };
-              const extraStudentData: any = await API.graphql(
-                graphqlOperation(mutations.createUniversalLessonStudentData, {
-                  input,
-                })
-              );
-              const returnedData = extraStudentData.data.createUniversalLessonStudentData;
-              tempArray.push({
-                id: returnedData.id,
-                pageIdx: indexOfExtraPage,
-                lessonPageID: lessonPage.id,
-                update: false,
-              });
-            },
-            []
-          );
-        };
-        await loopCreateExtraStudentData(extraPages);
-        tempArray.push(studentDataIdArray(studentDataRows));
-      }
-
-      //  IF DATA EXISTS AND NO PAGE NR DIFFERENCE  //
-      if (studentDataRows.length === PAGES.length) {
-        tempArray.push(studentDataIdArray(studentDataRows));
+      /**
+       * NEW RECORD CREATION LOGIC:
+       *   - if no student records for this lesson, make all new records per page
+       *   - if student records exist, but an additional page has been added, create records for these pages
+       */
+      if (studentDataRows?.length === 0) {
+        const createNewRecords = await loopCreateStudentData(
+          PAGES,
+          lessonID,
+          authId,
+          email
+        );
+        const newRecords = await Promise.all(createNewRecords);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
-          payload: {dataIdReferences: tempArray},
+          payload: {
+            dataIdReferences: studentDataIdArray([...newRecords, ...studentDataRows]),
+          },
+        });
+      } else if (extraPages?.length > 0 && studentDataRows?.length > 0) {
+        const createExtraRecords = await loopCreateStudentData(
+          extraPages,
+          lessonID,
+          authId,
+          email
+        );
+        const extraRecords = await Promise.all(createExtraRecords);
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {
+            dataIdReferences: studentDataIdArray([...extraRecords, ...studentDataRows]),
+          },
+        });
+      } else if (studentDataRows?.length === PAGES?.length) {
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {dataIdReferences: studentDataIdArray(studentDataRows)},
         });
       }
     } catch (err) {
@@ -372,24 +367,27 @@ const LessonApp = () => {
     }
   };
 
-  //  INITIALIZE STUDENT DATA AND DATA-ID ARRAY  //
+  // ~~ INITIALIZE STUDENT DATA STRUCTURE ~~ //
   useEffect(() => {
     if (
+      !lessonState.loaded &&
       lessonState.lessonData.lessonPlan &&
-      lessonState.lessonData.lessonPlan.length > 0 &&
-      lessonState.studentData &&
-      !(lessonState.studentData.length > 0)
+      lessonState.lessonData.lessonPlan.length > 0
     ) {
-      initializeStudentData().then((_: void) =>
-        console.log('initializeStudentData - ', 'initiated')
-      );
-      if (!lessonState.loaded) {
-        getOrCreateStudentData().then((_: void) =>
-          console.log('getOrCreateStudentData - ', 'getted')
-        );
-      }
+      initializeStudentData();
     }
   }, [lessonState.lessonData.lessonPlan]);
+
+  // ~~~~~ GET & CREATE DB DATA RECORDS ~~~~ //
+  useEffect(() => {
+    if (
+      !lessonState.loaded &&
+      lessonState.studentData &&
+      lessonState.studentData?.length === PAGES?.length
+    ) {
+      getOrCreateStudentData();
+    }
+  }, [lessonState.studentData]);
 
   // ##################################################################### //
   // ####################### MANAGE PERSON LOCATION ###################### //
