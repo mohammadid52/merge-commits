@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
@@ -24,6 +24,7 @@ interface StartProps {
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
+  const _isMounted = useRef(true); // Initial value _isMounted = true
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
   const {lessonKey, open, accessible, type, roomID} = props;
@@ -37,6 +38,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     if (type === 'lesson') {
       fetchAttendance();
     }
+    return () => {
+      _isMounted.current = false;
+    };
   }, []);
 
   const mutateToggleEnableDisable = async () => {
@@ -85,7 +89,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             },
           })
         );
-        setAttendanceRecorded(Boolean(list?.data.listAttendances?.items.length));
+        if (_isMounted) {
+          setAttendanceRecorded(Boolean(list?.data.listAttendances?.items.length));
+        }
       }
     } catch (error) {
       console.log(error, 'inside catch');
