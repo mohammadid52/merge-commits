@@ -594,6 +594,39 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+export const onChangeUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnChangeUniversalLessonStudentData(
+    $syllabusLessonID: ID!
+    $lessonID: ID!
+    $studentAuthID: ID!
+  ) {
+    onChangeUniversalLessonStudentData(
+      syllabusLessonID: $syllabusLessonID
+      lessonID: $lessonID
+      studentAuthID: $studentAuthID
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreatePerson = /* GraphQL */ `
   subscription OnCreatePerson {
     onCreatePerson {
