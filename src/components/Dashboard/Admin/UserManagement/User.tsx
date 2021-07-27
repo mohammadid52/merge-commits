@@ -62,6 +62,7 @@ export interface UserInfo {
   updatedAt: string;
   birthdate?: string;
   onDemand?: boolean;
+  rooms: any[];
 }
 
 export interface AnthologyContentInterface {
@@ -133,6 +134,7 @@ const User = () => {
     updatedAt: '',
     birthdate: null,
     onDemand: false,
+    rooms: [],
   });
 
   const [imageUrl, setImageUrl] = useState('');
@@ -207,6 +209,7 @@ const User = () => {
       const studentRooms: any = studentClasses
         ?.map((item: any) => item?.rooms?.items)
         ?.flat(1);
+      userData.rooms = studentRooms;
       const studentCurriculars: any = studentRooms
         .map((item: any) => item?.curricula?.items)
         .flat(1);
@@ -421,13 +424,13 @@ const User = () => {
 
   const handleClassRoomClick = (roomId: string) => {
     setSelectedRoomId(roomId);
-    setIsTimelineOpen(true)
+    setIsTimelineOpen(true);
   };
 
   const goToClassroom = () => {
     setSelectedRoomId('');
-    setIsTimelineOpen(false)
-  }
+    setIsTimelineOpen(false);
+  };
 
   const AssociatedClasses = ({list}: any) => {
     return (
@@ -449,12 +452,12 @@ const User = () => {
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Classname
+                      Institution
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Institution
+                      Classroom
                     </th>
                     <th
                       scope="col"
@@ -469,21 +472,20 @@ const User = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {list.map((item: any, idx: number) => {
-                    const rooms = item?.class?.rooms.items;
-                    const curriculum = rooms.length > 0 ? rooms[0].curricula : null;
-                    const teacher = rooms.length > 0 ? rooms[0].teacher : null;
+                  {list.map((room: any, idx: number) => {
+                    const curriculum = room.curricula;
+                    const teacher = room.teacher;
                     return (
                       <tr
-                        key={`${item.class?.name}_${idx}`}
+                        key={`${room.id}`}
                         className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td
-                          className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900 cursor-pointer"
-                          onClick={() => handleClassRoomClick(item?.class?.id)}>
-                          {item?.class?.name}
-                        </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {item?.class?.institution?.name}
+                          {room?.class?.institution?.name}
+                        </td>
+                        <td
+                          className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500 font-bold cursor-pointer"
+                          onClick={() => handleClassRoomClick(room.id)}>
+                          {room.name}
                         </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {teacher
@@ -1523,7 +1525,7 @@ const User = () => {
                     selectedRoomId={selectedRoomId}
                   />
                 ) : (
-                  <AssociatedClasses list={user?.classes?.items} />
+                  <AssociatedClasses list={user?.rooms} />
                 )}
               </div>
             )}

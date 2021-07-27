@@ -2624,6 +2624,14 @@ export const userById = /* GraphQL */ `
               rooms {
                 items {
                   id
+                  name
+                  class{
+                    id
+                    name
+                    institution {
+                      name
+                    }
+                  }
                   teacher {
                     firstName
                     preferredName
