@@ -7,8 +7,8 @@ const UniversalInputDialog = (props: any) => {
   const {selectedForm} = props;
   const initState =
     selectedForm === INPUT
-      ? {id: uuidv4(), textArea: false, label: '', value: ''}
-      : {id: uuidv4(), label: '', value: ''};
+      ? {id: uuidv4(), textArea: false, label: '', value: '', required: false}
+      : {id: uuidv4(), label: '', value: '', required: false};
   const [list, setList] = useState([{...initState}]);
 
   const [numbered, setNumbered] = useState(false);

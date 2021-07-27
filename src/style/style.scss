@@ -106,14 +106,13 @@
     top: 0;
     z-index: 9999;
     border-radius: 3px;
-    transition: opacity 0.5s;
     transform: translateX(-10px);
     transition: all 0.15s ease-in-out;
   }
 
   &:hover {
     .custom_tooltip {
-      transform: translateX(0px);
+      transform: translateX(0);
       opacity: 1;
       visibility: visible;
     }
@@ -995,4 +994,28 @@
     width: 16px;
     height: 16px;
   }
+}
+
+.wrapperClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  border: 1px solid rgba(50, 50, 62, 1);
+  color: white;
+}
+.toolbarClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  border: 1px solid #9ca3af;
+  color: white;
+}
+
+.editorClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  color: white;
+}
+
+.toolbarClassName.previewMode {
+  display: none;
+}
+.editorClassName.previewMode {
+  border: 1px solid #9ca3af;
+  border-radius: 8px;
 }

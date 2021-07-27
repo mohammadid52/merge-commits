@@ -55,6 +55,7 @@ export const updateUniversalLesson = /* GraphQL */ `
               caption
               width
               height
+              isRequired
               options {
                 id
                 label

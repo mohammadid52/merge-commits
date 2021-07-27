@@ -126,14 +126,14 @@ const AddContentDialog = ({
     },
   ];
   const userInterfaceContent = [
-    {
-      name: 'Checkpoint',
-      type: 'questions',
-      subtitle: 'Add multiple questions',
-      icon: RiSurveyLine,
-      iconForeground: 'text-teal-700',
-      iconBackground: 'bg-teal-100',
-    },
+    // {
+    //   name: 'Checkpoint',
+    //   type: 'questions',
+    //   subtitle: 'Add multiple questions',
+    //   icon: RiSurveyLine,
+    //   iconForeground: 'text-teal-700',
+    //   iconBackground: 'bg-teal-100',
+    // },
     {
       name: 'Highlighter',
       type: FORM_TYPES.HIGHLIGHTER,
