@@ -893,8 +893,13 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Attendance @model
-@key(name: "byStudent", fields: ["studentID", "date"], queryField: "attendanceByStudent") {
+type Attendance
+  @model
+  @key(
+    name: "byStudent"
+    fields: ["studentID", "date"]
+    queryField: "attendanceByStudent"
+  ) {
   id: ID!
   studentID: ID!
   curriculumID: ID!
@@ -1094,10 +1099,19 @@ type Subscription {
       mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
     )
   onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
+    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"]) # Deprecated subscription, can be removed?
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
-    @aws_subscribe(mutations: ["updateSyllabusLesson"])
+    @aws_subscribe(mutations: ["updateSyllabusLesson"]) # Deprecated subscription, can be removed?
   onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
+
+  onChangeUniversalLessonStudentData(
+    syllabusLessonID: ID!
+    lessonID: ID!
+    studentAuthID: ID!
+  ): UniversalLessonStudentData
+    @aws_subscribe(
+      mutations: ["createUniversalLessonStudentData", "updateUniversalLessonStudentData"]
+    )
 }
 
 input CreateClassStudentInput {
