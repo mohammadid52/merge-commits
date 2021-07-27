@@ -1099,7 +1099,6 @@ type Subscription {
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"]) # Deprecated subscription, can be removed?
   onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
-
   onChangeUniversalLessonStudentData(
     syllabusLessonID: ID!
     lessonID: ID!
