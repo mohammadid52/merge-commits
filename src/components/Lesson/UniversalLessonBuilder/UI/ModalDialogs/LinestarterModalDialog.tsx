@@ -9,6 +9,7 @@ import {nanoid} from 'nanoid';
 import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {FORM_TYPES} from '../common/constants';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -126,13 +127,19 @@ const LinestarterModalDialog = ({
       const updatedList = updateBlockContentULBHandler(
         '',
         '',
-        'poem-input',
+        FORM_TYPES.POEM,
         inputFieldsArray,
         0
       );
       await addToDB(updatedList);
     } else {
-      const updatedList = createNewBlockULBHandler('', '', 'poem', inputFieldsArray, 0);
+      const updatedList = createNewBlockULBHandler(
+        '',
+        '',
+        FORM_TYPES.POEM,
+        inputFieldsArray,
+        0
+      );
       await addToDB(updatedList);
     }
 
