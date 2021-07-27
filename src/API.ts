@@ -1111,6 +1111,7 @@ export type UniversalContent = {
   caption?: string | null,
   height?: string | null,
   width?: string | null,
+  isRequired?: boolean | null,
 };
 
 export type UniversalContentOptions = {
@@ -3489,6 +3490,7 @@ export type UniversalContentInput = {
   caption?: string | null,
   height?: string | null,
   width?: string | null,
+  isRequired?: boolean | null,
 };
 
 export type UniversalContentOptionsInput = {
