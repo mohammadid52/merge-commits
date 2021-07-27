@@ -22,11 +22,12 @@ const LessonsListRow = (props: LessonsListRow) => {
   const {BUTTONS} = useDictionary(clientKey);
 
   const handleLessonsEdit = (type: string) => {
-    if (type === 'Lesson') {
-      history.push(`${match.url}/lesson/edit?lessonId=${id}`);
-    } else {
-      history.push(`${match.url}/lesson/view?assessmentId=${id}`);
-    }
+    // if (type === 'Lesson') {
+    //   history.push(`${match.url}/lesson/edit?lessonId=${id}`);
+    // } else {
+    //   history.push(`${match.url}/lesson/view?assessmentId=${id}`);
+    // }
+    history.push(`${match.url}/lesson/edit?lessonId=${id}`);
   };
 
   const {id, index, title, type, languages, createdAt, updatedAt} = props;
