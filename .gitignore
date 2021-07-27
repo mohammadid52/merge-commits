@@ -1,5 +1,6 @@
 .history/
 .idea/
+.history/
 .vscode/
 .vscode/settings.json
 .gitignore

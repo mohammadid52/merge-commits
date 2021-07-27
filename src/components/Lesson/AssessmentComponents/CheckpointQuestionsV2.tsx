@@ -314,26 +314,47 @@ const CheckpointQuestions = (props: CheckpointQuestionsProps) => {
 
   const allQuestionGroupsData = allQuestionGroups()[currentCheckpointIdx] || [];
 
+  // FIXED BROKEN REQUIRED QUESTION CHECKING
+  // ON SURVEY CODE, ACTUALLY WORKS NOW
   useEffect(() => {
     const checkAllRequiredQuestions = () => {
-      allQuestionGroupsData.forEach((item: any) => {
-        if (item.required) {
-          setInput(state.questionData);
-
-          const responseArray = get(input, `${[item.checkpointID]}`, []);
-          const currentRes: any = find(
-            responseArray,
-            (_d: any) => _d.qid === item.question.id
-            // @ts-ignore
-          ).response;
-
-          if (currentRes.length > 0) {
-            setDisableNext(false);
+      const requiredIds = allQuestionGroupsData.reduce((acc: string[], question: any) => {
+        if (question.required) {
+          return [...acc, question.question.id];
+        } else {
+          return acc;
+        }
+      }, []);
+      const emptyResponses = get(
+        input,
+        `${[allQuestionGroupsData[0]?.checkpointID]}`,
+        []
+      ).reduce((acc: string[], responseObj: any) => {
+        if (responseObj.response.length > 0) {
+          return acc;
+        } else {
+          return [...acc, responseObj.qid];
+        }
+      }, []);
+      const nextDisabled = emptyResponses.reduce((truthy: boolean, qid: string) => {
+        if (truthy === true) {
+          return truthy;
+        } else {
+          if (requiredIds.includes(qid)) {
+            return true;
           } else {
-            setDisableNext(true);
+            return truthy;
           }
         }
-      });
+      }, false);
+
+      if (!nextDisabled) {
+        setDisableNext(false);
+      } else {
+        setDisableNext(true);
+      }
+
+      setInput(state.questionData);
     };
 
     if (input && allQuestionGroupsData) {
