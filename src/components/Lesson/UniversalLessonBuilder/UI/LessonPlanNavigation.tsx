@@ -219,7 +219,7 @@ const LessonPlanNavigation = ({
         </Droppable>
       </DragDropContext>
 
-      <div className="ml-2 w-2/10 bg-white h-12 flex items-center p-4">
+      <div className="ml-2 w-2/10 bg-white h-12 flex items-center p-4 mr-3">
         <div className="flex items-center text-xs">
           Theme:{' '}
           <CustomToggle

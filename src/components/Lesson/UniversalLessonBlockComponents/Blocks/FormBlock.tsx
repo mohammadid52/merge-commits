@@ -8,11 +8,7 @@ import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {
-  StudentPageInput,
-  UniversalLessonStudentData,
-} from '../../../../interfaces/UniversalLessonInterfaces';
-
+import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
@@ -290,7 +286,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={false} />
+          {numbered && index} {label}
         </label>
         <div className="mt-2">
           <span
@@ -404,11 +400,10 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
-      case FORM_TYPES.DATE_PICKER:
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label} <RequiredMark isRequired={false} />
+              {numbered && index} {label}
             </label>
             <input
               id={inputID}
@@ -416,19 +411,37 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               } ${themePlaceholderColor}`}
-              name="title"
-              type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
+              name={'text'}
+              type={'text'}
               onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
               value={isInLesson ? getValue(inputID) : value}
             />
           </div>
         );
-
+      case FORM_TYPES.DATE_PICKER:
+        return (
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
+            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+              {numbered && index} {label}
+            </label>
+            <input
+              id={inputID}
+              disabled={mode === 'building'}
+              className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              } ${themePlaceholderColor}`}
+              name={'date'}
+              type={'date'}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              value={isInLesson ? getValue(inputID) : value}
+            />
+          </div>
+        );
       case FORM_TYPES.TEXTAREA:
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label} <RequiredMark isRequired={false} />
+              {numbered && index} {label}
             </label>
             <textarea
               id={inputID}
@@ -447,7 +460,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label} <RequiredMark isRequired={false} />
+              {numbered && index} {label}
             </label>
             {generateCheckbox(
               options,
