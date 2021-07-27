@@ -218,7 +218,7 @@ const SelectOne = ({
 
   return (
     <>
-      <Tabs />
+      {/* <Tabs /> */}
       {curTab === tabs[0].name && (
         <>
           <div>
