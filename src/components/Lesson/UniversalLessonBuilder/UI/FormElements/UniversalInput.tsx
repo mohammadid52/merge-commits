@@ -106,20 +106,19 @@ const UniversalInput = (props: any) => {
   };
 
   const onFormCreate = async () => {
-    const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_${
-      selectedForm === ATTACHMENTS
-        ? 'attachments'
-        : selectedForm === DATE_PICKER
-        ? 'datePicker'
-        : selectedForm === INPUT_WITH_EMOJI
-        ? 'emojiInput'
-        : selectedForm === LINK
-        ? 'linkInput'
-        : 'text-input'
-    }`;
-
     const inputObjArray = map(list, (d: any) => {
+      const pageContentId: string = `${uuidv4()}_`;
+      const partContentId: string = `${pageContentId}_${
+        selectedForm === ATTACHMENTS
+          ? 'attachments'
+          : selectedForm === DATE_PICKER
+          ? 'datePicker'
+          : selectedForm === INPUT_WITH_EMOJI
+          ? 'emojiInput'
+          : selectedForm === LINK
+          ? 'linkInput'
+          : 'text-input'
+      }`;
       return {
         id: partContentId,
         type:

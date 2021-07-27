@@ -95,10 +95,9 @@ const SelectOne = ({
   };
 
   const onRadioCreate = async () => {
-    const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_radioInput`;
-
     const inputObjArray = map(list, (d: any) => {
+      const pageContentId: string = `${uuidv4()}_`;
+      const partContentId: string = `${pageContentId}_radioInput`;
       return {
         id: partContentId,
         type: selectedForm === SELECT_ONE ? FORM_TYPES.RADIO : FORM_TYPES.MULTIPLE,
