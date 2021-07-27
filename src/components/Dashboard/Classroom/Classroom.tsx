@@ -143,7 +143,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    * Open Lessons
    */
   const openLessons =
-    state.roomData.lessons.length > 0
+    state.roomData.lessons?.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
           if (!lesson.complete) {
             return lesson;
@@ -156,7 +156,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
    *  This array is a filter of lessons which are completed, closed or open
    */
   const completedLessons =
-    state.roomData.lessons.length > 0
+    state.roomData.lessons?.length > 0
       ? state.roomData.lessons.filter((lesson: Lesson) => {
           if (lesson.complete) {
             return lesson;
@@ -165,10 +165,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       : [];
 
   useEffect(() => {
-    if (state.roomData.lessons.length > 0) {
+    if (state.roomData.lessons?.length > 0) {
       setLessonGroupCount({
         open: openLessons.length,
         completed: completedLessons.length,
+      });
+    } else {
+      setLessonGroupCount({
+        open: 0,
+        completed: 0,
       });
     }
   }, [state.roomData.lessons]);

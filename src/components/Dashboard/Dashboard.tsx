@@ -490,16 +490,31 @@ const Dashboard = (props: DashboardProps) => {
     }
   }, [homeData]);
 
-  const getRoomsFromClassList =
-    classList && classList.length > 0
-      ? classList.reduce((acc: any[], classObj: any) => {
-          if (classObj.rooms.items.length > 0) {
-            return [...acc, ...classObj.rooms.items];
-          } else {
-            return acc;
-          }
-        }, [])
-      : [];
+  const getRoomsFromClassList = () => {
+    let rooms:any = [];
+    classList && classList.length
+      ? classList.forEach((classObj) =>
+          classObj.rooms.items.length
+            ? classObj.rooms.items.forEach((room: any) =>
+                room.curricula?.items.length && room.curricula?.items[0].curriculum
+                  ? rooms.push(room)
+                  : null
+              )
+            : null
+        )
+      : null;
+    return rooms;
+  };
+
+  // classList && classList.length > 0
+  //   ? classList.reduce((acc: any[], classObj: any) => {
+  //       if (classObj.rooms.items.length > 0) {
+  //         return [...acc, classObj.rooms.items[0]];
+  //       } else {
+  //         return acc;
+  //       }
+  //     }, [])
+  //   : [];
 
   // console.log('getRoomsFromClassList - ', getRoomsFromClassList);
 
@@ -508,7 +523,7 @@ const Dashboard = (props: DashboardProps) => {
       type: 'UPDATE_ROOM',
       payload: {
         property: 'rooms',
-        data: getRoomsFromClassList,
+        data: getRoomsFromClassList()
       },
     });
   }, [classList]);
@@ -662,7 +677,7 @@ const Dashboard = (props: DashboardProps) => {
           const syllabi = response.universalSyllabus.items;
           const sequence = response.universalSyllabusSeq;
 
-          const mappedResponseObjects = sequence.reduce(
+          const mappedResponseObjects = sequence?.reduce(
             (acc: any[], syllabusID: string) => {
               return [
                 ...acc,
@@ -718,7 +733,7 @@ const Dashboard = (props: DashboardProps) => {
         );
         //@ts-ignore
         const response = await syllabusLessonFetch.data.getUniversalSyllabus;
-        const lessons = response.lessons.items;
+        const lessons = response?.lessons.items;
         dispatch({
           type: 'UPDATE_ROOM',
           payload: {
@@ -761,7 +776,7 @@ const Dashboard = (props: DashboardProps) => {
       setActiveRoomName(name);
       dispatch({
         type: 'UPDATE_ACTIVEROOM',
-        payload: {roomID: id, syllabusID: getRoomSyllabus.activeSyllabus},
+        payload: {roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus},
       });
 
       // dispatch({
