@@ -129,6 +129,19 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     }));
   };
 
+  const [blockConfig, setBlockConfig] = useState<{
+    section: string;
+    position: number;
+    targetId: string;
+    classString?: string;
+    inputObj?: any;
+    isEditingMode?: boolean;
+  }>({
+    section: 'pageContent',
+    position: 0,
+    targetId: '',
+  });
+
   const [activeTab, setActiveTab] = useState<number>(0);
   const [fetchingLessonDetails, setFetchingLessonDetails] = useState(false);
   const [previewMode, setPreviewMode] = useState<boolean>(false);
@@ -168,6 +181,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         getCurrentPage,
         theme,
         newLessonPlanShow,
+        blockConfig,
+        setBlockConfig,
         setNewLessonPlanShow,
         setUniversalLessonDetails,
         setEnableDnD,

@@ -1,21 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {AiOutlineRight} from 'react-icons/ai';
-
 import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
-
-import {
-  UniversalLesson,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLesson} from '../../../../interfaces/UniversalLessonInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {useHistory} from 'react-router';
 import {useQuery} from '../../../../customHooks/urlParam';
-import {Switch} from '@headlessui/react';
-import {IconType} from 'react-icons';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import CustomToggle from './Toggle';
-import {ChevronRightIcon} from '@heroicons/react/outline';
 import {BiBook} from 'react-icons/bi';
 
 interface ILessonPlanNavigationProps {
@@ -36,7 +27,8 @@ const LessonPlanNavigation = ({
   setSelectedPageID,
   universalLessonDetails,
 }: ILessonPlanNavigationProps) => {
-  const {lessonPlan = []} = universalLessonDetails || {};
+  const {lessonPlan = [{id: '1', name: 'Loading', href: ''}]} =
+    universalLessonDetails || {};
   const {updateMovableList, fetchingLessonDetails} = useULBContext();
   const {dispatch} = useContext(GlobalContext);
   const history = useHistory();
@@ -76,16 +68,6 @@ const LessonPlanNavigation = ({
     }
   }, [universalLessonDetails, fetchingLessonDetails]);
 
-  // useEffect(() => {
-  //   if (universalLessonDetails.darkMode !== undefined) {
-  //     setSettings({
-  //       darkMode: universalLessonDetails.darkMode,
-  //       classwork: true, // for now
-  //     });
-  //     handleThemeChange(settings.darkMode);
-  //   }
-  // }, [universalLessonDetails.darkMode]);
-
   const wait = (timeout: number) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
@@ -113,54 +95,6 @@ const LessonPlanNavigation = ({
 
   return (
     <div className="px-0 py-5 flex items-center border-b-0 border-gray-200 bg-gray-200">
-      {/* <div className="w-8/10">
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Droppable droppableId="partContent" direction="horizontal">
-            {(provided) => (
-              <div
-                className={`max-w-full h-12 bg-white flex overflow-x-auto`}
-                ref={provided.innerRef}
-                {...provided.droppableProps}>
-                {lessonPlan.map((page: UniversalLessonPage, index: number) => (
-                  <Draggable draggableId={`${page.id}`} index={index} key={`${page.id}`}>
-                    {(provided) => (
-                      <div
-                        key={index}
-                        className={`my-2 px-4 flex items-center justify-start cursor-pointer`}
-                        onClick={() => updatePage(page.id)}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}>
-                        <span
-                          className={`font-bold w-auto ${
-                            selectedPageID === page.id
-                              ? 'border-b-2 border-blue-400 hover:border-blue-600 '
-                              : ''
-                          }${
-                            index == 0
-                              ? ' text-blue-500'
-                              : index === lessonPlan.length - 1
-                              ? ' text-red-600'
-                              : ''
-                          }`}>
-                          {page.label}
-                        </span>{' '}
-                        {index !== lessonPlan.length - 1 ? (
-                          <span className="inline-flex items-center justify-end w-auto">
-                            <AiOutlineRight size={25} className="w-auto" />
-                          </span>
-                        ) : null}{' '}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div> */}
-
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <Droppable droppableId="partContent" direction="horizontal">
           {(provided) => (
@@ -178,41 +112,50 @@ const LessonPlanNavigation = ({
                     </a>
                   </div>
                 </li>
-                {lessonPlan.map((page, index) => (
-                  <Draggable draggableId={`${page.id}`} index={index} key={`${page.id}`}>
-                    {(provided) => (
-                      <li
-                        key={index}
-                        className="flex w-auto"
-                        onClick={() => updatePage(page.id)}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}>
-                        <div className="flex items-center w-auto group">
-                          <svg
-                            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
-                            viewBox="0 0 24 44"
-                            preserveAspectRatio="none"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                            aria-hidden="true">
-                            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
-                          </svg>
+                {fetchingLessonDetails ? (
+                  <p className="text-gray-600 hover:text-gray-700 font-medium">
+                    Loading...
+                  </p>
+                ) : (
+                  lessonPlan.map((page, index) => (
+                    <Draggable
+                      draggableId={`${page.id}`}
+                      index={index}
+                      key={`${page.id}`}>
+                      {(provided) => (
+                        <li
+                          key={index}
+                          className="flex w-auto"
+                          onClick={() => updatePage(page.id)}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}>
+                          <div className="flex items-center w-auto group">
+                            <svg
+                              className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+                              viewBox="0 0 24 44"
+                              preserveAspectRatio="none"
+                              fill="currentColor"
+                              xmlns="http://www.w3.org/2000/svg"
+                              aria-hidden="true">
+                              <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                            </svg>
 
-                          <a
-                            href={page.href}
-                            className={` ${
-                              selectedPageID === page.id
-                                ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
-                                : 'text-gray-600 hover:text-gray-700'
-                            }   ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
-                            {page.label}
-                          </a>
-                        </div>
-                      </li>
-                    )}
-                  </Draggable>
-                ))}
+                            <a
+                              href={page.href}
+                              className={` ${
+                                selectedPageID === page.id
+                                  ? 'border-b-0 border-indigo-400 text-indigo-600 hover:text-indigo-700'
+                                  : 'text-gray-600 hover:text-gray-700'
+                              }   ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+                              {page.label}
+                            </a>
+                          </div>
+                        </li>
+                      )}
+                    </Draggable>
+                  ))
+                )}
               </ol>
             </nav>
           )}

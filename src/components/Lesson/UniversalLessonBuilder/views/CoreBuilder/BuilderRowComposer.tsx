@@ -11,7 +11,6 @@ import EditOverlayBlock from '../../../UniversalLessonBlockComponents/UtilityBlo
 import {AddNewBlock} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlock';
 import {AddNewBlockMini} from '../../../UniversalLessonBlockComponents/UtilityBlocks/AddNewBlockMini';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
-import {findIndex, update} from 'lodash';
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {FORM_TYPES} from '../../UI/common/constants';
@@ -20,11 +19,11 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   const {
     mode,
     createNewBlockULBHandler,
+    updateBlockContentULBHandler,
     deleteFromULBHandler,
     updateFromULBHandler,
     handleEditBlockContent,
     handleModalPopToggle,
-    handleTagModalOpen,
   } = props;
   const [editedID, setEditedID] = useState<string>('');
   const {
@@ -42,27 +41,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const {
-    getCurrentPageIdx,
-    selectedPageID,
-    universalLessonDetails,
-    setUniversalLessonDetails,
-    getPartContent,
-    getPageContent,
-  } = useULBContext();
-
-  const updateOnSave = (inputID: string, updatedText: string, pagePartId: string) => {
-    const pageIdx = getCurrentPageIdx(selectedPageID);
-    const pageContent = getPageContent(pageIdx);
-    const pageContentIdx = findIndex(pageContent, (d: any) => d.id === pagePartId);
-    const partContent = getPartContent(pageIdx, pageContentIdx);
-    const partContentIdx = findIndex(partContent, (d: any) => d.id === inputID);
-
-    const PATH_TO_PARTCONTENT = `lessonPlan[${pageIdx}].pageContent[${pageContentIdx}].partContent[${partContentIdx}].value`;
-
-    update(universalLessonDetails, PATH_TO_PARTCONTENT, () => [updatedText]);
-    setUniversalLessonDetails({...universalLessonDetails});
-  };
+  const {selectedPageID, universalLessonDetails} = useULBContext();
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
@@ -213,7 +192,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                   content.class,
                                                   pagePart.id,
                                                   mode,
-                                                  updateOnSave
+                                                  updateBlockContentULBHandler,
+                                                  idx2
                                                 )}
                                               </div>
                                             </div>

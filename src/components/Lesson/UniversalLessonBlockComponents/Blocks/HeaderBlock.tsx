@@ -1,16 +1,13 @@
 import './styles/HeaderStyles.scss';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-import {PartContentSub} from '../../../../interfaces/UniversalLessonInterfaces';
-import useOnScreen from '../../../../customHooks/useOnScreen';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
   pagePartId: string;
-  updateOnSave: any;
 }
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
@@ -20,30 +17,6 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
-  const [isAnimationDone, setIsAnimationDone] = useState(false);
-  // console.log(
-  //   '🚀 ~ file: HeaderBlock.tsx ~ line 23 ~ HeaderBlock ~ isAnimationDone',
-  //   isAnimationDone
-  // );
-
-  // console.log(
-  //   '🚀 ~ file: HeaderBlock.tsx ~ line 25 ~ HeaderBlock ~ animatedClass',
-  //   animatedClass
-  // );
-
-  const headerRef = React.useRef(null);
-  // const isVisible = useOnScreen(headerRef);
-  // const animationClass = 'animated-border-on fade__animation';
-
-  // useEffect(() => {
-  //   if (isVisible && !isAnimationDone) {
-  //     setAnimatedClass(classString);
-  //     // setIsAnimationDone(true);
-  //   } else {
-  //     setAnimatedClass(classString.replace(animationClass, ''));
-  //   }
-  // }, [isVisible, isAnimationDone]);
-
   const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
     return (
       <h3
@@ -52,31 +25,6 @@ export const HeaderBlock = (props: HeaderBlockProps) => {
         {inputValue.value}
       </h3>
     );
-    // switch (inputType) {
-    //   case 'header-default':
-    //     return (
-    //       <h2
-    //         id={inputID}
-    //         className={`
-    //         relative
-    //         w-full text-xl font-semibold  text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
-    //         {inputValue}
-    //       </h2>
-    //     );
-    //   case 'header-section':
-    //     return (
-    //       <h3
-    //         id={inputID}
-    //         className={`
-    //         ${classString || 'border-sea-green text-xl'}
-    //         relative
-    //         w-full flex border-b-4  font-medium text-left  flex-row items-center text-gray-100 mt-4`}>
-    //         {inputValue}
-    //       </h3>
-    //     );
-    //   default:
-    //     return <p id={inputID}>{inputValue}</p>;
-    // }
   };
 
   return (
