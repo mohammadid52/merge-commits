@@ -39,6 +39,7 @@ import ProfileCropModal from '../../Profile/ProfileCropModal';
 import {getAsset} from '../../../../assets';
 import Feedback from './Feedback';
 import Attendance from './Attendance';
+import {IoIosTime} from 'react-icons/io';
 
 export interface UserInfo {
   authId: string;
@@ -94,11 +95,12 @@ const User = () => {
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState<string>('');
 
   const tabs = [
     {name: 'User Information', current: true},
-    {name: 'Associated Classrooms', current: false},
-    {name: 'Timeline', current: false},
+    {name: 'Coursework & Attendance', current: false},
     {name: 'Notebook', current: false},
   ];
 
@@ -412,9 +414,32 @@ const User = () => {
     setUrlState({t: value});
   };
 
+  const switchMainTab = (tab: string) => {
+    setCurTab(tab);
+    history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
+  };
+
+  const handleClassRoomClick = (roomId: string) => {
+    setSelectedRoomId(roomId);
+    setIsTimelineOpen(true)
+  };
+
+  const goToClassroom = () => {
+    setSelectedRoomId('');
+    setIsTimelineOpen(false)
+  }
+
   const AssociatedClasses = ({list}: any) => {
     return (
       <div className="flex flex-col">
+        <div className="flex justify-end mb-4">
+          <Buttons
+            label={'Timeline'}
+            onClick={() => setIsTimelineOpen(true)}
+            btnClass="mr-4"
+            Icon={IoIosTime}
+          />
+        </div>
         <div className="overflow-x-auto">
           <div className="align-middle inline-block min-w-full">
             <div className=" overflow-hidden border-b-0 border-gray-200 sm:rounded-lg">
@@ -452,7 +477,9 @@ const User = () => {
                       <tr
                         key={`${item.class?.name}_${idx}`}
                         className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td
+                          className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900 cursor-pointer"
+                          onClick={() => handleClassRoomClick(item?.class?.id)}>
                           {item?.class?.name}
                         </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
@@ -486,7 +513,7 @@ const User = () => {
     const tabsData = !isTeacher ? slice(tabs, 0, 2) : tabs;
 
     return (
-      <div className="w-9/10 bg-white rounded-lg p-2">
+      <div className="w-8/10 bg-white rounded-lg p-2">
         <div className="sm:hidden">
           <label htmlFor="tabs" className="sr-only">
             Select a tab
@@ -1355,7 +1382,7 @@ const User = () => {
               /> */}
               {currentPath !== 'edit' && curTab === 'User Information' && (
                 <Buttons
-                  btnClass="ml-2 px-6"
+                  btnClass="mr-4 px-6"
                   label="Edit"
                   onClick={() => {
                     setCurTab(tabs[0].name);
@@ -1484,12 +1511,20 @@ const User = () => {
               </div>
             </div>
           )}
-          {curTab === 'Associated Classrooms' &&
+          {curTab === 'Coursework & Attendance' &&
             user?.classes?.items.length > 0 &&
             user.role === 'ST' && (
               <div
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-                <AssociatedClasses list={user?.classes?.items} />
+                {isTimelineOpen ? (
+                  <Attendance
+                    id={id}
+                    goToClassroom={goToClassroom}
+                    selectedRoomId={selectedRoomId}
+                  />
+                ) : (
+                  <AssociatedClasses list={user?.classes?.items} />
+                )}
               </div>
             )}
 
@@ -1518,7 +1553,7 @@ const User = () => {
           {curTab === 'Timeline' && (
             <div
               className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-              <Attendance id={id} />
+              <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
             </div>
           )}
         </div>

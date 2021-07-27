@@ -3417,3 +3417,50 @@ export const getInstListForNonAdmin = /* GraphQL */ `
     }
   }
 `;
+
+export const attendanceByStudent = /* GraphQL */ `
+  query AttendanceByStudent(
+    $studentID: ID
+    $date: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAttendanceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    attendanceByStudent(
+      studentID: $studentID
+      date: $date
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        studentID
+        curriculumID
+        syllabusID
+        lessonID
+        roomID
+        date
+        time
+        curriculum {
+          id
+          institutionID
+          name
+        }
+        lesson {
+          id
+          title
+        }
+        room {
+          id
+          name
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
