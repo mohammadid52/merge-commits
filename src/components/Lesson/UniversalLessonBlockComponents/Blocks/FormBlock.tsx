@@ -28,6 +28,7 @@ export interface FormControlProps {
   value?: any;
   options?: any;
   isInLesson?: boolean;
+  required?: boolean;
   numbered?: boolean;
   index?: string;
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
@@ -204,13 +205,20 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   );
 
   // ~~~~~~~~~~~~~~~~~ LINK ~~~~~~~~~~~~~~~~ //
-  const LinkInput = ({inputID, label, value, numbered, index}: FormControlProps) => {
+  const LinkInput = ({
+    inputID,
+    label,
+    value,
+    required,
+    numbered,
+    index,
+  }: FormControlProps) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
         <label
           className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
           htmlFor="label">
-          {numbered && index} {label} <RequiredMark isRequired={false} />
+          {numbered && index} {label} <RequiredMark isRequired={required} />
         </label>
         <input
           id={inputID}
@@ -236,6 +244,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     value,
     numbered,
     index,
+    required,
   }: FormControlProps) => {
     const inputOther = useRef(null);
 
@@ -286,7 +295,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label}
+          {numbered && index} {label} <RequiredMark isRequired={required} />
         </label>
         <div className="mt-2">
           <span
@@ -396,14 +405,15 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     handleUpdateStudentData?: any,
     getValue?: (domID: string) => any,
     numbered?: boolean,
-    index?: string
+    index?: string,
+    required?: boolean
   ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             <input
               id={inputID}
@@ -422,7 +432,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             <input
               id={inputID}
@@ -441,7 +451,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             <textarea
               id={inputID}
@@ -460,7 +470,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             {generateCheckbox(
               options,
@@ -476,6 +486,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             id={id}
             inputID={inputID}
             value={value}
+            required={required}
             label={label}
             numbered={numbered}
             index={index}
@@ -492,6 +503,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             id={id}
             inputID={inputID}
             label={label}
+            required={required}
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
@@ -507,6 +519,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             numbered={numbered}
             index={index}
             id={id}
+            required={required}
             value={value}
             inputID={inputID}
             label={label}
@@ -518,6 +531,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             numbered={numbered}
             index={index}
             id={id}
+            required={required}
             value={value}
             inputID={inputID}
             label={label}
@@ -546,7 +560,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 handleUpdateStudentData,
                 getDataValue,
                 numbered,
-                `${i + 1}.`
+                `${i + 1}.`,
+                v.isRequired
               )}
             </React.Fragment>
           );

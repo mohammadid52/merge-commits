@@ -80,7 +80,7 @@ const UniversalInput = (props: any) => {
     await updateLessonPageToDB(input);
   };
   const addOneInputField = () => {
-    setList([...list, {id: uuidv4(), label: '', value: ''}]);
+    setList([...list, {id: uuidv4(), label: '', value: '', required: false}]);
   };
 
   const makeRequired = (idx: number, required: boolean = false) => {
@@ -136,12 +136,10 @@ const UniversalInput = (props: any) => {
             : FORM_TYPES.TEXT,
         label: d.label,
         value: d.value,
+        isRequired: d.required,
       };
     });
-    console.log(
-      '🚀 ~ file: UniversalInput.tsx ~ line 141 ~ inputObjArray ~ inputObjArray',
-      inputObjArray
-    );
+
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
       const updatedList = updateContent('', '', type, inputObjArray);
@@ -186,17 +184,23 @@ const UniversalInput = (props: any) => {
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto">
                     <div className="flex items-center mt-4 ">
+                      {selectedForm === FORM_TYPES.TEXT && (
+                        <>
+                          <div className="flex items-center mt-4 ">
+                            <div className="flex items-center text-xs w-auto">
+                              Sentence
+                              <Toggle
+                                checked={input.textArea}
+                                onClick={() => changeCheckboxValue(idx, input.textArea)}
+                              />
+                              Paragraph
+                            </div>
+                            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+                          </div>
+                        </>
+                      )}
                       <div className="flex items-center text-xs w-auto">
-                        Sentence
-                        <Toggle
-                          checked={input.textArea}
-                          onClick={() => changeCheckboxValue(idx, input.textArea)}
-                        />
-                        Paragraph
-                      </div>
-                      <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-                      <div className="flex items-center text-xs w-auto">
-                        Required
+                        Make this required
                         <Toggle
                           checked={input.required}
                           onClick={() => makeRequired(idx, input.required)}
@@ -212,17 +216,23 @@ const UniversalInput = (props: any) => {
                   </div>
                 ) : (
                   <div className="flex items-center mt-4 ">
+                    {selectedForm === FORM_TYPES.TEXT && (
+                      <>
+                        <div className="flex items-center mt-4 ">
+                          <div className="flex items-center text-xs w-auto">
+                            Sentence
+                            <Toggle
+                              checked={input.textArea}
+                              onClick={() => changeCheckboxValue(idx, input.textArea)}
+                            />
+                            Paragraph
+                          </div>
+                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+                        </div>
+                      </>
+                    )}
                     <div className="flex items-center text-xs w-auto">
-                      Sentence
-                      <Toggle
-                        checked={input.textArea}
-                        onClick={() => changeCheckboxValue(idx, input.textArea)}
-                      />
-                      Paragraph
-                    </div>
-                    <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-                    <div className="flex items-center text-xs w-auto">
-                      Required
+                      Make this required
                       <Toggle
                         checked={input.required}
                         onClick={() => makeRequired(idx, input.required)}

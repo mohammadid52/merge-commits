@@ -17,6 +17,7 @@ const EmojiInput = ({
   index,
   handleUpdateStudentData,
   getStudentDataValue,
+  required,
 }: FormControlProps) => {
   const {
     lessonState,
@@ -72,7 +73,7 @@ const EmojiInput = ({
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
       <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
-        {numbered && index} {label} <RequiredMark isRequired={false} />
+        {numbered && index} {label} <RequiredMark isRequired={required} />
       </label>
 
       <div className="flex items-center relative">

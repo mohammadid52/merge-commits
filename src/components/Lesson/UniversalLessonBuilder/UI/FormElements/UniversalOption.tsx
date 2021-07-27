@@ -9,6 +9,37 @@ import Buttons from '../../../../Atoms/Buttons';
 import {getAsset} from '../../../../../assets';
 import {FORM_TYPES, SELECT_ONE} from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import {Switch} from '@headlessui/react';
+import {classNames} from './TextInput';
+
+const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
+  return (
+    <Switch
+      checked={checked}
+      onChange={onClick}
+      className="mx-3 flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <span className="sr-only">Text response type</span>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bg-white w-full h-full rounded-md"
+      />
+      <span
+        aria-hidden="true"
+        className={classNames(
+          checked ? 'bg-indigo-600' : 'bg-gray-200',
+          'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200'
+        )}
+      />
+      <span
+        aria-hidden="true"
+        className={classNames(
+          checked ? 'translate-x-5' : 'translate-x-0',
+          'pointer-events-none absolute left-0 inline-block h-5 w-5 border border-gray-200 rounded-full bg-white shadow transform ring-0 transition-transform ease-in-out duration-200'
+        )}
+      />
+    </Switch>
+  );
+};
 
 const SelectOne = ({
   numbered,
@@ -43,6 +74,7 @@ const SelectOne = ({
       ...list,
       {
         id: uuidv4(),
+        required: false,
         label: '',
         options: [
           {label: '1', text: '', id: uuidv4()},
@@ -71,6 +103,7 @@ const SelectOne = ({
         id: partContentId,
         type: selectedForm === SELECT_ONE ? FORM_TYPES.RADIO : FORM_TYPES.MULTIPLE,
         label: d.label,
+        isRequired: d.required,
         options: d.options,
       };
     });
@@ -115,6 +148,11 @@ const SelectOne = ({
       remove(options, (n: any) => n.id === id);
       setList([...list]);
     }
+  };
+
+  const makeRequired = (idx: number, required: boolean = false) => {
+    update(list[idx], `required`, () => !required);
+    setList([...list]);
   };
 
   const getColor = (color: string) => {
@@ -241,11 +279,48 @@ const SelectOne = ({
                           );
                         })}
                     </div>
-                    <RemoveInput
-                      idx={idx}
-                      inputId={input.id}
-                      removeItemFromList={removeItemFromList}
-                    />
+
+                    {idx !== 0 ? (
+                      <div className="flex my-2 items-center justify-between w-auto">
+                        <div className="flex items-center w-auto mt-4 ">
+                          {/* <div className="flex items-center text-xs w-auto">
+                            List
+                            <Toggle checked onClick={() => {}} />
+                            Inline
+                          </div>
+                          <span className="w-auto text-gray-500 text-xl mx-4">|</span> */}
+                          <div className="flex items-center text-xs w-auto">
+                            Make this required
+                            <Toggle
+                              checked={input.required}
+                              onClick={() => makeRequired(idx, input.required)}
+                            />
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => removeItemFromList(input.id)}
+                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+                          Remove Field
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center w-auto mt-4 ">
+                        {/* <div className="flex items-center text-xs w-auto">
+                          List
+                          <Toggle checked={input.textArea} onClick={() => {}} />
+                          Inline
+                        </div>
+                        <span className="w-auto text-gray-500 text-xl mx-4">|</span> */}
+                        <div className="flex items-center text-xs w-auto">
+                          Make this required
+                          <Toggle
+                            checked={input.required}
+                            onClick={() => makeRequired(idx, input.required)}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                   {shouldShowActions && (
                     <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
