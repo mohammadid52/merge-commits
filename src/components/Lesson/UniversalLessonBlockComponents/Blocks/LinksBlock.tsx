@@ -31,7 +31,7 @@ const LinksBlock = (props: LinksBlockProps) => {
               ) => (
                 <div
                   key={`${id}_${key}`}
-                  className="h-full p-2 flex justify-center items-start">
+                  className="h-full p-2 flex justify-center items-start px-4">
                   <LinkPreview url={item.value} />
                 </div>
               )
