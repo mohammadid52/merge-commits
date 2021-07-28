@@ -1451,6 +1451,10 @@ export const createRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -1604,6 +1608,10 @@ export const updateRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -1757,6 +1765,10 @@ export const deleteRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -1855,6 +1867,10 @@ export const createRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -1984,6 +2000,10 @@ export const updateRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -2113,6 +2133,10 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10664,6 +10688,10 @@ export const createPersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10862,6 +10890,10 @@ export const updatePersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -11060,6 +11092,10 @@ export const deletePersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -11463,6 +11499,10 @@ export const createAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -11686,6 +11726,10 @@ export const updateAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -11909,6 +11953,10 @@ export const deleteAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
