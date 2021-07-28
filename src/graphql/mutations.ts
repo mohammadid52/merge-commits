@@ -11262,6 +11262,7 @@ export const createAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -11484,6 +11485,7 @@ export const updateAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -11706,6 +11708,7 @@ export const deleteAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
