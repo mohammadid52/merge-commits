@@ -224,21 +224,21 @@ const ClassRoster = (props: classRosterProps) => {
     const {id} = e.target;
 
     if (lessonState.studentViewing === id) {
-      await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
       setViewedStudent('');
       lessonDispatch({
         type: 'SET_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
     } else {
-      await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
       setViewedStudent(id);
       lessonDispatch({
         type: 'SET_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: id},
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
     }
   };
 

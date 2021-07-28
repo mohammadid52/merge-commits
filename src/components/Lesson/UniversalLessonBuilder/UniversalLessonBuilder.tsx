@@ -23,7 +23,6 @@ import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import * as customQueries from '../../../customGraphql/customQueries';
 
-
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
   lessonID?: string;
@@ -113,7 +112,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       last: false,
     },
     {
-      title: universalLessonDetails.title || "Loading...",
+      title: universalLessonDetails.title || 'Loading...',
       url: `/dashboard/lesson-builder/lesson/edit?lessonId=${universalLessonDetails.id}`,
       last: false,
     },
@@ -438,9 +437,11 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     );
     let lessonPages = [...universalLessonDetails.lessonPlan];
     let pageContentData = [...lessonPages[activePageIndex].pageContent];
+
     const activePageContentIndex = pageContentData.findIndex(
       (content: any) => content.id === targetID
     );
+
     switch (propertyToTarget) {
       case 'pageContent':
         pageContentData[activePageContentIndex] = {
@@ -451,6 +452,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
           ...lessonPages[activePageIndex],
           pageContent: pageContentData,
         };
+
         break;
 
       case 'partContent':
@@ -463,6 +465,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
             type: contentType,
             value: inputObj,
           };
+
           pageContentData[activePageContentIndex] = {
             ...pageContentData[activePageContentIndex],
             partContent: activePagePartContentData,

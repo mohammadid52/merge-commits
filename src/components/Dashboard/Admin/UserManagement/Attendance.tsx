@@ -1,24 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import React, {forwardRef, useContext, useEffect, useState} from 'react';
+import {IconContext} from 'react-icons';
+import {IoIosCalendar, IoMdArrowBack} from 'react-icons/io';
 import {FaArrowUp, FaArrowDown} from 'react-icons/fa';
+import DatePicker from 'react-datepicker';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import orderBy from 'lodash/orderBy';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import 'react-datepicker/dist/react-datepicker.css';
-
-import * as queries from '../../../../graphql/queries';
+import * as customQueries from '../../../../customGraphql/customQueries';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 import Loader from '../../../Atoms/Loader';
+import Buttons from '../../../Atoms/Buttons';
+
+import {getAsset} from '../../../../assets';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const pad = (num: any) => {
   return `0${num}`.slice(-2);
 };
 
-const Attendance = ({id}: any) => {
+const limit: number = 10;
+
+const Attendance = ({id, goToClassroom, selectedRoomId}: any) => {
+  const {theme, clientKey} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceList, setAttendanceList] = useState<any>([]);
-  const [focused, setFocused] = useState(false);
   const [date, setDate] = useState(null);
   const [sortConfig, setSortConfig] = useState<{
     fieldName: string;
@@ -27,6 +36,7 @@ const Attendance = ({id}: any) => {
     fieldName: '',
     order: false,
   });
+  const [nextToken, setNextToken] = useState<string>('');
 
   useEffect(() => {
     if (id) {
@@ -34,36 +44,61 @@ const Attendance = ({id}: any) => {
     }
   }, [id]);
 
-  const fetchAttendance = async (date?: Date | null) => {
+  const fetchAttendance = async (
+    date?: Date | null,
+    fetchNewRecords: boolean = false
+  ) => {
     try {
       setLoading(true);
       let payload: any = {
         studentID: id,
-        sortDirection: 'ASC',
-        date
+        sortDirection: 'DESC',
+        date,
+        limit,
       };
+      if (nextToken) {
+        payload.nextToken = nextToken;
+      }
+      if (selectedRoomId) {
+        payload.filter = {roomID: {eq: selectedRoomId}};
+      }
       if (date) {
         const dayNumber = date.getDate();
         const monthNumber = date.getMonth();
         const year = date.getFullYear();
-        
+
         payload.date = {
           eq: `${year}-${pad(monthNumber + 1)}-${pad(dayNumber)}`,
         };
       }
       const list: any = await API.graphql(
-        graphqlOperation(queries.attendanceByStudent, payload)
+        graphqlOperation(customQueries.attendanceByStudent, payload)
       );
-      setAttendanceList(list?.data.attendanceByStudent?.items);
+      const temp = list?.data.attendanceByStudent?.items.map((record: any) => ({
+        ...record,
+        lessonName: record.lesson?.title,
+        curriculumName: record.curriculum?.name,
+        roomName: record.room?.name,
+      }));
+      if (fetchNewRecords) {
+        setAttendanceList(temp);
+      } else {
+        setAttendanceList((prevAttendance: any) => [...prevAttendance, ...temp]);
+      }
+      setNextToken(list?.data.attendanceByStudent?.nextToken);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
   };
 
+  const onLoadMore = () => {
+    fetchAttendance(date);
+  };
+
   const handleDateChange = (date: Date | null) => {
     setDate(date);
-    fetchAttendance(date);
+    fetchAttendance(date, true);
   };
 
   const handleOrderBy = (fieldName: string, order: boolean | 'desc' | 'asc') => {
@@ -100,30 +135,46 @@ const Attendance = ({id}: any) => {
     );
   };
 
+  const DateCustomInput = forwardRef(({value, onClick, ...rest}: any, ref: any) => (
+    <div
+      className={`flex w-auto py-3 px-4 rounded  ${theme.formSelect} ${theme.outlineNone}`}
+      onClick={onClick}>
+      <span className="w-6 mr-4 cursor-pointer">
+        <IconContext.Provider
+          value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+          <IoIosCalendar />
+        </IconContext.Provider>
+      </span>
+      <input
+        placeholder={'Search by date...'}
+        id="searchInput"
+        className={`${theme.outlineNone}`}
+        value={value}
+        {...rest}
+      />
+    </div>
+  ));
+
   return (
     <div className="">
-      <div className="flex justify-end mb-2">
+      <div className="flex justify-between items-center mb-4">
+        <div
+          className="text-indigo-400 flex cursor-pointer w-auto"
+          onClick={goToClassroom}>
+          <span className="w-auto inline-flex items-center mr-2">
+            <IoMdArrowBack className="w-4 h-4" />
+          </span>
+          <span>Back to course list</span>
+        </div>
         <div className="w-64 relative ulb-datepicker">
           <DatePicker
             dateFormat={'dd/MM/yyyy'}
             selected={date}
             placeholderText={'Search by date'}
             onChange={handleDateChange}
-            className="text-dark-gray"
+            customInput={<DateCustomInput />}
             isClearable={true}
           />
-
-          {/* <SingleDatePicker
-                  date={date}
-                  displayFormat={'DD/MM/YYYY'}
-                  focused={focused}
-                  id={id}
-                  readOnly={true}
-                  // isOutsideRange={(day) => !isInclusivelyAfterDay(day, new Date())}
-                  numberOfMonths={1}
-                  onDateChange={(date) => console.log(date, 'date')}
-                  onFocusChange={({focused}) => setFocused(focused)}
-                /> */}
         </div>
       </div>
       <div className="flex flex-col">
@@ -138,60 +189,45 @@ const Attendance = ({id}: any) => {
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'classroom',
-                          sortConfig.fieldName === 'syllabus'
+                          'roomName',
+                          sortConfig.fieldName === 'roomName'
                             ? sortConfig.order === 'desc'
                               ? 'asc'
                               : 'desc'
                             : 'desc'
                         )
                       }>
-                      {withOrderBy('ClassName', 'classroom')}
+                      {withOrderBy('ClassName', 'roomName')}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'curriculum',
-                          sortConfig.fieldName === 'curriculum'
+                          'curriculumName',
+                          sortConfig.fieldName === 'curriculumName'
                             ? sortConfig.order === 'desc'
                               ? 'asc'
                               : 'desc'
                             : 'desc'
                         )
                       }>
-                      {withOrderBy('Curriculum', 'curriculum')}
+                      {withOrderBy('Curriculum', 'curriculumName')}
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
                       onClick={() =>
                         handleOrderBy(
-                          'syllabus',
-                          sortConfig.fieldName === 'syllabus'
+                          'lessonName',
+                          sortConfig.fieldName === 'lessonName'
                             ? sortConfig.order === 'desc'
                               ? 'asc'
                               : 'desc'
                             : 'desc'
                         )
                       }>
-                      {withOrderBy('Syllabus', 'syllabus')}
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                      onClick={() =>
-                        handleOrderBy(
-                          'lesson',
-                          sortConfig.fieldName === 'lesson'
-                            ? sortConfig.order === 'desc'
-                              ? 'asc'
-                              : 'desc'
-                            : 'desc'
-                        )
-                      }>
-                      {withOrderBy('Lesson', 'lesson')}
+                      {withOrderBy('Lesson', 'lessonName')}
                     </th>
                     <th
                       scope="col"
@@ -206,7 +242,7 @@ const Attendance = ({id}: any) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {loading ? (
+                  {loading && !attendanceList.length ? (
                     <tr>
                       <td colSpan={5} className="py-4">
                         <Loader />
@@ -218,17 +254,14 @@ const Attendance = ({id}: any) => {
                         <tr
                           key={`${item.class?.name}_${idx}`}
                           className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {'-'}
-                          </td>
-                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-medium text-gray-900">
-                            {item.curriculum?.name || '-'}
+                          <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm font-bold text-gray-600">
+                            {item.roomName || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.syllabus?.name || '-'}
+                            {item.curriculumName || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
-                            {item.lesson?.title || '-'}
+                            {item.lessonName || '-'}
                           </td>
                           <td className="px-6 py-4 w-auto whitespace-nowrap text-left text-sm text-gray-500">
                             {new Date(item.date).toLocaleDateString()}
@@ -248,6 +281,16 @@ const Attendance = ({id}: any) => {
                   )}
                 </tbody>
               </table>
+              {nextToken ? (
+                <div className="flex justify-center w-full">
+                  <Buttons
+                    label={loading ? 'loading' : 'Load more'}
+                    btnClass="text-center my-2"
+                    disabled={loading}
+                    onClick={onLoadMore}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
