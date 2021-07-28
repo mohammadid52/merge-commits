@@ -4668,6 +4668,7 @@ export const getAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -4892,6 +4893,7 @@ export const listAttendances = /* GraphQL */ `
         roomID
         date
         time
+        isComplete
         curriculum {
           id
           institutionID
@@ -5906,6 +5908,7 @@ export const attendanceByStudent = /* GraphQL */ `
         roomID
         date
         time
+        isComplete
         curriculum {
           id
           institutionID
