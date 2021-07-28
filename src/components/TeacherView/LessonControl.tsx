@@ -110,7 +110,7 @@ const LessonControl = () => {
     )?.pageIdx;
     const getPageData = subscriptionData.pageData;
     lessonDispatch({
-      type: 'LOAD_STUDENT_DATA_SUBSCRIPTION',
+      type: 'LOAD_STUDENT_SUBSCRIPTION_DATA',
       payload: {stDataIdx: getPageIdx, subData: getPageData},
     });
   };
@@ -314,7 +314,7 @@ const LessonControl = () => {
         lessonState.lessonData.lessonPlan.length > 0
       ) {
         lessonDispatch({
-          type: 'SET_SUBSCRIPTION_DATA',
+          type: 'SET_ROOM_SUBSCRIPTION_DATA',
           payload: {ClosedPages: getRoomData.ClosedPages},
         });
       }

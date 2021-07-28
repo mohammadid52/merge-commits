@@ -83,7 +83,7 @@ const LessonApp = () => {
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages,
     });
-    lessonDispatch({type: 'SET_SUBSCRIPTION_DATA', payload: subscriptionData});
+    lessonDispatch({type: 'SET_ROOM_SUBSCRIPTION_DATA', payload: subscriptionData});
   };
 
   // ----------- 4 ---------- //
@@ -113,8 +113,6 @@ const LessonApp = () => {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
-
-      subscription = subscribeToRoom();
     } else {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
@@ -162,6 +160,7 @@ const LessonApp = () => {
         lessonState.lessonData.lessonPlan.length > 0
       ) {
         lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData.ClosedPages});
+        subscription = subscribeToRoom();
       }
     }
   }, [lessonState.lessonData.id]);

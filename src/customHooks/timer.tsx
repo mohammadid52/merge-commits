@@ -72,6 +72,20 @@ const useStudentTimer = (inputs?: inputs) => {
   const [activityTimeout, setactivityTimeout] = useState<any>();
   const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
 
+  const [iAmViewed, setiAmViewed] = useState<boolean>(false);
+  useEffect(() => {
+    if (lessonState.studentViewing && lessonState.studentViewing === state.user.authId) {
+      if (!iAmViewed) {
+        setiAmViewed(true);
+      }
+    }
+    if (lessonState.studentViewing !== state.user.authId) {
+      if (iAmViewed) {
+        setiAmViewed(false);
+      }
+    }
+  }, [lessonState.studentViewing, state.user.authId]);
+
   /**
    *
    * TIMERS & TRIGGERS
