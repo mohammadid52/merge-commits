@@ -22,6 +22,7 @@ import * as queries from '../../graphql/queries';
 import {Auth} from '@aws-amplify/auth';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import {UniversalLessonStudentData} from '../../API';
+import SaveQuit from './Foot/SaveQuit';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -34,8 +35,9 @@ const LessonApp = () => {
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
   const [overlay, setOverlay] = useState<string>('');
+  const [isAtEnd, setisAtEnd] = useState<boolean>(false);
   //  NAVIGATION CONSTANTS
-  const PAGES = lessonState.lessonData.lessonPlan;
+  const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
   // ##################################################################### //
@@ -224,9 +226,6 @@ const LessonApp = () => {
   // ##################################################################### //
   // ################# GET OR CREATE STUDENT DATA RECORDS ################ //
   // ##################################################################### //
-
-  // tempDataIdArray for new student data initialization
-  let tempDataIdArray: any = [];
 
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
@@ -470,6 +469,10 @@ const LessonApp = () => {
     handleUpdatePersonLocation(personLocationObj);
   }, [lessonState.currentPage]);
 
+  const userAtEnd = () => {
+    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
+  };
+
   return (
     <>
       <FloatingSideMenu />
@@ -478,6 +481,8 @@ const LessonApp = () => {
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
           setOverlay={setOverlay}
+          isAtEnd={isAtEnd}
+          setisAtEnd={setisAtEnd}
         />
         {/*<NotificationBar />*/}
 
@@ -485,6 +490,7 @@ const LessonApp = () => {
           {/*{lessonDataLoaded && <Body />}*/}
           {/* ADD LESSONWRAPPER HERE */}
           <CoreUniversalLesson />
+          {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
         </ErrorBoundary>
 
         {lessonDataLoaded && <Foot />}

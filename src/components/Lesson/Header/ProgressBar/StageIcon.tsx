@@ -107,16 +107,11 @@ const StageIcon = (props: StageIconProps) => {
    *
    */
 
-  /*const clickable = !disabled && open;*/
-
   const handleLink = () => {
-    if (!clickable) {
-      return;
+    if (clickable) {
+      // history.push(`${match.url}/${pageNr}`);
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
     }
-
-    history.push(`${match.url}/${pageNr}`);
-    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
-    // dispatch({ type: 'JUMP_PAGE', payload: props.iconID });
   };
 
   const iconColor = () => {
@@ -158,7 +153,7 @@ const StageIcon = (props: StageIconProps) => {
                                     : ''
                                 }
                                 ${
-                                  open || active || id <= state.currentPage
+                                  open || active || id <= lessonState.currentPage
                                     ? 'bg-blueberry'
                                     : ''
                                 } 

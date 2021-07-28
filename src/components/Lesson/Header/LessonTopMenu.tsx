@@ -6,54 +6,58 @@ import ProgressBar from './ProgressBar/ProgressBar';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
+import {getLocalStorageData} from '../../../utilities/localStorage';
 
-const LessonTopMenu = (props: {handlePopup: () => void}) => {
+const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
 
   //  NAVIGATION CONSTANTS
   const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
 
-  //  ENABLE NAVIGATION DEPENDING ON PAGE POSITION
-  const [canContinue, setCanContinue] = useState<boolean>(false);
-  const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
+  const canContinue = () => {
+    return (
+      lessonState.currentPage < PAGES.length - 1 &&
+      PAGES[lessonState.currentPage + 1]?.open !== false
+    );
+  };
 
-  useEffect(() => {
-    if (PAGES) {
-      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1]?.open !== false;
-      const USER_AT_END = CURRENT_PAGE === PAGES.length - 1;
-
-      if (CAN_CONTINUE && !USER_AT_END) {
-        setCanContinue(true);
-      } else if (CAN_CONTINUE && USER_AT_END) {
-        setCanContinue(true);
-        setUserAtEnd(true);
-      }
-    }
-  }, [lessonState.lessonData]);
+  const userAtEnd = () => {
+    return lessonState.currentPage === PAGES.length - 1;
+  };
 
   //  NAVIGATION CONTROLS
   const handleForward = () => {
-    if (canContinue && !userAtEnd) {
-      history.push(`${match.url}/${CURRENT_PAGE + 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: CURRENT_PAGE + 1,
-      });
-    }
-    if (userAtEnd) {
-      props.handlePopup();
+    if (!userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      if (canContinue()) {
+        history.push(`${match.url}/${lessonState.currentPage + 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonState.currentPage + 1,
+        });
+      }
+    } else if (userAtEnd()) {
+      handlePopup();
     }
   };
 
   const handleBack = () => {
-    if (CURRENT_PAGE > 0) {
-      history.push(`${match.url}/${CURRENT_PAGE - 1}`);
+    if (userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      history.push(`${match.url}/${lessonState.currentPage - 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: CURRENT_PAGE - 1,
+        payload: lessonState.currentPage - 1,
+      });
+    } else if (!userAtEnd() && lessonState.currentPage > 0) {
+      if (isAtEnd) setisAtEnd(false);
+      history.push(`${match.url}/${lessonState.currentPage - 1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: lessonState.currentPage - 1,
       });
     }
   };
