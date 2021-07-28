@@ -9,11 +9,9 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
-import Selector from '../../../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
 
 import { languageList } from '../../../../../../../utilities/staticData';
-import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
@@ -175,7 +173,6 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           graphqlOperation(mutations.createUniversalSyllabus, { input })
         );
         const newItem = newSyllabus.data.createUniversalSyllabus;
-        console.log('newItem', newItem);
         // replace this with custom mutation updateCurriculumSyllabusSequence
         await API.graphql(
           graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {

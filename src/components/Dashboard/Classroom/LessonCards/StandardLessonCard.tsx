@@ -1,7 +1,4 @@
 import React, {useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import Start from '../Start';
 
 import {LessonCardProps} from '../Classroom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';

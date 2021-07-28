@@ -59,6 +59,8 @@ export interface Lesson {
     language?: string;
     summary?: string;
     purpose?: string;
+    duration?: number | null;
+    cardImage?: string | null;
   };
   createdAt?: string;
   updatedAt?: string;

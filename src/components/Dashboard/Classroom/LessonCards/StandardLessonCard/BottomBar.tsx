@@ -21,7 +21,9 @@ const BottomBar = (props: LessonCardProps) => {
             <AiOutlineClockCircle />
           </IconContext.Provider>
         </div>
-        <div className={`w-auto mx-4 text-base text-gray-500`}>45 min.</div>
+        <div className={`w-auto mx-4 text-base text-gray-500`}>
+          {lessonProps.lesson?.duration} {lessonProps.lesson?.duration > 1 ? 'weeks' : 'week'}
+        </div>
       </div>
 
       {/* TEACHER */}

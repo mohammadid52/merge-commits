@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
-import {Lesson, LessonCardProps} from '../../Classroom';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import { getImageFromS3Static } from '../../../../../utilities/services';
+import {LessonCardProps} from '../../Classroom';
 
 const SideImage = (props: LessonCardProps) => {
   const {lessonProps} = props;
@@ -12,8 +13,8 @@ const SideImage = (props: LessonCardProps) => {
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
-          lessonProps && lessonProps.lesson?.artist?.images
-            ? lessonProps.lesson?.artist?.images
+          lessonProps && lessonProps.lesson?.cardImage
+            ? getImageFromS3Static(lessonProps.lesson?.cardImage)
             : null
         })`,
         backgroundSize: 'cover',
