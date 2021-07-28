@@ -594,6 +594,39 @@ export const onChangeSyllabusLesson = /* GraphQL */ `
     }
   }
 `;
+export const onChangeUniversalLessonStudentData = /* GraphQL */ `
+  subscription OnChangeUniversalLessonStudentData(
+    $syllabusLessonID: ID!
+    $lessonID: ID!
+    $studentAuthID: ID!
+  ) {
+    onChangeUniversalLessonStudentData(
+      syllabusLessonID: $syllabusLessonID
+      lessonID: $lessonID
+      studentAuthID: $studentAuthID
+    ) {
+      id
+      syllabusLessonID
+      lessonID
+      lessonPageID
+      studentID
+      studentAuthID
+      studentEmail
+      currentLocation
+      lessonProgress
+      pageData {
+        domID
+        input
+        comments {
+          commentBy
+          comment
+        }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
 export const onCreatePerson = /* GraphQL */ `
   subscription OnCreatePerson {
     onCreatePerson {
@@ -10472,6 +10505,7 @@ export const onCreateAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -10691,6 +10725,7 @@ export const onUpdateAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -10910,6 +10945,7 @@ export const onDeleteAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID

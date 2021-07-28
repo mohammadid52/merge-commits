@@ -893,8 +893,13 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Attendance @model
-@key(name: "byStudent", fields: ["studentID", "date"], queryField: "attendanceByStudent") {
+type Attendance
+  @model
+  @key(
+    name: "byStudent"
+    fields: ["studentID", "date"]
+    queryField: "attendanceByStudent"
+  ) {
   id: ID!
   studentID: ID!
   curriculumID: ID!
@@ -903,6 +908,7 @@ type Attendance @model
   roomID: ID!
   date: AWSDate
   time: AWSTime
+  isComplete: Boolean
   curriculum: Curriculum @connection(fields: ["curriculumID"])
   syllabus: UniversalSyllabus @connection(fields: ["syllabusID"])
   lesson: UniversalLesson @connection(fields: ["lessonID"])
@@ -1002,8 +1008,6 @@ type UniversalContentOptions {
   text: String
 }
 
-# Comments array property added to student-data record level
-# This will allow teachers/students to comment on a per-page basis
 type UniversalLessonStudentData
   @model
   @key(fields: ["id"])
@@ -1018,7 +1022,6 @@ type UniversalLessonStudentData
   currentLocation: String
   lessonProgress: String
   pageData: [partInput]
-  comments: [InputComment]
 }
 
 type StudentPageInput {
@@ -1026,7 +1029,6 @@ type StudentPageInput {
   pagePartInput: [partInput]
 }
 
-# We might remove 'comments' on partInput level...
 type partInput {
   domID: String
   input: [String]
@@ -1097,7 +1099,14 @@ type Subscription {
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"])
-  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
+  onChangeUniversalLessonStudentData(
+    syllabusLessonID: ID!
+    lessonID: ID!
+    studentAuthID: ID!
+  ): UniversalLessonStudentData
+    @aws_subscribe(
+      mutations: ["createUniversalLessonStudentData", "updateUniversalLessonStudentData"]
+    )
 }
 
 input CreateClassStudentInput {
