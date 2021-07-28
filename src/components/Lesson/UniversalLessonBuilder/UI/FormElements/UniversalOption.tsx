@@ -84,6 +84,7 @@ const SelectOne = ({
         id: uuidv4(),
         required: false,
         inLine: true,
+        type: selectedForm,
         label: '',
         options: [
           {label: '1', text: '', id: uuidv4()},
@@ -109,7 +110,7 @@ const SelectOne = ({
       const partContentId: string = `${pageContentId}_radioInput`;
       return {
         id: partContentId,
-        type: selectedForm === SELECT_ONE ? FORM_TYPES.RADIO : FORM_TYPES.MULTIPLE,
+        type: d.type === SELECT_MANY ? FORM_TYPES.MULTIPLE : FORM_TYPES.RADIO,
         label: d.label,
         isRequired: d.required,
         options: d.options,
@@ -178,6 +179,10 @@ const SelectOne = ({
 
   const changeBool = (idx: number, field: string, bool: boolean = false) => {
     update(list[idx], `${field}`, () => !bool);
+    setList([...list]);
+  };
+  const changeValue = (idx: number, field: string, val: string) => {
+    update(list[idx], `${field}`, () => val);
     setList([...list]);
   };
 
@@ -462,6 +467,21 @@ const SelectOne = ({
                               onClick={() => changeBool(idx, 'required', input.required)}
                             />
                           </div>
+                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+                          <div className="flex items-center text-xs w-auto">
+                            Single response
+                            <Toggle
+                              checked={input.type === SELECT_MANY}
+                              onClick={() =>
+                                changeValue(
+                                  idx,
+                                  'type',
+                                  input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                                )
+                              }
+                            />
+                            Multiple response
+                          </div>
                         </div>
 
                         <button
@@ -487,6 +507,22 @@ const SelectOne = ({
                             checked={input.required}
                             onClick={() => changeBool(idx, 'required', input.required)}
                           />
+                        </div>
+
+                        <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+                        <div className="flex items-center text-xs w-auto">
+                          Single response
+                          <Toggle
+                            checked={input.type === SELECT_MANY}
+                            onClick={() =>
+                              changeValue(
+                                idx,
+                                'type',
+                                input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                              )
+                            }
+                          />
+                          Multiple response
                         </div>
                       </div>
                     )}
@@ -535,7 +571,8 @@ const SelectOne = ({
       {curTab === tabs[1].name && (
         <div>
           <div className="h-56 overflow-y-auto rounded-lg shadow bg-dark-gray py-4 px-2">
-            {list[0].label && list[0].options[0].text ? (
+            {filterCompleteQuestions.length > 0 &&
+            filterCompleteQuestions[0].options[0].text ? (
               filterCompleteQuestions.map(
                 (
                   question: {
@@ -543,6 +580,7 @@ const SelectOne = ({
                     label: string;
                     required: boolean;
                     inLine: boolean;
+                    type: string;
                     options: {id: string; label: string; text: string}[];
                   },
                   index: number
@@ -558,7 +596,7 @@ const SelectOne = ({
                       </label>
                       {generateCheckbox(
                         question.options,
-                        selectedForm === SELECT_MANY ? true : false,
+                        question.type === SELECT_MANY ? true : false,
                         question.id,
                         question.inLine
                       )}

@@ -9,6 +9,7 @@ const UniversalOptionDialog = (props: any) => {
       label: '',
       required: false,
       inLine: true,
+      type: props.selectedForm,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},
