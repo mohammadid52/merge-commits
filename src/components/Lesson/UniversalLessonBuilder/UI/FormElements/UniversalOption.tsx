@@ -415,24 +415,26 @@ const SelectOne = ({
                           );
                         })}
 
-                      <div>
-                        <div className="my-4  flex flex-col items-center justify-center space-y-2">
-                          <p className="text-gray-500 text-center text-sm">
-                            ----- Or use suggested options -----
-                          </p>
-                          <Buttons
-                            label="Suggestions"
-                            onClick={() =>
-                              setSuggestionModal({
-                                ...suggestionModal,
-                                idx,
-                                data: optionResponses,
-                                show: true,
-                              })
-                            }
-                          />
+                      {selectedForm === SELECT_ONE && (
+                        <div>
+                          <div className="my-4  flex flex-col items-center justify-center space-y-2">
+                            <p className="text-gray-500 text-center text-sm">
+                              ----- Or use suggested options -----
+                            </p>
+                            <Buttons
+                              label="Suggestions"
+                              onClick={() =>
+                                setSuggestionModal({
+                                  ...suggestionModal,
+                                  idx,
+                                  data: optionResponses,
+                                  show: true,
+                                })
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
 
                     {idx !== 0 ? (
