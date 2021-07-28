@@ -4,6 +4,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
+import {lessonStateType} from '../state/LessonState';
 
 export type LessonActions =
   | {
@@ -50,7 +51,26 @@ export type LessonActions =
     }
   | {
       type: 'LOAD_STUDENT_DATA';
-      payload: {id: string; pageIdx: number; lessonPageID: string; update: boolean}[];
+      payload: {
+        dataIdReferences: {
+          id: string;
+          pageIdx: number;
+          lessonPageID: string;
+          update: boolean;
+        }[];
+        filteredStudentData?: StudentPageInput[];
+      };
+    }
+  | {
+      type: 'LOAD_STUDENT_DATA_SUBSCRIPTION';
+      payload: {
+        stDataIdx: number;
+        subData: StudentPageInput[];
+      };
+    }
+  | {
+      type: 'UNLOAD_STUDENT_DATA';
+      payload: any;
     }
   | {
       type: 'SET_UPDATE_STATUS';
@@ -156,7 +176,35 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {
         ...state,
         loaded: true,
-        universalStudentDataID: action.payload,
+        universalStudentDataID: action.payload.dataIdReferences,
+        studentData: action.payload.filteredStudentData
+          ? action.payload.filteredStudentData
+          : state.studentData,
+      };
+    case 'LOAD_STUDENT_DATA_SUBSCRIPTION':
+      const stDataIdx = action.payload.stDataIdx;
+      const subData = action.payload.subData;
+      const newStudentData = state.studentData.map(
+        (inputArr: StudentPageInput[], inputArrIdx: number) => {
+          if (inputArrIdx === stDataIdx) {
+            return subData;
+          } else {
+            return inputArr;
+          }
+        }
+      );
+      console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
+      console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
+      return {
+        ...state,
+        studentData: newStudentData,
+      };
+    case 'UNLOAD_STUDENT_DATA':
+      return {
+        ...state,
+        loaded: false,
+        universalStudentDataID: [],
+        studentData: [],
       };
     case 'UPDATE_STUDENT_DATA':
       const pageIdx = action.payload.pageIdx;

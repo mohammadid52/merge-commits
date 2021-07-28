@@ -21,7 +21,8 @@ const composePartContent = (
   classString: string = '',
   pagePartId: string,
   mode?: 'building' | 'viewing' | 'lesson',
-  updateOnSave?: (inputID: string, updatedText: string, pagePartId: string) => void
+  updateBlockContentULBHandler?: any,
+  position?: number
 ): JSX.Element => {
   if (type.includes('jumbotron')) {
     return (
@@ -36,7 +37,17 @@ const composePartContent = (
   } else if (type.includes('keyword')) {
     return <KeywordBlock id={id} type={type} value={value} mode={mode} />;
   } else if (type.includes('highlighter')) {
-    return <HighlighterBlock id={id} type={type} value={value} mode={mode} />;
+    return (
+      <HighlighterBlock
+        updateBlockContentULBHandler={updateBlockContentULBHandler}
+        id={id}
+        position={position}
+        pagePartId={pagePartId}
+        type={type}
+        value={value}
+        mode={mode}
+      />
+    );
   } else if (type === FORM_TYPES.POEM) {
     return <PoemBlock id={id} type={type} value={value} mode={mode} />;
   } else if (type.includes('links')) {
@@ -49,14 +60,12 @@ const composePartContent = (
         classString={classString}
         value={value}
         mode={mode}
-        updateOnSave={updateOnSave}
         pagePartId={pagePartId}
       />
     );
   } else if (type.includes('paragraph')) {
     return (
       <ParagraphBlock
-        updateOnSave={updateOnSave}
         id={id}
         pagePartId={pagePartId}
         type={type}

@@ -17,6 +17,7 @@ const EmojiInput = ({
   index,
   handleUpdateStudentData,
   getStudentDataValue,
+  required,
 }: FormControlProps) => {
   const {
     lessonState,
@@ -65,12 +66,14 @@ const EmojiInput = ({
       setShowEmojiSelector(false);
     }
   };
-
+  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
+    <span className="text-red-500"> {isRequired ? '*' : null}</span>
+  );
   const actionStyles = `ml-4 hover:bg-green-600 flex items-center justify-center ml-2 h-7 w-7 rounded cursor-pointer transition-all duration-300 ${themeTextColor}`;
   return (
     <div id={id} key={inputID} className={`mb-4 p-4`}>
       <label className={`text-sm ${themeTextColor} my-2`} htmlFor="label">
-        {numbered && index} {label}
+        {numbered && index} {label} <RequiredMark isRequired={required} />
       </label>
 
       <div className="flex items-center relative">

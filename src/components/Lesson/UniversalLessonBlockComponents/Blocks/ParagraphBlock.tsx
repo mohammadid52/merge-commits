@@ -8,7 +8,7 @@ interface ParagraphBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
-  updateOnSave: any;
+
   pagePartId: string;
 }
 

@@ -3312,6 +3312,7 @@ export type CreateAttendanceInput = {
   roomID: string,
   date?: string | null,
   time?: string | null,
+  isComplete?: boolean | null,
 };
 
 export type ModelAttendanceConditionInput = {
@@ -3322,6 +3323,7 @@ export type ModelAttendanceConditionInput = {
   roomID?: ModelIDInput | null,
   date?: ModelStringInput | null,
   time?: ModelStringInput | null,
+  isComplete?: ModelBooleanInput | null,
   and?: Array< ModelAttendanceConditionInput | null > | null,
   or?: Array< ModelAttendanceConditionInput | null > | null,
   not?: ModelAttendanceConditionInput | null,
@@ -3337,6 +3339,7 @@ export type Attendance = {
   roomID?: string,
   date?: string | null,
   time?: string | null,
+  isComplete?: boolean | null,
   curriculum?: Curriculum,
   syllabus?: UniversalSyllabus,
   lesson?: UniversalLesson,
@@ -3354,6 +3357,7 @@ export type UpdateAttendanceInput = {
   roomID?: string | null,
   date?: string | null,
   time?: string | null,
+  isComplete?: boolean | null,
 };
 
 export type DeleteAttendanceInput = {
@@ -4466,6 +4470,7 @@ export type ModelAttendanceFilterInput = {
   roomID?: ModelIDInput | null,
   date?: ModelStringInput | null,
   time?: ModelStringInput | null,
+  isComplete?: ModelBooleanInput | null,
   and?: Array< ModelAttendanceFilterInput | null > | null,
   or?: Array< ModelAttendanceFilterInput | null > | null,
   not?: ModelAttendanceFilterInput | null,
@@ -17195,6 +17200,7 @@ export type CreateAttendanceMutation = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,
@@ -17435,6 +17441,7 @@ export type UpdateAttendanceMutation = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,
@@ -17675,6 +17682,7 @@ export type DeleteAttendanceMutation = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,
@@ -24289,6 +24297,7 @@ export type GetAttendanceQuery = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,
@@ -24532,6 +24541,7 @@ export type ListAttendancesQuery = {
       roomID: string,
       date?: string | null,
       time?: string | null,
+      isComplete?: boolean | null,
       curriculum?:  {
         __typename: "Curriculum",
         id: string,
@@ -25585,6 +25595,7 @@ export type AttendanceByStudentQuery = {
       roomID: string,
       date?: string | null,
       time?: string | null,
+      isComplete?: boolean | null,
       curriculum?:  {
         __typename: "Curriculum",
         id: string,
@@ -37205,6 +37216,7 @@ export type OnCreateAttendanceSubscription = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,
@@ -37440,6 +37452,7 @@ export type OnUpdateAttendanceSubscription = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,
@@ -37675,6 +37688,7 @@ export type OnDeleteAttendanceSubscription = {
     roomID: string,
     date?: string | null,
     time?: string | null,
+    isComplete?: boolean | null,
     curriculum?:  {
       __typename: "Curriculum",
       id: string,

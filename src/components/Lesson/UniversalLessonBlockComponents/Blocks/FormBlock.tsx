@@ -8,11 +8,7 @@ import Loader from '../../../Atoms/Loader';
 import Tooltip from '../../../Atoms/Tooltip';
 import {AiOutlineCheckCircle} from 'react-icons/ai';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {
-  StudentPageInput,
-  UniversalLessonStudentData,
-} from '../../../../interfaces/UniversalLessonInterfaces';
-
+import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 import EmojiInput from './FormBlock/EmojiInputBlock';
 import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
@@ -32,6 +28,7 @@ export interface FormControlProps {
   value?: any;
   options?: any;
   isInLesson?: boolean;
+  required?: boolean;
   numbered?: boolean;
   index?: string;
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
@@ -42,10 +39,12 @@ const SelectMany = ({
   item,
   getCheckValue,
   onChange,
+  isStudent,
 }: {
   getCheckValue: (id: string) => boolean;
   onChange: (e: any) => void;
   item: {text: string; label: string; id: string};
+  isStudent: boolean;
 }) => {
   const {label, text, id} = item;
   const {
@@ -77,9 +76,11 @@ const SelectOne = ({
   item,
   onChange,
   getCheckValue,
+  isStudent,
 }: {
   onChange: (e: any) => void;
   getCheckValue: (id: string) => boolean;
+  isStudent: boolean;
 
   item: {text: string; label: string; id: string};
 }) => {
@@ -146,7 +147,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
-    if (getInput) {
+    if (getInput !== undefined) {
       return getInput.input;
     } else {
       return [''];
@@ -165,8 +166,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
-    console.log('getInput - ', getInput);
-    if (getInput) {
+    if (getInput !== undefined) {
       return getInput.input;
     } else {
       return [''];
@@ -174,12 +174,13 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   };
 
   const getDataValue = (domID: string) => {
-    const isDisplayData = lessonState.displayData.length > 0;
-    if (!isDisplayData) {
-      return getStudentDataValue(domID);
-    } else {
-      return getDisplayDataStudentValue(domID);
-    }
+    return getStudentDataValue(domID);
+    // const isDisplayData = lessonState.displayData.length > 0;
+    // if (!isDisplayData) {
+    //   return getStudentDataValue(domID);
+    // } else {
+    //   return getDisplayDataStudentValue(domID);
+    // }
   };
 
   const [fields, setFields] = useState<any>({});
@@ -203,14 +204,25 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     </span>
   );
 
+  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
+    <span className="text-red-500"> {isRequired ? '*' : null}</span>
+  );
+
   // ~~~~~~~~~~~~~~~~~ LINK ~~~~~~~~~~~~~~~~ //
-  const LinkInput = ({inputID, label, value, numbered, index}: FormControlProps) => {
+  const LinkInput = ({
+    inputID,
+    label,
+    value,
+    required,
+    numbered,
+    index,
+  }: FormControlProps) => {
     return (
       <div id={id} key={id} className={`mb-4 p-4`}>
         <label
           className={`text-sm text-gray-${lessonPageTheme === 'dark' ? '200' : '800'}`}
           htmlFor="label">
-          {numbered && index} {label}
+          {numbered && index} {label} <RequiredMark isRequired={required} />
         </label>
         <input
           id={inputID}
@@ -222,7 +234,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           name="url"
           type="text"
           defaultValue={value.length > 0 ? value : 'Please input...'}
-          onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
           value={isInLesson ? getDataValue(inputID) : value}
         />
       </div>
@@ -236,6 +248,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     value,
     numbered,
     index,
+    required,
   }: FormControlProps) => {
     const inputOther = useRef(null);
 
@@ -286,7 +299,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     return (
       <div id={id} key={inputID} className={`mb-4 p-4`}>
         <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-          {numbered && index} {label}
+          {numbered && index} {label} <RequiredMark isRequired={required} />
         </label>
         <div className="mt-2">
           <span
@@ -303,7 +316,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
           </span>
           <input
             ref={inputOther}
-            onChange={isInLesson && isStudent ? handleFileSelection : undefined}
+            onChange={isInLesson && isStudent ? handleFileSelection : () => {}}
             type="file"
             className="hidden"
             multiple={false}
@@ -365,15 +378,17 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             selectMany ? (
               <SelectMany
                 key={`question_${id}_${idx}`}
-                onChange={isStudent && isInLesson ? onChange : undefined}
+                isStudent={isStudent}
+                onChange={isStudent && isInLesson ? onChange : () => {}}
                 getCheckValue={getCheckValue}
                 item={item}
               />
             ) : (
               <SelectOne
-                onChange={isStudent && isInLesson ? onChange : undefined}
-                getCheckValue={getCheckValue}
                 key={`question_${id}_${idx}`}
+                isStudent={isStudent}
+                onChange={isStudent && isInLesson ? onChange : () => {}}
+                getCheckValue={getCheckValue}
                 item={item}
               />
             )
@@ -396,15 +411,34 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     handleUpdateStudentData?: any,
     getValue?: (domID: string) => any,
     numbered?: boolean,
-    index?: string
+    index?: string,
+    required?: boolean
   ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
+        return (
+          <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
+            <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+              {numbered && index} {label} <RequiredMark isRequired={required} />
+            </label>
+            <input
+              id={inputID}
+              disabled={mode === 'building'}
+              className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              } ${themePlaceholderColor}`}
+              name={'text'}
+              type={'text'}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              value={isInLesson ? getValue(inputID) : value}
+            />
+          </div>
+        );
       case FORM_TYPES.DATE_PICKER:
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             <input
               id={inputID}
@@ -414,17 +448,16 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name="title"
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
               value={isInLesson ? getValue(inputID) : value}
             />
           </div>
         );
-
       case FORM_TYPES.TEXTAREA:
         return (
           <div id={id} key={id} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             <textarea
               id={inputID}
@@ -433,7 +466,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
               }`}
               name="story"
-              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
               value={isInLesson ? getValue(inputID) : value}
             />
           </div>
@@ -443,7 +476,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         return (
           <div id={id} key={inputID} className={`questionItemChild mb-4 px-4`}>
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
-              {numbered && index} {label}
+              {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
             {generateCheckbox(
               options,
@@ -459,12 +492,13 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             id={id}
             inputID={inputID}
             value={value}
+            required={required}
             label={label}
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
             handleUpdateStudentData={
-              isStudent && isInLesson ? handleUpdateStudentData : undefined
+              isStudent && isInLesson ? handleUpdateStudentData : () => {}
             }
             getStudentDataValue={getValue}
           />
@@ -475,11 +509,12 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             id={id}
             inputID={inputID}
             label={label}
+            required={required}
             numbered={numbered}
             index={index}
             isInLesson={isInLesson}
             handleUpdateStudentData={
-              isStudent && isInLesson ? handleUpdateStudentData : undefined
+              isStudent && isInLesson ? handleUpdateStudentData : () => {}
             }
             getStudentDataValue={getValue}
           />
@@ -490,6 +525,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             numbered={numbered}
             index={index}
             id={id}
+            required={required}
             value={value}
             inputID={inputID}
             label={label}
@@ -501,6 +537,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             numbered={numbered}
             index={index}
             id={id}
+            required={required}
             value={value}
             inputID={inputID}
             label={label}
@@ -529,7 +566,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 handleUpdateStudentData,
                 getDataValue,
                 numbered,
-                `${i + 1}.`
+                `${i + 1}.`,
+                v.isRequired
               )}
             </React.Fragment>
           );

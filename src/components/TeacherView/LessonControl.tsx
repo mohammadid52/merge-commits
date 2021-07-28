@@ -15,12 +15,15 @@ import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLe
 import {useParams} from 'react-router';
 import usePrevious from '../../customHooks/previousProps';
 import {
+  StudentPageInput,
   UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../../interfaces/UniversalLessonInterfaces';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
+import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
+import * as subscriptions from '../../graphql/subscriptions';
 import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonControl = () => {
@@ -72,39 +75,149 @@ const LessonControl = () => {
   // ######################### SUBSCRIPTION SETUP ######################## //
   // ##################################################################### //
   let subscription: any;
-  const previousViewing = usePrevious(lessonState.studentViewing);
+  const [subscriptionData, setSubscriptionData] = useState<any>();
 
-  const transformStudentData = (dataArray: UniversalLessonStudentData[]) => {
-    const newArray = lessonState.lessonData.lessonPlan.map(
-      (page: UniversalLessonPage) => {
-        const matchPageWithData = dataArray.find(
-          (dataObj: UniversalLessonStudentData) =>
-            dataObj.universalLessonPageID === page.id
-        );
-        if (matchPageWithData) {
-          return matchPageWithData.pageData;
-        } else {
-          return [{}];
-        }
-      }
-    );
-    return {
-      studentAuthId: controlState.studentViewing,
-      studentData: newArray,
-    };
+  // ~~~~~~~~~~~~~ TEST VALUES ~~~~~~~~~~~~~ //
+  const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
+  const SYLLABUS_ID = '13fa95a7-0f71-4801-bd0c-f4c54fd2b8d8';
+
+  // ----------- 1 ---------- //
+
+  const subscribeToStudent = () => {
+    const studentDataSubscription = API.graphql(
+      graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
+        studentAuthID: lessonState.studentViewing,
+        syllabusLessonID: SYLLABUS_ID,
+        lessonID: LESSON_ID,
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (studentData: any) => {
+        const updatedStudentData =
+          studentData.value.data.onChangeUniversalLessonStudentData;
+        setSubscriptionData(updatedStudentData);
+      },
+    });
+
+    return studentDataSubscription;
   };
 
-  //~~~~~~TEMPORARY STUDENT DATA FETCH~~~~~~//
+  // ----------- 2 ---------- //
 
-  // useEffect(() => {
-  //   if (
-  //     controlState.studentViewing !== '' &&
-  //     controlState.studentViewing !== previousViewing
-  //   ) {
-  //     const transformedStudentData = transformStudentData([exampleStudentDataMutation]);
-  //     lessonDispatch({type: 'SET_DISPLAY_DATA', payload: transformedStudentData});
-  //   }
-  // }, [lessonState.studentViewing]);
+  const updateOnIncomingStudentSubscriptionData = (subscriptionData: any) => {
+    const getPageIdx = lessonState.universalStudentDataID.find(
+      (dataRef: any) => dataRef.id === subscriptionData.id
+    )?.pageIdx;
+    const getPageData = subscriptionData.pageData;
+    lessonDispatch({
+      type: 'LOAD_STUDENT_DATA_SUBSCRIPTION',
+      payload: {stDataIdx: getPageIdx, subData: getPageData},
+    });
+  };
+
+  // ----------- 3 ---------- //
+
+  useEffect(() => {
+    if (subscriptionData) {
+      updateOnIncomingStudentSubscriptionData(subscriptionData);
+    }
+  }, [subscriptionData]);
+
+  // ##################################################################### //
+  // ##################### INITIAL STUDENT DATA FETCH #################### //
+  // ##################################################################### //
+  const getStudentData = async (studentAuthId: string) => {
+    const lessonID = LESSON_ID;
+    const syllabusID = SYLLABUS_ID; // in the table this is called SyllabusLessonID, but it's just the syllabusID
+
+    // transform to data-id array, for updating
+    const studentDataIdArray = (studentDataArray: any[]) => {
+      return studentDataArray
+        .map((dataObj: any, idx: number) => {
+          return {
+            id: dataObj.id,
+            pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+              (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
+            ),
+            lessonPageID: dataObj.lessonPageID,
+            update: false,
+          };
+        })
+        .sort((dataID1: any, dataID2: any) => {
+          if (dataID1.pageIdx < dataID2.pageIdx) {
+            return -1;
+          }
+          if (dataID1.pageIdx > dataID2.pageIdx) {
+            return 1;
+          }
+        });
+    };
+
+    try {
+      const listFilter = {
+        filter: {
+          lessonID: lessonID,
+          syllabusLessonID: syllabusID,
+          studentAuthID: studentAuthId,
+        },
+      };
+      const studentData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessonStudentDatas, {
+          listFilter,
+        })
+      );
+
+      // existing student rows
+      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+
+      if (studentDataRows.length > 0) {
+        subscription = subscribeToStudent();
+
+        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
+        const filteredStudentData = existStudentDataIdArray.reduce(
+          (acc: StudentPageInput[], dataIdObj: any) => {
+            const findPageData = studentDataRows.find(
+              (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+            )?.pageData;
+            if (Array.isArray(findPageData)) {
+              return [...acc, findPageData];
+            } else {
+              return [];
+            }
+          },
+          []
+        );
+
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {
+            dataIdReferences: existStudentDataIdArray,
+            filteredStudentData: filteredStudentData,
+          },
+        });
+      } else {
+        throw 'No student data records for this lesson...';
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (lessonState.studentViewing === '') {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+    } else {
+      if (!lessonState.loaded) {
+        getStudentData(lessonState.studentViewing).then((_: void) =>
+          console.log('getStudentData teacher - ', 'getted')
+        );
+      }
+    }
+  }, [lessonState.studentViewing]);
 
   // ##################################################################### //
   // ################## STUDENT SHARE AND VIEW CONTROLS ################## //

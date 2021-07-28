@@ -67,7 +67,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     mode,
     createNewBlockULBHandler,
     updateBlockContentULBHandler,
-
     deleteFromULBHandler,
     updateFromULBHandler,
     initialUniversalLessonPagePartContent,
@@ -81,9 +80,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     universalLessonDetails,
     selectedPageID,
     setSelectedPageID,
-
+    blockConfig,
+    setBlockConfig,
     getCurrentPage,
   } = useULBContext();
+
   //@ts-ignore
   const {UniversalBuilderDict} = useDictionary(clientKey);
   const params = useQuery(location.search);
@@ -98,18 +99,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   const [builderMenuVisible, setBuilderMenuVisible] = useState<boolean>(false);
   // Modal popIn
   const [modalPopVisible, setModalPopVisible] = useState<boolean>(false);
-  const [blockConfig, setBlockConfig] = useState<{
-    section: string;
-    position: number;
-    targetId: string;
-    classString?: string;
-    inputObj?: any;
-    isEditingMode?: boolean;
-  }>({
-    section: 'pageContent',
-    position: 0,
-    targetId: '',
-  });
+
   const [currentModalDialog, setCurrentModalDialog] = useState<string>('');
 
   // Manage image gallery component
@@ -298,8 +288,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       inputValue: any,
       _: number,
       classString: string
-    ) =>
-      updateBlockContentULBHandler(
+    ) => {
+      return updateBlockContentULBHandler(
         targetID || blockConfig.targetId,
         propertyToTarget || section,
         contentType,
@@ -307,6 +297,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         position,
         classString
       );
+    };
 
     const createNewBlock = (
       targetID: string,
@@ -573,6 +564,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         handleEditBlockContent={handleEditBlockContent}
         handleModalPopToggle={handleModalPopToggle}
         handleTagModalOpen={handleTagModalOpen}
+        updateBlockContentULBHandler={updateBlockContentULBHandler}
         activePageData={selectedPageID ? getCurrentPage(selectedPageID) : {}}
       />
     </div>

@@ -43,6 +43,7 @@ const InputModalComponent = ({
             id: input.id,
             options: input.options,
             label: input.label,
+            required: input.isRequired,
           }))
         );
         setSelectedFormType(SELECT_ONE);
@@ -52,6 +53,7 @@ const InputModalComponent = ({
             id: input.id,
             options: input.options,
             label: input.label,
+            required: input.isRequired,
           }))
         );
         setSelectedFormType(SELECT_MANY);
@@ -61,6 +63,7 @@ const InputModalComponent = ({
             ...input,
             title: input.label,
             placeholder: input.value,
+            required: input.isRequired,
           }))
         );
         setSelectedFormType(INPUT_WITH_EMOJI);
@@ -70,6 +73,7 @@ const InputModalComponent = ({
             ...input,
             title: input.label,
             placeholder: input.value,
+            required: input.isRequired,
           }))
         );
         setSelectedFormType(LINK);
@@ -80,6 +84,7 @@ const InputModalComponent = ({
             textArea: input.type.includes('area'),
             title: input.label,
             placeholder: input.value,
+            required: input.isRequired,
           }))
         );
         setSelectedFormType(INPUT);
@@ -99,6 +104,7 @@ const InputModalComponent = ({
     {
       id: uuidv4(),
       label: '',
+      require: false,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},
@@ -110,6 +116,7 @@ const InputModalComponent = ({
     {
       id: uuidv4(),
       label: '',
+      require: false,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},
@@ -117,12 +124,14 @@ const InputModalComponent = ({
     },
   ]);
 
-  const [linkList, setLinkList] = useState([{id: uuidv4(), label: '', value: ''}]);
+  const [linkList, setLinkList] = useState([
+    {id: uuidv4(), require: false, label: '', value: ''},
+  ]);
   const [attachmentList, setAttachmentList] = useState([
-    {id: uuidv4(), label: '', value: ''},
+    {id: uuidv4(), require: false, label: '', value: ''},
   ]);
   const [datePickerList, setDatePickerList] = useState([
-    {id: uuidv4(), label: '', value: ''},
+    {id: uuidv4(), require: false, label: '', value: ''},
   ]);
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST ENDS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

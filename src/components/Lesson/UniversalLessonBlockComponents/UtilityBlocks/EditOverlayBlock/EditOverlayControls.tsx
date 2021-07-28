@@ -22,6 +22,7 @@ import {find, findIndex, findLastIndex, update} from 'lodash';
 import {reorder} from '../../../../../utilities/strings';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import Storage from '@aws-amplify/storage';
+import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -77,12 +78,15 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     currentPage?.pageContent,
     (d) => d.id === selID.pageContentID
   );
-  const pageContent = find(currentPage?.pageContent, (d) => d.id === selID.pageContentID);
 
+  const pageContent = find(currentPage?.pageContent, (d) => d.id === selID.pageContentID);
   const partContentIdx = findIndex(
     pageContent?.partContent,
     (d) => d.id === selID.partContentID
   );
+
+  const isHighlighter =
+    pageContent?.partContent[partContentIdx].type === FORM_TYPES.HIGHLIGHTER;
 
   const partContentLen = pageContent?.partContent?.length;
 
@@ -383,7 +387,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
               </>
             )}
 
-            {section !== 'pageContent' && (
+            {section !== 'pageContent' && !isHighlighter && (
               <button
                 className={`${actionClass} ${bgClass} ${themeTextColor}`}
                 onClick={() => {
