@@ -26,6 +26,109 @@ export const scrim: any = [
   {id: '3', name: 'Top'},
 ];
 
+export const optionResponses = [
+  {
+    title: 'Frequency',
+    content: [
+      {id: '1', text: 'Never'},
+      {id: '2', text: 'Rarely'},
+      {id: '3', text: 'Sometimes'},
+      {id: '4', text: 'Often'},
+      {id: '5', text: 'Always'},
+    ],
+  },
+  {
+    title: 'Quality',
+    content: [
+      {id: '1', text: 'Very poor'},
+      {id: '2', text: 'Poor'},
+      {id: '3', text: 'Fair'},
+      {id: '4', text: 'Good'},
+      {id: '5', text: 'Excellent'},
+    ],
+  },
+  {
+    title: 'Intensity',
+    content: [
+      {id: '1', text: 'None'},
+      {id: '2', text: 'Very mild'},
+      {id: '3', text: 'Mild'},
+      {id: '4', text: 'Moderate'},
+      {id: '5', text: 'Severe'},
+    ],
+  },
+  {
+    title: 'Agreement',
+    content: [
+      {id: '1', text: 'Strongly disagree'},
+      {id: '2', text: 'Disagree'},
+      {id: '3', text: 'Neither agree nor disagree'},
+      {id: '4', text: 'Agree'},
+      {id: '5', text: 'Strongly agree'},
+    ],
+  },
+  {
+    title: 'Approval',
+    content: [
+      {id: '1', text: 'Strongly disapprove'},
+      {id: '2', text: 'Dissaprove'},
+      {id: '3', text: 'Neutral'},
+      {id: '4', text: 'Approve'},
+      {id: '5', text: 'Strongly approve'},
+    ],
+  },
+  {
+    title: 'Awareness',
+    content: [
+      {id: '1', text: 'Not at all aware'},
+      {id: '2', text: 'Slightly aware'},
+      {id: '3', text: 'Moderately aware'},
+      {id: '4', text: 'Very aware'},
+      {id: '5', text: 'Extremely aware'},
+    ],
+  },
+  {
+    title: 'Importance',
+    content: [
+      {id: '1', text: 'Not at all important'},
+      {id: '2', text: 'Slightly important'},
+      {id: '3', text: 'Moderately important'},
+      {id: '4', text: 'Very important'},
+      {id: '5', text: 'Extremely important'},
+    ],
+  },
+  {
+    title: 'Familiarity',
+    content: [
+      {id: '1', text: 'Not at all familiar'},
+      {id: '2', text: 'Slightly familiar'},
+      {id: '3', text: 'Moderately familiar'},
+      {id: '4', text: 'Very familiar'},
+      {id: '5', text: 'Extremely familiar'},
+    ],
+  },
+  {
+    title: 'Satisfaction',
+    content: [
+      {id: '1', text: 'Not at all satisfied'},
+      {id: '2', text: 'Slightly satisfied'},
+      {id: '3', text: 'Moderately satisfied'},
+      {id: '4', text: 'Very satisfied'},
+      {id: '5', text: 'Extremely satisfied'},
+    ],
+  },
+  {
+    title: 'Performance',
+    content: [
+      {id: '1', text: 'Far below standards'},
+      {id: '2', text: 'Below standards'},
+      {id: '3', text: 'Meets standards'},
+      {id: '4', text: 'Above standards'},
+      {id: '5', text: 'Far above standards'},
+    ],
+  },
+];
+
 export const estimatedTimeList = Array(30)
   .fill({})
   .map((_, index: number) => ({

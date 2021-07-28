@@ -11,6 +11,8 @@ import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
+import {optionResponses} from '../../../../../utilities/staticData';
+import {useEffect} from 'react';
 
 const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
   return (
@@ -53,6 +55,8 @@ const SelectOne = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewContent,
+  suggestionModal,
+  setSuggestionModal,
 }: any) => {
   const {
     clientKey,
@@ -153,6 +157,23 @@ const SelectOne = ({
       setList([...list]);
     }
   };
+
+  const addSuggestions = (idx: number, options: any) => {
+    // {label: '2', text: '', id: uuidv4()},
+    let _options = options.map((o: any) => ({
+      label: o.text,
+      text: o.text,
+      id: o.id,
+    }));
+    update(list[idx], `options`, () => _options);
+    setList([...list]);
+  };
+
+  useEffect(() => {
+    if (suggestionModal.selectedResponse.length > 0) {
+      addSuggestions(suggestionModal.idx, suggestionModal.selectedResponse);
+    }
+  }, [suggestionModal.idx, suggestionModal.selectedResponse]);
 
   const changeBool = (idx: number, field: string, bool: boolean = false) => {
     update(list[idx], `${field}`, () => !bool);
@@ -393,6 +414,25 @@ const SelectOne = ({
                             </div>
                           );
                         })}
+
+                      <div>
+                        <div className="my-4  flex flex-col items-center justify-center space-y-2">
+                          <p className="text-gray-500 text-center text-sm">
+                            ----- Or use suggested options -----
+                          </p>
+                          <Buttons
+                            label="Suggestions"
+                            onClick={() =>
+                              setSuggestionModal({
+                                ...suggestionModal,
+                                idx,
+                                data: optionResponses,
+                                show: true,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     {idx !== 0 ? (

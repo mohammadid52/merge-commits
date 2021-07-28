@@ -24,12 +24,6 @@ const composePartContent = (
   updateBlockContentULBHandler?: any,
   position?: number
 ): JSX.Element => {
-  console.log(
-    '🚀 ~ file: composePartContent.tsx ~ line 27 ~ classString',
-    type,
-    '====>',
-    classString
-  );
   if (type.includes('jumbotron')) {
     return (
       <JumbotronBlock

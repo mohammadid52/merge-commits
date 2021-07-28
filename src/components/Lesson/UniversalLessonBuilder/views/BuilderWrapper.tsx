@@ -52,6 +52,7 @@ import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
+import {Accordion} from '../UI/UIComponents/Accordian';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -206,10 +207,16 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       isEditingMode: false,
     });
   };
+  const [suggestionModal, setSuggestionModal] = useState({
+    show: false,
+    data: [{title: '', content: [{id: '', text: ''}]}],
+    selectedResponse: [],
+    idx: 0,
+  });
 
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: true,
-    type: FORM_TYPES.MULTIPLE,
+    show: false,
+    type: '',
   });
 
   const dialogLabelList = {
@@ -411,6 +418,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             inputObj={inputObj}
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
+            suggestionModal={suggestionModal}
+            setSuggestionModal={setSuggestionModal}
             updateContent={updateBlockContent}
             setUnsavedChanges={setUnsavedChanges}
             askBeforeClose={askBeforeClose}
@@ -525,6 +534,37 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             <>{modalByType(addContentModal.type)}</>
           </div>
           <UnsavedModal />
+        </Modal>
+      )}
+
+      {suggestionModal.show && (
+        <Modal
+          showHeader={true}
+          title={'Option Suggestions'}
+          showHeaderBorder={true}
+          showFooter={false}
+          closeAction={() =>
+            setSuggestionModal({
+              ...suggestionModal,
+              data: [{title: '', content: [{id: '', text: ''}]}],
+              show: false,
+            })
+          }>
+          <div style={{minWidth: '30rem'}} className="bg-white">
+            {suggestionModal.data.map((item) => (
+              <Accordion
+                onResponseSelect={(r: any) => {
+                  setSuggestionModal({
+                    ...suggestionModal,
+                    show: false,
+                    selectedResponse: r,
+                  });
+                }}
+                title={item.title}
+                content={item.content}
+              />
+            ))}
+          </div>
         </Modal>
       )}
 
