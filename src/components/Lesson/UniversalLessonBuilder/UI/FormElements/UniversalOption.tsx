@@ -113,6 +113,7 @@ const SelectOne = ({
         label: d.label,
         isRequired: d.required,
         options: d.options,
+        class: `${d.inLine ? 'flex-row items-center' : 'flex-col items-start'}`,
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
@@ -422,7 +423,12 @@ const SelectOne = ({
                               ----- Or use suggested options -----
                             </p>
                             <Buttons
-                              label="Suggestions"
+                              label={
+                                suggestionModal.idx === idx &&
+                                suggestionModal.selectedResponse.length > 0
+                                  ? 'Change Options'
+                                  : 'Add Suggested Options'
+                              }
                               onClick={() =>
                                 setSuggestionModal({
                                   ...suggestionModal,
