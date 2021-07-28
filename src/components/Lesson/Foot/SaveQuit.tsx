@@ -3,6 +3,7 @@ import {useHistory} from 'react-router-dom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineSave} from 'react-icons/ai';
+import {getLocalStorageData} from '../../../utilities/localStorage';
 
 interface SaveQuitProps {
   id?: string;
@@ -15,21 +16,33 @@ interface SaveQuitProps {
 
 const SaveQuit = (props: SaveQuitProps) => {
   const {lessonState} = useContext(GlobalContext);
-  const {roomID} = props;
   const history = useHistory();
 
+  // ##################################################################### //
+  // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
+  // ##################################################################### //
+  const getRoomData = getLocalStorageData('room_info');
   const [waiting, setWaiting] = useState<boolean>(null);
-  const [safeToLeave, setSafeToLeave] = useState<any>(false);
+  const [safeToLeave, setSafeToLeave] = useState<any>(null);
 
   const handleManualSave = () => {
-    setWaiting(true);
+    if (lessonState.updated) {
+      setWaiting(true);
+      setSafeToLeave(false);
+    } else {
+      setWaiting(false);
+      setSafeToLeave(true);
+    }
   };
 
   useEffect(() => {
-    if (!lessonState.update) {
-      if (waiting === true) {
+    if (!lessonState.updated) {
+      if (waiting === true && safeToLeave === false) {
         setWaiting(false);
         setSafeToLeave(true);
+      } else {
+        setWaiting(null);
+        setSafeToLeave(null);
       }
     }
   }, [lessonState.updated]);
@@ -37,7 +50,7 @@ const SaveQuit = (props: SaveQuitProps) => {
   useEffect(() => {
     console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
-      history.push(`/dashboard/classroom/${roomID}`);
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
     }
   }, [safeToLeave]);
 

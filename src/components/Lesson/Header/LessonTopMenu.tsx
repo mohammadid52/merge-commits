@@ -14,8 +14,9 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
   const history = useHistory();
   const match = useRouteMatch();
 
-  //  NAVIGATION CONSTANTS
   const PAGES = lessonState.lessonData.lessonPlan;
+
+  // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
 
   const canContinue = () => {
     return (
@@ -28,7 +29,9 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
     return lessonState.currentPage === PAGES.length - 1;
   };
 
-  //  NAVIGATION CONTROLS
+  // ##################################################################### //
+  // ############################# NAVIGATION ############################ //
+  // ##################################################################### //
   const handleForward = () => {
     if (!userAtEnd()) {
       if (isAtEnd) setisAtEnd(false);

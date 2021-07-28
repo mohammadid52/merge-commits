@@ -19,19 +19,32 @@ const LessonHeaderBar = ({
   const history = useHistory();
   const {lessonState, theme} = useContext(GlobalContext);
 
+  // ##################################################################### //
+  // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
+  // ##################################################################### //
+
   const getRoomData = getLocalStorageData('room_info');
   const [waiting, setWaiting] = useState<boolean>(null);
-  const [safeToLeave, setSafeToLeave] = useState<any>(false);
+  const [safeToLeave, setSafeToLeave] = useState<any>(null);
 
   const handleManualSave = () => {
-    setWaiting(true);
+    if (lessonState.updated) {
+      setWaiting(true);
+      setSafeToLeave(false);
+    } else {
+      setWaiting(false);
+      setSafeToLeave(true);
+    }
   };
 
   useEffect(() => {
-    if (!lessonState.update) {
-      if (waiting === true) {
+    if (!lessonState.updated) {
+      if (waiting === true && safeToLeave === false) {
         setWaiting(false);
         setSafeToLeave(true);
+      } else {
+        setWaiting(null);
+        setSafeToLeave(null);
       }
     }
   }, [lessonState.updated]);
@@ -44,6 +57,7 @@ const LessonHeaderBar = ({
     }
   }, [safeToLeave]);
 
+  // ------ POPUP MODAL ----- //
   const {visible, setVisible} = useOutsideAlerter(false);
   const handlePopup = () => {
     setVisible((prevState: any) => !prevState);
@@ -89,12 +103,7 @@ const LessonHeaderBar = ({
        */}
 
       {lessonDataLoaded && (
-        <SideMenu
-          lessonDataLoaded={lessonDataLoaded}
-          handlePopup={handlePopup}
-          overlay={overlay}
-          setOverlay={setOverlay}
-        />
+        <SideMenu lessonDataLoaded={lessonDataLoaded} handlePopup={handlePopup} />
       )}
     </div>
   );

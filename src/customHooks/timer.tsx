@@ -163,7 +163,7 @@ const useStudentTimer = (inputs?: inputs) => {
               'background: #00FF00; color: #bada55',
               'saved'
             );
-          }, 10000);
+          }, 4000);
         }
       }
     }
@@ -180,8 +180,10 @@ const useStudentTimer = (inputs?: inputs) => {
       setCurrentSaveCount(lessonState.saveCount);
       const standardUpdate = updateStudentData('autosave');
       Promise.resolve(standardUpdate).then((_: void) => {
-        lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-        console.log('standardUpdate - ', 'done');
+        setTimeout(() => {
+          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
+          console.log('standardUpdate - ', 'done');
+        }, 2000);
       });
     }
     if (lessonState.viewing) {
@@ -191,8 +193,10 @@ const useStudentTimer = (inputs?: inputs) => {
       // lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
       const liveUpdate = updateStudentData('autosave');
       Promise.resolve(liveUpdate).then((_: void) => {
-        lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-        console.log('liveUpdate - ', 'done');
+        setTimeout(() => {
+          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
+          console.log('liveUpdate - ', 'done');
+        }, 2000);
       });
     }
 

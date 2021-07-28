@@ -1,52 +1,19 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customMutations from '../../../customGraphql/customMutations';
 import useStudentTimer from '../../../customHooks/timer';
-import NotesWidget from './SideMenu/NotesWidget';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import HomeWidget from './SideMenu/HomeWidget';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 
-const SideMenu = (props: LessonHeaderBarProps) => {
-  const {overlay, setOverlay} = props;
-  const [cookies, setCookie] = useCookies(['lesson']);
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
-  const [isToggled, setIsToggled] = useState<string[]>(['']);
+const SideMenu = ({handlePopup}: LessonHeaderBarProps) => {
+  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
 
   /**
    * FUNCTION TO SAVE STUDENT DATA ON COMMAND
    * @param saveType
    */
-  const updateStudentData = async (saveType?: string) => {
-    let lessonProgress =
-      lessonState.currentPage > lessonState.lessonProgress
-        ? lessonState.currentPage
-        : lessonState.lessonProgress;
-
-    let data = {
-      id: lessonState.studentDataID,
-      lessonProgress: lessonProgress,
-      status: lessonState.studentStatus,
-      saveType: saveType,
-      syllabusLessonID: lessonState.syllabusLessonID,
-      studentID: lessonState.studentUsername,
-      studentAuthID: lessonState.studentAuthID,
-      // warmupData: lessonState.componentlessonState.story ? state.componentState.story : null,
-      // corelessonData: state.componentState.lyrics ? state.componentState.lyrics : null,
-      // activityData: state.componentState.poem ? state.componentState.poem : null,
-    };
-
-    try {
-      const dataObject: any = await API.graphql(
-        graphqlOperation(customMutations.updateStudentData, {input: data})
-      );
-      console.log(dataObject);
-      lessonDispatch({type: 'SAVED_CHANGES'});
-      console.log('lessonState', lessonState);
-    } catch (error) {
-      console.error(error);
-    }
+  const updateStudentData = async () => {
+    //
   };
 
   const {changeParams, resetParams} = useStudentTimer({
@@ -94,16 +61,12 @@ const SideMenu = (props: LessonHeaderBarProps) => {
         {/**
          * HOME
          */}
-        <HomeWidget
-          overlay={overlay}
-          setOverlay={setOverlay}
-          handlePopup={props.handlePopup}
-        />
+        <HomeWidget handlePopup={handlePopup} />
 
         {/**
          * NOTES
          */}
-        <NotesWidget overlay={overlay} setOverlay={setOverlay} />
+        {/* <NotesWidget overlay={overlay} setOverlay={setOverlay} /> */}
       </div>
     </>
   );

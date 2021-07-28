@@ -493,7 +493,7 @@ const LessonApp = () => {
           {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
         </ErrorBoundary>
 
-        {lessonDataLoaded && <Foot />}
+        {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
       </div>
     </>
   );
