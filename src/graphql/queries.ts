@@ -552,6 +552,10 @@ export const getRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -646,6 +650,10 @@ export const listRooms = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -743,6 +751,10 @@ export const getRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -4427,6 +4439,10 @@ export const getPersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -4869,6 +4885,10 @@ export const getAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
