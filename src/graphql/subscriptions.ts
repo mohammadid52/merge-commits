@@ -189,6 +189,10 @@ export const onChangePersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -621,6 +625,160 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onChangeRoom = /* GraphQL */ `
+  subscription OnChangeRoom($id: ID!) {
+    onChangeRoom(id: $id) {
+      id
+      institutionID
+      classID
+      teacherAuthID
+      teacherEmail
+      name
+      maxPersons
+      filters
+      location
+      startDate
+      startTime
+      endDate
+      endTime
+      length
+      repeat
+      notes
+      activeSyllabus
+      frequency
+      coTeachers {
+        items {
+          id
+          roomID
+          teacherID
+          teacherEmail
+          teacherAuthID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      institution {
+        id
+        name
+        type
+        district
+        address
+        addressLine2
+        city
+        state
+        zip
+        phone
+        website
+        image
+        isServiceProvider
+        serviceProviders {
+          nextToken
+        }
+        staff {
+          nextToken
+        }
+        rooms {
+          nextToken
+        }
+        curricula {
+          nextToken
+        }
+        classes {
+          nextToken
+        }
+        filters
+        checkpoints {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      teacher {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      class {
+        id
+        institutionID
+        type
+        name
+        institution {
+          id
+          name
+          type
+          district
+          address
+          addressLine2
+          city
+          state
+          zip
+          phone
+          website
+          image
+          isServiceProvider
+          filters
+          createdAt
+          updatedAt
+        }
+        rooms {
+          nextToken
+        }
+        students {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      curricula {
+        items {
+          id
+          roomID
+          curriculumID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
+      completedLessons {
+        lessonID
+        time
       }
       createdAt
       updatedAt
@@ -1627,6 +1785,10 @@ export const onCreateRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -1777,6 +1939,10 @@ export const onUpdateRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -1927,6 +2093,10 @@ export const onDeleteRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -2022,6 +2192,10 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -2148,6 +2322,10 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -2274,6 +2452,10 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -9925,6 +10107,10 @@ export const onCreatePersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10120,6 +10306,10 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10315,6 +10505,10 @@ export const onDeletePersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10505,6 +10699,7 @@ export const onCreateAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -10705,6 +10900,10 @@ export const onCreateAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10724,6 +10923,7 @@ export const onUpdateAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -10924,6 +11124,10 @@ export const onUpdateAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -10943,6 +11147,7 @@ export const onDeleteAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -11143,6 +11348,10 @@ export const onDeleteAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }

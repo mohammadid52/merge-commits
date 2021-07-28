@@ -552,6 +552,10 @@ export const getRoom = /* GraphQL */ `
       studentViewing
       displayData
       currentPage
+      completedLessons {
+        lessonID
+        time
+      }
       createdAt
       updatedAt
     }
@@ -646,6 +650,10 @@ export const listRooms = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -743,6 +751,10 @@ export const getRoomCoTeachers = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -4427,6 +4439,10 @@ export const getPersonLocation = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -4668,6 +4684,7 @@ export const getAttendance = /* GraphQL */ `
       roomID
       date
       time
+      isComplete
       curriculum {
         id
         institutionID
@@ -4868,6 +4885,10 @@ export const getAttendance = /* GraphQL */ `
         studentViewing
         displayData
         currentPage
+        completedLessons {
+          lessonID
+          time
+        }
         createdAt
         updatedAt
       }
@@ -4892,6 +4913,7 @@ export const listAttendances = /* GraphQL */ `
         roomID
         date
         time
+        isComplete
         curriculum {
           id
           institutionID
@@ -5906,6 +5928,7 @@ export const attendanceByStudent = /* GraphQL */ `
         roomID
         date
         time
+        isComplete
         curriculum {
           id
           institutionID

@@ -1,4 +1,4 @@
-import {map, remove, update} from 'lodash';
+import {filter, map, remove, update} from 'lodash';
 import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import FormInput from '../../../../Atoms/Form/FormInput';
@@ -7,10 +7,12 @@ import {v4 as uuidv4} from 'uuid';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {getAsset} from '../../../../../assets';
-import {FORM_TYPES, SELECT_ONE} from '../common/constants';
+import {FORM_TYPES, SELECT_MANY, SELECT_ONE} from '../common/constants';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
+import {optionResponses} from '../../../../../utilities/staticData';
+import {useEffect} from 'react';
 
 const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
   return (
@@ -53,8 +55,14 @@ const SelectOne = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewContent,
+  suggestionModal,
+  setSuggestionModal,
 }: any) => {
-  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {
+    clientKey,
+    userLanguage,
+    state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
   const onOptionInputChange = (idx: number, idx2: number, e: any) => {
@@ -75,6 +83,7 @@ const SelectOne = ({
       {
         id: uuidv4(),
         required: false,
+        inLine: true,
         label: '',
         options: [
           {label: '1', text: '', id: uuidv4()},
@@ -104,6 +113,7 @@ const SelectOne = ({
         label: d.label,
         isRequired: d.required,
         options: d.options,
+        class: `${d.inLine ? 'flex-row items-center' : 'flex-col items-start'}`,
       };
     });
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
@@ -149,8 +159,25 @@ const SelectOne = ({
     }
   };
 
-  const makeRequired = (idx: number, required: boolean = false) => {
-    update(list[idx], `required`, () => !required);
+  const addSuggestions = (idx: number, options: any) => {
+    // {label: '2', text: '', id: uuidv4()},
+    let _options = options.map((o: any) => ({
+      label: o.text,
+      text: o.text,
+      id: o.id,
+    }));
+    update(list[idx], `options`, () => _options);
+    setList([...list]);
+  };
+
+  useEffect(() => {
+    if (suggestionModal.selectedResponse.length > 0) {
+      addSuggestions(suggestionModal.idx, suggestionModal.selectedResponse);
+    }
+  }, [suggestionModal.idx, suggestionModal.selectedResponse]);
+
+  const changeBool = (idx: number, field: string, bool: boolean = false) => {
+    update(list[idx], `${field}`, () => !bool);
     setList([...list]);
   };
 
@@ -215,9 +242,120 @@ const SelectOne = ({
     );
   };
 
+  const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
+    <span className="text-red-500"> {isRequired ? '*' : null}</span>
+  );
+  const SelectMany = ({
+    item,
+    checked,
+    onChange,
+  }: {
+    checked: boolean;
+    onChange: (e: any) => void;
+    item: {text: string; label: string; id: string};
+  }) => {
+    const {label, text, id} = item;
+    const {
+      theme,
+      state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+    } = useContext(GlobalContext);
+
+    const themePlaceholderColor =
+      lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+    return (
+      <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
+        <input
+          id={id}
+          data-key={id}
+          data-value={label}
+          type="checkbox"
+          className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
+            checked ? 'bg-blueberry border-white' : 'bg-white border-black '
+          }`}
+          onChange={onChange}
+          checked={checked}
+        />
+
+        <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+      </div>
+    );
+  };
+
+  const SelectOne = ({
+    item,
+    onChange,
+    checked,
+  }: {
+    onChange: (e: any) => void;
+    checked: boolean;
+
+    item: {text: string; label: string; id: string};
+  }) => {
+    const {label, text, id} = item;
+
+    const themePlaceholderColor =
+      lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+    return (
+      <div className={`w-auto flex justify-center items-center mr-8 `}>
+        <input
+          id={id}
+          data-key={id}
+          data-value={label}
+          type="radio"
+          className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+            checked ? 'bg-blueberry border-white' : 'bg-white border-black '
+          }`}
+          onChange={onChange}
+          checked={checked}
+        />
+
+        <span className={`w-auto`}>{text}</span>
+      </div>
+    );
+  };
+
+  // ~~~~~~~~ SELECTMANY CHECKBOXES ~~~~~~~~ //
+  const generateCheckbox = (
+    values: {label: string; text: string; id: string}[],
+    selectMany: boolean,
+    inputID: string,
+    inLine: boolean
+  ) => {
+    if (values && Array.isArray(values)) {
+      return (
+        <div
+          className={`mt-2 flex flex-wrap ${themeTextColor} ${
+            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+          } py-2 px-4 rounded-xl ${
+            inLine ? 'flex-row items-center' : 'flex-col items-start'
+          }`}>
+          {values.map((item, idx: number) =>
+            selectMany ? (
+              <SelectMany
+                key={`question_selectMultiple_${inputID}_${idx}`}
+                onChange={() => {}}
+                checked={false}
+                item={item}
+              />
+            ) : (
+              <SelectOne
+                onChange={() => {}}
+                checked={false}
+                key={`question_selectOne_${inputID}_${idx}`}
+                item={item}
+              />
+            )
+          )}
+        </div>
+      );
+    }
+  };
+
+  const filterCompleteQuestions = filter(list, (q) => q.label.length > 0);
+
   return (
     <>
-      {/* <Tabs /> */}
+      <Tabs />
       {curTab === tabs[0].name && (
         <>
           <div>
@@ -277,22 +415,51 @@ const SelectOne = ({
                             </div>
                           );
                         })}
+
+                      {selectedForm === SELECT_ONE && (
+                        <div>
+                          <div className="my-4  flex flex-col items-center justify-center space-y-2">
+                            <p className="text-gray-500 text-center text-sm">
+                              ----- Or use suggested options -----
+                            </p>
+                            <Buttons
+                              label={
+                                suggestionModal.idx === idx &&
+                                suggestionModal.selectedResponse.length > 0
+                                  ? 'Change Options'
+                                  : 'Add Suggested Options'
+                              }
+                              onClick={() =>
+                                setSuggestionModal({
+                                  ...suggestionModal,
+                                  idx,
+                                  data: optionResponses,
+                                  show: true,
+                                })
+                              }
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {idx !== 0 ? (
                       <div className="flex my-2 items-center justify-between w-auto">
                         <div className="flex items-center w-auto mt-4 ">
-                          {/* <div className="flex items-center text-xs w-auto">
-                            List
-                            <Toggle checked onClick={() => {}} />
+                          <div className="flex items-center text-xs w-auto">
                             Inline
+                            <Toggle
+                              checked={input.inLine}
+                              onClick={() => changeBool(idx, 'inLine', input.inLine)}
+                            />
+                            List
                           </div>
-                          <span className="w-auto text-gray-500 text-xl mx-4">|</span> */}
+                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
                           <div className="flex items-center text-xs w-auto">
                             Make this required
                             <Toggle
                               checked={input.required}
-                              onClick={() => makeRequired(idx, input.required)}
+                              onClick={() => changeBool(idx, 'required', input.required)}
                             />
                           </div>
                         </div>
@@ -305,17 +472,20 @@ const SelectOne = ({
                       </div>
                     ) : (
                       <div className="flex items-center w-auto mt-4 ">
-                        {/* <div className="flex items-center text-xs w-auto">
-                          List
-                          <Toggle checked={input.textArea} onClick={() => {}} />
+                        <div className="flex items-center text-xs w-auto">
                           Inline
+                          <Toggle
+                            checked={input.inLine}
+                            onClick={() => changeBool(idx, 'inLine', input.inLine)}
+                          />
+                          List
                         </div>
-                        <span className="w-auto text-gray-500 text-xl mx-4">|</span> */}
+                        <span className="w-auto text-gray-500 text-xl mx-4">|</span>
                         <div className="flex items-center text-xs w-auto">
                           Make this required
                           <Toggle
                             checked={input.required}
-                            onClick={() => makeRequired(idx, input.required)}
+                            onClick={() => changeBool(idx, 'required', input.required)}
                           />
                         </div>
                       </div>
@@ -363,19 +533,61 @@ const SelectOne = ({
       )}
 
       {curTab === tabs[1].name && (
-        <div className="flex mt-8 justify-end px-6 pb-4">
-          <div className="flex items-center w-auto">
-            <Buttons
-              btnClass="py-1 px-4 text-xs mr-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-              onClick={askBeforeClose}
-              transparent
-            />
-            <Buttons
-              btnClass="py-1 px-8 text-xs ml-2"
-              label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-              onClick={onRadioCreate}
-            />
+        <div>
+          <div className="h-56 overflow-y-auto rounded-lg shadow bg-dark-gray py-4 px-2">
+            {list[0].label && list[0].options[0].text ? (
+              filterCompleteQuestions.map(
+                (
+                  question: {
+                    id: string;
+                    label: string;
+                    required: boolean;
+                    inLine: boolean;
+                    options: {id: string; label: string; text: string}[];
+                  },
+                  index: number
+                ) => {
+                  return (
+                    <div
+                      id={question.id}
+                      key={'preview_question_439i3u4u23'}
+                      className={`mb-4 px-4`}>
+                      <label className={`text-sm ${themeTextColor}`} htmlFor="label">
+                        {numbered && `${index + 1}.`} {question.label}{' '}
+                        <RequiredMark isRequired={question.required} />
+                      </label>
+                      {generateCheckbox(
+                        question.options,
+                        selectedForm === SELECT_MANY ? true : false,
+                        question.id,
+                        question.inLine
+                      )}
+                    </div>
+                  );
+                }
+              )
+            ) : (
+              <div className="h-full flex items-center justify-center">
+                <p className="text-white text-lg text-center">
+                  Add atleast one question with one option
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="flex mt-8 justify-end px-6 pb-4">
+            <div className="flex items-center w-auto">
+              <Buttons
+                btnClass="py-1 px-4 text-xs mr-2"
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
+                onClick={askBeforeClose}
+                transparent
+              />
+              <Buttons
+                btnClass="py-1 px-8 text-xs ml-2"
+                label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
+                onClick={onRadioCreate}
+              />
+            </div>
           </div>
         </div>
       )}
