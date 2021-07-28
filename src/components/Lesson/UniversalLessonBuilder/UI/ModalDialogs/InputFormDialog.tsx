@@ -95,16 +95,17 @@ const InputModalComponent = ({
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST STARTS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   const [inputList, setInputList] = useState([
-    {textArea: false, id: uuidv4(), title: '', placeholder: ''},
+    {id: uuidv4(), textArea: false, label: '', value: '', required: false},
   ]);
   const [emojiInputList, setEmojiInputList] = useState([
-    {id: uuidv4(), title: '', placeholder: ''},
+    {id: uuidv4(), label: '', value: '', required: false},
   ]);
   const [manyOptionList, setManyOptionList] = useState([
     {
       id: uuidv4(),
       label: '',
-      require: false,
+      required: false,
+      inLine: true,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},
@@ -116,7 +117,8 @@ const InputModalComponent = ({
     {
       id: uuidv4(),
       label: '',
-      require: false,
+      required: false,
+      inLine: true,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},

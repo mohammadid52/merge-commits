@@ -107,8 +107,7 @@ const UniversalInput = (props: any) => {
 
   const onFormCreate = async () => {
     const inputObjArray = map(list, (d: any) => {
-      const pageContentId: string = `${uuidv4()}_`;
-      const partContentId: string = `${pageContentId}_${
+      const partContentId: string = `${uuidv4()}_${
         selectedForm === ATTACHMENTS
           ? 'attachments'
           : selectedForm === DATE_PICKER
@@ -119,6 +118,7 @@ const UniversalInput = (props: any) => {
           ? 'linkInput'
           : 'text-input'
       }`;
+
       return {
         id: partContentId,
         type:
