@@ -4,7 +4,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
-import {lessonStateType} from '../state/LessonState';
+import {lessonStateType, lessonState as initialLessonState} from '../state/LessonState';
 
 export type LessonActions =
   | {
@@ -261,7 +261,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'SET_DISPLAY_DATA':
       return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
-      return {...state, currentPage: action.payload};
+      return {
+        ...state,
+        currentPage: action.payload,
+        lessonProgress:
+          action.payload > state.lessonProgress ? action.payload : state.lessonProgress,
+      };
     case 'TOGGLE_OPEN_PAGE':
       const mappedPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
@@ -277,7 +282,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
       console.log('cleanup...');
-      return state;
+      return initialLessonState;
     default:
       return state;
   }
