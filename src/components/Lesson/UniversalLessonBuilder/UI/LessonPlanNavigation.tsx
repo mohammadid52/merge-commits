@@ -101,7 +101,7 @@ const LessonPlanNavigation = ({
             <nav
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="bg-white border-b border-gray-200 flex"
+              className="bg-white border-b h-12 border-gray-200 flex"
               aria-label="Breadcrumb">
               <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 sm:px-6 lg:px-8">
                 <li className="flex w-auto">
@@ -163,7 +163,7 @@ const LessonPlanNavigation = ({
       </DragDropContext>
 
       <div className="ml-2 w-2/10 bg-white h-12 flex items-center p-4 mr-3">
-        <div className="flex items-center text-xs">
+        <div className="flex items-center text-base">
           Theme:{' '}
           <CustomToggle
             enabledColor={'bg-yellow-400 text-yellow-500'}
@@ -172,7 +172,7 @@ const LessonPlanNavigation = ({
             enabled={!darkMode}
           />
         </div>
-        <div className="flex items-center text-xs">
+        <div className="flex items-center text-base">
           Classwork:{' '}
           <CustomToggle
             enabledColor={'bg-indigo-600'}
