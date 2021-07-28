@@ -70,10 +70,7 @@ const SaveQuit = (props: SaveQuitProps) => {
         </div>
       ) : null} */}
 
-      <div
-        className={
-          'w-full items-center justify-center flex py-4 bg-darker-gray bg-opacity-40'
-        }>
+      <div className={'w-full items-center justify-center flex py-4'}>
         <button
           type="submit"
           className={`py-1 min-w-48 w-auto px-4 font-semibold bg-blueberry hover:bg-blue-500 hover:text-underline text-white flex justify-center items-center rounded my-4`}

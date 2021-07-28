@@ -126,32 +126,50 @@ const LessonControl = () => {
   // ##################################################################### //
   // ##################### INITIAL STUDENT DATA FETCH #################### //
   // ##################################################################### //
-  const getStudentData = async (studentAuthId: string) => {
-    const lessonID = LESSON_ID;
-    const syllabusID = SYLLABUS_ID; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
-    // transform to data-id array, for updating
-    const studentDataIdArray = (studentDataArray: any[]) => {
-      return studentDataArray
-        .map((dataObj: any, idx: number) => {
-          return {
-            id: dataObj.id,
-            pageIdx: lessonState.lessonData.lessonPlan.findIndex(
-              (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
-            ),
-            lessonPageID: dataObj.lessonPageID,
-            update: false,
-          };
-        })
-        .sort((dataID1: any, dataID2: any) => {
-          if (dataID1.pageIdx < dataID2.pageIdx) {
-            return -1;
-          }
-          if (dataID1.pageIdx > dataID2.pageIdx) {
-            return 1;
-          }
-        });
-    };
+  // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
+  const studentDataIdArray = (studentDataArray: any[]) => {
+    const idArr = studentDataArray
+      .reduce((acc: any[], dataObj: any, idx: number) => {
+        const idObj = {
+          id: dataObj.id,
+          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+            (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
+          ),
+          lessonPageID: dataObj.lessonPageID,
+          update: false,
+        };
+        return [...acc, idObj];
+      }, [])
+      .sort((dataID1: any, dataID2: any) => {
+        if (dataID1.pageIdx < dataID2.pageIdx) {
+          return -1;
+        }
+        if (dataID1.pageIdx > dataID2.pageIdx) {
+          return 1;
+        }
+      });
+    return idArr;
+  };
+
+  // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
+  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
+    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
+      const findPageData = studentDataArray.find(
+        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+      )?.pageData;
+      if (Array.isArray(findPageData)) {
+        return [...acc, findPageData];
+      } else {
+        return [];
+      }
+    }, []);
+  };
+
+  // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  const getStudentData = async (studentAuthId: string) => {
+    const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
     try {
       const listFilter = {
@@ -174,25 +192,13 @@ const LessonControl = () => {
         subscription = subscribeToStudent();
 
         const existStudentDataIdArray = studentDataIdArray(studentDataRows);
-        const filteredStudentData = existStudentDataIdArray.reduce(
-          (acc: StudentPageInput[], dataIdObj: any) => {
-            const findPageData = studentDataRows.find(
-              (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
-            )?.pageData;
-            if (Array.isArray(findPageData)) {
-              return [...acc, findPageData];
-            } else {
-              return [];
-            }
-          },
-          []
-        );
+        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
 
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: filteredStudentData,
+            filteredStudentData: filteredData,
           },
         });
       } else {

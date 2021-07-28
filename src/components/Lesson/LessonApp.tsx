@@ -252,6 +252,20 @@ const LessonApp = () => {
     return idArr;
   };
 
+  // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
+  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
+    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
+      const findPageData = studentDataArray.find(
+        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+      )?.pageData;
+      if (Array.isArray(findPageData)) {
+        return [...acc, findPageData];
+      } else {
+        return [];
+      }
+    }, []);
+  };
+
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
   const loopCreateStudentData = async (
     lessonPages: any[],
@@ -289,12 +303,19 @@ const LessonApp = () => {
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getOrCreateStudentData = async () => {
     const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus;
     const user = await Auth.currentAuthenticatedUser();
-    const authId = user.attributes.sub;
+    const studentAuthId = user.attributes.sub;
     const email = user.attributes.email;
 
     try {
-      const listFilter = {filter: {lessonID: lessonID, studentAuthID: authId}};
+      const listFilter = {
+        filter: {
+          lessonID: lessonID,
+          syllabusLessonID: syllabusID,
+          studentAuthID: studentAuthId,
+        },
+      };
       const studentData: any = await API.graphql(
         graphqlOperation(queries.listUniversalLessonStudentDatas, {
           listFilter,
@@ -327,7 +348,7 @@ const LessonApp = () => {
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
-          authId,
+          studentAuthId,
           email
         );
         const newRecords = await Promise.all(createNewRecords);
@@ -341,20 +362,32 @@ const LessonApp = () => {
         const createExtraRecords = await loopCreateStudentData(
           extraPages,
           lessonID,
-          authId,
+          studentAuthId,
           email
         );
         const extraRecords = await Promise.all(createExtraRecords);
+        const combinedRecords = [...extraRecords, ...studentDataRows];
+        const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
+        const filteredData = filterStudentData(
+          combinedStudentDataIdArray,
+          studentDataRows
+        );
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
-            dataIdReferences: studentDataIdArray([...extraRecords, ...studentDataRows]),
+            dataIdReferences: combinedStudentDataIdArray,
+            filteredStudentData: filteredData,
           },
         });
-      } else if (studentDataRows?.length === PAGES?.length) {
+      } else if (studentDataRows?.length > 0 && extraPages?.length === 0) {
+        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
+        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
-          payload: {dataIdReferences: studentDataIdArray(studentDataRows)},
+          payload: {
+            dataIdReferences: existStudentDataIdArray,
+            filteredStudentData: filteredData,
+          },
         });
       }
     } catch (err) {
