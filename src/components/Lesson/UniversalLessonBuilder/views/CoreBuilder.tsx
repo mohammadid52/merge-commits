@@ -71,6 +71,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     targetID,
     setTargetID,
     selectedPagePartID,
+    updateBlockContentULBHandler,
     setSelectedPagePartID,
     selectedPartContentID,
     setSelectedPartContentID,
@@ -362,6 +363,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             ) : (
               <BuilderRowComposer
                 mode={mode}
+                updateBlockContentULBHandler={updateBlockContentULBHandler}
                 createNewBlockULBHandler={createNewBlockULBHandler}
                 deleteFromULBHandler={deleteFromULBHandler}
                 updateFromULBHandler={updateFromULBHandler}

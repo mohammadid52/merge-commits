@@ -3,7 +3,6 @@ import React, {useContext, useState, useEffect} from 'react';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {uniqueId} from 'lodash';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
@@ -18,7 +17,6 @@ interface IParaModalComponentProps extends IContentTypeComponentProps {
 }
 
 const ParaModalComponent = ({
-  selectedPageID,
   closeAction,
   inputObj,
   setUnsavedChanges,
@@ -54,8 +52,6 @@ const ParaModalComponent = ({
   };
 
   const onParaCreate = async () => {
-    const pageContentId: string = uniqueId(`${selectedPageID}_`);
-    const partContentId: string = uniqueId(`${pageContentId}_`);
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler('', '', FIELD_ID, [
         {id: uuidv4().toString(), value: fields['paragraphHtml']},

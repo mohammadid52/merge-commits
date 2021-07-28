@@ -1498,8 +1498,8 @@ export const listCurriculumsForLessons = /* GraphQL */ `
           items {
             id
             name
-            lessons{
-              items{
+            lessons {
+              items {
                 id
                 lessonID
               }
@@ -1943,6 +1943,7 @@ export const getUniversalLesson = /* GraphQL */ `
               label
               value
               caption
+              isRequired
               width
               height
               options {

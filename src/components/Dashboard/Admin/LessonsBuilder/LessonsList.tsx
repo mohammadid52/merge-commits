@@ -328,7 +328,7 @@ const LessonsList = () => {
                     {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Label</span>
                   </div> */}
-                    <div className="w-1/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span className="w-auto">
                         {LessonsListDict[userLanguage]['TYPE']}
                       </span>
@@ -339,7 +339,7 @@ const LessonsList = () => {
                     <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span className="w-auto">Last Edit Date</span>
                     </div>
-                    <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                       <span className="w-auto">
                         {LessonsListDict[userLanguage]['LANGUAGE']}
                       </span>

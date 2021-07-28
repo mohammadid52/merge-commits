@@ -52,7 +52,7 @@ const InputTag = ({
 
   return (
     <div className="bg-white border-1 border-gray-400 rounded-md flex-wrap">
-      <ul className="inline-flex flex-wrap m-0 p-0 w-full max-w-132">
+      <ul className="inline-flex flex-wrap m-0 p-0 w-full" style={{maxWidth: '36rem'}}>
         {tags.map((tag, i) => (
           <li
             className={
@@ -136,6 +136,7 @@ const ERROR_INITIAL_STATE: ErrorInterface = {
 
 const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const {BUTTONS} = useDictionary(clientKey);
 
@@ -518,7 +519,12 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           Get started by filling in the information below to create your
                           new lesson plan.
                         </p>
-                        <hr className="mt-2 text-gray-500" />
+                        <div
+                          style={{height: 1}}
+                          className={`mt-2 w-full bg-${
+                            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                          }-500`}
+                        />
                       </div>
 
                       <div className="h-7 w-auto flex items-center">
@@ -538,7 +544,10 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                   {/* Divider container */}
                   <div className="py-6 space-y-6 sm:py-0 sm:space-y-0 sm:divide-y sm:divide-gray-200">
                     {/* Activity name */}
-                    <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                    <div
+                      className={
+                        'space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5'
+                      }>
                       <div>
                         <label
                           htmlFor="project-name"
@@ -546,7 +555,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           Activity name <span className="text-red-500">*</span>
                         </label>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div className="sm:col-span-3">
                         <Input
                           placeholder="eg. What is Javascript?"
                           value={title}
@@ -557,7 +566,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                       </div>
                     </div>
                     {/* Activity label */}
-                    <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                    <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
                       <div>
                         <label
                           htmlFor="project-name"
@@ -565,7 +574,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           Activity label <span className="text-red-500">*</span>
                         </label>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div className="sm:col-span-3">
                         <Input
                           showCharacterUsage
                           maxLength={12}
@@ -579,7 +588,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                     </div>
 
                     {/* Activity Instructions */}
-                    <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                    <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
                       <div>
                         <label
                           htmlFor="project-description"
@@ -587,7 +596,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           Activity Instructions
                         </label>
                       </div>
-                      <div className="sm:col-span-2 max-w-132">
+                      <div className="sm:col-span-3 " style={{maxWidth: '36rem'}}>
                         <RichTextEditor
                           initialValue={instructions}
                           onChange={(htmlContent, plainText) =>
@@ -604,7 +613,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
 
                     {/* Interaction Type */}
                     <fieldset>
-                      <div className="space-y-2 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:px-6 sm:py-5">
+                      <div className="space-y-2 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:items-start sm:px-10 sm:py-5">
                         <div>
                           <legend className="text-sm font-medium text-gray-900">
                             Interaction type
@@ -632,7 +641,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                       </div>
                     </fieldset>
                     {/* Estimated time */}
-                    <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                    <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
                       <div>
                         <label
                           htmlFor="project-description"
@@ -640,7 +649,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           Estimated time
                         </label>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div className="sm:col-span-3">
                         <Selector
                           placeholder={'Select estimate time'}
                           list={estimatedTimeList}
@@ -650,7 +659,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                       </div>
                     </div>
                     {/* Tags */}
-                    <div className="space-y-1 px-4 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
+                    <div className="space-y-1 px-6 sm:space-y-0 sm:grid sm:grid-cols-4 sm:px-10 sm:py-5">
                       <div>
                         <label
                           htmlFor="project-description"
@@ -658,7 +667,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                           Tags
                         </label>
                       </div>
-                      <div className="sm:col-span-2">
+                      <div className="sm:col-span-3">
                         <form
                           onSubmit={(e) => {
                             e.preventDefault();

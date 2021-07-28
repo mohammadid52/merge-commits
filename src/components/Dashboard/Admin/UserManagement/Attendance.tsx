@@ -164,7 +164,7 @@ const Attendance = ({id, goToClassroom, selectedRoomId}: any) => {
           <span className="w-auto inline-flex items-center mr-2">
             <IoMdArrowBack className="w-4 h-4" />
           </span>
-          <span>Back to classroom</span>
+          <span>Back to course list</span>
         </div>
         <div className="w-64 relative ulb-datepicker">
           <DatePicker
