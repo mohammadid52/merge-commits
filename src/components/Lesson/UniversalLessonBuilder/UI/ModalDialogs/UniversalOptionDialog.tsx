@@ -8,6 +8,7 @@ const UniversalOptionDialog = (props: any) => {
       id: uuidv4(),
       label: '',
       required: false,
+      inLine: true,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},

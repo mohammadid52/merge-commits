@@ -86,7 +86,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   );
 
   const isHighlighter =
-    pageContent?.partContent[partContentIdx].type === FORM_TYPES.HIGHLIGHTER;
+    pageContent?.partContent[partContentIdx]?.type === FORM_TYPES.HIGHLIGHTER;
 
   const partContentLen = pageContent?.partContent?.length;
 
