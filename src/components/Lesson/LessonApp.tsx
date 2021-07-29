@@ -509,22 +509,27 @@ const LessonApp = () => {
   return (
     <>
       <FloatingSideMenu />
-      <div className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
-        <LessonHeaderBar
-          lessonDataLoaded={lessonDataLoaded}
-          overlay={overlay}
-          setOverlay={setOverlay}
-          isAtEnd={isAtEnd}
-          setisAtEnd={setisAtEnd}
-        />
-        <div className="h-full overflow-y-scroll">
+      <div
+        className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
+        <div className="fixed z-50">
+          <LessonHeaderBar
+            lessonDataLoaded={lessonDataLoaded}
+            overlay={overlay}
+            setOverlay={setOverlay}
+            isAtEnd={isAtEnd}
+            setisAtEnd={setisAtEnd}
+          />
+        </div>
+        <div className="relative top-6">
           {/*<NotificationBar />*/}
 
           <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
             {/*{lessonDataLoaded && <Body />}*/}
             {/* ADD LESSONWRAPPER HERE */}
-            <CoreUniversalLesson />
-            {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
+            <div className="mt-4 mb-8">
+              <CoreUniversalLesson />
+              {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
+            </div>
           </ErrorBoundary>
 
           {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
