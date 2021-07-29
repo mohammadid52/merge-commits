@@ -3473,3 +3473,15 @@ export const attendanceByStudent = /* GraphQL */ `
     }
   }
 `;
+
+export const listRoomsByActiveSyllabusId = /* GraphQL */ `
+  query ListRooms($filter: ModelRoomFilterInput, $limit: Int, $nextToken: String) {
+    listRooms(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        activeSyllabus
+      }
+      nextToken
+    }
+  }
+`;
