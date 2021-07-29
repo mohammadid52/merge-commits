@@ -16,6 +16,7 @@ export const getDashboardData = /* GraphQL */ `
                 maxPersons
                 activeSyllabus
                 activeLessonId
+                activeLessons
                 ClosedPages
                 disabledPages
                 studentViewing
@@ -651,6 +652,7 @@ export const listRooms = /* GraphQL */ `
           lastName
         }
         activeLessonId
+        activeLessons
         ClosedPages
         disabledPages
         studentViewing

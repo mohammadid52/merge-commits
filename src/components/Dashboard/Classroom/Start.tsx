@@ -11,6 +11,7 @@ import * as queries from '../../../graphql/queries';
 import useDictionary from '../../../customHooks/dictionary';
 
 import Buttons from '../../Atoms/Buttons';
+import ModalPopUp from '../../Molecules/ModalPopUp';
 
 import {Lesson} from './Classroom';
 
@@ -22,16 +23,22 @@ interface StartProps {
   type?: string;
   roomID: string;
   isActive?: boolean;
+  activeRoomInfo?: any;
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
   const _isMounted = useRef(true); // Initial value _isMounted = true
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
-  const {isActive, lessonKey, open, accessible, type, roomID} = props;
+  const {activeRoomInfo, isActive, lessonKey, open, accessible, type, roomID} = props;
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    activeLessonsId: [],
+    message: 'Do you want to mark these active lessons as completed?',
+  });
 
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
@@ -149,12 +156,64 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       if (type === 'survey' || type === 'assessment') {
         toggleEnableDisable();
       } else {
-        if (!attendanceRecorded) {
-          recordAttendance();
+        if (isActive) {
+          if (!attendanceRecorded) {
+            recordAttendance();
+          }
+          history.push(`${`/lesson-control/${lessonKey}`}`);
+        } else {
+          toggleLessonSwitchAlert();
         }
-        history.push(`${`/lesson-control/${lessonKey}`}`);
       }
     }
+  };
+
+  const discardChanges = async () => {
+    await API.graphql(
+      graphqlOperation(mutations.updateRoom, {
+        input: {id: roomID, activeLessons: [...state.roomData.activeLessons, lessonKey]},
+      })
+    );
+    history.push(`${`/lesson-control/${lessonKey}`}`);
+  };
+
+  const toggleLessonSwitchAlert = () => {
+    const activeLessonsData = state.roomData.lessons
+      .filter(
+        (lessonData: Lesson) =>
+          lessonData.lesson?.type === 'lesson' &&
+          activeRoomInfo?.activeLessons?.includes(lessonData.lessonID)
+      )
+      .map((item: any) => item.lesson);
+    
+    setWarnModal((prevValues) => ({
+      ...prevValues,
+      message: `Do you want to mark ${activeLessonsData
+        .map((lesson: any) => lesson.title)
+        .join(', ')} as completed?`,
+      activeLessonsId: activeLessonsData.map((lesson: any) => lesson.id),
+      show: true,
+    }));
+  };
+
+  const handleMarkAsCompleteClick = async () => {
+    await API.graphql(
+      graphqlOperation(mutations.updateRoom, {
+        input: {
+          id: roomID,
+          completedLessons: [
+            ...(state.roomData.completedLessons || []),
+            {
+              lessonID: warnModal.activeLessonsId,
+              time: new Date().toISOString(),
+            },
+          ],
+          activeLessons: [lessonKey],
+        },
+      })
+    );
+    history.push(`${`/lesson-control/${lessonKey}`}`);
+    discardChanges();
   };
 
   const firstPart = () => {
@@ -232,6 +291,15 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           !open ? 'opacity-80' : 'opacity-100'
         } transition duration-150 ease-in-out`}
       />
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={discardChanges}
+          saveAction={handleMarkAsCompleteClick}
+          saveLabel="Yes"
+          cancelLabel="No"
+          message={warnModal.message}
+        />
+      )}
     </div>
   );
 };

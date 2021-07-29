@@ -21,7 +21,8 @@ const BottomBar = (props: LessonCardProps) => {
           </IconContext.Provider>
         </div>
         <div className={`w-auto mx-4 text-base text-gray-500`}>
-          {lessonProps.lesson?.duration} {lessonProps.lesson?.duration > 1 ? 'weeks' : 'week'}
+          {lessonProps.lesson?.duration}{' '}
+          {lessonProps.lesson?.duration > 1 ? 'weeks' : 'week'}
         </div>
       </div>
 
@@ -66,10 +67,11 @@ const BottomBar = (props: LessonCardProps) => {
           roomID={roomID}
           isTeacher={isTeacher}
           lessonKey={lessonProps ? lessonProps.lessonID : null}
-          isActive={lessonProps?.lessonID === activeRoomInfo?.activeLessonId}
+          isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
           open={lessonProps && lessonProps.status === 'Active' ? true : false}
           accessible={accessible}
           type={lessonProps.lesson.type}
+          activeRoomInfo={activeRoomInfo}
         />
       </div>
     </div>

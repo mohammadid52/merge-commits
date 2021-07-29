@@ -161,7 +161,7 @@ const LessonApp = () => {
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan.length > 0
       ) {
-        lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData.ClosedPages});
+        lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData?.ClosedPages});
         subscription = subscribeToRoom();
       }
     }
@@ -509,7 +509,7 @@ const LessonApp = () => {
   return (
     <>
       <FloatingSideMenu />
-      <div className={`${theme.bg} w-full flex flex-col h-full items-start`}>
+      <div className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
@@ -517,16 +517,18 @@ const LessonApp = () => {
           isAtEnd={isAtEnd}
           setisAtEnd={setisAtEnd}
         />
-        {/*<NotificationBar />*/}
+        <div className="h-full overflow-y-scroll">
+          {/*<NotificationBar />*/}
 
-        <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
-          {/*{lessonDataLoaded && <Body />}*/}
-          {/* ADD LESSONWRAPPER HERE */}
-          <CoreUniversalLesson />
-          {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
-        </ErrorBoundary>
+          <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
+            {/*{lessonDataLoaded && <Body />}*/}
+            {/* ADD LESSONWRAPPER HERE */}
+            <CoreUniversalLesson />
+            {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
+          </ErrorBoundary>
 
-        {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
+          {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
+        </div>
       </div>
     </>
   );
