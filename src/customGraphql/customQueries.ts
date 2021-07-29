@@ -1944,6 +1944,7 @@ export const getUniversalLesson = /* GraphQL */ `
               value
               caption
               isRequired
+              class
               width
               height
               options {
@@ -2626,7 +2627,7 @@ export const userById = /* GraphQL */ `
                 items {
                   id
                   name
-                  class{
+                  class {
                     id
                     name
                     institution {

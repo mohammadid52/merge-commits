@@ -22,6 +22,7 @@ import * as queries from '../../graphql/queries';
 import {Auth} from '@aws-amplify/auth';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import {UniversalLessonStudentData} from '../../API';
+import SaveQuit from './Foot/SaveQuit';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -34,8 +35,9 @@ const LessonApp = () => {
   // ######################### BASIC UI CONTROLS ######################### //
   // ##################################################################### //
   const [overlay, setOverlay] = useState<string>('');
+  const [isAtEnd, setisAtEnd] = useState<boolean>(false);
   //  NAVIGATION CONSTANTS
-  const PAGES = lessonState.lessonData.lessonPlan;
+  const PAGES = lessonState?.lessonData?.lessonPlan;
   const CURRENT_PAGE = lessonState.currentPage;
 
   // ##################################################################### //
@@ -83,7 +85,7 @@ const LessonApp = () => {
       ...getRoomData,
       ClosedPages: subscriptionData.ClosedPages,
     });
-    lessonDispatch({type: 'SET_SUBSCRIPTION_DATA', payload: subscriptionData});
+    lessonDispatch({type: 'SET_ROOM_SUBSCRIPTION_DATA', payload: subscriptionData});
   };
 
   // ----------- 4 ---------- //
@@ -113,8 +115,6 @@ const LessonApp = () => {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
-
-      subscription = subscribeToRoom();
     } else {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
@@ -162,6 +162,7 @@ const LessonApp = () => {
         lessonState.lessonData.lessonPlan.length > 0
       ) {
         lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData.ClosedPages});
+        subscription = subscribeToRoom();
       }
     }
   }, [lessonState.lessonData.id]);
@@ -226,9 +227,6 @@ const LessonApp = () => {
   // ################# GET OR CREATE STUDENT DATA RECORDS ################ //
   // ##################################################################### //
 
-  // tempDataIdArray for new student data initialization
-  let tempDataIdArray: any = [];
-
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
     const idArr = studentDataArray
@@ -252,6 +250,20 @@ const LessonApp = () => {
         }
       });
     return idArr;
+  };
+
+  // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
+  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
+    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
+      const findPageData = studentDataArray.find(
+        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+      )?.pageData;
+      if (Array.isArray(findPageData)) {
+        return [...acc, findPageData];
+      } else {
+        return [];
+      }
+    }, []);
   };
 
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
@@ -291,12 +303,19 @@ const LessonApp = () => {
   // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
   const getOrCreateStudentData = async () => {
     const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus;
     const user = await Auth.currentAuthenticatedUser();
-    const authId = user.attributes.sub;
+    const studentAuthId = user.attributes.sub;
     const email = user.attributes.email;
 
     try {
-      const listFilter = {filter: {lessonID: lessonID, studentAuthID: authId}};
+      const listFilter = {
+        filter: {
+          lessonID: lessonID,
+          syllabusLessonID: syllabusID,
+          studentAuthID: studentAuthId,
+        },
+      };
       const studentData: any = await API.graphql(
         graphqlOperation(queries.listUniversalLessonStudentDatas, {
           listFilter,
@@ -329,7 +348,7 @@ const LessonApp = () => {
         const createNewRecords = await loopCreateStudentData(
           PAGES,
           lessonID,
-          authId,
+          studentAuthId,
           email
         );
         const newRecords = await Promise.all(createNewRecords);
@@ -343,20 +362,32 @@ const LessonApp = () => {
         const createExtraRecords = await loopCreateStudentData(
           extraPages,
           lessonID,
-          authId,
+          studentAuthId,
           email
         );
         const extraRecords = await Promise.all(createExtraRecords);
+        const combinedRecords = [...extraRecords, ...studentDataRows];
+        const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
+        const filteredData = filterStudentData(
+          combinedStudentDataIdArray,
+          studentDataRows
+        );
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
-            dataIdReferences: studentDataIdArray([...extraRecords, ...studentDataRows]),
+            dataIdReferences: combinedStudentDataIdArray,
+            filteredStudentData: filteredData,
           },
         });
-      } else if (studentDataRows?.length === PAGES?.length) {
+      } else if (studentDataRows?.length > 0 && extraPages?.length === 0) {
+        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
+        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
-          payload: {dataIdReferences: studentDataIdArray(studentDataRows)},
+          payload: {
+            dataIdReferences: existStudentDataIdArray,
+            filteredStudentData: filteredData,
+          },
         });
       }
     } catch (err) {
@@ -471,6 +502,10 @@ const LessonApp = () => {
     handleUpdatePersonLocation(personLocationObj);
   }, [lessonState.currentPage]);
 
+  const userAtEnd = () => {
+    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
+  };
+
   return (
     <>
       <FloatingSideMenu />
@@ -479,6 +514,8 @@ const LessonApp = () => {
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
           setOverlay={setOverlay}
+          isAtEnd={isAtEnd}
+          setisAtEnd={setisAtEnd}
         />
         {/*<NotificationBar />*/}
 
@@ -486,9 +523,10 @@ const LessonApp = () => {
           {/*{lessonDataLoaded && <Body />}*/}
           {/* ADD LESSONWRAPPER HERE */}
           <CoreUniversalLesson />
+          {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
         </ErrorBoundary>
 
-        {lessonDataLoaded && <Foot />}
+        {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
       </div>
     </>
   );

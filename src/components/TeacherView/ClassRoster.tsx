@@ -74,7 +74,7 @@ const ClassRoster = (props: classRosterProps) => {
       }
       setViewedStudent('');
       lessonDispatch({
-        type: 'SET_SUBSCRIPTION_DATA',
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
@@ -226,7 +226,7 @@ const ClassRoster = (props: classRosterProps) => {
     if (lessonState.studentViewing === id) {
       setViewedStudent('');
       lessonDispatch({
-        type: 'SET_SUBSCRIPTION_DATA',
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: ''},
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
@@ -234,7 +234,7 @@ const ClassRoster = (props: classRosterProps) => {
     } else {
       setViewedStudent(id);
       lessonDispatch({
-        type: 'SET_SUBSCRIPTION_DATA',
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
         payload: {id: getRoomData.id, studentViewing: id},
       });
       setLocalStorageData('room_info', {...getRoomData, studentViewing: id});

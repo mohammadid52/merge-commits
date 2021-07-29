@@ -6,66 +6,109 @@ import {getAsset} from '../../../assets';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import PositiveAlert from '../../General/Popup';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
+import {getLocalStorageData} from '../../../utilities/localStorage';
 
-const Foot = (props: LessonHeaderBarProps) => {
+const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, clientKey, theme} = useContext(
     GlobalContext
   );
   const history = useHistory();
   const match = useRouteMatch();
-  const [visible, setVisible] = useState<boolean>(false);
 
-  //  NAVIGATION CONSTANTS
   const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
 
-  //  ENABLE NAVIGATION DEPENDING ON PAGE POSITION
-  const [canContinue, setCanContinue] = useState<boolean>(false);
-  const [userAtEnd, setUserAtEnd] = useState<boolean>(false);
-  useEffect(() => {
-    if (PAGES) {
-      const CAN_CONTINUE = PAGES[CURRENT_PAGE + 1]?.open;
-      const USER_AT_END = CURRENT_PAGE === PAGES.length - 1;
+  // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
 
-      if (CAN_CONTINUE && !USER_AT_END) {
-        setCanContinue(true);
-      } else if (CAN_CONTINUE && USER_AT_END) {
-        setCanContinue(true);
-        setUserAtEnd(true);
-      }
-    }
-  }, [lessonState.lessonData]);
+  const canContinue = () => {
+    return (
+      lessonState.currentPage < PAGES.length - 1 &&
+      PAGES[lessonState.currentPage + 1]?.open !== false
+    );
+  };
 
-  //  NAVIGATION CONTROLS
+  const userAtEnd = () => {
+    return lessonState.currentPage === PAGES.length - 1;
+  };
+
+  // ##################################################################### //
+  // ############################# NAVIGATION ############################ //
+  // ##################################################################### //
   const handleForward = () => {
-    if (canContinue && !userAtEnd) {
-      history.push(`${match.url}/${CURRENT_PAGE + 1}`);
-      lessonDispatch({
-        type: 'SET_CURRENT_PAGE',
-        payload: CURRENT_PAGE + 1,
-      });
-    }
-    if (userAtEnd) {
-      props.handlePopup();
+    if (!userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      if (canContinue()) {
+        history.push(`${match.url}/${lessonState.currentPage + 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonState.currentPage + 1,
+        });
+      }
+    } else if (userAtEnd()) {
+      handlePopup();
     }
   };
 
   const handleBack = () => {
-    if (CURRENT_PAGE > 0) {
-      history.push(`${match.url}/${CURRENT_PAGE - 1}`);
+    if (userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      history.push(`${match.url}/${lessonState.currentPage - 1}`);
       lessonDispatch({
         type: 'SET_CURRENT_PAGE',
-        payload: CURRENT_PAGE - 1,
+        payload: lessonState.currentPage - 1,
+      });
+    } else if (!userAtEnd() && lessonState.currentPage > 0) {
+      if (isAtEnd) setisAtEnd(false);
+      history.push(`${match.url}/${lessonState.currentPage - 1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: lessonState.currentPage - 1,
       });
     }
   };
 
-  const handlePopup = () => {
-    setVisible((prevState: any) => !prevState);
+  // ##################################################################### //
+  // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
+  // ##################################################################### //
+
+  const getRoomData = getLocalStorageData('room_info');
+  const [waiting, setWaiting] = useState<boolean>(null);
+  const [safeToLeave, setSafeToLeave] = useState<any>(null);
+
+  const handleManualSave = () => {
+    if (lessonState.updated) {
+      setWaiting(true);
+      setSafeToLeave(false);
+    } else {
+      setWaiting(false);
+      setSafeToLeave(true);
+    }
   };
 
-  const handleSubmit = () => {
-    history.push('/dashboard');
+  useEffect(() => {
+    if (!lessonState.updated) {
+      if (waiting === true && safeToLeave === false) {
+        setWaiting(false);
+        setSafeToLeave(true);
+      } else {
+        setWaiting(null);
+        setSafeToLeave(null);
+      }
+    }
+  }, [lessonState.updated]);
+
+  useEffect(() => {
+    console.log('safeToLeave State - ', safeToLeave);
+    if (safeToLeave === true) {
+      handlePopup();
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
+    }
+  }, [safeToLeave]);
+
+  // ------ POPUP MODAL ----- //
+
+  const {visible, setVisible} = useOutsideAlerter(false);
+  const handlePopup = () => {
+    setVisible((prevState: any) => !prevState);
   };
 
   return (
@@ -79,7 +122,7 @@ const Foot = (props: LessonHeaderBarProps) => {
             button1="Go to the dashboard"
             button2="Cancel"
             svg="question"
-            handleButton1={handleSubmit}
+            handleButton1={handleManualSave}
             handleButton2={() => handlePopup}
             theme="dark"
             fill="screen"

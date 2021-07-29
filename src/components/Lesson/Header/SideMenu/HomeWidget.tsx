@@ -1,14 +1,10 @@
 import React from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineHome} from 'react-icons/ai';
-import {BsPencilSquare} from 'react-icons/all';
 
-const HomeWidget = (props: {overlay: any; setOverlay: any; handlePopup: any}) => {
-  const {overlay, setOverlay, handlePopup} = props;
+const HomeWidget = (props: {handlePopup: any}) => {
+  const {handlePopup} = props;
   const handleHome = () => {
-    if (overlay !== '') {
-      setOverlay('');
-    }
     handlePopup();
   };
   return (

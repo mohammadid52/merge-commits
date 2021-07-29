@@ -347,7 +347,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   const generateCheckbox = (
     values: {label: string; text: string; id: string}[],
     selectMany: boolean,
-    inputID: string
+    inputID: string,
+    classString: string
   ) => {
     if (values && Array.isArray(values)) {
       const studentDataValue = getStudentDataValue(inputID) || [];
@@ -373,7 +374,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         <div
           className={`mt-2 flex flex-wrap ${themeTextColor} ${
             lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-          } py-2 px-4 rounded-xl`}>
+          } py-2 px-4 rounded-xl ${classString}`}>
           {values.map((item, idx: number) =>
             selectMany ? (
               <SelectMany
@@ -412,7 +413,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     getValue?: (domID: string) => any,
     numbered?: boolean,
     index?: string,
-    required?: boolean
+    required?: boolean,
+    classString?: string
   ) => {
     switch (type) {
       case FORM_TYPES.TEXT:
@@ -481,7 +483,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             {generateCheckbox(
               options,
               type === FORM_TYPES.MULTIPLE ? true : false,
-              inputID
+              inputID,
+              classString
             )}
           </div>
         );
@@ -567,7 +570,8 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
                 getDataValue,
                 numbered,
                 `${i + 1}.`,
-                v.isRequired
+                v.isRequired,
+                v.class
               )}
             </React.Fragment>
           );
