@@ -111,7 +111,7 @@ const InputContainer = ({
                           : 'Add'}{' '}
                         none of the above option
                       </p>
-                      <p
+                      {/* <p
                         onClick={() => {
                           if (input.options.find((item: any) => item.label === 'other')) {
                             removeExtraOption(idx, 'other');
@@ -124,7 +124,7 @@ const InputContainer = ({
                           ? 'Remove'
                           : 'Add'}{' '}
                         'other' option
-                      </p>
+                      </p> */}
                     </div>
                   )}
                 </div>
