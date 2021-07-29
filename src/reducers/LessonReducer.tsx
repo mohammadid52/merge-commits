@@ -4,7 +4,7 @@ import {
   UniversalLessonPage,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
-import {lessonStateType} from '../state/LessonState';
+import {lessonStateType, lessonState as initialLessonState} from '../state/LessonState';
 
 export type LessonActions =
   | {
@@ -28,7 +28,7 @@ export type LessonActions =
       payload: {subscription: any};
     }
   | {
-      type: 'SET_SUBSCRIPTION_DATA';
+      type: 'SET_ROOM_SUBSCRIPTION_DATA';
       payload: {
         ClosedPages?: string[] | any;
         activeLessonId?: string | null;
@@ -37,7 +37,7 @@ export type LessonActions =
         disabledPages?: string[] | any;
         displayData?: UniversalLessonStudentData[] | null;
         id: string;
-        studentViewing?: string | null;
+        studentViewing?: string | '';
         updatedAt?: string;
       };
     }
@@ -62,7 +62,7 @@ export type LessonActions =
       };
     }
   | {
-      type: 'LOAD_STUDENT_DATA_SUBSCRIPTION';
+      type: 'LOAD_STUDENT_SUBSCRIPTION_DATA';
       payload: {
         stDataIdx: number;
         subData: StudentPageInput[];
@@ -134,7 +134,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         ...state,
         subscription: action.payload.subscription,
       };
-    case 'SET_SUBSCRIPTION_DATA':
+    case 'SET_ROOM_SUBSCRIPTION_DATA':
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
         ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
@@ -181,7 +181,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
           ? action.payload.filteredStudentData
           : state.studentData,
       };
-    case 'LOAD_STUDENT_DATA_SUBSCRIPTION':
+    case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;
       const subData = action.payload.subData;
       const newStudentData = state.studentData.map(
@@ -261,7 +261,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'SET_DISPLAY_DATA':
       return {...state, displayData: [action.payload]};
     case 'SET_CURRENT_PAGE':
-      return {...state, currentPage: action.payload};
+      return {
+        ...state,
+        currentPage: action.payload,
+        lessonProgress:
+          action.payload > state.lessonProgress ? action.payload : state.lessonProgress,
+      };
     case 'TOGGLE_OPEN_PAGE':
       const mappedPages = state.lessonData.lessonPlan.map(
         (page: UniversalLessonPage, idx: number) => {
@@ -277,7 +282,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
       console.log('cleanup...');
-      return state;
+      return initialLessonState;
     default:
       return state;
   }

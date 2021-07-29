@@ -17,6 +17,7 @@ const ProgressBar = () => {
   // const [clickable, setClickable] = useState<number>();
 
   const PAGES = lessonState.lessonData.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
   const LESSON_PROGRESS = lessonState.lessonProgress;
 
   // useEffect(() => {
@@ -65,7 +66,7 @@ const ProgressBar = () => {
               open={page.open !== false}
               active={page.active !== false}
               label={page.label}
-              clickable={PAGES.length > 0 && PAGES[key].open}
+              clickable={page.open !== false}
             />
 
             {/* PROGRESS BAR */}

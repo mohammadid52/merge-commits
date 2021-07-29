@@ -1,46 +1,66 @@
-import React, { useContext, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
-import { useHistory } from 'react-router-dom';
-import { useOutsideAlerter } from '../General/hooks/outsideAlerter';
+import React, {useContext, useEffect, useState} from 'react';
+import {useCookies} from 'react-cookie';
+import {useHistory} from 'react-router-dom';
+import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
 import LessonTopMenu from '../Lesson/Header/LessonTopMenu';
 import SideMenu from '../Lesson/Header/SideMenu';
-import { LessonHeaderBarProps } from '../../interfaces/LessonComponentsInterfaces';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import NotificationBar from '../Lesson/Header/NotificationBar';
+import {LessonHeaderBarProps} from '../../interfaces/LessonComponentsInterfaces';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {getLocalStorageData} from '../../utilities/localStorage';
 
-const LessonHeaderBar = (props: LessonHeaderBarProps) => {
-  const { lessonDataLoaded, checkpointsLoaded, overlay, setOverlay } = props;
+const LessonHeaderBar = ({
+  lessonDataLoaded,
+  overlay,
+  setOverlay,
+  isAtEnd,
+  setisAtEnd,
+}: LessonHeaderBarProps) => {
   const history = useHistory();
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
-  const [cookies, setCookie] = useCookies([`lesson-${state.syllabusLessonID}`]);
-  const { visible, setVisible, ref } = useOutsideAlerter(false);
+  const {lessonState, theme} = useContext(GlobalContext);
 
-  // useEffect(() => {
-  //   if (lessonDataLoaded) {
-  //     const shouldDispatch = state.pages.length > 0;
-  //     if (shouldDispatch && !state.pages[0].active) {
-  //       dispatch({ type: 'SET_PROGRESS', payload: state.lessonProgress });
-  //     }
-  //   }
-  // }, [lessonDataLoaded, state.pages, state.currentPage]);
+  // ##################################################################### //
+  // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
+  // ##################################################################### //
 
-  useEffect(() => {
-    if (cookies.lesson) {
-      setCookie('lesson', { ...cookies.lesson, lessonProgress: state.lessonProgress });
+  const getRoomData = getLocalStorageData('room_info');
+  const [waiting, setWaiting] = useState<boolean>(null);
+  const [safeToLeave, setSafeToLeave] = useState<any>(null);
+
+  const handleManualSave = () => {
+    if (lessonState.updated) {
+      setWaiting(true);
+      setSafeToLeave(false);
+    } else {
+      setWaiting(false);
+      setSafeToLeave(true);
     }
-
-    if (!cookies.lesson) {
-      setCookie('lesson', { lessonProgress: 0 });
-    }
-  }, [state.lessonProgress]);
-
-  const handlePopup = () => {
-    setVisible((prevState: any) => !prevState);
   };
 
-  const handleSubmit = () => {
-    history.push('/dashboard');
+  useEffect(() => {
+    if (!lessonState.updated) {
+      if (waiting === true && safeToLeave === false) {
+        setWaiting(false);
+        setSafeToLeave(true);
+      } else {
+        setWaiting(null);
+        setSafeToLeave(null);
+      }
+    }
+  }, [lessonState.updated]);
+
+  useEffect(() => {
+    console.log('safeToLeave State - ', safeToLeave);
+    if (safeToLeave === true) {
+      handlePopup();
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
+    }
+  }, [safeToLeave]);
+
+  // ------ POPUP MODAL ----- //
+  const {visible, setVisible} = useOutsideAlerter(false);
+  const handlePopup = () => {
+    setVisible((prevState: any) => !prevState);
   };
 
   return (
@@ -53,32 +73,26 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
        * Potentially need to fix html below
        *
        */}
-      <div className={`${visible ? 'absolute z-100' : 'hidden'}`} onClick={handlePopup}>
+      <div className={`${visible ? 'absolute z-100' : 'hidden'}`}>
         <PositiveAlert
           alert={visible}
           setAlert={setVisible}
           header="Are you sure you want to leave the Lesson?"
-          button1="Go to the dashboard"
+          button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
           button2="Cancel"
           svg="question"
-          handleButton1={handleSubmit}
+          handleButton1={handleManualSave}
           handleButton2={() => handlePopup}
           theme="dark"
           fill="screen"
         />
       </div>
 
-      <LessonTopMenu handlePopup={handlePopup} />
-
-      {/*{lessonDataLoaded ? (*/}
-      {/*  state.data.lesson.type === 'lesson' ? (*/}
-      {/*    <LessonTopMenu handlePopup={handlePopup} />*/}
-      {/*  ) : (*/}
-      {/*    <SurveyTopMenu lessonDataLoaded={lessonDataLoaded} checkpointsLoaded={checkpointsLoaded} />*/}
-      {/*  )*/}
-      {/*) : null}*/}
-
-      {/*<NotificationBar />*/}
+      <LessonTopMenu
+        handlePopup={handlePopup}
+        isAtEnd={isAtEnd}
+        setisAtEnd={setisAtEnd}
+      />
 
       {/**
        *
@@ -89,12 +103,7 @@ const LessonHeaderBar = (props: LessonHeaderBarProps) => {
        */}
 
       {lessonDataLoaded && (
-        <SideMenu
-          lessonDataLoaded={lessonDataLoaded}
-          handlePopup={handlePopup}
-          overlay={overlay}
-          setOverlay={setOverlay}
-        />
+        <SideMenu lessonDataLoaded={lessonDataLoaded} handlePopup={handlePopup} />
       )}
     </div>
   );

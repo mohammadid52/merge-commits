@@ -107,10 +107,9 @@ const TextInput = ({
   };
 
   const onFormCreate = async () => {
-    const pageContentId: string = `${uuidv4()}_`;
-    const partContentId: string = `${pageContentId}_textInput`;
-
     const inputObjArray = map(list, (d: any) => {
+      const pageContentId: string = `${uuidv4()}_`;
+      const partContentId: string = `${pageContentId}_textInput`;
       return {
         id: partContentId,
         type: d.textArea ? FORM_TYPES.TEXTAREA : FORM_TYPES.TEXT,
