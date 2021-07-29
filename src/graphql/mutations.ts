@@ -616,6 +616,7 @@ export const createInstitution = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -736,6 +737,7 @@ export const updateInstitution = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -856,6 +858,7 @@ export const deleteInstitution = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -1455,6 +1458,7 @@ export const createRoom = /* GraphQL */ `
         lessonID
         time
       }
+      activeLessons
       createdAt
       updatedAt
     }
@@ -1612,6 +1616,7 @@ export const updateRoom = /* GraphQL */ `
         lessonID
         time
       }
+      activeLessons
       createdAt
       updatedAt
     }
@@ -1769,6 +1774,7 @@ export const deleteRoom = /* GraphQL */ `
         lessonID
         time
       }
+      activeLessons
       createdAt
       updatedAt
     }
@@ -1871,6 +1877,7 @@ export const createRoomCoTeachers = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -2004,6 +2011,7 @@ export const updateRoomCoTeachers = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -2137,6 +2145,7 @@ export const deleteRoomCoTeachers = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -2245,6 +2254,7 @@ export const createClass = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -2340,6 +2350,7 @@ export const updateClass = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -2435,6 +2446,7 @@ export const deleteClass = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -10692,6 +10704,7 @@ export const createPersonLocation = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -10894,6 +10907,7 @@ export const updatePersonLocation = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -11096,6 +11110,7 @@ export const deletePersonLocation = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -11503,6 +11518,7 @@ export const createAttendance = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -11730,6 +11746,7 @@ export const updateAttendance = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -11957,6 +11974,7 @@ export const deleteAttendance = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
