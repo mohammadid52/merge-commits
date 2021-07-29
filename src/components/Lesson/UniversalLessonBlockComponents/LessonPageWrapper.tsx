@@ -15,7 +15,7 @@ export const LessonPageWrapper = (props: PageWrapperProps) => {
 
   return (
     <div
-      className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
+      className={`w-full max-w-256 mx-auto mt-4 flex flex-col justify-between items-center`}>
       <div className={`text-white`}>{children}</div>
     </div>
   );

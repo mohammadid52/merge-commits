@@ -21,13 +21,14 @@ interface StartProps {
   accessible: boolean;
   type?: string;
   roomID: string;
+  isActive?: boolean;
 }
 
 const Start: React.FC<StartProps> = (props: StartProps) => {
   const _isMounted = useRef(true); // Initial value _isMounted = true
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
-  const {lessonKey, open, accessible, type, roomID} = props;
+  const {isActive, lessonKey, open, accessible, type, roomID} = props;
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
@@ -35,13 +36,16 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const isTeacher = state.user.role === 'FLW' || state.user.role === 'TR';
 
   useEffect(() => {
-    if (type === 'lesson') {
-      fetchAttendance();
-    }
     return () => {
       _isMounted.current = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (type === 'lesson') {
+      fetchAttendance();
+    }
+  }, [state.roomData.syllabus]);
 
   const mutateToggleEnableDisable = async () => {
     const mutatedLessonData = {
@@ -77,16 +81,20 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       const syllabusData = state.roomData.syllabus.find(
         (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
       );
+
       if (syllabusData) {
+        let filter: any = {
+          studentID: {eq: state.user?.id},
+          curriculumID: {eq: syllabusData.curriculumID},
+          syllabusID: {eq: syllabusData.id},
+          lessonID: {eq: lessonKey},
+        };
+        if (!isTeacher) {
+          filter.date = {eq: awsFormatDate(dateString('-', 'WORLD'))};
+        }
         const list: any = await API.graphql(
           graphqlOperation(queries.listAttendances, {
-            filter: {
-              studentID: {eq: state.user?.id},
-              curriculumID: {eq: syllabusData.curriculumID},
-              syllabusID: {eq: syllabusData.id},
-              lessonID: {eq: lessonKey},
-              date: {eq: awsFormatDate(dateString('-', 'WORLD'))},
-            },
+            filter,
           })
         );
         if (_isMounted) {
@@ -98,30 +106,38 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     }
   };
 
+  const recordAttendance = async () => {
+    try {
+      setLoading(true);
+      const syllabusData = state.roomData.syllabus.find(
+        (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
+      );
+
+      const payload = {
+        studentID: state.user?.id,
+        curriculumID: syllabusData.curriculumID,
+        syllabusID: syllabusData.id,
+        lessonID: lessonKey,
+        roomID,
+        date: awsFormatDate(dateString('-', 'WORLD')),
+        time: new Date().toTimeString().split(' ')[0],
+      };
+      await API.graphql(
+        graphqlOperation(mutations.createAttendance, {
+          input: payload,
+        })
+      );
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
   const handleLink = async () => {
     if (!isTeacher && accessible && open) {
       try {
         if (!attendanceRecorded) {
-          setLoading(true);
-          const syllabusData = state.roomData.syllabus.find(
-            (syllabus: any) => syllabus.id === state.activeSyllabus // was looking for syllabus.active, but active status is on room
-          );
-
-          const payload = {
-            studentID: state.user?.id,
-            curriculumID: syllabusData.curriculumID,
-            syllabusID: syllabusData.id,
-            lessonID: lessonKey,
-            roomID,
-            date: awsFormatDate(dateString('-', 'WORLD')),
-            time: new Date().toTimeString().split(' ')[0],
-          };
-          await API.graphql(
-            graphqlOperation(mutations.createAttendance, {
-              input: payload,
-            })
-          );
-          setLoading(false);
+          recordAttendance();
         }
         history.push(`/lesson/${lessonKey}?roomId=${roomID}`);
       } catch (error) {
@@ -133,6 +149,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       if (type === 'survey' || type === 'assessment') {
         toggleEnableDisable();
       } else {
+        if (!attendanceRecorded) {
+          recordAttendance();
+        }
         history.push(`${`/lesson-control/${lessonKey}`}`);
       }
     }
@@ -147,7 +166,11 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
       } else {
-        return classRoomDict[userLanguage]['BOTTOM_BAR']['TEACH'];
+        if (isActive) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['ACTIVE'];
+        } else {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['TEACH'];
+        }
       }
     } else {
       return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
@@ -173,7 +196,11 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   const studentTeacherButtonTheme = () => {
     if (type === 'lesson') {
-      return theme.btn.lessonStart;
+      if (isActive) {
+        return theme.btn.lessonStart;
+      } else {
+        return theme.btn.iconoclastIndigo;
+      }
     } else {
       if (!isTeacher) {
         return theme.btn.surveyStart;
@@ -197,7 +224,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
             : `${firstPart()} ${secondPart()}`
         }
-        disabled={loading || (!open && !isTeacher)}
+        disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive)}
         overrideClass={true}
         btnClass={`
         ${studentTeacherButtonTheme()}

@@ -138,7 +138,7 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
       const mappedClosedPages = havePagesChanged
         ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
-            if (action.payload.ClosedPages.includes(page.id)) {
+            if (action.payload.ClosedPages?.includes(page.id)) {
               return {...page, open: false};
             } else {
               return {...page, open: true};

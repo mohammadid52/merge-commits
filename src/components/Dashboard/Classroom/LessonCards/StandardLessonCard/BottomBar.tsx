@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {LessonCardProps} from '../../Classroom';
 import Start from '../../Start';
 
@@ -67,6 +66,7 @@ const BottomBar = (props: LessonCardProps) => {
           roomID={roomID}
           isTeacher={isTeacher}
           lessonKey={lessonProps ? lessonProps.lessonID : null}
+          isActive={lessonProps?.lessonID === activeRoomInfo?.activeLessonId}
           open={lessonProps && lessonProps.status === 'Active' ? true : false}
           accessible={accessible}
           type={lessonProps.lesson.type}

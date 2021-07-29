@@ -28,7 +28,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
-  const {previewMode} = useULBContext();
+  const {previewMode = false} = useULBContext() || {};
 
   const options: string[] = [
     'inline',
