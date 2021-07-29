@@ -77,12 +77,12 @@ const LessonHeaderBar = ({
         <PositiveAlert
           alert={visible}
           setAlert={setVisible}
-          header="Are you sure you want to leave the Lesson?"
+          header="Congratulations, you have reached the end of the lesson, do you want to go back to the dashboard?"
           button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
-          button2="Cancel"
+          button2="Stay on lesson"
           svg="question"
           handleButton1={handleManualSave}
-          handleButton2={() => handlePopup}
+          handleButton2={handlePopup}
           theme="dark"
           fill="screen"
         />
