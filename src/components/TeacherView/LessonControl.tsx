@@ -78,17 +78,20 @@ const LessonControl = () => {
   const [subscriptionData, setSubscriptionData] = useState<any>();
 
   // ~~~~~~~~~~~~~ TEST VALUES ~~~~~~~~~~~~~ //
-  const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
-  const SYLLABUS_ID = '13fa95a7-0f71-4801-bd0c-f4c54fd2b8d8';
+  // const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
+  // const SYLLABUS_ID = '13fa95a7-0f71-4801-bd0c-f4c54fd2b8d8';
 
   // ----------- 1 ---------- //
 
   const subscribeToStudent = () => {
+    const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
+
     const studentDataSubscription = API.graphql(
       graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
-        syllabusLessonID: SYLLABUS_ID,
-        lessonID: LESSON_ID,
+        syllabusLessonID: syllabusID,
+        lessonID: lessonID,
       })
       //@ts-ignore
     ).subscribe({
@@ -444,12 +447,12 @@ const LessonControl = () => {
   // ##################################################################### //
   const handleOpen = async () => {
     await handleOpenPlanner();
-    dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
+    //   dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
   };
 
   const handleComplete = async () => {
-    await handleCompletePlanner();
-    dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
+    //   await handleCompletePlanner();
+    //   dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
     handleHome();
   };
 
