@@ -10,6 +10,7 @@ import useInLessonCheck from '../../customHooks/checkIfInLesson';
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
   initialValue: string;
+  theme?: 'iconoclastIndigo' | 'curate';
   fullWHOverride?: boolean;
   rounded?: boolean;
   dark?: boolean;
@@ -26,6 +27,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     customStyle = false,
     rounded = false,
     features = [],
+    theme,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -137,7 +139,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         colorPicker: {
           className: ` ${
             customStyle ? `${dark ? 'dark' : ''} text-black` : ''
-          }  toolItemClassName`,
+          }  toolItemClassName ${theme}`,
           colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff'],
         },
       }}

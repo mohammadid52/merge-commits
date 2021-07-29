@@ -1,8 +1,7 @@
 import {filter, map, remove, update} from 'lodash';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import RemoveInput from '../common/RemoveInput';
 import {v4 as uuidv4} from 'uuid';
 import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
 import Buttons from '../../../../Atoms/Buttons';
@@ -12,9 +11,243 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
 import {optionResponses} from '../../../../../utilities/staticData';
-import {Menu, Transition} from '@headlessui/react';
-import {ChevronDownIcon} from '@heroicons/react/solid';
-import {DotsVerticalIcon} from '@heroicons/react/outline';
+import {isEmpty} from '@aws-amplify/core';
+
+const InputContainer = ({
+  shouldShowActions,
+  input,
+  numbered,
+  onChange,
+  themeColor,
+  idx,
+  onOptionInputChange,
+  onOptionAdd,
+  getColor,
+  onOptionRemove,
+  selectedForm,
+  removeExtraOption,
+  addExtraOption,
+  suggestionModal,
+  setSuggestionModal,
+  changeBool,
+  changeValue,
+  removeItemFromList,
+}: any) => {
+  const [selForm, setSelForm] = useState(selectedForm);
+  return (
+    <div key={input.id} className="flex flex-col input-container">
+      <div className="px-2">
+        <div className="mb-2">
+          <FormInput
+            onChange={(e) => onChange(e, idx)}
+            label={`${numbered ? `${idx + 1}. ` : ''}Label`}
+            isRequired
+            value={input.label}
+            id={`formField_${input.id}`}
+            placeHolder={`Enter Label`}
+          />
+
+          {/* Options input fields */}
+          {input.options?.length &&
+            input.options?.map((item: any, index: number) => {
+              // @ts-ignore
+
+              return (
+                <div
+                  key={index.toLocaleString()}
+                  className="flex w-9/10 mx-auto flex-col mt-4">
+                  <div className="flex items-center">
+                    <div className="w-8/10">
+                      <FormInput
+                        disabled={item.label === 'other' || item.label === 'noneOfAbove'}
+                        value={item.text}
+                        className={`${
+                          item.label === 'other' || item.label === 'noneOfAbove'
+                            ? 'text-gray-600'
+                            : ''
+                        }`}
+                        id={`formFieldRadioOption_${idx}_${index}`}
+                        onChange={(e) => onOptionInputChange(idx, index, e)}
+                        name={item.label}
+                        placeHolder={`Option ${index + 1}`}
+                      />
+                    </div>
+                    <div className="w-auto flex items-center">
+                      <div className="flex items-center justify-end w-auto ml-3">
+                        <button
+                          onClick={() => onOptionAdd(idx, index)}
+                          className={`text-center w-20 transition-all duration-200 ${getColor(
+                            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                          )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                          Add
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-end w-auto ml-3">
+                        <button
+                          onClick={() => onOptionRemove(idx, item.id)}
+                          className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {index === input.options.length - 1 && (
+                    <div className="text-gray-400 flex items-center mt-2">
+                      <p
+                        onClick={() => {
+                          if (
+                            input.options.find(
+                              (item: any) => item.label === 'noneOfAbove'
+                            )
+                          ) {
+                            removeExtraOption(idx, 'noneOfAbove');
+                          } else {
+                            addExtraOption(idx, 'noneOfAbove', 'None of the above');
+                          }
+                        }}
+                        className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
+                        {input.options.find((item: any) => item.label === 'noneOfAbove')
+                          ? 'Remove'
+                          : 'Add'}{' '}
+                        none of the above option
+                      </p>
+                      <p
+                        onClick={() => {
+                          if (input.options.find((item: any) => item.label === 'other')) {
+                            removeExtraOption(idx, 'other');
+                          } else {
+                            addExtraOption(idx, 'other', 'Other');
+                          }
+                        }}
+                        className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
+                        {input.options.find((item: any) => item.label === 'other')
+                          ? 'Remove'
+                          : 'Add'}{' '}
+                        'other' option
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+          {selForm === SELECT_ONE && (
+            <div>
+              <div className="my-4  flex flex-col items-center justify-center space-y-2">
+                <p className="text-gray-500 text-center text-sm">
+                  ----- Or use suggested options -----
+                </p>
+                <Buttons
+                  label={
+                    suggestionModal.idx === idx &&
+                    suggestionModal.selectedResponse.length > 0
+                      ? 'Change Options'
+                      : 'Add Suggested Options'
+                  }
+                  onClick={() =>
+                    setSuggestionModal({
+                      ...suggestionModal,
+                      idx,
+                      data: optionResponses,
+                      show: true,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {idx !== 0 ? (
+          <div className="flex my-2 items-center justify-between w-auto">
+            <div className="flex items-center w-auto mt-4 ">
+              <div className="flex items-center text-xs w-auto">
+                List
+                <Toggle
+                  checked={input.inLine}
+                  onClick={() => {
+                    changeBool(idx, 'inLine', input.inLine);
+                  }}
+                />
+                Inline
+              </div>
+              <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+              <div className="flex items-center text-xs w-auto">
+                Make this required
+                <Toggle
+                  checked={input.required}
+                  onClick={() => changeBool(idx, 'required', input.required)}
+                />
+              </div>
+              <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+              <div className="flex items-center text-xs w-auto">
+                Single response
+                <Toggle
+                  checked={input.type === SELECT_MANY}
+                  onClick={() => {
+                    setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
+                    changeValue(
+                      idx,
+                      'type',
+                      input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                    );
+                  }}
+                />
+                Multiple response
+              </div>
+            </div>
+
+            <button
+              onClick={() => removeItemFromList(input.id)}
+              className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
+              Remove Field
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center w-auto mt-4 ">
+            <div className="flex items-center text-xs w-auto">
+              List
+              <Toggle
+                checked={input.inLine}
+                onClick={() => changeBool(idx, 'inLine', input.inLine)}
+              />
+              Inline
+            </div>
+            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+            <div className="flex items-center text-xs w-auto">
+              Make this required
+              <Toggle
+                checked={input.required}
+                onClick={() => changeBool(idx, 'required', input.required)}
+              />
+            </div>
+
+            <span className="w-auto text-gray-500 text-xl mx-4">|</span>
+            <div className="flex items-center text-xs w-auto">
+              Single response
+              <Toggle
+                checked={input.type === SELECT_MANY}
+                onClick={() => {
+                  setSelForm(input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY);
+
+                  changeValue(
+                    idx,
+                    'type',
+                    input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
+                  );
+                }}
+              />
+              Multiple response
+            </div>
+          </div>
+        )}
+      </div>
+      {shouldShowActions && (
+        <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
+      )}
+    </div>
+  );
+};
 
 const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
   return (
@@ -45,7 +278,7 @@ const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
   );
 };
 
-const SelectOne = ({
+const UniversalOption = ({
   numbered,
   closeAction,
   isEditingMode,
@@ -107,30 +340,58 @@ const SelectOne = ({
   };
 
   const onRadioCreate = async () => {
-    const inputObjArray = map(list, (d: any) => {
-      const pageContentId: string = `${uuidv4()}_`;
-      const partContentId: string = `${pageContentId}_radioInput`;
-      return {
-        id: partContentId,
-        type: d.type === SELECT_MANY ? FORM_TYPES.MULTIPLE : FORM_TYPES.RADIO,
-        label: d.label,
-        isRequired: d.required,
-        options: d.options,
-        class: `${d.inLine ? 'flex-row items-center' : 'flex-col items-start'}`,
-      };
-    });
-    const type: string = `form-${numbered ? 'numbered' : 'default'}`;
-    if (isEditingMode) {
-      const updatedList = updateContent('', '', type, inputObjArray);
+    try {
+      const inputObjArray = map(list, (d: any) => {
+        const pageContentId: string = `${uuidv4()}_`;
+        const partContentId: string = `${pageContentId}_radioInput`;
+        return {
+          id: partContentId,
+          type: d.type === SELECT_MANY ? FORM_TYPES.MULTIPLE : FORM_TYPES.RADIO,
+          label: d.label,
+          isRequired: d.required,
+          options: d.options,
+          class: `${
+            d.inLine
+              ? 'flex-row items-center py-2'
+              : 'flex-col items-start space-y-4 py-4'
+          }`,
+        };
+      });
+      const type: string = `form-${numbered ? 'numbered' : 'default'}`;
+      if (isEditingMode) {
+        const updatedList = updateContent('', '', type, inputObjArray);
 
-      await addToDB(updatedList);
-    } else {
-      const updatedList = createNewContent('', '', type, inputObjArray);
+        await addToDB(updatedList);
+      } else {
+        const updatedList = createNewContent('', '', type, inputObjArray);
 
-      await addToDB(updatedList);
+        await addToDB(updatedList);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setUnsavedChanges(false);
+      setList([
+        {
+          id: uuidv4(),
+          label: '',
+          required: false,
+          inLine: true,
+          type: selectedForm,
+          options: [
+            {label: '1', text: '', id: uuidv4()},
+            {label: '2', text: '', id: uuidv4()},
+          ],
+        },
+      ]);
+
+      setSuggestionModal({
+        show: false,
+        data: [{title: '', content: [{id: '', text: ''}]}],
+        selectedResponse: [],
+        idx: 0,
+      });
     }
-
-    setUnsavedChanges(false);
   };
 
   const removeItemFromList = (id: string) => {
@@ -179,7 +440,7 @@ const SelectOne = ({
     options.push({
       label: optionName,
       text: optionValue,
-      id: uuidv4(),
+      id: `${optionName}__${uuidv4()}`,
     });
 
     setList([...list]);
@@ -192,10 +453,12 @@ const SelectOne = ({
   };
 
   useEffect(() => {
-    if (suggestionModal.selectedResponse.length > 0) {
-      addSuggestions(suggestionModal.idx, suggestionModal.selectedResponse);
+    if (!isEmpty(suggestionModal)) {
+      if (suggestionModal.selectedResponse.length > 0) {
+        addSuggestions(suggestionModal.idx, suggestionModal.selectedResponse);
+      }
     }
-  }, [suggestionModal.idx, suggestionModal.selectedResponse]);
+  }, [suggestionModal, suggestionModal]);
 
   const changeBool = (idx: number, field: string, bool: boolean = false) => {
     update(list[idx], `${field}`, () => !bool);
@@ -350,7 +613,7 @@ const SelectOne = ({
           className={`mt-2 flex flex-wrap ${themeTextColor} ${
             lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
           } py-2 px-4 rounded-xl ${
-            inLine ? 'flex-row items-center' : 'flex-col items-start'
+            inLine ? 'flex-row items-center' : 'flex-col items-start space-y-4 py-4'
           }`}>
           {values.map((item, idx: number) =>
             selectMany ? (
@@ -386,230 +649,26 @@ const SelectOne = ({
               const shouldShowActions = idx !== list.length - 1;
 
               return (
-                <div key={input.id} className="flex flex-col input-container">
-                  <div className="px-2">
-                    <div className="mb-2">
-                      <FormInput
-                        onChange={(e) => onChange(e, idx)}
-                        label={`${numbered ? `${idx + 1}. ` : ''}Label`}
-                        isRequired
-                        value={input.label}
-                        id={`formField_${input.id}`}
-                        placeHolder={`Enter Label`}
-                      />
-
-                      {/* Options input fields */}
-                      {input.options?.length &&
-                        input.options?.map((item: any, index: number) => {
-                          // @ts-ignore
-
-                          return (
-                            <div
-                              key={index.toLocaleString()}
-                              className="flex w-9/10 mx-auto flex-col mt-4">
-                              <div className="flex items-center">
-                                <div className="w-8/10">
-                                  <FormInput
-                                    disabled={
-                                      item.label === 'other' ||
-                                      item.label === 'noneOfAbove'
-                                    }
-                                    value={item.text}
-                                    className={`${
-                                      item.label === 'other' ||
-                                      item.label === 'noneOfAbove'
-                                        ? 'text-gray-600'
-                                        : ''
-                                    }`}
-                                    id={`formFieldRadioOption_${idx}_${index}`}
-                                    onChange={(e) => onOptionInputChange(idx, index, e)}
-                                    name={item.label}
-                                    placeHolder={`Option ${index + 1}`}
-                                  />
-                                </div>
-                                <div className="w-auto flex items-center">
-                                  <div className="flex items-center justify-end w-auto ml-3">
-                                    <button
-                                      onClick={() => onOptionAdd(idx, index)}
-                                      className={`text-center w-20 transition-all duration-200 ${getColor(
-                                        themeColor === 'iconoclastIndigo'
-                                          ? 'indigo'
-                                          : 'blue'
-                                      )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
-                                      Add
-                                    </button>
-                                  </div>
-                                  <div className="flex items-center justify-end w-auto ml-3">
-                                    <button
-                                      onClick={() => onOptionRemove(idx, item.id)}
-                                      className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
-                                      Remove
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                              {index === input.options.length - 1 && (
-                                <div className="text-gray-400 flex items-center mt-2">
-                                  <p
-                                    onClick={() => {
-                                      if (
-                                        input.options.find(
-                                          (item: any) => item.label === 'noneOfAbove'
-                                        )
-                                      ) {
-                                        removeExtraOption(idx, 'noneOfAbove');
-                                      } else {
-                                        addExtraOption(
-                                          idx,
-                                          'noneOfAbove',
-                                          'None of the above'
-                                        );
-                                      }
-                                    }}
-                                    className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
-                                    {input.options.find(
-                                      (item: any) => item.label === 'noneOfAbove'
-                                    )
-                                      ? 'Remove'
-                                      : 'Add'}{' '}
-                                    none of the above option
-                                  </p>
-                                  <p
-                                    onClick={() => {
-                                      if (
-                                        input.options.find(
-                                          (item: any) => item.label === 'other'
-                                        )
-                                      ) {
-                                        removeExtraOption(idx, 'other');
-                                      } else {
-                                        addExtraOption(idx, 'other', 'Other');
-                                      }
-                                    }}
-                                    className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
-                                    {input.options.find(
-                                      (item: any) => item.label === 'other'
-                                    )
-                                      ? 'Remove'
-                                      : 'Add'}{' '}
-                                    'other' option
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-
-                      {selectedForm === SELECT_ONE && (
-                        <div>
-                          <div className="my-4  flex flex-col items-center justify-center space-y-2">
-                            <p className="text-gray-500 text-center text-sm">
-                              ----- Or use suggested options -----
-                            </p>
-                            <Buttons
-                              label={
-                                suggestionModal.idx === idx &&
-                                suggestionModal.selectedResponse.length > 0
-                                  ? 'Change Options'
-                                  : 'Add Suggested Options'
-                              }
-                              onClick={() =>
-                                setSuggestionModal({
-                                  ...suggestionModal,
-                                  idx,
-                                  data: optionResponses,
-                                  show: true,
-                                })
-                              }
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {idx !== 0 ? (
-                      <div className="flex my-2 items-center justify-between w-auto">
-                        <div className="flex items-center w-auto mt-4 ">
-                          <div className="flex items-center text-xs w-auto">
-                            Inline
-                            <Toggle
-                              checked={input.inLine}
-                              onClick={() => changeBool(idx, 'inLine', input.inLine)}
-                            />
-                            List
-                          </div>
-                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-                          <div className="flex items-center text-xs w-auto">
-                            Make this required
-                            <Toggle
-                              checked={input.required}
-                              onClick={() => changeBool(idx, 'required', input.required)}
-                            />
-                          </div>
-                          <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-                          <div className="flex items-center text-xs w-auto">
-                            Single response
-                            <Toggle
-                              checked={input.type === SELECT_MANY}
-                              onClick={() =>
-                                changeValue(
-                                  idx,
-                                  'type',
-                                  input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
-                                )
-                              }
-                            />
-                            Multiple response
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => removeItemFromList(input.id)}
-                          className={`text-center transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded mt-2 border-2 hover:text-red-600 w-auto`}>
-                          Remove Field
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center w-auto mt-4 ">
-                        <div className="flex items-center text-xs w-auto">
-                          Inline
-                          <Toggle
-                            checked={input.inLine}
-                            onClick={() => changeBool(idx, 'inLine', input.inLine)}
-                          />
-                          List
-                        </div>
-                        <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-                        <div className="flex items-center text-xs w-auto">
-                          Make this required
-                          <Toggle
-                            checked={input.required}
-                            onClick={() => changeBool(idx, 'required', input.required)}
-                          />
-                        </div>
-
-                        <span className="w-auto text-gray-500 text-xl mx-4">|</span>
-                        <div className="flex items-center text-xs w-auto">
-                          Single response
-                          <Toggle
-                            checked={input.type === SELECT_MANY}
-                            onClick={() =>
-                              changeValue(
-                                idx,
-                                'type',
-                                input.type === SELECT_MANY ? SELECT_ONE : SELECT_MANY
-                              )
-                            }
-                          />
-                          Multiple response
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  {shouldShowActions && (
-                    <div className="border-b-2 border-dashed border-gray-300 my-4 "></div>
-                  )}
-                </div>
+                <InputContainer
+                  input={input}
+                  idx={idx}
+                  shouldShowActions={shouldShowActions}
+                  numbered={numbered}
+                  onChange={onChange}
+                  themeColor={themeColor}
+                  onOptionInputChange={onOptionInputChange}
+                  onOptionAdd={onOptionAdd}
+                  getColor={getColor}
+                  onOptionRemove={onOptionRemove}
+                  selectedForm={selectedForm}
+                  removeExtraOption={removeExtraOption}
+                  addExtraOption={addExtraOption}
+                  suggestionModal={suggestionModal}
+                  setSuggestionModal={setSuggestionModal}
+                  changeBool={changeBool}
+                  changeValue={changeValue}
+                  removeItemFromList={removeItemFromList}
+                />
               );
             })}
           </div>
@@ -716,4 +775,4 @@ const SelectOne = ({
     </>
   );
 };
-export default SelectOne;
+export default UniversalOption;

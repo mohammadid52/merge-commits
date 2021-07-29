@@ -1014,6 +1014,7 @@
 
 .editorClassName {
   color: #000;
+  height: 20rem !important;
 }
 
 .toolbarClassName.previewMode {
@@ -1024,6 +1025,15 @@
   border: 1px solid #9ca3af;
   border-radius: 8px;
 }
+
+.toolbarClassName.iconoclast .rdw-colorpicker-modal-style-label-active {
+  border-bottom: 2px solid #667eea !important;
+}
+.toolbarClassName.curate .rdw-colorpicker-modal-style-label-active {
+  border-bottom: 2px solid #0081cb !important;
+}
+
+// -------------------------------------------------
 
 // datepicker library config styles
 .react-datepicker-popper {

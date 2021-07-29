@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {BiImageAdd} from 'react-icons/bi';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -37,75 +37,142 @@ export interface FormControlProps {
 }
 
 const SelectMany = ({
-  item,
-  getCheckValue,
   onChange,
-  isStudent,
+  getCheckValue,
+
+  classString,
+  value,
 }: {
-  getCheckValue: (id: string) => boolean;
   onChange: (e: any) => void;
-  item: {text: string; label: string; id: string};
-  isStudent: boolean;
+
+  getCheckValue: (id: string) => boolean;
+  classString: string;
+  value: any;
 }) => {
-  const {label, text, id} = item;
   const {
     theme,
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-
   const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
-  return (
-    <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
-      <input
-        id={id}
-        data-key={id}
-        data-value={label}
-        type="checkbox"
-        className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
-          getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
-        }`}
-        onChange={onChange}
-        checked={getCheckValue(id)}
-      />
 
-      <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+  return (
+    <div className={classString}>
+      {value.map((item: any) => {
+        const {label, text, id} = item;
+
+        return (
+          <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
+            <input
+              id={id}
+              data-key={id}
+              data-value={label}
+              type="checkbox"
+              className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
+                getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+              }`}
+              onChange={onChange}
+              checked={getCheckValue(id)}
+            />
+
+            <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+          </div>
+        );
+      })}
     </div>
   );
+  // const {label, text, id} = item;
+  // const {
+  //   theme,
+  //   state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
+  // } = useContext(GlobalContext);
+
+  // const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
+  // return (
+  // <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
+  //   <input
+  //     id={id}
+  //     data-key={id}
+  //     data-value={label}
+  //     type="checkbox"
+  //     className={`w-5 h-5 flex-shrink-0 mx-4  cursor-pointer border-0 ${themePlaceholderColor} ${
+  //       getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+  //     }`}
+  //     onChange={onChange}
+  //     checked={getCheckValue(id)}
+  //   />
+
+  //   <span className={`ml-2 ${theme.elem.text} ${themeTextColor}`}>{text}</span>
+  // </div>
+  // );
 };
 
 const SelectOne = ({
-  item,
   onChange,
   getCheckValue,
   isStudent,
+  classString,
+  value,
+  isInLesson,
 }: {
   onChange: (e: any) => void;
   getCheckValue: (id: string) => boolean;
   isStudent: boolean;
-
-  item: {text: string; label: string; id: string};
+  isInLesson: boolean;
+  classString: string;
+  value: any;
 }) => {
-  const {label, text, id} = item;
   const {
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
+  const [otherOptSel, setOtherOptSel] = useState(false);
 
+  const [other, setOther] = useState('');
   const themePlaceholderColor = lessonPageTheme === 'light' ? 'placeholder-gray-800' : '';
   return (
-    <div className={`w-auto flex justify-center items-center mr-8 `}>
-      <input
-        id={id}
-        data-key={id}
-        data-value={label}
-        type="radio"
-        className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
-          getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
-        }`}
-        onChange={onChange}
-        checked={getCheckValue(id)}
-      />
+    <div className={classString}>
+      {value.map((item: any) => {
+        const {label, text, id} = item;
+        return (
+          <div className={`w-auto flex justify-center items-center mr-8 `}>
+            <input
+              id={id}
+              data-key={id}
+              data-value={label}
+              type="radio"
+              className={`w-5 h-5 flex-shrink-0 mx-4 rounded-full cursor-pointer border-0 ${themePlaceholderColor} ${
+                getCheckValue(id) ? 'bg-blueberry border-white' : 'bg-white border-black '
+              }`}
+              onChange={(e) => {
+                if (e.target.id.includes('other')) {
+                  setOtherOptSel(true);
+                } else {
+                  setOther('');
+                  setOtherOptSel(false);
+                }
+                onChange(e);
+              }}
+              checked={getCheckValue(id)}
+            />
 
-      <span className={`w-auto`}>{text}</span>
+            <span className={`w-auto`}>{text}</span>
+          </div>
+        );
+      })}
+
+      {otherOptSel && (
+        <div key={`question_}`} className={`w-auto ml-4  my-4`}>
+          <input
+            id={'sdsd'}
+            className={`${themePlaceholderColor} ${themeTextColor} ${
+              lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+            } w-full rounded-xl`}
+            type="text"
+            name={'Other'}
+            value={other}
+            onChange={(e) => setOther(e.target.value)}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -372,28 +439,29 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
         }
       };
       return (
-        <div
-          className={`mt-2 flex flex-wrap ${themeTextColor} ${
-            lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-          } py-2 px-4 rounded-xl ${classString}`}>
-          {values.map((item, idx: number) =>
-            selectMany ? (
-              <SelectMany
-                key={`question_${id}_${idx}`}
-                isStudent={isStudent}
-                onChange={isStudent && isInLesson ? onChange : () => {}}
-                getCheckValue={getCheckValue}
-                item={item}
-              />
-            ) : (
-              <SelectOne
-                key={`question_${id}_${idx}`}
-                isStudent={isStudent}
-                onChange={isStudent && isInLesson ? onChange : () => {}}
-                getCheckValue={getCheckValue}
-                item={item}
-              />
-            )
+        <div>
+          {selectMany ? (
+            <SelectMany
+              classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              } px-4 rounded-xl ${classString}`}
+              onChange={isStudent && isInLesson ? onChange : () => {}}
+              key={`question_${id}`}
+              getCheckValue={getCheckValue}
+              value={values}
+            />
+          ) : (
+            <SelectOne
+              classString={`mt-2 py-2 flex flex-wrap ${themeTextColor} ${
+                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
+              } px-4 rounded-xl ${classString}`}
+              onChange={isStudent && isInLesson ? onChange : () => {}}
+              key={`question_${id}`}
+              isStudent={isStudent}
+              getCheckValue={getCheckValue}
+              isInLesson={isInLesson}
+              value={values}
+            />
           )}
         </div>
       );
@@ -417,7 +485,6 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     required?: boolean,
     classString?: string
   ) => {
-    console.log(getValue(inputID));
     switch (type) {
       case FORM_TYPES.TEXT:
         return (
