@@ -7,6 +7,7 @@ import {
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuilder/BuilderRowWrapper';
+import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 
 const LessonRowComposer = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -21,6 +22,8 @@ const LessonRowComposer = () => {
     }
   }, [lessonState.lessonData, lessonState.currentPage]);
 
+  // this is only for header component
+  const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
   return (
     <>
       {activePageData &&
@@ -41,16 +44,23 @@ const LessonRowComposer = () => {
                   pagePart.partContent.map((content: PartContent, idx2: number) => {
                     if (content.value.length > 0) {
                       return (
-                        <div key={`row_pagepart_${idx}_${idx2}`} className={content.class} id={content.id}>
-                          {composePartContent(
-                            content.id,
-                            content.type,
-                            content.value,
-                            `pp_${idx}_pc_${idx2}`,
-                            content.class,
-                            pagePart.id,
-                            'lesson'
-                          )}
+                        <div className={`${paddingForHeader(content.type)}`}>
+                          <div
+                            key={`row_pagepart_${idx}_${idx2}`}
+                            className={`${
+                              content.type === FORM_TYPES.JUMBOTRON ? 'px-4 pt-4' : ''
+                            }`}
+                            id={content.id}>
+                            {composePartContent(
+                              content.id,
+                              content.type,
+                              content.value,
+                              `pp_${idx}_pc_${idx2}`,
+                              content.class,
+                              pagePart.id,
+                              'lesson'
+                            )}
+                          </div>
                         </div>
                       );
                     } else {
