@@ -3,12 +3,21 @@
 // this is an auto generated file. This will be overwritten
 
 export const onChangePersonLocation = /* GraphQL */ `
-  subscription OnChangePersonLocation($syllabusLessonID: ID!) {
-    onChangePersonLocation(syllabusLessonID: $syllabusLessonID) {
+  subscription OnChangePersonLocation(
+    $syllabusLessonID: ID!
+    $lessonID: ID!
+    $roomID: ID!
+  ) {
+    onChangePersonLocation(
+      syllabusLessonID: $syllabusLessonID
+      lessonID: $lessonID
+      roomID: $roomID
+    ) {
       id
       personAuthID
       personEmail
       syllabusLessonID
+      lessonID
       roomID
       currentLocation
       lessonProgress
@@ -9941,6 +9950,7 @@ export const onCreatePersonLocation = /* GraphQL */ `
       personAuthID
       personEmail
       syllabusLessonID
+      lessonID
       roomID
       currentLocation
       lessonProgress
@@ -10141,6 +10151,7 @@ export const onUpdatePersonLocation = /* GraphQL */ `
       personAuthID
       personEmail
       syllabusLessonID
+      lessonID
       roomID
       currentLocation
       lessonProgress
@@ -10341,6 +10352,7 @@ export const onDeletePersonLocation = /* GraphQL */ `
       personAuthID
       personEmail
       syllabusLessonID
+      lessonID
       roomID
       currentLocation
       lessonProgress
