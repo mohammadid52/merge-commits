@@ -218,9 +218,9 @@ const LessonControl = () => {
       lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
     } else {
       if (!lessonState.loaded) {
-        // getStudentData(lessonState.studentViewing).then((_: void) =>
-        //   console.log('getStudentData teacher - ', 'getted')
-        // );
+        getStudentData(lessonState.studentViewing).then((_: void) =>
+          console.log('getStudentData teacher - ', 'getted')
+        );
       }
     }
   }, [lessonState.studentViewing]);

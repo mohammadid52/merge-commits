@@ -230,13 +230,15 @@ const LessonApp = () => {
   // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
   const studentDataIdArray = (studentDataArray: any[]) => {
     const idArr = studentDataArray
-      .reduce((acc: any[], dataObj: any, idx: number) => {
+      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
+        const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+          (lessonPlanPage: UniversalLessonPage) =>
+            lessonPlanPage.id === studentDataIdObj.lessonPageID
+        );
         const idObj = {
-          id: dataObj.id,
-          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
-            (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
-          ),
-          lessonPageID: dataObj.lessonPageID,
+          id: studentDataIdObj.id,
+          pageIdx: indexOfPage,
+          lessonPageID: studentDataIdObj.lessonPageID,
           update: false,
         };
         return [...acc, idObj];
@@ -256,7 +258,8 @@ const LessonApp = () => {
   const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
     return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
       const findPageData = studentDataArray.find(
-        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+        (studentDataIdObj: UniversalLessonStudentData) =>
+          studentDataIdObj.id === dataIdObj.id
       )?.pageData;
       if (Array.isArray(findPageData)) {
         return [...acc, findPageData];
@@ -264,6 +267,40 @@ const LessonApp = () => {
         return [];
       }
     }, []);
+  };
+
+  // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
+  const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
+    const extraPagesArray = lessonPlanPages.reduce(
+      (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
+        const findInStudentDataRecords = studentDataRecords.find(
+          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+        );
+        if (findInStudentDataRecords === undefined) {
+          return [...extraPageArray, lessonPage];
+        } else {
+          return extraPageArray;
+        }
+      },
+      []
+    );
+    const currentLessonRecords = studentDataRecords.reduce(
+      (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
+        const isStudentDataFromLesson = lessonPlanPages.find(
+          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
+        );
+        if (isStudentDataFromLesson !== undefined) {
+          return [...currentLessonRecords, studentData];
+        } else {
+          return currentLessonRecords;
+        }
+      },
+      []
+    );
+    return {
+      extraPages: extraPagesArray,
+      currentRecords: currentLessonRecords,
+    };
   };
 
   // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
@@ -316,6 +353,7 @@ const LessonApp = () => {
           studentAuthID: studentAuthId,
         },
       };
+      console.log('listing student data for lessonID - ', lessonID);
       const studentData: any = await API.graphql(
         graphqlOperation(queries.listUniversalLessonStudentDatas, {
           listFilter,
@@ -324,20 +362,10 @@ const LessonApp = () => {
 
       // existing student rows
       const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
-      // find out if there are any missing records for pages
-      const extraPages = PAGES.reduce(
-        (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
-          const findInStudentDataRows = studentDataRows.find(
-            (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
-          );
-          if (findInStudentDataRows === undefined) {
-            return [...extraPageArray, lessonPage];
-          } else {
-            return extraPageArray;
-          }
-        },
-        []
-      );
+
+      const filteredData = filterExtraPages(PAGES, studentDataRows);
+      const extraPages = filteredData.extraPages;
+      const currentStudentData = filteredData.currentRecords;
 
       /**
        * NEW RECORD CREATION LOGIC:
@@ -355,10 +383,10 @@ const LessonApp = () => {
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
-            dataIdReferences: studentDataIdArray([...newRecords, ...studentDataRows]),
+            dataIdReferences: studentDataIdArray(newRecords),
           },
         });
-      } else if (extraPages?.length > 0 && studentDataRows?.length > 0) {
+      } else if (extraPages?.length > 0 && currentStudentData?.length > 0) {
         const createExtraRecords = await loopCreateStudentData(
           extraPages,
           lessonID,
@@ -366,11 +394,11 @@ const LessonApp = () => {
           email
         );
         const extraRecords = await Promise.all(createExtraRecords);
-        const combinedRecords = [...extraRecords, ...studentDataRows];
+        const combinedRecords = [...extraRecords, ...currentStudentData];
         const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
         const filteredData = filterStudentData(
           combinedStudentDataIdArray,
-          studentDataRows
+          combinedRecords
         );
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
@@ -379,9 +407,12 @@ const LessonApp = () => {
             filteredStudentData: filteredData,
           },
         });
-      } else if (studentDataRows?.length > 0 && extraPages?.length === 0) {
-        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
-        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
+      } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
+        const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+        const filteredData = filterStudentData(
+          existStudentDataIdArray,
+          currentStudentData
+        );
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
@@ -413,7 +444,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      // getOrCreateStudentData();
+      getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 
