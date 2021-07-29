@@ -159,6 +159,7 @@ export const getInstitution = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -556,6 +557,7 @@ export const getRoom = /* GraphQL */ `
         lessonID
         time
       }
+      activeLessons
       createdAt
       updatedAt
     }
@@ -654,6 +656,7 @@ export const listRooms = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -755,6 +758,7 @@ export const getRoomCoTeachers = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -829,6 +833,7 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -933,6 +938,7 @@ export const getClass = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -4443,6 +4449,7 @@ export const getPersonLocation = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -4541,6 +4548,7 @@ export const listPersonLocations = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -4889,6 +4897,7 @@ export const getAttendance = /* GraphQL */ `
           lessonID
           time
         }
+        activeLessons
         createdAt
         updatedAt
       }
@@ -4997,6 +5006,7 @@ export const listAttendances = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -5892,6 +5902,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }
@@ -6012,6 +6023,7 @@ export const attendanceByStudent = /* GraphQL */ `
           studentViewing
           displayData
           currentPage
+          activeLessons
           createdAt
           updatedAt
         }

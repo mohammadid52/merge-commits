@@ -133,6 +133,13 @@ type Room
   studentViewing: String
   displayData: [String]
   currentPage: String
+  completedLessons: [CompleteLesson]
+  activeLessons: [String]
+}
+
+type CompleteLesson {
+  lessonID: String
+  time: AWSDateTime
 }
 
 type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
@@ -999,6 +1006,7 @@ type UniversalContent {
   caption: String
   height: String
   width: String
+  class: String
   isRequired: Boolean
 }
 
@@ -1107,6 +1115,7 @@ type Subscription {
     @aws_subscribe(
       mutations: ["createUniversalLessonStudentData", "updateUniversalLessonStudentData"]
     )
+  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
 input CreateClassStudentInput {
