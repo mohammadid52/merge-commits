@@ -453,13 +453,15 @@ const LessonApp = () => {
   // ##################################################################### //
 
   const [personLocationObj, setPersonLocationObj] = useState<any>();
+  const {lessonID} = urlParams;
 
   const createPersonLocation = async () => {
     const newLocation = {
       personAuthID: state.user.authId,
       personEmail: state.user.email,
-      syllabusLessonID: lessonState.syllabusLessonID,
-      roomID: '0',
+      syllabusLessonID: getRoomData.activeSyllabus,
+      lessonID: lessonID,
+      roomID: getRoomData.id,
       currentLocation: lessonState.currentPage,
       lessonProgress: lessonState.lessonProgress,
     };
@@ -499,7 +501,8 @@ const LessonApp = () => {
       id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
       personAuthID: state.user.authId,
       personEmail: state.user.email,
-      syllabusLessonID: lessonState.universalLessonID,
+      syllabusLessonID: getRoomData.activeSyllabus,
+      lessonID: lessonID,
       roomID: getRoomData.id,
       currentLocation: lessonState.currentPage,
       lessonProgress: lessonState.lessonProgress,
