@@ -133,6 +133,13 @@ type Room
   studentViewing: String
   displayData: [String]
   currentPage: String
+  completedLessons: [CompleteLesson]
+  activeLessons: [String]
+}
+
+type CompleteLesson {
+  lessonID: String
+  time: AWSDateTime
 }
 
 type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
@@ -908,6 +915,7 @@ type Attendance
   roomID: ID!
   date: AWSDate
   time: AWSTime
+  isComplete: Boolean
   curriculum: Curriculum @connection(fields: ["curriculumID"])
   syllabus: UniversalSyllabus @connection(fields: ["syllabusID"])
   lesson: UniversalLesson @connection(fields: ["lessonID"])
@@ -998,6 +1006,7 @@ type UniversalContent {
   caption: String
   height: String
   width: String
+  class: String
   isRequired: Boolean
 }
 
@@ -1095,10 +1104,9 @@ type Subscription {
       mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
     )
   onChangeStudentData(syllabusLessonID: ID!): StudentData
-    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"]) # Deprecated subscription, can be removed?
+    @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
-    @aws_subscribe(mutations: ["updateSyllabusLesson"]) # Deprecated subscription, can be removed?
-  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
+    @aws_subscribe(mutations: ["updateSyllabusLesson"])
   onChangeUniversalLessonStudentData(
     syllabusLessonID: ID!
     lessonID: ID!
@@ -1107,6 +1115,7 @@ type Subscription {
     @aws_subscribe(
       mutations: ["createUniversalLessonStudentData", "updateUniversalLessonStudentData"]
     )
+  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
 input CreateClassStudentInput {
