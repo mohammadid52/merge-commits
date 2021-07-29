@@ -1,5 +1,5 @@
 import {filter, map, remove, update} from 'lodash';
-import React, {useContext, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import RemoveInput from '../common/RemoveInput';
@@ -12,7 +12,9 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
 import {optionResponses} from '../../../../../utilities/staticData';
-import {useEffect} from 'react';
+import {Menu, Transition} from '@headlessui/react';
+import {ChevronDownIcon} from '@heroicons/react/solid';
+import {DotsVerticalIcon} from '@heroicons/react/outline';
 
 const Toggle = ({checked, onClick}: {checked: boolean; onClick: any}) => {
   return (
@@ -200,8 +202,6 @@ const SelectOne = ({
 
   const [curTab, setCurTab] = useState(tabs[0].name);
 
-  // const previewAvailable = url && url.length > 0;
-
   const Tabs = () => {
     return (
       <div className="mb-4">
@@ -379,6 +379,7 @@ const SelectOne = ({
                         id={`formField_${input.id}`}
                         placeHolder={`Enter Label`}
                       />
+
                       {/* Options input fields */}
                       {input.options?.length &&
                         input.options?.map((item: any, index: number) => {
@@ -416,6 +417,10 @@ const SelectOne = ({
                                     Remove
                                   </button>
                                 </div>
+                              </div>
+                              <div className="text-gray-400 flex items-center">
+                                <p>Add none of the above option</p>
+                                <p>Add 'other' option</p>
                               </div>
                             </div>
                           );
@@ -549,6 +554,11 @@ const SelectOne = ({
                     : 'border-gray-300 text-dark'
                 } w-auto p-2 px-4 focus:border-indigo-600 text-tiny border-2 hover:border-gray-500 rounded-md  transition-all duration-300 mr-4`}>
                 {numbered ? 'Numbered' : 'Unnumbered'}
+              </button>
+              <button
+                onClick={() => setCurTab(tabs[1].name)}
+                className={` text-white bg-indigo-600 w-auto p-2 px-4  text-tiny rounded-md  transition-all duration-300 mr-4`}>
+                See the preview
               </button>
             </div>
             <div className="flex items-center w-auto">

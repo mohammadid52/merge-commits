@@ -1053,3 +1053,13 @@
   top: 10px !important;
   width: 13px !important;
 }
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+  right: 80px !important;
+  top: 0 !important;
+}
+.react-datepicker__year-option--selected {
+  width: auto !important;
+}

@@ -16,6 +16,8 @@ const CustomDatePicker = (props: DatePickerProps) => {
   return (
     <DatePicker
       disabled={disabled}
+      showYearDropdown
+      placeholderText="click here to select a date"
       id={id}
       selected={startDate}
       onChange={(date, e) => {
