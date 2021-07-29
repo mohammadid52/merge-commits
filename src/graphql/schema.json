@@ -22704,6 +22704,21 @@
           "isDeprecated" : false,
           "deprecationReason" : null
         }, {
+          "name" : "lessonID",
+          "description" : null,
+          "args" : [ ],
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "isDeprecated" : false,
+          "deprecationReason" : null
+        }, {
           "name" : "roomID",
           "description" : null,
           "args" : [ ],
@@ -22877,6 +22892,15 @@
           "defaultValue" : null
         }, {
           "name" : "syllabusLessonID",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lessonID",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -44810,6 +44834,19 @@
           },
           "defaultValue" : null
         }, {
+          "name" : "lessonID",
+          "description" : null,
+          "type" : {
+            "kind" : "NON_NULL",
+            "name" : null,
+            "ofType" : {
+              "kind" : "SCALAR",
+              "name" : "ID",
+              "ofType" : null
+            }
+          },
+          "defaultValue" : null
+        }, {
           "name" : "roomID",
           "description" : null,
           "type" : {
@@ -44851,6 +44888,15 @@
         "fields" : null,
         "inputFields" : [ {
           "name" : "syllabusLessonID",
+          "description" : null,
+          "type" : {
+            "kind" : "INPUT_OBJECT",
+            "name" : "ModelIDInput",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lessonID",
           "description" : null,
           "type" : {
             "kind" : "INPUT_OBJECT",
@@ -44966,6 +45012,15 @@
           "defaultValue" : null
         }, {
           "name" : "syllabusLessonID",
+          "description" : null,
+          "type" : {
+            "kind" : "SCALAR",
+            "name" : "ID",
+            "ofType" : null
+          },
+          "defaultValue" : null
+        }, {
+          "name" : "lessonID",
           "description" : null,
           "type" : {
             "kind" : "SCALAR",
@@ -48959,6 +49014,32 @@
           "description" : null,
           "args" : [ {
             "name" : "syllabusLessonID",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "ID",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "lessonID",
+            "description" : null,
+            "type" : {
+              "kind" : "NON_NULL",
+              "name" : null,
+              "ofType" : {
+                "kind" : "SCALAR",
+                "name" : "ID",
+                "ofType" : null
+              }
+            },
+            "defaultValue" : null
+          }, {
+            "name" : "roomID",
             "description" : null,
             "type" : {
               "kind" : "NON_NULL",
