@@ -4265,6 +4265,7 @@ export const getPersonLocation = /* GraphQL */ `
       personAuthID
       personEmail
       syllabusLessonID
+      lessonID
       roomID
       currentLocation
       lessonProgress
@@ -4480,6 +4481,7 @@ export const listPersonLocations = /* GraphQL */ `
         personAuthID
         personEmail
         syllabusLessonID
+        lessonID
         roomID
         currentLocation
         lessonProgress
@@ -5834,6 +5836,7 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
         personAuthID
         personEmail
         syllabusLessonID
+        lessonID
         roomID
         currentLocation
         lessonProgress
