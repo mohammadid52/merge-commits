@@ -452,7 +452,7 @@ const LessonApp = () => {
   // ####################### MANAGE PERSON LOCATION ###################### //
   // ##################################################################### //
 
-  const [personLocationObj, setPersonLocationObj] = useState<any>();
+  const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
   const {lessonID} = urlParams;
 
   const createPersonLocation = async () => {
@@ -466,35 +466,72 @@ const LessonApp = () => {
       lessonProgress: lessonState.lessonProgress,
     };
     try {
-      const newPersonLocationMutation: any = await API.graphql(
+      const newUserLocation: any = await API.graphql(
         graphqlOperation(mutations.createPersonLocation, {input: newLocation})
       );
+      const response = newUserLocation.data.createPersonLocation;
+      const newLocationObj = {
+        id: response.id,
+        personAuthID: response.personAuthID,
+        personEmail: response.personEmail,
+        syllabusLessonID: response.syllabusLessonID,
+        lessonID: response.lessonID,
+        roomID: response.roomID,
+        currentLocation: response.currentLocation,
+        lessonProgress: response.lessonProgress,
+      };
+      setPersonLocationObj(newLocationObj);
+      console.log('created new location - ', response);
     } catch (e) {
       console.error('createPersonLocation - ', e);
-    } finally {
-      try {
-        const getNewLocation = await getPersonLocation();
-        console.log('getNewLocation - ', getNewLocation);
-      } catch (e) {
-        console.log('getNewLocation after Create - ', e);
-      }
     }
   };
 
   const getPersonLocation = async () => {
     try {
-      let userInfo: any = await API.graphql(
-        graphqlOperation(customQueries.getPersonLocation, {
-          personAuthID: state.user.authId,
-          personEmail: state.user.email,
+      let userLocations: any = await API.graphql(
+        graphqlOperation(customQueries.listPersonLocations, {
+          input: {
+            personAuthID: state.user.authId,
+            personEmail: state.user.email,
+            syllabusLessonID: getRoomData.activeSyllabus,
+            lessonID: lessonID,
+          },
         })
       );
-      userInfo = userInfo.data.getPersonLocation;
-      return userInfo || null;
+
+      const responseItems = userLocations.data.listPersonLocations.items;
+      if (responseItems.length > 0) {
+        const response = responseItems[0];
+        const existLocationObj = {
+          id: response.id,
+          personAuthID: response.personAuthID,
+          personEmail: response.personEmail,
+          syllabusLessonID: response.syllabusLessonID,
+          lessonID: response.lessonID,
+          roomID: response.roomID,
+          currentLocation: response.currentLocation,
+          lessonProgress: response.lessonProgress,
+        };
+        setPersonLocationObj(existLocationObj);
+        return true;
+      } else {
+        await createPersonLocation();
+        return false;
+      }
     } finally {
       console.log('getPersonLocation funnction completed');
     }
   };
+
+  useEffect(() => {
+    if (personLocationObj === undefined) {
+      const fetchLocation = getPersonLocation();
+      Promise.resolve(fetchLocation).then((_: any) => {
+        console.log('...initialized location');
+      });
+    }
+  }, [lessonState.lessonData.id]);
 
   const updatePersonLocation = async () => {
     const updatedLocation = {
@@ -508,32 +545,26 @@ const LessonApp = () => {
       lessonProgress: lessonState.lessonProgress,
     };
 
+    setPersonLocationObj(updatedLocation);
+
     try {
       const newPersonLocationMutation: any = await API.graphql(
         graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
       );
     } catch (e) {
       console.error('updatePersonLocation - ', e);
-    } finally {
-      setPersonLocationObj(updatedLocation);
-    }
-  };
-
-  const handleUpdatePersonLocation = async (locationObj: any) => {
-    if (locationObj && Object.keys(locationObj).length > 0 && locationObj.id !== '') {
-      await updatePersonLocation();
-    } else {
-      const getLocation = await getPersonLocation();
-      if (getLocation !== null) {
-        setPersonLocationObj(getLocation);
-      } else {
-        await createPersonLocation();
-      }
     }
   };
 
   useEffect(() => {
-    handleUpdatePersonLocation(personLocationObj);
+    if (
+      personLocationObj &&
+      personLocationObj.id &&
+      lessonState.currentPage &&
+      lessonState.currentPage !== personLocationObj.currentLocation
+    ) {
+      updatePersonLocation();
+    }
   }, [lessonState.currentPage]);
 
   const userAtEnd = () => {

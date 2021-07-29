@@ -24,7 +24,7 @@ import * as customQueries from '../../customGraphql/customQueries';
 import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import * as subscriptions from '../../graphql/subscriptions';
-import {getLocalStorageData} from '../../utilities/localStorage';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 
 const LessonControl = () => {
   const {dispatch, lessonState, lessonDispatch, controlState, theme} = useContext(
@@ -76,10 +76,6 @@ const LessonControl = () => {
   // ##################################################################### //
   let subscription: any;
   const [subscriptionData, setSubscriptionData] = useState<any>();
-
-  // ~~~~~~~~~~~~~ TEST VALUES ~~~~~~~~~~~~~ //
-  // const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
-  // const SYLLABUS_ID = '13fa95a7-0f71-4801-bd0c-f4c54fd2b8d8';
 
   // ----------- 1 ---------- //
 
@@ -213,18 +209,16 @@ const LessonControl = () => {
   };
 
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
+
   useEffect(() => {
-    if (lessonState.studentViewing === '') {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
-    } else {
+    if (lessonState.studentViewing !== '') {
       if (!lessonState.loaded) {
         getStudentData(lessonState.studentViewing).then((_: void) =>
           console.log('getStudentData teacher - ', 'getted')
         );
       }
+    } else {
+      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
     }
   }, [lessonState.studentViewing]);
 
@@ -293,6 +287,7 @@ const LessonControl = () => {
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
     const {lessonID} = urlParams;
+
     if (lessonID) {
       lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
       getSyllabusLesson(lessonID).then((_: void) =>
@@ -317,6 +312,7 @@ const LessonControl = () => {
       history.push(`${match.url}/${0}`);
 
       const getRoomData = getLocalStorageData('room_info');
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
 
       if (
         lessonState.lessonData.lessonPlan &&
@@ -324,24 +320,12 @@ const LessonControl = () => {
       ) {
         lessonDispatch({
           type: 'SET_ROOM_SUBSCRIPTION_DATA',
-          payload: {ClosedPages: getRoomData.ClosedPages},
+          payload: {
+            ClosedPages: getRoomData.ClosedPages,
+            studentViewing: '',
+          },
         });
       }
-
-      // MODIFY REDUCER FOR THIS
-      // lessonControlDispatch({
-      //   type: 'INITIAL_CONTROL_SETUP',
-      //   payload: {
-      //     syllabusLessonID: lessonID,
-      //     pages: lesson.lessonPlan,
-      //     data: lesson,
-      //     students: [],
-      //     open: lesson?.status === 'Active',
-      //     complete: lesson?.complete,
-      //     startDate: lesson?.startDate ? lesson?.startDate : '',
-      //     endDate: lesson?.endDate ? lesson?.endDate : '',
-      //   },
-      // });
     }
   }, [lessonState.lessonData.id]);
 
@@ -351,20 +335,20 @@ const LessonControl = () => {
 
   // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
   useEffect(() => {
-    // if (controlState.studentViewing !== '') {
-    //   const viewedStudentLocation = controlState.roster.find(
-    //     (student: any) => student.personAuthID === controlState.studentViewing
-    //   )?.currentLocation;
-    //
-    //   if (viewedStudentLocation !== '') {
-    //     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
-    //     history.push(`${match.url}/${viewedStudentLocation}`);
-    //   } else {
-    //     lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
-    //     history.push(`${match.url}/0`);
-    //   }
-    // }
-  }, [controlState.roster]);
+    if (lessonState.studentViewing !== '') {
+      const viewedStudentLocation = controlState.roster.find(
+        (student: any) => student.personAuthID === lessonState.studentViewing
+      )?.currentLocation;
+
+      if (viewedStudentLocation !== '') {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+        history.push(`${match.url}/${viewedStudentLocation}`);
+      } else {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/0`);
+      }
+    }
+  }, [controlState.roster, lessonState.studentViewing]);
 
   // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
   const [isSameStudentShared, setIsSameStudentShared] = useState(false);
