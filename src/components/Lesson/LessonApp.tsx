@@ -509,7 +509,7 @@ const LessonApp = () => {
   return (
     <>
       <FloatingSideMenu />
-      <div className={`${theme.bg} w-full flex flex-col items-start`}>
+      <div className={`${theme.bg} w-full flex flex-col h-full items-start`}>
         <LessonHeaderBar
           lessonDataLoaded={lessonDataLoaded}
           overlay={overlay}
