@@ -1019,7 +1019,37 @@
 .toolbarClassName.previewMode {
   display: none;
 }
+
 .editorClassName.previewMode {
   border: 1px solid #9ca3af;
   border-radius: 8px;
+}
+
+// datepicker library config styles
+.react-datepicker-popper {
+  width: auto;
+}
+
+.datePickerWrapper.light .react-datepicker__input-container input {
+  background-color: rgb(237, 242, 247);
+  color: rgb(50, 50, 62);
+}
+
+.react-datepicker__input-container input {
+  border-radius: 1rem;
+  background-color: rgb(39, 39, 48);
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__navigation-icon::before,
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+  height: 13px !important;
+
+  top: 10px !important;
+  width: 13px !important;
 }

@@ -56,7 +56,7 @@ const WritingBlock = (props: WritingBlockProps) => {
 
   return (
     <div className="w-full flex flex-col">
-      <div className={`w-full h-full rounded-xl z-10 p-4`}>
+      <div className={`w-full h-full rounded-xl  p-4`}>
         <h3
           className={`relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left ${themeTextColor} text-xl`}>
           Line Prompts

@@ -13,6 +13,7 @@ import EmojiInput from './FormBlock/EmojiInputBlock';
 import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
 import noop from 'lodash/noop';
+import CustomDatePicker from './FormBlock/DatePicker';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -416,6 +417,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     required?: boolean,
     classString?: string
   ) => {
+    console.log(getValue(inputID));
     switch (type) {
       case FORM_TYPES.TEXT:
         return (
@@ -442,7 +444,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
-            <input
+            {/* <input
               id={inputID}
               disabled={mode === 'building'}
               className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
@@ -452,7 +454,15 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
               onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
               value={isInLesson ? getValue(inputID) : value}
-            />
+            /> */}
+            <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
+              <CustomDatePicker
+                id={inputID}
+                disabled={false}
+                onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
+                value={isInLesson ? getValue(inputID) : value}
+              />
+            </div>
           </div>
         );
       case FORM_TYPES.TEXTAREA:

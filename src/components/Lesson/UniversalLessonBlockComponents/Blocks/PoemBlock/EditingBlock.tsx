@@ -17,7 +17,7 @@ const EditingBlock = (props: EditingBlockProps) => {
 
   return (
     <div className="w-full flex flex-col">
-      <div className={`w-full h-full rounded-xl z-10 p-4 text-black`}>
+      <div className={`w-full h-full rounded-xl p-4 text-black`}>
         <h3
           className={`relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}>
           Edit

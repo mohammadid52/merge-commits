@@ -84,7 +84,7 @@ const PoemBlock = (props: PoemBlockProps) => {
 
   return (
     <div
-      className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50`}>
+      className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
       <div className="relative flex flex-col justify-between items-center">
         {!saveAndEdit ? (
           <WritingBlock
