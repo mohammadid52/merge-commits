@@ -21,6 +21,7 @@ interface FormInputProps {
   cols?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
+  className?: string;
 }
 
 const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
@@ -37,6 +38,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     error = '',
     textarea = false,
     rows = 1,
+    className,
     cols = 125,
     maxLength = 99999,
     showCharacterUsage = false,
@@ -68,7 +70,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
             theme.outlineNone
-          }`}
+          } ${className}`}
           disabled={disabled}
           maxLength={maxLength}
           name={name}
@@ -88,7 +90,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
             themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
           }-600 focus:border-transparent border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm ${
             theme.outlineNone
-          }`}
+          } ${className}`}
           value={value ? value : ''}
           placeholder={placeHolder}
           {...otherInputProps}

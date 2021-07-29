@@ -173,6 +173,24 @@ const SelectOne = ({
     setList([...list]);
   };
 
+  const addExtraOption = (idx: number, optionName: string, optionValue: string) => {
+    const options = list[idx].options;
+
+    options.push({
+      label: optionName,
+      text: optionValue,
+      id: uuidv4(),
+    });
+
+    setList([...list]);
+  };
+  const removeExtraOption = (idx: number, field: string) => {
+    const options = list[idx].options;
+
+    remove(options, (n: any) => n.label === field);
+    setList([...list]);
+  };
+
   useEffect(() => {
     if (suggestionModal.selectedResponse.length > 0) {
       addSuggestions(suggestionModal.idx, suggestionModal.selectedResponse);
@@ -388,40 +406,96 @@ const SelectOne = ({
                           return (
                             <div
                               key={index.toLocaleString()}
-                              className="flex w-9/10 mx-auto mt-4">
-                              <div className="w-8/10">
-                                <FormInput
-                                  value={item.text}
-                                  id={`formFieldRadioOption_${idx}_${index}`}
-                                  onChange={(e) => onOptionInputChange(idx, index, e)}
-                                  name={item.label}
-                                  placeHolder={`Option ${index + 1}`}
-                                />
-                              </div>
-                              <div className="w-auto flex items-center">
-                                <div className="flex items-center justify-end w-auto ml-3">
-                                  <button
-                                    onClick={() => onOptionAdd(idx, index)}
-                                    className={`text-center w-20 transition-all duration-200 ${getColor(
-                                      themeColor === 'iconoclastIndigo'
-                                        ? 'indigo'
-                                        : 'blue'
-                                    )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
-                                    Add
-                                  </button>
+                              className="flex w-9/10 mx-auto flex-col mt-4">
+                              <div className="flex items-center">
+                                <div className="w-8/10">
+                                  <FormInput
+                                    disabled={
+                                      item.label === 'other' ||
+                                      item.label === 'noneOfAbove'
+                                    }
+                                    value={item.text}
+                                    className={`${
+                                      item.label === 'other' ||
+                                      item.label === 'noneOfAbove'
+                                        ? 'text-gray-600'
+                                        : ''
+                                    }`}
+                                    id={`formFieldRadioOption_${idx}_${index}`}
+                                    onChange={(e) => onOptionInputChange(idx, index, e)}
+                                    name={item.label}
+                                    placeHolder={`Option ${index + 1}`}
+                                  />
                                 </div>
-                                <div className="flex items-center justify-end w-auto ml-3">
-                                  <button
-                                    onClick={() => onOptionRemove(idx, item.id)}
-                                    className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
-                                    Remove
-                                  </button>
+                                <div className="w-auto flex items-center">
+                                  <div className="flex items-center justify-end w-auto ml-3">
+                                    <button
+                                      onClick={() => onOptionAdd(idx, index)}
+                                      className={`text-center w-20 transition-all duration-200 ${getColor(
+                                        themeColor === 'iconoclastIndigo'
+                                          ? 'indigo'
+                                          : 'blue'
+                                      )} text-xs font-semibold text-gray-400 border-gray-200 px-2 py-1 cursor-pointer rounded  border-2 hover:text-gray-600`}>
+                                      Add
+                                    </button>
+                                  </div>
+                                  <div className="flex items-center justify-end w-auto ml-3">
+                                    <button
+                                      onClick={() => onOptionRemove(idx, item.id)}
+                                      className={`text-center focus:outline-none focus:bg-red-200 focus:border-transparent w-20 transition-all duration-200 hover:bg-red-200 text-xs font-semibold text-red-400 border-red-200 px-2 py-1 cursor-pointer rounded border-2 hover:text-red-600`}>
+                                      Remove
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
-                              <div className="text-gray-400 flex items-center">
-                                <p>Add none of the above option</p>
-                                <p>Add 'other' option</p>
-                              </div>
+                              {index === input.options.length - 1 && (
+                                <div className="text-gray-400 flex items-center mt-2">
+                                  <p
+                                    onClick={() => {
+                                      if (
+                                        input.options.find(
+                                          (item: any) => item.label === 'noneOfAbove'
+                                        )
+                                      ) {
+                                        removeExtraOption(idx, 'noneOfAbove');
+                                      } else {
+                                        addExtraOption(
+                                          idx,
+                                          'noneOfAbove',
+                                          'None of the above'
+                                        );
+                                      }
+                                    }}
+                                    className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
+                                    {input.options.find(
+                                      (item: any) => item.label === 'noneOfAbove'
+                                    )
+                                      ? 'Remove'
+                                      : 'Add'}{' '}
+                                    none of the above option
+                                  </p>
+                                  <p
+                                    onClick={() => {
+                                      if (
+                                        input.options.find(
+                                          (item: any) => item.label === 'other'
+                                        )
+                                      ) {
+                                        removeExtraOption(idx, 'other');
+                                      } else {
+                                        addExtraOption(idx, 'other', 'Other');
+                                      }
+                                    }}
+                                    className="w-auto mr-4 hover:text-indigo-500 hover:bg-indigo-100 px-3 py-1 transition-all duration-200 cursor-pointer rounded-lg">
+                                    {input.options.find(
+                                      (item: any) => item.label === 'other'
+                                    )
+                                      ? 'Remove'
+                                      : 'Add'}{' '}
+                                    'other' option
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           );
                         })}
