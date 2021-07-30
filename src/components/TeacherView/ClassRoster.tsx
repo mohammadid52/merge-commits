@@ -152,10 +152,10 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   useEffect(() => {
-    if (lessonState.universalLessonID && controlState.roster.length === 0) {
+    if (lessonState.lessonData.id /*&& controlState.roster.length === 0*/) {
       getSyllabusLessonStudents();
     }
-  }, [lessonState.universalLessonID]);
+  }, [lessonState.lessonData.id]);
 
   // ##################################################################### //
   // #################### SUBSCRIBE TO LOCATION CHANGE ################### //
