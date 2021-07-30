@@ -1390,11 +1390,48 @@ export const getStudentData = /* GraphQL */ `
 export const getPersonLocation = /* GraphQL */ `
   query GetPersonLocation($personAuthID: String!, $personEmail: String!) {
     getPersonLocation(personAuthID: $personAuthID, personEmail: $personEmail) {
-      currentLocation
       id
-      lessonProgress
       personAuthID
       personEmail
+      syllabusLessonID
+      lessonID
+      roomID
+      currentLocation
+      lessonProgress
+    }
+  }
+`;
+
+export const listPersonLocations = /* GraphQL */ `
+  query ListPersonLocations(
+    $personEmail: String
+    $personAuthID: ModelStringKeyConditionInput
+    $filter: ModelPersonLocationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonLocations(
+      personEmail: $personEmail
+      personAuthID: $personAuthID
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        personAuthID
+        personEmail
+        syllabusLessonID
+        lessonID
+        roomID
+        currentLocation
+        lessonProgress
+        createdAt
+        updatedAt
+      }
+      nextToken
     }
   }
 `;

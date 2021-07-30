@@ -20,10 +20,14 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
 
   const canContinue = () => {
-    return (
-      lessonState.currentPage < PAGES.length - 1 &&
-      PAGES[lessonState.currentPage + 1]?.open !== false
-    );
+    if (PAGES) {
+      return (
+        lessonState.currentPage < PAGES.length - 1 &&
+        PAGES[lessonState.currentPage + 1]?.open !== false
+      );
+    } else {
+      return false;
+    }
   };
 
   const userAtEnd = () => {

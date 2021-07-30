@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
 import {useHistory} from 'react-router-dom';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
@@ -11,8 +10,6 @@ import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonHeaderBar = ({
   lessonDataLoaded,
-  overlay,
-  setOverlay,
   isAtEnd,
   setisAtEnd,
 }: LessonHeaderBarProps) => {
