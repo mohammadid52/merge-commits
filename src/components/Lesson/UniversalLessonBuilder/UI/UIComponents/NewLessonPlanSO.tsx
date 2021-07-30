@@ -506,7 +506,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
               ${newLessonPlanShow ? 'translate-x-0' : 'translate-x-full'}
               `}>
             <div className="w-auto max-w-2xl">
-              <form className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+              <div className="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
                 <div className="flex-1">
                   {/* Header */}
                   <div className="px-4 py-6 bg-gray-50 sm:px-6">
@@ -701,7 +701,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                     </div>
                   </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>

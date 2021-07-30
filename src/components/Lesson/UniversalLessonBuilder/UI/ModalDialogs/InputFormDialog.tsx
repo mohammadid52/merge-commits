@@ -21,6 +21,7 @@ import UniversalInput from '../FormElements/UniversalInput';
 interface InputModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
   contentType?: any;
+  classString?: string;
 }
 
 const InputModalComponent = ({
@@ -38,23 +39,31 @@ const InputModalComponent = ({
     if (inputObj && inputObj.length) {
       setNumbered(contentType.includes('numbered'));
       if (inputObj[0].type === FORM_TYPES.RADIO) {
+        const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
         setRadioList(
           inputObj.map((input: any) => ({
             id: input.id,
             options: input.options,
             label: input.label,
             required: input.isRequired,
+            inLine: inLine,
+            type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
           }))
         );
         setSelectedFormType(SELECT_ONE);
       } else if (inputObj[0].type === FORM_TYPES.MULTIPLE) {
+        const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
         setManyOptionList(
-          inputObj.map((input: any) => ({
-            id: input.id,
-            options: input.options,
-            label: input.label,
-            required: input.isRequired,
-          }))
+          inputObj.map((input: any) => {
+            return {
+              id: input.id,
+              options: input.options,
+              label: input.label,
+              inLine: inLine,
+              required: input.isRequired,
+              type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
+            };
+          })
         );
         setSelectedFormType(SELECT_MANY);
       } else if (inputObj[0].type === FORM_TYPES.EMOJI) {
@@ -106,6 +115,7 @@ const InputModalComponent = ({
       label: '',
       required: false,
       inLine: true,
+      type: FORM_TYPES.MULTIPLE,
       options: [
         {label: '1', text: '', id: uuidv4()},
         {label: '2', text: '', id: uuidv4()},
@@ -117,6 +127,7 @@ const InputModalComponent = ({
     {
       id: uuidv4(),
       label: '',
+      type: FORM_TYPES.RADIO,
       required: false,
       inLine: true,
       options: [
