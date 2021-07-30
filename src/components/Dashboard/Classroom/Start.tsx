@@ -23,6 +23,7 @@ interface StartProps {
   type?: string;
   roomID: string;
   isActive?: boolean;
+  isCompleted?: boolean;
   activeRoomInfo?: any;
 }
 
@@ -30,7 +31,16 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const _isMounted = useRef(true); // Initial value _isMounted = true
   const {state, theme, dispatch, userLanguage, clientKey} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
-  const {activeRoomInfo, isActive, lessonKey, open, accessible, type, roomID} = props;
+  const {
+    activeRoomInfo,
+    isActive,
+    isCompleted,
+    lessonKey,
+    open,
+    accessible,
+    type,
+    roomID,
+  } = props;
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [attendanceRecorded, setAttendanceRecorded] = useState<boolean>(false);
@@ -185,7 +195,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           activeRoomInfo?.activeLessons?.includes(lessonData.lessonID)
       )
       .map((item: any) => item.lesson);
-    
+
     setWarnModal((prevValues) => ({
       ...prevValues,
       message: `Do you want to mark ${activeLessonsData
@@ -203,7 +213,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           id: roomID,
           completedLessons: [
             ...(state.roomData.completedLessons || []),
-            warnModal.activeLessonsId.map((lessonID) => ({
+            ...warnModal.activeLessonsId.map((lessonID) => ({
               lessonID,
               time: new Date().toISOString(),
             })),
@@ -225,14 +235,20 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
       } else {
-        if (isActive) {
+        if (isCompleted) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+        } else if (isActive) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ACTIVE'];
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['TEACH'];
         }
       }
     } else {
-      return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
+      if (isCompleted) {
+        return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+      } else {
+        return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
+      }
     }
   };
 
@@ -240,7 +256,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     if (typeof type !== 'undefined') {
       switch (type) {
         case 'lesson':
-          return classRoomDict[userLanguage]['LESSON'].toUpperCase();
+          return isCompleted ? '' : classRoomDict[userLanguage]['LESSON'].toUpperCase();
         case 'assessment':
           return classRoomDict[userLanguage]['ASSESSMENT'].toUpperCase();
         case 'survey':

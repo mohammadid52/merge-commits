@@ -62,6 +62,8 @@ export interface Lesson {
     duration?: number | null;
     cardImage?: string | null;
   };
+  session?: number;
+  sessionHeading?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -81,6 +83,18 @@ export interface LessonCardProps {
   lessonType?: string;
   roomID?: string;
 }
+
+const range = (from:number, to:number, step:number = 1) => {
+  let i = from;
+  const range = [];
+
+  while (i <= to) {
+    range.push(i);
+    i += step;
+  }
+
+  return range;
+};
 
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
@@ -169,6 +183,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             ) > -1
         )
       : [];
+
+  let count: number = 0;
+  const lessonsSortedDataByDuration = state.roomData.lessons.sort(
+    (a: any, b: any) => a.lesson.duration - b.lesson.duration
+  );
+  lessonsSortedDataByDuration.map(
+    (item: any) => {
+      item.sessionHeading = `Session ${range(count + 1, Math.ceil(count + item.lesson.duration))
+        .join(', ')
+        .replace(/, ([^,]*)$/, ' & $1')}`;
+      count += item.lesson.duration;
+      item.session = Math.ceil(count);
+      return item;
+    }
+  );
     
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
@@ -319,13 +348,23 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 </div>
               </>
             )}
-
-            {showClassDetails && (
+            <div className={`bg-opacity-10`}>
+              <div className={`p-4 text-xl m-auto`}>
+                <Today
+                  activeRoom={state.activeRoom}
+                  activeRoomInfo={activeRoomInfo}
+                  isTeacher={isTeacher}
+                  lessonLoading={lessonLoading}
+                  lessons={lessonsSortedDataByDuration}
+                />
+              </div>
+            </div>
+            {/* {showClassDetails && (
               <div
                 className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
                 <UnderlinedTabs activeTab={0} tabs={tabs} />
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </DashboardContainer>

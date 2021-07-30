@@ -35,11 +35,16 @@ interface AddNewLessonFormProps {
 }
 
 const periodOptions = [
-  {id: 1, name: '1'},
-  {id: 2, name: '2'},
-  {id: 3, name: '3'},
-  {id: 4, name: '4'},
-  {id: 5, name: '5'},
+  {id: 1, name: '.25'},
+  {id: 2, name: '.33'},
+  {id: 3, name: '.5'},
+  {id: 4, name: '.66'},
+  {id: 5, name: '.75'},
+  {id: 6, name: '1'},
+  {id: 7, name: '2'},
+  {id: 8, name: '3'},
+  {id: 9, name: '4'},
+  {id: 10, name: '5'},
 ];
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
@@ -318,6 +323,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             cardImage: fileName,
             darkMode: true,
             cardCaption: formData.imageCaption,
+            duration: Number(formData.duration),
           };
           const results: any = await API.graphql(
             graphqlOperation(customMutations.updateUniversalLesson, {input: input})
