@@ -612,6 +612,8 @@ const classRoomDict: any = {
       DISABLE: 'DISABLE',
       ENABLE: 'ENABLE',
       TEACH: 'TEACH',
+      ACTIVE: 'ACTIVE',
+      COMPLETED: 'COMPLETED',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,

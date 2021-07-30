@@ -549,6 +549,8 @@ const classRoomDict: any = {
       DISABLE: 'DISABLE',
       ENABLE: 'ENABLE',
       TEACH: 'TEACH',
+      ACTIVE: 'ACTIVE',
+      COMPLETED: 'COMPLETED',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Session`,
@@ -577,6 +579,8 @@ const classRoomDict: any = {
       DISABLE: 'TBD',
       ENABLE: 'TBD',
       TEACH: 'TBD',
+      ACTIVE: 'TBD',
+      COMPLETED: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,
@@ -2760,7 +2764,7 @@ const AddNewLessonFormDict: any = {
     LANGUAGE: 'Language',
     SELECTDESIGNER: 'Select Developers',
     DESIGNER: 'Developers',
-    DURATION: 'Duration (weeks)',
+    DURATION: 'Duration (Sessions)',
     MATERIALS: 'Materials',
     PURPOSE: 'Purpose',
     OBJECTIVE: 'Lesson Objectives',

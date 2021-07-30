@@ -69,6 +69,10 @@ const BottomBar = (props: LessonCardProps) => {
           lessonKey={lessonProps ? lessonProps.lessonID : null}
           isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
           open={lessonProps && lessonProps.status === 'Active' ? true : false}
+          isCompleted={activeRoomInfo.completedLessons?.findIndex(
+            (item: {lessonID?: string | null; time?: string | null}) =>
+              item.lessonID === lessonProps.lessonID
+          ) > -1}
           accessible={accessible}
           type={lessonProps.lesson.type}
           activeRoomInfo={activeRoomInfo}
