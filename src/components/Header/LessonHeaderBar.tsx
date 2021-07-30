@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {useCookies} from 'react-cookie';
 import {useHistory} from 'react-router-dom';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import PositiveAlert from '../General/Popup';
@@ -11,8 +10,6 @@ import {getLocalStorageData} from '../../utilities/localStorage';
 
 const LessonHeaderBar = ({
   lessonDataLoaded,
-  overlay,
-  setOverlay,
   isAtEnd,
   setisAtEnd,
 }: LessonHeaderBarProps) => {
@@ -26,6 +23,9 @@ const LessonHeaderBar = ({
   const getRoomData = getLocalStorageData('room_info');
   const [waiting, setWaiting] = useState<boolean>(null);
   const [safeToLeave, setSafeToLeave] = useState<any>(null);
+
+  // To track user clicks on home button or click next on last page
+  const [leaveAfterCompletion, setLeaveAfterCompletion] = useState<boolean>(false);
 
   const handleManualSave = () => {
     if (lessonState.updated) {
@@ -59,8 +59,9 @@ const LessonHeaderBar = ({
 
   // ------ POPUP MODAL ----- //
   const {visible, setVisible} = useOutsideAlerter(false);
-  const handlePopup = () => {
+  const handlePopup = (isLeavingAfterCompletion: boolean = true) => {
     setVisible((prevState: any) => !prevState);
+    setLeaveAfterCompletion(isLeavingAfterCompletion);
   };
 
   return (
@@ -77,12 +78,16 @@ const LessonHeaderBar = ({
         <PositiveAlert
           alert={visible}
           setAlert={setVisible}
-          header="Are you sure you want to leave the Lesson?"
+          header={
+            leaveAfterCompletion
+              ? 'Congratulations, you have reached the end of the lesson, do you want to go back to the dashboard?'
+              : 'This will take you out of the lesson.  Did you want to continue?'
+          }
           button1={`${!waiting ? 'Go to the dashboard' : 'Saving your data...'}`}
-          button2="Cancel"
+          button2="Stay on lesson"
           svg="question"
           handleButton1={handleManualSave}
-          handleButton2={() => handlePopup}
+          handleButton2={handlePopup}
           theme="dark"
           fill="screen"
         />

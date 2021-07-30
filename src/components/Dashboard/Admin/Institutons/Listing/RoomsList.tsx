@@ -75,7 +75,16 @@ const RoomsList = (props: RoomListProps) => {
             {InstitueRomms[userLanguage]['TITLE']}
           </h3>
 
-          {!loading && roomList.length > 0 ? (
+          {loading ? (
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+              <div className="w-5/10">
+                <Loader color="rgba(107, 114, 128, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">
+                  {InstitueRomms[userLanguage]['LOADING']}
+                </p>
+              </div>
+            </div>
+          ) : roomList.length > 0 ? (
             <Fragment>
               <div className="flex justify-end">
                 <Buttons
@@ -143,7 +152,7 @@ const RoomsList = (props: RoomListProps) => {
                 ))}
               </div>
             </Fragment>
-          ) : roomList.length <= 0 ? (
+          ) : (
             <Fragment>
               <div className="flex justify-center mt-8">
                 <Buttons
@@ -157,15 +166,6 @@ const RoomsList = (props: RoomListProps) => {
                 {messages.message}
               </p>
             </Fragment>
-          ) : (
-            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-              <div className="w-5/10">
-                <Loader color="rgba(107, 114, 128, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">
-                  {InstitueRomms[userLanguage]['LOADING']}
-                </p>
-              </div>
-            </div>
           )}
         </PageWrapper>
       </div>

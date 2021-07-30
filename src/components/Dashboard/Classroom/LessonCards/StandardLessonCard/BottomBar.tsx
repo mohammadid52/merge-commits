@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {LessonCardProps} from '../../Classroom';
 import Start from '../../Start';
 
@@ -21,7 +20,10 @@ const BottomBar = (props: LessonCardProps) => {
             <AiOutlineClockCircle />
           </IconContext.Provider>
         </div>
-        <div className={`w-auto mx-4 text-base text-gray-500`}>45 min.</div>
+        <div className={`w-auto mx-4 text-base text-gray-500`}>
+          {lessonProps.lesson?.duration}{' '}
+          {lessonProps.lesson?.duration > 1 ? 'weeks' : 'week'}
+        </div>
       </div>
 
       {/* TEACHER */}
@@ -65,9 +67,11 @@ const BottomBar = (props: LessonCardProps) => {
           roomID={roomID}
           isTeacher={isTeacher}
           lessonKey={lessonProps ? lessonProps.lessonID : null}
+          isActive={activeRoomInfo?.activeLessons?.includes(lessonProps?.lessonID)}
           open={lessonProps && lessonProps.status === 'Active' ? true : false}
           accessible={accessible}
           type={lessonProps.lesson.type}
+          activeRoomInfo={activeRoomInfo}
         />
       </div>
     </div>

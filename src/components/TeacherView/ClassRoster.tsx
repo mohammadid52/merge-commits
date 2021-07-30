@@ -4,15 +4,14 @@ import {IoMdRefresh} from 'react-icons/io';
 
 import useDictionary from '../../customHooks/dictionary';
 import {GlobalContext} from '../../contexts/GlobalContext';
-import {getSessionData} from '../../utilities/sessionData';
 import RosterRow from './ClassRoster/RosterRow';
 
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
 
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {useCookies} from 'react-cookie';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {useParams} from 'react-router-dom';
 
 interface classRosterProps {
   handleUpdateSyllabusLesson: () => Promise<void>;
@@ -24,16 +23,9 @@ interface classRosterProps {
   handleRoomUpdate?: (payload: any) => void;
 }
 
-enum SortByEnum {
-  FNAME = 'firstName',
-  PAGE = 'lessonProgress',
-  ACTION = 'action',
-}
-
 const ClassRoster = (props: classRosterProps) => {
   // Essentials
   const {
-    handleUpdateSyllabusLesson,
     handleShareStudentData,
     isSameStudentShared,
     handleQuitShare,
@@ -46,6 +38,7 @@ const ClassRoster = (props: classRosterProps) => {
   );
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonPlannerDict} = useDictionary(clientKey);
+  const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
@@ -94,7 +87,7 @@ const ClassRoster = (props: classRosterProps) => {
         })
       );
       const classStudentList = classStudents.data.listClassStudents.items;
-      const initClassStudentList = classStudentList.map((student: any, i: number) => {
+      const initClassStudentList = classStudentList.map((student: any) => {
         return {
           id: '',
           personAuthID: student.studentAuthID,
@@ -122,12 +115,17 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   // ~~~~ FETCH STUDENTS IN THIS LESSON ~~~~ //
+
+  const {lessonID} = urlParams;
+
   const getSyllabusLessonStudents = async () => {
     setLoading(true);
     try {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
-          filter: {syllabusLessonID: {contains: lessonState.universalLessonID}},
+          syllabusLessonID: getRoomData.activeSyllabus,
+          lessonID: lessonID,
+          roomID: getRoomData.id,
         })
       );
       const syllabusLessonStudentList =
@@ -163,11 +161,12 @@ const ClassRoster = (props: classRosterProps) => {
   // #################### SUBSCRIBE TO LOCATION CHANGE ################### //
   // ##################################################################### //
   const subscribeToPersonLocations = () => {
-    const syllabusLessonID = lessonState.universalLessonID;
     // @ts-ignore
     const personLocationSubscription = API.graphql(
       graphqlOperation(subscriptions.onChangePersonLocation, {
-        syllabusLessonID: syllabusLessonID,
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        roomID: getRoomData.id,
       })
       //@ts-ignore
     ).subscribe({
@@ -241,6 +240,13 @@ const ClassRoster = (props: classRosterProps) => {
       await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
     }
   };
+
+  // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (lessonState.studentViewing === '' && viewedStudent !== '') {
+      setViewedStudent('');
+    }
+  }, [lessonState.studentViewing]);
 
   const handleManualRefresh = () => {
     if (loading === false) {

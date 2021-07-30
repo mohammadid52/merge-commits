@@ -73,16 +73,26 @@ const useStudentTimer = (inputs?: inputs) => {
   const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
 
   const [iAmViewed, setiAmViewed] = useState<boolean>(false);
-  useEffect(() => {
-    if (lessonState.studentViewing && lessonState.studentViewing === state.user.authId) {
+
+  const viewingLogic = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const authId = user.attributes.sub;
+
+    if (lessonState.studentViewing && lessonState.studentViewing === authId) {
       if (!iAmViewed) {
         setiAmViewed(true);
       }
     }
-    if (lessonState.studentViewing !== state.user.authId) {
+    if (lessonState.studentViewing !== authId) {
       if (iAmViewed) {
         setiAmViewed(false);
       }
+    }
+  };
+
+  useEffect(() => {
+    if (lessonState.studentViewing !== '') {
+      viewingLogic();
     }
   }, [lessonState.studentViewing, state.user.authId]);
 
@@ -90,46 +100,7 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    * TIMERS & TRIGGERS
    *
-   *  PAGE SWITCH SAVE TRIGGER:
-   *      This logic is now redundant, because we're managing saves
-   *      on a per-page basis i.e. if a page is modified, an update cycle
-   *      will start and send only the updated pages data to the DB.
-   *
-   *      ...If nothing on a page is updated, there's no reason to trigger a save.
-   *
    */
-  //PAGE SWITCH => SAVE TTRIGGER after 10 secs
-  // useEffect(() => {
-  //   const isLesson = true; // UPDATE IN FUTURE FOR ULB-SURVEYS/LESSONS
-  //   if (isLesson) {
-  //     if (lessonState.viewing) {
-  //       clearTimeout(activityTimeout);
-  //       setactivityTimeout(
-  //         setTimeout(() => {
-  //           console.log('VIEWING -> page switch -> save');
-  //           dispatch({type: 'INCREMENT_SAVE_COUNT'});
-  //         }, 2000)
-  //       );
-  //     } else if (!lessonState.viewing) {
-  //       if (typeOfTimeout === '') {
-  //         console.log(
-  //           '%c save timer: ',
-  //           'background: #222; color: #bada55',
-  //           'page switch save triggered after 10s'
-  //         );
-
-  //         setTypeOfTimeout('pageSwitch');
-
-  //         const pageEditTimeout = setTimeout(() => {
-  //           dispatch({type: 'INCREMENT_SAVE_COUNT'});
-  //           setTypeOfTimeout('');
-  //           console.log('%c save timer: ', 'background: #222; color: #bada55', 'saved');
-  //         }, 5000);
-  //       }
-  //     }
-  //   }
-  //   return () => resetParams();
-  // }, [lessonState.currentPage]);
 
   // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
   // COMPONENT CHANGE --> save after 60 secs
@@ -137,15 +108,15 @@ const useStudentTimer = (inputs?: inputs) => {
   useEffect(() => {
     const isLesson = true; // UPDATE IN FUTURE FOR ULB-SURVEYS/LESSONS
     if (isLesson) {
-      if (lessonState.viewing) {
+      if (iAmViewed) {
         clearTimeout(activityTimeout);
         setactivityTimeout(
           setTimeout(() => {
             dispatch({type: 'INCREMENT_SAVE_COUNT'});
             console.log('VIEWING -> EDIT -> save');
-          }, 2000)
+          }, 1000)
         );
-      } else if (!lessonState.viewing && lessonState.updated) {
+      } else if (!iAmViewed && lessonState.updated) {
         if (typeOfTimeout === '') {
           console.log(
             '%c save timer: ',
@@ -168,7 +139,7 @@ const useStudentTimer = (inputs?: inputs) => {
       }
     }
     return () => resetParams();
-  }, [lessonState.viewing, lessonState.studentData]);
+  }, [iAmViewed, lessonState.studentData]);
 
   /**
    *
@@ -176,17 +147,7 @@ const useStudentTimer = (inputs?: inputs) => {
    *
    */
   useEffect(() => {
-    if (!lessonState.viewing && currentSaveCount < lessonState.saveCount) {
-      setCurrentSaveCount(lessonState.saveCount);
-      const standardUpdate = updateStudentData('autosave');
-      Promise.resolve(standardUpdate).then((_: void) => {
-        setTimeout(() => {
-          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-          console.log('standardUpdate - ', 'done');
-        }, 2000);
-      });
-    }
-    if (lessonState.viewing) {
+    if (iAmViewed) {
       if (currentSaveCount < lessonState.saveCount) {
         setCurrentSaveCount(lessonState.saveCount);
       }
@@ -196,6 +157,17 @@ const useStudentTimer = (inputs?: inputs) => {
         setTimeout(() => {
           lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
           console.log('liveUpdate - ', 'done');
+        }, 1000);
+      });
+    }
+
+    if (!iAmViewed && currentSaveCount < lessonState.saveCount) {
+      setCurrentSaveCount(lessonState.saveCount);
+      const standardUpdate = updateStudentData('autosave');
+      Promise.resolve(standardUpdate).then((_: void) => {
+        setTimeout(() => {
+          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
+          console.log('standardUpdate - ', 'done');
         }, 2000);
       });
     }
@@ -236,9 +208,6 @@ const useStudentTimer = (inputs?: inputs) => {
             console.error('update universal student data - ', encodeURI);
           } finally {
             console.log('updateStudentData - finally - ', idx);
-            // if (idx === lessonState.universalStudentDataID.length - 1) {
-            //   lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-            // }
           }
 
           console.log('updateStudentData - timer - ', data);
@@ -246,11 +215,6 @@ const useStudentTimer = (inputs?: inputs) => {
       },
       []
     );
-
-    // console.log(
-    //   'lessonState.universalStudentDataID - ',
-    //   lessonState.universalStudentDataID
-    // );
   };
 
   /**

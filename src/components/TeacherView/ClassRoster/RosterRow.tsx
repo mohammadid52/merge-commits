@@ -140,10 +140,12 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
             aria-label={`asd`}
             id={`${id}`}
             draggable={false}
-            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm ${
+            // className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm ${
+            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
               active && activeHoverClass
             }`}
-            onClick={handleShareStudentData}>
+            // onClick={handleShareStudentData}>
+            onClick={() => {}}>
             <span id={`${id}`}>Share</span>
           </div>
         ) : (

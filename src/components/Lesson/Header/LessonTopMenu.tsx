@@ -8,6 +8,7 @@ import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import {getLocalStorageData} from '../../../utilities/localStorage';
+import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
 
 const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -19,10 +20,14 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
 
   const canContinue = () => {
-    return (
-      lessonState.currentPage < PAGES.length - 1 &&
-      PAGES[lessonState.currentPage + 1]?.open !== false
-    );
+    if (PAGES) {
+      return (
+        lessonState.currentPage < PAGES.length - 1 &&
+        PAGES[lessonState.currentPage + 1]?.open !== false
+      );
+    } else {
+      return false;
+    }
   };
 
   const userAtEnd = () => {
@@ -98,7 +103,7 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
 
             <div
               className={`ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
-                canContinue || userAtEnd
+                canContinue()
                   ? 'bg-sea-green cursor-pointer'
                   : 'bg-dark-gray cursor-default'
               } `}

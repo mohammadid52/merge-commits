@@ -160,15 +160,19 @@ const RoomBuilder = (props: RoomBuilderProps) => {
 
   const getFirstSyllabus = async (curriculumID: string) => {
     if(curriculumID){
-      const syllabusCSequenceFetch = await API.graphql(
-        graphqlOperation(queries.getCSequences, {
-          id: `s_${curriculumID}`,
+      const syllabusCSequenceFetch: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
+          id: `${curriculumID}`,
         })
       );
+      
       //@ts-ignore
-      const syllabusSequenceArray = syllabusCSequenceFetch.data.getCSequences;
+      const syllabusSequenceArray =
+        syllabusCSequenceFetch.data.getCurriculum?.universalSyllabusSeq;
       //@ts-ignore
-      const firstSyllabusID = syllabusSequenceArray.sequence.length > 0 ? syllabusCSequenceFetch.data.getCSequences.sequence[0] : '';
+      const firstSyllabusID = syllabusSequenceArray.length
+        ? syllabusSequenceArray[0]
+        : '';
       return firstSyllabusID;
     }
   }
@@ -500,11 +504,6 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       );
     }
   };
-
-  const test = async () => {
-    const activeSyllabus = await getFirstSyllabus(roomData.curricular.id);
-    console.log(activeSyllabus);
-  }
 
   const createNewRoom = async () => {
     setLoading(true);
