@@ -61,7 +61,7 @@ const SideMenu = ({handlePopup}: LessonHeaderBarProps) => {
         {/**
          * HOME
          */}
-        <HomeWidget handlePopup={handlePopup} />
+        <HomeWidget handlePopup={() => handlePopup(false)} />
 
         {/**
          * NOTES

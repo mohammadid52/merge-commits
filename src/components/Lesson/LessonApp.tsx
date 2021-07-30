@@ -585,13 +585,13 @@ const LessonApp = () => {
             setisAtEnd={setisAtEnd}
           />
         </div>
-        <div className="relative top-6">
+        <div className="relative top-6 lesson-body-container">
           {/*<NotificationBar />*/}
 
           <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
             {/*{lessonDataLoaded && <Body />}*/}
             {/* ADD LESSONWRAPPER HERE */}
-            <div className="mt-4 mb-8">
+            <div className="mt-4 mb-8 lesson-page-container">
               <CoreUniversalLesson />
               {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
             </div>
