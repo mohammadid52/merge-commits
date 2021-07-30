@@ -107,7 +107,7 @@ const LessonApp = () => {
   // ##################################################################### //
   const getSyllabusLesson = async (lessonID?: string) => {
     // lessonID will be undefined for testing
-    if (lessonID !== '') {
+    try {
       const universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
@@ -115,10 +115,8 @@ const LessonApp = () => {
       setTimeout(() => {
         lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
       }, 1000);
-    } else {
-      setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-      }, 1000);
+    } catch (e) {
+      console.error('error getting lesson - ', lessonID, ' ', e);
     }
   };
 
@@ -140,6 +138,22 @@ const LessonApp = () => {
   }, []);
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+
+  // ~~~~~~~~~~~~~~~ GET ROOM ~~~~~~~~~~~~~~ //
+
+  const getRoomSetup = async (roomID: string) => {
+    try {
+      const initialRoomSetup = await API.graphql(
+        graphqlOperation(customQueries.getRoomSetup, {id: roomID})
+      );
+      //@ts-ignore
+      const response = initialRoomSetup.data.getRoom;
+      setSubscriptionData(response);
+    } catch (e) {
+      console.error('error gettingRoom - ', e);
+    }
+  };
+
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
@@ -161,7 +175,7 @@ const LessonApp = () => {
         lessonState.lessonData.lessonPlan &&
         lessonState.lessonData.lessonPlan.length > 0
       ) {
-        lessonDispatch({type: 'SET_CLOSED_PAGES', payload: getRoomData?.ClosedPages});
+        getRoomSetup(getRoomData.id);
         subscription = subscribeToRoom();
       }
     }
@@ -455,38 +469,6 @@ const LessonApp = () => {
   const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
   const {lessonID} = urlParams;
 
-  const createPersonLocation = async () => {
-    const newLocation = {
-      personAuthID: state.user.authId,
-      personEmail: state.user.email,
-      syllabusLessonID: getRoomData.activeSyllabus,
-      lessonID: lessonID,
-      roomID: getRoomData.id,
-      currentLocation: lessonState.currentPage,
-      lessonProgress: lessonState.lessonProgress,
-    };
-    try {
-      const newUserLocation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
-      );
-      const response = newUserLocation.data.createPersonLocation;
-      const newLocationObj = {
-        id: response.id,
-        personAuthID: response.personAuthID,
-        personEmail: response.personEmail,
-        syllabusLessonID: response.syllabusLessonID,
-        lessonID: response.lessonID,
-        roomID: response.roomID,
-        currentLocation: response.currentLocation,
-        lessonProgress: response.lessonProgress,
-      };
-      setPersonLocationObj(newLocationObj);
-      console.log('created new location - ', response);
-    } catch (e) {
-      console.error('createPersonLocation - ', e);
-    }
-  };
-
   const getPersonLocation = async () => {
     try {
       let userLocations: any = await API.graphql(
@@ -504,23 +486,42 @@ const LessonApp = () => {
       if (responseItems.length > 0) {
         const response = responseItems[0];
         const existLocationObj = {
-          id: response.id,
-          personAuthID: response.personAuthID,
-          personEmail: response.personEmail,
-          syllabusLessonID: response.syllabusLessonID,
-          lessonID: response.lessonID,
-          roomID: response.roomID,
-          currentLocation: response.currentLocation,
-          lessonProgress: response.lessonProgress,
+          ...response,
+          currentLocation: '0',
         };
         setPersonLocationObj(existLocationObj);
-        return true;
       } else {
         await createPersonLocation();
-        return false;
       }
     } finally {
       console.log('getPersonLocation funnction completed');
+      updatePersonLocation();
+    }
+  };
+
+  const createPersonLocation = async () => {
+    const newLocation = {
+      personAuthID: state.user.authId,
+      personEmail: state.user.email,
+      syllabusLessonID: getRoomData.activeSyllabus,
+      lessonID: lessonID,
+      roomID: getRoomData.id,
+      currentLocation: '0',
+      lessonProgress: '0',
+    };
+    try {
+      const newUserLocation: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
+      );
+      const response = newUserLocation.data.createPersonLocation;
+      const newLocationObj = {
+        ...newLocation,
+        id: response.id,
+      };
+      setPersonLocationObj(newLocationObj);
+      console.log('created new location - ', response);
+    } catch (e) {
+      console.error('createPersonLocation - ', e);
     }
   };
 
@@ -535,12 +536,12 @@ const LessonApp = () => {
 
   const updatePersonLocation = async () => {
     const updatedLocation = {
-      id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
-      personAuthID: state.user.authId,
-      personEmail: state.user.email,
-      syllabusLessonID: getRoomData.activeSyllabus,
-      lessonID: lessonID,
-      roomID: getRoomData.id,
+      id: personLocationObj.id,
+      personAuthID: personLocationObj.personAuthID,
+      personEmail: personLocationObj.personEmail,
+      syllabusLessonID: personLocationObj.syllabusLessonID,
+      lessonID: personLocationObj.lessonID,
+      roomID: personLocationObj.roomID,
       currentLocation: lessonState.currentPage,
       lessonProgress: lessonState.lessonProgress,
     };
@@ -557,12 +558,7 @@ const LessonApp = () => {
   };
 
   useEffect(() => {
-    if (
-      personLocationObj &&
-      personLocationObj.id &&
-      lessonState.currentPage &&
-      lessonState.currentPage !== personLocationObj.currentLocation
-    ) {
+    if (personLocationObj && personLocationObj.id && lessonState.currentPage >= 0) {
       updatePersonLocation();
     }
   }, [lessonState.currentPage]);

@@ -41,9 +41,9 @@ const PoemBlock = (props: PoemBlockProps) => {
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData.find(
-      (inputObj: StudentPageInput) => inputObj.domID === domID
-    );
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
     if (getInput) {
       return getInput.input;
     } else {
