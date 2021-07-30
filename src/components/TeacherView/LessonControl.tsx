@@ -304,10 +304,8 @@ const LessonControl = () => {
 
   // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
-  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
     if (lessonState.lessonData) {
-      // setLessonDataLoaded(true);
       lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
       history.push(`${match.url}/${0}`);
 
