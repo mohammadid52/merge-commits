@@ -203,10 +203,10 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
           id: roomID,
           completedLessons: [
             ...(state.roomData.completedLessons || []),
-            {
-              lessonID: warnModal.activeLessonsId,
+            warnModal.activeLessonsId.map((lessonID) => ({
+              lessonID,
               time: new Date().toISOString(),
-            },
+            })),
           ],
           activeLessons: [lessonKey],
         },
