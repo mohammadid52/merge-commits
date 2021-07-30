@@ -8,6 +8,8 @@ import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {getAsset} from '../../../../assets';
+import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
+import {useEffect} from 'react';
 
 type SelectObject = {
   id?: string | number;
@@ -68,7 +70,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   return (
     <div className={`p-4`}>
-      <RichTextEditor
+      <CustomRichTextEditor
         theme={themeColor}
         features={features}
         rounded

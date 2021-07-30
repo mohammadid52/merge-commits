@@ -1026,11 +1026,20 @@
   border-radius: 8px;
 }
 
-.toolbarClassName.iconoclast .rdw-colorpicker-modal-style-label-active {
+.toolbarClassName.iconoclast
+  .rdw-colorpicker-modal
+  .rdw-colorpicker-modal-header
+  .rdw-colorpicker-modal-style-label-active {
   border-bottom: 2px solid #667eea !important;
 }
-.toolbarClassName.curate .rdw-colorpicker-modal-style-label-active {
+.toolbarClassName.curate
+  .rdw-colorpicker-modal
+  .rdw-colorpicker-modal-header
+  .rdw-colorpicker-modal-style-label-active {
   border-bottom: 2px solid #0081cb !important;
+}
+.rdw-colorpicker-modal-header {
+  color: #000;
 }
 
 // -------------------------------------------------

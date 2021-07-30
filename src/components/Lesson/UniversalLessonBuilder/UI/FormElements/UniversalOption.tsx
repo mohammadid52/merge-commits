@@ -35,7 +35,7 @@ const InputContainer = ({
 }: any) => {
   const [selForm, setSelForm] = useState(selectedForm);
   return (
-    <div key={input.id} className="flex flex-col input-container">
+    <div className="flex flex-col input-container">
       <div className="px-2">
         <div className="mb-2">
           <FormInput
@@ -139,8 +139,9 @@ const InputContainer = ({
                 </p>
                 <Buttons
                   label={
-                    suggestionModal.idx === idx &&
-                    suggestionModal.selectedResponse.length > 0
+                    !isEmpty(suggestionModal) &&
+                    suggestionModal?.idx === idx &&
+                    suggestionModal?.selectedResponse?.length > 0
                       ? 'Change Options'
                       : 'Add Suggested Options'
                   }
@@ -341,22 +342,17 @@ const UniversalOption = ({
 
   const onRadioCreate = async () => {
     try {
-      const inputObjArray = map(list, (d: any) => {
-        const pageContentId: string = `${uuidv4()}_`;
-        const partContentId: string = `${pageContentId}_radioInput`;
-        return {
-          id: partContentId,
-          type: d.type === SELECT_MANY ? FORM_TYPES.MULTIPLE : FORM_TYPES.RADIO,
-          label: d.label,
-          isRequired: d.required,
-          options: d.options,
-          class: `${
-            d.inLine
-              ? 'flex-row items-center py-2'
-              : 'flex-col items-start space-y-4 py-4'
-          }`,
-        };
-      });
+      const inputObjArray = map(list, (d: any) => ({
+        id: uuidv4(),
+        type: d.type === SELECT_MANY ? FORM_TYPES.MULTIPLE : FORM_TYPES.RADIO,
+        label: d.label,
+        isRequired: d.required,
+        options: d.options,
+        class: `${
+          d.inLine ? 'flex-row items-center py-2' : 'flex-col items-start space-y-4 py-4'
+        }`,
+      }));
+
       const type: string = `form-${numbered ? 'numbered' : 'default'}`;
       if (isEditingMode) {
         const updatedList = updateContent('', '', type, inputObjArray);
@@ -650,6 +646,7 @@ const UniversalOption = ({
 
               return (
                 <InputContainer
+                  key={idx}
                   input={input}
                   idx={idx}
                   shouldShowActions={shouldShowActions}

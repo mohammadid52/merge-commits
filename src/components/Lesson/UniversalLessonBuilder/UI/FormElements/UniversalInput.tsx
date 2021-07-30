@@ -106,38 +106,24 @@ const UniversalInput = (props: any) => {
   };
 
   const onFormCreate = async () => {
-    const inputObjArray = map(list, (d: any) => {
-      const partContentId: string = `${uuidv4()}_${
+    const inputObjArray = map(list, (d: any) => ({
+      id: uuidv4(),
+      type:
         selectedForm === ATTACHMENTS
-          ? 'attachments'
-          : selectedForm === DATE_PICKER
-          ? 'datePicker'
+          ? FORM_TYPES.ATTACHMENTS
           : selectedForm === INPUT_WITH_EMOJI
-          ? 'emojiInput'
+          ? FORM_TYPES.EMOJI
           : selectedForm === LINK
-          ? 'linkInput'
-          : 'text-input'
-      }`;
-
-      return {
-        id: partContentId,
-        type:
-          selectedForm === ATTACHMENTS
-            ? FORM_TYPES.ATTACHMENTS
-            : selectedForm === INPUT_WITH_EMOJI
-            ? FORM_TYPES.EMOJI
-            : selectedForm === LINK
-            ? FORM_TYPES.LINK
-            : selectedForm === DATE_PICKER
-            ? FORM_TYPES.DATE_PICKER
-            : selectedForm === INPUT && d.textArea
-            ? FORM_TYPES.TEXTAREA
-            : FORM_TYPES.TEXT,
-        label: d.label,
-        value: d.value,
-        isRequired: d.required,
-      };
-    });
+          ? FORM_TYPES.LINK
+          : selectedForm === DATE_PICKER
+          ? FORM_TYPES.DATE_PICKER
+          : selectedForm === INPUT && d.textArea
+          ? FORM_TYPES.TEXTAREA
+          : FORM_TYPES.TEXT,
+      label: d.label,
+      value: d.value,
+      isRequired: d.required,
+    }));
 
     const type: string = `form-${numbered ? 'numbered' : 'default'}`;
     if (isEditingMode) {
