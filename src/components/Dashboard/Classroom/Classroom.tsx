@@ -84,7 +84,7 @@ export interface LessonCardProps {
   roomID?: string;
 }
 
-const range = (from:number, to:number, step:number = 1) => {
+const range = (from: number, to: number, step: number = 1) => {
   let i = from;
   const range = [];
 
@@ -162,7 +162,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
       ? state.roomData.lessons.filter(
           (lesson: Lesson) =>
-            activeRoomInfo.completedLessons.findIndex(
+            activeRoomInfo?.completedLessons.findIndex(
               (item: {lessonID?: string | null; time?: string | null}) =>
                 item.lessonID === lesson.lessonID
             ) < 0
@@ -177,7 +177,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
       ? state.roomData.lessons.filter(
           (lesson: Lesson) =>
-            activeRoomInfo.completedLessons.findIndex(
+            activeRoomInfo?.completedLessons.findIndex(
               (item: {lessonID?: string | null; time?: string | null}) =>
                 item.lessonID === lesson.lessonID
             ) > -1
@@ -188,17 +188,18 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const lessonsSortedDataByDuration = state.roomData.lessons.sort(
     (a: any, b: any) => a.lesson.duration - b.lesson.duration
   );
-  lessonsSortedDataByDuration.map(
-    (item: any) => {
-      item.sessionHeading = `Session ${range(count + 1, Math.ceil(count + item.lesson.duration))
-        .join(', ')
-        .replace(/, ([^,]*)$/, ' & $1')}`;
-      count += item.lesson.duration;
-      item.session = Math.ceil(count);
-      return item;
-    }
-  );
-    
+  lessonsSortedDataByDuration.map((item: any) => {
+    item.sessionHeading = `Session ${range(
+      count + 1,
+      Math.ceil(count + item.lesson.duration)
+    )
+      .join(', ')
+      .replace(/, ([^,]*)$/, ' & $1')}`;
+    count += item.lesson.duration;
+    item.session = Math.ceil(count);
+    return item;
+  });
+
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
       setLessonGroupCount({

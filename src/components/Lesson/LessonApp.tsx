@@ -536,7 +536,7 @@ const LessonApp = () => {
 
   const updatePersonLocation = async () => {
     const updatedLocation = {
-      id: personLocationObj.id,
+      id: personLocationObj?.id,
       personAuthID: personLocationObj.personAuthID,
       personEmail: personLocationObj.personEmail,
       syllabusLessonID: personLocationObj.syllabusLessonID,
