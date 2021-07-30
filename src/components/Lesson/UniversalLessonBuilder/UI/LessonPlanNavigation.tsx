@@ -103,7 +103,7 @@ const LessonPlanNavigation = ({
               {...provided.droppableProps}
               className="bg-white border-b h-12 border-gray-200 flex"
               aria-label="Breadcrumb">
-              <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 sm:px-6 lg:px-8">
+              <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
                 <li className="flex w-auto">
                   <div className="flex items-center">
                     <a href="#" className="text-gray-600">
