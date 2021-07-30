@@ -31,17 +31,9 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
-  /**
-   * Please don't do this:
-   *
-   * The useULBContext is only something dont in the  builder,
-   * not in student lessons or teacher environments
-   *
-   * I added logic to fix this
-   */
-  const isInLesson = useInLessonCheck();
-  const switchContext = isInLesson ? undefined : useULBContext();
-  const previewMode = isInLesson ? false : switchContext.previewMode;
+
+  const ulbContext = useULBContext();
+  const previewMode = ulbContext?.previewMode ? ulbContext.previewMode : undefined;
 
   const options: string[] = [
     'inline',
