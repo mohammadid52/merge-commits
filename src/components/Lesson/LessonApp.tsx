@@ -283,6 +283,33 @@ const LessonApp = () => {
     }, []);
   };
 
+  // ~~~~ CHECK AND MERGE NEW INPUT DATA ~~~ //
+  const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
+    const differenceData = studentDataArray.reduce(
+      //@ts-ignore
+      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageDataIdx: number) => {
+        const notYetSavedData = initStudentDataArray[pageDataIdx].reduce(
+          (diffPageData: any[], initData: any) => {
+            const foundInLoaded = loadedInput.find(
+              (inputObj: any) => inputObj.domID === initData.domID
+            );
+            if (foundInLoaded) {
+              return diffPageData;
+            } else {
+              return [...diffPageData, initData];
+            }
+          },
+          []
+        );
+
+        return [...diffArray, [...loadedInput, ...notYetSavedData]];
+      },
+      []
+    );
+
+    return differenceData;
+  };
+
   // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
   const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
     const extraPagesArray = lessonPlanPages.reduce(
@@ -414,11 +441,13 @@ const LessonApp = () => {
           combinedStudentDataIdArray,
           combinedRecords
         );
+        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        // console.log('merged data', finalData);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: combinedStudentDataIdArray,
-            filteredStudentData: filteredData,
+            filteredStudentData: finalData,
           },
         });
       } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
@@ -427,11 +456,13 @@ const LessonApp = () => {
           existStudentDataIdArray,
           currentStudentData
         );
+        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        // console.log('merged data', finalData);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: filteredData,
+            filteredStudentData: finalData,
           },
         });
       }

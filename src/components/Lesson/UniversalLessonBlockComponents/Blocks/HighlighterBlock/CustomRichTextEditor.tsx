@@ -10,6 +10,7 @@ import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
   initialValue: string;
+  dynamicInput?: string;
   theme?: 'iconoclastIndigo' | 'curate';
   fullWHOverride?: boolean;
   rounded?: boolean;
@@ -22,6 +23,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
     initialValue,
+    dynamicInput,
     fullWHOverride,
     dark = false,
     customStyle = false,
@@ -78,7 +80,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
       editorState = EditorState.createEmpty();
     }
     setEditorState(editorState);
-  }, []);
+  }, [initialValue]);
 
   const toolbarClassName = `${
     customStyle

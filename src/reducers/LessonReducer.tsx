@@ -173,66 +173,37 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: action.payload,
       };
     case 'LOAD_STUDENT_DATA':
-      const mergedStudentData = () => {
-        const differenceData = action.payload.filteredStudentData.reduce(
-          //@ts-ignore
-          (
-            diffArray: any[],
-            loadedInput: StudentPageInput[] | [],
-            pageDataIdx: number
-          ) => {
-            const notYetSavedData = state.studentData[pageDataIdx].reduce(
-              (diffPageData: any[], initData: any) => {
-                const foundInLoaded = loadedInput.find(
-                  (inputObj: any) => inputObj.domID === initData.domID
-                );
-                if (foundInLoaded) {
-                  return diffPageData;
-                } else {
-                  return [...diffPageData, initData];
-                }
-              },
-              []
-            );
-
-            return [...diffArray, [...loadedInput, ...notYetSavedData]];
-          },
-          []
-        );
-
-        return differenceData;
-      };
-
-      if (action.payload.filteredStudentData) {
-        console.log('differenceData - ', mergedStudentData());
-      }
-
       return {
         ...state,
         loaded: true,
         universalStudentDataID: action.payload.dataIdReferences,
         studentData: action.payload.filteredStudentData
-          ? mergedStudentData()
+          ? action.payload.filteredStudentData
           : state.studentData,
       };
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;
       const subData = action.payload.subData;
-      const newStudentData = state.studentData.map(
-        (inputArr: StudentPageInput[], inputArrIdx: number) => {
-          if (inputArrIdx === stDataIdx) {
-            return subData;
-          } else {
-            return inputArr;
-          }
-        }
-      );
-      console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
-      console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
-      return {
-        ...state,
-        studentData: newStudentData,
-      };
+      const newStudentData =
+        state.studentData.length > 0
+          ? state.studentData.map((inputArr: StudentPageInput[], inputArrIdx: number) => {
+              if (inputArrIdx === stDataIdx) {
+                return subData;
+              } else {
+                return inputArr;
+              }
+            })
+          : [];
+      // console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
+      // console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
+      if (newStudentData.length > 0) {
+        return {
+          ...state,
+          studentData: newStudentData,
+        };
+      } else {
+        return state;
+      }
     case 'UNLOAD_STUDENT_DATA':
       return {
         ...state,
