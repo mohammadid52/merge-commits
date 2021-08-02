@@ -14,6 +14,7 @@ import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
 import noop from 'lodash/noop';
 import CustomDatePicker from './FormBlock/DatePicker';
+import ReviewSliderBlock from './ReviewSliderBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -26,6 +27,7 @@ export interface FormControlProps {
   inputID: string;
   type?: string;
   label?: string;
+  classString?: string;
   value?: any;
   options?: any;
   isInLesson?: boolean;
@@ -623,7 +625,18 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             label={label}
           />
         );
-
+      case FORM_TYPES.REVIEW_SLIDER:
+        return (
+          <ReviewSliderBlock
+            inputID={inputID}
+            id={inputID}
+            disabled={mode === 'building'}
+            classString={classString}
+            label={label}
+            onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+            value={isInLesson ? getValue(inputID) : value}
+          />
+        );
       default:
         return <p>No valid form input type</p>;
     }

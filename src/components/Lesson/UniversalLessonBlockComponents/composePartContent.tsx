@@ -12,6 +12,7 @@ import {StringifyBlock} from './Blocks/StringifyBlock';
 import React from 'react';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import {FORM_TYPES} from '../UniversalLessonBuilder/UI/common/constants';
+import ReviewSliderBlock from './Blocks/ReviewSliderBlock';
 
 const composePartContent = (
   id: string,

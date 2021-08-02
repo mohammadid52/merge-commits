@@ -11,11 +11,11 @@ import {
   AiOutlineVideoCameraAdd,
   AiOutlineYoutube,
 } from 'react-icons/ai';
-import {MdInput, MdTitle} from 'react-icons/md';
+import {MdInput, MdRateReview, MdTitle} from 'react-icons/md';
 import {RiSurveyLine} from 'react-icons/ri';
 import {BsCheckBox, BsImages, BsNewspaper} from 'react-icons/bs';
 import {FORM_TYPES} from '../common/constants';
-import {BiRadioCircleMarked} from 'react-icons/bi';
+import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {
   HiOutlineArrowRight,
   HiOutlineEmojiHappy,
@@ -126,14 +126,14 @@ const AddContentDialog = ({
     },
   ];
   const userInterfaceContent = [
-    // {
-    //   name: 'Checkpoint',
-    //   type: 'questions',
-    //   subtitle: 'Add multiple questions',
-    //   icon: RiSurveyLine,
-    //   iconForeground: 'text-teal-700',
-    //   iconBackground: 'bg-teal-100',
-    // },
+    {
+      name: 'Review slider',
+      type: FORM_TYPES.REVIEW_SLIDER,
+      subtitle: 'Add review slider',
+      icon: BiSlider,
+      iconForeground: 'text-teal-700',
+      iconBackground: 'bg-teal-100',
+    },
     {
       name: 'Highlighter',
       type: FORM_TYPES.HIGHLIGHTER,

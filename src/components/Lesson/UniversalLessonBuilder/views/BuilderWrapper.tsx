@@ -53,6 +53,7 @@ import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 import {Accordion} from '../UI/UIComponents/Accordian';
+import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -179,7 +180,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-    setAddContentModal({type, show: true});
+    setAddContentModal({
+      type: type === 'form' ? 'review-slider' : type,
+      show: true,
+    });
     setBlockConfig({
       section,
       position: indexToUpdate,
@@ -428,6 +432,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
 
+      case FORM_TYPES.REVIEW_SLIDER:
+        return <ReviewSliderModal {...commonProps} />;
+
       default:
         break;
     }
@@ -474,6 +481,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Poem Component';
       case FORM_TYPES.LINK:
         return 'Link Component';
+      case FORM_TYPES.REVIEW_SLIDER:
+        return 'Review Slider Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }
