@@ -165,13 +165,13 @@ const LessonActivities = ({
                   />
                 </span>
               </div>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
+              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8 pr-3">
                 {/* <div className="w-1/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {LessonBuilderDict[userLanguage]['LESSON_PLAN_COLUMN']['ID']}
                   </span>
                 </div> */}
-                <div className="w-3/10 px-4 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider whitespace-normal">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -180,7 +180,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -189,7 +189,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-3/10 px-8 py-3 flex justify-start bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -198,7 +198,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="flex justify-start w-4/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -207,7 +207,7 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="flex justify-start w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span>
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
@@ -216,8 +216,8 @@ const LessonActivities = ({
                     }
                   </span>
                 </div>
-                <div className="w-2/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>
+                <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider flex justify-center">
+                  <span className="text-center">
                     {
                       LessonBuilderDict[userLanguage]['LESSON_CLASSROOM_ACTIVITY_TABLE'][
                         'ACTION'
@@ -247,43 +247,45 @@ const LessonActivities = ({
                                   {/* <div className="w-1/10 flex items-center px-4 py-4 whitespace-normal text-left text-sm leading-5 font-medium">
                                   {'-'}
                                 </div> */}
-                                  <div className="flex w-3/10 truncate items-center px-4 py-3 text-sm leading-4 font-medium whitespace-normal">
+                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 font-medium whitespace-normal">
                                     {page.label || '-'}
                                   </div>
                                   <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
                                     {page.title || '-'}
                                   </div>
-                                  <div className="flex w-3/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+                                  <div className="flex w-3/10 justify-start items-center px-8 py-3 text-sm leading-4 whitespace-normal">
                                     {page.interactionType
                                       ? page.interactionType.join(', ')
                                       : '-'}
                                   </div>
-
                                   <div
-                                    className="flex flex-col w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
+                                    className="flex justify-start flex-col w-4/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal custom-editor-description"
                                     dangerouslySetInnerHTML={{__html: page.description}}
                                   />
 
-                                  <div className="flex w-2/10 items-center px-8 py-3 text-sm leading-4 whitespace-normal">
+                                  <div className="flex w-2/10 justify-start items-center px-8 py-3 text-sm leading-4 whitespace-normal">
                                     {page.estTime ? `${page.estTime} min` : ''}
                                   </div>
-                                  <span
-                                    className={`w-2/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]}`}>
-                                    <span onClick={() => lessonPagePreview(page.id)}>
+                                  <div
+                                    className={`w-3/10 flex items-center px-8 py-3 cursor-pointer ${theme.textColor[themeColor]} text-sm justify-center`}>
+                                    <span
+                                      className="w-auto"
+                                      onClick={() => lessonPagePreview(page.id)}>
                                       {
                                         LessonBuilderDict[userLanguage]['BUTTON'][
                                           'PREVIEW'
                                         ]
                                       }
                                     </span>
-                                    <span className="flex justify-center">
+                                    <span className="flex justify-center w-auto">
                                       &nbsp;|&nbsp;
                                     </span>
                                     <span
+                                      className="w-auto"
                                       onClick={() => toggleDeleteModal(true, page.id)}>
                                       {BUTTONS[userLanguage]['DELETE']}
                                     </span>
-                                  </span>
+                                  </div>
                                 </div>
                               )}
                             </Draggable>
