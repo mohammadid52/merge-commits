@@ -41,9 +41,9 @@ const PoemBlock = (props: PoemBlockProps) => {
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
-    const getInput = pageData.find(
-      (inputObj: StudentPageInput) => inputObj.domID === domID
-    );
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
     if (getInput) {
       return getInput.input;
     } else {
@@ -84,7 +84,7 @@ const PoemBlock = (props: PoemBlockProps) => {
 
   return (
     <div
-      className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50`}>
+      className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
       <div className="relative flex flex-col justify-between items-center">
         {!saveAndEdit ? (
           <WritingBlock

@@ -173,12 +173,46 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: action.payload,
       };
     case 'LOAD_STUDENT_DATA':
+      const mergedStudentData = () => {
+        const differenceData = action.payload.filteredStudentData.reduce(
+          //@ts-ignore
+          (
+            diffArray: any[],
+            loadedInput: StudentPageInput[] | [],
+            pageDataIdx: number
+          ) => {
+            const notYetSavedData = state.studentData[pageDataIdx].reduce(
+              (diffPageData: any[], initData: any) => {
+                const foundInLoaded = loadedInput.find(
+                  (inputObj: any) => inputObj.domID === initData.domID
+                );
+                if (foundInLoaded) {
+                  return diffPageData;
+                } else {
+                  return [...diffPageData, initData];
+                }
+              },
+              []
+            );
+
+            return [...diffArray, [...loadedInput, ...notYetSavedData]];
+          },
+          []
+        );
+
+        return differenceData;
+      };
+
+      if (action.payload.filteredStudentData) {
+        console.log('differenceData - ', mergedStudentData());
+      }
+
       return {
         ...state,
         loaded: true,
         universalStudentDataID: action.payload.dataIdReferences,
         studentData: action.payload.filteredStudentData
-          ? action.payload.filteredStudentData
+          ? mergedStudentData()
           : state.studentData,
       };
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':

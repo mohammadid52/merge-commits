@@ -7,6 +7,9 @@ import Buttons from '../../../Atoms/Buttons';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import {v4 as uuidv4} from 'uuid';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {getAsset} from '../../../../assets';
+import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
+import {useEffect} from 'react';
 
 type SelectObject = {
   id?: string | number;
@@ -27,12 +30,11 @@ interface HighlighterBlockProps extends RowWrapperProps {
 const HighlighterBlock = (props: HighlighterBlockProps) => {
   const {id, value, pagePartId, updateBlockContentULBHandler, position} = props;
 
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
-
   const {
+    clientKey,
     state: {lessonPage: {theme = 'dark'} = {}},
   } = useContext(GlobalContext);
-
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const [editorState, setEditorState] = useState(!isEmpty(value) ? value[0].value : '');
 
   const addToDB = async (list: any) => {
@@ -68,7 +70,8 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   return (
     <div className={`p-4`}>
-      <RichTextEditor
+      <CustomRichTextEditor
+        theme={themeColor}
         features={features}
         rounded
         customStyle

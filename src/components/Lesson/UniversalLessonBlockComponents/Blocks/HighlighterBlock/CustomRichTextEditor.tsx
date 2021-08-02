@@ -4,8 +4,8 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import {EditorState, convertToRaw, ContentState} from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {useULBContext} from '../../contexts/UniversalLessonBuilderContext';
-import useInLessonCheck from '../../customHooks/checkIfInLesson';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -18,7 +18,7 @@ interface RichTextEditorProps {
   features?: string[];
 }
 
-const RichTextEditor = (props: RichTextEditorProps) => {
+const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
     initialValue,
@@ -27,13 +27,22 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     customStyle = false,
     rounded = false,
     features = [],
+
     theme,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
-
-  const ulbContext = useULBContext();
-  const previewMode = ulbContext?.previewMode ? ulbContext.previewMode : undefined;
+  /**
+   * Please don't do this:
+   *
+   * The useULBContext is only something dont in the  builder,
+   * not in student lessons or teacher environments
+   *
+   * I added logic to fix this
+   */
+  const isInLesson = useInLessonCheck();
+  const switchContext = isInLesson ? undefined : useULBContext();
+  const previewMode = isInLesson ? false : switchContext.previewMode;
 
   const options: string[] = [
     'inline',
@@ -139,4 +148,4 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   );
 };
 
-export default RichTextEditor;
+export default CustomRichTextEditor;

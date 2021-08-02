@@ -17,7 +17,7 @@ export const getDashboardData = /* GraphQL */ `
                 activeSyllabus
                 activeLessonId
                 activeLessons
-                completedLessons{
+                completedLessons {
                   lessonID
                   time
                 }
@@ -657,7 +657,7 @@ export const listRooms = /* GraphQL */ `
         }
         activeLessonId
         activeLessons
-        completedLessons{
+        completedLessons {
           lessonID
           time
         }
@@ -811,6 +811,27 @@ export const getRoom = /* GraphQL */ `
         }
         nextToken
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const getRoomSetup = /* GraphQL */ `
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      id
+      activeLessonId
+      ClosedPages
+      disabledPages
+      studentViewing
+      displayData
+      currentPage
+      completedLessons {
+        lessonID
+        time
+      }
+      activeLessons
       createdAt
       updatedAt
     }

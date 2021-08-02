@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import StageButton from './StageButton';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {BiBook} from 'react-icons/bi';
 
 interface LessonControlBarProps {
   pageViewed?: {pageID: number; stage: string};
@@ -24,10 +25,16 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (
   };
 
   return (
-    <div className="relative w-full h-full md:flex flex-col items-center justify-center content-center px-2 z-0">
-      <ol
-        className="relative w-full h-8 cursor-pointer bg-white bg-opacity-60
-      rounded-lg px-2 flex justify-between">
+    <nav className="bg-white border-b h-12 border-gray-200 flex" aria-label="Breadcrumb">
+      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
+        <li className="flex w-auto">
+          <div className="flex items-center">
+            <a href="#" className="text-gray-600">
+              <BiBook className="flex-shrink-0 h-5 w-5" aria-hidden="true" />
+              <span className="sr-only">Home</span>
+            </a>
+          </div>
+        </li>
         {PAGES &&
           PAGES.map((page: UniversalLessonPage, key: number) => (
             <StageButton
@@ -40,10 +47,12 @@ const LessonControlBar: React.FC<LessonControlBarProps> = (
               menuOpen={menuOpen === page.stage}
               handleOpenMenu={handleOpenMenu}
               handlePageChange={handlePageChange}
+              id={page.id}
+              page={page}
             />
           ))}
       </ol>
-    </div>
+    </nav>
   );
 };
 
