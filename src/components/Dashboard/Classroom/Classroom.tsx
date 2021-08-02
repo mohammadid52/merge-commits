@@ -185,21 +185,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
       : [];
 
   let count: number = 0;
-  const lessonsSortedDataByDuration = state.roomData.lessons.sort(
-    (a: any, b: any) => a.lesson.duration - b.lesson.duration
-  );
-  lessonsSortedDataByDuration.map((item: any) => {
-    item.sessionHeading = `Session ${range(
-      count + 1,
-      Math.ceil(count + item.lesson.duration)
-    )
-      .join(', ')
-      .replace(/, ([^,]*)$/, ' & $1')}`;
+  let lessonData = state.roomData.lessons;
+  lessonData?.map((item: any) => {
+    let temp = Math.round(count + item.lesson.duration);
+    item.sessionHeading = `Session ${
+      temp > 1
+        ? range(count + 1, temp)
+            .join(', ')
+            .replace(/, ([^,]*)$/, ' & $1')
+        : temp
+    }`;
     count += item.lesson.duration;
-    item.session = Math.ceil(count);
+    item.session = Math.round(count);
     return item;
   });
-
+  
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
       setLessonGroupCount({
@@ -356,7 +356,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   activeRoomInfo={activeRoomInfo}
                   isTeacher={isTeacher}
                   lessonLoading={lessonLoading}
-                  lessons={lessonsSortedDataByDuration}
+                  lessons={lessonData}
                 />
               </div>
             </div>
