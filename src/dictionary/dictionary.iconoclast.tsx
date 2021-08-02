@@ -32,7 +32,7 @@ const BUTTONS: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',

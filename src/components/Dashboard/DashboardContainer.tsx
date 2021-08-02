@@ -49,7 +49,7 @@ const DashboardContainer = ({
           {user && (
             <div
               className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-              <h2 className={`text-base text-center font-normal`}>
+              <h2 className={`text-xl text-center font-normal`}>
                 <span className="font-semibold">{currentUnit() || 'Unit'}</span>
               </h2>
             </div>

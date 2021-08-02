@@ -270,23 +270,24 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   };
 
   const studentTeacherButtonTheme = () => {
-    if (type === 'lesson') {
+    // if (type === 'lesson') {
       if (isActive) {
         return theme.btn.lessonStart;
       } else {
         return theme.btn.iconoclastIndigo;
       }
-    } else {
-      if (!isTeacher) {
-        return theme.btn.surveyStart;
-      } else {
-        if (open) {
-          return theme.btn.surveyStart;
-        } else {
-          return theme.btn.lessonStart;
-        }
-      }
-    }
+    // }
+    // else {
+    //   if (!isTeacher) {
+    //     return theme.btn.surveyStart;
+    //   } else {
+    //     if (open) {
+    //       return theme.btn.surveyStart;
+    //     } else {
+    //       return theme.btn.lessonStart;
+    //     }
+    //   }
+    // }
   };
 
   return (
@@ -301,7 +302,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         }
         disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive)}
         overrideClass={true}
-        btnClass={`
+        btnClass={`rounded 
         ${studentTeacherButtonTheme()}
         h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
