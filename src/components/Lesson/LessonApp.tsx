@@ -23,6 +23,7 @@ import {Auth} from '@aws-amplify/auth';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import {UniversalLessonStudentData} from '../../API';
 import SaveQuit from './Foot/SaveQuit';
+import usePrevious from '../../customHooks/previousProps';
 
 const LessonApp = () => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -130,10 +131,13 @@ const LessonApp = () => {
       );
     }
     return () => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-      lessonDispatch({type: 'CLEANUP'});
+      const leaveLesson = leaveRoomLocation();
+      Promise.resolve(leaveLesson).then((_: any) => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+        lessonDispatch({type: 'CLEANUP'});
+      });
     };
   }, []);
 
@@ -283,6 +287,33 @@ const LessonApp = () => {
     }, []);
   };
 
+  // ~~~~ CHECK AND MERGE NEW INPUT DATA ~~~ //
+  const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
+    const differenceData = studentDataArray.reduce(
+      //@ts-ignore
+      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageDataIdx: number) => {
+        const notYetSavedData = initStudentDataArray[pageDataIdx].reduce(
+          (diffPageData: any[], initData: any) => {
+            const foundInLoaded = loadedInput.find(
+              (inputObj: any) => inputObj.domID === initData.domID
+            );
+            if (foundInLoaded) {
+              return diffPageData;
+            } else {
+              return [...diffPageData, initData];
+            }
+          },
+          []
+        );
+
+        return [...diffArray, [...loadedInput, ...notYetSavedData]];
+      },
+      []
+    );
+
+    return differenceData;
+  };
+
   // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
   const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
     const extraPagesArray = lessonPlanPages.reduce(
@@ -414,11 +445,13 @@ const LessonApp = () => {
           combinedStudentDataIdArray,
           combinedRecords
         );
+        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        // console.log('merged data', finalData);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: combinedStudentDataIdArray,
-            filteredStudentData: filteredData,
+            filteredStudentData: finalData,
           },
         });
       } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
@@ -427,11 +460,13 @@ const LessonApp = () => {
           existStudentDataIdArray,
           currentStudentData
         );
+        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        // console.log('merged data', finalData);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: existStudentDataIdArray,
-            filteredStudentData: filteredData,
+            filteredStudentData: finalData,
           },
         });
       }
@@ -467,7 +502,16 @@ const LessonApp = () => {
   // ##################################################################### //
 
   const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
+  const previousLocation = usePrevious(personLocationObj);
   const {lessonID} = urlParams;
+
+  useEffect(() => {
+    if (previousLocation !== undefined) {
+      updatePersonLocation();
+    }
+  }, [personLocationObj]);
+
+  // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
 
   const getPersonLocation = async () => {
     try {
@@ -483,19 +527,21 @@ const LessonApp = () => {
       );
 
       const responseItems = userLocations.data.listPersonLocations.items;
+
       if (responseItems.length > 0) {
         const response = responseItems[0];
         const existLocationObj = {
           ...response,
+          roomID: getRoomData.id,
           currentLocation: '0',
         };
         setPersonLocationObj(existLocationObj);
+        console.log('getPersonLocation - ', 'location exists');
       } else {
         await createPersonLocation();
       }
-    } finally {
-      console.log('getPersonLocation funnction completed');
-      updatePersonLocation();
+    } catch (e) {
+      console.error('getPersonLocation - ', e);
     }
   };
 
@@ -534,34 +580,43 @@ const LessonApp = () => {
     }
   }, [lessonState.lessonData.id]);
 
+  // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
+
   const updatePersonLocation = async () => {
-    const updatedLocation = {
-      id: personLocationObj?.id,
+    const locationUpdateProps = {
+      id: personLocationObj.id,
       personAuthID: personLocationObj.personAuthID,
       personEmail: personLocationObj.personEmail,
-      syllabusLessonID: personLocationObj.syllabusLessonID,
       lessonID: personLocationObj.lessonID,
+      syllabusLessonID: personLocationObj.syllabusLessonID,
       roomID: personLocationObj.roomID,
-      currentLocation: lessonState.currentPage,
-      lessonProgress: lessonState.lessonProgress,
+      currentLocation: personLocationObj.currentLocation,
+      lessonProgress: personLocationObj.lessonProgress,
     };
-
-    setPersonLocationObj(updatedLocation);
-
     try {
       const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
+        graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
       );
     } catch (e) {
       console.error('updatePersonLocation - ', e);
     }
   };
 
+  const leaveRoomLocation = async () => {
+    setPersonLocationObj({...personLocationObj, roomID: '0'});
+  };
+
   useEffect(() => {
     if (personLocationObj && personLocationObj.id && lessonState.currentPage >= 0) {
-      updatePersonLocation();
+      setPersonLocationObj({
+        ...personLocationObj,
+        currentLocation: lessonState.currentPage,
+        lessonProgress: lessonState.lessonProgress,
+      });
     }
   }, [lessonState.currentPage]);
+
+  // ~~~~~ PERSON LOCATION DB FUNCTIONS ~~~~ //
 
   const userAtEnd = () => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;

@@ -10,6 +10,8 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import {getAsset} from '../../../../assets';
 import CustomRichTextEditor from './HighlighterBlock/CustomRichTextEditor';
 import {useEffect} from 'react';
+import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
+import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces';
 
 type SelectObject = {
   id?: string | number;
@@ -32,11 +34,20 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
 
   const {
     clientKey,
-    state: {lessonPage: {theme = 'dark'} = {}},
+    state: {user, lessonPage: {theme = 'dark'} = {}},
+    lessonState,
+    lessonDispatch,
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const [editorState, setEditorState] = useState(!isEmpty(value) ? value[0].value : '');
 
+  // ##################################################################### //
+  // ########################## ULB FUNCTIONS ? ########################## //
+  // ##################################################################### //
+  /**
+   * TODO:
+   *  These functions should not be 'inside' the actual lesson-component
+   *  Please remove/refactor them to be at the builder level
+   */
   const addToDB = async (list: any) => {
     const input = {
       id: list.id,
@@ -60,13 +71,71 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     await addToDB(updatedList);
   };
 
-  const onEditorStateChange = (html: string) => {
-    setEditorState(html);
+  const [saving, setSaving] = useState(false);
+
+  // ##################################################################### //
+  // ######################## STUDENT DATA CONTEXT ####################### //
+  // ##################################################################### //
+  const isStudent = user && user.role === 'ST';
+  const isInLesson = useInLessonCheck();
+  const [editorState, setEditorState] = useState('');
+
+  // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
+  useEffect(() => {
+    if (!isEmpty(value)) {
+      setEditorState(value[0].value);
+    }
+  }, [value]);
+
+  // ~~ INIT STUDENT DATA HIGHLIGHTED TEXT ~ //
+  useEffect(() => {
+    if (editorState !== '') {
+      if (getStudentDataValue(id)[0] === '' && isStudent) {
+        handleUpdateStudentData(id, [editorState]);
+      }
+    }
+  }, [editorState]);
+
+  //  LOAD & UNLOAD STUDENT DATA INTO EDITOR  //
+  useEffect(() => {
+    if (isInLesson && !isStudent) {
+      const incomingStudentVal = getStudentDataValue(id)[0];
+      if (incomingStudentVal !== '') {
+        setEditorState(incomingStudentVal);
+      } else {
+        setEditorState(value[0].value);
+      }
+    }
+  }, [lessonState.studentData]);
+
+  // ~~~~~~~~~~~ UPDATE FUNCTION ~~~~~~~~~~~ //
+  const handleUpdateStudentData = (domID: string, input: string[]) => {
+    lessonDispatch({
+      type: 'UPDATE_STUDENT_DATA',
+      payload: {
+        pageIdx: lessonState.currentPage,
+        data: {
+          domID: domID,
+          input: input,
+        },
+      },
+    });
+  };
+
+  // ~~~~~~~~~~~~~ GET FUNCTION ~~~~~~~~~~~~ //
+  const getStudentDataValue = (domID: string) => {
+    const pageData = lessonState.studentData[lessonState.currentPage];
+    const getInput = pageData
+      ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
+      : undefined;
+    if (getInput) {
+      return getInput?.input;
+    } else {
+      return [''];
+    }
   };
 
   const features: string[] = ['colorPicker', 'remove', 'inline'];
-
-  const [saving, setSaving] = useState(false);
 
   return (
     <div className={`p-4`}>
@@ -76,12 +145,21 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         rounded
         customStyle
         dark={theme === 'dark'}
-        initialValue={editorState}
-        onChange={(html) => onEditorStateChange(html)}
+        initialValue={isInLesson && isStudent ? getStudentDataValue(id)[0] : editorState}
+        onChange={
+          isInLesson && isStudent
+            ? (html) => handleUpdateStudentData(id, [html])
+            : () => {}
+        }
       />
-      <div className="w-auto flex items-center justify-end">
-        <Buttons onClick={onHighlighterBlockCreate} label={saving ? 'saving' : 'save'} />
-      </div>
+      {!isInLesson && (
+        <div className="w-auto flex items-center justify-end">
+          <Buttons
+            onClick={onHighlighterBlockCreate}
+            label={saving ? 'saving' : 'save'}
+          />
+        </div>
+      )}
     </div>
   );
 };
