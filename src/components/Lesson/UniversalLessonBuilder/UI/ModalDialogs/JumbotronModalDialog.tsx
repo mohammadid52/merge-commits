@@ -25,6 +25,7 @@ import {Switch} from '@headlessui/react';
 import {classNames} from '../FormElements/TextInput';
 import ProgressBar from '../ProgressBar';
 import {update} from 'lodash';
+import Tabs from '../UIComponents/Tabs';
 
 const Toggle = ({
   checked,
@@ -118,8 +119,8 @@ const JumbotronModalDialog = ({
   setUnsavedChanges,
   updateBlockContentULBHandler,
 }: IJumbotronModalComponentProps) => {
-  const {userLanguage, clientKey} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {userLanguage} = useContext(GlobalContext);
+
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [isAnimationOn, setIsAnimationOn] = useState(false);
 
@@ -449,51 +450,6 @@ const JumbotronModalDialog = ({
 
   const previewAvailable = url && url.length > 0;
 
-  const Tabs = () => {
-    return (
-      <div>
-        <div className="sm:hidden">
-          <label htmlFor="tabs" className="sr-only">
-            Select a tab
-          </label>
-          <select
-            id="tabs"
-            name="tabs"
-            className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-            defaultValue={tabs.find((tab) => tab.current).name}>
-            {tabs.map((tab) => (
-              <option key={tab.name}>{tab.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden sm:block">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex" aria-label="Tabs">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.name}
-                  onClick={() => setCurTab(tab.name)}
-                  className={classNames(
-                    curTab === tab.name
-                      ? `border-${
-                          themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                        }-500 text-${
-                          themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                        }-600`
-                      : 'border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                    'py-4 cursor-pointer px-1 text-center border-b-3 font-medium text-sm'
-                  )}
-                  aria-current={curTab === tab.name ? 'page' : undefined}>
-                  {tab.name}
-                </button>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const [colorPickerActive, setColorPickerActive] = useState<boolean>(false);
   const handleColorPickerSelect = (pickedColor: string) => {
     setSelectedStyles({...selectedStyles, bgColor: `bg-${pickedColor}`});
@@ -502,7 +458,7 @@ const JumbotronModalDialog = ({
 
   return (
     <>
-      <Tabs />
+      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
 
       {curTab === 'Component Details' && (
         <div className="grid grid-cols-2 my-2 gap-4">

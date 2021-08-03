@@ -11,6 +11,7 @@
 .fade__animation-longer {
   animation: fade 3s ease-in-out;
 }
+
 .fade__animation-short {
   animation: fade 1s ease-in-out;
 }
@@ -27,9 +28,9 @@
 
 .animated-border {
   position: relative;
-
   display: inline-block;
 }
+
 .animated-border::after {
   height: 4px;
   position: absolute;
@@ -44,6 +45,7 @@
   from {
     width: 0%;
   }
+
   to {
     width: 100%;
   }
