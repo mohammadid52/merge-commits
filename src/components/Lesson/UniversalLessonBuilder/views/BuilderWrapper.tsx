@@ -181,7 +181,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     // Hide all UI Menus
     hideAllUIMenus();
     setAddContentModal({
-      type: type === 'form' ? 'review-slider' : type,
+      type: type === FORM_TYPES.REVIEW_SLIDER ? FORM_TYPES.REVIEW_SLIDER : type,
       show: true,
     });
     setBlockConfig({

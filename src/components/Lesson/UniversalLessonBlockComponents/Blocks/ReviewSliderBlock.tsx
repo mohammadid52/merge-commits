@@ -2,13 +2,24 @@ import React, {useContext, useState} from 'react';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {FormControlProps} from './FormBlock';
 import './styles/ReviewSliderStyles.scss';
-const genSlideStyle = (value: number) => {
+
+/**
+ *
+ * @param value the range value
+ * @param max maximum numer for value
+ * @returns dynamic style object for  slider
+ */
+
+const genSlideStyle = (value: number | string, max: number | string) => {
+  let val = Number(max) === 10 ? Number(value) / 2 : Number(value);
+  let updatedVal = Number(max) === 5 ? (val === 1 ? 0 : val) : val === 0.5 ? 0 : val;
+
   return {
     point: {
-      left: `calc(${value * 20}% - ${5 + 3 * value}px)`,
+      left: `calc(${updatedVal * 20}% - ${5 + 3 * updatedVal}px)`,
     },
     range: {
-      width: `${value * 20}%`,
+      width: `${updatedVal * 20}%`,
     },
   };
 };
@@ -16,20 +27,47 @@ interface ReviewSliderBlockProps extends FormControlProps {
   onChange: (e: any) => void;
   disabled: boolean;
 }
+/**
+ *
+ * @param el the element you want to split
+ * @param splitBy specify the pattern by which you want to split the element
+ * @returns splitted values
+ */
+export const getFirstLastValue = (el: string, splitBy: string) => el.split(splitBy);
 
-const ReviewSliderBlock = ({
-  value = 0,
-  disabled,
-  onChange,
-  label,
-}: ReviewSliderBlockProps) => {
-  const [range, setRange] = useState(value);
+/**
+ * @return extracted values from classString like min-max, background color and foreground color.
+ */
+export const extractValuesFromClassString = (classString: string) => {
+  let [minMax, bgColor, fgColor, cardBgColor, rounded] = classString.split(' || ');
+  let [min, max] = getFirstLastValue(minMax, '-');
+  return {min, max, bgColor, fgColor, cardBgColor, rounded};
+};
+
+const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
+  const {
+    value = ['1'],
+    disabled,
+    id,
+    onChange,
+    classString = `1-5 || gray-700 || gray-800`,
+    label,
+  } = props;
+
+  console.log(
+    '🚀 ~ file: ReviewSliderBlock.tsx ~ line 56 ~ ReviewSliderBlock ~ props',
+    props
+  );
 
   const {state} = useContext(GlobalContext);
 
+  const {min, max, bgColor, fgColor, rounded, cardBgColor} = extractValuesFromClassString(
+    classString
+  );
+
   const isDark = state.lessonPage.theme === 'dark';
 
-  const slideStyle = genSlideStyle(range);
+  const slideStyle = genSlideStyle(value[0].length > 0 ? value[0] : '1', max);
 
   return (
     <div className="p-4">
@@ -39,34 +77,33 @@ const ReviewSliderBlock = ({
           border: !isDark ? '1px solid #ececec' : 'none',
           boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.05)',
         }}
-        className={`review-slider-container p-4 py-6 w-auto  flex flex-col items-start justify-center  ${
-          isDark ? 'bg-gray-700' : 'bg-white'
-        } h-auto rounded-lg shadow`}>
+        className={`review-slider-container p-6 w-auto  flex flex-col items-start justify-center bg-${cardBgColor} h-auto ${rounded} shadow`}>
         <div className="flex items-center justify-between">
           <p
             className={`${
               isDark ? 'text-gray-400' : 'text-gray-600'
-            }  block text-lg w-auto font-semibold leading-5 `}>
+            } block text-lg w-auto font-semibold leading-5 `}>
             {label}
           </p>
           <p
             className={`${
               isDark ? 'text-gray-400' : 'text-gray-600'
-            }  block text-lg w-auto font-semibold leading-5 `}>
-            {range}
+            } block text-lg w-auto font-semibold leading-5 `}>
+            {value[0].length > 0 ? value[0] : '1'}
           </p>
         </div>
-        <div className={`range ${isDark ? 'dark' : 'light'} mt-4`}>
-          <span className="range-value" style={slideStyle.range} />
-          <span className="circle" style={slideStyle.point} />
+        <div className={`range relative rounded-full bg-${bgColor} mt-4`}>
+          <span className={`range-value bg-${fgColor}`} style={slideStyle.range} />
+          <span className={`circle bg-${fgColor}`} style={slideStyle.point} />
           <input
-            className={`range-slide }`}
+            className={`range-slide`}
             name="range"
             type="range"
-            min={'0'}
-            max={'5'}
+            id={id}
+            min={min}
+            max={max}
             disabled={disabled}
-            value={range}
+            value={value[0].length > 0 ? value[0] : '1'}
             step="1"
             onChange={onChange}
           />

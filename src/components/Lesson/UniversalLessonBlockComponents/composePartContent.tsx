@@ -74,7 +74,7 @@ const composePartContent = (
         mode={mode}
       />
     );
-  } else if (type.includes('form')) {
+  } else if (type.includes('form') || type === FORM_TYPES.REVIEW_SLIDER) {
     return (
       <FormBlock numbered={type === 'form-numbered'} id={id} value={value} mode={mode} />
     );
