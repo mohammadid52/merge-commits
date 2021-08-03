@@ -332,12 +332,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {isTeacher && (
               <>
                 <SectionTitleV3
+                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
                   title={classRoomDict[userLanguage]['UNIT_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
-                  <div className={`pb-4 m-auto`}>
+                  <div className={`pb-4 m-auto lg:px-0 px-4`}>
                     <SyllabusSwitch
                       classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
                       activeRoom={state.activeRoom}

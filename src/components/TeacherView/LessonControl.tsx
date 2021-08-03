@@ -25,6 +25,8 @@ import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import * as subscriptions from '../../graphql/subscriptions';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
+import useDeviceDetect from '../../customHooks/deviceDetect';
 
 const LessonControl = () => {
   const {dispatch, lessonState, lessonDispatch, controlState, theme} = useContext(
@@ -34,6 +36,7 @@ const LessonControl = () => {
   const history = useHistory();
   const urlParams: any = useParams();
   const getRoomData = getLocalStorageData('room_info');
+  const {mobile} = useDeviceDetect();
 
   // ##################################################################### //
   // ######################### BASIC UI CONTROLS ######################### //
@@ -593,12 +596,12 @@ const LessonControl = () => {
 
         {/* END TOP MENU */}
 
-        <div className={`w-full h-8.5/10 flex rounded-lg`}>
+        <div className={`w-full h-8.5/10 flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
           <div
             className={`${
               fullscreen ? 'hidden' : ''
-            } w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
+            } w-full lg:w-4/10 min-w-100 lg:max-w-160 h-1/4 lg:h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
@@ -615,12 +618,22 @@ const LessonControl = () => {
               </div>
             </div>
           </div>
+          <div className="block lg:hidden">
+            <div className="relative w-full h-12 flex flex-col items-center z-100">
+              <LessonControlBar handlePageChange={handlePageChange} />
+            </div>
+          </div>
 
           {/* RIGHT SECTION */}
           <div
             className={`relative 
-            ${fullscreen ? 'w-full' : 'w-6/10'} relative 
-            w-6/10 lg:w-full h-full flex flex-col items-center`}>
+            ${fullscreen ? 'w-full' : 'w-6/10'} 
+            w-6/10 w-full h-full flex flex-col items-center`}
+            style={
+              mobile && !fullscreen
+                ? {height: '75%'}
+                : null
+            }>
             <StudentWindowTitleBar
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}

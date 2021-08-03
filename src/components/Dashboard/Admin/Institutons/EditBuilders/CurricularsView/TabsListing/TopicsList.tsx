@@ -123,7 +123,7 @@ const TopicsListComponent = (props: TopicsListComponentProps) => {
                       >
                         <div className="w-9/10 m-auto border-b">
                           {topics.map((item: any, index: number) => (
-                            <Fragment>
+                            <Fragment key={index}>
                               <Draggable key={item.id} draggableId={item.id} index={index}>
                                 {(provided, snapshot) => (
                                   <div
