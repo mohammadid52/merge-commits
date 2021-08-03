@@ -78,21 +78,33 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   // ##################################################################### //
   const isStudent = user && user.role === 'ST';
   const isInLesson = useInLessonCheck();
-  const [editorState, setEditorState] = useState(!isEmpty(value) ? value[0].value : '');
+  const [editorState, setEditorState] = useState('');
+
+  // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
+  useEffect(() => {
+    if (!isEmpty(value)) {
+      setEditorState(value[0].value);
+    }
+  }, [value]);
 
   // ~~ INIT STUDENT DATA HIGHLIGHTED TEXT ~ //
   useEffect(() => {
-    if (!isEmpty(value)) {
+    if (editorState !== '') {
       if (getStudentDataValue(id)[0] === '' && isStudent) {
         handleUpdateStudentData(id, [editorState]);
       }
     }
   }, [editorState]);
 
+  //  LOAD & UNLOAD STUDENT DATA INTO EDITOR  //
   useEffect(() => {
     if (isInLesson && !isStudent) {
-      const valval = getStudentDataValue(id)[0];
-      setEditorState(valval);
+      const incomingStudentVal = getStudentDataValue(id)[0];
+      if (incomingStudentVal !== '') {
+        setEditorState(incomingStudentVal);
+      } else {
+        setEditorState(value[0].value);
+      }
     }
   }, [lessonState.studentData]);
 
@@ -133,7 +145,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
         rounded
         customStyle
         dark={theme === 'dark'}
-        // initialValue={editorState}
         initialValue={isInLesson && isStudent ? getStudentDataValue(id)[0] : editorState}
         onChange={
           isInLesson && isStudent

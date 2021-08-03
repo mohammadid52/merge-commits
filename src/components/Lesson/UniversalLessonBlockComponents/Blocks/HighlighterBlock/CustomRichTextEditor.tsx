@@ -23,7 +23,6 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
   const {
     onChange,
     initialValue,
-    dynamicInput,
     fullWHOverride,
     dark = false,
     customStyle = false,
@@ -68,18 +67,21 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     setEditorState(editorState);
   };
 
+  /**
+   * On 'initialValue' mount:
+   *  - Allows updating the customRichText editor
+   *  when incoming props are updated
+   */
   useEffect(() => {
     const html = initialValue ? initialValue : '<p></p>';
     const contentBlock = htmlToDraft(html);
 
-    let editorState;
     if (contentBlock) {
       const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-      editorState = EditorState.createWithContent(contentState);
+      setEditorState(EditorState.createWithContent(contentState));
     } else {
-      editorState = EditorState.createEmpty();
+      setEditorState(EditorState.createEmpty());
     }
-    setEditorState(editorState);
   }, [initialValue]);
 
   const toolbarClassName = `${
