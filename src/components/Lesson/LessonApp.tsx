@@ -387,22 +387,22 @@ const LessonApp = () => {
     const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus;
     const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.attributes.sub;
+    const studentAuthId = user.username;
     const email = user.attributes.email;
+
+    console.log('getOrCreateData - user - ', user);
 
     try {
       const listFilter = {
         filter: {
-          lessonID: lessonID,
-          syllabusLessonID: syllabusID,
-          studentAuthID: studentAuthId,
+          studentAuthID: {eq: studentAuthId},
+          lessonID: {eq: lessonID},
+          syllabusLessonID: {eq: syllabusID},
         },
       };
-      console.log('listing student data for lessonID - ', lessonID);
+
       const studentData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonStudentDatas, {
-          listFilter,
-        })
+        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
       );
 
       // existing student rows
