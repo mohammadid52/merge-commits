@@ -128,14 +128,11 @@ const ReviewSliderModal = ({
           id: uuidv4().toString(),
           type: FORM_TYPES.REVIEW_SLIDER,
           label: reviewFields.label,
-          value: isEditingMode ? reviewFields.value : 5,
+          value: isEditingMode ? reviewFields.value : 1,
           class: getClassValue(),
         },
       ];
-      console.log(
-        '🚀 ~ file: ReviewSliderModal.tsx ~ line 135 ~ onReviewSliderCreate ~ reviewSliderArray',
-        reviewSliderArray
-      );
+
       if (isEditingMode) {
         const updatedList = updateBlockContentULBHandler(
           '',
