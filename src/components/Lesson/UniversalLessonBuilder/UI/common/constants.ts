@@ -15,7 +15,7 @@ export const FORM_TYPES = {
   VIDEO: 'video',
   TAG: 'tag',
   LINKS: 'links',
-  REVIEW_SLIDER: 'review-slider',
+  REVIEW_SLIDER: 'review-slider-input',
   HIGHLIGHTER: 'highlighter-input',
 };
 export const INPUT = 'Input';

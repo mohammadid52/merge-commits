@@ -46,18 +46,14 @@ export const extractValuesFromClassString = (classString: string) => {
 
 const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
   const {
-    value = ['1'],
+    value = 1,
     disabled,
     id,
     onChange,
+    inputID,
     classString = `1-5 || gray-700 || gray-800`,
     label,
   } = props;
-
-  console.log(
-    '🚀 ~ file: ReviewSliderBlock.tsx ~ line 56 ~ ReviewSliderBlock ~ props',
-    props
-  );
 
   const {state} = useContext(GlobalContext);
 
@@ -67,10 +63,10 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
 
   const isDark = state.lessonPage.theme === 'dark';
 
-  const slideStyle = genSlideStyle(value[0].length > 0 ? value[0] : '1', max);
+  const slideStyle = genSlideStyle(value, max);
 
   return (
-    <div className="p-4">
+    <div className="p-4" id={id} key={id}>
       {/* */}
       <div
         style={{
@@ -89,7 +85,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
             className={`${
               isDark ? 'text-gray-400' : 'text-gray-600'
             } block text-lg w-auto font-semibold leading-5 `}>
-            {value[0].length > 0 ? value[0] : '1'}
+            {value}
           </p>
         </div>
         <div className={`range relative rounded-full bg-${bgColor} mt-4`}>
@@ -99,11 +95,11 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
             className={`range-slide`}
             name="range"
             type="range"
-            id={id}
+            id={inputID}
             min={min}
             max={max}
             disabled={disabled}
-            value={value[0].length > 0 ? value[0] : '1'}
+            value={value}
             step="1"
             onChange={onChange}
           />
