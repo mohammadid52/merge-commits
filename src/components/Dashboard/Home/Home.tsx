@@ -238,37 +238,38 @@ const Home = (props: ClassroomControlProps) => {
           )}
 
           {/* Classroom Section */}
-
-          <RoomTiles
-            handleRoomSelection={handleRoomSelection}
-            classList={getClassList()}
-          />
-
-          {/* Teachers Section */}
-          {teacherList && teacherList.length > 0 && (
-            <div className="my-8">
-              <SectionTitleV3
-                title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
-                fontSize="xl"
-                fontStyle="semibold"
-                extraContainerClass="max-w-256 px-6"
-                borderBottom
-                extraClass="leading-6 text-gray-900"
-              />
-              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
-            </div>
-          )}
-          {/* Classmates Section */}
-          <div className="my-6">
-            <StudentsTiles
-              title={
-                DashboardDict[userLanguage][
-                  isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
-                ]
-              }
-              state={state}
-              studentsList={studentsList}
+          <div className="px-3">
+            <RoomTiles
+              handleRoomSelection={handleRoomSelection}
+              classList={getClassList()}
             />
+
+            {/* Teachers Section */}
+            {teacherList && teacherList.length > 0 && (
+              <div className="my-8">
+                <SectionTitleV3
+                  title={DashboardDict[userLanguage]['YOUR_TEACHERS']}
+                  fontSize="xl"
+                  fontStyle="semibold"
+                  extraContainerClass="max-w-256 px-6"
+                  borderBottom
+                  extraClass="leading-6 text-gray-900"
+                />
+                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+              </div>
+            )}
+            {/* Classmates Section */}
+            <div className="my-6">
+              <StudentsTiles
+                title={
+                  DashboardDict[userLanguage][
+                    isTeacher ? 'YOUR_STUDENTS' : 'YOUR_CLASSMATES'
+                  ]
+                }
+                state={state}
+                studentsList={studentsList}
+              />
+            </div>
           </div>
         </>
       ) : (

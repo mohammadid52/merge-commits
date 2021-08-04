@@ -306,7 +306,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         ${studentTeacherButtonTheme()}
         h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
-        } transition duration-150 ease-in-out`}
+        } transition duration-150 ease-in-out py-2 sm:py-auto`}
       />
       {warnModal.show && (
         <ModalPopUp

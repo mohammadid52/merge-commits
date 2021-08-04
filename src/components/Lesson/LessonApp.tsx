@@ -644,7 +644,7 @@ const LessonApp = () => {
             {/* ADD LESSONWRAPPER HERE */}
             <div className="mt-4 mb-8 lesson-page-container">
               <CoreUniversalLesson />
-              {userAtEnd() ? <SaveQuit roomID={getRoomData.id} /> : null}
+              {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
             </div>
           </ErrorBoundary>
 
