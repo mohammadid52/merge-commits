@@ -26,6 +26,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
     pageContentID,
     partContentID,
     isComponent,
+    updateBlockContentULBHandler,
     // isLast,
     handleEditBlockContent,
     handleEditBlockToggle,
@@ -58,6 +59,7 @@ const EditOverlayBlock = (props: IEditOverlayBlockProps) => {
             isActive={contentID === editedID}
             isComponent={isComponent}
             isPagePart={isPagePart}
+            updateContent={updateBlockContentULBHandler}
             section={section}
             partContentID={partContentID}
             handleEditBlockContent={handleEditBlockContent}
