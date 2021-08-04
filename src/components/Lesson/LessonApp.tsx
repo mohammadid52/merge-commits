@@ -517,11 +517,11 @@ const LessonApp = () => {
     try {
       let userLocations: any = await API.graphql(
         graphqlOperation(customQueries.listPersonLocations, {
-          input: {
-            personAuthID: state.user.authId,
-            personEmail: state.user.email,
-            syllabusLessonID: getRoomData.activeSyllabus,
-            lessonID: lessonID,
+          filter: {
+            personAuthID: {eq: state.user.authId},
+            personEmail: {eq: state.user.email},
+            syllabusLessonID: {eq: getRoomData.activeSyllabus},
+            lessonID: {eq: lessonID},
           },
         })
       );
