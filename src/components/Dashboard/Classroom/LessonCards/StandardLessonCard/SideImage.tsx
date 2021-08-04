@@ -9,7 +9,7 @@ const SideImage = (props: LessonCardProps) => {
 
   return (
     <div
-      className={`w-full lg:w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
+      className={`w-full sm:w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
@@ -20,7 +20,7 @@ const SideImage = (props: LessonCardProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <div className="h-24 lg:h-6/10 flex justify-center items-center" />
+      <div className="h-24 sm:h-6/10 flex justify-center items-center" />
 
       <div className="mt-4">
         <div className="h-1/10 pl-6">

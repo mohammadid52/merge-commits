@@ -37,7 +37,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
 
       <div
         key={keyProps}
-        className={`relative bg-white shadow rounded-lg flex flex-col lg:flex-row mb-8 ${theme.elem.textDark} `}>
+        className={`relative bg-white shadow rounded-lg flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
         {/**
          *  LEFT SECTION IMAGE
          */}
@@ -45,7 +45,7 @@ const StandardLessonCard = (props: LessonCardProps) => {
         {/**
          *  RIGHT SECTION
          */}
-        <div className={`w-full lg:w-7.5/10 flex flex-col rounded-b`}>
+        <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
           <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
           <BottomBar
