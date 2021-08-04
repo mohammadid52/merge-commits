@@ -255,7 +255,6 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    console.log('🚀 ~ file: FormBlock.tsx ~ line 258 ~ onChange ~ id, value', id, value);
 
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);

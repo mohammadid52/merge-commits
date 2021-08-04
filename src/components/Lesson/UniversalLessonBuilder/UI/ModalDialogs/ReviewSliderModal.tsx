@@ -137,7 +137,7 @@ const ReviewSliderModal = ({
         const updatedList = updateBlockContentULBHandler(
           '',
           '',
-          FORM_TYPES.REVIEW_SLIDER,
+          `${FORM_TYPES.REVIEW_SLIDER}-form`,
           reviewSliderArray,
           0
         );
@@ -146,7 +146,7 @@ const ReviewSliderModal = ({
         const updatedList = createNewBlockULBHandler(
           '',
           '',
-          FORM_TYPES.REVIEW_SLIDER,
+          `${FORM_TYPES.REVIEW_SLIDER}-form`,
           reviewSliderArray,
           0
         );
