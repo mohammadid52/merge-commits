@@ -26,3 +26,4 @@ export const LINK = 'Link';
 export const INPUT_WITH_EMOJI = 'Emoji';
 export const ATTACHMENTS = 'Attachments';
 export const DATE_PICKER = 'Date Picker';
+export const TABLE = 'table';

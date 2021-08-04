@@ -47,6 +47,7 @@ import {
   INPUT_WITH_EMOJI,
   FORM_TYPES,
   DIVIDER,
+  TABLE,
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
@@ -56,6 +57,7 @@ import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 import {Accordion} from '../UI/UIComponents/Accordian';
 import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
 import DividerModal from '../UI/ModalDialogs/DividerModal';
+import TableModal from '../UI/ModalDialogs/TableModal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -386,6 +388,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <LinksModalDialog {...commonProps} />;
       case DIVIDER:
         return <DividerModal {...commonProps} />;
+      case TABLE:
+        return <TableModal {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
