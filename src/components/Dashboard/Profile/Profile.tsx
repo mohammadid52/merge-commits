@@ -367,14 +367,14 @@ const Profile = (props: ProfilePageProps) => {
             </h2>
           </div>
         )}
-        <div className={`main_container p-0 mx-auto max-w-256`}>
+        <div className={`main_container p-0 mx-auto max-w-256 px-5`}>
           {/* <BreadCrums items={breadCrumsList} />  */}
-          <div className="flex justify-between">
+          <div className="flex justify-between flex-col md:flex-row">
             <SectionTitle
               title={dashboardProfileDict[userLanguage]['TITLE']}
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
-            <div className="flex justify-end py-4 mb-4 w-5/10">
+            <div className="flex justify-end py-4 mb-4 w-full md:w-3/5 lg:w-5/10">
               <Buttons
                 label="Go Back"
                 onClick={history.goBack}
@@ -392,7 +392,7 @@ const Profile = (props: ProfilePageProps) => {
           </div>
           <div
             className={`w-full m-auto max-w-256 p-4 white_back mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
-            <div className="h-9/10 flex flex-col md:flex-row">
+            <div className="h-9/10 flex flex-col lg:flex-row">
               <div className="w-auto p-4 flex flex-col text-center items-center px-8">
                 <div className="relative">
                   {person.image ? (

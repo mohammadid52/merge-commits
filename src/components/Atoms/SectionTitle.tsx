@@ -11,7 +11,7 @@ const SectionTitle: React.FC<SectionTitleProps> = (sectProps: SectionTitleProps)
   const { theme } = useContext(GlobalContext);
 
   return (
-    <div className="flex flex-col py-4 mb-4">
+    <div className="flex flex-col py-4 mb-0 md:mb-4">
       <h1 className={`text-lg ${theme.text.default} font-bold`}>{title.toUpperCase()}</h1>
       <h2 className={`text-sm ${theme.text.secondary} font-bold`}>{subtitle ? subtitle : ''}</h2>
     </div>
