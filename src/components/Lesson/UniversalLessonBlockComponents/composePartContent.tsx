@@ -12,6 +12,7 @@ import {StringifyBlock} from './Blocks/StringifyBlock';
 import React from 'react';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
 import {FORM_TYPES} from '../UniversalLessonBuilder/UI/common/constants';
+import ReviewSliderBlock from './Blocks/ReviewSliderBlock';
 
 const composePartContent = (
   id: string,
@@ -73,7 +74,7 @@ const composePartContent = (
         mode={mode}
       />
     );
-  } else if (type.includes('form')) {
+  } else if (type.includes('form') || type === FORM_TYPES.REVIEW_SLIDER) {
     return (
       <FormBlock numbered={type === 'form-numbered'} id={id} value={value} mode={mode} />
     );

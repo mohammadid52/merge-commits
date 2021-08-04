@@ -70,6 +70,7 @@ export interface PartContentSub {
   type?: string;
   label?: string;
   value?: string;
+  class?: string;
   options?: Options[];
   placeholderText?: string;
 }
