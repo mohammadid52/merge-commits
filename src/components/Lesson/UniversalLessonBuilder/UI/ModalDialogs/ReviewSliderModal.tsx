@@ -119,6 +119,7 @@ const ReviewSliderModal = ({
       'rounded-lg';
     return `${reviewFields.range} || ${reviewFields.bgColor} || ${reviewFields.fgColor} || ${reviewFields.cardBgColor} || ${rounded}`;
   };
+
   const onReviewSliderCreate = async () => {
     const isValid = validate();
     if (isValid) {
@@ -229,8 +230,8 @@ const ReviewSliderModal = ({
               onClick={() => setColorPickerActiveBG(!colorPickerActiveBG)}
               className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
               <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                {reviewFields.bgColor.split('-')[0]}{' '}
-                {getColorDensity(reviewFields.bgColor.split('-')[1])}
+                {reviewFields.bgColor?.split('-')[0]}{' '}
+                {getColorDensity(reviewFields.bgColor?.split('-')[1])}
               </span>
 
               <span
@@ -258,8 +259,8 @@ const ReviewSliderModal = ({
               onClick={() => setColorPickerActiveFG(!colorPickerActiveFG)}
               className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
               <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                {reviewFields.fgColor.split('-')[0]}{' '}
-                {getColorDensity(reviewFields.fgColor.split('-')[1])}
+                {reviewFields.fgColor?.split('-')[0]}{' '}
+                {getColorDensity(reviewFields.fgColor?.split('-')[1])}
               </span>
 
               <span
@@ -288,8 +289,8 @@ const ReviewSliderModal = ({
               onClick={() => setColorPickerActiveCardBG(!colorPickerActiveCardBG)}
               className={`border-0 border-gray-300 rounded shadow-xs flex items-center justify-start  h-10 px-3`}>
               <span className={'text-gray-700 w-auto text-sm mr-2 capitalize'}>
-                {reviewFields.cardBgColor.split('-')[0]}{' '}
-                {getColorDensity(reviewFields.cardBgColor.split('-')[1])}
+                {reviewFields.cardBgColor?.split('-')[0]}{' '}
+                {getColorDensity(reviewFields.cardBgColor?.split('-')[1])}
               </span>
 
               <span

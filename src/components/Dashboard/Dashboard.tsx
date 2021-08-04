@@ -396,10 +396,9 @@ const Dashboard = (props: DashboardProps) => {
   const [homeData, setHomeData] = useState<{class: any}[]>();
   const [classList, setClassList] = useState<any[]>();
 
-  const [classIds, setClassIds] = useState<string[]>([]);
-  const [rooms, setRooms] = useState<any[]>([]);
+  // const [classIds, setClassIds] = useState<string[]>([]);
+  // const [rooms, setRooms] = useState<any[]>([]);
   const [curriculumIds, setCurriculumIds] = useState<string>('');
-  const [syllabusLessonSequence, setSyllabusLessonSequence] = useState<string[]>(['']);
 
   /******************************************
    * 1.1 PROCESS STUDENT ROOM FETCHING      *
@@ -491,7 +490,7 @@ const Dashboard = (props: DashboardProps) => {
   }, [homeData]);
 
   const getRoomsFromClassList = () => {
-    let rooms:any = [];
+    let rooms: any = [];
     classList && classList.length
       ? classList.forEach((classObj) =>
           classObj.rooms.items.length
@@ -506,24 +505,14 @@ const Dashboard = (props: DashboardProps) => {
     return rooms;
   };
 
-  // classList && classList.length > 0
-  //   ? classList.reduce((acc: any[], classObj: any) => {
-  //       if (classObj.rooms.items.length > 0) {
-  //         return [...acc, classObj.rooms.items[0]];
-  //       } else {
-  //         return acc;
-  //       }
-  //     }, [])
-  //   : [];
-
-  // console.log('getRoomsFromClassList - ', getRoomsFromClassList);
-
   useEffect(() => {
+    const studentRoomsList = getRoomsFromClassList();
+    setLocalStorageData('room_list', studentRoomsList);
     dispatch({
       type: 'UPDATE_ROOM',
       payload: {
         property: 'rooms',
-        data: getRoomsFromClassList()
+        data: studentRoomsList,
       },
     });
   }, [classList]);
@@ -538,7 +527,6 @@ const Dashboard = (props: DashboardProps) => {
         valueObj: {filter: {teacherAuthID: {eq: teacherAuthID}}},
       };
 
-      // const classIdFromRoomsFetch = await handleFetchAndCache(queryObj);
       const classIdFromRoomsFetch = await API.graphql(
         graphqlOperation(customQueries.listRooms, queryObj.valueObj)
       );
@@ -546,7 +534,8 @@ const Dashboard = (props: DashboardProps) => {
       //@ts-ignore
       const arrayOfResponseObjects = response?.data?.listRooms?.items;
 
-      setRooms(arrayOfResponseObjects);
+      setLocalStorageData('room_list', arrayOfResponseObjects);
+
       dispatch({
         type: 'UPDATE_ROOM',
         payload: {
@@ -779,13 +768,6 @@ const Dashboard = (props: DashboardProps) => {
         payload: {roomID: id, syllabusID: getRoomSyllabus?.activeSyllabus},
       });
 
-      // dispatch({
-      //   type: 'UPDATE_ROOM',
-      //   payload: {
-      //     property: 'syllabus',
-      //     data: [],
-      //   },
-      // });
       history.push(`/dashboard/${route}/${id}`);
     }
   };

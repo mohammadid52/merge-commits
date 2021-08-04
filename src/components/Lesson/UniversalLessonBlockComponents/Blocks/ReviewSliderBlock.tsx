@@ -38,10 +38,14 @@ export const getFirstLastValue = (el: string, splitBy: string) => el.split(split
 /**
  * @return extracted values from classString like min-max, background color and foreground color.
  */
-export const extractValuesFromClassString = (classString: string) => {
-  let [minMax, bgColor, fgColor, cardBgColor, rounded] = classString.split(' || ');
-  let [min, max] = getFirstLastValue(minMax, '-');
-  return {min, max, bgColor, fgColor, cardBgColor, rounded};
+export const extractValuesFromClassString = (
+  classString: string = `1-5 || gray-700 || gray-800 || gray-700 || rounded-lg`
+) => {
+  if (classString) {
+    let [minMax, bgColor, fgColor, cardBgColor, rounded] = classString.split(' || ');
+    let [min, max] = getFirstLastValue(minMax, '-');
+    return {min, max, bgColor, fgColor, cardBgColor, rounded};
+  }
 };
 
 const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
@@ -51,7 +55,7 @@ const ReviewSliderBlock = (props: ReviewSliderBlockProps) => {
     id,
     onChange,
     inputID,
-    classString = `1-5 || gray-700 || gray-800`,
+    classString = `1-5 || gray-700 || gray-800 || dark-gray || rounded-lg`,
     label,
   } = props;
 
