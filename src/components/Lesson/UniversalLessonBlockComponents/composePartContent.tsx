@@ -11,7 +11,8 @@ import {VideoBlock} from './Blocks/VideoBlock';
 import {StringifyBlock} from './Blocks/StringifyBlock';
 import React from 'react';
 import CustomVideoBlock from './Blocks/CustomVideoBlock';
-import {FORM_TYPES} from '../UniversalLessonBuilder/UI/common/constants';
+import {DIVIDER, FORM_TYPES} from '../UniversalLessonBuilder/UI/common/constants';
+import DividerBlock from './Blocks/DividerBlock';
 
 const composePartContent = (
   id: string,
@@ -107,6 +108,8 @@ const composePartContent = (
         mode={mode}
       />
     );
+  } else if (type === DIVIDER) {
+    return <DividerBlock value={value[0]?.value} />;
   } else {
     return <StringifyBlock key={inputKey} id={id} anyObj={value} mode={mode} />;
   }

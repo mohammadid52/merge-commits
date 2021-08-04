@@ -6,6 +6,7 @@ import {
   AiOutlineFileImage,
   AiOutlineHighlight,
   AiOutlineLink,
+  AiOutlineMinus,
   AiOutlineQuestionCircle,
   AiOutlineSwapRight,
   AiOutlineVideoCameraAdd,
@@ -14,7 +15,7 @@ import {
 import {MdInput, MdRateReview, MdTitle} from 'react-icons/md';
 import {RiSurveyLine} from 'react-icons/ri';
 import {BsCheckBox, BsImages, BsNewspaper} from 'react-icons/bs';
-import {FORM_TYPES} from '../common/constants';
+import {DIVIDER, FORM_TYPES} from '../common/constants';
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {
   HiOutlineArrowRight,
@@ -80,6 +81,14 @@ const AddContentDialog = ({
       icon: AiOutlineLink,
       iconForeground: 'text-pink-700',
       iconBackground: 'bg-pink-100',
+    },
+    {
+      name: 'Divider',
+      subtitle: 'Add custom divider',
+      type: DIVIDER,
+      icon: AiOutlineMinus,
+      iconForeground: 'text-purple-700',
+      iconBackground: 'bg-purple-100',
     },
   ];
   const mediaContent = [

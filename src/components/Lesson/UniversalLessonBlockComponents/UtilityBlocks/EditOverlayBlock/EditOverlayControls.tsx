@@ -1,10 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import {AiOutlineBgColors, AiOutlineDelete, AiOutlineEdit} from 'react-icons/ai';
+import {
+  AiOutlineBgColors,
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineMinus,
+} from 'react-icons/ai';
 import {BsLayoutSplit} from 'react-icons/bs';
 import {HiPencil} from 'react-icons/hi';
 import {IoCloseSharp} from 'react-icons/io5';
-
+import {v4 as uuidv4} from 'uuid';
 import {
   RowWrapperProps,
   ULBSelectionProps,
@@ -22,7 +27,7 @@ import {find, findIndex, findLastIndex, update} from 'lodash';
 import {reorder} from '../../../../../utilities/strings';
 import {useQuery} from '../../../../../customHooks/urlParam';
 import Storage from '@aws-amplify/storage';
-import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
+import {DIVIDER, FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 
 interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   isActive?: boolean;
@@ -31,6 +36,7 @@ interface EditOverlayControlsProps extends RowWrapperProps, ULBSelectionProps {
   handleEditBlockContent?: () => void;
   pageContentID?: string;
   partContentID?: string;
+  updateContent: any;
 }
 
 const EditOverlayControls = (props: EditOverlayControlsProps) => {
@@ -60,6 +66,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     selectedPageID,
     setUniversalLessonDetails,
     selID,
+    addContentModal,
+    setAddContentModal,
     setSelID,
   } = useULBContext();
 
@@ -100,9 +108,11 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     COMPONENT_DOWN: partContentLen - 1 === partContentIdx,
   };
 
-  const updateData = async (path: string, newArr: any) => {
+  const updateData = async (path: string, newValue: any) => {
     // clearIds();
-    update(universalLessonDetails, path, () => newArr);
+
+    update(universalLessonDetails, path, () => newValue);
+
     setUniversalLessonDetails({...universalLessonDetails});
     const input = {
       id: lessonId,
@@ -124,10 +134,10 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     );
   };
   const moveBlock = (dir: 'up' | 'down') => {
-    const PATH_TO_PATHCONTENT = `lessonPlan[${pageIdx}].pageContent`;
+    const PATH_TO_PAGECONTENT = `lessonPlan[${pageIdx}].pageContent`;
 
     updateData(
-      PATH_TO_PATHCONTENT,
+      PATH_TO_PAGECONTENT,
       reorder(
         currentPage?.pageContent,
         pageContentIdx,
@@ -153,26 +163,17 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
   }, [isActive]);
 
   /**
+   * Add divider item below the selected partContent
+   */
+
+  /**
    * FUNCTIONALITY
    */
 
   const handleColorPickerSelect = (pickedColor: string) => {
     updateFromULBHandler(contentID, 'class', `bg-${pickedColor}`);
   };
-  const handleSplitColumnChange = (column: number) => {
-    createNewBlockULBHandler(
-      contentID,
-      'pageContentColumn',
-      '',
-      column,
-      0,
-      `grid grid-cols-${column} gap-1`
-    );
-  };
-  const handleSplitColToggle = () => {
-    setColDropdownActive((prevValue) => !prevValue);
-    setColorPickerActive(false);
-  };
+
   const {
     state: {
       lessonPage: {
@@ -330,7 +331,6 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
             clearIds();
           }}>
           <div
-            style={{zIndex: 9999999}}
             className={`flex ulb_action ${
               overlayVisible ? 'opacit-100 visible' : 'opacit-0 invisible'
             }  justify-center flex-col my-auto h-auto w-44 absolute top-2 ${
@@ -448,7 +448,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
       {!previewMode && (
         <button
-          className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 z-10 cursor-pointer`}
+          className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 cursor-pointer`}
           onClick={() => {
             handleEditBlockToggle();
 
