@@ -1,37 +1,46 @@
 import React, {Suspense, useContext, useEffect, useState} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useParams} from 'react-router';
+import API, {graphqlOperation} from '@aws-amplify/api';
+
+import {
+  StudentPageInput,
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../../interfaces/UniversalLessonInterfaces';
+import * as customQueries from '../../customGraphql/customQueries';
+import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
+import * as subscriptions from '../../graphql/subscriptions';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import useDeviceDetect from '../../customHooks/deviceDetect';
+import useDictionary from '../../customHooks/dictionary';
+
+import QuickRegister from '../Auth/QuickRegister';
+import ErrorBoundary from '../Error/ErrorBoundary';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import PositiveAlert from '../General/Popup';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
 import TopMenu from './TopMenu';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
-import QuickRegister from '../Auth/QuickRegister';
-import {dateString} from '../../utilities/time';
-import ErrorBoundary from '../Error/ErrorBoundary';
-import {GlobalContext} from '../../contexts/GlobalContext';
 import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
-import {useParams} from 'react-router';
-import usePrevious from '../../customHooks/previousProps';
-import {
-  StudentPageInput,
-  UniversalLessonPage,
-  UniversalLessonStudentData,
-} from '../../interfaces/UniversalLessonInterfaces';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customQueries from '../../customGraphql/customQueries';
-import * as queries from '../../graphql/queries';
-import * as mutations from '../../graphql/mutations';
-import * as subscriptions from '../../graphql/subscriptions';
-import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import HamburgerMenu from './TopMenu/HamburgerMenu';
 import LessonControlBar from './LessonControlBar/LessonControlBar';
-import useDeviceDetect from '../../customHooks/deviceDetect';
 
 const LessonControl = () => {
-  const {dispatch, lessonState, lessonDispatch, controlState, theme} = useContext(
-    GlobalContext
-  );
+  const {
+    clientKey,
+    dispatch,
+    lessonState,
+    lessonDispatch,
+    controlState,
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
+  const {lessonPlannerDict} = useDictionary(clientKey);
   const match = useRouteMatch();
   const history = useHistory();
   const urlParams: any = useParams();
@@ -618,7 +627,19 @@ const LessonControl = () => {
               </div>
             </div>
           </div>
+          {/* FOR MOBILE */}
           <div className="block lg:hidden">
+            <div className="relative w-full h-full flex flex-row justify-center items-center pl-2 m-2.5">
+              <div className="h-8 align-middle font-bold text-xs leading-8 ">
+                {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
+              </div>
+
+              <HamburgerMenu
+                handleClick={handleClick}
+                setQuickRegister={setQuickRegister}
+                handleHomePopup={handleHomePopup}
+              />
+            </div>
             <div className="relative w-full h-12 flex flex-col items-center z-100">
               <LessonControlBar handlePageChange={handlePageChange} />
             </div>
@@ -629,11 +650,7 @@ const LessonControl = () => {
             className={`relative 
             ${fullscreen ? 'w-full' : 'w-6/10'} 
             w-6/10 w-full h-full flex flex-col items-center`}
-            style={
-              mobile && !fullscreen
-                ? {height: '75%'}
-                : null
-            }>
+            style={mobile && !fullscreen ? {height: '75%'} : null}>
             <StudentWindowTitleBar
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}

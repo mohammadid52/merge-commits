@@ -134,7 +134,7 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
         </div>
 
         <div
-          className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
           {/* BACK BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">
