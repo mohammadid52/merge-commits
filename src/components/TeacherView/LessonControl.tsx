@@ -605,7 +605,7 @@ const LessonControl = () => {
 
         {/* END TOP MENU */}
 
-        <div className={`w-full h-8.5/10 flex flex-col lg:flex-row rounded-lg`}>
+        <div className={`w-full h-full lg:h-8.5/10 flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
           <div
             className={`${
@@ -629,7 +629,7 @@ const LessonControl = () => {
           </div>
           {/* FOR MOBILE */}
           <div className="block lg:hidden">
-            <div className="relative w-full h-full flex flex-row justify-center items-center pl-2 m-2.5">
+            {/* <div className="relative w-full h-16 flex flex-row justify-center items-center pl-2 m-2.5">
               <div className="h-8 align-middle font-bold text-xs leading-8 ">
                 {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
               </div>
@@ -639,7 +639,7 @@ const LessonControl = () => {
                 setQuickRegister={setQuickRegister}
                 handleHomePopup={handleHomePopup}
               />
-            </div>
+            </div> */}
             <div className="relative w-full h-12 flex flex-col items-center z-100">
               <LessonControlBar handlePageChange={handlePageChange} />
             </div>
@@ -650,7 +650,7 @@ const LessonControl = () => {
             className={`relative 
             ${fullscreen ? 'w-full' : 'w-6/10'} 
             w-6/10 w-full h-full flex flex-col items-center`}
-            style={mobile && !fullscreen ? {height: '75%'} : null}>
+            style={mobile && !fullscreen ? {height: 'calc(75% - 80px)'} : null}>
             <StudentWindowTitleBar
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}

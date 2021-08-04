@@ -111,11 +111,18 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
       </div>
       {/* for mobile */}
       <div className="block lg:hidden">
-        <LessonInfoTitleBar
-          handleOpen={handleOpen}
-          handleComplete={handleComplete}
-          handleLessonButton={handleLessonButton}
-        />
+        <div className="relative w-full h-full flex flex-row justify-center items-center bg-darker-gray bg-opacity-40">
+          <LessonInfoTitleBar
+            handleOpen={handleOpen}
+            handleComplete={handleComplete}
+            handleLessonButton={handleLessonButton}
+          />
+          <HamburgerMenu
+            handleClick={handleClick}
+            setQuickRegister={setQuickRegister}
+            handleHomePopup={handleHomePopup}
+          />
+        </div>
       </div>
       {/* BUTTONS & CONTENT */}
       <div className="hidden lg:block">
@@ -138,12 +145,12 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
         </div>
       </div>
       {/* For mobile */}
-      <div
+      {/* <div
         className={`relative w-full h-22 border-b-0 border-gray-400 flex flex-row mt-0 z-50 `}>
         <div className="h-full w-full border-r-0 border-white bg-light-gray bg-opacity-10 pl-2 flex flex-row justify-between block lg:hidden">
           {basicDetailsElements()}
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
