@@ -108,7 +108,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                   setCurrentPage={setCurrentPage}
                   currentPage={currentPage}
                 />
-                <nav className="flex-1 py-4 space-y-1">
+                <nav className="flex-1 py-4 space-y-1 h-full overflow-y-auto overflow-x-hidden">
                   <Links
                     handleRoomSelection={handleRoomSelection}
                     // setActiveRoomSyllabus={setActiveRoomSyllabus}
