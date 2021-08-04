@@ -83,6 +83,14 @@ const LessonControl = () => {
     const {lessonID} = urlParams;
     const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
+    const subscriptionFilter = {
+      filter: {
+        studentAuthID: {eq: lessonState.studentViewing},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: syllabusID},
+      },
+    };
+
     const studentDataSubscription = API.graphql(
       graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
         studentAuthID: lessonState.studentViewing,
@@ -173,15 +181,13 @@ const LessonControl = () => {
     try {
       const listFilter = {
         filter: {
-          lessonID: lessonID,
-          syllabusLessonID: syllabusID,
-          studentAuthID: studentAuthId,
+          studentAuthID: {eq: studentAuthId},
+          lessonID: {eq: lessonID},
+          syllabusLessonID: {eq: syllabusID},
         },
       };
       const studentData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonStudentDatas, {
-          listFilter,
-        })
+        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
       );
 
       // existing student rows
@@ -210,15 +216,21 @@ const LessonControl = () => {
 
   // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
 
+  const clearStudentData = async () => {
+    lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+  };
+
   useEffect(() => {
+    if (lessonState.studentViewing === '') {
+      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+    }
+
     if (lessonState.studentViewing !== '') {
-      if (!lessonState.loaded) {
+      clearStudentData().then((_: void) =>
         getStudentData(lessonState.studentViewing).then((_: void) =>
           console.log('getStudentData teacher - ', 'getted')
-        );
-      }
-    } else {
-      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+        )
+      );
     }
   }, [lessonState.studentViewing]);
 
