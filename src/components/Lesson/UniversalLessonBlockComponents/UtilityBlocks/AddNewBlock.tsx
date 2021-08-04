@@ -25,7 +25,7 @@ export const AddNewBlock = (props: RowWrapperProps) => {
       bg-gray-400 bg-opacity-20 
       rounded
       z-0`}>
-      <div className={`w-auto cursor-pointer z-10`}>
+      <div className={`w-auto cursor-pointer`}>
         <IconContext.Provider value={{size: '4rem', color: iconColor}}>
           <IoMdAddCircleOutline />
         </IconContext.Provider>

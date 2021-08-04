@@ -9,8 +9,7 @@ const BUTTONS: any = {
     PUBLISH: 'Publish',
     YES: 'Yes',
     CREATE: 'Create',
-    CREATING: 'Creating'
-
+    CREATING: 'Creating',
   },
   ES: {
     ADD: 'Añadir',
@@ -22,8 +21,7 @@ const BUTTONS: any = {
     PUBLISH: 'TBD',
     YES: 'TBD',
     CREATE: 'TBD',
-    CREATING: 'TBD'
-
+    CREATING: 'TBD',
   },
 };
 
@@ -671,6 +669,7 @@ const lessonPlannerDict: any = {
     CORELESSON_BREAKDOWN: 'CoreLesson/Breakdown',
     ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
+      ROOM_NAME: 'Room',
       STUDDENT_ONLINE: 'Students Online',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
@@ -704,6 +703,7 @@ const lessonPlannerDict: any = {
     CORELESSON_BREAKDOWN: 'TBD',
     ACTIVITY_BREAKDOWN: 'TBD',
     OTHER_LABELS: {
+      ROOM_NAME: 'TBD',
       STUDDENT_ONLINE: 'TBD',
       TOPIC: 'TBD',
       START_DATE: 'TBD',

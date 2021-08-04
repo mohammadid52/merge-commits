@@ -610,6 +610,7 @@ const lessonPlannerDict: any = {
     CORELESSON_BREAKDOWN: 'CoreLesson/Breakdown',
     ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
+      ROOM_NAME: 'Room',
       STUDDENT_ONLINE: 'Students Online',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
@@ -643,6 +644,7 @@ const lessonPlannerDict: any = {
     CORELESSON_BREAKDOWN: 'TBD',
     ACTIVITY_BREAKDOWN: 'TBD',
     OTHER_LABELS: {
+      ROOM_NAME: 'TBD',
       STUDDENT_ONLINE: 'Students Online',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',

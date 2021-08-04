@@ -46,6 +46,7 @@ import {
   DATE_PICKER,
   INPUT_WITH_EMOJI,
   FORM_TYPES,
+  DIVIDER,
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
@@ -54,6 +55,7 @@ import LessonPlanNavigation from '../UI/LessonPlanNavigation';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 import {Accordion} from '../UI/UIComponents/Accordian';
 import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
+import DividerModal from '../UI/ModalDialogs/DividerModal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -85,6 +87,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     blockConfig,
     setBlockConfig,
     getCurrentPage,
+    addContentModal,
+    setAddContentModal,
   } = useULBContext();
 
   //@ts-ignore
@@ -217,11 +221,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     data: [{title: '', content: [{id: '', text: ''}]}],
     selectedResponse: [],
     idx: 0,
-  });
-
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
   });
 
   const dialogLabelList = {
@@ -385,6 +384,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <KeywordModalDialog {...commonProps} />;
       case FORM_TYPES.LINKS:
         return <LinksModalDialog {...commonProps} />;
+      case DIVIDER:
+        return <DividerModal {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
