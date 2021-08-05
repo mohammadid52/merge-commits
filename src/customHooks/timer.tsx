@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {LessonActions} from '../reducers/LessonReducerOLD';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
@@ -9,6 +9,7 @@ import {lessonStateOLD} from '../state/LessonStateOLD';
 import {lessonState} from '../state/LessonState';
 import {globalState} from '../state/GlobalState';
 import {Auth} from '@aws-amplify/auth';
+import {GlobalContext} from '../contexts/GlobalContext';
 
 interface inputs {
   subscription?: any;
@@ -44,28 +45,8 @@ const timerInitialParams: timerStateType = {
   autoSaveInterval: null,
 };
 
-const useStudentTimer = (inputs?: inputs) => {
-  const urlParams: any = useParams();
-  const {
-    subscription,
-    subscribeFunc,
-    dispatch,
-    callback,
-    state,
-    lessonState,
-    lessonDispatch,
-  } = inputs;
-  const [params, setParams] = useState<timerStateType>({
-    subscription: subscription,
-    subscribeFunc: subscribeFunc,
-    dispatch: dispatch,
-    callback: callback,
-    state: state,
-    lessonState: lessonState,
-    activeTimer: null,
-    idleTimer: null,
-    autoSaveInterval: null,
-  });
+const useStudentTimer = () => {
+  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
 
   // ##################################################################### //
   // ###################### TEACHER VIEWING TRIGGER ###################### //
@@ -90,9 +71,7 @@ const useStudentTimer = (inputs?: inputs) => {
   };
 
   useEffect(() => {
-    if (lessonState.studentViewing !== '') {
-      viewingLogic();
-    }
+    viewingLogic();
   }, [lessonState.studentViewing, state.user.authId]);
 
   // ##################################################################### //
@@ -112,7 +91,7 @@ const useStudentTimer = (inputs?: inputs) => {
       if (iAmViewed) {
         setactivityTimeout(
           setTimeout(() => {
-            dispatch({type: 'INCREMENT_SAVE_COUNT'});
+            lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
             console.log(
               '%c viewed save: ',
               'background: #00FF00; color: #000000',
@@ -123,7 +102,7 @@ const useStudentTimer = (inputs?: inputs) => {
       } else {
         setactivityTimeout(
           setTimeout(() => {
-            dispatch({type: 'INCREMENT_SAVE_COUNT'});
+            lessonDispatch({type: 'INCREMENT_SAVE_COUNT'});
             console.log(
               '%c standard save: ',
               'background: #BEFAB5; color: #1E156F',
@@ -133,10 +112,7 @@ const useStudentTimer = (inputs?: inputs) => {
         );
       }
     }
-    return () => {
-      Promise.resolve(clearUpdateCycle());
-    };
-  }, [iAmViewed, lessonState.updated]);
+  }, [lessonState.studentData]);
 
   // ##################################################################### //
   // ######################## EXECUTE SAVE EFFECT ######################## //
@@ -147,29 +123,23 @@ const useStudentTimer = (inputs?: inputs) => {
   useEffect(() => {
     if (currentSaveCount < lessonState.saveCount) {
       setCurrentSaveCount(lessonState.saveCount);
-
-      if (iAmViewed) {
-        const viewedUpdate = updateStudentData();
-
-        Promise.resolve(viewedUpdate).then((_: void) => {
-          clearUpdateCycle().then((_: void) => {
-            console.log('viewedUpdate - ', 'done');
-          });
-        });
-      } else {
-        const standardUpdate = updateStudentData();
-
-        Promise.resolve(standardUpdate).then((_: void) => {
-          clearUpdateCycle().then((_: void) => {
-            console.log('standardUpdate - ', 'done');
-          });
-        });
-      }
     }
 
-    return () => {
-      Promise.resolve(clearUpdateCycle());
-    };
+    if (iAmViewed) {
+      const viewedUpdate = updateStudentData();
+
+      Promise.resolve(viewedUpdate).then((_: void) => {
+        clearUpdateCycle();
+        console.log('viewedUpdate - ', 'done');
+      });
+    } else {
+      const standardUpdate = updateStudentData();
+
+      Promise.resolve(standardUpdate).then((_: void) => {
+        clearUpdateCycle();
+        console.log('standardUpdate - ', 'done');
+      });
+    }
   }, [lessonState.saveCount]);
 
   // ##################################################################### //
@@ -183,21 +153,21 @@ const useStudentTimer = (inputs?: inputs) => {
       () => clearTimeout(activityTimeout),
       () => setSavePending(false),
     ];
-    return cleanUpProcess.reduce((p: any, cleanUpFn: any, idx: number) => {
-      return p.then((_: void) => {
-        cleanUpFn();
-        if (idx === cleanUpProcess.length - 1) {
-          console.log('update cycle cleared...');
-          return p;
-        }
-      });
-    }, Promise.resolve());
+    return cleanUpProcess.reduce((truth: boolean, cleanUpFn: any, idx: number) => {
+      cleanUpFn();
+      if (idx === cleanUpProcess.length - 1) {
+        console.log('update cycle cleared...');
+        return true;
+      } else {
+        return truth;
+      }
+    }, false);
   };
 
   // ~~~~~~~~~~ UPDATE DB RECORDS ~~~~~~~~~~ //
   const updateStudentData = async () => {
-    const loopOverDataId = lessonState.universalStudentDataID.reduce(
-      async (acc: any[], currentIdObj: any, idx: number) => {
+    return lessonState.universalStudentDataID.reduce(
+      async (p: any, currentIdObj: any, idx: number) => {
         if (currentIdObj.update) {
           let data = {
             id: currentIdObj.id,
@@ -208,63 +178,26 @@ const useStudentTimer = (inputs?: inputs) => {
             let updatedStudentData: any = await API.graphql(
               graphqlOperation(mutations.updateUniversalLessonStudentData, {input: data})
             );
+            console.log('updateStudentData - timer - ', data);
           } catch (e) {
             console.error('update universal student data - ', encodeURI);
           } finally {
-            console.log('updateStudentData - finally - ', idx);
+            if (idx === lessonState.universalStudentDataID.length - 1) {
+              return Promise.resolve();
+            }
           }
-
-          console.log('updateStudentData - timer - ', data);
         }
       },
-      []
+      Promise.resolve()
     );
   };
 
-  /**
-   *
-   * LEGACY CODE
-   *
-   */
-  const changeParams = (key: string, updatedValue: any) => {
-    setParams((prev) => {
-      return {
-        ...prev,
-        [key]: updatedValue,
-      };
-    });
-  };
-
-  const resetParams = () => {
-    setParams(timerInitialParams);
-    clearTimeout(activityTimeout);
-  };
-
-  const startAutoSave = () => {
-    clearTimeout(params.activeTimer);
-    clearTimeout(params.idleTimer);
-    params.dispatch({type: 'UPDATE_STUDENT_STATUS', payload: 'ACTIVE'});
-    params.dispatch({type: 'INCREMENT_SAVE_COUNT'});
-  };
-
-  const clearAutoSave = () => {
-    clearInterval(params.autoSaveInterval);
-    console.log('cleared');
-  };
-
-  const clearAllTimers = () => {
-    clearInterval(params.autoSaveInterval);
-    clearTimeout(params.activeTimer);
-    clearTimeout(params.idleTimer);
-  };
-
   return {
-    // startTimer,
-    startAutoSave,
-    clearAutoSave,
-    clearAllTimers,
-    changeParams,
-    resetParams,
+    iAmViewed,
+    savePending,
+    currentSaveCount,
+    clearUpdateCycle,
+    updateStudentData,
   };
 };
 

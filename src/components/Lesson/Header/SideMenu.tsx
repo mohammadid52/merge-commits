@@ -6,39 +6,9 @@ import HomeWidget from './SideMenu/HomeWidget';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 
 const SideMenu = ({handlePopup}: LessonHeaderBarProps) => {
-  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
 
-  /**
-   * FUNCTION TO SAVE STUDENT DATA ON COMMAND
-   * @param saveType
-   */
-  const updateStudentData = async () => {
-    //
-  };
-
-  const {changeParams, resetParams} = useStudentTimer({
-    dispatch: lessonDispatch,
-    subscription: lessonState.subscription,
-    subscribeFunc: lessonState.subscribeFunc,
-    callback: updateStudentData,
-    state: state,
-    lessonState: lessonState,
-    lessonDispatch: lessonDispatch,
-  });
-
-  useEffect((): any => {
-    if (lessonState) {
-      changeParams('lessonState', lessonState);
-    }
-    return () => resetParams();
-  }, [
-    lessonState.studentStatus,
-    lessonState.currentPage,
-    lessonState.currentLocation,
-    lessonState.viewing,
-    lessonState.saveCount,
-    lessonState.subscription,
-  ]);
+  const initializeTimer = useStudentTimer();
 
   // @ts-ignore
   return (
