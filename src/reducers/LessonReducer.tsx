@@ -69,6 +69,10 @@ export type LessonActions =
       };
     }
   | {
+      type: 'UPDATE_PERSON_LOCATION';
+      payload: any;
+    }
+  | {
       type: 'UNLOAD_STUDENT_DATA';
       payload: any;
     }
@@ -204,6 +208,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
       } else {
         return state;
       }
+    case 'UPDATE_PERSON_LOCATION':
+      return {
+        ...state,
+        personLocationObj: action.payload,
+      };
+
     case 'UNLOAD_STUDENT_DATA':
       return {
         ...state,

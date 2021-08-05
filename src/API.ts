@@ -3542,7 +3542,7 @@ export type ModelUniversalLessonConditionInput = {
   instructionsTitle?: ModelStringInput | null,
   summary?: ModelStringInput | null,
   summaryTitle?: ModelStringInput | null,
-  duration?: ModelIntInput | null,
+  duration?: ModelFloatInput | null,
   resources?: ModelStringInput | null,
   notes?: ModelStringInput | null,
   cardImage?: ModelStringInput | null,
@@ -3552,6 +3552,18 @@ export type ModelUniversalLessonConditionInput = {
   and?: Array< ModelUniversalLessonConditionInput | null > | null,
   or?: Array< ModelUniversalLessonConditionInput | null > | null,
   not?: ModelUniversalLessonConditionInput | null,
+};
+
+export type ModelFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
 };
 
 export type UpdateUniversalLessonInput = {
@@ -4546,7 +4558,7 @@ export type ModelUniversalLessonFilterInput = {
   instructionsTitle?: ModelStringInput | null,
   summary?: ModelStringInput | null,
   summaryTitle?: ModelStringInput | null,
-  duration?: ModelIntInput | null,
+  duration?: ModelFloatInput | null,
   resources?: ModelStringInput | null,
   notes?: ModelStringInput | null,
   cardImage?: ModelStringInput | null,

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 import {VscSymbolKeyword, VscSymbolParameter} from 'react-icons/vsc';
 import {
+  AiOutlineBorderlessTable,
   AiOutlineCalendar,
   AiOutlineFileImage,
   AiOutlineHighlight,
@@ -15,7 +16,7 @@ import {
 import {MdInput, MdRateReview, MdTitle} from 'react-icons/md';
 import {RiSurveyLine} from 'react-icons/ri';
 import {BsCheckBox, BsImages, BsNewspaper} from 'react-icons/bs';
-import {DIVIDER, FORM_TYPES} from '../common/constants';
+import {DIVIDER, FORM_TYPES, TABLE} from '../common/constants';
 import {BiRadioCircleMarked, BiSlider} from 'react-icons/bi';
 import {
   HiOutlineArrowRight,
@@ -87,6 +88,14 @@ const AddContentDialog = ({
       subtitle: 'Add custom divider',
       type: DIVIDER,
       icon: AiOutlineMinus,
+      iconForeground: 'text-purple-700',
+      iconBackground: 'bg-purple-100',
+    },
+    {
+      name: 'Table',
+      subtitle: 'Add table',
+      type: TABLE,
+      icon: AiOutlineBorderlessTable,
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-100',
     },

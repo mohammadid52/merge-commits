@@ -123,9 +123,11 @@ const ClassRoster = (props: classRosterProps) => {
     try {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
-          syllabusLessonID: getRoomData.activeSyllabus,
-          lessonID: lessonID,
-          roomID: getRoomData.id,
+          filter: {
+            syllabusLessonID: {eq: getRoomData.activeSyllabus},
+            lessonID: {eq: lessonID},
+            roomID: {eq: getRoomData.id},
+          },
         })
       );
       const syllabusLessonStudentList =

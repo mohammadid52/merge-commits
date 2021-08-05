@@ -1,7 +1,13 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {classNames} from '../FormElements/UniversalInput';
+
+export const useTabs = (tabs: {name: string; current: boolean}[]) => {
+  const [curTab, setCurTab] = useState(tabs[0].name);
+
+  return {curTab, setCurTab};
+};
 
 const Tabs = ({
   tabs,
@@ -31,7 +37,7 @@ const Tabs = ({
         </select>
       </div>
       <div className="hidden sm:block">
-        <div className="border-b border-gray-200">
+        <div className="border-b mb-4 border-gray-200">
           <nav className="-mb-px flex" aria-label="Tabs">
             {tabs.map((tab) => (
               <button
