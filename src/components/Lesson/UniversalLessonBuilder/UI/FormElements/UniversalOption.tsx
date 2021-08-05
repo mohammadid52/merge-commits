@@ -12,6 +12,7 @@ import {Switch} from '@headlessui/react';
 import {classNames} from './TextInput';
 import {optionResponses} from '../../../../../utilities/staticData';
 import {isEmpty} from '@aws-amplify/core';
+import Tabs from '../UIComponents/Tabs';
 
 const InputContainer = ({
   shouldShowActions,
@@ -469,60 +470,12 @@ const UniversalOption = ({
     return `hover:bg-${color}-200 text-${color}-400 border-${color}-200 hover:text-${color}-600 focus:outline-none focus:bg-${color}-200 focus:border-transparent`;
   };
 
-  function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ');
-  }
   const tabs = [
     {name: 'Component Details', current: true},
     {name: 'Preview', current: false},
   ];
 
   const [curTab, setCurTab] = useState(tabs[0].name);
-
-  const Tabs = () => {
-    return (
-      <div className="mb-4">
-        <div className="sm:hidden">
-          <label htmlFor="tabs" className="sr-only">
-            Select a tab
-          </label>
-          <select
-            id="tabs"
-            name="tabs"
-            className="block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md"
-            defaultValue={tabs.find((tab) => tab.current).name}>
-            {tabs.map((tab) => (
-              <option key={tab.name}>{tab.name}</option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden sm:block">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex" aria-label="Tabs">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.name}
-                  onClick={() => setCurTab(tab.name)}
-                  className={classNames(
-                    curTab === tab.name
-                      ? `border-${
-                          themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                        }-500 text-${
-                          themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
-                        }-600`
-                      : 'border-transparent focus:outline-none text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                    'py-4 cursor-pointer px-1 text-center border-b-3 font-medium text-sm'
-                  )}
-                  aria-current={curTab === tab.name ? 'page' : undefined}>
-                  {tab.name}
-                </button>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
     <span className="text-red-500"> {isRequired ? '*' : null}</span>
@@ -637,7 +590,7 @@ const UniversalOption = ({
 
   return (
     <>
-      <Tabs />
+      <Tabs tabs={tabs} curTab={curTab} setCurTab={setCurTab} />
       {curTab === tabs[0].name && (
         <>
           <div>
