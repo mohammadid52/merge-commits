@@ -189,16 +189,16 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   let count: number = 0;
   let lessonData = state.roomData.lessons;
   lessonData?.map((item: any) => {
-    let temp = Math.round(count + item.lesson.duration);
+    let temp = Math.ceil(count + item.lesson.duration);
     item.sessionHeading = `Session ${
-      temp > 1
+      item.lesson.duration > 1
         ? range(count + 1, temp)
             .join(', ')
             .replace(/, ([^,]*)$/, ' & $1')
         : temp
     }`;
     count += item.lesson.duration;
-    item.session = Math.round(count);
+    item.session = Math.ceil(count);
     item.lesson = {
       ...item.lesson,
       totalEstTime:
