@@ -1,9 +1,9 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
+import {FaBook} from 'react-icons/fa';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
-import Tooltip from '../../Atoms/Tooltip';
 import {getAsset} from '../../../assets';
 
 const SyllabusSwitch = (props: DashboardProps) => {
@@ -21,6 +21,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
   const getBG = (theme = 'indigo') => {
     return `text-${theme}-500 hover:bg-${theme}-400`;
   };
+  
   return (
     <>
       {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
@@ -37,30 +38,30 @@ const SyllabusSwitch = (props: DashboardProps) => {
                 <div
                   key={`testSyllabus_${i}`}
                   id={`testSyllabus_${i}`}
-                  className={`flex relative flex-col bg-white rounded-lg shadow py-4 pb-10 justify-center items-center`}>
-                  <div className={``}>
-                    <p className={`text-sm text-semibold text-darker-gray text-center`}>
-                      Unit Name:
-                    </p>
-                    <p className={`text-base py-4 my-2 text-darker-gray text-center`}>
-                      {syllabus.name}
-                    </p>
-                  </div>
+                  className={`flex relative flex-col ${classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'} rounded-lg shadow justify-center items-center`}>
+                  <div className={`flex justify-between p-2`}>
+                    <div className="flex items-center">
+                      <span className="w-auto">
+                        <FaBook className="w-6 h-6" />
+                      </span>
+                      <span className={`text-sm 2xl:text-base text-darker-gray pl-2`}>
+                        {syllabus.name}
+                      </span>
+                    </div>
 
-                  {classRoomActiveSyllabus !== syllabus.id ? (
-                    <div
-                      className={`${getBG(
-                        themeColor === 'iconoclast' ? 'indigo' : 'blue'
-                      )} text-center rounded-b-lg absolute bottom-0 left-0 right-0 cursor-pointer text-base  hover:text-white transition-all font-semibold w-auto py-2 duration-150`}
-                      onClick={() => handleSyllabusActivation(syllabus.id)}>
-                      Activate
-                    </div>
-                  ) : (
-                    <div
-                      className={`w-full absolute rounded-b-lg bottom-0 left-0 right-0 py-2 flex justify-center  items-center text-base bg-green-400 text-white  font-semibold`}>
-                      Active
-                    </div>
-                  )}
+                    {classRoomActiveSyllabus !== syllabus.id ? (
+                      <div
+                        className={`${theme.btn.iconoclastIndigo} text-center rounded-lg cursor-pointer text-sm 2xl:text-base hover:text-white transition-all w-24 py-1 duration-150`}
+                        onClick={() => handleSyllabusActivation(syllabus.id)}>
+                        Select
+                      </div>
+                    ) : (
+                      <div
+                        className={`w-24 rounded-lg py-1 flex justify-center  items-center text-base bg-green-400 text-white font-semibold`}>
+                        Active
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })

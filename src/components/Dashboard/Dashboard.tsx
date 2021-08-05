@@ -682,7 +682,20 @@ const Dashboard = (props: DashboardProps) => {
               data: mappedResponseObjects,
             },
           });
-
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'syllabus',
+              data: mappedResponseObjects,
+            },
+          });
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'curriculum',
+              data: {name: response.name},
+            },
+          });
           setSyllabusLoading(false);
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);

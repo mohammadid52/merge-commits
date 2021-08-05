@@ -358,8 +358,8 @@ const Profile = (props: ProfilePageProps) => {
         {/* Header */}
         {person && (
           <div
-            className={`${theme.section} relative -mt-6 mb-4 px-6 py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
-            <h2 className={`text-base text-center font-normal`}>
+            className={`${theme.section} relative -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto ${theme.backGround[themeColor]} text-white rounded`}>
+            <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
               <span className="font-semibold">
                 {person.preferredName ? person.preferredName : person.firstName}
               </span>
@@ -368,32 +368,33 @@ const Profile = (props: ProfilePageProps) => {
           </div>
         )}
         <div className={`main_container p-0 mx-auto max-w-256 px-5`}>
-          {/* <BreadCrums items={breadCrumsList} />  */}
+          <BreadCrums items={breadCrumsList} />
           <div className="flex justify-between flex-col md:flex-row">
             <SectionTitle
               title={dashboardProfileDict[userLanguage]['TITLE']}
               subtitle={dashboardProfileDict[userLanguage]['SUBTITLE']}
             />
-            <div className="flex justify-end py-4 mb-4 w-full md:w-3/5 lg:w-5/10">
-              <Buttons
+
+            {/* <Buttons
                 label="Go Back"
                 onClick={history.goBack}
                 Icon={IoArrowUndoCircleOutline}
-              />
-              {currentPath !== 'edit' && currentPath !== 'password' ? (
+              /> */}
+            {currentPath !== 'edit' && currentPath !== 'password' ? (
+              <div className="flex justify-end py-2 2xl:py-4 mb-2 2xl:mb-4 w-full md:w-3/5 lg:w-5/10">
                 <Buttons
                   btnClass="ml-6"
                   label="Edit"
                   onClick={() => history.push(`${match.url}/edit`)}
                   Icon={FaEdit}
-                />
-              ) : null}
-            </div>
+                />{' '}
+              </div>
+            ) : null}
           </div>
           <div
-            className={`w-full m-auto max-w-256 p-4 white_back mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
+            className={`w-full m-auto max-w-256 p-2 md:p-4 white_back mb-2 md:mb-8 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow}`}>
             <div className="h-9/10 flex flex-col lg:flex-row">
-              <div className="w-auto p-4 flex flex-col text-center items-center px-8">
+              <div className="w-auto p-2 md:p-4 flex flex-col text-center items-center px-8">
                 <div className="relative">
                   {person.image ? (
                     <button className="group hover:opacity-80 focus:outline-none focus:opacity-95">
@@ -463,7 +464,8 @@ const Profile = (props: ProfilePageProps) => {
                 <p className="text-gray-600 my-2">
                   {dashboardProfileDict[userLanguage]['PROFILE_INSTRUCTON']}{' '}
                 </p>
-                <div className={`text-lg md:text-xl font-bold  text-gray-900 mt-4 w-52`}>
+                <div
+                  className={`text-sm md:text-xl font-bold text-gray-900 mt-2 md:mt-4 w-52`}>
                   {`${person.preferredName ? person.preferredName : person.firstName} ${
                     person.lastName
                   }`}

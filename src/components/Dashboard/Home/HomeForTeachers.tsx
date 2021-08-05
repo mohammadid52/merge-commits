@@ -219,7 +219,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
         <>
           {/* Hero Section */}
           <div className="relative">
-            <div className="absolute inset-0 w-full h-60">
+            <div className="absolute inset-0 w-full h-32 2xl:h-60">
               <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
               <img
                 className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"
@@ -229,8 +229,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
             </div>
             <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
               <h1
-                style={{fontSize: '6rem'}}
-                className="z-10 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+                className="z-10 flex align-center self-auto items-center justify-center h-32 2xl:h-60 text-9xl font-extrabold tracking-tight text-center text-white text-4xl 2xl:text-8xl pb-4 2xl:pb-6">
                 Dashboard
               </h1>
             </div>
@@ -238,8 +237,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div
-              className={`w-full max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-              <h2 className={`text-base text-center font-normal`}>
+              className={`w-full max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+              <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}

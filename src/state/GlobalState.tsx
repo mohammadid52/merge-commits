@@ -3,6 +3,7 @@ export interface globalStateType {
     upcomingLessons: any[];
   };
   roomData: {
+    curriculum: any;
     rooms: any[];
     syllabus: any[];
     lessons: any[];
@@ -38,6 +39,7 @@ export const globalState: globalStateType = {
     upcomingLessons: [],
   },
   roomData: {
+    curriculum: {},
     rooms: [],
     syllabus: [],
     lessons: [],

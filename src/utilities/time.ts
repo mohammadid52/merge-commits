@@ -10,12 +10,21 @@ interface PatternObject {
  * @param inputPattern
  * @param outputPattern
  */
-export const formatTime = (pattern: string, separator: string, inputPattern: string, outputPattern: string) => {
+export const formatTime = (
+  pattern: string,
+  separator: string,
+  inputPattern: string,
+  outputPattern: string
+) => {
   const patternStringObject = pattern.split(separator);
-  const originalTime = inputPattern.split(separator).reduce((acc: PatternObject, val: string, i: number) => {
-    return { ...acc, [`${val}`]: patternStringObject[i] };
-  }, {});
-  const outputTime = outputPattern.split(separator).map((val: string, i: number) => originalTime[val]);
+  const originalTime = inputPattern
+    .split(separator)
+    .reduce((acc: PatternObject, val: string, i: number) => {
+      return {...acc, [`${val}`]: patternStringObject[i]};
+    }, {});
+  const outputTime = outputPattern
+    .split(separator)
+    .map((val: string, i: number) => originalTime[val]);
 
   return outputTime.join(separator);
 };
@@ -57,4 +66,10 @@ export const dateFromServer = (date: string) => {
   const month = dateObj.getUTCMonth();
   const day = dateObj.getUTCDate();
   return `${month}/${day}/${year}`;
-}
+};
+
+export const MinutesToHHMM = (minutes: number, separator?: string) => {
+  let m = minutes % 60;
+  let h = (minutes - m) / 60;
+  return separator === ":" ? `${h.toString()}:${m < 10 ? '0' : ''} ${m.toString()}` : `${h ? `${h.toString()} hrs` : ''} ${m < 10 ? '0' : ''} ${m.toString()} minutes`
+};

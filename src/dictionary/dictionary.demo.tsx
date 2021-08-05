@@ -605,6 +605,8 @@ const classRoomDict: any = {
     LESSON_PLANNER: 'Lesson Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
     UNIT_TITLE: 'Unit Manager',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -635,6 +637,8 @@ const classRoomDict: any = {
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
     UNIT_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',

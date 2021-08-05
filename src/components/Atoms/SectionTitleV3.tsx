@@ -32,8 +32,8 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
         borderBottom ? 'px-4 border-b-0 border-gray-200 shadow rounded-t-lg bg-white mb-0' : ''
       }`}>
       <div className={``}>
-        <h2 className={`text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
-        <p className="text-md text-gray-500">{subtitle}</p>
+        <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
+        <p className="text-xs 2xl:text-md text-gray-500">{subtitle}</p>
       </div>
       {withButton}
     </div>

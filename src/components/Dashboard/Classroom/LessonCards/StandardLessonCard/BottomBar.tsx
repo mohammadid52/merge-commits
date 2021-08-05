@@ -1,6 +1,6 @@
 import React from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
+import { MinutesToHHMM } from '../../../../../utilities/time';
 import {LessonCardProps} from '../../Classroom';
 import Start from '../../Start';
 
@@ -14,26 +14,20 @@ const BottomBar = (props: LessonCardProps) => {
           lessonType === 'survey' ? 'rounded-b' : 'rounded-br'
         }`}>
         {/* TIME */}
-        <div
-          className={`flex justify-center items-center my-1 sm:my-2 sm:w-3/10 w-2/5 text-gray-500`}>
+        <div className={`flex justify-center items-center sm:w-3/10 w-2/5 text-gray-500`}>
           <div className="w-auto text-gray-500">
-            <IconContext.Provider value={{style: {width: 'auto'}}}>
-              <AiOutlineClockCircle className="w-4 h-4 sm:w-8 sm:h-8" />
-            </IconContext.Provider>
+            <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
           <div className={`w-auto mx-2 sm:mx-4 text-sm sm:text-base text-gray-500`}>
-            {lessonProps.lesson?.duration}{' '}
-            {lessonProps.lesson?.duration > 1 ? 'weeks' : 'week'}
+            {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>
 
         {/* TEACHER */}
-        <div className={`flex justify-center items-center my-1 sm:my-2 sm:w-5/10 w-3/5 mr-2`}>
+        <div className={`flex justify-center items-center sm:w-5/10 w-3/5 mr-2`}>
           <div className="w-auto text-gray-500">
             {lessonType !== 'survey' && (
-              <IconContext.Provider value={{style: {width: 'auto'}}}>
-                <AiOutlineUser className="w-4 h-4 sm:w-8 sm:h-8" />
-              </IconContext.Provider>
+              <AiOutlineUser className="w-4 h-4 sm:w-6 sm:h-6" />
             )}
             {lessonType === 'survey' && (
               <p className="overflow-ellipsis overflow-hidden text-base text-left">

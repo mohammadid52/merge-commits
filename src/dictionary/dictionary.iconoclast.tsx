@@ -41,6 +41,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
+    CLASSROOM: 'Classroom',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
     EDITCLASSROOM: 'Edit Classroom',
@@ -553,7 +554,10 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Lesson Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
-    UNIT_TITLE: 'Unit Manager',
+    UNIT_TITLE: 'Select Unit',
+    UNIT_SUB_TITLE: 'Select unit for list of corresponding lessons',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -585,13 +589,16 @@ const classRoomDict: any = {
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
     UNIT_TITLE: 'TBD',
+    UNIT_SUB_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
       ENABLE: 'TBD',
       TEACH: 'TBD',
       ACTIVE: 'TBD',
-      COMPLETED: 'TBD'
+      COMPLETED: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,

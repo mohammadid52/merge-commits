@@ -13,6 +13,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
+import BreadCrums from '../../Atoms/BreadCrums';
 import DashboardContainer from '../DashboardContainer';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../../graphql/mutations';
@@ -61,6 +62,7 @@ export interface Lesson {
     purpose?: string;
     duration?: number | null;
     cardImage?: string | null;
+    totalEstTime?: number;
   };
   session?: number;
   sessionHeading?: string;
@@ -116,7 +118,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {classRoomDict} = useDictionary(clientKey);
+  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   // ##################################################################### //
   // #################### ROOM SWITCHING (DEPRECATED) #################### //
@@ -197,9 +199,20 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }`;
     count += item.lesson.duration;
     item.session = Math.round(count);
+    item.lesson = {
+      ...item.lesson,
+      totalEstTime:
+        Math.ceil(
+          item.lesson.lessonPlan.reduce(
+            (total: number, obj: any) => Number(obj.estTime) + total,
+            0
+          ) / 5
+        ) * 5,
+    };
+
     return item;
   });
-  
+
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
       setLessonGroupCount({
@@ -303,15 +316,25 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   };
 
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
+      url: `/dashboard/classroom/${roomId}`,
+      last: true,
+    },
+  ];
+
   return (
     <>
       <DashboardContainer
         bannerImg={bannerImg}
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
-        <div className="mx-auto max-w-256">
+        <div className="px-5 2xl:px-0 2xl:mx-auto max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+            <BreadCrums items={breadCrumsList} />
+            {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
               <span>
                 {!isTeacher
                   ? activeRoomName !== ''
@@ -320,7 +343,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   : null}
                 {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
               </span>
-            </div>
+            </div> */}
             <div>
               <span className={`mr-0 float-right text-gray-600 text-right`}>
                 <DateAndTime />
@@ -335,7 +358,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
-                  title={classRoomDict[userLanguage]['UNIT_TITLE']}
+                  title={`${classRoomDict[userLanguage]['UNIT_TITLE']} ${
+                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''
+                  }`}
+                  subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
                   <div className={`pb-4 m-auto lg:px-0 px-4`}>
@@ -350,8 +376,21 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 </div>
               </>
             )}
+
+            <SectionTitleV3
+              extraContainerClass={'lg:px-0 px-4'}
+              fontSize="2xl"
+              fontStyle="bold"
+              title={classRoomDict[userLanguage]['LESSON_TITLE']}
+              subtitle={
+                isTeacher
+                  ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                  : 'To enter classroom, select open lesson for this week'
+              }
+            />
+
             <div className={`bg-opacity-10`}>
-              <div className={`p-4 text-xl m-auto`}>
+              <div className={`py-4 text-xl m-auto`}>
                 <Today
                   activeRoom={state.activeRoom}
                   activeRoomInfo={activeRoomInfo}
