@@ -20,8 +20,9 @@ const TableBlock = ({
       : `${colIndex % 2 !== 0 ? 'bg-white' : 'bg-gray-100'}`;
 
   return (
-    <div style={{maxWidth: '94rem'}}>
-      <div className={`grid overflow-hidden rounded-lg  grid-cols-${rowList.length}`}>
+    <div className="p-4" style={{maxWidth: '94rem'}}>
+      <div
+        className={`grid overflow-hidden rounded-lg shadow-lg  grid-cols-${rowList.length}`}>
         {map(rowList, (rowItem, rowIndex) => {
           return (
             <div>

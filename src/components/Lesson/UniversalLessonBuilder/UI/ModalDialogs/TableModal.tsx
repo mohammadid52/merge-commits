@@ -387,7 +387,7 @@ const TableModal = (props: TableProps) => {
         (filteredList.length > 0 ? (
           <div style={{maxWidth: '94rem'}}>
             <div
-              className={`grid border-0 border-gray-300 rounded-lg  grid-cols-${filteredList.length}`}>
+              className={`grid  overflow-hidden  shadow-lg rounded-lg  grid-cols-${filteredList.length}`}>
               {map(filteredList, (rowItem, rowIndex) => {
                 return (
                   <div>
