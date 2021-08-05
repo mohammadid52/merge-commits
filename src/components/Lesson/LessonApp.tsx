@@ -131,8 +131,8 @@ const LessonApp = () => {
       );
     }
     return () => {
-      const leaveLesson = leaveRoomLocation();
-      Promise.resolve(leaveLesson).then((_: any) => {
+      const leaveRoom = leaveRoomLocation();
+      Promise.resolve(leaveRoom).then((_: void) => {
         if (subscription) {
           subscription.unsubscribe();
         }
@@ -506,8 +506,9 @@ const LessonApp = () => {
   const {lessonID} = urlParams;
 
   useEffect(() => {
-    if (previousLocation !== undefined) {
-      updatePersonLocation();
+    if (personLocationObj && personLocationObj.id) {
+      updatePersonLocation(personLocationObj);
+      setLocalStorageData('person_location', personLocationObj);
     }
   }, [personLocationObj]);
 
@@ -582,16 +583,16 @@ const LessonApp = () => {
 
   // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
 
-  const updatePersonLocation = async () => {
+  const updatePersonLocation = async (updatedLocationObj: any) => {
     const locationUpdateProps = {
-      id: personLocationObj.id,
-      personAuthID: personLocationObj.personAuthID,
-      personEmail: personLocationObj.personEmail,
-      lessonID: personLocationObj.lessonID,
-      syllabusLessonID: personLocationObj.syllabusLessonID,
-      roomID: personLocationObj.roomID,
-      currentLocation: personLocationObj.currentLocation,
-      lessonProgress: personLocationObj.lessonProgress,
+      id: updatedLocationObj.id,
+      personAuthID: updatedLocationObj.personAuthID,
+      personEmail: updatedLocationObj.personEmail,
+      lessonID: updatedLocationObj.lessonID,
+      syllabusLessonID: updatedLocationObj.syllabusLessonID,
+      roomID: updatedLocationObj.roomID,
+      currentLocation: updatedLocationObj.currentLocation,
+      lessonProgress: updatedLocationObj.lessonProgress,
     };
     try {
       const newPersonLocationMutation: any = await API.graphql(
@@ -603,7 +604,20 @@ const LessonApp = () => {
   };
 
   const leaveRoomLocation = async () => {
-    setPersonLocationObj({...personLocationObj, roomID: '0'});
+    const storedLocation = getLocalStorageData('person_location');
+    try {
+      const deletePersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.deletePersonLocation, {
+          input: {
+            personEmail: storedLocation.personEmail,
+            personAuthID: storedLocation.personAuthID,
+          },
+        })
+      );
+      console.log('left room...', storedLocation);
+    } catch (e) {
+      console.error('error deleting location record - ', e);
+    }
   };
 
   useEffect(() => {
