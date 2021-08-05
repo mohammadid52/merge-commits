@@ -389,7 +389,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case DIVIDER:
         return <DividerModal {...commonProps} />;
       case TABLE:
-        return <TableModal {...commonProps} />;
+        return <TableModal classString={selectedContentClass} {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:

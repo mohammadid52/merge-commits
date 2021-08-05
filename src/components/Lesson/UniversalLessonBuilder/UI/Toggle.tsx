@@ -8,8 +8,8 @@ function classNames(...classes: any[]) {
 
 const Toggle = ({
   enabled,
-  enabledColor,
-  disabledColor,
+  enabledColor = 'bg-gray-600',
+  disabledColor = 'bg-orange-200',
   setEnabled,
   enableIcon: EIcon,
   disableIcon: DIcon,
@@ -19,8 +19,8 @@ const Toggle = ({
   disableIcon?: IconType;
   enabled: boolean;
   disabled?: boolean;
-  enabledColor: string;
-  disabledColor: string;
+  enabledColor?: string;
+  disabledColor?: string;
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 }): React.ReactElement => {
   return (
@@ -29,9 +29,7 @@ const Toggle = ({
       onChange={setEnabled}
       disabled={disabled}
       className={classNames(
-        enabled
-          ? `${enabledColor || 'bg-gray-600'}`
-          : `${disabledColor || 'bg-orange-200'}`,
+        enabled ? enabledColor : disabledColor,
         'relative ml-2 inline-flex flex-shrink-0 h-4 w-7 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
       )}>
       <span className="sr-only">Use setting</span>
