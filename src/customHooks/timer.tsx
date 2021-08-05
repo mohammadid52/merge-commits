@@ -67,10 +67,9 @@ const useStudentTimer = (inputs?: inputs) => {
     autoSaveInterval: null,
   });
 
-  const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
-
-  const [activityTimeout, setactivityTimeout] = useState<any>();
-  const [typeOfTimeout, setTypeOfTimeout] = useState<'pageSwitch' | 'edit' | ''>('');
+  // ##################################################################### //
+  // ###################### TEACHER VIEWING TRIGGER ###################### //
+  // ##################################################################### //
 
   const [iAmViewed, setiAmViewed] = useState<boolean>(false);
 
@@ -96,102 +95,107 @@ const useStudentTimer = (inputs?: inputs) => {
     }
   }, [lessonState.studentViewing, state.user.authId]);
 
-  /**
-   *
-   * TIMERS & TRIGGERS
-   *
-   */
+  // ##################################################################### //
+  // ###################### SAVE TIMERS & TRIGGERING ##################### //
+  // ##################################################################### //
+  const [activityTimeout, setactivityTimeout] = useState<any>();
+  const [savePending, setSavePending] = useState<boolean>(false);
 
-  // TEACHER VIEWING & STUDENT EDIT => SAVE TRIGGER after 1 secs
-  // COMPONENT CHANGE --> save after 60 secs
-  // COMPONENT CHANGE --> checkpoint in lesson && lesson
+  // save intervals
+  const VIEWED_INTERVAL = 2000;
+  const STANDARD_INTERVAL = 4000;
+
   useEffect(() => {
-    const isLesson = true; // UPDATE IN FUTURE FOR ULB-SURVEYS/LESSONS
-    if (isLesson) {
+    if (lessonState.updated && !savePending) {
+      setSavePending(true);
+
       if (iAmViewed) {
-        clearTimeout(activityTimeout);
         setactivityTimeout(
           setTimeout(() => {
             dispatch({type: 'INCREMENT_SAVE_COUNT'});
-            console.log('VIEWING -> EDIT -> save');
-          }, 1000)
-        );
-      } else if (!iAmViewed && lessonState.updated) {
-        if (typeOfTimeout === '') {
-          console.log(
-            '%c save timer: ',
-            'background: #bada55; color: #25362a',
-            'edit save triggered after 60s'
-          );
-
-          setTypeOfTimeout('edit');
-
-          const editTimeout = setTimeout(() => {
-            dispatch({type: 'INCREMENT_SAVE_COUNT'});
-            setTypeOfTimeout('');
             console.log(
-              '%c save timer: ',
-              'background: #00FF00; color: #bada55',
+              '%c viewed save: ',
+              'background: #00FF00; color: #000000',
               'saved'
             );
-          }, 4000);
-        }
+          }, VIEWED_INTERVAL)
+        );
+      } else {
+        setactivityTimeout(
+          setTimeout(() => {
+            dispatch({type: 'INCREMENT_SAVE_COUNT'});
+            console.log(
+              '%c standard save: ',
+              'background: #BEFAB5; color: #1E156F',
+              'saved'
+            );
+          }, STANDARD_INTERVAL)
+        );
       }
     }
-    return () => resetParams();
-  }, [iAmViewed, lessonState.studentData]);
+    return () => {
+      Promise.resolve(clearUpdateCycle());
+    };
+  }, [iAmViewed, lessonState.updated]);
 
-  /**
-   *
-   * SAVE TRIGGER
-   *
-   */
+  // ##################################################################### //
+  // ######################## EXECUTE SAVE EFFECT ######################## //
+  // ##################################################################### //
+
+  const [currentSaveCount, setCurrentSaveCount] = useState<number>(0);
+
   useEffect(() => {
-    if (iAmViewed) {
-      if (currentSaveCount < lessonState.saveCount) {
-        setCurrentSaveCount(lessonState.saveCount);
-      }
-      // lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-      const liveUpdate = updateStudentData('autosave');
-      Promise.resolve(liveUpdate).then((_: void) => {
-        setTimeout(() => {
-          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-          console.log('liveUpdate - ', 'done');
-        }, 1000);
-      });
-    }
-
-    if (!iAmViewed && currentSaveCount < lessonState.saveCount) {
+    if (currentSaveCount < lessonState.saveCount) {
       setCurrentSaveCount(lessonState.saveCount);
-      const standardUpdate = updateStudentData('autosave');
-      Promise.resolve(standardUpdate).then((_: void) => {
-        setTimeout(() => {
-          lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'});
-          console.log('standardUpdate - ', 'done');
-        }, 2000);
-      });
+
+      if (iAmViewed) {
+        const viewedUpdate = updateStudentData();
+
+        Promise.resolve(viewedUpdate).then((_: void) => {
+          clearUpdateCycle().then((_: void) => {
+            console.log('viewedUpdate - ', 'done');
+          });
+        });
+      } else {
+        const standardUpdate = updateStudentData();
+
+        Promise.resolve(standardUpdate).then((_: void) => {
+          clearUpdateCycle().then((_: void) => {
+            console.log('standardUpdate - ', 'done');
+          });
+        });
+      }
     }
 
-    return () => resetParams();
+    return () => {
+      Promise.resolve(clearUpdateCycle());
+    };
   }, [lessonState.saveCount]);
 
-  /**
-   *
-   * COLLECT DATA & CONTENT FROM CONTEXT - SAVE
-   *
-   */
+  // ##################################################################### //
+  // ######################## MAIN SAVE FUNCTIONS ######################## //
+  // ##################################################################### //
 
-  /**
-   *
-   * FUNCTIONS - SAVE
-   *
-   */
-  const updateStudentData = async (saveType?: string) => {
-    const {lessonID} = urlParams;
-    const user = await Auth.currentAuthenticatedUser();
-    const authId = user.attributes.sub;
-    const email = user.attributes.email;
+  // ~~~~~~~~~~~ RESET SAVE LOOP ~~~~~~~~~~~ //
+  const clearUpdateCycle = async () => {
+    const cleanUpProcess = [
+      () => lessonDispatch({type: 'COMPLETE_STUDENT_UPDATE'}),
+      () => clearTimeout(activityTimeout),
+      () => setSavePending(false),
+    ];
+    return cleanUpProcess.reduce((p: any, cleanUpFn: any, idx: number) => {
+      return p.then((_: void) => {
+        cleanUpFn();
+        if (idx === cleanUpProcess.length - 1) {
+          console.log('update cycle cleared...');
+          return p;
+        }
+      });
+    }, Promise.resolve());
+  };
 
+  // ~~~~~~~~~~ UPDATE DB RECORDS ~~~~~~~~~~ //
+  const updateStudentData = async () => {
     const loopOverDataId = lessonState.universalStudentDataID.reduce(
       async (acc: any[], currentIdObj: any, idx: number) => {
         if (currentIdObj.update) {
