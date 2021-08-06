@@ -46,6 +46,8 @@ import {
   DATE_PICKER,
   INPUT_WITH_EMOJI,
   FORM_TYPES,
+  DIVIDER,
+  TABLE,
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
@@ -53,6 +55,9 @@ import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
 import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
 import {Accordion} from '../UI/UIComponents/Accordian';
+import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
+import DividerModal from '../UI/ModalDialogs/DividerModal';
+import TableModal from '../UI/ModalDialogs/TableModal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -84,6 +89,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     blockConfig,
     setBlockConfig,
     getCurrentPage,
+    addContentModal,
+    setAddContentModal,
   } = useULBContext();
 
   //@ts-ignore
@@ -179,7 +186,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   ) => {
     // Hide all UI Menus
     hideAllUIMenus();
-    setAddContentModal({type, show: true});
+    setAddContentModal({
+      type: type === `${FORM_TYPES.REVIEW_SLIDER}-form` ? FORM_TYPES.REVIEW_SLIDER : type,
+      show: true,
+    });
+
     setBlockConfig({
       section,
       position: indexToUpdate,
@@ -212,11 +223,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     data: [{title: '', content: [{id: '', text: ''}]}],
     selectedResponse: [],
     idx: 0,
-  });
-
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
   });
 
   const dialogLabelList = {
@@ -380,6 +386,10 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <KeywordModalDialog {...commonProps} />;
       case FORM_TYPES.LINKS:
         return <LinksModalDialog {...commonProps} />;
+      case DIVIDER:
+        return <DividerModal {...commonProps} />;
+      case TABLE:
+        return <TableModal classString={selectedContentClass} {...commonProps} />;
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
@@ -428,6 +438,9 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           />
         );
 
+      case FORM_TYPES.REVIEW_SLIDER:
+        return <ReviewSliderModal {...commonProps} />;
+
       default:
         break;
     }
@@ -474,6 +487,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Poem Component';
       case FORM_TYPES.LINK:
         return 'Link Component';
+      case FORM_TYPES.REVIEW_SLIDER:
+        return 'Review Slider Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }

@@ -69,6 +69,10 @@ export type LessonActions =
       };
     }
   | {
+      type: 'UPDATE_PERSON_LOCATION';
+      payload: any;
+    }
+  | {
       type: 'UNLOAD_STUDENT_DATA';
       payload: any;
     }
@@ -184,21 +188,32 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;
       const subData = action.payload.subData;
-      const newStudentData = state.studentData.map(
-        (inputArr: StudentPageInput[], inputArrIdx: number) => {
-          if (inputArrIdx === stDataIdx) {
-            return subData;
-          } else {
-            return inputArr;
-          }
-        }
-      );
-      console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
-      console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
+      const newStudentData =
+        state.studentData.length > 0
+          ? state.studentData.map((inputArr: StudentPageInput[], inputArrIdx: number) => {
+              if (inputArrIdx === stDataIdx) {
+                return subData;
+              } else {
+                return inputArr;
+              }
+            })
+          : [];
+      // console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
+      // console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
+      if (newStudentData.length > 0) {
+        return {
+          ...state,
+          studentData: newStudentData,
+        };
+      } else {
+        return state;
+      }
+    case 'UPDATE_PERSON_LOCATION':
       return {
         ...state,
-        studentData: newStudentData,
+        personLocationObj: action.payload,
       };
+
     case 'UNLOAD_STUDENT_DATA':
       return {
         ...state,

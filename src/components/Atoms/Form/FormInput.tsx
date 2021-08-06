@@ -19,6 +19,8 @@ interface FormInputProps {
   textarea?: boolean;
   rows?: number;
   cols?: number;
+  min?: number;
+  max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
   className?: string;
@@ -43,6 +45,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     maxLength = 99999,
     showCharacterUsage = false,
     dark,
+    min,
+    max,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -82,6 +86,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
         <input
           disabled={disabled}
           type={type}
+          min={type === 'number' ? min : undefined}
+          max={type === 'number' ? max : undefined}
           id={id}
           maxLength={maxLength}
           name={name}

@@ -14,6 +14,7 @@ import Storage from '@aws-amplify/storage';
 import {getImageFromS3} from '../../../../utilities/services';
 import noop from 'lodash/noop';
 import CustomDatePicker from './FormBlock/DatePicker';
+import ReviewSliderBlock from './ReviewSliderBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -26,6 +27,7 @@ export interface FormControlProps {
   inputID: string;
   type?: string;
   label?: string;
+  classString?: string;
   value?: any;
   options?: any;
   isInLesson?: boolean;
@@ -251,10 +253,9 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
     // }
   };
 
-  const [fields, setFields] = useState<any>({});
   const onChange = (e: any) => {
     const {id, value} = e.target;
-    setFields({...fields, [id]: value});
+
     if (isInLesson) {
       handleUpdateStudentData(id, [value]);
     }
@@ -263,14 +264,6 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
   // ##################################################################### //
   // ########################## FORM BLOCK TYPES ######################### //
   // ##################################################################### //
-
-  // ~~~~~~~~~~~~~~~~ OTHER ~~~~~~~~~~~~~~~~ //
-  const Type = ({text, color = 'indigo'}: {color?: string; text: string}) => (
-    <span
-      className={`py-0.5 px-1 ml-2 text-xs  rounded bg-${color}-200  text-${color}-700`}>
-      {text}
-    </span>
-  );
 
   const RequiredMark = ({isRequired}: {isRequired: boolean}) => (
     <span className="text-red-500"> {isRequired ? '*' : null}</span>
@@ -500,7 +493,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
               } ${themePlaceholderColor}`}
               name={'text'}
               type={'text'}
-              onChange={isInLesson && isStudent ? (e) => onChange(e) : undefined}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
               value={isInLesson ? getValue(inputID) : value}
             />
           </div>
@@ -511,17 +504,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             <label className={`text-sm ${themeTextColor}`} htmlFor="label">
               {numbered && index} {label} <RequiredMark isRequired={required} />
             </label>
-            {/* <input
-              id={inputID}
-              disabled={mode === 'building'}
-              className={`w-full py-2 px-4 ${themeTextColor} mt-2 rounded-xl ${
-                lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
-              } ${themePlaceholderColor}`}
-              name="title"
-              type={type === FORM_TYPES.DATE_PICKER ? 'date' : 'text'}
-              onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
-              value={isInLesson ? getValue(inputID) : value}
-            /> */}
+
             <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
               <CustomDatePicker
                 id={inputID}
@@ -623,7 +606,18 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             label={label}
           />
         );
-
+      case FORM_TYPES.REVIEW_SLIDER:
+        return (
+          <ReviewSliderBlock
+            inputID={inputID}
+            id={id}
+            disabled={mode === 'building'}
+            classString={classString}
+            label={label}
+            onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+            value={isInLesson ? getValue(inputID) : value}
+          />
+        );
       default:
         return <p>No valid form input type</p>;
     }

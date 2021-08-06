@@ -12,6 +12,7 @@ import HamburgerMenu from './TopMenu/HamburgerMenu';
  * IMPORT FUNCTIONS
  */
 import {formatPattern} from '../../utilities/strings';
+import {getLocalStorageData} from '../../utilities/localStorage';
 
 interface TopMenuControlProps {
   isSameStudentShared: boolean;
@@ -52,6 +53,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
   );
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonPlannerDict} = useDictionary(clientKey);
+
+  const getRoomData = getLocalStorageData('room_info');
 
   const studentsOnline = () => {
     if (controlState.roster) {
@@ -100,14 +103,22 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
               {studentsOnline()}
             </p>
             <p className="text-xs">
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['ROOM_NAME']}:{' '}
+              {`${getRoomData.name ? getRoomData.name : ''}`}
+            </p>
+
+            {/* <p className="text-xs">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['TOPIC']}: Identity
-            </p>
-            <p className="text-xs">
+            </p> */}
+
+            {/* <p className="text-xs">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['START_DATE']}:{' '}
-              {/*{formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}*/}
-            </p>
+              {formatPattern(state.startDate, '-', 'aaaa-bb-cc', 'bb-cc-aaaa')}
+            </p>*/}
+
             <p className="text-xs">
-              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}: t.b.d.
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
+              {lessonState.lessonData.duration} hrs
             </p>
           </div>
         </div>

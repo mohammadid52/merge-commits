@@ -2,6 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customQueries from '../../customGraphql/customQueries';
 import {GlobalContext} from '../../contexts/GlobalContext';
+import {getLocalStorageData} from '../../utilities/localStorage';
 
 interface Rooms {
   chatroom?: any;
@@ -11,44 +12,49 @@ interface Rooms {
 }
 
 const Rooms = (props: Rooms) => {
-  const {state, dispatch} = useContext(GlobalContext);
+  const {state, lessonState} = useContext(GlobalContext);
   const {chatroom, setSelectedChatroom, focusSection, setFocusSection} = props;
   const [rooms, setRooms] = useState(null);
   const [loadingRooms, setLoadingRooms] = useState(false);
 
-  const fetchRooms = async () => {
-    setLoadingRooms(true);
-    let rooms: any = await API.graphql(
-      graphqlOperation(customQueries.getChatRooms, {
-        email: state.user.email,
-        authId: state.user.authId,
-      })
-    );
-    console.log('chatrooms query - ', rooms);
-    let classes = rooms.data.getPerson?.classes?.items || [];
-    let chatRooms: any = [];
-    classes.map((cls: any, i: any) => {
-      let rooms = cls.class.rooms?.items;
-      chatRooms = chatRooms.concat(rooms);
-    });
-    setRooms(chatRooms);
-    setLoadingRooms(false);
-  };
+  // const fetchRooms = async () => {
+  //   setLoadingRooms(true);
+  //   let rooms: any = await API.graphql(
+  //     graphqlOperation(customQueries.getChatRooms, {
+  //       email: state.user.email,
+  //       authId: state.user.authId,
+  //     })
+  //   );
+  //   console.log('chatrooms query - ', rooms);
+  //   let classes = rooms.data.getPerson?.classes?.items || [];
+  //   let chatRooms: any = [];
+  //   classes.map((cls: any, i: any) => {
+  //     let rooms = cls.class.rooms?.items;
+  //     chatRooms = chatRooms.concat(rooms);
+  //   });
+  //   setRooms(chatRooms);
+  //   setLoadingRooms(false);
+  // };
 
   useEffect(() => {
-    const chatrooms = state.roomData.rooms;
-    if (chatrooms.length > 0) {
-      setLoadingRooms(true);
-      try {
-        setRooms(chatrooms);
-      } catch (e) {
-        console.error('error setting chatrooms -> ', e);
-      } finally {
-        setLoadingRooms(false);
+    const roomsFromContext = state.roomData.rooms;
+    const roomsFromLocal = getLocalStorageData('room_list');
+
+    if (rooms === null) {
+      if (roomsFromContext.length > 0 || roomsFromLocal.length > 0) {
+        setLoadingRooms(true);
+        if (roomsFromContext.length > 0) {
+          setRooms(roomsFromContext);
+          setLoadingRooms(false);
+        } else if (roomsFromLocal.length > 0) {
+          setRooms(roomsFromLocal);
+          setLoadingRooms(false);
+        }
       }
     }
+
     // fetchRooms();
-  }, [state.roomData.rooms]);
+  }, [state.roomData.rooms, lessonState.loaded]);
 
   const showLoader = () => {
     return (
@@ -74,14 +80,14 @@ const Rooms = (props: Rooms) => {
             transform transition ease-in-out duration-400 sm:duration-400
             ${Object.keys(chatroom).length > 0 ? 'h-0 overflow-hidden' : 'h-auto'}
             `}>
-              {!(Object.keys(chatroom).length > 0) &&
-                rooms.map((rm: any, index: any) => {
-                  return (
-                    <button
-                      key={`chatroom_${index}`}
-                      onClick={() => setSelectedChatroom(rm)}
-                      type="button"
-                      className={`
+          {!(Object.keys(chatroom).length > 0) &&
+            rooms.map((rm: any, index: any) => {
+              return (
+                <button
+                  key={`chatroom_${index}`}
+                  onClick={() => setSelectedChatroom(rm)}
+                  type="button"
+                  className={`
                         ${index < rooms.length - 1 ? 'mb-2' : ''}
                         p-2
                         truncate inline-flex 
@@ -90,10 +96,10 @@ const Rooms = (props: Rooms) => {
                         text-gray-200 bg-gray-500 
                         shadow-sm text-xs font-medium rounded 
                         hover:bg-opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
-                      {rm.name}
-                    </button>
-                  );
-                })}
+                  {rm.name}
+                </button>
+              );
+            })}
         </div>
       </>
     );
