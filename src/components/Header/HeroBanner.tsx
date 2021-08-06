@@ -21,7 +21,7 @@ const HeroBanner = (props: HeroBannerProps) => {
       <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
         <h1
           // style={{fontSize: '6rem'}}
-          className={`z-10 flex align-center self-auto items-center justify-center h-32 2xl:h-60 font-extrabold tracking-tight text-center text-white text-6xl 2xl:text-8xl pb-4 2xl:pb-6 ${
+          className={`z-10 flex align-center self-auto items-center justify-center h-32 2xl:h-60 font-extrabold tracking-tight text-center text-white text-4xl md:text-6xl 2xl:text-8xl pb-4 2xl:pb-6 ${
             transition ? 'fade__animation' : ''
           }`}>
           {title}

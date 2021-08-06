@@ -27,16 +27,20 @@ const SyllabusSwitch = (props: DashboardProps) => {
   return (
     <>
       {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
-        <div
-          className={`shadow text-center bg-white rounded-lg p-6 ${theme.elem.textDark}`}>
-          Loading units...
+        <div className="relative shadow rounded-lg flex mb-8">
+          <div className="animate-pulse space-y-8 flex flex-col">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
+              <div className={'h-12 bg-gray-400 rounded-lg'} />
+              <div className={'h-12 bg-gray-400 rounded-lg'} />
+            </div>
+          </div>
         </div>
       ) : null}
 
-      <div className={`grid grid-cols-3 md:grid-cols-2 gap-2`}>
+      <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
         {!syllabusLoading && state.roomData?.syllabus?.length > 0
           ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
-            // const progressPercentage = completedLessons;
+              // const progressPercentage = completedLessons;
               return (
                 <div
                   key={`testSyllabus_${i}`}

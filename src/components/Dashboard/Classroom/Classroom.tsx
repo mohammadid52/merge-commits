@@ -186,13 +186,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         )
       : [];
 
+  // reconstructing lesson data after adding some calculated fields
   let count: number = 0;
   let lessonData = state.roomData.lessons;
   lessonData?.map((item: any) => {
     let temp = Math.ceil(count + item.lesson.duration);
     item.sessionHeading = `Session ${
       item.lesson.duration > 1
-        ? range(count + 1, temp)
+        ? range(Math.ceil(count) + 1, temp)
             .join(', ')
             .replace(/, ([^,]*)$/, ' & $1')
         : temp
@@ -209,7 +210,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
           ) / 5
         ) * 5,
     };
-
     return item;
   });
 
@@ -345,7 +345,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </span>
             </div> */}
             <div>
-              <span className={`mr-0 float-right text-gray-600 text-right`}>
+              <span className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
                 <DateAndTime />
               </span>
             </div>
@@ -364,7 +364,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
-                  <div className={`pb-4 m-auto lg:px-0 px-4`}>
+                  <div className={`pb-4 m-auto px-0`}>
                     <SyllabusSwitch
                       completedLessons={activeRoomInfo?.completedLessons}
                       classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
