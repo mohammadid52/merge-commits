@@ -191,50 +191,104 @@ const LessonApp = () => {
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
   const initializeStudentData = async () => {
     if (studentDataInitialized === false && PAGES) {
-      const mappedPages = PAGES.map((page: UniversalLessonPage) => {
-        const allessonPageageParts = page.pageContent;
-        const initialessonPageageData = allessonPageageParts.reduce(
-          (pageData: StudentPageInput[], pagePart: PagePart) => {
-            if (pagePart.hasOwnProperty('partContent')) {
-              const pagePartContent = pagePart.partContent.reduce(
-                (pagePartAcc: any[], partContent: PartContent) => {
-                  const isForm = /form/g.test(partContent.type);
-                  const isOtherInput = /input/g.test(partContent.type);
-                  if (isForm) {
-                    // map through partContent sub array
-                    return [
-                      ...pagePartAcc,
-                      ...partContent.value.map((partContentSub: PartContentSub) => {
-                        return {
-                          domID: partContentSub.id,
-                          input: [''],
-                        };
-                      }),
-                    ];
-                  } else if (isOtherInput) {
-                    return [
-                      ...pagePartAcc,
-                      {
-                        domID: partContent.id,
-                        input: [''],
-                      },
-                    ];
-                  } else {
-                    return pagePartAcc;
-                  }
-                },
-                []
-              );
-              return [...pageData, ...pagePartContent];
-            } else {
-              return pageData;
-            }
-          },
-          []
-        );
-        return initialessonPageageData;
+      const mappedPages = PAGES.reduce(
+        (inputs: {required: any[]; initialized: any[]}, page: UniversalLessonPage) => {
+          const currentPageParts = page.pageContent;
+          const reducedPageInputs = currentPageParts.reduce(
+            (
+              pageInputsAcc: {requiredIdAcc: string[]; pageInputAcc: StudentPageInput[]},
+              pagePart: PagePart
+            ) => {
+              if (pagePart.hasOwnProperty('partContent')) {
+                const partInputs = pagePart.partContent.reduce(
+                  (
+                    partInputAcc: {requiredIdAcc: string[]; pageInputAcc: any[]},
+                    partContent: PartContent
+                  ) => {
+                    const isForm = /form/g.test(partContent.type);
+                    const isOtherInput = /input/g.test(partContent.type);
+                    if (isForm) {
+                      const formSubInputs = partContent.value.reduce(
+                        (
+                          subPartAcc: {reqId: string[]; pgInput: any[]},
+                          partContentSub: PartContentSub
+                        ) => {
+                          return {
+                            ...subPartAcc,
+                            reqId: partContentSub.isRequired
+                              ? [...subPartAcc.reqId, partContentSub.id]
+                              : subPartAcc.reqId,
+                            pgInput: [
+                              ...subPartAcc.pgInput,
+                              {
+                                domID: partContentSub.id,
+                                input: [''],
+                              },
+                            ],
+                          };
+                        },
+                        {reqId: [], pgInput: []}
+                      );
+                      return {
+                        requiredIdAcc: [
+                          ...partInputAcc.requiredIdAcc,
+                          ...formSubInputs.reqId,
+                        ],
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          ...formSubInputs.pgInput,
+                        ],
+                      };
+                    } else if (isOtherInput) {
+                      return {
+                        requiredIdAcc: partContent.isRequired
+                          ? [...partInputAcc.requiredIdAcc, partContent.id]
+                          : partInputAcc.requiredIdAcc,
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          {
+                            domID: partContent.id,
+                            input: [''],
+                          },
+                        ],
+                      };
+                    } else {
+                      return partInputAcc;
+                    }
+                  },
+                  {requiredIdAcc: [], pageInputAcc: []}
+                );
+                return {
+                  requiredIdAcc: [
+                    ...pageInputsAcc.requiredIdAcc,
+                    ...partInputs.requiredIdAcc,
+                  ],
+                  pageInputAcc: [
+                    ...pageInputsAcc.pageInputAcc,
+                    ...partInputs.pageInputAcc,
+                  ],
+                };
+              } else {
+                return pageInputsAcc;
+              }
+            },
+            {requiredIdAcc: [], pageInputAcc: []}
+          );
+          return {
+            required: [...inputs.required, reducedPageInputs.requiredIdAcc],
+            initialized: [...inputs.initialized, reducedPageInputs.pageInputAcc],
+          };
+        },
+        {required: [], initialized: []}
+      );
+
+      lessonDispatch({
+        type: 'SET_INITIAL_STUDENT_DATA',
+        payload: {
+          requiredInputs: mappedPages.required,
+          studentData: mappedPages.initialized,
+        },
       });
-      lessonDispatch({type: 'SET_INITIAL_STUDENT_DATA', payload: mappedPages});
       setStudentDataInitialized(true);
     }
   };
@@ -291,14 +345,14 @@ const LessonApp = () => {
       //@ts-ignore
       (diffArray: any[], loadedInput: StudentPageInput[] | [], pageDataIdx: number) => {
         const notYetSavedData = initStudentDataArray[pageDataIdx].reduce(
-          (diffPageData: any[], initData: any) => {
+          (diffPageData: any[], initPageData: any) => {
             const foundInLoaded = loadedInput.find(
-              (inputObj: any) => inputObj.domID === initData.domID
+              (inputObj: any) => inputObj.domID === initPageData.domID
             );
             if (foundInLoaded) {
               return diffPageData;
             } else {
-              return [...diffPageData, initData];
+              return [...diffPageData, initPageData];
             }
           },
           []
