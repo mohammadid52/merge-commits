@@ -2,7 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import StageIcon from './StageIcon';
 import {LessonContext} from '../../../../contexts/LessonContext';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {
+  StudentPageInput,
+  UniversalLessonPage,
+} from '../../../../interfaces/UniversalLessonInterfaces';
 
 interface Page {
   active: boolean;
@@ -20,32 +23,44 @@ const ProgressBar = () => {
   const CURRENT_PAGE = lessonState.currentPage;
   const LESSON_PROGRESS = lessonState.lessonProgress;
 
-  // useEffect(() => {
-  //   /**
-  //    *
-  //    *
-  //    * STOPPING POINTS
-  //    * any circle should be clickable up until 1 before
-  //    * the next closed component, or breakdown which is not active
-  //    *
-  //    */
-  //   const stoppingPoints = PAGES
-  //     ? PAGES.reduce((acc: [], page: UniversalLessonPage, i: number) => {
-  //         const isDisabled = !page.enabled;
-  //         const isClosed = !page.open;
+  // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
+  const validateRequired = (pageIdx: number) => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData[pageIdx];
+      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
+      if (thisPageData && thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+        // console.log('validate areAnyEmpty - ', areAnyEmpty);
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
 
-  //         //  Disabled or closed = don't go
-  //         if ((i !== 0 && isDisabled) || (i !== 0 && isClosed)) {
-  //           return [...acc, i];
-  //         } else {
-  //           return acc;
-  //         }
-  //       }, [])
-  //     : [];
-
-  //   const earliestStoppingPoint = Math.min(...stoppingPoints);
-  //   setClickable(earliestStoppingPoint);
-  // }, [PAGES]);
+  const nextRequiredIdx = PAGES
+    ? PAGES.reduce((nextIdx: number, _: any, currIdx: number) => {
+        if (nextIdx === null) {
+          if (validateRequired(currIdx)) {
+            return nextIdx;
+          } else {
+            return currIdx;
+          }
+        } else {
+          return nextIdx;
+        }
+      }, null)
+    : 0;
 
   const lessonProgressBar = () => {
     return (
@@ -66,7 +81,7 @@ const ProgressBar = () => {
               open={page.open !== false}
               active={page.active !== false}
               label={page.label}
-              clickable={page.open !== false}
+              clickable={key <= nextRequiredIdx && page.open !== false}
             />
 
             {/* PROGRESS BAR */}

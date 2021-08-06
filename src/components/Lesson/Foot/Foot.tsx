@@ -7,6 +7,7 @@ import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfac
 import PositiveAlert from '../../General/Popup';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
 import {getLocalStorageData} from '../../../utilities/localStorage';
+import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
 
 const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, clientKey, theme} = useContext(
@@ -18,10 +19,34 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const PAGES = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
+  const validateRequired = () => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData[lessonState.currentPage];
+      const thisPageRequired = lessonState?.requiredInputs[lessonState.currentPage];
+      if (thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+        // console.log('validate areAnyEmpty - ', areAnyEmpty);
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
 
   const canContinue = () => {
     if (PAGES) {
       return (
+        validateRequired() &&
         lessonState.currentPage < PAGES.length - 1 &&
         PAGES[lessonState.currentPage + 1]?.open !== false
       );
@@ -29,7 +54,6 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
       return false;
     }
   };
-
   const userAtEnd = () => {
     return lessonState.currentPage === PAGES.length - 1;
   };
@@ -47,7 +71,7 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
           payload: lessonState.currentPage + 1,
         });
       }
-    } else if (userAtEnd()) {
+    } else if (userAtEnd() && validateRequired()) {
       handlePopup();
     }
   };
@@ -165,7 +189,7 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
           <div className="w-3.3/10 flex justify-center items-center">
             <div
               className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
-                canContinue || userAtEnd
+                canContinue() || userAtEnd()
                   ? 'bg-sea-green cursor-pointer'
                   : 'bg-dark-gray cursor-default'
               } `}

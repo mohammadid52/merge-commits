@@ -47,7 +47,10 @@ export type LessonActions =
     }
   | {
       type: 'SET_INITIAL_STUDENT_DATA';
-      payload: UniversalLessonStudentData[];
+      payload: {
+        requiredInputs: [string[]];
+        studentData: UniversalLessonStudentData[];
+      };
     }
   | {
       type: 'LOAD_STUDENT_DATA';
@@ -172,9 +175,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         lessonData: action.payload,
       };
     case 'SET_INITIAL_STUDENT_DATA':
+      const requiredInputs = action.payload.requiredInputs;
+      const studentData = action.payload.studentData;
       return {
         ...state,
-        studentData: action.payload,
+        requiredInputs: requiredInputs,
+        studentData: studentData,
       };
     case 'LOAD_STUDENT_DATA':
       return {
