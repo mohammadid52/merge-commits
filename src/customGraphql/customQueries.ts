@@ -1572,6 +1572,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
                 lessonID
               }
             }
+            universalLessonsSeq
             curriculumID
           }
           nextToken

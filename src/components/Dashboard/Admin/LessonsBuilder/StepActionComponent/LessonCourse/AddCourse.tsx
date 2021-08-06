@@ -77,13 +77,6 @@ const AddCourse = (props: IAddCourse) => {
       [field]: {id, name, value: val},
     });
   };
-  const editCurrentUnit = (id: string) => {
-    setEditState({id});
-  };
-
-  const cancelEdit = () => {
-    setEditState({id: '', action: ''});
-  };
   const updateStatusOnTable = (uniqId: string, status: string) => {
     let updatedList = [...selectedUnitsList];
     updatedList.find((item) => item.id === uniqId).status = status;
@@ -143,10 +136,9 @@ const AddCourse = (props: IAddCourse) => {
       const result: any = await API.graphql(
         graphqlOperation(mutations.createUniversalSyllabusLesson, {input: input})
       );
-      console.log(result, 'result after api called');
-
       const newLesson = result.data?.createUniversalSyllabusLesson;
       if (newLesson?.id) {
+        updateLessonSequence(lessonId);
         const newItem: any = {
           ...newLesson,
           curricularName: formState?.curriculum?.name,
@@ -189,6 +181,21 @@ const AddCourse = (props: IAddCourse) => {
         msg: UnitLookupDict[userLanguage]['MESSAGES']['ADDERR'],
       });
     }
+  };
+
+  const updateLessonSequence = async (lessonsID: string) => {
+    const selectedItem = curriculaList?.find(
+      (curricular: any) => curricular.curricularId === formState?.curriculum?.id
+    );
+    const existingLessonSeq = selectedItem?.unitList.find((unit:any) => unit.id === formState.unit.id)?.universalLessonsSeq || [];
+    await API.graphql(
+      graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+        input: {
+          id: formState.unit.id,
+          universalLessonsSeq: [...existingLessonSeq, lessonsID],
+        },
+      })
+    );
   };
 
   const setRequiredData = async () => {
