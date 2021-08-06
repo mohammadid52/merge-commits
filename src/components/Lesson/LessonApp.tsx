@@ -23,6 +23,7 @@ import {Auth} from '@aws-amplify/auth';
 import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
 import {UniversalLessonStudentData} from '../../API';
 import SaveQuit from './Foot/SaveQuit';
+import LessonPageLoader from './LessonPageLoader';
 import usePrevious from '../../customHooks/previousProps';
 
 const LessonApp = () => {
@@ -161,9 +162,8 @@ const LessonApp = () => {
   // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
   const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
   useEffect(() => {
-    if (lessonState.lessonData) {
+    if (lessonState.lessonData && lessonState.lessonData.id) {
       setLessonDataLoaded(true);
-
       // Initialize page url and context
       if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
         lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
@@ -651,16 +651,20 @@ const LessonApp = () => {
           />
         </div>
         <div className="relative top-6 lesson-body-container">
-          {/*<NotificationBar />*/}
-
-          <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
-            {/*{lessonDataLoaded && <Body />}*/}
-            {/* ADD LESSONWRAPPER HERE */}
+          {!lessonDataLoaded ? (
             <div className="mt-4 mb-8 lesson-page-container">
-              <CoreUniversalLesson />
-              {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
+              <LessonPageLoader />
             </div>
-          </ErrorBoundary>
+          ) : (
+            <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
+              {/*{lessonDataLoaded && <Body />}*/}
+              {/* ADD LESSONWRAPPER HERE */}
+              <div className="mt-4 mb-8 lesson-page-container">
+                <CoreUniversalLesson />
+                {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
+              </div>
+            </ErrorBoundary>
+          )}
 
           {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
         </div>
