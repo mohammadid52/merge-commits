@@ -5,6 +5,7 @@ import {API, graphqlOperation} from 'aws-amplify';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import * as mutations from '../../../../../../graphql/mutations';
+import * as customMutations from '../../../../../../customGraphql/customMutations';
 
 import Loader from '../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../Molecules/ModalPopUp';
@@ -24,10 +25,16 @@ const DetailTable = ({
 }: IDetailTableProps) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {LessonBuilderDict} = useDictionary(clientKey);
-  const {assignedSyllabi, associatedClassRoomData, institution} = curriculum;
+  const {
+    assignedSyllabi,
+    associatedClassRoomData,
+    institution,
+    universalSyllabus,
+  } = curriculum;
 
   const [showDeleteModal, setShowDeleteModal] = useState({
     id: '',
+    syllabusId: '',
     state: false,
     message: 'This will remove the lesson from the unit, do you want to continue?',
   });
@@ -42,6 +49,7 @@ const DetailTable = ({
       id: syllabus
         ? syllabus.lessons.items.find((lesson: any) => lesson.lessonID === lessonId)?.id
         : '',
+      syllabusId: syllabus ? syllabus.id : '',
       state: !showDeleteModal.state,
     });
   };
@@ -54,13 +62,29 @@ const DetailTable = ({
       const results: any = await API.graphql(
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {input: input})
       );
-      console.log(results, 'inside delete syllabus');
+      await updateLessonSequence();
       toggleModal();
       postDeletion();
     } catch (e) {
       console.log(e, 'e inside catch');
     }
   };
+
+    const updateLessonSequence = async () => {
+      const selectedItem = universalSyllabus?.items?.find(
+        (unit: any) => unit.id === showDeleteModal.syllabusId
+      );
+      await API.graphql(
+        graphqlOperation(customMutations.updateUniversalSyllabusLessonSequence, {
+          input: {
+            id: showDeleteModal.syllabusId,
+            universalLessonsSeq: selectedItem.universalLessonsSeq.filter(
+              (lesson: any) => lesson !== lessonId
+            ),
+          },
+        })
+      );
+    };
 
   return (
     <>

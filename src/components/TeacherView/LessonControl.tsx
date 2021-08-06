@@ -291,21 +291,21 @@ const LessonControl = () => {
   // ##################################################################### //
   const getSyllabusLesson = async (lessonID?: string) => {
     // lessonID will be undefined for testing
-    if (lessonID !== '') {
+    try {
       const universalLesson: any = await API.graphql(
         graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
       const response = universalLesson.data.getUniversalLesson;
-      setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
-      }, 1000);
-      //
-      // subscription = subscribeToStudentData(lessonID);
-    } else {
-      setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-      }, 1000);
+      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+    } catch (e) {
+      console.error('getSyllabusLesson() - error fetching lesson', e);
     }
+
+    // else {
+    //   setTimeout(() => {
+    //     lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+    //   }, 1000);
+    // }
   };
 
   // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
