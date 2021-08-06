@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
+  AiOutlineCopy,
   AiOutlineDelete,
   AiOutlineEye,
   AiOutlineEyeInvisible,
@@ -7,6 +8,8 @@ import {
   AiOutlineFileSearch,
   AiOutlineSave,
 } from 'react-icons/ai';
+import {FaRegClone} from 'react-icons/fa';
+import {GrClone} from 'react-icons/gr';
 
 import {IconType} from 'react-icons/lib';
 import {RiDragDropFill, RiDragDropLine} from 'react-icons/ri';
@@ -61,11 +64,13 @@ const Toolbar = ({
   deleteLesson,
   setEditMode,
   setFields,
-
+  onCopy,
+  onClone,
   setNewLessonPlanShow,
 }: {
   deleteLesson: () => void;
-
+  onCopy: () => void;
+  onClone: () => void;
   setNewLessonPlanShow: React.Dispatch<React.SetStateAction<boolean>>;
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   setFields: React.Dispatch<React.SetStateAction<any>>;
@@ -101,6 +106,18 @@ const Toolbar = ({
               tooltip="Preview"
               color={themeTextColor}
               icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+            />
+            <Button
+              onClick={onCopy}
+              tooltip="Copy"
+              color={themeTextColor}
+              icon={AiOutlineCopy}
+            />
+            <Button
+              onClick={onClone}
+              tooltip="Clone"
+              color={themeTextColor}
+              icon={FaRegClone}
             />
 
             <>

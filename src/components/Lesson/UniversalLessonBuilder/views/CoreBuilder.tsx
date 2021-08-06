@@ -11,11 +11,10 @@ import {
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-
-import Loader from '../../../Atoms/Loader';
+import {v4 as uuidv4} from 'uuid';
 import Toolbar from '../UI/UIComponents/Toolbar';
 
-import {findLastIndex, remove} from 'lodash';
+import {find, findLastIndex, map, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
@@ -225,6 +224,49 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     }
   };
 
+  const onCopy = () => {};
+
+  const onClone = () => {
+    /**
+     * This object will replace all the existing ids with new ones
+     * hope this works 😼
+     * Please don't change anything 👏
+     */
+    const replaceAllExistingIds: UniversalLessonPage = {
+      ...activePageData,
+      id: uuidv4(),
+      pageContent:
+        activePageData.pageContent && activePageData.pageContent.length > 0
+          ? map(activePageData.pageContent, (pgContent) => ({
+              ...pgContent,
+
+              id: uuidv4(),
+              partContent:
+                pgContent.partContent && pgContent.partContent.length > 0
+                  ? map(pgContent.partContent, (ptContent) => ({
+                      ...ptContent,
+                      id: uuidv4(),
+                      value:
+                        ptContent.value && ptContent.value.length > 0
+                          ? map(ptContent.value, (ptValue) => ({
+                              ...ptValue,
+                              id: uuidv4(),
+                              options:
+                                ptValue.options && ptValue.options.length > 0
+                                  ? map(ptValue.options, (opt) => ({
+                                      ...opt,
+                                      id: uuidv4(),
+                                    }))
+                                  : null,
+                            }))
+                          : [],
+                    }))
+                  : [],
+            }))
+          : [],
+    };
+  };
+
   return (
     <>
       {activePageData && show && (
@@ -327,6 +369,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
           {!fetchingLessonDetails && (
             <Toolbar
+              onCopy={() => {}}
+              onClone={onClone}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
@@ -335,6 +379,10 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           )}
           <LessonPageWrapper>
             {fetchingLessonDetails ? (
+              // this is just a trial loader
+              // if anyone is making a component out of it .
+              // PLEASE replace this with that component
+              // :)
               <div className="border border-gray-300 shadow rounded-md p-4 max-w-sm w-full mx-auto mt-12">
                 <div className="animate-pulse space-y-8 flex flex-col">
                   <div className="flex-1 space-y-4 py-1">

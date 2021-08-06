@@ -25,7 +25,7 @@ const TableBlock = ({
         className={`grid overflow-hidden rounded-lg shadow-lg  grid-cols-${rowList.length}`}>
         {map(rowList, (rowItem, rowIndex) => {
           return (
-            <div>
+            <div key={rowItem.id}>
               <h4
                 className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}>
                 {rowItem.value}
@@ -33,6 +33,7 @@ const TableBlock = ({
               {map(rowItem.options, (colItem, colIndex: number) => {
                 return (
                   <div
+                    key={colItem.id}
                     className={`px-6 py-4 ${genThemeClass(
                       colIndex
                     )} whitespace-nowrap text-sm ${
