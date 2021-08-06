@@ -15,6 +15,7 @@ export interface lessonStateType {
   lessonProgress?: number;
   canContinue?: string;
   updated?: boolean;
+  requiredInputs?: [string[]];
   studentData?: [StudentPageInput[]];
   viewing?: boolean;
   displayData?: string[];
@@ -37,6 +38,7 @@ export const lessonState: lessonStateType = {
   lessonProgress: 0,
   canContinue: '',
   updated: false,
+  requiredInputs: [[]],
   studentData: [[]],
   viewing: false,
   displayData: [],

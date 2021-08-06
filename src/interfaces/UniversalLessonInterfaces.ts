@@ -67,6 +67,7 @@ export interface PartContent {
 
 export interface PartContentSub {
   id?: string;
+  isRequired?: boolean;
   type?: string;
   label?: string;
   value?: string;

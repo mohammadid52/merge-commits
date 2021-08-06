@@ -8,7 +8,10 @@ import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import {getLocalStorageData} from '../../../utilities/localStorage';
-import {UniversalLessonPage} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  StudentPageInput,
+  UniversalLessonPage,
+} from '../../../interfaces/UniversalLessonInterfaces';
 
 const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
@@ -18,10 +21,34 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
   const PAGES = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
+  const validateRequired = (pageIdx: number) => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData[pageIdx];
+      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
+      if (thisPageData && thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+        // console.log('validate areAnyEmpty - ', areAnyEmpty);
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
 
   const canContinue = () => {
     if (PAGES) {
       return (
+        validateRequired(lessonState.currentPage) &&
         lessonState.currentPage < PAGES.length - 1 &&
         PAGES[lessonState.currentPage + 1]?.open !== false
       );
@@ -47,7 +74,7 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
           payload: lessonState.currentPage + 1,
         });
       }
-    } else if (userAtEnd()) {
+    } else if (userAtEnd() && validateRequired(lessonState.currentPage)) {
       handlePopup();
     }
   };
