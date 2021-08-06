@@ -46,6 +46,11 @@ type userObject = {
   [key: string]: any;
 };
 
+export interface ICompletedLessons{
+  lessonID: string;
+  time: string;
+}
+
 export interface DashboardProps {
   classRoomActiveSyllabus?: string;
   loading?: boolean;
@@ -70,6 +75,7 @@ export interface DashboardProps {
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   handleRoomSelection?: Function;
   justLoggedIn?: boolean;
+  completedLessons?: ICompletedLessons[];
 }
 
 export interface ClassroomControlProps extends DashboardProps {

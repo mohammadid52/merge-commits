@@ -18,7 +18,7 @@ const BottomBar = (props: LessonCardProps) => {
           <div className="w-auto text-gray-500">
             <AiOutlineClockCircle className="w-4 h-4 sm:w-6 sm:h-6" />
           </div>
-          <div className={`w-auto mx-2 sm:mx-4 text-sm sm:text-base text-gray-500`}>
+          <div className={`w-auto mx-2 sm:mx-4 text-sm 2xl:text-base text-gray-500`}>
             {MinutesToHHMM(lessonProps.lesson?.totalEstTime)}
           </div>
         </div>

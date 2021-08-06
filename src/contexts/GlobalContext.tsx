@@ -17,7 +17,7 @@ export const standardTheme = {
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
   banner: '',
-  section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
+  section: 'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',
@@ -39,7 +39,7 @@ export const standardTheme = {
     cardNoBG: 'relative h-auto p-2 flex',
   },
   lessonCard: {
-    title: 'flex items-center text-lg sm:text-2xl  text-black text-left',
+    title: 'flex items-center text-lg 2xl:text-2xl  text-black text-left',
     subtitle: 'text-sm text-gray-400',
     border: 'border-dark-gray border-opacity-20',
   },

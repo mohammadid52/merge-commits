@@ -331,7 +331,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         bannerImg={bannerImg}
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
-        <div className="px-5 2xl:px-0 2xl:mx-auto max-w-none 2xl:max-w-256">
+        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
             <BreadCrums items={breadCrumsList} />
             {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
@@ -358,14 +358,15 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
-                  title={`${classRoomDict[userLanguage]['UNIT_TITLE']} ${
-                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''
-                  }`}
+                  title={`${classRoomDict[userLanguage]['STEP']} 1: ${
+                    classRoomDict[userLanguage]['UNIT_TITLE']
+                  } ${!syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''}`}
                   subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
                   <div className={`pb-4 m-auto lg:px-0 px-4`}>
                     <SyllabusSwitch
+                      completedLessons={activeRoomInfo?.completedLessons}
                       classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
                       activeRoom={state.activeRoom}
                       currentPage={currentPage}
@@ -384,13 +385,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               title={classRoomDict[userLanguage]['LESSON_TITLE']}
               subtitle={
                 isTeacher
-                  ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                  ? `${classRoomDict[userLanguage]['STEP']} 2: ${classRoomDict[userLanguage]['LESSON_SUB_TITLE']}`
                   : 'To enter classroom, select open lesson for this week'
               }
             />
 
             <div className={`bg-opacity-10`}>
-              <div className={`py-4 text-xl m-auto`}>
+              <div className={`pb-4 text-xl m-auto`}>
                 <Today
                   activeRoom={state.activeRoom}
                   activeRoomInfo={activeRoomInfo}

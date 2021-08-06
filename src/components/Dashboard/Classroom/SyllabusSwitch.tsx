@@ -5,6 +5,7 @@ import {Syllabus} from './Classroom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
+// import ProgressBar from './ProgressBar';
 
 const SyllabusSwitch = (props: DashboardProps) => {
   const {
@@ -13,6 +14,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
     currentPage,
     syllabusLoading,
     handleSyllabusActivation,
+    // completedLessons
   } = props;
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
@@ -34,11 +36,14 @@ const SyllabusSwitch = (props: DashboardProps) => {
       <div className={`grid grid-cols-3 md:grid-cols-2 gap-2`}>
         {!syllabusLoading && state.roomData?.syllabus?.length > 0
           ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
+            // const progressPercentage = completedLessons;
               return (
                 <div
                   key={`testSyllabus_${i}`}
                   id={`testSyllabus_${i}`}
-                  className={`flex relative flex-col ${classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'} rounded-lg shadow justify-center items-center`}>
+                  className={`flex relative flex-col ${
+                    classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'
+                  } rounded-lg shadow justify-center items-center`}>
                   <div className={`flex justify-between p-2`}>
                     <div className="flex items-center">
                       <span className="w-auto">
@@ -62,6 +67,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
                       </div>
                     )}
                   </div>
+                  {/* <ProgressBar progressPercentage={60} /> */}
                 </div>
               );
             })
