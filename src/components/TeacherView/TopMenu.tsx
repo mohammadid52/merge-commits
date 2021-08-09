@@ -118,7 +118,8 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
 
             <p className="text-xs">
               {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
-              {lessonState.lessonData.duration} hrs
+              {lessonState.lessonData?.duration}{' '}
+              {`${lessonState.lessonData?.duration > 1 ? 'weeks' : 'week'}`}
             </p>
           </div>
         </div>
