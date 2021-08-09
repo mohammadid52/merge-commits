@@ -3,6 +3,8 @@ import RichTextEditor from '../../../Atoms/RichTextEditor';
 import useDictionary from '../../../../customHooks/dictionary';
 import {FloatingSideMenuProps} from '../../../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import CustomRichTextEditor from '../../UniversalLessonBlockComponents/Blocks/HighlighterBlock/CustomRichTextEditor';
+import {getAsset} from '../../../../assets';
 
 const NotesForm = (props: FloatingSideMenuProps) => {
   const {focusSection} = props;
@@ -10,6 +12,7 @@ const NotesForm = (props: FloatingSideMenuProps) => {
     GlobalContext
   );
   const {lessonDict} = useDictionary(clientKey);
+  const themeColor = getAsset(clientKey, 'themeClassName');
 
   const [notesData, setNotesData] = useState<{content: string}>({content: ''});
 
@@ -40,7 +43,18 @@ const NotesForm = (props: FloatingSideMenuProps) => {
             : 'w-0 overflow-hidden opacity-0'
         }
       `}>
-      <RichTextEditor
+      {/* <RichTextEditor
+        initialValue={`Take notes here...`}
+        onChange={(htmlContent, plainText) =>
+          setEditorContent(htmlContent, plainText, 'content')
+        }
+        fullWHOverride={true}
+      /> */}
+      <CustomRichTextEditor
+        theme={themeColor}
+        rounded
+        customStyle
+        mediumDark={true}
         initialValue={`Take notes here...`}
         onChange={(htmlContent, plainText) =>
           setEditorContent(htmlContent, plainText, 'content')
