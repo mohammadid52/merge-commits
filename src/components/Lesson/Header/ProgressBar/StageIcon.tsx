@@ -138,7 +138,7 @@ const StageIcon = (props: StageIconProps) => {
           className={`relative h-8 w-8 origin-center rounded-full flex items-center justify-center 
                     ${clickable ? 'cursor-pointer' : 'cursor-default'}
                     ${recentOpened ? 'animate-activation' : ''}`}
-          onClick={handleLink}>
+          onClick={clickable ? () => handleLink() : () => {}}>
           <IconContext.Provider value={{color: iconColor(), size: '0.9rem'}}>
             <div
               className={`h-8 w-8 origin-center rounded-full bg-black
