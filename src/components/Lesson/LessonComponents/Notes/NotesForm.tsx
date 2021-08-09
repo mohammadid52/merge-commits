@@ -1,15 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import RichTextEditor from '../../../Atoms/RichTextEditor';
 import useDictionary from '../../../../customHooks/dictionary';
-import { FloatingSideMenuProps } from '../../../Dashboard/FloatingSideMenu/FloatingSideMenu';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {FloatingSideMenuProps} from '../../../Dashboard/FloatingSideMenu/FloatingSideMenu';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
 const NotesForm = (props: FloatingSideMenuProps) => {
-  const { focusSection } = props;
-  const {state, dispatch, lessonState, lessonDispatch, theme, clientKey} = useContext(GlobalContext);
-  const { lessonDict } = useDictionary(clientKey);
+  const {focusSection} = props;
+  const {state, dispatch, lessonState, lessonDispatch, theme, clientKey} = useContext(
+    GlobalContext
+  );
+  const {lessonDict} = useDictionary(clientKey);
 
-  const [notesData, setNotesData] = useState<{ content: string }>({ content: '' });
+  const [notesData, setNotesData] = useState<{content: string}>({content: ''});
 
   // useEffect(() => {
   //   dispatch({
@@ -29,16 +31,24 @@ const NotesForm = (props: FloatingSideMenuProps) => {
     });
   };
   return (
-    <div className={`
+    <div
+      className={`
         transform transition duration-400 ease-in-out
-        ${focusSection === 'Notes' ? 'w-full h-full mb-2 opacity-100' : 'w-0 overflow-hidden opacity-0'}
+        ${
+          focusSection === 'Notes'
+            ? 'w-full mb-2 opacity-100'
+            : 'w-0 overflow-hidden opacity-0'
+        }
       `}>
-        <RichTextEditor initialValue={`Take notes here...`}
-                        onChange={(htmlContent, plainText) => setEditorContent(htmlContent, plainText, 'content')}
-                        fullWHOverride={true}/>
-      </div>
+      <RichTextEditor
+        initialValue={`Take notes here...`}
+        onChange={(htmlContent, plainText) =>
+          setEditorContent(htmlContent, plainText, 'content')
+        }
+        fullWHOverride={true}
+      />
+    </div>
   );
 };
-
 
 export default NotesForm;

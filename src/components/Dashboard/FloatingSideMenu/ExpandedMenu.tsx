@@ -28,7 +28,7 @@ const ExpandedMenu = (props: {
     setChatroom,
   } = props;
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
-  const { lessonDict } = useDictionary(clientKey);
+  const {lessonDict} = useDictionary(clientKey);
 
   const setSelectedChatroom = (roomObj: any) => {
     if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
@@ -74,7 +74,7 @@ const ExpandedMenu = (props: {
         transform transition-transform ease-in-out duration-400  z-100
         ${menuState > 0 && focusSection === 'Chatroom' ? 'bg-container' : ''}
         ${menuState > 0 && focusSection !== 'Chatroom' ? 'bg-gray-600' : ''}
-        ${menuState > 0 ? '' : 'w-0 invisible'}
+        ${menuState > 0 ? 'rounded-r-lg' : 'w-0 invisible'}
          `}>
         <SideMenuSection
           menuState={menuState}
@@ -124,7 +124,7 @@ const ExpandedMenu = (props: {
             sectionLabel={`Notes`}
             sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
             focusSection={focusSection}>
-            <NotesForm focusSection={focusSection}/>
+            <NotesForm focusSection={focusSection} />
           </SideMenuSection>
         )}
       </div>
