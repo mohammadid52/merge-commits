@@ -261,6 +261,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchCurriculum();
+  }, [formData?.institution]);
+
   const hasUnsavedCheckpoint = (
     val: boolean,
     isIndividualEmpty: boolean,
