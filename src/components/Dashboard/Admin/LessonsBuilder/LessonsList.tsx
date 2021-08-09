@@ -22,6 +22,7 @@ import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
 import {remove} from 'lodash';
+import LessonListLoader from './LessonListLoader';
 
 const LessonsList = () => {
   const match = useRouteMatch();
@@ -266,9 +267,9 @@ const LessonsList = () => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  if (status !== 'done') {
-    return <LessonLoading />;
-  }
+  // if (status !== 'done') {
+  //   return <LessonLoading />;
+  // }
   {
     return (
       <div className={`w-full h-full`}>
@@ -317,39 +318,45 @@ const LessonsList = () => {
           <div className="-my-2 py-2">
             <div className="white_back py-4 px-8 mt-2 mb-8 align-middle rounded-lg border-b-0 border-gray-200">
               <div className="h-8/10 px-4">
-                {totalLessonNum > 0 && (
-                  <div className="w-full flex justify-between border-b-0 border-gray-200 ">
-                    <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{LessonsListDict[userLanguage]['NO']}</span>
-                    </div>
-                    <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
-                    </div>
-                    {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                <div className="w-full flex justify-between border-b-0 border-gray-200 ">
+                  <div className="w-.5/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{LessonsListDict[userLanguage]['NO']}</span>
+                  </div>
+                  <div className="w-3/10 px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span>{LessonsListDict[userLanguage]['LESSONTITLE']}</span>
+                  </div>
+                  {/* <div className="w-1.5/10 flex px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                     <span className="w-auto">Label</span>
                   </div> */}
-                    <div className="w-1/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">
-                        {LessonsListDict[userLanguage]['TYPE']}
-                      </span>
-                    </div>
-                    <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">Created Date</span>
-                    </div>
-                    <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">Last Edit Date</span>
-                    </div>
-                    <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      <span className="w-auto">
-                        {LessonsListDict[userLanguage]['LANGUAGE']}
-                      </span>
-                    </div>
-                    <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                      {LessonsListDict[userLanguage]['ACTION']}
-                    </div>
+                  <div className="w-1/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">
+                      {LessonsListDict[userLanguage]['TYPE']}
+                    </span>
                   </div>
-                )}
-                {currentList && currentList.length ? (
+                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">Created Date</span>
+                  </div>
+                  <div className="w-1.5/10 flex justify-center px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">Last Edit Date</span>
+                  </div>
+                  <div className="w-1.5/10 flex justify-left px-8 py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    <span className="w-auto">
+                      {LessonsListDict[userLanguage]['LANGUAGE']}
+                    </span>
+                  </div>
+                  <div className="w-1/10 px-8 flex justify-center py-3 bg-gray-50 text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                    {LessonsListDict[userLanguage]['ACTION']}
+                  </div>
+                </div>
+                {status !== 'done' ? (
+                  Array(3)
+                    .fill(' ')
+                    .map((_: any, index: number) => (
+                      <Fragment key={index}>
+                        <LessonListLoader />
+                      </Fragment>
+                    ))
+                ) : currentList && currentList.length ? (
                   currentList.map((lessonsObject, i) => (
                     <LessonsListRow
                       key={`lessonsRows${i}`}

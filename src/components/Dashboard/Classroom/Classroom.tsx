@@ -345,7 +345,8 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </span>
             </div> */}
             <div>
-              <span className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
+              <span
+                className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
                 <DateAndTime />
               </span>
             </div>
@@ -382,10 +383,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               extraContainerClass={'lg:px-0 px-4'}
               fontSize="2xl"
               fontStyle="bold"
-              title={classRoomDict[userLanguage]['LESSON_TITLE']}
+              title={`${isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''} ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${state.roomData?.activeSyllabus?.name}`}
               subtitle={
                 isTeacher
-                  ? `${classRoomDict[userLanguage]['STEP']} 2: ${classRoomDict[userLanguage]['LESSON_SUB_TITLE']}`
+                  ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
                   : 'To enter classroom, select open lesson for this week'
               }
             />

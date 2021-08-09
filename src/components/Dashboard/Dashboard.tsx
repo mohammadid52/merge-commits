@@ -749,6 +749,13 @@ const Dashboard = (props: DashboardProps) => {
             data: lessons,
           },
         });
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'activeSyllabus',
+            data: response,
+          },
+        });
       } catch (e) {
         console.error('syllabus lessons: ', e);
       } finally {
