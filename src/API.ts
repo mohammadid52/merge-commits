@@ -1299,7 +1299,7 @@ export type ModelLanguageInput = {
 };
 
 export type UpdatePersonInput = {
-  id: string,
+  id?: string | null,
   authId: string,
   status?: PersonStatus | null,
   email: string,
@@ -1424,7 +1424,7 @@ export type UpdateServiceProviderInput = {
 };
 
 export type DeleteServiceProviderInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStaffInput = {
@@ -1457,7 +1457,7 @@ export type UpdateStaffInput = {
 };
 
 export type DeleteStaffInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomInput = {
@@ -1566,7 +1566,7 @@ export type UpdateRoomInput = {
 };
 
 export type DeleteRoomInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomCoTeachersInput = {
@@ -1596,7 +1596,7 @@ export type UpdateRoomCoTeachersInput = {
 };
 
 export type DeleteRoomCoTeachersInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateClassInput = {
@@ -1623,7 +1623,7 @@ export type UpdateClassInput = {
 };
 
 export type DeleteClassInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelClassStudentConditionInput = {
@@ -1647,7 +1647,7 @@ export type UpdateClassStudentInput = {
 };
 
 export type DeleteClassStudentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCurriculumInput = {
@@ -1854,7 +1854,7 @@ export type UpdateRoomCurriculumInput = {
 };
 
 export type DeleteRoomCurriculumInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateArtistInput = {
@@ -1906,7 +1906,7 @@ export type UpdateArtistInput = {
 };
 
 export type DeleteArtistInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateDoFirstInput = {
@@ -1930,7 +1930,7 @@ export type UpdateDoFirstInput = {
 };
 
 export type DeleteDoFirstInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateDoFirstQuestionInput = {
@@ -1954,7 +1954,7 @@ export type UpdateDoFirstQuestionInput = {
 };
 
 export type DeleteDoFirstQuestionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateWarmUpInput = {
@@ -2055,7 +2055,7 @@ export type UpdateWarmUpInput = {
 };
 
 export type DeleteWarmUpInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCoreLessonInput = {
@@ -2114,7 +2114,7 @@ export type UpdateCoreLessonInput = {
 };
 
 export type DeleteCoreLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateActivityInput = {
@@ -2159,7 +2159,7 @@ export type UpdateActivityInput = {
 };
 
 export type DeleteActivityInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCheckpointInput = {
@@ -2216,7 +2216,7 @@ export type UpdateCheckpointInput = {
 };
 
 export type DeleteCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCommonCheckpointInput = {
@@ -2243,7 +2243,7 @@ export type UpdateCommonCheckpointInput = {
 };
 
 export type DeleteCommonCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCheckpointQuestionsInput = {
@@ -2270,7 +2270,7 @@ export type UpdateCheckpointQuestionsInput = {
 };
 
 export type DeleteCheckpointQuestionsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentInput = {
@@ -2300,7 +2300,7 @@ export type UpdateAssessmentInput = {
 };
 
 export type DeleteAssessmentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentQuestionsInput = {
@@ -2324,7 +2324,7 @@ export type UpdateAssessmentQuestionsInput = {
 };
 
 export type DeleteAssessmentQuestionsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAssessmentCheckpointInput = {
@@ -2348,7 +2348,7 @@ export type UpdateAssessmentCheckpointInput = {
 };
 
 export type DeleteAssessmentCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionInput = {
@@ -2399,7 +2399,7 @@ export type UpdateQuestionInput = {
 };
 
 export type DeleteQuestionInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionSourceInput = {
@@ -2428,7 +2428,7 @@ export type UpdateQuestionSourceInput = {
 };
 
 export type DeleteQuestionSourceInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionTypeInput = {
@@ -2457,7 +2457,7 @@ export type UpdateQuestionTypeInput = {
 };
 
 export type DeleteQuestionTypeInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateWordInput = {
@@ -2481,7 +2481,7 @@ export type UpdateWordInput = {
 };
 
 export type DeleteWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateRoomMsgsInput = {
@@ -2526,7 +2526,7 @@ export type UpdateRoomMsgsInput = {
 };
 
 export type DeleteRoomMsgsInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateCourseInput = {
@@ -2567,7 +2567,7 @@ export type UpdateCourseInput = {
 };
 
 export type DeleteCourseInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonInput = {
@@ -2735,7 +2735,7 @@ export type UpdateLessonCheckpointInput = {
 };
 
 export type DeleteLessonCheckpointInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateLessonKeyWordInput = {
@@ -2759,7 +2759,7 @@ export type UpdateLessonKeyWordInput = {
 };
 
 export type DeleteLessonKeyWordInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateSyllabusInput = {
@@ -2946,7 +2946,7 @@ export type UpdateSyllabusLessonInput = {
 };
 
 export type DeleteSyllabusLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateStudentDataInput = {
@@ -2988,7 +2988,7 @@ export type ModelStudentDataConditionInput = {
 };
 
 export type UpdateStudentDataInput = {
-  id: string,
+  id?: string | null,
   lessonProgress?: string | null,
   currentLocation?: string | null,
   status?: string | null,
@@ -3070,7 +3070,7 @@ export type UpdateAnthologyCommentInput = {
 };
 
 export type DeleteAnthologyCommentInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionDataInput = {
@@ -3117,7 +3117,7 @@ export type UpdateQuestionDataInput = {
 };
 
 export type DeleteQuestionDataInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateQuestionDataStudentDataInput = {
@@ -3141,7 +3141,7 @@ export type UpdateQuestionDataStudentDataInput = {
 };
 
 export type DeleteQuestionDataStudentDataInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateFeedbackInput = {
@@ -3168,7 +3168,7 @@ export type UpdateFeedbackInput = {
 };
 
 export type DeleteFeedbackInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreatePersonLocationInput = {
@@ -3211,7 +3211,7 @@ export type PersonLocation = {
 };
 
 export type UpdatePersonLocationInput = {
-  id: string,
+  id?: string | null,
   personAuthID: string,
   personEmail: string,
   syllabusLessonID?: string | null,
@@ -3323,7 +3323,7 @@ export type UpdateNoticeboardWidgetInput = {
 };
 
 export type DeleteNoticeboardWidgetInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateAttendanceInput = {
@@ -3384,7 +3384,7 @@ export type UpdateAttendanceInput = {
 };
 
 export type DeleteAttendanceInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreatePlannerInput = {
@@ -3445,7 +3445,7 @@ export type UpdatePlannerInput = {
 };
 
 export type DeletePlannerInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateUniversalLessonInput = {
@@ -3784,7 +3784,7 @@ export type UpdateUniversalSyllabusLessonInput = {
 };
 
 export type DeleteUniversalSyllabusLessonInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type CreateUniversalLessonFeedbackInput = {
@@ -3811,7 +3811,7 @@ export type UpdateUniversalLessonFeedbackInput = {
 };
 
 export type DeleteUniversalLessonFeedbackInput = {
-  id?: string | null,
+  id: string,
 };
 
 export type ModelStringKeyConditionInput = {
