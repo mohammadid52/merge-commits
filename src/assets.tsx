@@ -75,7 +75,7 @@ const curate_assets: any = {
 };
 
 const demo_assets: any = {
-  appTitle: 'Demo',
+  appTitle: 'Demo App',
   main_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
   login_page_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
   loading_logo: 'https://zoiqappdemoimages.s3.amazonaws.com/ISPLogo.png',
