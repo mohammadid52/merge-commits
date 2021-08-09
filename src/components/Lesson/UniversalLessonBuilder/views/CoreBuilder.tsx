@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, Fragment, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
-
+import {Dialog, Transition} from '@headlessui/react';
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {
@@ -13,13 +13,13 @@ import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext'
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {v4 as uuidv4} from 'uuid';
 import Toolbar from '../UI/UIComponents/Toolbar';
+import * as customQueries from '../../../../customGraphql/customQueries';
 
 import {find, findLastIndex, map, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
-import useOnScreen from '../../../../customHooks/useOnScreen';
 import {IconType} from 'react-icons/lib';
 import Tooltip from '../../../Atoms/Tooltip';
 import {
@@ -30,7 +30,7 @@ import {
   AiOutlineFileSearch,
   AiOutlineSave,
 } from 'react-icons/ai';
-
+import API, {graphqlOperation} from '@aws-amplify/api';
 import {VscDiscard} from 'react-icons/vsc';
 
 interface CoreBuilderProps extends ULBSelectionProps {
@@ -86,7 +86,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setLessonPlanFields,
     setEditMode,
     toolbarOnTop,
-    setToolbarOnTop,
+
     previewMode,
     setPreviewMode,
   } = useULBContext();
@@ -154,15 +154,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const Divider = ({theme = 'dark'}: any) => (
-    <span
-      style={{width: 1}}
-      className={`h-8 mx-2 ${
-        theme === 'dark' ? 'bg-white' : 'bg-gray-600'
-      } bg-opacity-50 `}
-    />
-  );
-
   const Container = ({children}: {children: any}) => (
     <div className={`flex items-center flex-col w-auto ${!toolbarOnTop ? 'mb-2' : ''}`}>
       {children}
@@ -224,20 +215,86 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     }
   };
 
-  const onCopy = () => {};
+  const [treeViewData, setTreeViewData] = useState({});
 
-  const onClone = () => {
+  const loadTreeViewData = async () => {
+    try {
+      const fetchUList: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessons)
+      );
+      if (!fetchUList) {
+        throw new Error('fail!');
+      } else {
+        const data = fetchUList?.data?.listUniversalLessons.items;
+        if (data) {
+          const dataForTreeView = {
+            title: 'root',
+            children: map(data, (lesson) => ({
+              title: lesson.title,
+              type: 'lesson',
+              id: lesson.id,
+              children:
+                lesson.lessonPlan && lesson.lessonPlan.length > 0
+                  ? map(lesson.lessonPlan, (page) => ({
+                      title: page.title || page.label,
+                      type: 'page',
+                      id: page.id,
+                      lessonId: lesson.id,
+                      children: [],
+                    }))
+                  : [],
+            })),
+          };
+          setTreeViewData(dataForTreeView);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadTreeViewData();
+  }, []);
+
+  const getLessonById = async (lessonId: string) => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {id: lessonId})
+      );
+      return res.data.getUniversalLesson;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const getPageById = async (lessonId: string, pageId: string) => {
+    const selectedLesson: UniversalLesson = await getLessonById(lessonId);
+    if (selectedLesson) {
+      const selectedPage = find(
+        selectedLesson.lessonPlan,
+        (lesson) => lesson.id === pageId
+      );
+      return selectedPage;
+    }
+  };
+
+  const getCloneData = async (lessonId: string, pageId: string) => {
     /**
      * This object will replace all the existing ids with new ones
      * hope this works 😼
      * Please don't change anything 👏
      */
+
+    const selectedPage = await getPageById(lessonId, pageId);
+
     const replaceAllExistingIds: UniversalLessonPage = {
-      ...activePageData,
+      ...selectedPage,
       id: uuidv4(),
       pageContent:
-        activePageData.pageContent && activePageData.pageContent.length > 0
-          ? map(activePageData.pageContent, (pgContent) => ({
+        selectedPage.pageContent && selectedPage.pageContent.length > 0
+          ? map(selectedPage.pageContent, (pgContent) => ({
               ...pgContent,
 
               id: uuidv4(),
@@ -265,6 +322,58 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
             }))
           : [],
     };
+
+    return replaceAllExistingIds;
+  };
+
+  const getCopyData = async (lessonId: string, pageId: string) => {
+    /**
+     * This object will replace all the existing ids with new ones
+     * hope this works 😼
+     * Please don't change anything 👏
+     */
+
+    const selectedPage = await getPageById(lessonId, pageId);
+
+    const replaceAllExistingIds: UniversalLessonPage = {
+      ...selectedPage,
+      id: uuidv4(),
+      pageContent:
+        selectedPage.pageContent && selectedPage.pageContent.length > 0
+          ? map(selectedPage.pageContent, (pgContent) => ({
+              ...pgContent,
+
+              id: uuidv4(),
+              partContent:
+                pgContent.partContent && pgContent.partContent.length > 0
+                  ? map(pgContent.partContent, (ptContent) => ({
+                      ...ptContent,
+                      id: uuidv4(),
+
+                      value:
+                        ptContent.value && ptContent.value.length > 0
+                          ? map(ptContent.value, (ptValue) => ({
+                              ...ptValue,
+                              id: uuidv4(),
+                              label: ptContent.type !== 'jumbotron' ? '' : ptValue.label,
+                              value: '-',
+                              options:
+                                ptValue.options && ptValue.options.length > 0
+                                  ? map(ptValue.options, (opt) => ({
+                                      ...opt,
+                                      text: '-',
+                                      id: uuidv4(),
+                                    }))
+                                  : null,
+                            }))
+                          : [],
+                    }))
+                  : [],
+            }))
+          : [],
+    };
+
+    return replaceAllExistingIds;
   };
 
   return (
@@ -277,6 +386,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
+
       <div
         hidden={previewMode}
         style={{top: '30rem'}}
@@ -369,11 +479,13 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
           {!fetchingLessonDetails && (
             <Toolbar
-              onCopy={() => {}}
-              onClone={onClone}
+              getCopyData={getCopyData}
+              getCloneData={getCloneData}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
+              universalLessonDetails={universalLessonDetails}
+              treeViewData={treeViewData}
               setNewLessonPlanShow={setNewLessonPlanShow}
             />
           )}

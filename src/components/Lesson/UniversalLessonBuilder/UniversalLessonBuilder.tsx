@@ -149,6 +149,10 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
         })
       );
       const savedData = result.data.getUniversalLesson;
+      console.log(
+        '🚀 ~ file: UniversalLessonBuilder.tsx ~ line 152 ~ fetchLessonData ~ savedData',
+        savedData
+      );
       setUniversalLessonDetails(savedData);
       setSelectedPageID(pageId);
     } catch {

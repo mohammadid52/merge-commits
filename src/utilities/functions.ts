@@ -1,15 +1,13 @@
-
-
-export const goBackBreadCrumb = (list:any[],history: any) => {
-    const lastSecondIdx = list.length - 2;
-    const url = list[lastSecondIdx]?.url;
-    if (url) {
-      history.push(url);
-    } else {
-      history.goBack();
-    }
+export const goBackBreadCrumb = (list: any[], history: any) => {
+  const lastSecondIdx = list.length - 2;
+  const url = list[lastSecondIdx]?.url;
+  if (url) {
+    history.push(url);
+  } else {
+    history.goBack();
+  }
 };
-  
+
 export const doResize = (textbox: any) => {
   var maxrows = 50;
   var txt = textbox.value;
@@ -24,4 +22,7 @@ export const doResize = (textbox: any) => {
 
   if (rows > maxrows) textbox.rows = maxrows;
   else textbox.rows = rows;
+};
+export const wait = (timeout: number) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
 };
