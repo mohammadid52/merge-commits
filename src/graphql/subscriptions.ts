@@ -636,6 +636,16 @@ export const onChangeUniversalLessonStudentData = /* GraphQL */ `
           comment
         }
       }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+      }
       createdAt
       updatedAt
     }
@@ -828,6 +838,7 @@ export const onCreatePerson = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -870,6 +881,7 @@ export const onUpdatePerson = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -912,6 +924,7 @@ export const onDeletePerson = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -2595,6 +2608,7 @@ export const onCreateClass = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -2688,6 +2702,7 @@ export const onUpdateClass = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -2781,6 +2796,7 @@ export const onDeleteClass = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -2800,6 +2816,7 @@ export const onCreateClassStudent = /* GraphQL */ `
       studentEmail
       studentAuthID
       status
+      group
       class {
         id
         institutionID
@@ -2874,6 +2891,7 @@ export const onUpdateClassStudent = /* GraphQL */ `
       studentEmail
       studentAuthID
       status
+      group
       class {
         id
         institutionID
@@ -2948,6 +2966,7 @@ export const onDeleteClassStudent = /* GraphQL */ `
       studentEmail
       studentAuthID
       status
+      group
       class {
         id
         institutionID
@@ -10844,6 +10863,9 @@ export const onCreateAttendance = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -11069,6 +11091,9 @@ export const onUpdateAttendance = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -11294,6 +11319,9 @@ export const onDeleteAttendance = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -11513,6 +11541,9 @@ export const onCreateUniversalLesson = /* GraphQL */ `
       }
       darkMode
       rubrics
+      smallGroup
+      groupSize
+      groupType
       createdAt
       updatedAt
     }
@@ -11585,6 +11616,9 @@ export const onUpdateUniversalLesson = /* GraphQL */ `
       }
       darkMode
       rubrics
+      smallGroup
+      groupSize
+      groupType
       createdAt
       updatedAt
     }
@@ -11657,6 +11691,9 @@ export const onDeleteUniversalLesson = /* GraphQL */ `
       }
       darkMode
       rubrics
+      smallGroup
+      groupSize
+      groupType
       createdAt
       updatedAt
     }
@@ -11681,6 +11718,16 @@ export const onCreateUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -11707,6 +11754,16 @@ export const onUpdateUniversalLessonStudentData = /* GraphQL */ `
           comment
         }
       }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+      }
       createdAt
       updatedAt
     }
@@ -11732,6 +11789,73 @@ export const onDeleteUniversalLessonStudentData = /* GraphQL */ `
           comment
         }
       }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateUniversalJournalData = /* GraphQL */ `
+  subscription OnCreateUniversalJournalData {
+    onCreateUniversalJournalData {
+      id
+      studentID
+      studentAuthID
+      studentEmail
+      type
+      entryData {
+        domID
+        type
+        input
+      }
+      feedbacks
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateUniversalJournalData = /* GraphQL */ `
+  subscription OnUpdateUniversalJournalData {
+    onUpdateUniversalJournalData {
+      id
+      studentID
+      studentAuthID
+      studentEmail
+      type
+      entryData {
+        domID
+        type
+        input
+      }
+      feedbacks
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUniversalJournalData = /* GraphQL */ `
+  subscription OnDeleteUniversalJournalData {
+    onDeleteUniversalJournalData {
+      id
+      studentID
+      studentAuthID
+      studentEmail
+      type
+      entryData {
+        domID
+        type
+        input
+      }
+      feedbacks
       createdAt
       updatedAt
     }
@@ -11919,6 +12043,9 @@ export const onCreateUniversalSyllabusLesson = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -12035,6 +12162,9 @@ export const onUpdateUniversalSyllabusLesson = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -12151,6 +12281,9 @@ export const onDeleteUniversalSyllabusLesson = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -12242,6 +12375,9 @@ export const onCreateUniversalLessonFeedback = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
@@ -12310,6 +12446,9 @@ export const onUpdateUniversalLessonFeedback = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
@@ -12378,6 +12517,9 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
