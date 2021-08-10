@@ -76,9 +76,9 @@ const curate_assets: any = {
 
 const demo_assets: any = {
   appTitle: 'Demo App',
-  main_logo: 'https://selready.s3.us-east-2.amazonaws.com/Asset+1.png',
-  login_page_logo: 'https://selready.s3.us-east-2.amazonaws.com/Asset+1.png',
-  loading_logo: 'https://selready.s3.us-east-2.amazonaws.com/Asset+1.png',
+  main_logo: 'https://zoiqclients.s3.amazonaws.com/Edges+First+Logo+Final+PNG-01.png',
+  login_page_logo: 'https://zoiqclients.s3.amazonaws.com/Edges+First+Logo+Final+PNG-01.png',
+  loading_logo: 'https://zoiqclients.s3.amazonaws.com/Edges+First+Logo+Final+PNG-01.png',
   logo_symbol: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
   faviconDefault: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
   favicon16x16: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
