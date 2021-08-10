@@ -1082,3 +1082,20 @@
 .react-datepicker__year-option--selected {
   width: auto !important;
 }
+
+// Search Styles
+
+.rotateSearchIcon {
+  transition: 3s linear;
+  animation: searchIconRotation infinite 3s;
+  transform: rotateZ(0deg);
+}
+
+@keyframes searchIconRotation {
+  from {
+    transform: rotateZ(90deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
