@@ -1557,6 +1557,7 @@ const TOPICLISTDICT: any = {
     TOPIC: 'Topics',
     EDIT: 'Edit',
     INFO: 'This learning objective does not have any topics. Please create a new one.',
+    ADD: 'Add Topic',
     ADDNEW: 'Add New Topic',
     FETCH: 'Fetching topics list...',
   },
