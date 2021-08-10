@@ -593,8 +593,8 @@ const LessonApp = () => {
       } else {
         await createPersonLocation();
       }
-    } catch (e) {
-      console.error('getPersonLocation - ', e);
+    } finally {
+      console.log('personLocation setup!');
     }
   };
 
