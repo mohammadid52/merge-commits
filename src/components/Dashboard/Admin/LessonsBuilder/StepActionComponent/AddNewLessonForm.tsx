@@ -278,7 +278,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
         try {
           const input: any = {
             type: formData.type.value,
-            title: formData.name.toLowerCase(),
+            title: formData.name,
             designers: selectedDesigners.map((item) => item.id),
             lessonPlan: [],
             summary: formData.studentSummary,
@@ -313,7 +313,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
           const input = {
             id: lessonId,
             type: formData.type.value,
-            title: formData.name.toLowerCase(),
+            title: formData.name,
             institutionID: formData.institution.id,
             purpose: formData.purposeHtml,
             objectives: [formData.objectiveHtml],

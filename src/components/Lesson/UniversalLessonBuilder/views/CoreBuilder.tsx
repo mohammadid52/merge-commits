@@ -305,7 +305,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
                               ...ptValue,
                               id: uuidv4(),
                               label: ptContent.type !== 'jumbotron' ? '' : ptValue.label,
-                              value: '-',
+                              value:
+                                ptContent.type === 'jumbotron' ||
+                                ptContent.type === 'links'
+                                  ? ptValue.value
+                                  : '-',
                               options:
                                 ptValue.options && ptValue.options.length > 0
                                   ? map(ptValue.options, (opt) => ({

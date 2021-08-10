@@ -184,37 +184,6 @@ const Toolbar = ({
 
   const [selectedId, setSelectedId] = useState({pageId: '', lessonId: ''});
 
-  const [selectedPageData, setSelectedPageData] = useState<any>({});
-
-  useEffect(() => {
-    if (selectedId.lessonId) {
-      const lessonObject = treeViewData.children.find(
-        (item: any) => item.id === selectedId.lessonId
-      );
-      const pageObject = find(
-        lessonObject.children,
-        (item) => item.id === selectedId.pageId
-      );
-      setSelectedPageData({pageObject, lessonObject});
-    }
-  }, [selectedId.lessonId, selectedId.pageId]);
-
-  const generateDynamicInfo = () => {
-    if (selectedPageData.pageObject && selectedPageData.lessonObject) {
-      const lessonName = selectedPageData.lessonObject.title;
-      const pageName = selectedPageData.pageObject.title;
-      return (
-        <p className="text-sm text-blue-700">
-          You have selected:{' '}
-          <span className="font-semibold">
-            {pageName} <span className="font-medium">from</span> {lessonName}
-          </span>
-        </p>
-      );
-    }
-    return 'Loading...';
-  };
-
   const [status, setStatus] = useState('none');
 
   const onCopyCloneAction = (action: string = 'copy') => {
@@ -285,6 +254,8 @@ const Toolbar = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchStatus, setSearchStatus] = useState('none');
 
+  const loadRecentUpdates = () => {};
+
   const loadLessonsOnSearch = async () => {
     setSearchStatus('searching');
     try {
@@ -320,6 +291,13 @@ const Toolbar = ({
     <>
       <SliderOver open={showDataForCopyClone} setOpen={setShowDataForCopyClone}>
         <div className="flex flex-col items-center space-y-2 mb-2">
+          <Info text="Lessons are case sensitive" className="my-2 mb-4" />
+          {searchStatus === 'success' && status === 'none' && (
+            <Info
+              text="Click on a page to select for copy / clone"
+              className="my-2 mb-4"
+            />
+          )}
           <div className="flex items-center space-x-2">
             <div className="w-auto">
               <FormInput
@@ -365,10 +343,6 @@ const Toolbar = ({
             </div>
           ) : (
             <div className="self-start">
-              <Info
-                text="Click on a page to select for copy / clone"
-                className="my-2 mb-4"
-              />
               <Transition
                 show={status !== 'none'}
                 enter="transition-opacity duration-150"
@@ -429,8 +403,6 @@ const Toolbar = ({
                 leave="transition-opacity duration-75"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0">
-                <Info customText={generateDynamicInfo()} className="my-2 mb-4" />
-
                 <div className="mb-4">
                   <label
                     className={`mb-1 text-gray-700 block text-xs font-semibold leading-5 `}>

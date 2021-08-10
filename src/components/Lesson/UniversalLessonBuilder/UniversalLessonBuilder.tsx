@@ -22,7 +22,6 @@ import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit'
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import * as customQueries from '../../../customGraphql/customQueries';
-import {capitalizeFirstLetter} from '../../../utilities/functions';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -113,7 +112,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
       last: false,
     },
     {
-      title: capitalizeFirstLetter(universalLessonDetails.title) || 'Loading...',
+      title: universalLessonDetails.title || 'Loading...',
       url: `/dashboard/lesson-builder/lesson/edit?lessonId=${universalLessonDetails.id}`,
       last: false,
     },
