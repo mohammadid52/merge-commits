@@ -28,7 +28,7 @@ const MeasurementsList = ({
   return (
     <>
       <div className="w-full flex justify-between border-b-0 border-gray-200 mt-4">
-        <div className="w-4/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+        <div className="w-6/10 px-4 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
           <span>
             {
               LessonBuilderDict[userLanguage]['LEARNING_EVIDENCE_COLUMNS'][
