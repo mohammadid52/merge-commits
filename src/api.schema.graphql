@@ -172,6 +172,7 @@ type ClassStudent
   studentEmail: String!
   studentAuthID: String!
   status: String
+  group: String
   class: Class @connection(fields: ["classID"])
   student: Person @connection(fields: ["studentEmail", "studentAuthID"])
 }
@@ -861,6 +862,7 @@ type PersonLocation
   personAuthID: String!
   personEmail: String!
   syllabusLessonID: ID!
+  lessonID: ID!
   roomID: ID!
   currentLocation: String
   lessonProgress: String
@@ -953,7 +955,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   instructionsTitle: String
   summary: String
   summaryTitle: String
-  duration: Int
+  duration: Float
   resources: String
   notes: String
   cardImage: String
@@ -962,6 +964,9 @@ type UniversalLesson @model @key(fields: ["id"]) {
   homework: [UniversalLessonPlan]
   darkMode: Boolean
   rubrics: [String]
+  smallGroup: String
+  groupSize: Int
+  groupType: String
 }
 
 type UniversalLessonPlan {
@@ -1030,6 +1035,30 @@ type UniversalLessonStudentData
   currentLocation: String
   lessonProgress: String
   pageData: [partInput]
+  hasExerciseData: Boolean
+  exerciseData: [ExerciseData] 
+}
+
+type ExerciseData {
+  id: String!
+  entryData: [JournalEntryData]
+  feedbacks: [String]
+}
+
+type UniversalJournalData @model @key(fields: ["id"]) {
+  id: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  type: String!
+  entryData: [JournalEntryData]
+  feedbacks: [String]
+}
+
+type JournalEntryData {
+  domID: String
+  type: String
+  input: String
 }
 
 type StudentPageInput {
@@ -1099,10 +1128,10 @@ type UniversalLessonFeedback @model {
 }
 
 type Subscription {
-  onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
-    @aws_subscribe(
-      mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
-    )
+  onChangePersonLocation(syllabusLessonID: ID!, lessonID: ID!, roomID: ID!): PersonLocation
+    @aws_subscribe(mutations: [
+      "createPersonLocation", "updatePersonLocation", "deletePersonLocation"
+    ])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
