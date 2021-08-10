@@ -154,15 +154,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const Container = ({children}: {children: any}) => (
-    <div className={`flex items-center flex-col w-auto ${!toolbarOnTop ? 'mb-2' : ''}`}>
-      {children}
-    </div>
-  );
-  // const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
-  //   (lessonPage: UniversalLessonPage) => lessonPage.id === selectedPageID
-  // );
-
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
     message: string;
@@ -214,48 +205,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       goToLessonPlan();
     }
   };
-
-  const [treeViewData, setTreeViewData] = useState({});
-
-  const loadTreeViewData = async () => {
-    try {
-      const fetchUList: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessons)
-      );
-      if (!fetchUList) {
-        throw new Error('fail!');
-      } else {
-        const data = fetchUList?.data?.listUniversalLessons.items;
-        if (data) {
-          const dataForTreeView = {
-            title: 'root',
-            children: map(data, (lesson) => ({
-              title: lesson.title,
-              type: 'lesson',
-              id: lesson.id,
-              children:
-                lesson.lessonPlan && lesson.lessonPlan.length > 0
-                  ? map(lesson.lessonPlan, (page) => ({
-                      title: page.title || page.label,
-                      type: 'page',
-                      id: page.id,
-                      lessonId: lesson.id,
-                      children: [],
-                    }))
-                  : [],
-            })),
-          };
-          setTreeViewData(dataForTreeView);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    loadTreeViewData();
-  }, []);
 
   const getLessonById = async (lessonId: string) => {
     try {
@@ -388,74 +337,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       )}
 
       <div
-        hidden={previewMode}
-        style={{top: '30rem'}}
-        className={`${
-          toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
-        } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
-        {/* {!previewMode && ( */}
-        <div
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
-          <div className="flex items-center flex-col">
-            <Container>
-              <Button
-                onClick={() => setPreviewMode(!previewMode)}
-                tooltip="Preview"
-                color={themeTextColor}
-                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
-              />
-
-              <>
-                <Button
-                  color={themeTextColor}
-                  tooltip="Add New Page"
-                  onClick={() => {
-                    setNewLessonPlanShow(true);
-                    setEditMode(false);
-                  }}
-                  icon={AiOutlineFileAdd}
-                />
-              </>
-            </Container>
-
-            <Container>
-              {/* <Button
-              color={themeTextColor}
-              tooltip="Enable Drag"
-              icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-            /> */}
-              <Button
-                color={themeTextColor}
-                tooltip="Search Page"
-                icon={AiOutlineFileSearch}
-              />
-            </Container>
-
-            <Container>
-              <Button
-                color={themeTextColor}
-                tooltip="Save changes"
-                icon={AiOutlineSave}
-              />
-              <Button
-                color={themeTextColor}
-                tooltip="Discard changes"
-                icon={VscDiscard}
-              />
-
-              <Button
-                color="text-red-500"
-                tooltip="Delete this page"
-                icon={AiOutlineDelete}
-                onClick={onDeleteButtonClick}
-              />
-            </Container>
-          </div>
-        </div>
-        {/* )} */}
-      </div>
-
-      <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
@@ -485,7 +366,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
               universalLessonDetails={universalLessonDetails}
-              treeViewData={treeViewData}
               setNewLessonPlanShow={setNewLessonPlanShow}
             />
           )}

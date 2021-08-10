@@ -8,26 +8,29 @@ import {
   AiOutlineFileSearch,
   AiOutlineSave,
 } from 'react-icons/ai';
-import {FaRegClone} from 'react-icons/fa';
 import {IconType} from 'react-icons/lib';
 import {VscDiscard} from 'react-icons/vsc';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useOnScreen from '../../../../../customHooks/useOnScreen';
 import Tooltip from '../../../../Atoms/Tooltip';
-
 import {Dialog, Transition} from '@headlessui/react';
 import {CheckCircleIcon, XIcon} from '@heroicons/react/outline';
 import {Tree} from '../../UI/UIComponents/TreeView/Tree';
-import {find} from 'lodash';
+import {find, isEmpty, map} from 'lodash';
 import Info from '../../../../Atoms/Alerts/Info';
 import Buttons from '../../../../Atoms/Buttons';
 import {wait} from '../../../../../utilities/functions';
-import {UniversalLesson} from '../../../../../interfaces/UniversalLessonInterfaces';
+import {
+  UniversalLesson,
+  UniversalLessonPage,
+} from '../../../../../interfaces/UniversalLessonInterfaces';
 import {useHistory} from 'react-router';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as customQueries from '../../../../../customGraphql/customQueries';
+
 import {graphqlOperation, API} from 'aws-amplify';
+import FormInput from '../../../../Atoms/Form/FormInput';
 const Button = ({
   onClick,
   icon: Icon,
@@ -35,16 +38,18 @@ const Button = ({
   tooltip = '',
   invert = false,
   color = 'text-white',
+  tooltipPlacement = 'bottom',
 }: {
   onClick?: () => void;
   icon?: IconType;
   tooltip?: string;
   text?: string;
   color?: string;
+  tooltipPlacement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
   invert?: boolean;
 }) => {
   return (
-    <Tooltip show={tooltip.length > 0} text={tooltip} placement="bottom">
+    <Tooltip show={tooltip.length > 0} text={tooltip} placement={tooltipPlacement}>
       <button
         onClick={onClick}
         type="button"
@@ -135,7 +140,7 @@ const Toolbar = ({
   getCopyData,
   getCloneData,
   setNewLessonPlanShow,
-  treeViewData,
+
   universalLessonDetails,
 }: {
   deleteLesson: () => void;
@@ -146,7 +151,6 @@ const Toolbar = ({
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 
   setFields: React.Dispatch<React.SetStateAction<any>>;
-  treeViewData?: any;
 }) => {
   const {
     previewMode,
@@ -154,6 +158,7 @@ const Toolbar = ({
     setUniversalLessonDetails,
     setSelectedPageID,
     setToolbarOnTop,
+    toolbarOnTop,
   } = useULBContext();
   const history = useHistory();
 
@@ -250,101 +255,195 @@ const Toolbar = ({
       });
     });
   };
+  const [treeViewData, setTreeViewData] = useState<any>({});
+  const [fetching, setFetching] = useState(false);
+
+  const prepareTreeViewData = (data: UniversalLessonPage[]) => {
+    const dataForTreeView = {
+      title: 'root',
+      children: map(data, (lesson) => ({
+        title: lesson.title,
+        type: 'lesson',
+        id: lesson.id,
+        children:
+          lesson.lessonPlan && lesson.lessonPlan.length > 0
+            ? map(lesson.lessonPlan, (page) => ({
+                title: page.title || page.label,
+                type: 'page',
+                id: page.id,
+                lessonId: lesson.id,
+                children: [],
+              }))
+            : [],
+      })),
+    };
+
+    setTreeViewData(dataForTreeView);
+  };
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchStatus, setSearchStatus] = useState('none');
+
+  const loadLessonsOnSearch = async () => {
+    setSearchStatus('searching');
+    try {
+      const fetchUList: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessons, {
+          filter: {title: {contains: searchQuery}},
+        })
+      );
+      if (!fetchUList) {
+        throw new Error('fail!');
+      } else {
+        const data = fetchUList?.data?.listUniversalLessons.items;
+        if (data) {
+          prepareTreeViewData(data);
+        }
+      }
+    } catch (error) {
+      setSearchStatus('error');
+    } finally {
+      setFetching(false);
+      setSearchStatus('success');
+    }
+  };
 
   return (
     <>
       <SliderOver open={showDataForCopyClone} setOpen={setShowDataForCopyClone}>
-        <div>
-          <Info text="Click on a page to select for copy / clone" className="my-2 mb-4" />
-          <Transition
-            show={Boolean(selectedId.lessonId) && Boolean(selectedId.pageId)}
-            enter="transition-opacity duration-150"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="transition-opacity duration-75"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0">
-            <Info customText={generateDynamicInfo()} className="my-2 mb-4" />
-
-            <div className="mb-4">
-              <label
-                className={`mb-1 text-gray-700 block text-xs font-semibold leading-5 `}>
-                Select action:
-              </label>
-              <div className="border-0 p-4  flex items-center justify-around px-6 border-gray-200 rounded-md">
-                <Tooltip
-                  placement="bottom"
-                  text="Only copy styles of selected page with blank data">
-                  <Buttons label="Copy" onClick={() => onCopyCloneAction('copy')} />
-                </Tooltip>
-                <Tooltip
-                  placement="bottom"
-                  text="Clone the whole selected page with styles">
-                  <Buttons label="Clone" onClick={() => onCopyCloneAction('clone')} />
-                </Tooltip>
-              </div>
+        <div className="flex flex-col items-center space-y-2 mb-2">
+          <div className="flex items-center space-x-2">
+            <div className="w-auto">
+              <FormInput
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeHolder="Search lessons"
+              />
             </div>
-          </Transition>
+            <Buttons onClick={loadLessonsOnSearch} label="Search" />
+          </div>
+        </div>
+
+        <Transition
+          show={!fetching && !isEmpty(treeViewData)}
+          enter="transition-opacity duration-200"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-150"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0">
+          <div>
+            <Info
+              text="Click on a page to select for copy / clone"
+              className="my-2 mb-4"
+            />
+            <Transition
+              show={Boolean(selectedId.lessonId) && Boolean(selectedId.pageId)}
+              enter="transition-opacity duration-150"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-75"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0">
+              <Info customText={generateDynamicInfo()} className="my-2 mb-4" />
+
+              <div className="mb-4">
+                <label
+                  className={`mb-1 text-gray-700 block text-xs font-semibold leading-5 `}>
+                  Select action:
+                </label>
+                <div className="border-0 p-4  flex items-center justify-around px-6 border-gray-200 rounded-md">
+                  <Tooltip
+                    placement="bottom"
+                    text="Only copy styles of selected page with blank data">
+                    <Buttons label="Copy" onClick={() => onCopyCloneAction('copy')} />
+                  </Tooltip>
+                  <Tooltip
+                    placement="bottom"
+                    text="Clone the whole selected page with styles">
+                    <Buttons label="Clone" onClick={() => onCopyCloneAction('clone')} />
+                  </Tooltip>
+                </div>
+              </div>
+            </Transition>
+            <Transition
+              show={status === 'loading' || status === 'done'}
+              enter="transition-opacity duration-200"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-150"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0">
+              <div style={{backgroundColor: '#ecfdf5'}} className="my-4 rounded-md  p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0 w-auto">
+                    {status !== 'loading' ? (
+                      <CheckCircleIcon
+                        className="h-5 w-5 text-green-400"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <div>
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-700"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24">
+                          <circle
+                            className="opacity-20"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="4"></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-green-800 w-auto">
+                      {status === 'loading'
+                        ? 'collecting page data...'
+                        : 'Redirecting you to your new page...'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
           <Transition
-            show={status === 'loading' || status === 'done'}
+            show={searchStatus !== 'none'}
             enter="transition-opacity duration-200"
             enterFrom="opacity-0"
             enterTo="opacity-100"
             leave="transition-opacity duration-150"
             leaveFrom="opacity-100"
             leaveTo="opacity-0">
-            <div style={{backgroundColor: '#ecfdf5'}} className="my-4 rounded-md  p-4">
-              <div className="flex">
-                <div className="flex-shrink-0 w-auto">
-                  {status !== 'loading' ? (
-                    <CheckCircleIcon
-                      className="h-5 w-5 text-green-400"
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <div>
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-green-700"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-20"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-green-800 w-auto">
-                    {status === 'loading'
-                      ? 'collecting page data...'
-                      : 'Redirecting you to your new page...'}
-                  </p>
-                </div>
+            {searchStatus === 'searching' ? (
+              <div className="h-full flex items-center justify-center">Loading</div>
+            ) : searchStatus === 'error' ? (
+              <div>Oops! Somsdsdething went wrong.</div>
+            ) : (
+              <div>
+                <Tree
+                  customClick
+                  onClick={(pageId: string, lessonId: string) => {
+                    setSelectedId({pageId, lessonId});
+                  }}
+                  selPageId={selectedId.pageId}
+                  root={treeViewData}
+                  dark
+                />
               </div>
-            </div>
+            )}
           </Transition>
-          <Tree
-            customClick
-            onClick={(pageId: string, lessonId: string) => {
-              setSelectedId({pageId, lessonId});
-            }}
-            selPageId={selectedId.pageId}
-            root={treeViewData}
-            dark
-          />
-        </div>
+        </Transition>
       </SliderOver>
-      {/* {!previewMode && ( */}
+
       <div
         hidden={previewMode}
         ref={toolbarRef}
@@ -391,20 +490,6 @@ const Toolbar = ({
           </Container>
 
           <Container>
-            {/* <Button
-                color={themeTextColor}
-                tooltip="Enable Drag"
-                icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-              /> */}
-            <Button
-              color={themeTextColor}
-              tooltip="Search Page"
-              icon={AiOutlineFileSearch}
-            />
-            <Divider theme={theme} />
-          </Container>
-
-          <Container>
             <Button color={themeTextColor} tooltip="Save changes" icon={AiOutlineSave} />
             <Button color={themeTextColor} tooltip="Discard changes" icon={VscDiscard} />
 
@@ -417,7 +502,77 @@ const Toolbar = ({
           </Container>
         </div>
       </div>
-      {/* )} */}
+
+      <div
+        hidden={previewMode}
+        style={{top: '30rem'}}
+        className={`${
+          toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
+        } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
+        <div
+          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          <div className="flex items-center flex-col">
+            <div
+              className={`flex items-center flex-col w-auto ${
+                !toolbarOnTop ? 'mb-2' : ''
+              }`}>
+              <Button
+                onClick={() => setPreviewMode(!previewMode)}
+                tooltip="Preview"
+                color={themeTextColor}
+                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
+                tooltipPlacement="left"
+              />
+
+              <Button
+                onClick={() => setShowDataForCopyClone(true)}
+                tooltip="Copy / Clone"
+                color={themeTextColor}
+                icon={AiOutlineCopy}
+                tooltipPlacement="left"
+              />
+              <>
+                <Button
+                  color={themeTextColor}
+                  tooltip="Add New Page"
+                  onClick={() => {
+                    setNewLessonPlanShow(true);
+                    setEditMode(false);
+                  }}
+                  icon={AiOutlineFileAdd}
+                  tooltipPlacement="left"
+                />
+              </>
+            </div>
+
+            <div
+              className={`flex items-center flex-col w-auto ${
+                !toolbarOnTop ? 'mb-2' : ''
+              }`}>
+              <Button
+                color={themeTextColor}
+                tooltip="Save changes"
+                icon={AiOutlineSave}
+                tooltipPlacement="left"
+              />
+              <Button
+                color={themeTextColor}
+                tooltip="Discard changes"
+                icon={VscDiscard}
+                tooltipPlacement="left"
+              />
+
+              <Button
+                color="text-red-500"
+                tooltip="Delete this page"
+                icon={AiOutlineDelete}
+                onClick={deleteLesson}
+                tooltipPlacement="left"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
