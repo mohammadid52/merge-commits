@@ -2,6 +2,8 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {HiPencil} from 'react-icons/hi';
+import {IoAdd} from 'react-icons/io5';
+import {IconContext} from 'react-icons';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import TopicsListComponent from './TopicsList';
@@ -109,20 +111,24 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
         console.log(topicsData, 'topicsData inside loop++++');
 
         objective.topics = await Promise.all(
-          (topicsData?.data.listTopics?.items || []).sort((a: any, b: any) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1).map(async (t: any) => {
-            const measurementData: any = await API.graphql(
-              graphqlOperation(customQueries.listRubrics, {
-                filter: {topicID: {eq: t.id}},
-              })
-            );
-            console.log(measurementData, 'measurementData inside nested loop');
+          (topicsData?.data.listTopics?.items || [])
+            .sort((a: any, b: any) =>
+              a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+            )
+            .map(async (t: any) => {
+              const measurementData: any = await API.graphql(
+                graphqlOperation(customQueries.listRubrics, {
+                  filter: {topicID: {eq: t.id}},
+                })
+              );
+              console.log(measurementData, 'measurementData inside nested loop');
 
-            t.rubrics =
-              measurementData.data.listRubrics?.items.sort((a: any, b: any) =>
-                a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-              ) || [];
-            return t;
-          })
+              t.rubrics =
+                measurementData.data.listRubrics?.items.sort((a: any, b: any) =>
+                  a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+                ) || [];
+              return t;
+            })
         );
       })
     );
@@ -284,46 +290,91 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                         </div>
 
                                         <div className="mt-5 h-48 overflow-y-auto">
-                                          {learning.topics.map((topic: any) => (
-                                            <div key={topic.id} className="pr-1 mb-2">
-                                              <div className="flex justify-between items-center">
-                                                <span
-                                                  className={`text-lg ${theme.text.active} font-bold	`}>
-                                                  {topic.name}
-                                                </span>
-                                                <span
-                                                  className="w-auto cursor-pointer"
-                                                  onClick={() =>
-                                                    editCurrentTopic(topic.id)
-                                                  }>
-                                                  <HiPencil className="w-4 h-4" />
-                                                </span>
-                                              </div>
-                                              <ul className="pl-3">
-                                                {topic.rubrics.map((rubric: any) => (
-                                                  <li
-                                                    className="flex justify-between items-center py-1"
-                                                    key={rubric.id}>
-                                                    <span>{rubric.name}</span>
-                                                    <span
-                                                      className="w-auto cursor-pointer"
-                                                      onClick={() =>
-                                                        editCurrentMeasurement(rubric.id)
-                                                      }>
-                                                      <HiPencil className="w-4 h-4" />
-                                                    </span>
-                                                  </li>
-                                                ))}
-                                                <div
-                                                  className={`text-base ${theme.text.active}`}
-                                                  onClick={() =>
-                                                    createNewMeasurement(topic.id)
-                                                  }>
-                                                  Add new measurement
+                                          {learning.topics?.length ? (
+                                            learning.topics.map((topic: any) => (
+                                              <div key={topic.id} className="pr-1 mb-2">
+                                                <div className="flex justify-between items-center">
+                                                  <span
+                                                    className={`text-lg ${theme.text.active} font-bold	`}>
+                                                    {topic.name}
+                                                  </span>
+                                                  <span
+                                                    className="w-auto cursor-pointer"
+                                                    onClick={() =>
+                                                      editCurrentTopic(topic.id)
+                                                    }>
+                                                    <HiPencil className="w-4 h-4" />
+                                                  </span>
                                                 </div>
-                                              </ul>
+                                                <ul className="pl-3">
+                                                  {topic.rubrics?.length ? (
+                                                    topic.rubrics.map((rubric: any) => (
+                                                      <li
+                                                        className="flex justify-between items-center py-1"
+                                                        key={rubric.id}>
+                                                        <span>{rubric.name}</span>
+                                                        <span
+                                                          className="w-auto cursor-pointer"
+                                                          onClick={() =>
+                                                            editCurrentMeasurement(
+                                                              rubric.id
+                                                            )
+                                                          }>
+                                                          <HiPencil className="w-4 h-4" />
+                                                        </span>
+                                                      </li>
+                                                    ))
+                                                  ) : learning.topics?.length < 2 ? (
+                                                    <div className="flex justify-center items-center">
+                                                      <div
+                                                        className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                                        onClick={() =>
+                                                          createNewMeasurement(topic.id)
+                                                        }>
+                                                        <span className="w-6 h-6 flex items-center mr-4">
+                                                          <IconContext.Provider
+                                                            value={{
+                                                              size: '1.5rem',
+                                                              color: 'darkgray',
+                                                            }}>
+                                                            <IoAdd />
+                                                          </IconContext.Provider>
+                                                        </span>
+                                                        Add measurement
+                                                      </div>
+                                                    </div>
+                                                  ) : (
+                                                    <div
+                                                      className={`text-base ${theme.text.active}`}
+                                                      onClick={() =>
+                                                        createNewMeasurement(topic.id)
+                                                      }>
+                                                      Add new measurement
+                                                    </div>
+                                                  )}
+                                                </ul>
+                                              </div>
+                                            ))
+                                          ) : (
+                                            <div className="flex justify-center items-center">
+                                              <div
+                                                className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 h-36 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                                onClick={() =>
+                                                  createNewTopic(learning.id)
+                                                }>
+                                                <span className="w-6 h-6 flex items-center mr-4">
+                                                  <IconContext.Provider
+                                                    value={{
+                                                      size: '1.5rem',
+                                                      color: 'darkgray',
+                                                    }}>
+                                                    <IoAdd />
+                                                  </IconContext.Provider>
+                                                </span>
+                                                Add Topic
+                                              </div>
                                             </div>
-                                          ))}
+                                          )}
                                         </div>
                                       </div>
                                       <div className="border border-t-0 flex justify-center">
