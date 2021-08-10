@@ -75,14 +75,14 @@ const curate_assets: any = {
 };
 
 const demo_assets: any = {
-  appTitle: 'Demo App',
+  appTitle: 'Edges First',
   main_logo: 'https://zoiqclients.s3.amazonaws.com/Edges+First+Logo+Final+PNG-01.png',
   login_page_logo: 'https://zoiqclients.s3.amazonaws.com/Edges+First+Logo+Final+PNG-01.png',
   loading_logo: 'https://zoiqclients.s3.amazonaws.com/Edges+First+Logo+Final+PNG-01.png',
-  logo_symbol: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
-  faviconDefault: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
-  favicon16x16: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
-  favicon32x32: 'https://zoiqappdemoimages.s3.amazonaws.com/ISP.png',
+  logo_symbol: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  faviconDefault: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  favicon16x16: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
+  favicon32x32: 'https://selready.s3.us-east-2.amazonaws.com/Asset+2.png',
   manifest: 'https://zoiqclients.s3.amazonaws.com/demo/demologos/site.webmanifest',
   appleTouchIcon:
     'https://zoiqclients.s3.amazonaws.com/demo/demologos/apple-touch-icon.png',
