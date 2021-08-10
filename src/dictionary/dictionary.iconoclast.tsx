@@ -566,6 +566,8 @@ const classRoomDict: any = {
       TEACH: 'TEACH',
       ACTIVE: 'ACTIVE',
       COMPLETED: 'COMPLETED',
+      OPENED: 'Opened',
+      CLOSED: 'Closed'
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,

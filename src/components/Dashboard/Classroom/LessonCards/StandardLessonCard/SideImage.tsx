@@ -22,12 +22,12 @@ const SideImage = (props: LessonCardProps) => {
       }}>
       <div className="h-24 sm:h-6/10 flex justify-center items-center" />
 
-      {/* <div className="mt-4">
+      <div className="mt-4">
         <div className="h-1/10 pl-6">
           <div
             className="tracking-widest border-b-0 text-gray-300 border-ketchup"
             style={{textShadow: '1px 1px black'}}>
-            FEATURED PERSON
+            {lessonProps?.lesson?.cardCaption}
           </div>
         </div>
         <div className="h-14 flex flex-row-reverse">
@@ -39,7 +39,7 @@ const SideImage = (props: LessonCardProps) => {
               : null}
           </h2>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

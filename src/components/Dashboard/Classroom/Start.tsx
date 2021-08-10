@@ -229,11 +229,18 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const firstPart = () => {
     if (isTeacher) {
       if (type === 'survey' || type === 'assessment') {
-        if (open) {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['DISABLE'];
+        if (isCompleted) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+        } else if (isActive) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['ACTIVE'];
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
+        // if (open) {
+        //   return classRoomDict[userLanguage]['BOTTOM_BAR']['DISABLE'];
+        // } else {
+        // return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
+        // }
       } else {
         if (isCompleted) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
@@ -260,7 +267,11 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         case 'assessment':
           return classRoomDict[userLanguage]['ASSESSMENT'].toUpperCase();
         case 'survey':
-          return classRoomDict[userLanguage]['SURVEY'].toUpperCase();
+          return isActive
+            ? classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED']
+            : isCompleted
+            ? classRoomDict[userLanguage]['BOTTOM_BAR']['CLOSED']
+            : classRoomDict[userLanguage]['SURVEY'].toUpperCase();
         default:
           return type.toUpperCase();
       }
@@ -271,11 +282,13 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   const studentTeacherButtonTheme = () => {
     // if (type === 'lesson') {
-      if (isActive) {
-        return theme.btn.lessonStart;
-      } else {
-        return theme.btn.iconoclastIndigo;
-      }
+    if (isActive) {
+      return theme.btn.lessonStart;
+    } else if (isCompleted) {
+      return 'bg-gray-500';
+    } else {
+      return theme.btn.iconoclastIndigo;
+    }
     // }
     // else {
     //   if (!isTeacher) {

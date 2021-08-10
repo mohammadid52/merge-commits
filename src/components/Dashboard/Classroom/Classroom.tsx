@@ -62,6 +62,7 @@ export interface Lesson {
     purpose?: string;
     duration?: number | null;
     cardImage?: string | null;
+    cardCaption?: string;
     totalEstTime?: number;
   };
   session?: number;
