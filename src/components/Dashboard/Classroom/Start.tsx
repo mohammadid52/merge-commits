@@ -283,7 +283,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     if (isActive) {
       return theme.btn.lessonStart;
     } else if (isCompleted) {
-      return 'bg-gray-500';
+      return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
     } else {
       return theme.btn.iconoclastIndigo;
     }
