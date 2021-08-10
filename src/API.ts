@@ -19,6 +19,7 @@ export type ClassStudent = {
   studentEmail?: string,
   studentAuthID?: string,
   status?: string | null,
+  group?: string | null,
   class?: Class,
   student?: Person,
   createdAt?: string,
@@ -1063,6 +1064,9 @@ export type UniversalLesson = {
   homework?:  Array<UniversalLessonPlan | null > | null,
   darkMode?: boolean | null,
   rubrics?: Array< string | null > | null,
+  smallGroup?: string | null,
+  groupSize?: number | null,
+  groupType?: string | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -1632,6 +1636,7 @@ export type ModelClassStudentConditionInput = {
   studentEmail?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
   status?: ModelStringInput | null,
+  group?: ModelStringInput | null,
   and?: Array< ModelClassStudentConditionInput | null > | null,
   or?: Array< ModelClassStudentConditionInput | null > | null,
   not?: ModelClassStudentConditionInput | null,
@@ -1644,6 +1649,7 @@ export type UpdateClassStudentInput = {
   studentEmail?: string | null,
   studentAuthID?: string | null,
   status?: string | null,
+  group?: string | null,
 };
 
 export type DeleteClassStudentInput = {
@@ -3473,6 +3479,9 @@ export type CreateUniversalLessonInput = {
   homework?: Array< UniversalLessonPlanInput | null > | null,
   darkMode?: boolean | null,
   rubrics?: Array< string | null > | null,
+  smallGroup?: string | null,
+  groupSize?: number | null,
+  groupType?: string | null,
 };
 
 export type UniversalLessonPlanInput = {
@@ -3549,6 +3558,9 @@ export type ModelUniversalLessonConditionInput = {
   cardCaption?: ModelStringInput | null,
   darkMode?: ModelBooleanInput | null,
   rubrics?: ModelStringInput | null,
+  smallGroup?: ModelStringInput | null,
+  groupSize?: ModelIntInput | null,
+  groupType?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonConditionInput | null > | null,
   or?: Array< ModelUniversalLessonConditionInput | null > | null,
   not?: ModelUniversalLessonConditionInput | null,
@@ -3591,6 +3603,9 @@ export type UpdateUniversalLessonInput = {
   homework?: Array< UniversalLessonPlanInput | null > | null,
   darkMode?: boolean | null,
   rubrics?: Array< string | null > | null,
+  smallGroup?: string | null,
+  groupSize?: number | null,
+  groupType?: string | null,
 };
 
 export type DeleteUniversalLessonInput = {
@@ -3608,6 +3623,8 @@ export type CreateUniversalLessonStudentDataInput = {
   currentLocation?: string | null,
   lessonProgress?: string | null,
   pageData?: Array< PartInputInput | null > | null,
+  hasExerciseData?: boolean | null,
+  exerciseData?: Array< ExerciseDataInput | null > | null,
 };
 
 export type PartInputInput = {
@@ -3621,6 +3638,18 @@ export type InputCommentInput = {
   comment?: string | null,
 };
 
+export type ExerciseDataInput = {
+  id: string,
+  entryData?: Array< JournalEntryDataInput | null > | null,
+  feedbacks?: Array< string | null > | null,
+};
+
+export type JournalEntryDataInput = {
+  domID?: string | null,
+  type?: string | null,
+  input?: string | null,
+};
+
 export type ModelUniversalLessonStudentDataConditionInput = {
   syllabusLessonID?: ModelIDInput | null,
   lessonID?: ModelIDInput | null,
@@ -3630,6 +3659,7 @@ export type ModelUniversalLessonStudentDataConditionInput = {
   studentEmail?: ModelStringInput | null,
   currentLocation?: ModelStringInput | null,
   lessonProgress?: ModelStringInput | null,
+  hasExerciseData?: ModelBooleanInput | null,
   and?: Array< ModelUniversalLessonStudentDataConditionInput | null > | null,
   or?: Array< ModelUniversalLessonStudentDataConditionInput | null > | null,
   not?: ModelUniversalLessonStudentDataConditionInput | null,
@@ -3647,6 +3677,8 @@ export type UniversalLessonStudentData = {
   currentLocation?: string | null,
   lessonProgress?: string | null,
   pageData?:  Array<partInput | null > | null,
+  hasExerciseData?: boolean | null,
+  exerciseData?:  Array<ExerciseData | null > | null,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -3664,6 +3696,20 @@ export type InputComment = {
   comment?: string | null,
 };
 
+export type ExerciseData = {
+  __typename: "ExerciseData",
+  id?: string,
+  entryData?:  Array<JournalEntryData | null > | null,
+  feedbacks?: Array< string | null > | null,
+};
+
+export type JournalEntryData = {
+  __typename: "JournalEntryData",
+  domID?: string | null,
+  type?: string | null,
+  input?: string | null,
+};
+
 export type UpdateUniversalLessonStudentDataInput = {
   id: string,
   syllabusLessonID?: string | null,
@@ -3675,9 +3721,59 @@ export type UpdateUniversalLessonStudentDataInput = {
   currentLocation?: string | null,
   lessonProgress?: string | null,
   pageData?: Array< PartInputInput | null > | null,
+  hasExerciseData?: boolean | null,
+  exerciseData?: Array< ExerciseDataInput | null > | null,
 };
 
 export type DeleteUniversalLessonStudentDataInput = {
+  id: string,
+};
+
+export type CreateUniversalJournalDataInput = {
+  id?: string | null,
+  studentID: string,
+  studentAuthID: string,
+  studentEmail: string,
+  type: string,
+  entryData?: Array< JournalEntryDataInput | null > | null,
+  feedbacks?: Array< string | null > | null,
+};
+
+export type ModelUniversalJournalDataConditionInput = {
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  feedbacks?: ModelStringInput | null,
+  and?: Array< ModelUniversalJournalDataConditionInput | null > | null,
+  or?: Array< ModelUniversalJournalDataConditionInput | null > | null,
+  not?: ModelUniversalJournalDataConditionInput | null,
+};
+
+export type UniversalJournalData = {
+  __typename: "UniversalJournalData",
+  id?: string,
+  studentID?: string,
+  studentAuthID?: string,
+  studentEmail?: string,
+  type?: string,
+  entryData?:  Array<JournalEntryData | null > | null,
+  feedbacks?: Array< string | null > | null,
+  createdAt?: string,
+  updatedAt?: string,
+};
+
+export type UpdateUniversalJournalDataInput = {
+  id: string,
+  studentID?: string | null,
+  studentAuthID?: string | null,
+  studentEmail?: string | null,
+  type?: string | null,
+  entryData?: Array< JournalEntryDataInput | null > | null,
+  feedbacks?: Array< string | null > | null,
+};
+
+export type DeleteUniversalJournalDataInput = {
   id: string,
 };
 
@@ -3960,6 +4056,7 @@ export type ModelClassStudentFilterInput = {
   studentEmail?: ModelStringInput | null,
   studentAuthID?: ModelStringInput | null,
   status?: ModelStringInput | null,
+  group?: ModelStringInput | null,
   and?: Array< ModelClassStudentFilterInput | null > | null,
   or?: Array< ModelClassStudentFilterInput | null > | null,
   not?: ModelClassStudentFilterInput | null,
@@ -4565,6 +4662,9 @@ export type ModelUniversalLessonFilterInput = {
   cardCaption?: ModelStringInput | null,
   darkMode?: ModelBooleanInput | null,
   rubrics?: ModelStringInput | null,
+  smallGroup?: ModelStringInput | null,
+  groupSize?: ModelIntInput | null,
+  groupType?: ModelStringInput | null,
   and?: Array< ModelUniversalLessonFilterInput | null > | null,
   or?: Array< ModelUniversalLessonFilterInput | null > | null,
   not?: ModelUniversalLessonFilterInput | null,
@@ -4586,6 +4686,7 @@ export type ModelUniversalLessonStudentDataFilterInput = {
   studentEmail?: ModelStringInput | null,
   currentLocation?: ModelStringInput | null,
   lessonProgress?: ModelStringInput | null,
+  hasExerciseData?: ModelBooleanInput | null,
   and?: Array< ModelUniversalLessonStudentDataFilterInput | null > | null,
   or?: Array< ModelUniversalLessonStudentDataFilterInput | null > | null,
   not?: ModelUniversalLessonStudentDataFilterInput | null,
@@ -4594,6 +4695,24 @@ export type ModelUniversalLessonStudentDataFilterInput = {
 export type ModelUniversalLessonStudentDataConnection = {
   __typename: "ModelUniversalLessonStudentDataConnection",
   items?:  Array<UniversalLessonStudentData | null > | null,
+  nextToken?: string | null,
+};
+
+export type ModelUniversalJournalDataFilterInput = {
+  id?: ModelIDInput | null,
+  studentID?: ModelIDInput | null,
+  studentAuthID?: ModelIDInput | null,
+  studentEmail?: ModelStringInput | null,
+  type?: ModelStringInput | null,
+  feedbacks?: ModelStringInput | null,
+  and?: Array< ModelUniversalJournalDataFilterInput | null > | null,
+  or?: Array< ModelUniversalJournalDataFilterInput | null > | null,
+  not?: ModelUniversalJournalDataFilterInput | null,
+};
+
+export type ModelUniversalJournalDataConnection = {
+  __typename: "ModelUniversalJournalDataConnection",
+  items?:  Array<UniversalJournalData | null > | null,
   nextToken?: string | null,
 };
 
@@ -4656,6 +4775,7 @@ export type BatchAddClassStudentMutation = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -5138,6 +5258,7 @@ export type CreatePersonMutation = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5187,6 +5308,7 @@ export type UpdatePersonMutation = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -5236,6 +5358,7 @@ export type DeletePersonMutation = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -7175,6 +7298,7 @@ export type CreateClassMutation = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -7284,6 +7408,7 @@ export type UpdateClassMutation = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -7393,6 +7518,7 @@ export type DeleteClassMutation = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -7417,6 +7543,7 @@ export type CreateClassStudentMutation = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -7502,6 +7629,7 @@ export type UpdateClassStudentMutation = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -7587,6 +7715,7 @@ export type DeleteClassStudentMutation = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -17427,6 +17556,9 @@ export type CreateAttendanceMutation = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17674,6 +17806,9 @@ export type UpdateAttendanceMutation = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -17921,6 +18056,9 @@ export type DeleteAttendanceMutation = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18171,6 +18309,9 @@ export type CreateUniversalLessonMutation = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18252,6 +18393,9 @@ export type UpdateUniversalLessonMutation = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18333,6 +18477,9 @@ export type DeleteUniversalLessonMutation = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18364,6 +18511,18 @@ export type CreateUniversalLessonStudentDataMutation = {
         commentBy?: string | null,
         comment?: string | null,
       } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -18397,6 +18556,18 @@ export type UpdateUniversalLessonStudentDataMutation = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18429,6 +18600,93 @@ export type DeleteUniversalLessonStudentDataMutation = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateUniversalJournalDataMutationVariables = {
+  input?: CreateUniversalJournalDataInput,
+  condition?: ModelUniversalJournalDataConditionInput | null,
+};
+
+export type CreateUniversalJournalDataMutation = {
+  createUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateUniversalJournalDataMutationVariables = {
+  input?: UpdateUniversalJournalDataInput,
+  condition?: ModelUniversalJournalDataConditionInput | null,
+};
+
+export type UpdateUniversalJournalDataMutation = {
+  updateUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteUniversalJournalDataMutationVariables = {
+  input?: DeleteUniversalJournalDataInput,
+  condition?: ModelUniversalJournalDataConditionInput | null,
+};
+
+export type DeleteUniversalJournalDataMutation = {
+  deleteUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -18645,6 +18903,9 @@ export type CreateUniversalSyllabusLessonMutation = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18777,6 +19038,9 @@ export type UpdateUniversalSyllabusLessonMutation = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -18909,6 +19173,9 @@ export type DeleteUniversalSyllabusLessonMutation = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -19015,6 +19282,9 @@ export type CreateUniversalLessonFeedbackMutation = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -19093,6 +19363,9 @@ export type UpdateUniversalLessonFeedbackMutation = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -19171,6 +19444,9 @@ export type DeleteUniversalLessonFeedbackMutation = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -19241,6 +19517,7 @@ export type GetPersonQuery = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -20257,6 +20534,7 @@ export type GetClassQuery = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -20329,6 +20607,7 @@ export type GetClassStudentQuery = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -20417,6 +20696,7 @@ export type ListClassStudentsQuery = {
       studentEmail: string,
       studentAuthID: string,
       status?: string | null,
+      group?: string | null,
       class?:  {
         __typename: "Class",
         id: string,
@@ -24572,6 +24852,9 @@ export type GetAttendanceQuery = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -24755,6 +25038,9 @@ export type ListAttendancesQuery = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -24920,6 +25206,9 @@ export type GetUniversalLessonQuery = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -24992,6 +25281,9 @@ export type ListUniversalLessonsQuery = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -25025,6 +25317,18 @@ export type GetUniversalLessonStudentDataQuery = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -25057,6 +25361,68 @@ export type ListUniversalLessonStudentDatasQuery = {
         domID?: string | null,
         input?: Array< string | null > | null,
       } | null > | null,
+      hasExerciseData?: boolean | null,
+      exerciseData?:  Array< {
+        __typename: "ExerciseData",
+        id: string,
+        feedbacks?: Array< string | null > | null,
+      } | null > | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetUniversalJournalDataQueryVariables = {
+  id?: string,
+};
+
+export type GetUniversalJournalDataQuery = {
+  getUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListUniversalJournalDatasQueryVariables = {
+  id?: string | null,
+  filter?: ModelUniversalJournalDataFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  sortDirection?: ModelSortDirection | null,
+};
+
+export type ListUniversalJournalDatasQuery = {
+  listUniversalJournalDatas?:  {
+    __typename: "ModelUniversalJournalDataConnection",
+    items?:  Array< {
+      __typename: "UniversalJournalData",
+      id: string,
+      studentID: string,
+      studentAuthID: string,
+      studentEmail: string,
+      type: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
     } | null > | null,
@@ -25218,6 +25584,9 @@ export type GetUniversalSyllabusLessonQuery = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -25321,6 +25690,9 @@ export type ListUniversalSyllabusLessonsQuery = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25397,6 +25769,9 @@ export type GetUniversalLessonFeedbackQuery = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -25812,6 +26187,9 @@ export type AttendanceByStudentQuery = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -26553,6 +26931,18 @@ export type OnChangeUniversalLessonStudentDataSubscription = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -26769,6 +27159,7 @@ export type OnCreatePersonSubscription = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -26813,6 +27204,7 @@ export type OnUpdatePersonSubscription = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -26857,6 +27249,7 @@ export type OnDeletePersonSubscription = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -28716,6 +29109,7 @@ export type OnCreateClassSubscription = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -28820,6 +29214,7 @@ export type OnUpdateClassSubscription = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -28924,6 +29319,7 @@ export type OnDeleteClassSubscription = {
         studentEmail: string,
         studentAuthID: string,
         status?: string | null,
+        group?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null > | null,
@@ -28943,6 +29339,7 @@ export type OnCreateClassStudentSubscription = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -29023,6 +29420,7 @@ export type OnUpdateClassStudentSubscription = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -29103,6 +29501,7 @@ export type OnDeleteClassStudentSubscription = {
     studentEmail: string,
     studentAuthID: string,
     status?: string | null,
+    group?: string | null,
     class?:  {
       __typename: "Class",
       id: string,
@@ -37750,6 +38149,9 @@ export type OnCreateAttendanceSubscription = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -37992,6 +38394,9 @@ export type OnUpdateAttendanceSubscription = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -38234,6 +38639,9 @@ export type OnDeleteAttendanceSubscription = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -38464,6 +38872,9 @@ export type OnCreateUniversalLessonSubscription = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38540,6 +38951,9 @@ export type OnUpdateUniversalLessonSubscription = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38616,6 +39030,9 @@ export type OnDeleteUniversalLessonSubscription = {
     } | null > | null,
     darkMode?: boolean | null,
     rubrics?: Array< string | null > | null,
+    smallGroup?: string | null,
+    groupSize?: number | null,
+    groupType?: string | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38642,6 +39059,18 @@ export type OnCreateUniversalLessonStudentDataSubscription = {
         commentBy?: string | null,
         comment?: string | null,
       } | null > | null,
+    } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
     } | null > | null,
     createdAt: string,
     updatedAt: string,
@@ -38670,6 +39099,18 @@ export type OnUpdateUniversalLessonStudentDataSubscription = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+    } | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38697,6 +39138,78 @@ export type OnDeleteUniversalLessonStudentDataSubscription = {
         comment?: string | null,
       } | null > | null,
     } | null > | null,
+    hasExerciseData?: boolean | null,
+    exerciseData?:  Array< {
+      __typename: "ExerciseData",
+      id: string,
+      entryData?:  Array< {
+        __typename: "JournalEntryData",
+        domID?: string | null,
+        type?: string | null,
+        input?: string | null,
+      } | null > | null,
+      feedbacks?: Array< string | null > | null,
+    } | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateUniversalJournalDataSubscription = {
+  onCreateUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateUniversalJournalDataSubscription = {
+  onUpdateUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteUniversalJournalDataSubscription = {
+  onDeleteUniversalJournalData?:  {
+    __typename: "UniversalJournalData",
+    id: string,
+    studentID: string,
+    studentAuthID: string,
+    studentEmail: string,
+    type: string,
+    entryData?:  Array< {
+      __typename: "JournalEntryData",
+      domID?: string | null,
+      type?: string | null,
+      input?: string | null,
+    } | null > | null,
+    feedbacks?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -38893,6 +39406,9 @@ export type OnCreateUniversalSyllabusLessonSubscription = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -39020,6 +39536,9 @@ export type OnUpdateUniversalSyllabusLessonSubscription = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -39147,6 +39666,9 @@ export type OnDeleteUniversalSyllabusLessonSubscription = {
       } | null > | null,
       darkMode?: boolean | null,
       rubrics?: Array< string | null > | null,
+      smallGroup?: string | null,
+      groupSize?: number | null,
+      groupType?: string | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -39248,6 +39770,9 @@ export type OnCreateUniversalLessonFeedbackSubscription = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -39321,6 +39846,9 @@ export type OnUpdateUniversalLessonFeedbackSubscription = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
@@ -39394,6 +39922,9 @@ export type OnDeleteUniversalLessonFeedbackSubscription = {
         cardCaption?: string | null,
         darkMode?: boolean | null,
         rubrics?: Array< string | null > | null,
+        smallGroup?: string | null,
+        groupSize?: number | null,
+        groupType?: string | null,
         createdAt: string,
         updatedAt: string,
       } | null,
