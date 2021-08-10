@@ -163,9 +163,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     }
 
     if (isTeacher) {
-      if (type === 'survey' || type === 'assessment') {
-        toggleEnableDisable();
-      } else {
+      // if (type === 'survey' || type === 'assessment') {
+      //   toggleEnableDisable();
+      // } else {
         if (isActive) {
           if (!attendanceRecorded) {
             recordAttendance();
@@ -174,14 +174,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         } else {
           toggleLessonSwitchAlert();
         }
-      }
+      // }
     }
   };
 
   const discardChanges = async () => {
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
-        input: {id: roomID, activeLessons: [...state.roomData.activeLessons, lessonKey]},
+        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]},
       })
     );
     history.push(`${`/lesson-control/${lessonKey}`}`);
@@ -229,10 +229,8 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const firstPart = () => {
     if (isTeacher) {
       if (type === 'survey' || type === 'assessment') {
-        if (isCompleted) {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
-        } else if (isActive) {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['ACTIVE'];
+        if (isCompleted || isActive) {
+          return classRoomDict[userLanguage]['SURVEY'];
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
