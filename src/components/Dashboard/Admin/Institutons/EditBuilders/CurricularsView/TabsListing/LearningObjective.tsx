@@ -20,6 +20,7 @@ import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import {getAsset} from '../../../../../../../assets';
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
+import {IoIosAdd} from 'react-icons/io';
 
 interface LearningObjectiveListProps {
   curricularId: string;
@@ -35,7 +36,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const [learningIds, setLearningIds] = useState([]);
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {LEARINGOBJECTIVEDICT, BreadcrumsTitles} = useDictionary(clientKey);
+  const {LEARINGOBJECTIVEDICT, TOPICLISTDICT} = useDictionary(clientKey);
 
   const history = useHistory();
 
@@ -381,9 +382,24 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                         <Buttons
                                           type="submit"
                                           onClick={() => createNewTopic(learning.id)}
-                                          label={'Add Topic'}
+                                          label={
+                                            <>
+                                              <span className="w-8 h-8 inline-flex items-center">
+                                                <IconContext.Provider
+                                                  value={{
+                                                    size: '1.2rem',
+                                                    color: '#ffffff',
+                                                  }}>
+                                                  <IoIosAdd />
+                                                </IconContext.Provider>
+                                              </span>
+                                              <span>
+                                                {TOPICLISTDICT[userLanguage]['ADD']}
+                                              </span>
+                                            </>
+                                          }
                                           overrideClass={true}
-                                          btnClass={`h-9 w-auto my-2 rounded px-12 text-xs focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
+                                          btnClass={`h-9 w-auto my-2 flex rounded px-12 text-xs focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
                                         />
                                       </div>
                                     </div>
