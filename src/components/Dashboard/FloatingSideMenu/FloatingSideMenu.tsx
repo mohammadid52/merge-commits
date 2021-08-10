@@ -14,15 +14,39 @@ export interface FloatingSideMenuProps {
   overlay?: string;
   callback?: any;
   callbackArg?: any;
+  saveInProgress?: boolean;
+  setSaveInProgress?: any;
 }
 
 const FloatingSideMenu = () => {
+  const {browser} = useDeviceDetect();
+  const scrollbarMarginRight = browser.includes('Firefox') ? 'mr-4' : 'mr-3';
+
   const [menuOpenLevel, setMenuOpenLevel] = useState<number>(0);
   const [focusSection, setFocusSection] = useState<string>('');
   const [chatroom, setChatroom] = useState<any>({});
 
-  const {browser} = useDeviceDetect();
-  const scrollbarMarginRight = browser.includes('Firefox') ? 'mr-4' : 'mr-3';
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
+  const [fnQueue, setFnQueue] = useState<any[]>([]);
+
+  const loopFns = async () => {
+    const loopedFns = await fnQueue.reduce(async (acc: any[], func: any, idx: number) => {
+      func();
+      if (idx === fnQueue.length - 1) {
+        console.log('queue cleared...');
+      }
+      return acc;
+    }, []);
+    return loopedFns;
+  };
+
+  useEffect(() => {
+    if (fnQueue.length > 0 && !saveInProgress) {
+      loopFns().then((_: void) => {
+        console.log('queue cleared part 2 ...');
+      });
+    }
+  }, [fnQueue, saveInProgress]);
 
   const setMenuState = (level: number, section: string) => {
     if (level === -1 && section === 'reset') {
@@ -52,6 +76,32 @@ const FloatingSideMenu = () => {
     }
   };
 
+  const handleSetMenuState = (level: number, section: string) => {
+    if (saveInProgress) {
+      setFnQueue((prevState: any[]) => [
+        ...prevState,
+        () => {
+          setMenuState(level, section);
+        },
+      ]);
+    } else {
+      setMenuState(level, section);
+    }
+  };
+
+  const handleSetFocusSection = (section: string) => {
+    if (saveInProgress) {
+      setFnQueue((prevState: any[]) => [
+        ...prevState,
+        () => {
+          setFocusSection(section);
+        },
+      ]);
+    } else {
+      setFocusSection(section);
+    }
+  };
+
   return (
     <div>
       <div className={`relative`}>
@@ -77,16 +127,17 @@ const FloatingSideMenu = () => {
               className={`relative transition transition-all ease-in-out duration-400 w-full h-full`}>
               <FloatingBar
                 menuState={menuOpenLevel}
-                setMenuState={setMenuState}
+                setMenuState={handleSetMenuState}
                 focusSection={focusSection}
-                setFocusSection={setFocusSection}
+                setFocusSection={handleSetFocusSection}
                 chatroom={chatroom}
               />
               <ExpandedMenu
                 menuState={menuOpenLevel}
-                setMenuState={setMenuState}
+                setMenuState={handleSetMenuState}
+                setSaveInProgress={setSaveInProgress}
                 focusSection={focusSection}
-                setFocusSection={setFocusSection}
+                setFocusSection={handleSetFocusSection}
                 chatroom={chatroom}
                 setChatroom={setChatroom}
               />

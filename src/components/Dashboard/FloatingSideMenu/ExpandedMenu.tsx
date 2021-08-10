@@ -18,6 +18,8 @@ const ExpandedMenu = (props: {
   setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   chatroom?: any;
   setChatroom?: React.Dispatch<React.SetStateAction<any>>;
+  saveInProgress?: boolean;
+  setSaveInProgress?: any;
 }) => {
   const {
     menuState,
@@ -26,6 +28,8 @@ const ExpandedMenu = (props: {
     setFocusSection,
     chatroom,
     setChatroom,
+    saveInProgress,
+    setSaveInProgress,
   } = props;
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonDict} = useDictionary(clientKey);
@@ -121,10 +125,16 @@ const ExpandedMenu = (props: {
           <SideMenuSection
             menuState={menuState}
             setMenuState={setMenuState}
+            saveInProgress={saveInProgress}
+            setSaveInProgress={setSaveInProgress}
             sectionLabel={`Notes`}
             sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
             focusSection={focusSection}>
-            <NotesForm focusSection={focusSection} />
+            <NotesForm
+              focusSection={focusSection}
+              saveInProgress={saveInProgress}
+              setSaveInProgress={setSaveInProgress}
+            />
           </SideMenuSection>
         )}
       </div>

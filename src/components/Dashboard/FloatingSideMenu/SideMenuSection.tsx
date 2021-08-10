@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import ButtonsRound from '../../Atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {IconType} from 'react-icons';
 import {AiOutlineSave} from 'react-icons/all';
-import { LessonContext } from '../../../contexts/LessonContext';
+import {LessonContext} from '../../../contexts/LessonContext';
 
 export const SideMenuSection = (props: {
   menuState?: number;
@@ -16,6 +16,8 @@ export const SideMenuSection = (props: {
   setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   isOpen?: boolean;
   isChatActive?: boolean;
+  saveInProgress?: boolean;
+  setSaveInProgress?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const {
     menuState,
@@ -25,8 +27,9 @@ export const SideMenuSection = (props: {
     sectionTitle,
     focusSection,
     setFocusSection,
+    saveInProgress,
+    setSaveInProgress,
   } = props;
-  const LessonCTX = useContext(LessonContext);
   const thisSectionActive = focusSection === sectionLabel;
   const noSectionActive = focusSection === '';
 
@@ -40,15 +43,12 @@ export const SideMenuSection = (props: {
   };
 
   const handleCloseOrSave = () => {
-    if(menuState > 0 && thisSectionActive && focusSection === 'Notes'){
-      if(LessonCTX !== null) {
-        LessonCTX.dispatch({type: 'INCREMENT_SAVE_COUNT'});
-      }
-      setMenuState(-1, 'reset')
+    if (menuState > 0 && thisSectionActive && focusSection === 'Notes') {
+      setMenuState(-1, 'reset');
     } else {
-      setMenuState(-1, 'reset')
+      setMenuState(-1, 'reset');
     }
-  }
+  };
 
   return (
     <div
