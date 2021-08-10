@@ -25,7 +25,7 @@ const SideImage = (props: LessonCardProps) => {
       <div className="mt-4">
         <div className="h-1/10 pl-6">
           <div
-            className="tracking-widest border-b-0 text-gray-300 border-ketchup"
+            className="tracking-widest border-b-0 text-2xl md:text-lg text-gray-300 border-ketchup"
             style={{textShadow: '1px 1px black'}}>
             {lessonProps?.lesson?.cardCaption}
           </div>
