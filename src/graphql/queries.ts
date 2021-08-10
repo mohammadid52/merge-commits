@@ -34,6 +34,7 @@ export const getPerson = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -952,6 +953,7 @@ export const getClass = /* GraphQL */ `
           studentEmail
           studentAuthID
           status
+          group
           createdAt
           updatedAt
         }
@@ -1014,6 +1016,7 @@ export const getClassStudent = /* GraphQL */ `
       studentEmail
       studentAuthID
       status
+      group
       class {
         id
         institutionID
@@ -1093,6 +1096,7 @@ export const listClassStudents = /* GraphQL */ `
         studentEmail
         studentAuthID
         status
+        group
         class {
           id
           institutionID
@@ -4810,6 +4814,9 @@ export const getAttendance = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -4980,6 +4987,9 @@ export const listAttendances = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
@@ -5129,6 +5139,9 @@ export const getUniversalLesson = /* GraphQL */ `
       }
       darkMode
       rubrics
+      smallGroup
+      groupSize
+      groupType
       createdAt
       updatedAt
     }
@@ -5202,6 +5215,9 @@ export const listUniversalLessons = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -5228,6 +5244,16 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
           commentBy
           comment
         }
+      }
+      hasExerciseData
+      exerciseData {
+        id
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
       }
       createdAt
       updatedAt
@@ -5263,6 +5289,64 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
           domID
           input
         }
+        hasExerciseData
+        exerciseData {
+          id
+          feedbacks
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getUniversalJournalData = /* GraphQL */ `
+  query GetUniversalJournalData($id: ID!) {
+    getUniversalJournalData(id: $id) {
+      id
+      studentID
+      studentAuthID
+      studentEmail
+      type
+      entryData {
+        domID
+        type
+        input
+      }
+      feedbacks
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUniversalJournalDatas = /* GraphQL */ `
+  query ListUniversalJournalDatas(
+    $id: ID
+    $filter: ModelUniversalJournalDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalJournalDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        studentID
+        studentAuthID
+        studentEmail
+        type
+        entryData {
+          domID
+          type
+          input
+        }
+        feedbacks
         createdAt
         updatedAt
       }
@@ -5413,6 +5497,9 @@ export const getUniversalSyllabusLesson = /* GraphQL */ `
         }
         darkMode
         rubrics
+        smallGroup
+        groupSize
+        groupType
         createdAt
         updatedAt
       }
@@ -5508,6 +5595,9 @@ export const listUniversalSyllabusLessons = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
@@ -5575,6 +5665,9 @@ export const getUniversalLessonFeedback = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
@@ -5998,6 +6091,9 @@ export const attendanceByStudent = /* GraphQL */ `
           cardCaption
           darkMode
           rubrics
+          smallGroup
+          groupSize
+          groupType
           createdAt
           updatedAt
         }
