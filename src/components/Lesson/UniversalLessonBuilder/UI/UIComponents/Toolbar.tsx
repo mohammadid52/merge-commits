@@ -111,7 +111,7 @@ const SliderOver = ({
                       </div>
                     </div>
                   </div>
-                  <div className="mt-6 relative flex-1 px-4 sm:px-6 max-w-112 min-w-112">
+                  <div className="mt-6 relative flex-1 px-4 sm:px-6 max-w-140 min-w-136">
                     {children}
                   </div>
                 </div>
@@ -254,36 +254,43 @@ const Toolbar = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchStatus, setSearchStatus] = useState('none');
 
-  const loadRecentUpdates = () => {};
-
   const loadLessonsOnSearch = async () => {
-    setSearchStatus('searching');
-    try {
-      const filter = {
-        title: {
-          contains: searchQuery,
-          beginsWith: searchQuery,
-        },
-      };
+    if (searchQuery.length >= 3) {
+      setSearchStatus('searching');
+      try {
+        const filter = {
+          title: {
+            contains: searchQuery,
+            beginsWith: searchQuery,
+          },
+        };
 
-      const fetchUList: any = await API.graphql(
-        graphqlOperation(customQueries.listUniversalLessons, {
-          filter: filter,
-        })
-      );
-      if (!fetchUList) {
-        throw new Error('fail!');
-      } else {
-        const data = fetchUList?.data?.listUniversalLessons.items;
-        if (data.length > 0) {
-          prepareTreeViewData(data);
-          setSearchStatus('success');
+        const fetchUList: any = await API.graphql(
+          graphqlOperation(customQueries.listUniversalLessons, {
+            filter: filter,
+          })
+        );
+        if (!fetchUList) {
+          throw new Error('fail!');
         } else {
-          setSearchStatus('no_results');
+          const data = fetchUList?.data?.listUniversalLessons.items;
+          if (data.length > 0) {
+            prepareTreeViewData(data);
+            setSearchStatus('success');
+          } else {
+            setSearchStatus('no_results');
+          }
         }
+      } catch (error) {
+        setSearchStatus('error');
       }
-    } catch (error) {
-      setSearchStatus('error');
+    }
+  };
+
+  const onSearchChange = (e: any) => {
+    setSearchQuery(e.target.value);
+    if (searchStatus === 'no_results') {
+      setSearchStatus('none');
     }
   };
 
@@ -299,10 +306,15 @@ const Toolbar = ({
             />
           )}
           <div className="flex items-center space-x-2">
-            <div className="w-auto">
+            <div className="">
               <FormInput
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13) {
+                    loadLessonsOnSearch();
+                  }
+                }}
+                onChange={onSearchChange}
                 placeHolder="Search lessons"
               />
             </div>
@@ -312,7 +324,7 @@ const Toolbar = ({
 
         <div className="h-full flex items-center justify-center">
           {searchStatus === 'none' ? (
-            <span className="block flex items-center justify-center flex-col">
+            <span className="flex items-center justify-center flex-col">
               <FiBook className="h-40 w-40 text-gray-400" />
               <p className="w-auto block text-gray-400 text-lg">Search lessons</p>
             </span>
