@@ -34,6 +34,7 @@ const Toggle = ({
       )}>
       <span className="sr-only">Use setting</span>
       <span
+        title="toggle"
         className={classNames(
           enabled ? 'translate-x-3' : 'translate-x-0',
           'pointer-events-none relative inline-block h-3 w-3 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'

@@ -66,8 +66,7 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     selectedPageID,
     setUniversalLessonDetails,
     selID,
-    addContentModal,
-    setAddContentModal,
+
     setSelID,
   } = useULBContext();
 

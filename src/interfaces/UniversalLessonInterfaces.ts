@@ -52,7 +52,7 @@ export interface UniversalLessonPage {
 
 export interface PagePart {
   id: string;
-  partType: 'component' | 'default';
+  partType: 'component' | 'default' | string;
   class: string;
   partContent: PartContent[];
   [key: string]: any;

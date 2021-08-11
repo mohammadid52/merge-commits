@@ -48,6 +48,7 @@ import {
   FORM_TYPES,
   DIVIDER,
   TABLE,
+  PARAGRAPH,
 } from '../UI/common/constants';
 import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
@@ -59,6 +60,7 @@ import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
 import DividerModal from '../UI/ModalDialogs/DividerModal';
 import TableModal from '../UI/ModalDialogs/TableModal';
 import {capitalizeFirstLetter} from '../../../../utilities/functions';
+import WritingExerciseModal from '../UI/ModalDialogs/WritingExerciseModal';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -90,8 +92,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     blockConfig,
     setBlockConfig,
     getCurrentPage,
-    addContentModal,
-    setAddContentModal,
   } = useULBContext();
 
   //@ts-ignore
@@ -114,6 +114,12 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   // Manage image gallery component
   const [openGallery, setOpenGallery] = useState<boolean>(false);
   const [selectedImageFromGallery, setSelectedImageFromGallery] = useState<string>('');
+
+  // This state handles all the modal components
+  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
+    show: true,
+    type: FORM_TYPES.WRITING_EXERCISE,
+  });
 
   useEffect(() => {
     if (isNewPage === 'true') {
@@ -280,6 +286,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   const closeAction = () => setAddContentModal({type: '', show: false});
 
+  /**
+   * This is a hub for all the modal components
+   * If you want to add a modal component,
+   * first add constant type in constants.tsx and add component here
+   */
   const modalByType = (type: string) => {
     const {
       position = 0,
@@ -312,7 +323,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       contentType: string,
       inputValue: any,
       _: number,
-      classString?: string
+      classString?: string,
+      partType?: string
     ) =>
       createNewBlockULBHandler(
         targetID || blockConfig.targetId,
@@ -320,7 +332,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         contentType,
         inputValue,
         position,
-        classString
+        classString,
+        partType
       );
 
     let commonProps = {
@@ -349,8 +362,13 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             selectedImageFromGallery={selectedImageFromGallery}
           />
         );
-      case 'paragraph':
+      case PARAGRAPH:
         return <ParaModalComponent {...commonProps} />;
+      case DIVIDER:
+        return <DividerModal {...commonProps} />;
+      case TABLE:
+        return <TableModal classString={selectedContentClass} {...commonProps} />;
+      // Interactive component modals starts here
       case 'input':
       case 'form-numbered':
       case 'form-default':
@@ -380,10 +398,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <KeywordModalDialog {...commonProps} />;
       case FORM_TYPES.LINKS:
         return <LinksModalDialog {...commonProps} />;
-      case DIVIDER:
-        return <DividerModal {...commonProps} />;
-      case TABLE:
-        return <TableModal classString={selectedContentClass} {...commonProps} />;
+
+      case FORM_TYPES.WRITING_EXERCISE:
+        return (
+          <WritingExerciseModal classString={selectedContentClass} {...commonProps} />
+        );
 
       case FORM_TYPES.ATTACHMENTS:
       case FORM_TYPES.LINK:
@@ -483,6 +502,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return 'Link Component';
       case FORM_TYPES.REVIEW_SLIDER:
         return 'Review Slider Component';
+      case FORM_TYPES.WRITING_EXERCISE:
+        return 'Writing Exercise Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;
     }
