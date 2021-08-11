@@ -508,6 +508,11 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
               <CustomDatePicker
                 id={inputID}
+                inputID={inputID}
+                mode={mode}
+                themeTextColor={themeTextColor}
+                lessonPageTheme={lessonPageTheme}
+                themePlaceholderColor={themePlaceholderColor}
                 disabled={false}
                 onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
                 value={isInLesson ? getValue(inputID) : value}
