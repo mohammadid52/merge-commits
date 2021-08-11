@@ -62,6 +62,8 @@ export interface PartContent {
   id: string;
   type?: string;
   value: PartContentSub[];
+  label?: string;
+  class?: string;
   [key: string]: any;
 }
 

@@ -58,6 +58,7 @@ import {Accordion} from '../UI/UIComponents/Accordian';
 import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
 import DividerModal from '../UI/ModalDialogs/DividerModal';
 import TableModal from '../UI/ModalDialogs/TableModal';
+import {capitalizeFirstLetter} from '../../../../utilities/functions';
 
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
@@ -278,13 +279,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
   };
 
   const closeAction = () => setAddContentModal({type: '', show: false});
-
-  function capitalizeFirstLetter(str: string = '') {
-    if (str.length > 0) {
-      const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
-      return capitalized;
-    }
-  }
 
   const modalByType = (type: string) => {
     const {

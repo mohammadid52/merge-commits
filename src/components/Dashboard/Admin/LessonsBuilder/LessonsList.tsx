@@ -21,7 +21,6 @@ import LessonsListRow from './LessonsListRow';
 import {getLanguageString} from '../../../../utilities/strings';
 import {getAsset} from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
-import {remove} from 'lodash';
 import LessonListLoader from './LessonListLoader';
 
 const LessonsList = () => {

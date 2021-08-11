@@ -1,6 +1,6 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, Fragment, useEffect, useRef, useState} from 'react';
 import {useHistory} from 'react-router';
-
+import {Dialog, Transition} from '@headlessui/react';
 import BuilderRowComposer from './CoreBuilder/BuilderRowComposer';
 import {LessonPageWrapper} from '../../UniversalLessonBlockComponents/LessonPageWrapper';
 import {
@@ -11,16 +11,15 @@ import {
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-
-import Loader from '../../../Atoms/Loader';
+import {v4 as uuidv4} from 'uuid';
 import Toolbar from '../UI/UIComponents/Toolbar';
+import * as customQueries from '../../../../customGraphql/customQueries';
 
-import {findLastIndex, remove} from 'lodash';
+import {find, findLastIndex, map, remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import useDictionary from '../../../../customHooks/dictionary';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import {useQuery} from '../../../../customHooks/urlParam';
-import useOnScreen from '../../../../customHooks/useOnScreen';
 import {IconType} from 'react-icons/lib';
 import Tooltip from '../../../Atoms/Tooltip';
 import {
@@ -31,7 +30,7 @@ import {
   AiOutlineFileSearch,
   AiOutlineSave,
 } from 'react-icons/ai';
-
+import API, {graphqlOperation} from '@aws-amplify/api';
 import {VscDiscard} from 'react-icons/vsc';
 
 interface CoreBuilderProps extends ULBSelectionProps {
@@ -87,7 +86,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     setLessonPlanFields,
     setEditMode,
     toolbarOnTop,
-    setToolbarOnTop,
+
     previewMode,
     setPreviewMode,
   } = useULBContext();
@@ -155,24 +154,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     );
   };
 
-  const Divider = ({theme = 'dark'}: any) => (
-    <span
-      style={{width: 1}}
-      className={`h-8 mx-2 ${
-        theme === 'dark' ? 'bg-white' : 'bg-gray-600'
-      } bg-opacity-50 `}
-    />
-  );
-
-  const Container = ({children}: {children: any}) => (
-    <div className={`flex items-center flex-col w-auto ${!toolbarOnTop ? 'mb-2' : ''}`}>
-      {children}
-    </div>
-  );
-  // const activePageData: UniversalLessonPage = universalLessonDetails.lessonPlan.find(
-  //   (lessonPage: UniversalLessonPage) => lessonPage.id === selectedPageID
-  // );
-
   const [confirmationConfig, setConfirmationConfig] = useState<{
     show: boolean;
     message: string;
@@ -225,6 +206,129 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     }
   };
 
+  const getLessonById = async (lessonId: string) => {
+    try {
+      const res: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {id: lessonId})
+      );
+      return res.data.getUniversalLesson;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const getPageById = async (lessonId: string, pageId: string) => {
+    const selectedLesson: UniversalLesson = await getLessonById(lessonId);
+    if (selectedLesson) {
+      const selectedPage = find(
+        selectedLesson.lessonPlan,
+        (lesson) => lesson.id === pageId
+      );
+      return selectedPage;
+    }
+  };
+
+  const getCloneData = async (lessonId: string, pageId: string) => {
+    /**
+     * This object will replace all the existing ids with new ones
+     * hope this works 😼
+     * Please don't change anything 👏
+     */
+
+    const selectedPage = await getPageById(lessonId, pageId);
+
+    const replaceAllExistingIds: UniversalLessonPage = {
+      ...selectedPage,
+      id: uuidv4(),
+      pageContent:
+        selectedPage.pageContent && selectedPage.pageContent.length > 0
+          ? map(selectedPage.pageContent, (pgContent) => ({
+              ...pgContent,
+
+              id: uuidv4(),
+              partContent:
+                pgContent.partContent && pgContent.partContent.length > 0
+                  ? map(pgContent.partContent, (ptContent) => ({
+                      ...ptContent,
+                      id: uuidv4(),
+                      value:
+                        ptContent.value && ptContent.value.length > 0
+                          ? map(ptContent.value, (ptValue) => ({
+                              ...ptValue,
+                              id: uuidv4(),
+                              options:
+                                ptValue.options && ptValue.options.length > 0
+                                  ? map(ptValue.options, (opt) => ({
+                                      ...opt,
+                                      id: uuidv4(),
+                                    }))
+                                  : null,
+                            }))
+                          : [],
+                    }))
+                  : [],
+            }))
+          : [],
+    };
+
+    return replaceAllExistingIds;
+  };
+
+  const getCopyData = async (lessonId: string, pageId: string) => {
+    /**
+     * This object will replace all the existing ids with new ones
+     * hope this works 😼
+     * Please don't change anything 👏
+     */
+
+    const selectedPage = await getPageById(lessonId, pageId);
+
+    const replaceAllExistingIds: UniversalLessonPage = {
+      ...selectedPage,
+      id: uuidv4(),
+      pageContent:
+        selectedPage.pageContent && selectedPage.pageContent.length > 0
+          ? map(selectedPage.pageContent, (pgContent) => ({
+              ...pgContent,
+
+              id: uuidv4(),
+              partContent:
+                pgContent.partContent && pgContent.partContent.length > 0
+                  ? map(pgContent.partContent, (ptContent) => ({
+                      ...ptContent,
+                      id: uuidv4(),
+
+                      value:
+                        ptContent.value && ptContent.value.length > 0
+                          ? map(ptContent.value, (ptValue) => ({
+                              ...ptValue,
+                              id: uuidv4(),
+                              label: ptContent.type !== 'jumbotron' ? '' : ptValue.label,
+                              value:
+                                ptContent.type === 'jumbotron' ||
+                                ptContent.type === 'links'
+                                  ? ptValue.value
+                                  : '-',
+                              options:
+                                ptValue.options && ptValue.options.length > 0
+                                  ? map(ptValue.options, (opt) => ({
+                                      ...opt,
+                                      text: '-',
+                                      id: uuidv4(),
+                                    }))
+                                  : null,
+                            }))
+                          : [],
+                    }))
+                  : [],
+            }))
+          : [],
+    };
+
+    return replaceAllExistingIds;
+  };
+
   return (
     <>
       {activePageData && show && (
@@ -235,73 +339,6 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
           saveAction={() => deleteLessonPlan(activePageData.id)}
         />
       )}
-      <div
-        hidden={previewMode}
-        style={{top: '30rem'}}
-        className={`${
-          toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
-        } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
-        {/* {!previewMode && ( */}
-        <div
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
-          <div className="flex items-center flex-col">
-            <Container>
-              <Button
-                onClick={() => setPreviewMode(!previewMode)}
-                tooltip="Preview"
-                color={themeTextColor}
-                icon={previewMode ? AiOutlineEyeInvisible : AiOutlineEye}
-              />
-
-              <>
-                <Button
-                  color={themeTextColor}
-                  tooltip="Add New Page"
-                  onClick={() => {
-                    setNewLessonPlanShow(true);
-                    setEditMode(false);
-                  }}
-                  icon={AiOutlineFileAdd}
-                />
-              </>
-            </Container>
-
-            <Container>
-              {/* <Button
-              color={themeTextColor}
-              tooltip="Enable Drag"
-              icon={enableDnD ? RiDragDropFill : RiDragDropLine}
-            /> */}
-              <Button
-                color={themeTextColor}
-                tooltip="Search Page"
-                icon={AiOutlineFileSearch}
-              />
-            </Container>
-
-            <Container>
-              <Button
-                color={themeTextColor}
-                tooltip="Save changes"
-                icon={AiOutlineSave}
-              />
-              <Button
-                color={themeTextColor}
-                tooltip="Discard changes"
-                icon={VscDiscard}
-              />
-
-              <Button
-                color="text-red-500"
-                tooltip="Delete this page"
-                icon={AiOutlineDelete}
-                onClick={onDeleteButtonClick}
-              />
-            </Container>
-          </div>
-        </div>
-        {/* )} */}
-      </div>
 
       <div
         className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
@@ -327,14 +364,21 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
 
           {!fetchingLessonDetails && (
             <Toolbar
+              getCopyData={getCopyData}
+              getCloneData={getCloneData}
               setFields={setLessonPlanFields}
               setEditMode={setEditMode}
               deleteLesson={onDeleteButtonClick}
+              universalLessonDetails={universalLessonDetails}
               setNewLessonPlanShow={setNewLessonPlanShow}
             />
           )}
           <LessonPageWrapper>
             {fetchingLessonDetails ? (
+              // this is just a trial loader
+              // if anyone is making a component out of it .
+              // PLEASE replace this with that component
+              // :)
               <div className="border border-gray-300 shadow rounded-md p-4 max-w-sm w-full mx-auto mt-12">
                 <div className="animate-pulse space-y-8 flex flex-col">
                   <div className="flex-1 space-y-4 py-1">

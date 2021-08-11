@@ -86,9 +86,10 @@ const TopMenuControl: React.FC<TopMenuControlProps> = (props: TopMenuControlProp
             </p>*/}
 
         <p className="text-xs">
-          {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
-          {lessonState.lessonData.duration} hrs
-        </p>
+              {lessonPlannerDict[userLanguage]['OTHER_LABELS']['EST_TIME']}:{' '}
+              {lessonState.lessonData?.duration}{' '}
+              {`${lessonState.lessonData?.duration > 1 ? 'weeks' : 'week'}`}
+            </p>
       </div>
     );
   };
