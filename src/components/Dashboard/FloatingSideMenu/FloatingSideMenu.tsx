@@ -1,8 +1,15 @@
+import {Auth} from '@aws-amplify/auth';
+import {nanoid} from 'nanoid';
 import React, {SetStateAction, useState} from 'react';
 import {useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as queries from '../../../graphql/queries';
+import * as mutations from '../../../graphql/mutations';
 import useDeviceDetect from '../../../customHooks/deviceDetect';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
+import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
 
 export interface FloatingSideMenuProps {
   menuState?: number;
@@ -10,44 +17,50 @@ export interface FloatingSideMenuProps {
   focusSection?: string;
   setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   chatroom?: any;
+  setChatroom?: React.Dispatch<React.SetStateAction<any>>;
   setOverlay?: React.Dispatch<SetStateAction<string>>;
   overlay?: string;
   callback?: any;
   callbackArg?: any;
   saveInProgress?: boolean;
   setSaveInProgress?: any;
+  notesData?: UniversalJournalData;
+  notesInitialized?: boolean;
+  setNotesInitialized?: React.Dispatch<SetStateAction<boolean>>;
+  getOrCreateJournalData?: () => void;
+  updateNotesContent?: (html: string) => void;
 }
+
+const INITIAL_NOTESDATA: UniversalJournalData = {
+  id: '',
+  studentID: '',
+  studentAuthID: '',
+  studentEmail: '',
+  type: 'class-note',
+  feedbacks: [''],
+  entryData: [
+    {
+      domID: `title_${nanoid(4)}`,
+      type: 'header',
+      input: 'Default Title',
+    },
+    {
+      domID: `note_${nanoid(4)}`,
+      type: 'content',
+      input: '<p>Enter notes here...</p>',
+    },
+  ],
+};
 
 const FloatingSideMenu = () => {
   const {browser} = useDeviceDetect();
+  const urlParams: any = useParams();
   const scrollbarMarginRight = browser.includes('Firefox') ? 'mr-4' : 'mr-3';
 
+  // ##################################################################### //
+  // ########################## MENU OPEN LEVEL ########################## //
+  // ##################################################################### //
   const [menuOpenLevel, setMenuOpenLevel] = useState<number>(0);
-  const [focusSection, setFocusSection] = useState<string>('');
-  const [chatroom, setChatroom] = useState<any>({});
-
-  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
-  const [fnQueue, setFnQueue] = useState<any[]>([]);
-
-  const loopFns = async () => {
-    const loopedFns = await fnQueue.reduce(async (acc: any[], func: any, idx: number) => {
-      func();
-      if (idx === fnQueue.length - 1) {
-        console.log('queue cleared...');
-      }
-      return acc;
-    }, []);
-    return loopedFns;
-  };
-
-  useEffect(() => {
-    if (fnQueue.length > 0 && !saveInProgress) {
-      loopFns().then((_: void) => {
-        console.log('queue cleared part 2 ...');
-      });
-    }
-  }, [fnQueue, saveInProgress]);
-
   const setMenuState = (level: number, section: string) => {
     if (level === -1 && section === 'reset') {
       if (menuOpenLevel > 0) {
@@ -77,29 +90,114 @@ const FloatingSideMenu = () => {
   };
 
   const handleSetMenuState = (level: number, section: string) => {
-    if (saveInProgress) {
-      setFnQueue((prevState: any[]) => [
-        ...prevState,
-        () => {
-          setMenuState(level, section);
+    setMenuState(level, section);
+  };
+
+  // ##################################################################### //
+  // ########################### FOCUS SECTION ########################### //
+  // ##################################################################### //
+  // Remember last opened section e.g. chat
+  const [focusSection, setFocusSection] = useState<string>('');
+  const handleSetFocusSection = (section: string) => {
+    setFocusSection(section);
+  };
+
+  // ##################################################################### //
+  // ########################## CURRENT CHATROOM ######################### //
+  // ##################################################################### //
+  const [chatroom, setChatroom] = useState<any>({});
+  const handleSetChatroom = (chatRoomObj: any) => {
+    if (!chatroom || (chatroom && chatroom.name !== chatRoomObj.name)) {
+      setChatroom(chatRoomObj);
+    }
+
+    handleSetMenuState(2, 'Chatroom');
+  };
+
+  // ##################################################################### //
+  // ######################### CLASS NOTES LOGIC ######################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+  const [notesData, setNotesData] = useState<UniversalJournalData>(INITIAL_NOTESDATA);
+
+  // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
+  const [notesInitialized, setNotesInitialized] = useState<boolean>(false);
+
+  const getOrCreateJournalData = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+
+    try {
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: studentAuthId},
+          lessonID: {eq: lessonID},
+          type: {eq: 'class-note'},
         },
-      ]);
-    } else {
-      setMenuState(level, section);
+      };
+
+      const notesData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalJournalDatas, listFilter)
+      );
+      const notesDataRows = notesData.data.listUniversalJournalDatas.items;
+
+      if (notesDataRows?.length === 0) {
+        const newJournalEntry = await createJournalData();
+        console.log('newJournalEntry - ', newJournalEntry);
+      } else {
+        const existJournalEntry = notesDataRows[0];
+        console.log('existJournalEntry - ', existJournalEntry);
+        // setNotesData()
+      }
+    } catch (e) {
+      console.error('error getting or creating journal data - ', e);
+    } finally {
+      setNotesInitialized(true);
     }
   };
 
-  const handleSetFocusSection = (section: string) => {
-    if (saveInProgress) {
-      setFnQueue((prevState: any[]) => [
-        ...prevState,
-        () => {
-          setFocusSection(section);
-        },
-      ]);
-    } else {
-      setFocusSection(section);
+  const createJournalData = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    try {
+      const input = {
+        lessonID: lessonID,
+        studentID: studentAuthId,
+        studentAuthID: studentAuthId,
+        studentEmail: email,
+        type: 'class-note',
+        entryData: notesData.entryData,
+      };
+
+      const newJournalData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalJournalData, {input})
+      );
+
+      const returnedData = newJournalData.data.createUniversalJournalData;
+      return returnedData;
+    } catch (e) {
+      console.error('error creating journal data - ', e);
     }
+  };
+
+  // ~~~~~~~~~~~~~ UPDATE NOTES ~~~~~~~~~~~~ //
+  const updateNotesContent = (html: string) => {
+    const updatedNotesData = {
+      ...notesData,
+      entryData: notesData.entryData.map((entryObj: any) => {
+        if (entryObj.type === 'content') {
+          return {...entryObj, input: html};
+        } else {
+          return entryObj;
+        }
+      }),
+    };
+    setNotesData(updatedNotesData);
   };
 
   return (
@@ -135,11 +233,15 @@ const FloatingSideMenu = () => {
               <ExpandedMenu
                 menuState={menuOpenLevel}
                 setMenuState={handleSetMenuState}
-                setSaveInProgress={setSaveInProgress}
                 focusSection={focusSection}
                 setFocusSection={handleSetFocusSection}
                 chatroom={chatroom}
-                setChatroom={setChatroom}
+                setChatroom={handleSetChatroom}
+                notesData={notesData}
+                notesInitialized={notesInitialized}
+                setNotesInitialized={setNotesInitialized}
+                getOrCreateJournalData={getOrCreateJournalData}
+                updateNotesContent={updateNotesContent}
               />
             </div>
           </div>

@@ -8,39 +8,25 @@ import {FileWidgetsSmall} from './SectionContent/FileWidgetsSmall';
 import RoomChat from '../../RoomChat/RoomChat';
 import NotesForm from '../../Lesson/LessonComponents/Notes/NotesForm';
 import useDictionary from '../../../customHooks/dictionary';
+import {FloatingSideMenuProps} from './FloatingSideMenu';
 
 // GET ALL THE RELEVANT WIDGETS HERE
 
-const ExpandedMenu = (props: {
-  menuState?: number;
-  setMenuState?: (level: number, section: string) => void;
-  focusSection?: string;
-  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
-  chatroom?: any;
-  setChatroom?: React.Dispatch<React.SetStateAction<any>>;
-  saveInProgress?: boolean;
-  setSaveInProgress?: any;
-}) => {
-  const {
-    menuState,
-    setMenuState,
-    focusSection,
-    setFocusSection,
-    chatroom,
-    setChatroom,
-    saveInProgress,
-    setSaveInProgress,
-  } = props;
+const ExpandedMenu = ({
+  menuState,
+  setMenuState,
+  focusSection,
+  setFocusSection,
+  chatroom,
+  setChatroom,
+  notesData,
+  notesInitialized,
+  setNotesInitialized,
+  getOrCreateJournalData,
+  updateNotesContent,
+}: FloatingSideMenuProps) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonDict} = useDictionary(clientKey);
-
-  const setSelectedChatroom = (roomObj: any) => {
-    if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
-      setChatroom(roomObj);
-    }
-
-    setMenuState(2, 'Chatroom');
-  };
 
   const [widgets, setWidgets] = useState<any>([]);
 
@@ -88,7 +74,7 @@ const ExpandedMenu = (props: {
           focusSection={focusSection}>
           <Rooms
             chatroom={chatroom}
-            setSelectedChatroom={setSelectedChatroom}
+            setSelectedChatroom={setChatroom}
             focusSection={focusSection}
             setFocusSection={setFocusSection}
           />
@@ -125,15 +111,16 @@ const ExpandedMenu = (props: {
           <SideMenuSection
             menuState={menuState}
             setMenuState={setMenuState}
-            saveInProgress={saveInProgress}
-            setSaveInProgress={setSaveInProgress}
             sectionLabel={`Notes`}
             sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
             focusSection={focusSection}>
             <NotesForm
               focusSection={focusSection}
-              saveInProgress={saveInProgress}
-              setSaveInProgress={setSaveInProgress}
+              notesData={notesData}
+              notesInitialized={notesInitialized}
+              setNotesInitialized={setNotesInitialized}
+              getOrCreateJournalData={getOrCreateJournalData}
+              updateNotesContent={updateNotesContent}
             />
           </SideMenuSection>
         )}
