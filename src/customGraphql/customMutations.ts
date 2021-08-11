@@ -746,10 +746,6 @@ export const updateRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       curriculumID
       createdAt

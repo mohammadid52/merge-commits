@@ -7,12 +7,11 @@ import {IoAdd} from 'react-icons/io5';
 import {IoIosAdd} from 'react-icons/io';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-import TopicsListComponent from './TopicsList';
 import {reorder, stringToHslColor} from '../../../../../../../utilities/strings';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
-import DragableAccordion from '../../../../../../Atoms/DragableAccordion';
 import Buttons from '../../../../../../Atoms/Buttons';
+import Modal from '../../../../../../Atoms/Modal';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 import * as mutations from '../../../../../../../graphql/mutations';
@@ -23,6 +22,7 @@ import useDictionary from '../../../../../../../customHooks/dictionary';
 import {getAsset} from '../../../../../../../assets';
 
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
+import AddMeasurement from '../TabsActions/AddMeasurement';
 
 interface LearningObjectiveListProps {
   curricularId: string;
@@ -37,6 +37,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
   const [learnings, setLearnings] = useState([]);
   const [learningIds, setLearningIds] = useState([]);
+  const [openMeasurementModal, setOpenMeasurementModal] = useState(false);
+  const [selectedRubricData, setSelectedRubricData] = useState<any>({});
   const [warnModal, setWarnModal] = useState({
     show: false,
     section: '',
@@ -45,7 +47,9 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   });
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {LEARINGOBJECTIVEDICT, TOPICLISTDICT} = useDictionary(clientKey);
+  const {AddMeasurementDict, LEARINGOBJECTIVEDICT, TOPICLISTDICT} = useDictionary(
+    clientKey
+  );
 
   const history = useHistory();
 
@@ -171,24 +175,40 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     );
   };
 
-  const createNewMeasurement = (topicID: string) => {
-    history.push(
-      `/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`
-    );
+  const createNewMeasurement = (topicId: string, objectiveId: string) => {
+    setOpenMeasurementModal(true);
+    setSelectedRubricData({
+      topicId,
+      objectiveId
+    });
+    // history.push(
+    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`
+    // );
   };
 
-  const editCurrentMeasurement = (id: string) => {
-    history.push(
-      `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
-    );
+  const editCurrentMeasurement = (rubricData: any, objectiveId: string) => {
+    setOpenMeasurementModal(true);
+    setSelectedRubricData({
+      ...rubricData,
+      topicId: rubricData.topicID,
+      objectiveId,
+    });
+    // history.push(
+    //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/edit/${id}`
+    // );
   };
+
+  const onMeasurementClose = () => {
+    setOpenMeasurementModal(false);
+    setSelectedRubricData({})
+  }
 
   const getInitialFromObjectiveName = (name: string) => {
     const temp = name.replace(/a |an |the /gi, '');
     return temp.split('')[0];
   };
 
-  const postMutation = (data: any) => {
+  const postLearningObjectiveChange = (data: any) => {
     if (selectedObjectiveData?.id) {
       const index = learnings.findIndex(
         (learning) => learning.id === selectedObjectiveData?.id
@@ -203,6 +223,57 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
       setLearnings((prevLearnings) => [...prevLearnings, {...data, topics: []}]);
     }
     handleCancel();
+  };
+
+  const postMeasurementChange = (data: any) => {
+    const {objectiveId, topicId} = selectedRubricData;
+    let temp = [...learnings];
+    const index = temp.findIndex((objective) => objective.id === objectiveId);
+    const topicIndex = temp[index].topics.findIndex(
+      (topic: any) => topic.id === topicId
+    );
+    if (selectedRubricData?.id) {
+      const rubricIndex = temp[index].topics[topicIndex].rubrics.findIndex(
+        (rubric: any) => rubric.id === selectedRubricData.id
+      );
+      temp[index] = {
+        ...temp[index],
+        topics: temp[index].topics.map((topic: any, index: number) =>
+          index !== topicIndex
+            ? topic
+            : {
+                ...topic,
+                rubrics: topic.rubrics.map((rubric: any, i: number) =>
+                  i !== rubricIndex
+                    ? rubric
+                    : {
+                        ...rubric,
+                        name: data.name,
+                        criteria: data.criteria,
+                      }
+                ),
+              }
+        ),
+      };
+      setLearnings(temp);
+    } else {
+      temp[index] = {
+        ...temp[index],
+        topics: temp[index].topics.map((topic: any, index: number) =>
+          index !== topicIndex
+            ? topic
+            : {
+                ...topic,
+                rubrics: [
+                  ...topic.rubrics,
+                  data
+                ],
+              }
+        ),
+      };
+      setLearnings(temp);
+    }
+    onMeasurementClose();
   };
 
   const deleteModal = (id: string, section: string) => {
@@ -343,21 +414,20 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
               )}
               <div className="py-4">
                 <div className="">
-
                   <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                       {(provided, snapshot) => (
                         <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
                           {isFormOpen && (
                             <div className="flex shadow flex-col rounded-lg overflow-hidden">
                               <AddLearningObjective
                                 curricularId={curricularId}
                                 handleCancel={handleCancel}
                                 learningObjectiveData={selectedObjectiveData}
-                                postMutation={postMutation}
+                                postMutation={postLearningObjectiveChange}
                               />
                             </div>
                           )}
@@ -449,7 +519,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                                                 className="w-4 h-4"
                                                                 onClick={() =>
                                                                   editCurrentMeasurement(
-                                                                    rubric.id
+                                                                    rubric,
+                                                                    learning.id
                                                                   )
                                                                 }
                                                               />
@@ -469,7 +540,10 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                                       <div
                                                         className={`text-base ${theme.text.active} cursor-pointer`}
                                                         onClick={() =>
-                                                          createNewMeasurement(topic.id)
+                                                          createNewMeasurement(
+                                                            topic.id,
+                                                            learning.id
+                                                          )
                                                         }>
                                                         Add new measurement
                                                       </div>
@@ -479,7 +553,10 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                                       <div
                                                         className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
                                                         onClick={() =>
-                                                          createNewMeasurement(topic.id)
+                                                          createNewMeasurement(
+                                                            topic.id,
+                                                            learning.id
+                                                          )
                                                         }>
                                                         <span className="w-6 h-6 flex items-center mr-4">
                                                           <IconContext.Provider
@@ -497,7 +574,10 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                                     <div
                                                       className={`text-base ${theme.text.active}  cursor-pointer`}
                                                       onClick={() =>
-                                                        createNewMeasurement(topic.id)
+                                                        createNewMeasurement(
+                                                          topic.id,
+                                                          learning.id
+                                                        )
                                                       }>
                                                       Add new measurement
                                                     </div>
@@ -601,6 +681,22 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             loading={deleting}
             message={warnModal.message}
           />
+        )}
+        {openMeasurementModal && (
+          <Modal
+            showHeader={true}
+            title={AddMeasurementDict[userLanguage]['title']}
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={onMeasurementClose}>
+            <AddMeasurement
+              curricularId={curricularId}
+              onCancel={onMeasurementClose}
+              postMutation={postMeasurementChange}
+              rubricData={selectedRubricData}
+              topicId={selectedRubricData.topicId}
+            />
+          </Modal>
         )}
       </div>
     </div>
