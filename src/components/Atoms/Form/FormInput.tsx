@@ -9,6 +9,7 @@ interface FormInputProps {
   isRequired?: boolean;
   value?: string;
   onChange?: (e: any) => void;
+  onKeyDown?: (e: any) => void;
   id?: string;
   name?: string;
   placeHolder?: string;
@@ -47,6 +48,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     dark,
     min,
     max,
+    onKeyDown,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -100,6 +102,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           value={value ? value : ''}
           placeholder={placeHolder}
           {...otherInputProps}
+          onKeyDown={onKeyDown}
         />
       )}
       <div className="flex">

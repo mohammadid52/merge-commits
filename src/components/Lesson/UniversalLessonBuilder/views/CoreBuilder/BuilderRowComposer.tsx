@@ -181,6 +181,8 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                                 className={`${
                                                   content.type === FORM_TYPES.JUMBOTRON
                                                     ? 'px-4 pt-4'
+                                                    : content.type === 'header'
+                                                    ? ''
                                                     : content.class
                                                 }`}
                                                 id={content.id}>

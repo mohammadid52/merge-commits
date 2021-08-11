@@ -22,17 +22,18 @@ const TableBlock = ({
   return (
     <div className="p-4" style={{maxWidth: '94rem'}}>
       <div
-        className={`grid overflow-hidden rounded-lg shadow-lg  grid-cols-${rowList.length}`}>
+        className={`grid overflow-hidden rounded-lg shadow-lg grid-cols-${rowList.length}`}>
         {map(rowList, (rowItem, rowIndex) => {
           return (
-            <div>
+            <div key={rowItem.id}>
               <h4
                 className={`bg-${tableBg} text-${tableText} uppercase border-b-0 border-${tableBg} px-6 py-3 text-left text-xs font-medium  tracking-wider`}>
-                {rowItem.value}
+                {rowItem.value || '--'}
               </h4>
               {map(rowItem.options, (colItem, colIndex: number) => {
                 return (
                   <div
+                    key={colItem.id}
                     className={`px-6 py-4 ${genThemeClass(
                       colIndex
                     )} whitespace-nowrap text-sm ${

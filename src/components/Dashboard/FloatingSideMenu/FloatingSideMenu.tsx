@@ -1,4 +1,6 @@
 import React, {SetStateAction, useState} from 'react';
+import {useEffect} from 'react';
+import useDeviceDetect from '../../../customHooks/deviceDetect';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 
@@ -14,10 +16,13 @@ export interface FloatingSideMenuProps {
   callbackArg?: any;
 }
 
-const FloatingSideMenu = (props: FloatingSideMenuProps) => {
+const FloatingSideMenu = () => {
   const [menuOpenLevel, setMenuOpenLevel] = useState<number>(0);
   const [focusSection, setFocusSection] = useState<string>('');
   const [chatroom, setChatroom] = useState<any>({});
+
+  const {browser} = useDeviceDetect();
+  const scrollbarMarginRight = browser.includes('Firefox') ? 'mr-4' : 'mr-3';
 
   const setMenuState = (level: number, section: string) => {
     if (level === -1 && section === 'reset') {
@@ -55,7 +60,7 @@ const FloatingSideMenu = (props: FloatingSideMenuProps) => {
                relative
                w-0
                h-full
-              ${menuOpenLevel === 3 ? 'mx-auto' : 'ml-auto mr-0'}
+              ${menuOpenLevel === 3 ? 'mx-auto' : `ml-auto ${scrollbarMarginRight}`}
               flex flex-row flex-1 z-100`}>
           <div
             className={`
