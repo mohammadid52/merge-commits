@@ -160,14 +160,7 @@ const AddContentDialog = ({
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-100',
     },
-    {
-      name: 'Linestarter',
-      subtitle: 'Add poem',
-      type: FORM_TYPES.POEM,
-      icon: BsNewspaper,
-      iconForeground: 'text-red-700',
-      iconBackground: 'bg-red-100',
-    },
+
     {
       name: 'Writing Exercise',
       subtitle: 'Add Writing Exercise',

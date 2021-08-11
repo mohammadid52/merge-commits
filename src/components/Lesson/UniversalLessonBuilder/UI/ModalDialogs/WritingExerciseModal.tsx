@@ -1,4 +1,4 @@
-import {remove} from 'lodash';
+import {findIndex, remove, update} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
@@ -14,6 +14,7 @@ import {FaTrashAlt} from 'react-icons/fa';
 import Tooltip from '../../../../Atoms/Tooltip';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {FORM_TYPES} from '../common/constants';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 interface WEProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -65,7 +66,7 @@ const WritingExerciseModal = (props: WEProps) => {
     setUnsavedChanges,
   } = props;
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
-
+  const {universalLessonDetails, selectedPageID} = useULBContext();
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setInputFieldsArray(inputObj);
@@ -125,42 +126,36 @@ const WritingExerciseModal = (props: WEProps) => {
     setInputFieldsArray([...inputFieldsArray]);
   };
 
-  const addToDB = async (list: any) => {
-    closeAction();
-
-    const input = {
-      id: list.id,
-      lessonPlan: [...list.lessonPlan],
-    };
-
-    await updateLessonPageToDB(input);
-  };
   const on_WE_Create = async () => {
-    if (isEditingMode) {
-      const updatedList = updateBlockContentULBHandler(
-        '',
-        '',
-        FORM_TYPES.WRITING_EXERCISE,
-        inputFieldsArray,
-        0
-      );
-      await addToDB(updatedList);
-    } else {
-      const updatedList = createNewBlockULBHandler(
-        '',
-        '',
-        FORM_TYPES.WRITING_EXERCISE,
-        inputFieldsArray,
-        0,
-        '',
-        'writing-exercise'
-      );
-      await addToDB(updatedList);
-    }
+    const currentPageIdx = findIndex(
+      universalLessonDetails.lessonPlan,
+      (item: any) => item.id === selectedPageID
+    );
 
-    // clear fields
-    setInputFieldsArray(initialInputFieldsState);
-    setUnsavedChanges(false);
+    const pageContent = [
+      ...universalLessonDetails.lessonPlan[currentPageIdx].pageContent,
+      {
+        id: uuidv4(),
+        class: '',
+        partType: 'writing-exercise',
+        partContent: [
+          {
+            id: uuidv4(),
+            type: '',
+            value: inputFieldsArray,
+            label: fields.title,
+          },
+        ],
+      },
+    ];
+
+    const updatedLesson = update(
+      universalLessonDetails,
+      `lessonPlan[${currentPageIdx}].pageContent`,
+      () => pageContent
+    );
+    closeAction();
+    await updateLessonPageToDB(updatedLesson);
   };
 
   return (
