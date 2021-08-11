@@ -7,7 +7,7 @@ interface AccordionProps {
     id: string;
     text: string;
   }[];
-  onResponseSelect: (response: any) => void;
+  onResponseSelect?: (response: any) => void;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
