@@ -1,9 +1,10 @@
 import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import {HiPencil} from 'react-icons/hi';
-import {IoAdd} from 'react-icons/io5';
 import {IconContext} from 'react-icons';
+import {HiPencil, HiOutlineTrash} from 'react-icons/hi';
+import {IoAdd} from 'react-icons/io5';
+import {IoIosAdd} from 'react-icons/io';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import TopicsListComponent from './TopicsList';
@@ -12,6 +13,7 @@ import {reorder, stringToHslColor} from '../../../../../../../utilities/strings'
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import DragableAccordion from '../../../../../../Atoms/DragableAccordion';
 import Buttons from '../../../../../../Atoms/Buttons';
+import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as queries from '../../../../../../../graphql/queries';
@@ -19,8 +21,8 @@ import * as customQueries from '../../../../../../../customGraphql/customQueries
 import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import {getAsset} from '../../../../../../../assets';
+
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
-import {IoIosAdd} from 'react-icons/io';
 
 interface LearningObjectiveListProps {
   curricularId: string;
@@ -30,10 +32,17 @@ interface LearningObjectiveListProps {
 const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const {curricularId, institutionId} = props;
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
   const [learnings, setLearnings] = useState([]);
   const [learningIds, setLearningIds] = useState([]);
+  const [warnModal, setWarnModal] = useState({
+    show: false,
+    section: '',
+    id: '',
+    message: "Are you sure? This can't be undone.",
+  });
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const {LEARINGOBJECTIVEDICT, TOPICLISTDICT} = useDictionary(clientKey);
@@ -104,13 +113,12 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     const listLength = list?.length;
     await Promise.all(
       list.map(async (objective: any) => {
+        objective.index = seq.indexOf(objective.id);
         const topicsData: any = await API.graphql(
           graphqlOperation(customQueries.listTopics, {
             filter: {learningObjectiveID: {eq: objective.id}},
           })
         );
-        console.log(topicsData, 'topicsData inside loop++++');
-
         objective.topics = await Promise.all(
           (topicsData?.data.listTopics?.items || [])
             .sort((a: any, b: any) =>
@@ -122,8 +130,6 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                   filter: {topicID: {eq: t.id}},
                 })
               );
-              console.log(measurementData, 'measurementData inside nested loop');
-
               t.rubrics =
                 measurementData.data.listRubrics?.items.sort((a: any, b: any) =>
                   a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
@@ -133,20 +139,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
         );
       })
     );
-    console.log(list, 'list');
-
-    // list = list
-    //   .map((t: any) => {
-    //     let index = seq.indexOf(t.id);
-    //     return {
-    //       id: t.id,
-    //       title: t.name,
-    //       content: <TopicsListComponent curricularId={curricularId} learningId={t.id} />,
-    //       index,
-    //     };
-    //   })
-    //   .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
-    setLearnings(list);
+    setLearnings(list.sort((a: any, b: any) => (a.index > b.index ? 1 : -1)));
     setLearningIds(seq);
 
     if (listLength && !sequenceLength) {
@@ -212,6 +205,124 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     handleCancel();
   };
 
+  const deleteModal = (id: string, section: string) => {
+    setWarnModal({
+      show: true,
+      id,
+      section,
+      message: `Are you sure you want to delete ${section}?. This action cannot be undone.`,
+    });
+  };
+
+  const onCancel = () => {
+    setWarnModal((prevValues) => ({
+      ...prevValues,
+      id: '',
+      message: '',
+      section: '',
+      show: false,
+    }));
+  };
+
+  const onSaveAction = () => {
+    const {section} = warnModal;
+    switch (section) {
+      case 'objective':
+        deleteLearningObjective();
+        break;
+      case 'topic':
+        deleteTopic();
+        break;
+      case 'measurement':
+        deleteRubric();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const deleteLearningObjective = async () => {
+    try {
+      setDeleting(true);
+      await API.graphql(
+        graphqlOperation(mutations.deleteLearningObjective, {
+          input: {id: warnModal.id},
+        })
+      );
+      await API.graphql(
+        graphqlOperation(mutations.updateCSequences, {
+          input: {
+            id: `l_${curricularId}`,
+            sequence: learningIds.filter((item) => item !== warnModal.id),
+          },
+        })
+      );
+      setLearnings((prevLearnings) =>
+        prevLearnings.filter((objective) => objective.id !== warnModal.id)
+      );
+      setLearningIds((prevLearningIds) =>
+        prevLearningIds.filter((item) => item !== warnModal.id)
+      );
+      setDeleting(false);
+      onCancel();
+    } catch (error) {}
+  };
+
+  const deleteTopic = async () => {
+    try {
+      setDeleting(true);
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.deleteTopic, {
+          input: {id: warnModal.id},
+        })
+      );
+      const objectiveId = result?.data.deleteTopic.learningObjectiveID;
+      let temp = [...learnings];
+      const index = temp.findIndex((objective) => objective.id === objectiveId);
+      temp[index] = {
+        ...temp[index],
+        topics: temp[index].topics.filter((topic: any) => topic.id !== warnModal.id),
+      };
+      setLearnings(temp);
+      setDeleting(false);
+      onCancel();
+    } catch (error) {}
+  };
+
+  const deleteRubric = async () => {
+    try {
+      setDeleting(true);
+      const result: any = await API.graphql(
+        graphqlOperation(mutations.deleteRubric, {
+          input: {id: warnModal.id},
+        })
+      );
+      const objectiveId = result?.data.deleteRubric?.topic.learningObjectiveID;
+      const topicId = result?.data.deleteRubric?.topicID;
+      let temp = [...learnings];
+      const index = temp.findIndex((objective) => objective.id === objectiveId);
+      const topicIndex = temp[index].topics.findIndex(
+        (topic: any) => topic.id === topicId
+      );
+      temp[index] = {
+        ...temp[index],
+        topics: temp[index].topics.map((topic: any, index: number) =>
+          index !== topicIndex
+            ? topic
+            : {
+                ...topic,
+                rubrics: topic.rubrics.filter(
+                  (rubric: any) => rubric.id !== warnModal.id
+                ),
+              }
+        ),
+      };
+      setLearnings(temp);
+      setDeleting(false);
+      onCancel();
+    } catch (error) {}
+  };
+
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
@@ -231,22 +342,25 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                 </div>
               )}
               <div className="py-4">
-                <div className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
-                  {isFormOpen && (
-                    <div className="flex shadow flex-col rounded-lg overflow-hidden">
-                      <AddLearningObjective
-                        curricularId={curricularId}
-                        handleCancel={handleCancel}
-                        learningObjectiveData={selectedObjectiveData}
-                        postMutation={postMutation}
-                      />
-                    </div>
-                  )}
+                <div className="">
 
                   <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable">
                       {(provided, snapshot) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                        <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
+                          {isFormOpen && (
+                            <div className="flex shadow flex-col rounded-lg overflow-hidden">
+                              <AddLearningObjective
+                                curricularId={curricularId}
+                                handleCancel={handleCancel}
+                                learningObjectiveData={selectedObjectiveData}
+                                postMutation={postMutation}
+                              />
+                            </div>
+                          )}
                           {learnings.map((learning: any, index: number) => (
                             <Draggable
                               key={learning.id}
@@ -283,10 +397,17 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                           <span className="inline-flex items-center ml-5 text-lg font-bold">
                                             {learning.name}
                                           </span>
-                                          <span
-                                            className="w-auto inline-flex items-center cursor-pointer"
-                                            onClick={() => editLearningObj(learning)}>
-                                            <HiPencil className="w-4 h-4" />
+                                          <span className="w-auto inline-flex items-center cursor-pointer">
+                                            <HiPencil
+                                              className="w-4 h-4"
+                                              onClick={() => editLearningObj(learning)}
+                                            />
+                                            <HiOutlineTrash
+                                              className="w-4 h-4"
+                                              onClick={() =>
+                                                deleteModal(learning?.id, 'objective')
+                                              }
+                                            />
                                           </span>
                                         </div>
 
@@ -296,35 +417,63 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                               <div key={topic.id} className="pr-1 mb-2">
                                                 <div className="flex justify-between items-center">
                                                   <span
-                                                    className={`text-lg ${theme.text.active} font-bold	`}>
+                                                    className={`text-lg ${theme.text.active} font-bold`}>
                                                     {topic.name}
                                                   </span>
-                                                  <span
-                                                    className="w-auto cursor-pointer"
-                                                    onClick={() =>
-                                                      editCurrentTopic(topic.id)
-                                                    }>
-                                                    <HiPencil className="w-4 h-4" />
+                                                  <span className="w-auto inline-flex items-center cursor-pointer">
+                                                    <HiPencil
+                                                      className="w-4 h-4"
+                                                      onClick={() =>
+                                                        editCurrentTopic(topic.id)
+                                                      }
+                                                    />
+                                                    <HiOutlineTrash
+                                                      className="w-4 h-4"
+                                                      onClick={() =>
+                                                        deleteModal(topic?.id, 'topic')
+                                                      }
+                                                    />
                                                   </span>
                                                 </div>
                                                 <ul className="pl-3">
                                                   {topic.rubrics?.length ? (
-                                                    topic.rubrics.map((rubric: any) => (
-                                                      <li
-                                                        className="flex justify-between items-center py-1"
-                                                        key={rubric.id}>
-                                                        <span>{rubric.name}</span>
-                                                        <span
-                                                          className="w-auto cursor-pointer"
-                                                          onClick={() =>
-                                                            editCurrentMeasurement(
-                                                              rubric.id
-                                                            )
-                                                          }>
-                                                          <HiPencil className="w-4 h-4" />
-                                                        </span>
-                                                      </li>
-                                                    ))
+                                                    <>
+                                                      {topic.rubrics.map(
+                                                        (rubric: any) => (
+                                                          <li
+                                                            className="flex justify-between items-center py-1"
+                                                            key={rubric.id}>
+                                                            <span>{rubric.name}</span>
+                                                            <span className="w-auto inline-flex items-center cursor-pointer">
+                                                              <HiPencil
+                                                                className="w-4 h-4"
+                                                                onClick={() =>
+                                                                  editCurrentMeasurement(
+                                                                    rubric.id
+                                                                  )
+                                                                }
+                                                              />
+                                                              <HiOutlineTrash
+                                                                className="w-4 h-4"
+                                                                onClick={() =>
+                                                                  deleteModal(
+                                                                    rubric?.id,
+                                                                    'measurement'
+                                                                  )
+                                                                }
+                                                              />
+                                                            </span>
+                                                          </li>
+                                                        )
+                                                      )}
+                                                      <div
+                                                        className={`text-base ${theme.text.active} cursor-pointer`}
+                                                        onClick={() =>
+                                                          createNewMeasurement(topic.id)
+                                                        }>
+                                                        Add new measurement
+                                                      </div>
+                                                    </>
                                                   ) : learning.topics?.length < 2 ? (
                                                     <div className="flex justify-center items-center">
                                                       <div
@@ -346,7 +495,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                                     </div>
                                                   ) : (
                                                     <div
-                                                      className={`text-base ${theme.text.active}`}
+                                                      className={`text-base ${theme.text.active}  cursor-pointer`}
                                                       onClick={() =>
                                                         createNewMeasurement(topic.id)
                                                       }>
@@ -443,6 +592,16 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             </div>
           )}
         </PageWrapper>
+        {warnModal.show && (
+          <ModalPopUp
+            closeAction={onCancel}
+            saveAction={onSaveAction}
+            saveLabel="Yes"
+            cancelLabel="No"
+            loading={deleting}
+            message={warnModal.message}
+          />
+        )}
       </div>
     </div>
   );
