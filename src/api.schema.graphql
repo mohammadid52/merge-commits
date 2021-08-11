@@ -1053,6 +1053,8 @@ type UniversalJournalData @model @key(fields: ["id"]) {
   type: String!
   entryData: [JournalEntryData]
   feedbacks: [String]
+  lessonID: ID
+  lessonType: String
 }
 
 type JournalEntryData {
