@@ -62,7 +62,7 @@ export const SideMenuSection = (props: {
     `}>
       {menuState > 0 && thisSectionActive ? (
         <>
-          <p
+          <div
             className={`
               h-12 max-w-72 truncate overflow-ellipsis overflow-hidden
               flex items-center  font-medium z-100
@@ -72,8 +72,9 @@ export const SideMenuSection = (props: {
                 ? 'border-t-0 pl-2 text-gray-700 text-xl bg-white'
                 : 'text-indigo-100 text-sm '
             } `}>
-            {sectionTitle || 'Section Title'}{' '}
-          </p>
+            <p>{sectionTitle || 'Section Title'} </p>
+            {saveInProgress && <span className={`ml-4`}>Saving...</span>}
+          </div>
           <div
             onClick={() => handleCloseOrSave()}
             className={`w-auto absolute right-0 ${

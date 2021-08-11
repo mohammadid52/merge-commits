@@ -23,6 +23,7 @@ const NotesForm = ({
   setNotesInitialized,
   getOrCreateJournalData,
   updateNotesContent,
+  saveInProgress,
 }: FloatingSideMenuProps) => {
   const {lessonState, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -42,6 +43,7 @@ const NotesForm = ({
   return (
     <div
       className={`
+      relative
         transform transition duration-400 ease-in-out
         ${
           focusSection === 'Notes'

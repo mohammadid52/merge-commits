@@ -24,6 +24,7 @@ const ExpandedMenu = ({
   setNotesInitialized,
   getOrCreateJournalData,
   updateNotesContent,
+  saveInProgress,
 }: FloatingSideMenuProps) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
   const {lessonDict} = useDictionary(clientKey);
@@ -113,7 +114,8 @@ const ExpandedMenu = ({
             setMenuState={setMenuState}
             sectionLabel={`Notes`}
             sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
-            focusSection={focusSection}>
+            focusSection={focusSection}
+            saveInProgress={saveInProgress}>
             <NotesForm
               focusSection={focusSection}
               notesData={notesData}
@@ -121,6 +123,7 @@ const ExpandedMenu = ({
               setNotesInitialized={setNotesInitialized}
               getOrCreateJournalData={getOrCreateJournalData}
               updateNotesContent={updateNotesContent}
+              saveInProgress={saveInProgress}
             />
           </SideMenuSection>
         )}

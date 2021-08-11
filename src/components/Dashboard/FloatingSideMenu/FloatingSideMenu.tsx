@@ -91,9 +91,11 @@ const FloatingSideMenu = () => {
 
   const handleSetMenuState = async (level: number, section: string) => {
     if (notesChanged) {
+      if (!saveInProgress) setSaveInProgress(true);
       await updateJournalData();
       setMenuState(level, section);
     } else {
+      if (saveInProgress) setSaveInProgress(false);
       setMenuState(level, section);
     }
   };
@@ -129,6 +131,7 @@ const FloatingSideMenu = () => {
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
   const [notesInitialized, setNotesInitialized] = useState<boolean>(false);
   const [notesChanged, setNotesChanged] = useState<boolean>(false);
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
   const getOrCreateJournalData = async () => {
     const {lessonID} = urlParams;
@@ -228,6 +231,7 @@ const FloatingSideMenu = () => {
     } finally {
       console.log('updated journal data...');
       if (notesChanged) setNotesChanged(false);
+      if (saveInProgress) setSaveInProgress(false);
     }
   };
 
@@ -285,6 +289,7 @@ const FloatingSideMenu = () => {
                 setFocusSection={handleSetFocusSection}
                 chatroom={chatroom}
                 setChatroom={handleSetChatroom}
+                saveInProgress={saveInProgress}
                 notesData={notesData}
                 notesInitialized={notesInitialized}
                 setNotesInitialized={setNotesInitialized}
