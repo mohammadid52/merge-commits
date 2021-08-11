@@ -23,6 +23,7 @@ import {getAsset} from '../../../../../../../assets';
 
 import AddLearningObjective from '../TabsActions/AddLearningObjective';
 import AddMeasurement from '../TabsActions/AddMeasurement';
+import AddTopic from '../TabsActions/AddTopic';
 
 interface LearningObjectiveListProps {
   curricularId: string;
@@ -39,6 +40,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const [learningIds, setLearningIds] = useState([]);
   const [openMeasurementModal, setOpenMeasurementModal] = useState(false);
   const [selectedRubricData, setSelectedRubricData] = useState<any>({});
+  const [openTopicModal, setTopicModal] = useState(false);
+  const [selectedTopicData, setSelectedTopicData] = useState<any>({});
   const [warnModal, setWarnModal] = useState({
     show: false,
     section: '',
@@ -47,9 +50,12 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   });
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {AddMeasurementDict, LEARINGOBJECTIVEDICT, TOPICLISTDICT} = useDictionary(
-    clientKey
-  );
+  const {
+    AddMeasurementDict,
+    AddTopicDict,
+    LEARINGOBJECTIVEDICT,
+    TOPICLISTDICT,
+  } = useDictionary(clientKey);
 
   const history = useHistory();
 
@@ -163,23 +169,34 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     fetchLearningObjs();
   }, []);
 
-  const createNewTopic = (learningId: string) => {
-    history.push(
-      `/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`
-    );
+  const createNewTopic = (learningObjectiveID: string) => {
+    setTopicModal(true);
+    setSelectedTopicData({
+      learningObjectiveID,
+    });
+    // history.push(
+    //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/add?lid=${learningId}`
+    // );
   };
 
-  const editCurrentTopic = (id: string) => {
-    history.push(
-      `/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`
-    );
+  const editCurrentTopic = (topicData: any) => {
+    setTopicModal(true);
+    setSelectedTopicData(topicData);
+    // history.push(
+    //   `/dashboard/manage-institutions/curricular/${curricularId}/topic/edit/${id}`
+    // );
+  };
+
+  const onTopicModalClose = () => {
+    setTopicModal(false);
+    setSelectedRubricData({});
   };
 
   const createNewMeasurement = (topicId: string, objectiveId: string) => {
     setOpenMeasurementModal(true);
     setSelectedRubricData({
       topicId,
-      objectiveId
+      objectiveId,
     });
     // history.push(
     //   `/dashboard/manage-institutions/curricular/${curricularId}/measurement/add?tid=${topicID}`
@@ -200,8 +217,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
   const onMeasurementClose = () => {
     setOpenMeasurementModal(false);
-    setSelectedRubricData({})
-  }
+    setSelectedRubricData({});
+  };
 
   const getInitialFromObjectiveName = (name: string) => {
     const temp = name.replace(/a |an |the /gi, '');
@@ -229,9 +246,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     const {objectiveId, topicId} = selectedRubricData;
     let temp = [...learnings];
     const index = temp.findIndex((objective) => objective.id === objectiveId);
-    const topicIndex = temp[index].topics.findIndex(
-      (topic: any) => topic.id === topicId
-    );
+    const topicIndex = temp[index].topics.findIndex((topic: any) => topic.id === topicId);
     if (selectedRubricData?.id) {
       const rubricIndex = temp[index].topics[topicIndex].rubrics.findIndex(
         (rubric: any) => rubric.id === selectedRubricData.id
@@ -264,16 +279,43 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             ? topic
             : {
                 ...topic,
-                rubrics: [
-                  ...topic.rubrics,
-                  data
-                ],
+                rubrics: [...topic.rubrics, data],
               }
         ),
       };
       setLearnings(temp);
     }
     onMeasurementClose();
+  };
+
+  const postTopicChange = (data: any) => {
+    const {learningObjectiveID} = selectedTopicData;
+    let temp = [...learnings];
+    const index = temp.findIndex((objective) => objective.id === learningObjectiveID);
+    if (selectedTopicData?.id) {
+      const topicIndex = temp[index].topics.findIndex(
+        (topic: any) => topic.id === selectedTopicData.id
+      );
+      temp[index] = {
+        ...temp[index],
+        topics: temp[index].topics.map((topic: any, index: number) =>
+          index !== topicIndex
+            ? topic
+            : {
+                ...topic,
+                ...data
+              }
+        ),
+      };
+      setLearnings(temp);
+    } else {
+      temp[index] = {
+        ...temp[index],
+        topics: [...temp[index].topics, data],
+      };
+      setLearnings(temp);
+    }
+    onTopicModalClose();
   };
 
   const deleteModal = (id: string, section: string) => {
@@ -494,7 +536,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                                     <HiPencil
                                                       className="w-4 h-4"
                                                       onClick={() =>
-                                                        editCurrentTopic(topic.id)
+                                                        editCurrentTopic(topic)
                                                       }
                                                     />
                                                     <HiOutlineTrash
@@ -611,22 +653,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                         <Buttons
                                           type="submit"
                                           onClick={() => createNewTopic(learning.id)}
-                                          label={
-                                            <>
-                                              <span className="w-8 h-8 inline-flex items-center">
-                                                <IconContext.Provider
-                                                  value={{
-                                                    size: '1.2rem',
-                                                    color: '#ffffff',
-                                                  }}>
-                                                  <IoIosAdd />
-                                                </IconContext.Provider>
-                                              </span>
-                                              <span>
-                                                {TOPICLISTDICT[userLanguage]['ADD']}
-                                              </span>
-                                            </>
-                                          }
+                                          label={TOPICLISTDICT[userLanguage]['ADD']}
                                           overrideClass={true}
                                           btnClass={`h-9 w-auto my-2 flex rounded px-12 text-xs focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
                                         />
@@ -695,6 +722,21 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
               postMutation={postMeasurementChange}
               rubricData={selectedRubricData}
               topicId={selectedRubricData.topicId}
+            />
+          </Modal>
+        )}
+        {openTopicModal && (
+          <Modal
+            showHeader={true}
+            title={AddTopicDict[userLanguage]['heading']}
+            showHeaderBorder={true}
+            showFooter={false}
+            closeAction={onTopicModalClose}>
+            <AddTopic
+              curricularId={curricularId}
+              onCancel={onTopicModalClose}
+              postMutation={postTopicChange}
+              topicData={selectedTopicData}
             />
           </Modal>
         )}

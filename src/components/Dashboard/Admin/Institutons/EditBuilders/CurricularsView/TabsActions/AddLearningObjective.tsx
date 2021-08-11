@@ -110,7 +110,11 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
         seqItem = seqItem.data.updateCSequences;
         console.log('seqItem', seqItem);
       }
-      postMutation(item.data?.createLearningObjective);
+      if (addedItem) {
+        postMutation(addedItem);
+      }else{
+        setLoading(false)
+      }
     }
     // if (addedItem) {
     //   history.goBack();
