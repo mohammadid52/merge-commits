@@ -89,8 +89,13 @@ const FloatingSideMenu = () => {
     }
   };
 
-  const handleSetMenuState = (level: number, section: string) => {
-    setMenuState(level, section);
+  const handleSetMenuState = async (level: number, section: string) => {
+    if (notesChanged) {
+      await updateJournalData();
+      setMenuState(level, section);
+    } else {
+      setMenuState(level, section);
+    }
   };
 
   // ##################################################################### //
@@ -123,6 +128,7 @@ const FloatingSideMenu = () => {
 
   // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
   const [notesInitialized, setNotesInitialized] = useState<boolean>(false);
+  const [notesChanged, setNotesChanged] = useState<boolean>(false);
 
   const getOrCreateJournalData = async () => {
     const {lessonID} = urlParams;
@@ -146,10 +152,25 @@ const FloatingSideMenu = () => {
       if (notesDataRows?.length === 0) {
         const newJournalEntry = await createJournalData();
         console.log('newJournalEntry - ', newJournalEntry);
+        setNotesData({
+          id: newJournalEntry.id,
+          studentID: newJournalEntry.studentID,
+          studentAuthID: newJournalEntry.studentAuthID,
+          studentEmail: newJournalEntry.studentEmail,
+          feedbacks: newJournalEntry.feedbacks,
+          entryData: newJournalEntry.entryData,
+        });
       } else {
         const existJournalEntry = notesDataRows[0];
         console.log('existJournalEntry - ', existJournalEntry);
-        // setNotesData()
+        setNotesData({
+          id: existJournalEntry.id,
+          studentID: existJournalEntry.studentID,
+          studentAuthID: existJournalEntry.studentAuthID,
+          studentEmail: existJournalEntry.studentEmail,
+          feedbacks: existJournalEntry.feedbacks,
+          entryData: existJournalEntry.entryData,
+        });
       }
     } catch (e) {
       console.error('error getting or creating journal data - ', e);
@@ -185,6 +206,31 @@ const FloatingSideMenu = () => {
     }
   };
 
+  const updateJournalData = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    try {
+      const input = {
+        id: notesData.id,
+        studentID: notesData.studentID,
+        studentAuthID: notesData.studentAuthID,
+        studentEmail: notesData.studentEmail,
+        entryData: notesData.entryData,
+      };
+      const updateJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {input})
+      );
+    } catch (e) {
+      console.error('error updating journal data - ', e);
+    } finally {
+      console.log('updated journal data...');
+      if (notesChanged) setNotesChanged(false);
+    }
+  };
+
   // ~~~~~~~~~~~~~ UPDATE NOTES ~~~~~~~~~~~~ //
   const updateNotesContent = (html: string) => {
     const updatedNotesData = {
@@ -197,7 +243,9 @@ const FloatingSideMenu = () => {
         }
       }),
     };
+    // console.log('updatedContent - ', updatedNotesData);
     setNotesData(updatedNotesData);
+    if (!notesChanged) setNotesChanged(true);
   };
 
   return (

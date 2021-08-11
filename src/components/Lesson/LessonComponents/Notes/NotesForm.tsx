@@ -49,17 +49,23 @@ const NotesForm = ({
             : 'w-0 overflow-hidden opacity-0'
         }
       `}>
-      <RichTextEditor
-        theme={themeColor}
-        rounded
-        customStyle
-        mediumDark={true}
-        initialValue={noteContent}
-        onChange={
-          notesInitialized ? (htmlContent) => updateNotesContent(htmlContent) : () => {}
-        }
-        fullWHOverride={true}
-      />
+      {notesInitialized ? (
+        <RichTextEditor
+          theme={themeColor}
+          rounded
+          customStyle
+          mediumDark={true}
+          initialValue={noteContent}
+          onChange={
+            notesInitialized ? (htmlContent) => updateNotesContent(htmlContent) : () => {}
+          }
+          fullWHOverride={true}
+        />
+      ) : (
+        <div className="bg-white bg-opacity-20 h-full w-full flex justify-center items-center align-center content-center">
+          <div className="w-auto h-auto text-lg text-white">Loading notes...</div>
+        </div>
+      )}
     </div>
   );
 };
