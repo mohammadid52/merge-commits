@@ -267,6 +267,7 @@ const Anthology = () => {
   // Function group to handle section-switching
   const handleTabClick = (tab: number, e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
+    console.log('🚀 ~ file: Anthology.tsx ~ line 271 ~ handleTabClick ~ id', id);
     setViewEditMode({...viewEditMode, mode: ''});
     setTab(tab);
 
@@ -293,7 +294,7 @@ const Anthology = () => {
 
   const filterAnthologyContentBySubsection = studentData.filter(
     (contentObj: AnthologyMapItem) => {
-      if (subSectionKey[subSection].includes(contentObj.type)) return contentObj;
+      if (subSectionKey[subSection]?.includes(contentObj.type)) return contentObj;
     }
   );
 
@@ -301,7 +302,7 @@ const Anthology = () => {
     inputSyllabusLessonID: string
   ) =>
     studentData.filter((contentObj: AnthologyMapItem) => {
-      if (contentObj.syllabusLessonID.includes(inputSyllabusLessonID)) return contentObj;
+      if (contentObj.syllabusLessonID?.includes(inputSyllabusLessonID)) return contentObj;
     });
 
   const getAnthologyContentByStudentDataID = studentData.find(
@@ -464,34 +465,29 @@ const Anthology = () => {
         />
 
         <div
-          className={`px-10 min-h-48 pb-4 overflow-hidden bg-dark-gray rounded-lg shadow mb-4`}>
-          <div className="grid grid-cols-6 gap-2 p-4">
-            <div>
-              <div className="text-white">Notebook</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}>
-                {/* <p className="w-auto p-4 font-bold text-sm text-white flex items-center">
-                <span className="inline-flex w-4 mr-2">
-                  <FaTasks size={16} />
-                </span>
-                <span>Classwork</span>
-              </p> */}
-                <ContextMenuProvider>
-                  <Tree root={data} />
-                </ContextMenuProvider>
-              </div>
+          className={`mx-auto max-w-256 min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
+          {/* <div className="grid grid-cols-6 gap-2 p-4">
+          <div>
+            <div className="text-white">Notebook</div>
+            <div className={`${theme.backGround[themeColor]} mt-2 h-96`}>
+              
+              <ContextMenuProvider>
+                <Tree root={data} />
+              </ContextMenuProvider>
             </div>
-            <div className={`col-span-4`}>
-              <div className="text-white">Pages</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 min-h-96`}>
-                <LessonDataViewer />
-              </div>
-            </div>
-            <div>
-              <div className="text-white">Feedback</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
-            </div>{' '}
           </div>
-          {/* <UnderlinedTabs tabs={tabs} updateTab={handleTabClick} /> */}
+          <div className={`col-span-4`}>
+            <div className="text-white">Pages</div>
+            <div className={`${theme.backGround[themeColor]} mt-2 min-h-96`}>
+              <LessonDataViewer />
+            </div>
+          </div>
+          <div>
+            <div className="text-white">Feedback</div>
+            <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
+          </div>
+        </div> */}
+          <UnderlinedTabs hideTooltip tabs={tabs} updateTab={handleTabClick} />
         </div>
 
         {/*
@@ -514,15 +510,15 @@ const Anthology = () => {
           - Poems
     */}
         {/* <AnthologyContent
-        viewEditMode={viewEditMode}
-        handleEditToggle={handleEditToggle}
-        handleEditUpdate={handleEditUpdate}
-        handleWYSIWYGupdate={handleWYSIWYGupdate}
-        subSection={subSection}
-        createTemplate={newStudentData}
-        content={studentData.length > 0 && filterAnthologyContentBySubsection}
-        getContentObjIndex={getContentObjIndex}
-      /> */}
+          viewEditMode={viewEditMode}
+          handleEditToggle={handleEditToggle}
+          handleEditUpdate={handleEditUpdate}
+          handleWYSIWYGupdate={handleWYSIWYGupdate}
+          subSection={subSection}
+          createTemplate={newStudentData}
+          content={studentData.length > 0 && filterAnthologyContentBySubsection}
+          getContentObjIndex={getContentObjIndex}
+        /> */}
       </div>
     </React.Fragment>
   );
