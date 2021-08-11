@@ -507,6 +507,7 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
             <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
               <CustomDatePicker
+                handleUpdateStudentData={handleUpdateStudentData}
                 id={inputID}
                 inputID={inputID}
                 mode={mode}

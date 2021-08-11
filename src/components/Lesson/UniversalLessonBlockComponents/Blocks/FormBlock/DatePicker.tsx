@@ -12,7 +12,7 @@ interface DatePickerProps {
   lessonPageTheme?: string;
   themePlaceholderColor?: string;
   disabled: boolean;
-
+  handleUpdateStudentData: any;
   value: string;
   onChange: (e: any) => void;
 }
@@ -27,6 +27,7 @@ const CustomDatePicker = (props: DatePickerProps) => {
     themePlaceholderColor,
 
     value,
+    handleUpdateStudentData,
 
     onChange,
   } = props;
@@ -40,14 +41,21 @@ const CustomDatePicker = (props: DatePickerProps) => {
           lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-darker-gray'
         } ${themePlaceholderColor}`}
         name={'datePicker'}
-        type={'date'}
+        type={'text'}
         onChange={onChange}
+        onFocus={(e) => (e.target.type = 'date')}
+        onBlur={(e) => (e.target.type = 'text')}
         value={value}
         placeholder={'choose a date'}
       />
+
       {value && value.length > 0 && (
         <Tooltip placement="bottom" text="Clear date">
-          <div className="h-6 cursor-pointer w-6 bg-blue-500 text-white flex items-center justify-center rounded-full">
+          <div
+            onClick={() => {
+              handleUpdateStudentData(inputID, ['']);
+            }}
+            className="h-6 cursor-pointer w-6 bg-blue-500 text-white flex items-center justify-center rounded-full">
             <IoClose />
           </div>
         </Tooltip>
