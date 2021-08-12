@@ -61,12 +61,19 @@ const LessonPlanNavigation = ({
       setSettings({...settings, darkMode: true});
       handleThemeChange(true);
     } else {
-      if (universalLessonDetails.darkMode) {
-        setSettings({...settings, darkMode: true});
-        handleThemeChange(true);
-      } else {
-        setSettings({...settings, darkMode: false});
-        handleThemeChange(false);
+      const parentContainer = document.getElementById('universalLessonBuilderContainer');
+      if (parentContainer) {
+        if (universalLessonDetails.darkMode) {
+          parentContainer.classList.add('dark');
+
+          setSettings({...settings, darkMode: true});
+          handleThemeChange(true);
+        } else {
+          parentContainer.classList.remove('dark');
+
+          setSettings({...settings, darkMode: false});
+          handleThemeChange(false);
+        }
       }
     }
   }, [universalLessonDetails, fetchingLessonDetails]);
@@ -76,6 +83,14 @@ const LessonPlanNavigation = ({
   };
 
   const updateTheme = () => {
+    const parentContainer = document.getElementById('universalLessonBuilderContainer');
+    if (parentContainer) {
+      if (settings.darkMode) {
+        parentContainer.classList.remove('dark');
+      } else {
+        parentContainer.classList.add('dark');
+      }
+    }
     setSettings({...settings, darkMode: !settings.darkMode});
     handleThemeChange(!settings.darkMode);
     wait(1000).then(async () => {

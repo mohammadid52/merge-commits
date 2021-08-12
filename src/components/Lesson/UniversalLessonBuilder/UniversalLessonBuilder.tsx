@@ -506,7 +506,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *
      */
     <div
-      id={`universalLessonBuilder`}
+      id={`universalLessonBuilderContainer`}
       className="h-full bg-dark-gray flex overflow-hidden">
       <div
         onClick={() => {
