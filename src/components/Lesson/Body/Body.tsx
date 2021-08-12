@@ -4,15 +4,7 @@ import {Redirect, Route, Switch, useRouteMatch} from 'react-router-dom';
 
 const Intro = lazy(() => import('../LessonComponents/Intro/Intro'));
 const IntroV2 = lazy(() => import('../LessonComponents/Intro/IntroV2'));
-const Story = lazy(() => import('../LessonComponents/StoryPage/Story'));
-const Lyrics = lazy(() => import('../LessonComponents/LyricsPage/Lyrics'));
-const Poem = lazy(() => import('../LessonComponents/PoemPage/Poem'));
-const List = lazy(() => import('../LessonComponents/ListPage/List'));
-const Poll = lazy(() => import('../LessonComponents/PollPage/Poll'));
-const TruthGame = lazy(() => import('../LessonComponents/TruthGamePage/TruthGame'));
-const Adventure = lazy(() => import('../LessonComponents/AdventurePage/Adventure'));
 const Outro = lazy(() => import('../LessonComponents/Outro/Outro'));
-const LessonError = lazy(() => import('../../Error/LessonError'));
 const Checkpoint = lazy(() => import('../AssessmentComponents/Checkpoint'));
 // const Assessments = lazy(() => import('../LessonComponents/Checkpoint/Assessments'));
 
@@ -47,38 +39,24 @@ const Body = (props: BodyProps) => {
   const pageSwitch = (pageType: string) => {
     switch (pageType) {
       case 'story':
-        return <Story />;
+      // return <Story />;
       case 'lyrics':
-        return <Lyrics />;
+      // return <Lyrics />;
       case 'poem':
-        return <Poem />;
+      // return <Poem />;
       case 'tchart':
       case 'multi-list':
       case 'list':
-        return <List />;
+      // return <List />;
       case 'truthgame':
-        return <TruthGame />;
+      // return <TruthGame />;
       case 'poll':
-        return <Poll />;
+      // return <Poll />;
       case 'adventure':
-        return <Adventure />;
+      // return <Adventure />;
       default:
-        return <LessonError />;
+      // return <LessonError />;
     }
-  };
-
-  const pageFetch = (stage: string) => {
-    let pageMatch = state.pages
-      .filter((page: {stage: string}) => {
-        return page.stage === stage;
-      })
-      .pop();
-
-    if (!pageMatch) {
-      return pageSwitch(null);
-    }
-
-    return pageSwitch(pageMatch.type);
   };
 
   useEffect(() => {
@@ -112,9 +90,9 @@ const Body = (props: BodyProps) => {
               }
             })()}
           </Route>
-          <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
+          {/* <Route path={`${match.url}/warmup`}>{pageFetch('warmup')}</Route>
           <Route path={`${match.url}/corelesson`}>{pageFetch('corelesson')}</Route>
-          <Route path={`${match.url}/activity`}>{pageFetch('activity')}</Route>
+          <Route path={`${match.url}/activity`}>{pageFetch('activity')}</Route> */}
           <Route path={`${match.url}/outro`}>
             <Outro />
           </Route>

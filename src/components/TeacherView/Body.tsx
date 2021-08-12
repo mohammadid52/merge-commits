@@ -1,85 +1,79 @@
-import React, { lazy, useContext, useEffect, useState } from 'react';
-import { LessonControlContext } from '../../contexts/LessonControlContext';
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import React, {lazy, useContext, useEffect, useState} from 'react';
+import {LessonControlContext} from '../../contexts/LessonControlContext';
+import {Redirect, Route, Switch, useLocation, useRouteMatch} from 'react-router-dom';
 
 const IntroView = lazy(() => import('./ComponentViews/IntroView/IntroView'));
-const StoryView = lazy(() => import('./ComponentViews/StoryPageView/StoryView'));
-const LyricsView = lazy(() => import('./ComponentViews/LyricsPageView/LyricsView'));
-const PoemView = lazy(() => import('./ComponentViews/PoemPageView/PoemView'));
-const ListView = lazy(() => import('./ComponentViews/ListPageView/ListView'));
-const PollView = lazy(() => import('./ComponentViews/PollPageView/PollView'));
 
-const TruthGameView = lazy(() => import('./ComponentViews/TruthGamePageView/TruthGameView'));
 const OutroView = lazy(() => import('./ComponentViews/OutroView/OutroView'));
-const LessonError = lazy(() => import('./../Error/LessonError'));
 const Checkpoint = lazy(() => import('../Lesson/AssessmentComponents/Checkpoint'));
 // const Assessments = lazy(() => import('./ComponentViews/Checkpoint/Assessments'));
 
 interface BodyProps {
   fullscreenInstructions: boolean;
-  setInstructions: React.Dispatch<React.SetStateAction<{ visible: boolean; available: boolean; content: any }>>;
+  setInstructions: React.Dispatch<
+    React.SetStateAction<{visible: boolean; available: boolean; content: any}>
+  >;
   checkpointsItems?: any[];
 }
 
 const Body: React.FC<BodyProps> = (props: BodyProps) => {
-  const { fullscreenInstructions, setInstructions, checkpointsItems } = props;
+  const {checkpointsItems} = props;
 
-  const { state, dispatch } = useContext(LessonControlContext);
-  const location = useLocation();
+  const {state, dispatch} = useContext(LessonControlContext);
   const match = useRouteMatch();
   const [fullscreen, setFullscreen] = useState(false);
 
-  const pageSwitch = (pageType: string) => {
-    switch (pageType) {
-      case 'story':
-        return <StoryView fullscreen={fullscreen} />;
-      case 'lyrics':
-        return (
-          <LyricsView
-            fullscreen={fullscreen}
-            fullscreenInstructions={fullscreenInstructions}
-            setInstructions={setInstructions}
-          />
-        );
-      case 'poem':
-        return <PoemView fullscreen={fullscreen} />;
-      case 'tchart':
-      case 'multi-list':
-      case 'list':
-        return <ListView fullscreen={fullscreen} />;
-      case 'truthgame':
-        return <TruthGameView fullscreen={fullscreen} />;
-      case 'poll':
-        return <PollView />;
-      default:
-        return <LessonError />;
-    }
-  };
+  // const pageSwitch = (pageType: string) => {
+  //   switch (pageType) {
+  //     case 'story':
+  //       return <StoryView fullscreen={fullscreen} />;
+  //     case 'lyrics':
+  //       return (
+  //         <LyricsView
+  //           fullscreen={fullscreen}
+  //           fullscreenInstructions={fullscreenInstructions}
+  //           setInstructions={setInstructions}
+  //         />
+  //       );
+  //     case 'poem':
+  //       return <PoemView fullscreen={fullscreen} />;
+  //     case 'tchart':
+  //     case 'multi-list':
+  //     case 'list':
+  //       return <ListView fullscreen={fullscreen} />;
+  //     case 'truthgame':
+  //       return <TruthGameView fullscreen={fullscreen} />;
+  //     case 'poll':
+  //       return <PollView />;
+  //     default:
+  //       return <LessonError />;
+  //   }
+  // };
 
-  const pageFetch = (stage: string) => {
-    let pageMatch = state.pages
-      .filter((page: { stage: string }) => {
-        return page.stage === stage;
-      })
-      .pop();
+  // const pageFetch = (stage: string) => {
+  //   let pageMatch = state.pages
+  //     .filter((page: { stage: string }) => {
+  //       return page.stage === stage;
+  //     })
+  //     .pop();
 
-    if (!pageMatch) {
-      return pageSwitch(null);
-    }
+  //   if (!pageMatch) {
+  //     return pageSwitch(null);
+  //   }
 
-    return pageSwitch(pageMatch.type);
-  };
+  //   return pageSwitch(pageMatch.type);
+  // };
 
   useEffect(() => {
     const pageAfter = state.currentPage + 1;
     if (state.currentPage < state.pages.length - 1) {
       if (pageAfter && state.pages[pageAfter]?.open) {
-        dispatch({ type: 'CAN_CONTINUE' });
+        dispatch({type: 'CAN_CONTINUE'});
       } else {
-        dispatch({ type: 'STOP' });
+        dispatch({type: 'STOP'});
       }
     } else {
-      dispatch({ type: 'STOP' });
+      dispatch({type: 'STOP'});
     }
   }, [state.currentPage, state.pages]);
 
@@ -88,25 +82,30 @@ const Body: React.FC<BodyProps> = (props: BodyProps) => {
     <Switch>
       <Route
         path={`${match.url}/intro`}
-        render={() => <IntroView fullscreen={fullscreen} checkpointsItems={checkpointsItems} />}
+        render={() => (
+          <IntroView fullscreen={fullscreen} checkpointsItems={checkpointsItems} />
+        )}
       />
 
-      <Route path={`${match.url}/warmup`} render={() => pageFetch('warmup')} />
+      {/* <Route path={`${match.url}/warmup`} render={() => pageFetch('warmup')} />
       <Route path={`${match.url}/corelesson`} render={() => pageFetch('corelesson')} />
-      <Route path={`${match.url}/activity`} render={() => pageFetch('activity')} />
+      <Route path={`${match.url}/activity`} render={() => pageFetch('activity')} /> */}
       <Route
         path={`${match.url}/checkpoint`}
         render={() => <Checkpoint isTeacher={true} checkpointsItems={checkpointsItems} />}
       />
-      <Route path={`${match.url}/outro`} render={() => <OutroView fullscreen={fullscreen} />} />
+      <Route
+        path={`${match.url}/outro`}
+        render={() => <OutroView fullscreen={fullscreen} />}
+      />
       <Route
         exact
         path={`${match.url}/`}
-        render={({ location }) => (
+        render={({location}) => (
           <Redirect
             to={{
               pathname: `${match.url}/intro`,
-              state: { from: location },
+              state: {from: location},
             }}
           />
         )}
