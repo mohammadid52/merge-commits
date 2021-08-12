@@ -117,8 +117,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
 
   // This state handles all the modal components
   const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: true,
-    type: FORM_TYPES.WRITING_EXERCISE,
+    show: false,
+    type: '',
   });
 
   useEffect(() => {

@@ -101,10 +101,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   };
 
   const filteredLesson: UniversalLessonPage['pageContent'] = removeWEComponents();
-  console.log(
-    '🚀 ~ file: BuilderRowComposer.tsx ~ line 104 ~ BuilderRowComposer ~ filteredLesson',
-    filteredLesson
-  );
 
   return (
     <>
