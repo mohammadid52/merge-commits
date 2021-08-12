@@ -64,7 +64,6 @@ const UserLookup = () => {
   const sortByList = [
     { id: 1, name: 'Name', value: 'lastName' },
     { id: 2, name: 'Role', value: 'role' },
-    // { id: 3, name: 'Institution', value: 'institution' },
     { id: 4, name: 'Status', value: 'status' },
   ];
 
@@ -408,26 +407,31 @@ const UserLookup = () => {
                 <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['role']}</span>
                 </div>
-
-                {/* hide institution column for now. */}
-                {/* <div className="w-3.5/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-										<span className="w-auto">Institution</span>
-									</div> */}
                 <div className="w-2/10 flex justify-center px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   <span className="w-auto">{UserLookupDict[userLanguage]['status']}</span>
                 </div>
                 <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                   {UserLookupDict[userLanguage]['action']}
                 </div>
+                {
+                  state.user.role !== 'ST' ?
+                    <div className="w-2/10 px-8 justify-center py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                      {UserLookupDict[userLanguage]['action']}
+                    </div> : null
+                }
+
               </div>
               {userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
+                  // <div key={key}>
+                  //   {state.user.role === 'FLW' ? (
+                  //     <ListStudents item={item} />
+                  //   ) : (
+                  //     <List item={item} key={key} />
+                  //   )}
+                  // </div>
                   <div key={key}>
-                    {state.user.role === 'FLW' ? (
-                      <ListStudents item={item} />
-                    ) : (
-                      <List item={item} key={key} />
-                    )}
+                    <List item={item} key={key} />
                   </div>
                 ))
               ) : (

@@ -133,6 +133,13 @@ type Room
   studentViewing: String
   displayData: [String]
   currentPage: String
+  completedLessons: [CompleteLesson]
+  activeLessons: [String]
+}
+
+type CompleteLesson {
+  lessonID: String
+  time: AWSDateTime
 }
 
 type RoomCoTeachers @model @key(name: "byRoom", fields: ["roomID", "teacherID"]) {
@@ -165,6 +172,7 @@ type ClassStudent
   studentEmail: String!
   studentAuthID: String!
   status: String
+  group: String
   class: Class @connection(fields: ["classID"])
   student: Person @connection(fields: ["studentEmail", "studentAuthID"])
 }
@@ -794,11 +802,7 @@ type AnthologyComment @model {
 type Attachment {
   type: String
   url: String
-<<<<<<< HEAD
-  filename:String
-=======
   filename: String
->>>>>>> uat
   size: Int
 }
 
@@ -858,6 +862,7 @@ type PersonLocation
   personAuthID: String!
   personEmail: String!
   syllabusLessonID: ID!
+  lessonID: ID!
   roomID: ID!
   currentLocation: String
   lessonProgress: String
@@ -897,13 +902,26 @@ type NoticeboardWidget @model {
   teacher: Person @connection(fields: ["teacherEmail", "teacherAuthID"])
 }
 
-type Attendance @model {
+type Attendance
+  @model
+  @key(
+    name: "byStudent"
+    fields: ["studentID", "date"]
+    queryField: "attendanceByStudent"
+  ) {
   id: ID!
   studentID: ID!
-  curriculumID: ID
-  syllabusID: ID
-  lessonID: ID
-  time: AWSDateTime
+  curriculumID: ID!
+  syllabusID: ID!
+  lessonID: ID!
+  roomID: ID!
+  date: AWSDate
+  time: AWSTime
+  isComplete: Boolean
+  curriculum: Curriculum @connection(fields: ["curriculumID"])
+  syllabus: UniversalSyllabus @connection(fields: ["syllabusID"])
+  lesson: UniversalLesson @connection(fields: ["lessonID"])
+  room: Room @connection(fields: ["roomID"])
 }
 
 type Planner @model {
@@ -937,7 +955,7 @@ type UniversalLesson @model @key(fields: ["id"]) {
   instructionsTitle: String
   summary: String
   summaryTitle: String
-  duration: Int
+  duration: Float
   resources: String
   notes: String
   cardImage: String
@@ -946,6 +964,9 @@ type UniversalLesson @model @key(fields: ["id"]) {
   homework: [UniversalLessonPlan]
   darkMode: Boolean
   rubrics: [String]
+  smallGroup: String
+  groupSize: Int
+  groupType: String
 }
 
 type UniversalLessonPlan {
@@ -990,6 +1011,8 @@ type UniversalContent {
   caption: String
   height: String
   width: String
+  class: String
+  isRequired: Boolean
 }
 
 type UniversalContentOptions {
@@ -1012,6 +1035,32 @@ type UniversalLessonStudentData
   currentLocation: String
   lessonProgress: String
   pageData: [partInput]
+  hasExerciseData: Boolean
+  exerciseData: [ExerciseData] 
+}
+
+type ExerciseData {
+  id: String!
+  entryData: [JournalEntryData]
+  feedbacks: [String]
+}
+
+type UniversalJournalData @model @key(fields: ["id"]) {
+  id: ID!
+  studentID: ID!
+  studentAuthID: ID!
+  studentEmail: String!
+  type: String!
+  entryData: [JournalEntryData]
+  feedbacks: [String]
+  lessonID: ID
+  lessonType: String
+}
+
+type JournalEntryData {
+  domID: String
+  type: String
+  input: String
 }
 
 type StudentPageInput {
@@ -1030,8 +1079,6 @@ type InputComment {
   comment: String
 }
 
-<<<<<<< HEAD
-=======
 type UniversalSyllabus
   @model
   @key(fields: ["id"])
@@ -1081,20 +1128,25 @@ type UniversalLessonFeedback @model {
   comment: String
   syllabusLesson: UniversalSyllabusLesson @connection(fields: ["syllabusLessonID"])
 }
->>>>>>> uat
 
 type Subscription {
-  onChangePersonLocation(syllabusLessonID: ID!): PersonLocation
-    @aws_subscribe(
-      mutations: ["createPersonLocation", "updatePersonLocation", "deletePersonLocation"]
-    )
+  onChangePersonLocation(syllabusLessonID: ID!, lessonID: ID!, roomID: ID!): PersonLocation
+    @aws_subscribe(mutations: [
+      "createPersonLocation", "updatePersonLocation", "deletePersonLocation"
+    ])
   onChangeStudentData(syllabusLessonID: ID!): StudentData
     @aws_subscribe(mutations: ["createStudentData", "updateStudentData"])
   onChangeSyllabusLesson(id: ID!): SyllabusLesson
     @aws_subscribe(mutations: ["updateSyllabusLesson"])
-<<<<<<< HEAD
-}
-=======
+  onChangeUniversalLessonStudentData(
+    syllabusLessonID: ID!
+    lessonID: ID!
+    studentAuthID: ID!
+  ): UniversalLessonStudentData
+    @aws_subscribe(
+      mutations: ["createUniversalLessonStudentData", "updateUniversalLessonStudentData"]
+    )
+  onChangeRoom(id: ID!): Room @aws_subscribe(mutations: ["updateRoom"])
 }
 
 input CreateClassStudentInput {
@@ -1106,7 +1158,18 @@ input CreateClassStudentInput {
   status: String
 }
 
+input CreateLessonRubricsInput {
+  id: ID
+  lessonID: ID!
+  rubricID: ID!
+}
+
+input DeleteLessonRubricsInput {
+  id: ID!
+}
+
 type Mutation {
   batchAddClassStudent(classStudents: [CreateClassStudentInput]): [ClassStudent]
+  batchAddLessonRubrics(lessonRubrics: [CreateLessonRubricsInput]): [LessonRubrics]
+  batchDeleteLessonRubrics(lessonRubrics: [DeleteLessonRubricsInput]): [LessonRubrics]
 }
->>>>>>> uat
