@@ -2,16 +2,17 @@ import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {IconContext} from 'react-icons';
-import {HiPencil, HiOutlineTrash} from 'react-icons/hi';
+import {HiPencil} from 'react-icons/hi';
 import {IoAdd} from 'react-icons/io5';
 import {IoIosAdd} from 'react-icons/io';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import {reorder, stringToHslColor} from '../../../../../../../utilities/strings';
 
-import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
+import {DeleteActionBtn} from '../../../../../../Atoms/DeleteActionBtn';
 import Modal from '../../../../../../Atoms/Modal';
+import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 
 import * as mutations from '../../../../../../../graphql/mutations';
@@ -25,6 +26,20 @@ import AddLearningObjective from '../TabsActions/AddLearningObjective';
 import AddMeasurement from '../TabsActions/AddMeasurement';
 import AddTopic from '../TabsActions/AddTopic';
 
+declare global {
+  interface Array<T> {
+    chunk(o: T): Array<T>;
+  }
+}
+
+// ? chunk method injected in Array prototype
+Array.prototype.chunk = function (n) {
+  if (!this.length) {
+    return [];
+  }
+  return [this.slice(0, n)].concat(this.slice(n).chunk(n));
+};
+
 interface LearningObjectiveListProps {
   curricularId: string;
   institutionId?: string;
@@ -32,7 +47,7 @@ interface LearningObjectiveListProps {
 
 const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   const {curricularId, institutionId} = props;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedObjectiveData, setSelectedObjectiveData] = useState<any>({});
@@ -303,7 +318,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             ? topic
             : {
                 ...topic,
-                ...data
+                ...data,
               }
         ),
       };
@@ -457,7 +472,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
               <div className="py-4">
                 <div className="">
                   <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="droppable">
+                    <Droppable droppableId="droppable" direction="horizontal">
                       {(provided, snapshot) => (
                         <div
                           {...provided.droppableProps}
@@ -506,7 +521,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                               {getInitialFromObjectiveName(learning.name)}
                                             </div>
                                           </div>
-                                          <span className="inline-flex items-center ml-5 text-lg font-bold">
+                                          <span className="inline-flex items-center ml-2 text-base font-bold">
                                             {learning.name}
                                           </span>
                                           <span className="w-auto inline-flex items-center cursor-pointer">
@@ -514,9 +529,8 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                               className="w-4 h-4"
                                               onClick={() => editLearningObj(learning)}
                                             />
-                                            <HiOutlineTrash
-                                              className="w-4 h-4"
-                                              onClick={() =>
+                                            <DeleteActionBtn
+                                              handleClick={() =>
                                                 deleteModal(learning?.id, 'objective')
                                               }
                                             />
@@ -525,108 +539,115 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
 
                                         <div className="mt-5 h-48 overflow-y-auto">
                                           {learning.topics?.length ? (
-                                            learning.topics.map((topic: any) => (
-                                              <div key={topic.id} className="pr-1 mb-2">
-                                                <div className="flex justify-between items-center">
-                                                  <span
-                                                    className={`text-lg ${theme.text.active} font-bold`}>
-                                                    {topic.name}
-                                                  </span>
-                                                  <span className="w-auto inline-flex items-center cursor-pointer">
-                                                    <HiPencil
-                                                      className="w-4 h-4"
-                                                      onClick={() =>
-                                                        editCurrentTopic(topic)
-                                                      }
-                                                    />
-                                                    <HiOutlineTrash
-                                                      className="w-4 h-4"
-                                                      onClick={() =>
-                                                        deleteModal(topic?.id, 'topic')
-                                                      }
-                                                    />
-                                                  </span>
-                                                </div>
-                                                <ul className="pl-3">
-                                                  {topic.rubrics?.length ? (
-                                                    <>
-                                                      {topic.rubrics.map(
-                                                        (rubric: any) => (
-                                                          <li
-                                                            className="flex justify-between items-center py-1"
-                                                            key={rubric.id}>
-                                                            <span>{rubric.name}</span>
-                                                            <span className="w-auto inline-flex items-center cursor-pointer">
-                                                              <HiPencil
-                                                                className="w-4 h-4"
-                                                                onClick={() =>
-                                                                  editCurrentMeasurement(
-                                                                    rubric,
-                                                                    learning.id
-                                                                  )
-                                                                }
-                                                              />
-                                                              <HiOutlineTrash
-                                                                className="w-4 h-4"
-                                                                onClick={() =>
-                                                                  deleteModal(
-                                                                    rubric?.id,
-                                                                    'measurement'
-                                                                  )
-                                                                }
-                                                              />
-                                                            </span>
-                                                          </li>
-                                                        )
-                                                      )}
-                                                      <div
-                                                        className={`text-base ${theme.text.active} cursor-pointer`}
+                                            learning.topics.map(
+                                              (topic: any, topicIndex: number) => (
+                                                <div key={topic.id} className="pr-1 mb-2">
+                                                  <div className="flex justify-between items-center">
+                                                    <span
+                                                      className={`text-base ${theme.text.active} font-bold pr-2`}>
+                                                      {topicIndex + 1}. {topic.name}
+                                                    </span>
+                                                    <span className="w-auto inline-flex items-center cursor-pointer">
+                                                      <HiPencil
+                                                        className="w-4 h-4"
                                                         onClick={() =>
-                                                          createNewMeasurement(
-                                                            topic.id,
-                                                            learning.id
+                                                          editCurrentTopic(topic)
+                                                        }
+                                                      />
+                                                      <DeleteActionBtn
+                                                        handleClick={() =>
+                                                          deleteModal(topic?.id, 'topic')
+                                                        }
+                                                      />
+                                                    </span>
+                                                  </div>
+                                                  <ul className="pl-3">
+                                                    {topic.rubrics?.length ? (
+                                                      <>
+                                                        {topic.rubrics.map(
+                                                          (
+                                                            rubric: any,
+                                                            rubricIndex: number
+                                                          ) => (
+                                                            <li
+                                                              className="flex justify-between items-center py-1 truncate"
+                                                              key={rubric.id}>
+                                                              <span className="pr-2 text-base truncate">
+                                                                {topicIndex + 1}.
+                                                                {rubricIndex + 1}{' '}
+                                                                {rubric.name}
+                                                              </span>
+                                                              <span className="w-auto inline-flex items-center cursor-pointer">
+                                                                <HiPencil
+                                                                  className="w-4 h-4"
+                                                                  onClick={() =>
+                                                                    editCurrentMeasurement(
+                                                                      rubric,
+                                                                      learning.id
+                                                                    )
+                                                                  }
+                                                                />
+                                                                <DeleteActionBtn
+                                                                  handleClick={() =>
+                                                                    deleteModal(
+                                                                      rubric?.id,
+                                                                      'measurement'
+                                                                    )
+                                                                  }
+                                                                />
+                                                              </span>
+                                                            </li>
                                                           )
-                                                        }>
-                                                        Add new measurement
+                                                        )}
+                                                        <div
+                                                          className={`text-base ${theme.text.active} cursor-pointer`}
+                                                          onClick={() =>
+                                                            createNewMeasurement(
+                                                              topic.id,
+                                                              learning.id
+                                                            )
+                                                          }>
+                                                          Add new measurement
+                                                        </div>
+                                                      </>
+                                                    ) : learning.topics?.length < 2 ? (
+                                                      <div className="flex justify-center items-center">
+                                                        <div
+                                                          className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                                          onClick={() =>
+                                                            createNewMeasurement(
+                                                              topic.id,
+                                                              learning.id
+                                                            )
+                                                          }>
+                                                          <span className="w-6 h-6 flex items-center mr-4">
+                                                            <IconContext.Provider
+                                                              value={{
+                                                                size: '1.5rem',
+                                                                color: 'darkgray',
+                                                              }}>
+                                                              <IoAdd />
+                                                            </IconContext.Provider>
+                                                          </span>
+                                                          Add measurement
+                                                        </div>
                                                       </div>
-                                                    </>
-                                                  ) : learning.topics?.length < 2 ? (
-                                                    <div className="flex justify-center items-center">
+                                                    ) : (
                                                       <div
-                                                        className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                                        className={`text-base ${theme.text.active}  cursor-pointer`}
                                                         onClick={() =>
                                                           createNewMeasurement(
                                                             topic.id,
                                                             learning.id
                                                           )
                                                         }>
-                                                        <span className="w-6 h-6 flex items-center mr-4">
-                                                          <IconContext.Provider
-                                                            value={{
-                                                              size: '1.5rem',
-                                                              color: 'darkgray',
-                                                            }}>
-                                                            <IoAdd />
-                                                          </IconContext.Provider>
-                                                        </span>
                                                         Add measurement
                                                       </div>
-                                                    </div>
-                                                  ) : (
-                                                    <div
-                                                      className={`text-base ${theme.text.active}  cursor-pointer`}
-                                                      onClick={() =>
-                                                        createNewMeasurement(
-                                                          topic.id,
-                                                          learning.id
-                                                        )
-                                                      }>
-                                                      Add new measurement
-                                                    </div>
-                                                  )}
-                                                </ul>
-                                              </div>
-                                            ))
+                                                    )}
+                                                  </ul>
+                                                </div>
+                                              )
+                                            )
                                           ) : (
                                             <div className="flex justify-center items-center">
                                               <div
@@ -655,7 +676,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                           onClick={() => createNewTopic(learning.id)}
                                           label={TOPICLISTDICT[userLanguage]['ADD']}
                                           overrideClass={true}
-                                          btnClass={`h-9 w-auto my-2 flex rounded px-12 text-xs focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
+                                          btnClass={`h-9 w-auto my-2 flex items-center rounded px-12 text-xs focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
                                         />
                                       </div>
                                     </div>
@@ -677,7 +698,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                     onItemEdit={editLearningObj}
                   /> */}
               </div>
-              {!isFormOpen && !learnings?.length && (
+              {!loading && !isFormOpen && !learnings?.length && (
                 <Fragment>
                   <div className="flex justify-center mt-8">
                     <Buttons

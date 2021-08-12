@@ -1492,7 +1492,7 @@ const LEARINGOBJECTIVEDICT: any = {
     INFO: 'This curricular does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {

@@ -166,6 +166,8 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
               name="name"
               label={ADDLEARINGOBJDICT[userLanguage]['NAME']}
               isRequired
+              maxLength={30}
+              showCharacterUsage
             />
             {!validation.isValid ? (
               <p className="text-red-600">{validation.msg}</p>

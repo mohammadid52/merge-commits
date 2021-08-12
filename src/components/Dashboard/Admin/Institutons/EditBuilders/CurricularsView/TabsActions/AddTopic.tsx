@@ -180,6 +180,8 @@ const AddTopic = (props: AddTopicProps) => {
               name="name"
               label={AddTopicDict[userLanguage]['topicname']}
               isRequired
+              maxLength={30}
+              showCharacterUsage
             />
             {validation.name && <p className="text-red-600">{validation.name}</p>}
           </div>
