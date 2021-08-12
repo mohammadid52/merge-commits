@@ -17,6 +17,7 @@ export const FORM_TYPES = {
   LINKS: 'links',
   REVIEW_SLIDER: 'review-slider-input',
   HIGHLIGHTER: 'highlighter-input',
+  WRITING_EXERCISE: 'writing-exercise-input',
 };
 export const DIVIDER = 'divider';
 export const INPUT = 'Input';
@@ -27,3 +28,4 @@ export const INPUT_WITH_EMOJI = 'Emoji';
 export const ATTACHMENTS = 'Attachments';
 export const DATE_PICKER = 'Date Picker';
 export const TABLE = 'table';
+export const PARAGRAPH = 'paragraph';
