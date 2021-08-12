@@ -360,9 +360,13 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
-                  title={`${classRoomDict[userLanguage]['STEP']} 1: ${
-                    classRoomDict[userLanguage]['UNIT_TITLE']
-                  } ${!syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''}`}
+                  title={`${
+                    Boolean(state.roomData?.syllabus?.length)
+                      ? `${classRoomDict[userLanguage]['STEP']} 1:`
+                      : ''
+                  } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
+                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''
+                  }`}
                   subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
@@ -370,6 +374,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                     <SyllabusSwitch
                       completedLessons={activeRoomInfo?.completedLessons}
                       classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      curriculumName={state.roomData?.curriculum?.name}
                       activeRoom={state.activeRoom}
                       currentPage={currentPage}
                       syllabusLoading={syllabusLoading}
@@ -380,29 +385,37 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </>
             )}
 
-            <SectionTitleV3
-              extraContainerClass={'lg:px-0 px-4'}
-              fontSize="2xl"
-              fontStyle="bold"
-              title={`${isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''} ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${state.roomData?.activeSyllabus?.name}`}
-              subtitle={
-                isTeacher
-                  ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
-                  : 'To enter classroom, select open lesson for this week'
-              }
-            />
-
-            <div className={`bg-opacity-10`}>
-              <div className={`pb-4 text-xl m-auto`}>
-                <Today
-                  activeRoom={state.activeRoom}
-                  activeRoomInfo={activeRoomInfo}
-                  isTeacher={isTeacher}
-                  lessonLoading={lessonLoading}
-                  lessons={lessonData}
+            {Boolean(state.roomData?.syllabus?.length) && (
+              <>
+                <SectionTitleV3
+                  extraContainerClass={'lg:px-0 px-4'}
+                  fontSize="2xl"
+                  fontStyle="bold"
+                  title={`${
+                    isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''
+                  } ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${
+                    state.roomData?.activeSyllabus?.name
+                  }`}
+                  subtitle={
+                    isTeacher
+                      ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                      : 'To enter classroom, select open lesson for this week'
+                  }
                 />
-              </div>
-            </div>
+
+                <div className={`bg-opacity-10`}>
+                  <div className={`pb-4 text-xl m-auto`}>
+                    <Today
+                      activeRoom={state.activeRoom}
+                      activeRoomInfo={activeRoomInfo}
+                      isTeacher={isTeacher}
+                      lessonLoading={lessonLoading}
+                      lessons={lessonData}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             {/* {showClassDetails && (
               <div
                 className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>

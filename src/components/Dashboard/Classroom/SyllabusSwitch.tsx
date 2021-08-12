@@ -5,11 +5,14 @@ import {Syllabus} from './Classroom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
+
+import Buttons from '../../Atoms/Buttons';
 // import ProgressBar from './ProgressBar';
 
 const SyllabusSwitch = (props: DashboardProps) => {
   const {
     classRoomActiveSyllabus,
+    curriculumName,
     activeRoom,
     currentPage,
     syllabusLoading,
@@ -23,7 +26,7 @@ const SyllabusSwitch = (props: DashboardProps) => {
   const getBG = (theme = 'indigo') => {
     return `text-${theme}-500 hover:bg-${theme}-400`;
   };
-  
+
   return (
     <>
       {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
@@ -35,48 +38,56 @@ const SyllabusSwitch = (props: DashboardProps) => {
             </div>
           </div>
         </div>
-      ) : null}
-
-      <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
-        {!syllabusLoading && state.roomData?.syllabus?.length > 0
-          ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
-              // const progressPercentage = completedLessons;
-              return (
-                <div
-                  key={`testSyllabus_${i}`}
-                  id={`testSyllabus_${i}`}
-                  className={`flex relative flex-col ${
-                    classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'
-                  } rounded-lg shadow justify-center items-center`}>
-                  <div className={`flex justify-between p-2`}>
-                    <div className="flex items-center">
-                      <span className="w-auto">
-                        <FaBook className="w-6 h-6" />
-                      </span>
-                      <span className={`text-sm 2xl:text-base text-darker-gray pl-2`}>
-                        {syllabus.name}
-                      </span>
-                    </div>
-
-                    {classRoomActiveSyllabus !== syllabus.id ? (
-                      <div
-                        className={`${theme.btn.iconoclastIndigo} text-center rounded-lg cursor-pointer text-sm 2xl:text-base hover:text-white transition-all w-24 py-1 duration-150`}
-                        onClick={() => handleSyllabusActivation(syllabus.id)}>
-                        Select
-                      </div>
-                    ) : (
-                      <div
-                        className={`w-24 rounded-lg py-1 flex justify-center  items-center text-base bg-green-400 text-white font-semibold`}>
-                        Active
-                      </div>
-                    )}
+      ) : state.roomData?.syllabus?.length > 0 ? (
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
+          {state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
+            // const progressPercentage = completedLessons;
+            return (
+              <div
+                key={`testSyllabus_${i}`}
+                id={`testSyllabus_${i}`}
+                className={`flex relative flex-col ${
+                  classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'
+                } rounded-lg shadow justify-center items-center`}>
+                <div className={`flex justify-between p-2`}>
+                  <div className="flex items-center">
+                    <span className="w-auto">
+                      <FaBook className="w-6 h-6" />
+                    </span>
+                    <span className={`text-sm 2xl:text-base text-darker-gray pl-2`}>
+                      {syllabus.name}
+                    </span>
                   </div>
-                  {/* <ProgressBar progressPercentage={60} /> */}
+
+                  {classRoomActiveSyllabus !== syllabus.id ? (
+                    <div
+                      className={`${theme.btn.iconoclastIndigo} text-center rounded-lg cursor-pointer text-sm 2xl:text-base hover:text-white transition-all w-24 py-1 duration-150`}
+                      onClick={() => handleSyllabusActivation(syllabus.id)}>
+                      Select
+                    </div>
+                  ) : (
+                    <div
+                      className={`w-24 rounded-lg py-1 flex justify-center  items-center text-base bg-green-400 text-white font-semibold`}>
+                      Active
+                    </div>
+                  )}
                 </div>
-              );
-            })
-          : null}
-      </div>
+                {/* <ProgressBar progressPercentage={60} /> */}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div>
+          No units or lessons have been created for {curriculumName}. Please complete
+          curriculum set up to continue.
+          <Buttons
+            label="Go to Curriculum"
+            btnClass="mr-4 mt-4"
+            onClick={() => console.log()}
+          />
+        </div>
+      )}
 
       {activeRoom === '' ? (
         <div className={`py-4 px-6 bg-white rounded-lg shadow`}>

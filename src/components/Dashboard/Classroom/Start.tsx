@@ -319,7 +319,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
             : `${firstPart()} ${secondPart()}`
         }
-        disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive)}
+        disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive) || isCompleted}
         overrideClass={true}
         btnClass={`rounded 
         ${studentTeacherButtonTheme()}
