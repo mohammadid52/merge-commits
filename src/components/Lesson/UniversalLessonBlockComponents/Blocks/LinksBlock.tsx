@@ -14,9 +14,6 @@ const LinksBlock = (props: LinksBlockProps) => {
   const {
     state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-  const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
-
-  const isDark = lessonPageTheme !== 'light';
 
   return (
     <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
@@ -31,8 +28,8 @@ const LinksBlock = (props: LinksBlockProps) => {
               ) => (
                 <div
                   key={`${id}_${key}`}
-                  className="h-full p-2 flex justify-center items-start px-4">
-                  <LinkPreview url={item.value} />
+                  className="h-full  p-2 flex justify-center items-start px-4">
+                  <LinkPreview url={item.value} height={400} imageHeight={200} />
                 </div>
               )
             )}
