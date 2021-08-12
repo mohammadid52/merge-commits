@@ -67,10 +67,12 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
   };
 
   const getPageLabel = (locationIndex: string) => {
-    if (locationIndex === '') {
-      return 'n/a';
-    } else {
-      return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
+    if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+      if (locationIndex === '') {
+        return 'n/a';
+      } else {
+        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
+      }
     }
   };
 
