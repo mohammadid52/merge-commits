@@ -15,6 +15,7 @@ interface RichTextEditorProps {
   fullWHOverride?: boolean;
   rounded?: boolean;
   dark?: boolean;
+  mediumDark?: boolean;
   customStyle?: boolean;
   features?: string[];
 }
@@ -25,10 +26,10 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     initialValue,
     fullWHOverride,
     dark = false,
+    mediumDark = false,
     customStyle = false,
     rounded = false,
     features = [],
-
     theme,
   } = props;
   const initialState: any = EditorState.createEmpty();
@@ -86,16 +87,16 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
 
   const toolbarClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} toolbarClassName ${
+      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} toolbarClassName ${
           previewMode ? 'previewMode' : ''
         } text-black`
       : 'toolbarClassName'
   }`;
   const wrapperClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} wrapperClassName ${previewMode ? 'previewMode' : ''}  ${
-          fullWHOverride ? 'flex flex-col' : ''
-        }`
+      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} wrapperClassName ${
+          previewMode ? 'previewMode' : ''
+        }  ${fullWHOverride ? 'flex flex-col' : ''}`
       : 'wrapperClassName'
   }`;
   const editorClassName = `${

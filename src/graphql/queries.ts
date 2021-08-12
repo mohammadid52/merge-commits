@@ -5315,6 +5315,8 @@ export const getUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      lessonID
+      lessonType
       createdAt
       updatedAt
     }
@@ -5347,6 +5349,8 @@ export const listUniversalJournalDatas = /* GraphQL */ `
           input
         }
         feedbacks
+        lessonID
+        lessonType
         createdAt
         updatedAt
       }

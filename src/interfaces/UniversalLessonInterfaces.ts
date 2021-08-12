@@ -1,7 +1,6 @@
-/**************************************
- * UNIVERSAL LESSON BUILDER INTERFACES*
- ***************************************/
-//
+// ##################################################################### //
+// #################### UNIVERSAL LESSON INTERFACES #################### //
+// ##################################################################### //
 export interface UniversalLesson {
   id: string;
   isDraft?: boolean; //will determine if curriculum builder can see lesson to add to syllabus
@@ -84,10 +83,9 @@ export interface Options {
   text?: string;
 }
 
-/**************************************
- * UNIVERSAL LESSON SETUP DATA && STUDENT DATA INTERFACES   *
- **************************************/
-//
+// ##################################################################### //
+// ################### UNIVERSAL LESSON STUDENT DATA ################### //
+// ##################################################################### //
 export interface UniversalLessonStudentData {
   id: string;
   universalLessonID: string;
@@ -107,4 +105,17 @@ export interface StudentPageInput {
 export interface TeacherStudentComments {
   commentBy: string;
   comment: string;
+}
+
+// ##################################################################### //
+// ####################### UNIVERSAL JOURNAL DATA ###################### //
+// ##################################################################### //
+export interface UniversalJournalData {
+  id: string;
+  studentID: string;
+  studentAuthID: string;
+  studentEmail: string;
+  type?: 'class-note';
+  feedbacks?: string[];
+  entryData?: {domID: string; type: string; input: string}[];
 }
