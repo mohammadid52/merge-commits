@@ -1,16 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {FaCaretDown, FaEdit, FaTasks} from 'react-icons/fa';
+import {FaEdit} from 'react-icons/fa';
 import {API, graphqlOperation} from '@aws-amplify/api';
 
 import {GlobalContext} from '../../../contexts/GlobalContext';
-import {ContextMenuProvider} from '../../../contexts/TreeContext';
-import {Tree} from '../../TreeView/Tree';
 import useDictionary from '../../../customHooks/dictionary';
 
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
-import * as customQueries from '../../../customGraphql/customQueries';
-import * as customMutations from '../../../customGraphql/customMutations';
 
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
@@ -19,87 +15,14 @@ import Buttons from '../../Atoms/Buttons';
 import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
 import {getAsset} from '../../../assets';
-import LessonDataViewer from './LessonDataViewer';
-import {exampleUniversalLesson} from '../../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
-
-const data: any = {
-  title: 'root',
-  children: [
-    {
-      title: 'Course 1',
-      type: 'course',
-      children: [
-        {
-          title: 'Syllabus 1',
-          type: 'syllabus',
-          children: [
-            {
-              title: 'Lesson 1',
-              type: 'lesson',
-              children: [
-                {
-                  title: 'Page 1',
-                  type: 'pages',
-                  children: [],
-                },
-                {
-                  title: 'Page 2',
-                  type: 'pages',
-                  children: [],
-                },
-              ],
-            },
-            {
-              title: 'Lesson 2',
-              type: 'lesson',
-              children: [],
-            },
-          ],
-        },
-        {
-          title: 'Syllabus 2',
-          type: 'syllabus',
-          children: [
-            {
-              title: 'Lesson 2-1',
-              type: 'lesson',
-              children: [],
-            },
-            {
-              title: 'Lesson 2-2',
-              type: 'lesson',
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-export interface AnthologyContentInterface {
-  type: string;
-  subType: string;
-  title: string;
-  subTitle: string;
-  description: string;
-  content: string;
-}
-
-export interface AnthologyMapItem extends AnthologyContentInterface {
-  studentDataID?: string;
-  lessonProgress?: string;
-  currentLocation?: string;
-  status: string;
-  syllabusLessonID: string;
-  studentID: string;
-  studentAuthID: string;
-  updatedAt?: string;
-}
+import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {nanoid} from 'nanoid';
+import {Auth} from '@aws-amplify/auth';
+import {useParams} from 'react-router-dom';
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
-  studentDataID: string;
+  dataID: string;
   idx: number;
 };
 
@@ -114,309 +37,267 @@ const Anthology = () => {
     clientKey,
   } = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
+  const urlParams: any = useParams();
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const [tab, setTab] = useState(0);
-
-  const [studentData, setStudentData] = useState<AnthologyMapItem[]>([]);
-  const [newStudentData, setNewStudentData] = useState<AnthologyMapItem>({
-    type: 'journal',
-    subType: '',
-    title: '',
-    subTitle: '',
-    description: '',
-    content: '',
-    lessonProgress: '0',
-    currentLocation: '0',
-    status: 'ACTIVE',
-    syllabusLessonID: '',
-    studentID: state.user.email,
-    studentAuthID: state.user.authId,
-  });
-  // For switching sections & knowing which field to edit
-  const [subSection, setSubSection] = useState<string>('Journal');
-  // For editing specific poems/stories
-  const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({
-    mode: '',
-    studentDataID: '',
-    idx: 0,
-  });
+  const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
 
   useEffect(() => {
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'anthology'}});
   }, []);
+
+  // ##################################################################### //
+  // ######################## LOADED STUDENT DATA ######################## //
+  // ##################################################################### //
+
+  /**
+   * This section is currently emptied out because
+   * the data-structure for student data is different
+   * Now it follows the UniversalLessonStudentData structure
+   */
+
   const [loadingContent, setLoadingContent] = useState(false);
 
-  // TOP Function to load student data
-  const listStudentData = async () => {
-    setLoadingContent(true);
+  // ##################################################################### //
+  // ##################### CRUD JOURNAL & CLASS NOTES #################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+  const [allUniversalJournalData, setAllUniversalJournalData] = useState<
+    UniversalJournalData[]
+  >([]);
+  const [journalEntryData, setJournalEntryData] = useState<UniversalJournalData>({
+    id: '',
+    studentID: '',
+    studentAuthID: '',
+    studentEmail: '',
+    type: 'journal-entry',
+    feedbacks: [''],
+    entryData: [
+      {
+        domID: `title_${nanoid(4)}`,
+        type: 'header',
+        input: 'Default Title',
+      },
+      {
+        domID: `note_${nanoid(4)}`,
+        type: 'content',
+        input: '<p>Enter notes here...</p>',
+      },
+    ],
+  });
+
+  // ~~~~~~~~~~~~ GET OR CREATE ~~~~~~~~~~~~ //
+  const [universalJournalDataLoaded, setUniversalJournalDataLoaded] = useState<boolean>(
+    false
+  );
+  const [notesChanged, setNotesChanged] = useState<boolean>(false);
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
+
+  const listUniversalJournalData = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+
     try {
-      const studentDataFetch: any = await API.graphql(
-        graphqlOperation(queries.listStudentDatas, {
-          filter: {studentAuthID: {eq: state.user.authId}},
-        })
-      );
-      const response = await studentDataFetch;
-      const arrayOfResponseObjects = response?.data?.listStudentDatas?.items;
-      const reducedAnthologyContent = arrayOfResponseObjects.reduce(
-        (acc: AnthologyMapItem[], contentObj: any) => {
-          if (contentObj.anthologyContent) {
-            const mapIdToItem = contentObj.anthologyContent.map(
-              (contentMapItem: AnthologyContentInterface) => {
-                return {
-                  ...contentMapItem,
-                  status: contentObj.status,
-                  syllabusLessonID: contentObj.syllabusLessonID,
-                  studentID: contentObj.studentID,
-                  studentAuthID: contentObj.studentAuthID,
-                  studentDataID: contentObj.id,
-                  updatedAt: contentObj.updatedAt,
-                };
-              }
-            );
-            return [...acc, ...mapIdToItem];
-          } else {
-            return acc;
-          }
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: studentAuthId},
         },
-        []
+      };
+
+      const journalEntryData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalJournalDatas, listFilter)
       );
-      setStudentData(reducedAnthologyContent);
-    } catch (e) {
-      console.error('Anthology student data fetch error: ', e);
-    } finally {
-      setLoadingContent(false);
-    }
-  };
+      const journalEntryDataRows = journalEntryData.data.listUniversalJournalDatas.items;
 
-  // Useeffect to load student data and process it
-  useEffect(() => {
-    const initializeStudentData = async () => {
-      if (state.user.authId) {
-        await listStudentData();
+      if (journalEntryDataRows?.length > 0) {
+        console.log('anthology - universalJournalDatas exist ', journalEntryDataRows);
+
+        setAllUniversalJournalData(journalEntryDataRows);
+      } else {
+        console.log('anthology - NO universalJournalDatas');
       }
+    } catch (e) {
+      console.error('error listing journal data - ', e);
+    } finally {
+      setUniversalJournalDataLoaded(true);
+    }
+  };
+
+  const createJournalData = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    try {
+      const input = {
+        studentID: studentAuthId,
+        studentAuthID: studentAuthId,
+        studentEmail: email,
+        type: journalEntryData.type,
+        entryData: journalEntryData.entryData,
+      };
+
+      const newJournalData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalJournalData, {input})
+      );
+
+      const returnedData = newJournalData.data.createUniversalJournalData;
+      return returnedData;
+    } catch (e) {
+      console.error('error creating journal data - ', e);
+    }
+  };
+
+  const updateJournalData = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    try {
+      const input = {
+        id: journalEntryData.id,
+        studentID: journalEntryData.studentID,
+        studentAuthID: journalEntryData.studentAuthID,
+        studentEmail: journalEntryData.studentEmail,
+        entryData: journalEntryData.entryData,
+      };
+      const updateJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {input})
+      );
+    } catch (e) {
+      console.error('error updating journal data - ', e);
+    } finally {
+      console.log('updated journal data...');
+      if (notesChanged) setNotesChanged(false);
+      if (saveInProgress) setSaveInProgress(false);
+    }
+  };
+
+  // ~~~~~~~~~~~~~ UPDATE NOTES ~~~~~~~~~~~~ //
+  const selectJournalData = async () => {
+    const selectExisting = allUniversalJournalData.find(
+      (journalObj: any) => journalObj.id === viewEditMode.dataID
+    );
+    setJournalEntryData({
+      id: selectExisting.id,
+      studentID: selectExisting.studentID,
+      studentAuthID: selectExisting.studentAuthID,
+      studentEmail: selectExisting.studentEmail,
+      feedbacks: selectExisting.feedbacks,
+      entryData: selectExisting.entryData,
+    });
+  };
+
+  const updateJournalDataContent = (html: string, targetType: string) => {
+    const updatedNotesData = {
+      ...journalEntryData,
+      entryData: journalEntryData.entryData.map((entryObj: any) => {
+        if (entryObj.type === targetType) {
+          return {...entryObj, input: html};
+        } else {
+          return entryObj;
+        }
+      }),
     };
-    initializeStudentData();
-  }, [state.user.authId]);
-
-  // Useeffect to initialize newStudentData
-  useEffect(() => {
-    setNewStudentData({...newStudentData, syllabusLessonID: customSyllabusLessonID()});
-  }, [studentData]);
-
-  // Function group to handle updating student data
-  const handleEditUpdate = (e: React.ChangeEvent) => {
-    const {id, value} = e.target as HTMLInputElement;
-    const [key, type, studentDataID] = id.split('_');
-    switch (viewEditMode.mode) {
-      case 'edit':
-        const updatedStudentData = studentData.reduce(
-          (acc: AnthologyMapItem[], contentObj: any, idx: number) => {
-            if (
-              contentObj.type === type &&
-              contentObj.studentDataID === studentDataID &&
-              idx === viewEditMode.idx
-            ) {
-              return [...acc, {...contentObj, [key]: value}];
-            } else {
-              return [...acc, contentObj];
-            }
-          },
-          []
-        );
-        setStudentData(updatedStudentData);
-        break;
-      case 'create':
-        if (viewEditMode.mode === 'create') {
-          const updatedNewStudentData = {...newStudentData, [key]: value};
-          setNewStudentData(updatedNewStudentData);
-        }
-        break;
-    }
+    console.log('input - ', html);
+    setJournalEntryData(updatedNotesData);
+    if (!notesChanged) setNotesChanged(true);
   };
 
-  const handleWYSIWYGupdate = (id: string, value: string) => {
-    const [key, type, studentDataID] = id.split('_');
-    switch (viewEditMode.mode) {
-      case 'edit':
-        const updatedStudentData = studentData.reduce(
-          (acc: AnthologyMapItem[], contentObj: any, idx: number) => {
-            if (
-              contentObj.type === type &&
-              contentObj.studentDataID === studentDataID &&
-              idx === viewEditMode.idx
-            ) {
-              return [...acc, {...contentObj, [key]: value}];
-            } else {
-              return [...acc, contentObj];
-            }
-          },
-          []
-        );
-        setStudentData(updatedStudentData);
-        break;
-      case 'create':
-        if (viewEditMode.mode === 'create') {
-          const updatedNewStudentData = {...newStudentData, [key]: value};
-          setNewStudentData(updatedNewStudentData);
-        }
-        break;
-    }
-  };
+  // ##################################################################### //
+  // ################ TOGGLE EDITING & ADDING NEW JOURNAL ################ //
+  // ##################################################################### //
+  const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({
+    mode: '',
+    dataID: '',
+    idx: 0,
+  });
 
   const handleEditToggle = (
     editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
-    studentDataID: string,
-    idx: number
+    dataID: string
   ) => {
-    setViewEditMode({mode: editMode, studentDataID: studentDataID, idx: idx});
+    setViewEditMode({mode: editMode, dataID: dataID, idx: 0});
   };
 
-  const onCancel = (type: string) => {
-    setNewStudentData({...newStudentData, content: '', title: ''});
-  };
-
-  // Function group to handle section-switching
-  const handleTabClick = (tab: number, e: React.MouseEvent) => {
-    const {id} = e.target as HTMLElement;
-
-    setViewEditMode({...viewEditMode, mode: ''});
-    setTab(tab);
-
-    if (id !== subSection) {
-      if (id !== 'subSectionTabs') {
-        setSubSection(id);
-        setNewStudentData({...newStudentData, type: subSectionKey[id][0]});
-      }
-    }
-  };
-
-  const subSectionKey: any = {
-    Journal: ['journal'],
-    Work: ['poem', 'story'],
-    Notes: ['notes'],
-  };
-
-  // Function group for filtering the studentData/anthology content
-  const customSyllabusLessonID = () => {
-    return `custom_${state.user.authId}_${
-      filterAnthologyContentWithSimilarSyllabusLessonID('custom').length
-    }`;
-  };
-
-  const filterAnthologyContentBySubsection = studentData.filter(
-    (contentObj: AnthologyMapItem) => {
-      if (subSectionKey[subSection]?.includes(contentObj.type)) return contentObj;
-    }
-  );
-
-  const filterAnthologyContentWithSimilarSyllabusLessonID = (
-    inputSyllabusLessonID: string
-  ) =>
-    studentData.filter((contentObj: AnthologyMapItem) => {
-      if (contentObj.syllabusLessonID?.includes(inputSyllabusLessonID)) return contentObj;
+  const handleResetJournalEntry = async () => {
+    setJournalEntryData({
+      id: '',
+      studentID: '',
+      studentAuthID: '',
+      studentEmail: '',
+      type: 'journal-entry',
+      feedbacks: [''],
+      entryData: [
+        {
+          domID: `title_${nanoid(4)}`,
+          type: 'header',
+          input: 'Default Title',
+        },
+        {
+          domID: `note_${nanoid(4)}`,
+          type: 'content',
+          input: '<p>Enter notes here...</p>',
+        },
+      ],
     });
-
-  const getAnthologyContentByStudentDataID = studentData.find(
-    (contentObj: AnthologyMapItem) => {
-      return contentObj.studentDataID === viewEditMode.studentDataID;
-    }
-  );
-
-  const getContentObjIndex = (contentObj: AnthologyMapItem) =>
-    studentData.indexOf(contentObj);
-
-  // Function group for mutating database
-  const anthologySave = async () => {
-    const removeHelperProperties = {
-      type: getAnthologyContentByStudentDataID.type,
-      subType: getAnthologyContentByStudentDataID.subType,
-      title: getAnthologyContentByStudentDataID.title,
-      subTitle: getAnthologyContentByStudentDataID.subTitle,
-      description: getAnthologyContentByStudentDataID.description,
-      content: getAnthologyContentByStudentDataID.content,
-    };
-
-    try {
-      const studentDataUpdate: any = await API.graphql(
-        graphqlOperation(mutations.updateStudentData, {
-          input: {
-            id: getAnthologyContentByStudentDataID.studentDataID,
-            status: getAnthologyContentByStudentDataID.status,
-            syllabusLessonID: getAnthologyContentByStudentDataID.syllabusLessonID,
-            studentID: state.user.email,
-            studentAuthID: state.user.authId,
-            anthologyContent: removeHelperProperties,
-          },
-        })
-      );
-    } catch (e) {
-      console.error('studentDataUpdate: ', e);
-    } finally {
-      setViewEditMode({mode: '', studentDataID: '', idx: 0});
-    }
-  };
-
-  const anthologyCreate = async () => {
-    const removeHelperProperties = {
-      type: newStudentData.type,
-      subType: newStudentData.subType,
-      title: newStudentData.title,
-      subTitle: newStudentData.subTitle,
-      description: newStudentData.description,
-      content: newStudentData.content,
-    };
-
-    try {
-      const studentDataCreate: any = await API.graphql(
-        graphqlOperation(mutations.createStudentData, {
-          input: {
-            lessonProgress: newStudentData.lessonProgress,
-            currentLocation: newStudentData.currentLocation,
-            status: newStudentData.status,
-            syllabusLessonID: newStudentData.syllabusLessonID,
-            studentID: state.user.email,
-            studentAuthID: state.user.authId,
-            anthologyContent: removeHelperProperties,
-          },
-        })
-      );
-    } catch (e) {
-      console.error('studentDataCreate: Anthology: ', e);
-    } finally {
-      setViewEditMode({mode: '', studentDataID: '', idx: 0});
-    }
   };
 
   // UseEffect for monitoring save/create new changes and calling functions
   useEffect(() => {
     const manageSaveAndCreate = async () => {
-      if (viewEditMode.mode === 'save') {
-        await anthologySave();
+      if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+        await selectJournalData();
+      } else if (viewEditMode.mode === 'save') {
+        await handleResetJournalEntry();
+        await updateJournalData();
+        await listUniversalJournalData();
       } else if (viewEditMode.mode === 'savenew') {
-        await anthologyCreate();
-        await listStudentData();
+        await createJournalData();
+        await handleResetJournalEntry();
+        await listUniversalJournalData();
+      } else if (viewEditMode.mode === '') {
+        await handleResetJournalEntry();
       }
     };
     manageSaveAndCreate();
   }, [viewEditMode]);
 
-  const getTranslation = Object.keys(anthologyDict[userLanguage].TABS).map((key: any) => {
-    return anthologyDict[userLanguage].TABS[key];
-  });
-  const notebookBanner = getAsset(clientKey, 'dashboardBanner1');
+  // ##################################################################### //
+  // #################### DISPLAY CONTENT BASED ON TAB ################### //
+  // ##################################################################### //
+  const [tab, setTab] = useState(0);
+  const [subSection, setSubSection] = useState<string>('Journal');
+
+  const filteredContent =
+    allUniversalJournalData?.length > 0
+      ? allUniversalJournalData.reduce(
+          (acc: UniversalJournalData[], data: UniversalJournalData) => {
+            if (subSection === 'Journal' && data.type === 'journal-entry') {
+              return [...acc, data];
+            } else if (subSection === 'Notes' && data.type === 'class-note') {
+              return [...acc, data];
+            } else {
+              return acc;
+            }
+          },
+          []
+        )
+      : [];
 
   const Content = (
     <AnthologyContent
       // loadingContent={loadingContent}
-      onCancel={onCancel}
+      onCancel={() => {}}
       viewEditMode={viewEditMode}
       handleEditToggle={handleEditToggle}
-      handleEditUpdate={handleEditUpdate}
-      handleWYSIWYGupdate={handleWYSIWYGupdate}
+      updateJournalContent={updateJournalDataContent}
       subSection={subSection}
-      createTemplate={newStudentData}
-      content={studentData.length > 0 && filterAnthologyContentBySubsection}
-      getContentObjIndex={getContentObjIndex}
+      createTemplate={journalEntryData}
+      currentContentObj={journalEntryData}
+      content={subSection !== 'Work' ? filteredContent : []}
+      getContentObjIndex={() => 0}
     />
   );
 
@@ -441,54 +322,30 @@ const Anthology = () => {
     },
   ];
 
-  // ~~~~~~~~~~~~~ TEST VALUES ~~~~~~~~~~~~~ //
-  const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
-  const SYLLABUS_ID = 'b0cd146b-6070-4a4a-ab23-b6f7db8f6d72';
+  const handleTabClick = (tab: number, e: React.MouseEvent) => {
+    const {id} = e.target as HTMLElement;
 
-  // ##################################################################### //
-  // ############################ LESSON FETCH ########################### //
-  // ##################################################################### //
-  const getSyllabusLesson = async (lessonID?: string) => {
-    // lessonID will be undefined for testing
-    if (lessonID !== '') {
-      try {
-        const universalLesson: any = await API.graphql(
-          graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
-        );
-        const response = universalLesson.data.getUniversalLesson;
-        setTimeout(() => {
-          lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
-        }, 1000);
-      } catch (e) {
-        console.error('Error loading lesson in LessonDataViewer.tsx - ', e);
+    setViewEditMode({...viewEditMode, mode: ''});
+    setTab(tab);
+
+    if (id !== subSection) {
+      if (id !== 'subSectionTabs') {
+        setSubSection(id);
       }
-    } else {
-      setTimeout(() => {
-        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
-      }, 1000);
     }
   };
 
-  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
+  // ##################################################################### //
+  // ###################### LOGIC FOR DATA FETCHING ###################### //
+  // ##################################################################### //
+
   useEffect(() => {
-    // const {lessonID} = urlParams;
-    const lessonID = LESSON_ID;
-
-    if (lessonID) {
-      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
-      getSyllabusLesson(lessonID).then((_: void) =>
-        console.log('Lesson Mount - ', 'Lesson fetched!')
-      );
+    if (subSection === 'Journal' || subSection === 'Notes') {
+      if (!universalJournalDataLoaded) {
+        listUniversalJournalData();
+      }
     }
-    return () => {
-      lessonDispatch({type: 'CLEANUP'});
-    };
   }, []);
-
-  //  NAVIGATION CONSTANTS
-  const PAGES = lessonState.lessonData.lessonPlan;
-
-  const CURRENT_PAGE = lessonState.currentPage;
 
   return (
     <React.Fragment>
@@ -515,9 +372,7 @@ const Anthology = () => {
                   Icon={FaEdit}
                   customStyles={{width: '14rem'}}
                   label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                  onClick={() =>
-                    handleEditToggle('create', newStudentData.syllabusLessonID, 0)
-                  }
+                  onClick={() => handleEditToggle('create', '')}
                   type="button"
                 />
               )
@@ -526,60 +381,14 @@ const Anthology = () => {
           />
           <div
             className={` min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-            {/* <div className="grid grid-cols-6 gap-2 p-4">
-          <div>
-            <div className="text-white">Notebook</div>
-            <div className={`${theme.backGround[themeColor]} mt-2 h-96`}>
-              
-              <ContextMenuProvider>
-                <Tree root={data} />
-              </ContextMenuProvider>
-            </div>
-          </div>
-          <div className={`col-span-4`}>
-            <div className="text-white">Pages</div>
-            <div className={`${theme.backGround[themeColor]} mt-2 min-h-96`}>
-              <LessonDataViewer />
-            </div>
-          </div>
-          <div>
-            <div className="text-white">Feedback</div>
-            <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
-          </div>
-        </div> */}
-            <UnderlinedTabs hideTooltip tabs={tabs} updateTab={handleTabClick} />
+            <UnderlinedTabs
+              hideTooltip
+              activeTab={tab}
+              tabs={tabs}
+              updateTab={handleTabClick}
+            />
           </div>
         </div>
-
-        {/*
-        Tabs to select between:
-          - Lesson Data
-          - Journal
-          - Your Stories & Poems
-    */}
-        {/* <SubSectionTabs
-        subSection={subSection}
-        handleTabClick={handleTabClick}
-        subSectionList={Object.keys(subSectionKey)}
-        translations={getTranslation}
-      /> */}
-        {/*
-        This section shows rows of:
-          - ADD NEW ENTRY
-          - Journal entries
-          - Stories
-          - Poems
-    */}
-        {/* <AnthologyContent
-          viewEditMode={viewEditMode}
-          handleEditToggle={handleEditToggle}
-          handleEditUpdate={handleEditUpdate}
-          handleWYSIWYGupdate={handleWYSIWYGupdate}
-          subSection={subSection}
-          createTemplate={newStudentData}
-          content={studentData.length > 0 && filterAnthologyContentBySubsection}
-          getContentObjIndex={getContentObjIndex}
-        /> */}
       </div>
     </React.Fragment>
   );

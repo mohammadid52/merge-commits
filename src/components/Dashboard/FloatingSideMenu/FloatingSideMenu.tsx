@@ -1,6 +1,6 @@
 import {Auth} from '@aws-amplify/auth';
 import {nanoid} from 'nanoid';
-import React, {SetStateAction, useState} from 'react';
+import React, {SetStateAction, useContext, useState} from 'react';
 import {useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import API, {graphqlOperation} from '@aws-amplify/api';
@@ -10,12 +10,13 @@ import useDeviceDetect from '../../../customHooks/deviceDetect';
 import ExpandedMenu from './ExpandedMenu';
 import {FloatingBar} from './FloatingBar';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 export interface FloatingSideMenuProps {
   menuState?: number;
   setMenuState?: (level: number, section: string) => void;
   focusSection?: string;
-  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
+  setFocusSection?: any;
   chatroom?: any;
   setChatroom?: React.Dispatch<React.SetStateAction<any>>;
   setOverlay?: React.Dispatch<SetStateAction<string>>;
@@ -53,6 +54,7 @@ const INITIAL_NOTESDATA: UniversalJournalData = {
 };
 
 const FloatingSideMenu = () => {
+  const {lessonState, clientKey} = useContext(GlobalContext);
   const {browser} = useDeviceDetect();
   const urlParams: any = useParams();
   const scrollbarMarginRight = browser.includes('Firefox') ? 'mr-4' : 'mr-3';
@@ -195,7 +197,13 @@ const FloatingSideMenu = () => {
         studentAuthID: studentAuthId,
         studentEmail: email,
         type: 'class-note',
-        entryData: notesData.entryData,
+        entryData: notesData.entryData.map((entryObj: any) => {
+          if (entryObj.type === 'header') {
+            return {...entryObj, input: `Class Note: ${lessonState?.lessonData?.title}`};
+          } else {
+            return entryObj;
+          }
+        }),
       };
 
       const newJournalData: any = await API.graphql(

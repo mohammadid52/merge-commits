@@ -115,7 +115,7 @@ export interface UniversalJournalData {
   studentID: string;
   studentAuthID: string;
   studentEmail: string;
-  type?: 'class-note';
+  type?: string;
   feedbacks?: string[];
   entryData?: {domID: string; type: string; input: string}[];
 }
