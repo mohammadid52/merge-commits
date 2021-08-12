@@ -13,9 +13,9 @@ const DividerBlock = ({value, bgWhite}: {value: string; bgWhite?: boolean}) => {
       <div className="relative flex w-auto justify-center">
         {value && (
           <span
-            className={`"px-2 w-auto text-sm  text-gray-400 ${
-              theme === 'dark' && !bgWhite ? 'bg-dark-gray' : 'bg-white'
-            }`}>
+            className={`px-2 w-auto text-sm transition-all duration-200  text-gray-400 bg-white ${
+              bgWhite ? 'dark:bg-white' : 'dark:bg-dark-gray'
+            } `}>
             {value}
           </span>
         )}
