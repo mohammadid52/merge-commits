@@ -33,7 +33,7 @@ const SectionTitleV3: React.FC<SectionTitleProps> = (sectProps: SectionTitleProp
       }`}>
       <div className={``}>
         <h2 className={`text-lg 2xl:text-${fontSize} font-${fontStyle} ${extraClass}`}>{title}</h2>
-        <p className="text-xs 2xl:text-md text-gray-500">{subtitle}</p>
+        <p className="text-sm 2xl:text-base text-gray-500">{subtitle}</p>
       </div>
       {withButton}
     </div>

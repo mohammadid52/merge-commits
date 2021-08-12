@@ -280,10 +280,10 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
 
   const studentTeacherButtonTheme = () => {
     // if (type === 'lesson') {
-    if (isActive) {
-      return theme.btn.lessonStart;
-    } else if (isCompleted) {
+    if (isCompleted) {
       return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
+    } else if (isActive) {
+      return theme.btn.lessonStart;
     } else {
       return theme.btn.iconoclastIndigo;
     }
