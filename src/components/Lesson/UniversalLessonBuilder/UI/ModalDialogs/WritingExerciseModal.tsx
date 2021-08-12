@@ -7,14 +7,13 @@ import {PartContentSub} from '../../../../../interfaces/UniversalLessonInterface
 import Info from '../../../../Atoms/Alerts/Info';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import RemoveInput from '../common/RemoveInput';
 import Toggle from '../Toggle';
 import {v4 as uuidv4} from 'uuid';
 import {FaTrashAlt} from 'react-icons/fa';
-import Tooltip from '../../../../Atoms/Tooltip';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {FORM_TYPES} from '../common/constants';
+
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
+import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
 
 interface WEProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -166,25 +165,36 @@ const WritingExerciseModal = (props: WEProps) => {
           className={`col-span-2 ${
             !enable.title ? 'pointer-events-none opacity-50' : ''
           }`}>
+          <div className="flex items-center">
+            <label
+              htmlFor={'title'}
+              className={`text-gray-700 w-auto mr-3 block text-xs font-semibold leading-5 `}>
+              {'Title'}
+            </label>
+
+            <div className="flex items-center h-5 w-auto">
+              <input
+                id="show_title"
+                aria-describedby="show_title"
+                name="show_title"
+                checked={enable.title}
+                onChange={(e) => setEnable({...enable, title: !enable.title})}
+                type="checkbox"
+                className="pointer-events-auto  h-4 w-4 text-indigo-600 border-gray-500 rounded"
+              />
+            </div>
+          </div>
           <FormInput
-            label="Title"
             id="title"
             className=""
             value={fields.title}
             onChange={onChange}
-          />
-        </div>
-        <div className="col-span-2 mt-1 mb-4 flex items-center justify-between w-56">
-          <span className=" w-auto">Show title</span>
-          <Toggle
-            enabledColor="bg-blue-600"
-            disabledColor="bg-gray-300"
-            setEnabled={() => setEnable({...enable, title: !enable.title})}
-            enabled={enable.title}
+            placeHolder="Add instructional text here"
           />
         </div>
 
         <div className={`col-span-2 ${!enable.lineStarter ? 'hidden' : ''}`}>
+          <DividerBlock bgWhite value="Line Starter Builder" />
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
               <div className="mb-2" key={`linestarter_${idx}`}>
@@ -225,13 +235,14 @@ const WritingExerciseModal = (props: WEProps) => {
             />
           </div>
 
-          <Buttons
-            disabled={!enable.lineStarter}
-            btnClass="py-1 px-4 text-xs mr-2"
-            label={'+ Add field'}
-            onClick={handleAddNewLinestarter}
-            transparent
-          />
+          {enable.lineStarter && (
+            <Buttons
+              btnClass="py-1 px-4 text-xs mr-2"
+              label={'+ Add field'}
+              onClick={handleAddNewLinestarter}
+              transparent
+            />
+          )}
         </div>
       </div>
 

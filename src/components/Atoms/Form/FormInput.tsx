@@ -24,6 +24,7 @@ interface FormInputProps {
   max?: number;
   maxLength?: number;
   showCharacterUsage?: boolean;
+
   className?: string;
 }
 
@@ -48,6 +49,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     dark,
     min,
     max,
+
     onKeyDown,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);
@@ -66,6 +68,7 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
         } block text-xs font-semibold leading-5 `}>
         {label} <span className="text-red-500"> {isRequired ? '*' : null}</span>
       </label>
+
       {textarea ? (
         <textarea
           rows={rows}
@@ -101,8 +104,8 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
           } ${className}`}
           value={value ? value : ''}
           placeholder={placeHolder}
-          {...otherInputProps}
           onKeyDown={onKeyDown}
+          {...otherInputProps}
         />
       )}
       <div className="flex">
