@@ -470,227 +470,201 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                 </div>
               )}
               <div className="py-4">
-                <div className="">
-                  <DragDropContext onDragEnd={onDragEnd}>
+                <div className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
+                  {/* <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable" direction="horizontal">
                       {(provided, snapshot) => (
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
-                          {isFormOpen && (
-                            <div className="flex shadow flex-col rounded-lg overflow-hidden">
-                              <AddLearningObjective
-                                curricularId={curricularId}
-                                handleCancel={handleCancel}
-                                learningObjectiveData={selectedObjectiveData}
-                                postMutation={postLearningObjectiveChange}
-                              />
-                            </div>
-                          )}
-                          {learnings.map((learning: any, index: number) => (
-                            <Draggable
-                              key={learning.id}
-                              draggableId={learning.id}
-                              index={index}>
-                              {(provided, snapshot) => (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}>
-                                  <div
-                                    className="flex shadow flex-col rounded-lg overflow-hidden"
-                                    key={learning.id}>
-                                    <div className="flex-shrink-0">
-                                      <div className="p-4">
-                                        <div className="flex">
-                                          {/* <span className="w-auto">
+                          className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none"> */}
+                  {isFormOpen && (
+                    <div className="flex shadow flex-col rounded-lg overflow-hidden">
+                      <AddLearningObjective
+                        curricularId={curricularId}
+                        handleCancel={handleCancel}
+                        learningObjectiveData={selectedObjectiveData}
+                        postMutation={postLearningObjectiveChange}
+                      />
+                    </div>
+                  )}
+                  {learnings.map((learning: any, index: number) => (
+                    // <Draggable
+                    //   key={learning.id}
+                    //   draggableId={learning.id}
+                    //   index={index}>
+                    //   {(provided, snapshot) => (
+                    //     <div
+                    //       ref={provided.innerRef}
+                    //       {...provided.draggableProps}
+                    //       {...provided.dragHandleProps}>
+                    <div
+                      className="flex shadow flex-col rounded-lg overflow-hidden"
+                      key={learning.id}>
+                      <div className="flex-shrink-0">
+                        <div className="p-4">
+                          <div className="flex">
+                            {/* <span className="w-auto">
                                               <GiArrowScope className="w-12 h-12" />
                                             </span> */}
-                                          <div className="flex-shrink-0 h-16 w-16 flex items-center">
-                                            <div
-                                              className="h-14 w-14 rounded-full flex justify-center items-center text-white text-lg text-bold"
-                                              style={{
-                                                background: `${stringToHslColor(
-                                                  getInitialFromObjectiveName(
-                                                    learning.name
-                                                  )
-                                                )}`,
-                                                textShadow: '0.1rem 0.1rem 2px #423939b3',
-                                              }}>
-                                              {getInitialFromObjectiveName(learning.name)}
-                                            </div>
-                                          </div>
-                                          <span className="inline-flex items-center ml-2 text-base font-bold">
-                                            {learning.name}
-                                          </span>
-                                          <span className="w-auto inline-flex items-center cursor-pointer">
-                                            <HiPencil
-                                              className="w-4 h-4"
-                                              onClick={() => editLearningObj(learning)}
-                                            />
-                                            <DeleteActionBtn
-                                              handleClick={() =>
-                                                deleteModal(learning?.id, 'objective')
-                                              }
-                                            />
-                                          </span>
-                                        </div>
+                            <div className="flex-shrink-0 h-16 w-16 flex items-center">
+                              <div
+                                className="h-14 w-14 rounded-full flex justify-center items-center text-white text-lg text-bold"
+                                style={{
+                                  background: `${stringToHslColor(
+                                    getInitialFromObjectiveName(learning.name)
+                                  )}`,
+                                  textShadow: '0.1rem 0.1rem 2px #423939b3',
+                                }}>
+                                {getInitialFromObjectiveName(learning.name)}
+                              </div>
+                            </div>
+                            <span className="inline-flex items-center ml-2 text-base font-bold">
+                              {learning.name}
+                            </span>
+                            <span className="w-auto inline-flex items-center cursor-pointer">
+                              <HiPencil
+                                className="w-4 h-4"
+                                onClick={() => editLearningObj(learning)}
+                              />
+                              <DeleteActionBtn
+                                handleClick={() => deleteModal(learning?.id, 'objective')}
+                              />
+                            </span>
+                          </div>
 
-                                        <div className="mt-5 h-48 overflow-y-auto">
-                                          {learning.topics?.length ? (
-                                            learning.topics.map(
-                                              (topic: any, topicIndex: number) => (
-                                                <div key={topic.id} className="pr-1 mb-2">
-                                                  <div className="flex justify-between items-center">
-                                                    <span
-                                                      className={`text-base ${theme.text.active} font-bold pr-2`}>
-                                                      {topicIndex + 1}. {topic.name}
-                                                    </span>
-                                                    <span className="w-auto inline-flex items-center cursor-pointer">
-                                                      <HiPencil
-                                                        className="w-4 h-4"
-                                                        onClick={() =>
-                                                          editCurrentTopic(topic)
-                                                        }
-                                                      />
-                                                      <DeleteActionBtn
-                                                        handleClick={() =>
-                                                          deleteModal(topic?.id, 'topic')
-                                                        }
-                                                      />
-                                                    </span>
-                                                  </div>
-                                                  <ul className="pl-3">
-                                                    {topic.rubrics?.length ? (
-                                                      <>
-                                                        {topic.rubrics.map(
-                                                          (
-                                                            rubric: any,
-                                                            rubricIndex: number
-                                                          ) => (
-                                                            <li
-                                                              className="flex justify-between items-center py-1 truncate"
-                                                              key={rubric.id}>
-                                                              <span className="pr-2 text-base truncate">
-                                                                {topicIndex + 1}.
-                                                                {rubricIndex + 1}{' '}
-                                                                {rubric.name}
-                                                              </span>
-                                                              <span className="w-auto inline-flex items-center cursor-pointer">
-                                                                <HiPencil
-                                                                  className="w-4 h-4"
-                                                                  onClick={() =>
-                                                                    editCurrentMeasurement(
-                                                                      rubric,
-                                                                      learning.id
-                                                                    )
-                                                                  }
-                                                                />
-                                                                <DeleteActionBtn
-                                                                  handleClick={() =>
-                                                                    deleteModal(
-                                                                      rubric?.id,
-                                                                      'measurement'
-                                                                    )
-                                                                  }
-                                                                />
-                                                              </span>
-                                                            </li>
-                                                          )
-                                                        )}
-                                                        <div
-                                                          className={`text-base ${theme.text.active} cursor-pointer`}
-                                                          onClick={() =>
-                                                            createNewMeasurement(
-                                                              topic.id,
-                                                              learning.id
-                                                            )
-                                                          }>
-                                                          Add new measurement
-                                                        </div>
-                                                      </>
-                                                    ) : learning.topics?.length < 2 ? (
-                                                      <div className="flex justify-center items-center">
-                                                        <div
-                                                          className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
-                                                          onClick={() =>
-                                                            createNewMeasurement(
-                                                              topic.id,
-                                                              learning.id
-                                                            )
-                                                          }>
-                                                          <span className="w-6 h-6 flex items-center mr-4">
-                                                            <IconContext.Provider
-                                                              value={{
-                                                                size: '1.5rem',
-                                                                color: 'darkgray',
-                                                              }}>
-                                                              <IoAdd />
-                                                            </IconContext.Provider>
-                                                          </span>
-                                                          Add measurement
-                                                        </div>
-                                                      </div>
-                                                    ) : (
-                                                      <div
-                                                        className={`text-base ${theme.text.active}  cursor-pointer`}
-                                                        onClick={() =>
-                                                          createNewMeasurement(
-                                                            topic.id,
-                                                            learning.id
-                                                          )
-                                                        }>
-                                                        Add measurement
-                                                      </div>
-                                                    )}
-                                                  </ul>
-                                                </div>
-                                              )
-                                            )
-                                          ) : (
-                                            <div className="flex justify-center items-center">
-                                              <div
-                                                className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 h-36 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
-                                                onClick={() =>
-                                                  createNewTopic(learning.id)
-                                                }>
-                                                <span className="w-6 h-6 flex items-center mr-4">
-                                                  <IconContext.Provider
-                                                    value={{
-                                                      size: '1.5rem',
-                                                      color: 'darkgray',
-                                                    }}>
-                                                    <IoAdd />
-                                                  </IconContext.Provider>
-                                                </span>
-                                                Add Topic
-                                              </div>
-                                            </div>
-                                          )}
+                          <div className="mt-5 h-48 overflow-y-auto">
+                            {learning.topics?.length ? (
+                              learning.topics.map((topic: any, topicIndex: number) => (
+                                <div key={topic.id} className="pr-1 mb-2">
+                                  <div className="flex justify-between items-center">
+                                    <span
+                                      className={`text-base ${theme.text.active} font-bold pr-2`}>
+                                      {topicIndex + 1}. {topic.name}
+                                    </span>
+                                    <span className="w-auto inline-flex items-center cursor-pointer">
+                                      <HiPencil
+                                        className="w-4 h-4"
+                                        onClick={() => editCurrentTopic(topic)}
+                                      />
+                                      <DeleteActionBtn
+                                        handleClick={() =>
+                                          deleteModal(topic?.id, 'topic')
+                                        }
+                                      />
+                                    </span>
+                                  </div>
+                                  <ul className="pl-3">
+                                    {topic.rubrics?.length ? (
+                                      <>
+                                        {topic.rubrics.map(
+                                          (rubric: any, rubricIndex: number) => (
+                                            <li
+                                              className="flex justify-between items-center py-1 truncate"
+                                              key={rubric.id}>
+                                              <span className="pr-2 text-base truncate">
+                                                {topicIndex + 1}.{rubricIndex + 1}{' '}
+                                                {rubric.name}
+                                              </span>
+                                              <span className="w-auto inline-flex items-center cursor-pointer">
+                                                <HiPencil
+                                                  className="w-4 h-4"
+                                                  onClick={() =>
+                                                    editCurrentMeasurement(
+                                                      rubric,
+                                                      learning.id
+                                                    )
+                                                  }
+                                                />
+                                                <DeleteActionBtn
+                                                  handleClick={() =>
+                                                    deleteModal(rubric?.id, 'measurement')
+                                                  }
+                                                />
+                                              </span>
+                                            </li>
+                                          )
+                                        )}
+                                        <div
+                                          className={`text-base ${theme.text.active} cursor-pointer`}
+                                          onClick={() =>
+                                            createNewMeasurement(topic.id, learning.id)
+                                          }>
+                                          Add new measurement
+                                        </div>
+                                      </>
+                                    ) : learning.topics?.length < 2 ? (
+                                      <div className="flex justify-center items-center">
+                                        <div
+                                          className="flex justify-center items-center my-5 w-full mx-2 px-8 py-4 h-28 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                          onClick={() =>
+                                            createNewMeasurement(topic.id, learning.id)
+                                          }>
+                                          <span className="w-6 h-6 flex items-center mr-4">
+                                            <IconContext.Provider
+                                              value={{
+                                                size: '1.5rem',
+                                                color: 'darkgray',
+                                              }}>
+                                              <IoAdd />
+                                            </IconContext.Provider>
+                                          </span>
+                                          Add measurement
                                         </div>
                                       </div>
-                                      <div className="border border-t-0 flex justify-center">
-                                        <Buttons
-                                          type="submit"
-                                          onClick={() => createNewTopic(learning.id)}
-                                          label={TOPICLISTDICT[userLanguage]['ADD']}
-                                          overrideClass={true}
-                                          btnClass={`h-9 w-auto my-2 flex items-center rounded px-12 text-xs focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
-                                        />
+                                    ) : (
+                                      <div
+                                        className={`text-base ${theme.text.active}  cursor-pointer`}
+                                        onClick={() =>
+                                          createNewMeasurement(topic.id, learning.id)
+                                        }>
+                                        Add measurement
                                       </div>
-                                    </div>
-                                  </div>
+                                    )}
+                                  </ul>
                                 </div>
-                              )}
-                            </Draggable>
-                          ))}
-                          {provided.placeholder}
+                              ))
+                            ) : (
+                              <div className="flex justify-center items-center">
+                                <div
+                                  className="flex justify-center items-center my-2 w-9/10 mx-auto px-8 py-4 h-36 border-0 border-dashed font-medium border-gray-400 text-gray-600 cursor-pointer"
+                                  onClick={() => createNewTopic(learning.id)}>
+                                  <span className="w-6 h-6 flex items-center mr-4">
+                                    <IconContext.Provider
+                                      value={{
+                                        size: '1.5rem',
+                                        color: 'darkgray',
+                                      }}>
+                                      <IoAdd />
+                                    </IconContext.Provider>
+                                  </span>
+                                  Add Topic
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </Droppable>
-                  </DragDropContext>
+                        <div className="border border-t-0 flex justify-center">
+                          <Buttons
+                            type="submit"
+                            onClick={() => createNewTopic(learning.id)}
+                            label={TOPICLISTDICT[userLanguage]['ADD']}
+                            overrideClass={true}
+                            btnClass={`h-9 w-auto my-2 flex items-center rounded px-12 text-xs font-bold focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    // </div>
+                    // )}
+                    // </Draggable>
+                  ))}
+                  {/* {provided.placeholder} */}
                 </div>
+                {/* )} */}
+                {/* </Droppable>
+                  </DragDropContext> */}
+                {/* </div> */}
                 {/* <DragableAccordion
                     titleList={learnings}
                     onDragEnd={onDragEnd}
