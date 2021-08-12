@@ -47,22 +47,18 @@ const ReviewSliderModal = ({
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setIsEditingMode(true);
-      const {
-        min,
-        max,
-        bgColor,
-        fgColor,
-        cardBgColor,
-        rounded,
-      } = extractValuesFromClassString(inputObj.class);
+      const values = extractValuesFromClassString(inputObj[0].class);
 
+      const {min, max, bgColor, fgColor, cardBgColor, rounded} = values;
+      const roundedParsedValue = find(roundedCornerList, (item) => item.value === rounded)
+        .name;
       setReviewFields({
         ...reviewFields,
         label: inputObj[0].label,
         value: inputObj[0].value,
         range: `${min}-${max}`,
         cardBgColor,
-        cardCorners: rounded,
+        cardCorners: roundedParsedValue,
         bgColor,
         fgColor,
       });

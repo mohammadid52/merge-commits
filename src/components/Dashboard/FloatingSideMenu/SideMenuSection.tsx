@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import ButtonsRound from '../../Atoms/ButtonsRound';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 import {IconType} from 'react-icons';
 import {AiOutlineSave} from 'react-icons/all';
-import { LessonContext } from '../../../contexts/LessonContext';
+import {LessonContext} from '../../../contexts/LessonContext';
 
 export const SideMenuSection = (props: {
   menuState?: number;
@@ -16,6 +16,8 @@ export const SideMenuSection = (props: {
   setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
   isOpen?: boolean;
   isChatActive?: boolean;
+  saveInProgress?: boolean;
+  setSaveInProgress?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const {
     menuState,
@@ -25,8 +27,9 @@ export const SideMenuSection = (props: {
     sectionTitle,
     focusSection,
     setFocusSection,
+    saveInProgress,
+    setSaveInProgress,
   } = props;
-  const LessonCTX = useContext(LessonContext);
   const thisSectionActive = focusSection === sectionLabel;
   const noSectionActive = focusSection === '';
 
@@ -40,15 +43,12 @@ export const SideMenuSection = (props: {
   };
 
   const handleCloseOrSave = () => {
-    if(menuState > 0 && thisSectionActive && focusSection === 'Notes'){
-      if(LessonCTX !== null) {
-        LessonCTX.dispatch({type: 'INCREMENT_SAVE_COUNT'});
-      }
-      setMenuState(-1, 'reset')
+    if (menuState > 0 && thisSectionActive && focusSection === 'Notes') {
+      setMenuState(-1, 'reset');
     } else {
-      setMenuState(-1, 'reset')
+      setMenuState(-1, 'reset');
     }
-  }
+  };
 
   return (
     <div
@@ -62,7 +62,7 @@ export const SideMenuSection = (props: {
     `}>
       {menuState > 0 && thisSectionActive ? (
         <>
-          <p
+          <div
             className={`
               h-12 max-w-72 truncate overflow-ellipsis overflow-hidden
               flex items-center  font-medium z-100
@@ -72,8 +72,9 @@ export const SideMenuSection = (props: {
                 ? 'border-t-0 pl-2 text-gray-700 text-xl bg-white'
                 : 'text-indigo-100 text-sm '
             } `}>
-            {sectionTitle || 'Section Title'}{' '}
-          </p>
+            <p>{sectionTitle || 'Section Title'} </p>
+            {saveInProgress && <span className={`ml-4`}>Saving...</span>}
+          </div>
           <div
             onClick={() => handleCloseOrSave()}
             className={`w-auto absolute right-0 ${

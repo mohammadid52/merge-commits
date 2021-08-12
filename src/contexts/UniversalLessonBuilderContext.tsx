@@ -154,18 +154,14 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
-    show: false,
-    type: '',
-  });
+
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
         selectedLessonID,
-        addContentModal,
-        setAddContentModal,
+
         editMode,
         toolbarOnTop,
         setToolbarOnTop,
