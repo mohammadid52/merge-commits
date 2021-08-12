@@ -1,29 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { useLocation, useHistory, useRouteMatch, useParams } from 'react-router';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import { BiNotepad } from 'react-icons/bi';
-import { MdSpeakerNotes } from 'react-icons/md';
-import { FaEdit } from 'react-icons/fa';
-import { FiUserCheck } from 'react-icons/fi';
+import React, {useContext, useEffect, useState} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {useLocation, useHistory, useRouteMatch, useParams} from 'react-router';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {BiNotepad} from 'react-icons/bi';
+import {MdSpeakerNotes} from 'react-icons/md';
+import {FaEdit} from 'react-icons/fa';
+import {FiUserCheck} from 'react-icons/fi';
 
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 
-import { languageList } from '../../../../../../utilities/staticData';
-import { createFilterToFetchSpecificItemsOnly } from '../../../../../../utilities/strings';
+import {languageList} from '../../../../../../utilities/staticData';
+import {createFilterToFetchSpecificItemsOnly} from '../../../../../../utilities/strings';
 
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
+import Tooltip from '../../../../../Atoms/Tooltip';
 import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
 
 import SyllabusList from './TabsListing/SyllabusList';
 import LearningObjective from './TabsListing/LearningObjective';
 import CheckpointList from './TabsListing/CheckpointList';
-import { GlobalContext } from '../../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
-import { goBackBreadCrumb } from '../../../../../../utilities/functions';
+import {goBackBreadCrumb} from '../../../../../../utilities/functions';
+import { getAsset } from '../../../../../../assets';
 
 interface CurricularViewProps {
   tabProps?: any;
@@ -33,7 +35,7 @@ interface InitialData {
   name: string;
   description: string;
   objectives: string;
-  languages: { id: string; name: string; value: string }[];
+  languages: {id: string; name: string; value: string}[];
   institute: {
     id: string;
     name: string;
@@ -44,7 +46,7 @@ interface InitialData {
 }
 
 const CurricularView = (props: CurricularViewProps) => {
-  const { tabProps } = props;
+  const {tabProps} = props;
 
   const match = useRouteMatch();
   const history = useHistory();
@@ -70,7 +72,7 @@ const CurricularView = (props: CurricularViewProps) => {
     syllabusList: [] as any,
     syllabusSequence: [] as any,
     description: '',
-    languages: [{ id: '1', name: 'English', value: 'EN' }],
+    languages: [{id: '1', name: 'English', value: 'EN'}],
     objectives: '',
   };
 
@@ -78,8 +80,9 @@ const CurricularView = (props: CurricularViewProps) => {
   const [designersId, setDesignersID] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
-  const { curricularviewdict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {curricularviewdict, BreadcrumsTitles} = useDictionary(clientKey);
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -134,7 +137,7 @@ const CurricularView = (props: CurricularViewProps) => {
   ];
 
   const updateTab = (tab: number) => {
-    tabProps.setTabsData({ ...tabProps.tabsData, instCurr: tab });
+    tabProps.setTabsData({...tabProps.tabsData, instCurr: tab});
   };
 
   const fetchCurricularData = async () => {
@@ -142,9 +145,13 @@ const CurricularView = (props: CurricularViewProps) => {
     if (currID) {
       setLoading(true);
       try {
-        const result: any = await API.graphql(graphqlOperation(customQueries.getCurriculum, { id: currID }));
+        const result: any = await API.graphql(
+          graphqlOperation(customQueries.getCurriculum, {id: currID})
+        );
         const savedData = result.data.getCurriculum;
-        const savedLanguages = languageList.filter((item) => savedData.languages?.includes(item.value));
+        const savedLanguages = languageList.filter((item) =>
+          savedData.languages?.includes(item.value)
+        );
         setCurricularData({
           ...curricularData,
           id: savedData.id,
@@ -175,7 +182,7 @@ const CurricularView = (props: CurricularViewProps) => {
   const fetchPersonsData = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: { ...createFilterToFetchSpecificItemsOnly(designersId, 'id') },
+        filter: {...createFilterToFetchSpecificItemsOnly(designersId, 'id')},
       })
     );
     const personsData = result.data.listPersons.items.map((person: any) => {
@@ -195,7 +202,7 @@ const CurricularView = (props: CurricularViewProps) => {
     }
   }, [designersId]);
 
-  const { name, institute, description, objectives, languages } = curricularData;
+  const {name, institute, description, objectives, languages} = curricularData;
   return (
     <div>
       {/* Section Header */}
@@ -235,10 +242,18 @@ const CurricularView = (props: CurricularViewProps) => {
           <div className="w-full">
             <div className="bg-white shadow-5 sm:rounded-lg mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6 flex">
-                <h3 className="text-lg flex items-center justify-center leading-6 font-medium text-gray-900">
-                  {curricularviewdict[userLanguage]['HEADING']}
-                </h3>
-                {currentPath !== 'edit' ? (
+                <div className="text-center">
+                  <span className="text-lg leading-6 font-medium text-gray-900">
+                    {curricularviewdict[userLanguage]['HEADING']}
+                  </span>
+                  <Tooltip key={'id'} text={'Edit Curriculum Details'} placement="top">
+                    <span
+                      className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
+                      <FaEdit className="w-6 h-6 pl-2" />
+                    </span>
+                  </Tooltip>
+                </div>
+                {/* {currentPath !== 'edit' ? (
                   <Buttons
                     btnClass="px-6 py-1"
                     label="Edit"
@@ -251,7 +266,7 @@ const CurricularView = (props: CurricularViewProps) => {
                     }
                     Icon={FaEdit}
                   />
-                ) : null}
+                ) : null} */}
               </div>
 
               <div className="grid grid-cols-2 divide-x-0 divide-gray-400 p-4">
