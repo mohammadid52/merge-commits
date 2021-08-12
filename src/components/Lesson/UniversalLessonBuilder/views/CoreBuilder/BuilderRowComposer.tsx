@@ -14,6 +14,7 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {FORM_TYPES} from '../../UI/common/constants';
+import {filter} from 'lodash';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -90,13 +91,22 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
 
+  const removeWEComponents = () => {
+    if (selectedPageDetails && selectedPageDetails.pageContent) {
+      return filter(
+        selectedPageDetails.pageContent,
+        (pgContent) => pgContent.partType !== 'writing-exercise'
+      );
+    }
+  };
+
+  const filteredLesson: UniversalLessonPage['pageContent'] = removeWEComponents();
+
   return (
     <>
-      {selectedPageID &&
-      selectedPageDetails &&
-      selectedPageDetails.pageContent.length > 0 ? (
+      {selectedPageID && filteredLesson && filteredLesson.length > 0 ? (
         [
-          selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
+          filteredLesson.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
             <div key={`row_pagepart_${idx}`} className="relative">
               <EditOverlayBlock

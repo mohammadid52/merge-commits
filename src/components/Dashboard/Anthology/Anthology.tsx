@@ -9,6 +9,8 @@ import useDictionary from '../../../customHooks/dictionary';
 
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
+import * as customQueries from '../../../customGraphql/customQueries';
+import * as customMutations from '../../../customGraphql/customMutations';
 
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
@@ -18,6 +20,7 @@ import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
 import {getAsset} from '../../../assets';
 import LessonDataViewer from './LessonDataViewer';
+import {exampleUniversalLesson} from '../../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
 
 const data: any = {
   title: 'root',
@@ -101,7 +104,15 @@ export type ViewEditMode = {
 };
 
 const Anthology = () => {
-  const {state, dispatch, userLanguage, theme, clientKey} = useContext(GlobalContext);
+  const {
+    state,
+    lessonState,
+    lessonDispatch,
+    dispatch,
+    userLanguage,
+    theme,
+    clientKey,
+  } = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [tab, setTab] = useState(0);
@@ -267,6 +278,7 @@ const Anthology = () => {
   // Function group to handle section-switching
   const handleTabClick = (tab: number, e: React.MouseEvent) => {
     const {id} = e.target as HTMLElement;
+
     setViewEditMode({...viewEditMode, mode: ''});
     setTab(tab);
 
@@ -293,7 +305,7 @@ const Anthology = () => {
 
   const filterAnthologyContentBySubsection = studentData.filter(
     (contentObj: AnthologyMapItem) => {
-      if (subSectionKey[subSection].includes(contentObj.type)) return contentObj;
+      if (subSectionKey[subSection]?.includes(contentObj.type)) return contentObj;
     }
   );
 
@@ -301,7 +313,7 @@ const Anthology = () => {
     inputSyllabusLessonID: string
   ) =>
     studentData.filter((contentObj: AnthologyMapItem) => {
-      if (contentObj.syllabusLessonID.includes(inputSyllabusLessonID)) return contentObj;
+      if (contentObj.syllabusLessonID?.includes(inputSyllabusLessonID)) return contentObj;
     });
 
   const getAnthologyContentByStudentDataID = studentData.find(
@@ -429,6 +441,55 @@ const Anthology = () => {
     },
   ];
 
+  // ~~~~~~~~~~~~~ TEST VALUES ~~~~~~~~~~~~~ //
+  const LESSON_ID = '6b4f553d-b25c-47a2-98d0-894ca4caa129';
+  const SYLLABUS_ID = 'b0cd146b-6070-4a4a-ab23-b6f7db8f6d72';
+
+  // ##################################################################### //
+  // ############################ LESSON FETCH ########################### //
+  // ##################################################################### //
+  const getSyllabusLesson = async (lessonID?: string) => {
+    // lessonID will be undefined for testing
+    if (lessonID !== '') {
+      try {
+        const universalLesson: any = await API.graphql(
+          graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
+        );
+        const response = universalLesson.data.getUniversalLesson;
+        setTimeout(() => {
+          lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+        }, 1000);
+      } catch (e) {
+        console.error('Error loading lesson in LessonDataViewer.tsx - ', e);
+      }
+    } else {
+      setTimeout(() => {
+        lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+      }, 1000);
+    }
+  };
+
+  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
+  useEffect(() => {
+    // const {lessonID} = urlParams;
+    const lessonID = LESSON_ID;
+
+    if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
+      getSyllabusLesson(lessonID).then((_: void) =>
+        console.log('Lesson Mount - ', 'Lesson fetched!')
+      );
+    }
+    return () => {
+      lessonDispatch({type: 'CLEANUP'});
+    };
+  }, []);
+
+  //  NAVIGATION CONSTANTS
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  const CURRENT_PAGE = lessonState.currentPage;
+
   return (
     <React.Fragment>
       <div>
@@ -442,56 +503,52 @@ const Anthology = () => {
           </h2>
         </div>
 
-        <SectionTitleV3
-          fontSize="2xl"
-          fontStyle="bold"
-          extraContainerClass="px-10"
-          extraClass="leading-6 text-gray-900"
-          withButton={
-            tab === 0 && (
-              <Buttons
-                Icon={FaEdit}
-                customStyles={{width: '14rem'}}
-                label={anthologyDict[userLanguage].ACTIONS.CREATE}
-                onClick={() =>
-                  handleEditToggle('create', newStudentData.syllabusLessonID, 0)
-                }
-                type="button"
-              />
-            )
-          }
-          title={anthologyDict[userLanguage].TITLE}
-        />
-
-        <div
-          className={`px-10 min-h-48 pb-4 overflow-hidden bg-dark-gray rounded-lg shadow mb-4`}>
-          <div className="grid grid-cols-6 gap-2 p-4">
-            <div>
-              <div className="text-white">Notebook</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}>
-                {/* <p className="w-auto p-4 font-bold text-sm text-white flex items-center">
-                <span className="inline-flex w-4 mr-2">
-                  <FaTasks size={16} />
-                </span>
-                <span>Classwork</span>
-              </p> */}
-                <ContextMenuProvider>
-                  <Tree root={data} />
-                </ContextMenuProvider>
-              </div>
+        <div className="mx-auto max-w-256">
+          <SectionTitleV3
+            fontSize="2xl"
+            fontStyle="bold"
+            extraContainerClass="px-10"
+            extraClass="leading-6 text-gray-900"
+            withButton={
+              tab === 0 && (
+                <Buttons
+                  Icon={FaEdit}
+                  customStyles={{width: '14rem'}}
+                  label={anthologyDict[userLanguage].ACTIONS.CREATE}
+                  onClick={() =>
+                    handleEditToggle('create', newStudentData.syllabusLessonID, 0)
+                  }
+                  type="button"
+                />
+              )
+            }
+            title={anthologyDict[userLanguage].TITLE}
+          />
+          <div
+            className={` min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
+            {/* <div className="grid grid-cols-6 gap-2 p-4">
+          <div>
+            <div className="text-white">Notebook</div>
+            <div className={`${theme.backGround[themeColor]} mt-2 h-96`}>
+              
+              <ContextMenuProvider>
+                <Tree root={data} />
+              </ContextMenuProvider>
             </div>
-            <div className={`col-span-4`}>
-              <div className="text-white">Pages</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 min-h-96`}>
-                <LessonDataViewer />
-              </div>
-            </div>
-            <div>
-              <div className="text-white">Feedback</div>
-              <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
-            </div>{' '}
           </div>
-          {/* <UnderlinedTabs tabs={tabs} updateTab={handleTabClick} /> */}
+          <div className={`col-span-4`}>
+            <div className="text-white">Pages</div>
+            <div className={`${theme.backGround[themeColor]} mt-2 min-h-96`}>
+              <LessonDataViewer />
+            </div>
+          </div>
+          <div>
+            <div className="text-white">Feedback</div>
+            <div className={`${theme.backGround[themeColor]} mt-2 h-96`}></div>
+          </div>
+        </div> */}
+            <UnderlinedTabs hideTooltip tabs={tabs} updateTab={handleTabClick} />
+          </div>
         </div>
 
         {/*
@@ -514,15 +571,15 @@ const Anthology = () => {
           - Poems
     */}
         {/* <AnthologyContent
-        viewEditMode={viewEditMode}
-        handleEditToggle={handleEditToggle}
-        handleEditUpdate={handleEditUpdate}
-        handleWYSIWYGupdate={handleWYSIWYGupdate}
-        subSection={subSection}
-        createTemplate={newStudentData}
-        content={studentData.length > 0 && filterAnthologyContentBySubsection}
-        getContentObjIndex={getContentObjIndex}
-      /> */}
+          viewEditMode={viewEditMode}
+          handleEditToggle={handleEditToggle}
+          handleEditUpdate={handleEditUpdate}
+          handleWYSIWYGupdate={handleWYSIWYGupdate}
+          subSection={subSection}
+          createTemplate={newStudentData}
+          content={studentData.length > 0 && filterAnthologyContentBySubsection}
+          getContentObjIndex={getContentObjIndex}
+        /> */}
       </div>
     </React.Fragment>
   );
