@@ -1,4 +1,6 @@
 module.exports = {
+  darkMode: 'class',
+
   purge: {
     enabled: false,
     content: [
@@ -12,6 +14,7 @@ module.exports = {
   corePlugins: {
     translate: true,
   },
+
   theme: {
     placeholderColor: {
       gray: {
@@ -717,7 +720,7 @@ module.exports = {
   },
   variants: {
     animation: ['responsive', 'hover', 'focus'],
-    backgroundColor: ['responsive', 'hover', 'focus', 'active'],
+    backgroundColor: ['dark', 'responsive', 'hover', 'focus', 'active'],
     color: ['responsive', 'hover', 'focus', 'active'],
     border: ['responsive', 'hover', 'focus', 'active'],
     borderColor: ['responsive', 'hover', 'focus', 'active'],
@@ -727,8 +730,10 @@ module.exports = {
     zIndex: ['responsive', 'hover', 'focus'],
     position: ['responsive', 'hover', 'focus'],
     display: ['group-hover', 'responsive', 'group-focus'],
+    textColor: ['dark', 'responsive', 'hover', 'focus'],
   },
   // for slide over
+
   plugins: [require('@tailwindcss/forms')],
   // plugins: [],
 };

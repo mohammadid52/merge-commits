@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-const DividerBlock = ({value}: {value: string}) => {
+const DividerBlock = ({value, bgWhite}: {value: string; bgWhite?: boolean}) => {
+  const {
+    state: {lessonPage: {theme = 'dark'} = {}},
+  } = useContext(GlobalContext);
   return (
     <div className="relative my-2">
       <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -8,7 +12,12 @@ const DividerBlock = ({value}: {value: string}) => {
       </div>
       <div className="relative flex w-auto justify-center">
         {value && (
-          <span className="px-2 bg-dark-gray w-auto text-sm  text-gray-400">{value}</span>
+          <span
+            className={`px-2 w-auto text-sm transition-all duration-200  text-gray-400 bg-white ${
+              bgWhite ? 'dark:bg-white' : 'dark:bg-dark-gray'
+            } `}>
+            {value}
+          </span>
         )}
       </div>
     </div>

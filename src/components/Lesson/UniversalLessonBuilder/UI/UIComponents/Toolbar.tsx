@@ -470,7 +470,7 @@ const Toolbar = ({
       <div
         hidden={previewMode}
         ref={toolbarRef}
-        className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+        className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <Container>
             <Button
@@ -533,7 +533,7 @@ const Toolbar = ({
           toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
         } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
         <div
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200 w-auto p-2`}>
           <div className="flex items-center flex-col">
             <div
               className={`flex items-center flex-col w-auto ${
