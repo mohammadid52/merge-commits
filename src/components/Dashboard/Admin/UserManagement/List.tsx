@@ -69,6 +69,9 @@ const List = (props: ListProps) => {
         if (loggedUserRole === 'TR' && userRole === 'ST') {
             show = true;
         }
+        if (loggedUserRole === 'FLW' && userRole === 'ST') {
+            show = true;
+        }
         if (show) {
             return (
                 <div className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium" onClick={() => resetPassowrd(item)} >

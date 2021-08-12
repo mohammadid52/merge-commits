@@ -423,12 +423,15 @@ const UserLookup = () => {
               </div>
               {userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
+                  // <div key={key}>
+                  //   {state.user.role === 'FLW' ? (
+                  //     <ListStudents item={item} />
+                  //   ) : (
+                  //     <List item={item} key={key} />
+                  //   )}
+                  // </div>
                   <div key={key}>
-                    {state.user.role === 'FLW' ? (
-                      <ListStudents item={item} />
-                    ) : (
-                      <List item={item} key={key} />
-                    )}
+                    <List item={item} key={key} />
                   </div>
                 ))
               ) : (
