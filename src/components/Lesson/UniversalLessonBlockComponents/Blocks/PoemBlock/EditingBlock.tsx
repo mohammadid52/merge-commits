@@ -1,31 +1,50 @@
+import {ContentState, convertFromHTML, EditorState} from 'draft-js';
 import React from 'react';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import CustomRichTextEditor from '../HighlighterBlock/CustomRichTextEditor';
 
 interface EditingBlockProps {
   id?: string;
   poemWriting?: string;
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
+  setPoemWriting?: React.Dispatch<React.SetStateAction<string>>;
+  fields?: {poemHtml: string; poemText: string};
+  setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
 }
 
 const EditingBlock = (props: EditingBlockProps) => {
-  const {id, poemWriting, handleUpdateStudentData} = props;
+  const {
+    id,
+    poemWriting,
+    fields,
+    setFields,
+    setPoemWriting,
+    handleUpdateStudentData,
+  } = props;
 
-  const setEditorContent = (html: string, text: string, idKey: string) => {
-    handleUpdateStudentData(id, [html]);
-  };
+  const onEditorStateChange = (
+    html: string,
+    text: string,
+    fieldHtml: string,
+    field: string
+  ) => {};
+  const sampleMarkup =
+    '<b>Bold text</b>, <i>Italic text</i><br/ ><br />' +
+    '<a href="http://www.facebook.com">Example link</a>';
   // handleUpdateStudentData(id, [html]);
-
+  const blocksFromHTML = convertFromHTML(sampleMarkup);
+  const state = ContentState.createFromBlockArray(
+    blocksFromHTML.contentBlocks,
+    blocksFromHTML.entityMap
+  );
+  console.log();
   return (
     <div className="w-full flex flex-col">
-      <div className={`w-full h-full rounded-xl p-4 text-black`}>
-        <h3
-          className={`relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}>
-          Edit
-        </h3>
+      <div className={`w-full h-full rounded-xl text-black`}>
         <RichTextEditor
-          initialValue={poemWriting}
-          onChange={(htmlContent, plainText) =>
-            setEditorContent(htmlContent, plainText, id)
+          initialValue={fields.poemHtml}
+          onChange={(html, text) =>
+            setFields({...fields, poemText: text, poemHtml: html})
           }
         />
       </div>

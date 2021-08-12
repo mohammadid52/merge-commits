@@ -720,9 +720,9 @@ module.exports = {
   variants: {
     animation: ['responsive', 'hover', 'focus'],
     backgroundColor: ['dark', 'responsive', 'hover', 'focus', 'active'],
-    color: ['responsive', 'hover', 'focus', 'active'],
+    color: ['dark', 'responsive', 'hover', 'focus', 'active'],
     border: ['responsive', 'hover', 'focus', 'active'],
-    borderColor: ['responsive', 'hover', 'focus', 'active'],
+    borderColor: ['dark', 'responsive', 'hover', 'focus', 'active'],
     boxShadow: ['responsive', 'hover', 'focus', 'active'],
     height: ['responsive', 'hover', 'focus'],
     minHeight: ['responsive', 'hover', 'focus'],

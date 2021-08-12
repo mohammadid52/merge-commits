@@ -142,7 +142,8 @@ const WritingExerciseModal = (props: WEProps) => {
             id: uuidv4(),
             type: '',
             value: inputFieldsArray,
-            label: fields.title,
+            // don't have better idea to add title
+            class: fields.title,
           },
         ],
       },

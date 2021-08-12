@@ -10,6 +10,9 @@ import RemoveInput from '../common/RemoveInput';
 import {remove} from 'lodash';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import {FORM_TYPES} from '../common/constants';
+import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
+import {FaTrashAlt} from 'react-icons/fa';
+import Toggle from '../Toggle';
 
 interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -67,6 +70,13 @@ const LinestarterModalDialog = ({
   const [inputFieldsArray, setInputFieldsArray] = useState<PartContentSub[]>(
     initialInputFieldsState
   );
+  // states here
+  const [enable, setEnable] = useState<{title: boolean; lineStarter: boolean}>({
+    title: true,
+    lineStarter: false,
+  });
+
+  const [fields, setFields] = useState({title: ''});
   useEffect(() => {
     if (inputObj && inputObj.length) {
       setInputFieldsArray(inputObj);
@@ -129,7 +139,8 @@ const LinestarterModalDialog = ({
         '',
         FORM_TYPES.POEM,
         inputFieldsArray,
-        0
+        0,
+        fields.title
       );
       await addToDB(updatedList);
     } else {
@@ -138,7 +149,9 @@ const LinestarterModalDialog = ({
         '',
         FORM_TYPES.POEM,
         inputFieldsArray,
-        0
+        0,
+
+        fields.title
       );
       await addToDB(updatedList);
     }
@@ -152,9 +165,42 @@ const LinestarterModalDialog = ({
     setInputFieldsArray([...inputFieldsArray]);
   };
   return (
-    <>
+    <div>
       <div className="grid grid-cols-2 my-2 gap-4">
-        <div className="col-span-2">
+        <div
+          className={`col-span-2 ${
+            !enable.title ? 'pointer-events-none opacity-50' : ''
+          }`}>
+          <div className="flex items-center">
+            <label
+              htmlFor={'title'}
+              className={`text-gray-700 w-auto mr-3 block text-xs font-semibold leading-5 `}>
+              {'Title'}
+            </label>
+
+            <div className="flex items-center h-5 w-auto">
+              <input
+                id="show_title"
+                aria-describedby="show_title"
+                name="show_title"
+                checked={enable.title}
+                onChange={(e) => setEnable({...enable, title: !enable.title})}
+                type="checkbox"
+                className="pointer-events-auto  h-4 w-4 text-indigo-600 border-gray-500 rounded"
+              />
+            </div>
+          </div>
+          <FormInput
+            id="title"
+            className=""
+            value={fields.title}
+            onChange={(e) => setFields({...fields, title: e.target.value})}
+            placeHolder="Add instructional text here"
+          />
+        </div>
+
+        <div className={`col-span-2 ${!enable.lineStarter ? 'hidden' : ''}`}>
+          <DividerBlock bgWhite value="Line Starter Builder" />
           {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
               <div className="mb-2" key={`linestarter_${idx}`}>
@@ -163,35 +209,50 @@ const LinestarterModalDialog = ({
                   className="mb-2 block text-xs font-semibold leading-5 text-gray-700">
                   Line-starter {idx + 1}:
                 </label>
-                <div className="mb-2">
+                <div className="mb-2 relative">
                   <FormInput
-                    key={`jumboform_${idx}`}
+                    key={`lineStarter_${idx}`}
                     onChange={onChange}
                     value={inputFieldsArray[idx]?.value}
                     id={inputFieldsArray[idx]?.id}
                     placeHolder={inputFieldsArray[idx]?.value}
                     type="text"
                   />
+
+                  <span
+                    onClick={() => removeItemFromList(inputObj.id)}
+                    className="w-auto absolute right-0 top-0 pr-3 pt-3 text-center transition-all duration-200  text-xs font-semibold text-red-400  cursor-pointer hover:text-red-600
+                  ">
+                    <FaTrashAlt />
+                  </span>
                 </div>
-                <RemoveInput
-                  idx={idx}
-                  inputId={inputObj.id}
-                  removeItemFromList={removeItemFromList}
-                />
               </div>
             );
           })}
         </div>
+        <div className="col-span-2 mt-1 mb-4 flex items-center justify-between">
+          <div className="flex items-center justify-between w-56">
+            <span className=" w-auto">Show Linestarter</span>
+            <Toggle
+              enabledColor="bg-blue-600"
+              disabledColor="bg-gray-300"
+              setEnabled={() => setEnable({...enable, lineStarter: !enable.lineStarter})}
+              enabled={enable.lineStarter}
+            />
+          </div>
+
+          {enable.lineStarter && (
+            <Buttons
+              btnClass="py-1 px-4 text-xs mr-2"
+              label={'+ Add field'}
+              onClick={handleAddNewLinestarter}
+              transparent
+            />
+          )}
+        </div>
       </div>
 
-      <div className="flex mt-4 justify-between px-6 pb-4">
-        <div className="flex items-center w-auto">
-          <button
-            onClick={handleAddNewLinestarter}
-            className="w-auto mr-4 border-2 focus:text-white focus:border-indigo-600 focus:bg-indigo-400 border-gray-300 p-2 px-4 text-tiny hover:border-gray-500 rounded-md text-dark transition-all duration-300 ">
-            + Add Field
-          </button>
-        </div>
+      <div className="flex mt-4 justify-end px-6 pb-4">
         <div className="flex items-center w-auto">
           <Buttons
             btnClass="py-1 px-4 text-xs mr-2"
@@ -207,7 +268,7 @@ const LinestarterModalDialog = ({
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
