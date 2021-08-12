@@ -12,14 +12,16 @@ interface ButtonProps {
   btnClass?: string;
   overrideClass?: boolean;
   labelClass?: string;
+  iconBeforeLabel?: boolean;
   disabled?: boolean;
   customStyles?: object;
 }
 
-const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
+const Buttons: React.FC<ButtonProps> = (btnProps: ButtonProps) => {
   const {
     label,
     Icon,
+    iconBeforeLabel,
     transparent,
     type,
     onClick,
@@ -28,7 +30,7 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
     labelClass,
     disabled,
     customStyles,
-  } = btnPrps;
+  } = btnProps;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
@@ -54,10 +56,17 @@ const Buttons: React.FC<ButtonProps> = (btnPrps: ButtonProps) => {
       } 
       ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'} `}
       onClick={onClick}>
+      {Icon && iconBeforeLabel && (
+        <span className="w-auto">
+          <IconContext.Provider value={{color: '#ffffff'}}>
+            <Icon className="w-6 h-6"/>
+          </IconContext.Provider>
+        </span>
+      )}
       {label ? (
         <span className={`mx-2 ${labelClass ? labelClass : ''}`}>{label}</span>
       ) : null}
-      {Icon ? (
+      {Icon && !iconBeforeLabel ? (
         <span className="w-8 h-8 flex items-center">
           <IconContext.Provider value={{size: '1.2rem', color: '#ffffff'}}>
             <Icon />

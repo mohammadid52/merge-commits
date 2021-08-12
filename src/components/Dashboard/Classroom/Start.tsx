@@ -301,6 +301,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     // }
   };
 
+  const onCloseModal = () => {
+    setWarnModal({
+      message: '',
+      activeLessonsId: [],
+      show: false,
+    });
+  };
+
   return (
     <div>
       <Buttons
@@ -321,7 +329,8 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       />
       {warnModal.show && (
         <ModalPopUp
-          closeAction={discardChanges}
+          closeAction={onCloseModal}
+          cancelAction={discardChanges}
           saveAction={handleMarkAsCompleteClick}
           saveLabel="Yes"
           cancelLabel="No"

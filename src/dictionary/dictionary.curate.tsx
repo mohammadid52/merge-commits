@@ -1498,7 +1498,7 @@ const LEARINGOBJECTIVEDICT: any = {
     INFO: 'This curricular does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {
@@ -1559,6 +1559,7 @@ const TOPICLISTDICT: any = {
     TOPIC: 'Topics',
     EDIT: 'Edit',
     INFO: 'This objective does not have any topics. Please create a new one.',
+    ADD: 'Add Topic',
     ADDNEW: 'Add New Topic',
     FETCH: 'Fetching topics list...',
   },

@@ -2307,6 +2307,10 @@ export const listTopics = /* GraphQL */ `
         curriculumID
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         learningObjectiveID
         learningObjective {
           name
