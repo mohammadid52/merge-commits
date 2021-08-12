@@ -7,7 +7,9 @@ import {useQuery} from '../../../../customHooks/urlParam';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import CustomToggle from './Toggle';
-import {BiBook} from 'react-icons/bi';
+import {BiBook, BiSun} from 'react-icons/bi';
+
+import {BsMoon} from 'react-icons/bs';
 
 interface ILessonPlanNavigationProps {
   selectedPageID: string;
@@ -162,16 +164,7 @@ const LessonPlanNavigation = ({
         </Droppable>
       </DragDropContext>
 
-      <div className="ml-2 w-2/10 bg-white h-12 flex items-center p-4 mr-3">
-        <div className="flex items-center text-base">
-          Theme:{' '}
-          <CustomToggle
-            enabledColor={'bg-yellow-400 text-yellow-500'}
-            disabledColor={'bg-gray-600 text-gray-500'}
-            setEnabled={updateTheme}
-            enabled={!darkMode}
-          />
-        </div>
+      <div className="ml-2 w-auto bg-white h-12 flex items-center p-4 mr-3">
         <div className="flex items-center text-base">
           Classwork:{' '}
           <CustomToggle
@@ -180,6 +173,16 @@ const LessonPlanNavigation = ({
             setEnabled={() => {}}
             enabled={true}
           />
+        </div>
+
+        <div
+          className={`rounded hover:bg-gray-100 cursor-pointer transition-all h-12 w-12 flex items-center justify-center `}
+          onClick={updateTheme}>
+          {darkMode ? (
+            <BsMoon className="text-lg text-blue-800" />
+          ) : (
+            <BiSun className="text-lg text-orange-400" />
+          )}
         </div>
       </div>
     </div>
