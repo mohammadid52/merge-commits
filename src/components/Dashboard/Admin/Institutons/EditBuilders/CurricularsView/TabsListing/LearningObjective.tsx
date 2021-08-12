@@ -294,7 +294,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
             ? topic
             : {
                 ...topic,
-                rubrics: [...topic.rubrics, data],
+                rubrics: [...(topic.rubrics || []), data],
               }
         ),
       };
@@ -465,6 +465,9 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                   <Buttons
                     btnClass=""
                     label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
+                    labelClass={'leading-6'}
+                    Icon={IoIosAdd}
+                    iconBeforeLabel
                     onClick={createLearningObjective}
                   />
                 </div>
@@ -649,8 +652,11 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                             type="submit"
                             onClick={() => createNewTopic(learning.id)}
                             label={TOPICLISTDICT[userLanguage]['ADD']}
+                            labelClass={'leading-6'}
                             overrideClass={true}
                             btnClass={`h-9 w-auto my-2 flex items-center rounded px-12 text-xs font-bold focus:outline-none transition duration-150 ease-in-out ${theme.btn.iconoclastIndigo}`}
+                            iconBeforeLabel
+                            Icon={IoIosAdd}
                           />
                         </div>
                       </div>
