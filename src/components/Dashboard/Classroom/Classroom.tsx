@@ -372,13 +372,14 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 <div className={`bg-opacity-10`}>
                   <div className={`pb-4 m-auto px-0`}>
                     <SyllabusSwitch
-                      completedLessons={activeRoomInfo?.completedLessons}
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
-                      curriculumName={state.roomData?.curriculum?.name}
                       activeRoom={state.activeRoom}
+                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      completedLessons={activeRoomInfo?.completedLessons}
                       currentPage={currentPage}
-                      syllabusLoading={syllabusLoading}
+                      curriculumName={state.roomData?.curriculum?.name}
                       handleSyllabusActivation={handleSyllabusActivation}
+                      institutionId={activeRoomInfo?.institutionID}
+                      syllabusLoading={syllabusLoading}
                     />
                   </div>
                 </div>

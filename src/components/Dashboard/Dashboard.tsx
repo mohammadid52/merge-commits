@@ -77,6 +77,7 @@ export interface DashboardProps {
   justLoggedIn?: boolean;
   completedLessons?: ICompletedLessons[];
   curriculumName?: string;
+  institutionId?: string;
 }
 
 export interface ClassroomControlProps extends DashboardProps {
