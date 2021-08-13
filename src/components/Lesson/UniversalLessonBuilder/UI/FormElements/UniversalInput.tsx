@@ -169,9 +169,9 @@ const UniversalInput = (props: any) => {
                 {idx !== 0 ? (
                   <div className="flex my-2 items-center justify-end w-auto">
                     <div className="flex items-center mt-4 ">
-                      {selectedForm === FORM_TYPES.TEXT && (
+                      {selectedForm === INPUT && (
                         <>
-                          <div className="flex items-center mt-4 ">
+                          <div className="flex items-center w-auto">
                             <div className="flex items-center text-xs w-auto">
                               Sentence
                               <Toggle
@@ -201,9 +201,9 @@ const UniversalInput = (props: any) => {
                   </div>
                 ) : (
                   <div className="flex items-center mt-4 ">
-                    {selectedForm === FORM_TYPES.TEXT && (
+                    {selectedForm === INPUT && (
                       <>
-                        <div className="flex items-center mt-4 ">
+                        <div className="flex items-center w-auto ">
                           <div className="flex items-center text-xs w-auto">
                             Sentence
                             <Toggle
