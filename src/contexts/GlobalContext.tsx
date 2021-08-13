@@ -4,6 +4,10 @@ import {globalState} from '../state/GlobalState';
 import {getClientKey} from '../utilities/strings';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
+import {lessonReducer} from '../reducers/LessonReducer';
+import {lessonState as lessonStateObject} from '../state/LessonState';
+import {lessonControlReducer} from '../reducers/LessonControlReducer';
+import {lessonControlState} from '../state/LessonControlState';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -12,9 +16,9 @@ export const standardTheme = {
     cardBase: 'bg-gradient-to-tl from-dark-blue to-med-dark-blue',
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
-  banner:
-    'w-auto pb-2 mb-2 relative  font-medium text-left flex flex-row items-center text-gray-100 mt-4',
-  section: 'w-full max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
+  banner: '',
+  section:
+    'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',
@@ -36,7 +40,7 @@ export const standardTheme = {
     cardNoBG: 'relative h-auto p-2 flex',
   },
   lessonCard: {
-    title: 'flex items-center text-2xl text-black text-left',
+    title: 'flex items-center text-lg 2xl:text-2xl  text-black text-left',
     subtitle: 'text-sm text-gray-400',
     border: 'border-dark-gray border-opacity-20',
   },
@@ -61,6 +65,9 @@ export const standardTheme = {
       'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
     curateBlue:
       'bg-theme-blue text-white hover:bg-blue-500 active:bg-blue-500 focus:bg-blue-500',
+    delete: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-600 focus:bg-red-600',
+    confirm:
+      'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
     cancel: 'bg-white text-gray-600  border-0 border-gray-600 hover:bg-gray-200',
     lessonStart:
       'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
@@ -139,15 +146,22 @@ interface GlobalProps {
 export const GlobalContext = React.createContext(null);
 
 export const GlobalContextProvider = ({children}: GlobalProps) => {
+  /**
+   * state,dispatch --> Used in dashboard etc.
+   * lessonState, lessonStateDispatch --> Used in lesson state
+   */
   const [state, dispatch] = useReducer(globalReducer, globalState);
+  const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
+  const [controlState, controlDispatch] = useReducer(
+    lessonControlReducer,
+    lessonControlState
+  );
 
   const theme = standardTheme;
   const globalStateAccess = state;
   const userLanguage = state.user.language || 'EN';
   const uLang = userLanguage;
   const clientKey = getClientKey();
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     if (state.user && state.user.location && state.user.location.length > 0) {
@@ -182,6 +196,10 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
         theme,
         state,
         dispatch,
+        lessonState,
+        lessonDispatch,
+        controlState,
+        controlDispatch,
         globalStateAccess,
         userLanguage,
         uLang,

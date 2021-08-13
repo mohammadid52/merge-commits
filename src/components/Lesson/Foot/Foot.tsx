@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {NavLink, useHistory, useRouteMatch} from 'react-router-dom';
 import {LessonContext} from '../../../contexts/LessonContext';
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -6,49 +6,137 @@ import {getAsset} from '../../../assets';
 import {LessonHeaderBarProps} from '../../../interfaces/LessonComponentsInterfaces';
 import PositiveAlert from '../../General/Popup';
 import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
+import {getLocalStorageData} from '../../../utilities/localStorage';
+import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
 
-const Branding = (props: LessonHeaderBarProps) => {
-  const {state, theme, dispatch} = useContext(LessonContext);
-  const {clientKey} = useContext(GlobalContext);
+const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
+  const {state, dispatch, lessonState, lessonDispatch, clientKey, theme} = useContext(
+    GlobalContext
+  );
   const history = useHistory();
   const match = useRouteMatch();
-  const {visible, setVisible, ref} = useOutsideAlerter(false);
-  const userAtEnd = state.currentPage + 1 === state.pages.length;
 
-  useEffect(() => {
-    if (state.pages[state.currentPage + 1]) {
-      if (state.pages[state.currentPage + 1].open) {
-        // console.log(state.pages);
-        return dispatch({type: 'CAN_CONTINUE'});
+  const PAGES = lessonState.lessonData.lessonPlan;
+
+  // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
+  const validateRequired = () => {
+    if (PAGES) {
+      const thisPageData = lessonState?.studentData[lessonState.currentPage];
+      const thisPageRequired = lessonState?.requiredInputs[lessonState.currentPage];
+      if (thisPageData.length > 0) {
+        const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
+          if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
+            return input;
+          }
+        });
+        // console.log('validate areAnyEmpty - ', areAnyEmpty);
+        if (areAnyEmpty.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
       }
-      return dispatch({type: 'NO_CONTINUE'});
+    } else {
+      return false;
     }
-    return dispatch({type: 'NO_CONTINUE'});
-  }, [state.pages, state.currentPage]);
+  };
 
-  const handleForward = () => {
-    if (state.canContinue && state.currentPage < state.pages.length - 1) {
-      history.push(`${match.url}/${state.pages[state.currentPage + 1].stage}`);
-      dispatch({type: 'PAGE_FORWARD'});
+  const canContinue = () => {
+    if (PAGES) {
+      return (
+        validateRequired() &&
+        lessonState.currentPage < PAGES.length - 1 &&
+        PAGES[lessonState.currentPage + 1]?.open !== false
+      );
+    } else {
+      return false;
     }
-    if (userAtEnd) {
-      props.handlePopup();
+  };
+  const userAtEnd = () => {
+    return lessonState.currentPage === PAGES.length - 1;
+  };
+
+  // ##################################################################### //
+  // ############################# NAVIGATION ############################ //
+  // ##################################################################### //
+  const handleForward = () => {
+    if (!userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      if (canContinue()) {
+        history.push(`${match.url}/${lessonState.currentPage + 1}`);
+        lessonDispatch({
+          type: 'SET_CURRENT_PAGE',
+          payload: lessonState.currentPage + 1,
+        });
+      }
+    } else if (userAtEnd() && validateRequired()) {
+      handlePopup();
     }
   };
 
   const handleBack = () => {
-    if (state.currentPage > 0) {
-      history.push(`${match.url}/${state.pages[state.currentPage - 1].stage}`);
-      dispatch({type: 'PAGE_BACK'});
+    if (userAtEnd()) {
+      if (isAtEnd) setisAtEnd(false);
+      history.push(`${match.url}/${lessonState.currentPage - 1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: lessonState.currentPage - 1,
+      });
+    } else if (!userAtEnd() && lessonState.currentPage > 0) {
+      if (isAtEnd) setisAtEnd(false);
+      history.push(`${match.url}/${lessonState.currentPage - 1}`);
+      lessonDispatch({
+        type: 'SET_CURRENT_PAGE',
+        payload: lessonState.currentPage - 1,
+      });
     }
   };
 
-  const handlePopup = () => {
-    setVisible((prevState: any) => !prevState);
+  // ##################################################################### //
+  // ################## LOGIC FOR RETURNING TO CLASSROOM ################# //
+  // ##################################################################### //
+
+  const getRoomData = getLocalStorageData('room_info');
+  const [waiting, setWaiting] = useState<boolean>(null);
+  const [safeToLeave, setSafeToLeave] = useState<any>(null);
+
+  const handleManualSave = () => {
+    if (lessonState.updated) {
+      setWaiting(true);
+      setSafeToLeave(false);
+    } else {
+      setWaiting(false);
+      setSafeToLeave(true);
+    }
   };
 
-  const handleSubmit = () => {
-    history.push('/dashboard');
+  useEffect(() => {
+    if (!lessonState.updated) {
+      if (waiting === true && safeToLeave === false) {
+        setWaiting(false);
+        setSafeToLeave(true);
+      } else {
+        setWaiting(null);
+        setSafeToLeave(null);
+      }
+    }
+  }, [lessonState.updated]);
+
+  useEffect(() => {
+    console.log('safeToLeave State - ', safeToLeave);
+    if (safeToLeave === true) {
+      handlePopup();
+      history.push(`/dashboard/classroom/${getRoomData.id}`);
+    }
+  }, [safeToLeave]);
+
+  // ------ POPUP MODAL ----- //
+
+  const {visible, setVisible} = useOutsideAlerter(false);
+  const handlePopup = () => {
+    setVisible((prevState: any) => !prevState);
   };
 
   return (
@@ -62,7 +150,7 @@ const Branding = (props: LessonHeaderBarProps) => {
             button1="Go to the dashboard"
             button2="Cancel"
             svg="question"
-            handleButton1={handleSubmit}
+            handleButton1={handleManualSave}
             handleButton2={() => handlePopup}
             theme="dark"
             fill="screen"
@@ -70,20 +158,19 @@ const Branding = (props: LessonHeaderBarProps) => {
         </div>
 
         <div
-          className={`w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
-          {/* BACK */}
+          className={`w-full lg:w-256 h-auto mx-auto bg-darker-gray py-8 flex flex-row justify-center items-start text-center`}>
+          {/* BACK BUTTON */}
+
           <div className="w-3.3/10 flex justify-center items-center">
-            {state.data.lesson.type === 'lesson' && (
-              <div
-                className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
-                  state.currentPage > 0
-                    ? 'cursor-pointer bg-dark-red'
-                    : 'cursor-default bg-darker-gray'
-                } }`}
-                onClick={handleBack}>
-                <div className="w-auto h-auto text-white">Back</div>
-              </div>
-            )}
+            <div
+              className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
+                lessonState.currentPage > 0
+                  ? 'cursor-pointer bg-dark-red'
+                  : 'cursor-default bg-darker-gray'
+              } }`}
+              onClick={handleBack}>
+              <div className="w-auto h-auto text-white">Back</div>
+            </div>
           </div>
 
           {/* LOGO */}
@@ -97,19 +184,18 @@ const Branding = (props: LessonHeaderBarProps) => {
             </NavLink>
           </div>
 
-          {/* CONTINUE */}
+          {/* FORWARD BUTTON */}
+
           <div className="w-3.3/10 flex justify-center items-center">
-            {state.data.lesson.type === 'lesson' && (
-              <div
-                className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
-                  state.canContinue
-                    ? 'bg-sea-green cursor-pointer'
-                    : 'bg-dark-gray cursor-default'
-                } `}
-                onClick={handleForward}>
-                <div className="w-auto h-auto text-white">Continue</div>
-              </div>
-            )}
+            <div
+              className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
+                canContinue() || userAtEnd()
+                  ? 'bg-sea-green cursor-pointer'
+                  : 'bg-dark-gray cursor-default'
+              } `}
+              onClick={handleForward}>
+              <div className="w-auto h-auto text-white">Continue</div>
+            </div>
           </div>
         </div>
       </div>
@@ -117,4 +203,4 @@ const Branding = (props: LessonHeaderBarProps) => {
   );
 };
 
-export default Branding;
+export default Foot;

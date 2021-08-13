@@ -9,17 +9,16 @@ import Buttons from '../../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
-import Selector from '../../../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../../../Atoms/Form/MultipleSelector';
 
 import { languageList } from '../../../../../../../utilities/staticData';
-import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../customGraphql/customQueries';
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-
-interface AddSyllabusProps {}
+import { fetchDesigners } from '../../../../../../../utilities/utils';
+interface AddSyllabusProps { }
 interface InitialData {
   name: string;
   description: string;
@@ -31,7 +30,7 @@ interface InitialData {
 }
 
 const AddSyllabus = (props: AddSyllabusProps) => {
-  const {} = props;
+  const { } = props;
   const history = useHistory();
   const urlParams: any = useParams();
   const curricularId = urlParams.curricularId;
@@ -48,6 +47,7 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   const [designersList, setDesignersList] = useState([]);
   const [selectedDesigners, setSelectedDesigners] = useState([]);
   const [syllabusIds, setSyllabusIds] = useState([]);
+  const [universalSyllabusSeq, setUniversalSyllabusSeq] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const { theme, clientKey, userLanguage } = useContext(GlobalContext);
   const { AddSyllabusDict, BreadcrumsTitles } = useDictionary(clientKey);
@@ -132,18 +132,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
 
   const fetchPersonsList = async () => {
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
-          filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
-        })
-      );
-      const savedData = result.data.listPersons;
-      const updatedList = savedData?.items.map((item: { id: string; firstName: string; lastName: string }) => ({
-        id: item?.id,
-        name: `${item?.firstName || ''} ${item.lastName || ''}`,
-        value: `${item?.firstName || ''} ${item.lastName || ''}`,
-      }));
-      setDesignersList(updatedList);
+      const designers: any = await fetchDesigners();
+      setDesignersList(designers);
     } catch {
       setMessages({
         show: true,
@@ -154,11 +144,8 @@ const AddSyllabus = (props: AddSyllabusProps) => {
   };
 
   const fetchSyllabusSequence = async () => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences, { id: `s_${curricularId}` }));
-    item = item?.data.getCSequences?.sequence || [];
-    if (item) {
-      setSyllabusIds(item);
-    }
+    let result: any = await API.graphql(graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, { id: `${curricularId}` }));
+    setUniversalSyllabusSeq(result?.data.getCurriculum?.universalSyllabusSeq || []);
   };
 
   const saveSyllabusDetails = async () => {
@@ -166,9 +153,11 @@ const AddSyllabus = (props: AddSyllabusProps) => {
     if (isValid) {
       try {
         setIsLoading(true);
-        const languagesCode = syllabusData.languages.map((item: { value: string }) => item.value);
+        const languagesCode = syllabusData.languages.map(
+          (item: { value: string }) => item.value
+        );
         const designers = selectedDesigners.map((item) => item.id);
-        const input = {
+        const input: any = {
           name: syllabusData.name,
           curriculumID: curricularId,
           description: syllabusData.description,
@@ -178,24 +167,36 @@ const AddSyllabus = (props: AddSyllabusProps) => {
           objectives: syllabusData.objectives,
           languages: languagesCode,
           designers: designers,
+          universalLessonsSeq: [],
         };
-        const newSyllabus: any = await API.graphql(graphqlOperation(mutations.createSyllabus, { input: input }));
-        const newItem = newSyllabus.data.createSyllabus;
-        if (!syllabusIds.length) {
-          let seqItem: any = await API.graphql(
-            graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: [newItem.id] } })
-          );
-          seqItem = seqItem.data.createCSequences;
-          console.log('seqItem', seqItem);
-        } else {
-          let seqItem: any = await API.graphql(
-            graphqlOperation(mutations.updateCSequences, {
-              input: { id: `s_${curricularId}`, sequence: [...syllabusIds, newItem.id] },
-            })
-          );
-          seqItem = seqItem.data.updateCSequences;
-          console.log('seqItem', seqItem);
-        }
+        const newSyllabus: any = await API.graphql(
+          graphqlOperation(mutations.createUniversalSyllabus, { input })
+        );
+        const newItem = newSyllabus.data.createUniversalSyllabus;
+        // replace this with custom mutation updateCurriculumSyllabusSequence
+        await API.graphql(
+          graphqlOperation(customMutations.updateCurriculumSyllabusSequence, {
+            input: {
+              id: curricularId,
+              universalSyllabusSeq: [...universalSyllabusSeq, newItem.id],
+            },
+          })
+        );
+        // if (!syllabusIds.length) {
+        //   let seqItem: any = await API.graphql(
+        //     graphqlOperation(mutations.createCSequences, { input: { id: `s_${curricularId}`, sequence: [newItem.id] } })
+        //   );
+        //   seqItem = seqItem.data.createCSequences;
+        //   console.log('seqItem', seqItem);
+        // } else {
+        //   let seqItem: any = await API.graphql(
+        //     graphqlOperation(mutations.updateCSequences, {
+        //       input: { id: `s_${curricularId}`, sequence: [...syllabusIds, newItem.id] },
+        //     })
+        //   );
+        //   seqItem = seqItem.data.updateCSequences;
+        //   console.log('seqItem', seqItem);
+        // }
         setMessages({
           show: true,
           message: AddSyllabusDict[userLanguage]['messages']['unitsave'],

@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { LessonControlContext } from '../../../contexts/LessonControlContext';
-import ProgressSwitch from '../../General/LessonProgressSwitch';
+import React, {useContext, useState} from 'react';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 interface RosterRowProps {
   keyProp: number;
@@ -33,73 +31,48 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     firstName,
     lastName,
     preferredName,
-    role,
     currentLocation,
-    lessonProgress,
     handleSelect,
     handleShareStudentData,
     handleQuitShare,
-    handleQuitViewing,
-    isSameStudentShared,
     viewedStudent,
-    setViewedStudent,
     handlePageChange,
   } = props;
-  const { state, dispatch } = useContext(LessonControlContext);
-  const [shareable, setShareable] = useState(true);
-
-  useEffect(() => {
-    if (currentLocation) {
-      const indexToPage = state.pages[currentLocation].stage;
-      let result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-
-      if (currentLocation) {
-        result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-      } else if (lessonProgress) {
-        result = /.+\/(breakdown)\/*.*/.test(indexToPage);
-      }
-
-      if (result) {
-        setShareable(true);
-      }
-
-      if (!result) {
-        setShareable(false);
-      }
-    } else {
-      setShareable(false);
-    }
-  }, [currentLocation]);
+  const {lessonState, controlState} = useContext(GlobalContext);
+  const [shareable] = useState(true);
 
   const studentIsShared = () => {
-    if (/* state.studentViewing.live &&  */ state.sharing) {
+    if (controlState.sharing) {
       return (
-        state.displayData.studentInfo.firstName === firstName && state.displayData.studentInfo.lastName === lastName
+        controlState.displayData.studentInfo.firstName === firstName &&
+        controlState.displayData.studentInfo.lastName === lastName
       );
     }
   };
 
   const studentIsViewed = () => {
-    if (state.studentViewing.live) {
-      return viewedStudent === id;
-    }
+    return viewedStudent === id;
   };
 
   const handleRowSelection = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
     const button = t.hasAttribute('aria-label');
 
-    if (!studentIsViewed() && !button) {
+    if (!button) {
       handleSelect(e);
-      handlePageChange(parseInt(currentLocation));
+      if (!studentIsViewed()) {
+        handlePageChange(parseInt(currentLocation));
+      }
     }
   };
 
   const getPageLabel = (locationIndex: string) => {
-    if (locationIndex === '') {
-      return 'n/a';
-    } else {
-      return state.pages[parseInt(locationIndex)].stage;
+    if (lessonState.lessonData && lessonState.lessonData?.lessonPlan) {
+      if (locationIndex === '') {
+        return 'n/a';
+      } else {
+        return lessonState.lessonData.lessonPlan[parseInt(locationIndex)]?.label;
+      }
     }
   };
 
@@ -117,7 +90,6 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
     <div
       key={keyProp}
       id={`${id}`}
-      // onClick={active ? handleRowSelection : undefined}
       onMouseDown={active ? handleRowSelection : undefined}
       draggable={false}
       className={`w-full flex h-10 py-2 pl-2 pr-1 
@@ -127,7 +99,10 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
                     ${studentIsViewed() ? 'bg-blueberry bg-opacity-30' : null}
                     `}>
       {/* STUDENT NAME */}
-      <div id={`${id}`} draggable={false} className={`w-8/10 flex flex-row select-none ${active && activeHoverClass} `}>
+      <div
+        id={`${id}`}
+        draggable={false}
+        className={`w-8/10 flex flex-row select-none ${active && activeHoverClass} `}>
         <div
           id={`${id}`}
           draggable={false}
@@ -143,7 +118,9 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
           className={`w-1/2 mx-2 flex justify-center items-center pointer-events-none overflow-hidden text-sm text-left ${
             active && activeHoverClass
           }`}>
-          <ProgressSwitch label={getPageLabel(currentLocation)} id={id} />
+          <div id={id} draggable={false} className={`pointer-events-none`}>
+            {getPageLabel(currentLocation)}
+          </div>
         </div>
       </div>
 
@@ -165,10 +142,12 @@ const RosterRow: React.FC<RosterRowProps> = (props: RosterRowProps) => {
             aria-label={`asd`}
             id={`${id}`}
             draggable={false}
-            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm ${
+            // className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-sea-green hover:bg-green-400 text-sm ${
+            className={` w-2/10 mx-2 flex items-center text-center rounded-lg text-white bg-dark-gray bg-opacity-20 text-sm ${
               active && activeHoverClass
             }`}
-            onClick={handleShareStudentData}>
+            // onClick={handleShareStudentData}>
+            onClick={() => {}}>
             <span id={`${id}`}>Share</span>
           </div>
         ) : (

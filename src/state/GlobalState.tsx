@@ -3,16 +3,25 @@ export interface globalStateType {
     upcomingLessons: any[];
   };
   roomData: {
+    curriculum: any;
     rooms: any[];
     syllabus: any[];
+    activeSyllabus: any;
     lessons: any[];
     widgets: any[];
   };
   currentPage: string;
   activeRoom: string;
+  activeSyllabus: string;
   status: string;
   error: string;
   isAuthenticated: boolean;
+  lessonPage: {
+    theme: 'light' | 'dark';
+    themeTextColor: string;
+    themeBackgroundColor: string;
+    themeSecBackgroundColor: string;
+  };
   user: {
     id: string;
     authId: string;
@@ -22,7 +31,7 @@ export interface globalStateType {
     language: string;
     role: string;
     onBoardSurvey?: boolean;
-    location: any[]
+    location: any[];
   };
 }
 
@@ -31,16 +40,25 @@ export const globalState: globalStateType = {
     upcomingLessons: [],
   },
   roomData: {
+    curriculum: {},
     rooms: [],
     syllabus: [],
+    activeSyllabus: {},
     lessons: [],
-    widgets: []
+    widgets: [],
   },
   currentPage: '',
   activeRoom: '',
+  activeSyllabus: '',
   status: '',
   error: '',
   isAuthenticated: false,
+  lessonPage: {
+    theme: 'dark',
+    themeTextColor: 'text-white',
+    themeBackgroundColor: 'bg-dark-gray',
+    themeSecBackgroundColor: 'bg-gray-700',
+  },
   user: {
     id: '',
     authId: '',
@@ -49,6 +67,6 @@ export const globalState: globalStateType = {
     lastName: '',
     language: '',
     role: '',
-    location: []
+    location: [],
   },
 };

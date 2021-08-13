@@ -1,6 +1,8 @@
 import React, {useContext, useState, useEffect} from 'react';
-import {LessonComponentsInterface} from '../../../../interfaces/LessonComponentsInterfaces';
-import { RowWrapperProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+
+import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface KeywordBlockProps extends RowWrapperProps {
   id?: string;
@@ -9,6 +11,9 @@ interface KeywordBlockProps extends RowWrapperProps {
 }
 
 const KeywordBlock = (props: KeywordBlockProps) => {
+  const {
+    state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
   const {id, value} = props;
   const keywords: any = [];
   const [mappedKeywords, setMappedKeywords] = useState<any[]>([]);
@@ -35,16 +40,11 @@ const KeywordBlock = (props: KeywordBlockProps) => {
   }, [value]);
 
   return (
-    <div className={`flex flex-col md:w-full text-gray-200 rounded-r-lg`}>
-      <div
-        className={`relative flex flex-row items-center w-full pb-2 mb-2 mt-4 font-medium text-left text-xl border-b border-white border-opacity-10`}>
-        <h3>Keywords:</h3>
-      </div>
-
-      <div className={`flex flex-row`}>
+    <div id={id} className={`flex flex-col md:w-full ${themeTextColor} rounded-r-lg`}>
+      <div className={`flex flex-row p-2 pt-4`}>
         {mappedKeywords.length > 0 &&
           mappedKeywords.map((row: any[], i0: number) => (
-            <div key={`cardKWP_${i0}`} className={`flex flex-col px-2`}>
+            <div key={`cardKWP_${i0}`} className={`flex flex-col mx-2`}>
               {row.length > 0 &&
                 row.map(
                   (
@@ -53,12 +53,14 @@ const KeywordBlock = (props: KeywordBlockProps) => {
                   ) => (
                     <div
                       key={`cardKW_${idx}`}
-                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg bg-light-gray border-light-gray`}>
+                      className={`pb-4 pt-4 px-4 mb-4 h-32 hover:h-64 hover:min-h-32 transition-height duration-500 ease-in-out overflow-ellipsis overflow-hidden ... rounded-lg ${
+                        lessonPageTheme === 'light' ? 'bg-gray-200' : 'bg-light-gray'
+                      } border-light-gray`}>
                       <div className={`h-full overflow-ellipsis overflow-hidden ...`}>
-                        <p className={`text-lg font-semibold text-gray-200`}>
+                        <p className={`text-lg font-semibold ${themeTextColor}`}>
                           {word.label}:
                         </p>
-                        <p className={`text-sm text-gray-200`}>{word.value}</p>
+                        <p className={`text-sm ${themeTextColor}`}>{word.value}</p>
                       </div>
                     </div>
                   )

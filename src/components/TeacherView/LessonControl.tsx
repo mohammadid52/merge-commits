@@ -1,220 +1,254 @@
 import React, {Suspense, useContext, useEffect, useState} from 'react';
-import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
-import {LessonControlContext} from '../../contexts/LessonControlContext';
-import * as customMutations from '../../customGraphql/customMutations';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {useParams} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
+
+import {
+  StudentPageInput,
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../../interfaces/UniversalLessonInterfaces';
+import * as customQueries from '../../customGraphql/customQueries';
+import * as queries from '../../graphql/queries';
+import * as mutations from '../../graphql/mutations';
+import * as subscriptions from '../../graphql/subscriptions';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import useDeviceDetect from '../../customHooks/deviceDetect';
+import useDictionary from '../../customHooks/dictionary';
+
+import QuickRegister from '../Auth/QuickRegister';
+import ErrorBoundary from '../Error/ErrorBoundary';
 import ComponentLoading from '../Lesson/Loading/ComponentLoading';
 import ClassRoster from './ClassRoster';
 import PositiveAlert from '../General/Popup';
 import {useOutsideAlerter} from '../General/hooks/outsideAlerter';
-import Body from './Body';
 import TopMenu from './TopMenu';
 import StudentWindowTitleBar from './StudentWindow/StudentWindowTitleBar';
-import QuickRegister from '../Auth/QuickRegister';
-import {awsFormatDate, dateString} from '../../utilities/time';
-import ErrorBoundary from '../Error/ErrorBoundary';
+import {exampleUniversalLesson} from '../Lesson/UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import CoreUniversalLesson from '../Lesson/UniversalLesson/views/CoreUniversalLesson';
+import HamburgerMenu from './TopMenu/HamburgerMenu';
+import LessonControlBar from './LessonControlBar/LessonControlBar';
 
 const LessonControl = () => {
-  const {state, theme, dispatch, checkpointsItems} = useContext(LessonControlContext);
+  const {
+    clientKey,
+    dispatch,
+    lessonState,
+    lessonDispatch,
+    controlState,
+    theme,
+    userLanguage,
+  } = useContext(GlobalContext);
+  const {lessonPlannerDict} = useDictionary(clientKey);
   const match = useRouteMatch();
   const history = useHistory();
-  const location = useLocation();
-  const [fullscreen, setFullscreen] = useState(false);
-  const [fullscreenInstructions, setFullscreenInstructions] = useState(false);
+  const urlParams: any = useParams();
+  const getRoomData = getLocalStorageData('room_info');
+  const {mobile} = useDeviceDetect();
 
-  const [shareable, setShareable] = useState(false); // THIS ROW COPIED TO RosterRow.tsx, NEEDS TO BE REFACTORED
-
-  const [isSameStudentShared, setIsSameStudentShared] = useState(false);
-  const [open, setOpen] = useState(state.open);
-
-  let pathParams: any = location.pathname.split('/');
-  pathParams = pathParams[pathParams.length - 1];
-
-  if (pathParams) {
-    // state.pages.map((p: any, index: number) => {
-    //   if (p.stage === pathParams) {
-    //     pViewed.pageID = index;
-    //     pViewed.stage = p.stage;
-    //   }
-    // });
-  }
-  const [pageViewed, setPageViewed] = useState({
-    pageID: 0,
-    stage: 'intro',
-  });
-
-  const handlePageChange = (pageID: number) => {
-    const lessonPlanStage = state.pages[pageID].stage;
-    setPageViewed({
-      pageID: pageID,
-      stage: lessonPlanStage,
-    });
-    dispatch({type: 'SET_CURRENT_PAGE', payload: pageID});
+  // ##################################################################### //
+  // ######################### BASIC UI CONTROLS ######################### //
+  // ##################################################################### //
+  const handlePageChange = (pageNr: number) => {
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 
+  const [fullscreen, setFullscreen] = useState(false);
   const handleFullscreen = () => {
     setFullscreen((fullscreen) => {
       return !fullscreen;
     });
   };
 
-  useEffect(() => {
-    if (state.pages.length > 0 && state.unsavedChanges) {
-      handleUpdateSyllabusLesson();
-    }
-  }, [state.unsavedChanges]);
+  const {visible, setVisible} = useOutsideAlerter(false);
+  const [quickRegister, setQuickRegister] = useState(false);
+  const [homePopup, setHomePopup] = useState(false);
+  const [lessonButton, setLessonButton] = useState(false);
 
-  useEffect(() => {
-    let result = /.+\/(breakdown)\/*.*/.test(location.pathname);
-
-    if (result) {
-      setShareable(true);
-    }
-
-    if (!result) {
-      setShareable(false);
-    }
-  }, [location.pathname]);
-
-  const getPageLabel = (locIndex: string) => {
-    return state.pages[parseInt(locIndex)].stage;
+  const handleClick = () => {
+    setVisible((prevState: any) => !prevState);
+  };
+  const handleHomePopup = () => {
+    setHomePopup((prevState: any) => !prevState);
+  };
+  const handleLessonButton = () => {
+    setLessonButton((prevState: any) => !prevState);
+  };
+  const handleGoToUserManagement = () => {
+    history.push('/dashboard/manage-users');
+  };
+  const handleHome = async () => {
+    await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+    history.push(`/dashboard/lesson-planner/${getRoomData.id}`);
   };
 
-  useEffect(() => {
-    if (state.studentViewing.live) {
-      const hasCurrentLocation =
-        typeof state.studentViewing.studentInfo.currentLocation === 'string';
-      const currentLocationDefined =
-        typeof state.pages[state.studentViewing.studentInfo.currentLocation]?.stage !==
-        'undefined';
-      const lessonProgressDefined =
-        typeof state.pages[state.studentViewing.studentInfo.lessonProgress]?.stage !==
-        'undefined';
+  // ##################################################################### //
+  // ######################### SUBSCRIPTION SETUP ######################## //
+  // ##################################################################### //
+  let subscription: any;
+  const [subscriptionData, setSubscriptionData] = useState<any>();
 
-      if (hasCurrentLocation) {
-        if (currentLocationDefined) {
-          history.push(
-            `${match.url}/${
-              state.pages[state.studentViewing.studentInfo.currentLocation]?.stage
-            }`
-          );
-        }
-      } else if (!hasCurrentLocation) {
-        if (lessonProgressDefined) {
-          history.push(`${match.url}/${state.studentViewing.studentInfo.lessonProgress}`);
-        }
-      }
-    }
-  }, [state.studentViewing]);
+  // ----------- 1 ---------- //
 
-  useEffect(() => {
-    if (
-      !state.displayData ||
-      !state.displayData.studentInfo ||
-      !state.studentViewing.studentInfo ||
-      !state.studentViewing.studentInfo.student
-    ) {
-      setIsSameStudentShared(false);
-    }
+  const subscribeToStudent = () => {
+    const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
 
-    if (
-      state.displayData &&
-      state.displayData.studentInfo &&
-      state.studentViewing.studentInfo &&
-      state.studentViewing.studentInfo.student
-    ) {
-      if (
-        state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id
-      ) {
-        setIsSameStudentShared(true);
-      }
-
-      if (
-        state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id
-      ) {
-        setIsSameStudentShared(false);
-      }
-
-      if (
-        state.displayData.studentInfo.id ===
-          state.studentViewing.studentInfo.student.id &&
-        !state.studentViewing.live
-      ) {
-        setIsSameStudentShared(false);
-      }
-    }
-  }, [state.displayData, state.studentViewing]);
-
-  /**
-   * CLASSROOM DATE && STUDENT SHARING
-   */
-  const handleUpdateSyllabusLesson = async () => {
-    let updatedSyllabusLessonData: any = {
-      id: state.syllabusLessonID,
-      status: state.open ? 'Active' : 'Inactive',
-      complete: state.complete ? state.complete : false,
-      viewing:
-        state.studentViewing.studentInfo && state.studentViewing.studentInfo.personAuthID
-          ? state.studentViewing.studentInfo.personAuthID
-          : null,
-      displayData: state.displayData,
-      lessonPlan: state.pages,
-      startDate: '1989-11-02',
-      endDate: '2077-11-02',
+    const subscriptionFilter = {
+      filter: {
+        studentAuthID: {eq: lessonState.studentViewing},
+        lessonID: {eq: lessonID},
+        syllabusLessonID: {eq: syllabusID},
+      },
     };
 
-    try {
-      console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData);
-      const updatedSyllabusLesson = await API.graphql(
-        graphqlOperation(customMutations.updateSyllabusLesson, {
-          input: updatedSyllabusLessonData,
-        })
-      );
-      dispatch({type: 'SAVED_CHANGES'});
-    } catch (err) {
-      console.error('handleUpdateSyllabusLesson - ', err);
-    }
+    const studentDataSubscription = API.graphql(
+      graphqlOperation(subscriptions.onChangeUniversalLessonStudentData, {
+        studentAuthID: lessonState.studentViewing,
+        syllabusLessonID: syllabusID,
+        lessonID: lessonID,
+      })
+      //@ts-ignore
+    ).subscribe({
+      next: (studentData: any) => {
+        const updatedStudentData =
+          studentData.value.data.onChangeUniversalLessonStudentData;
+        setSubscriptionData(updatedStudentData);
+      },
+    });
+
+    return studentDataSubscription;
   };
 
-  const handleShareStudentData = async () => {
-    if (state.studentViewing.studentInfo) {
-      let displayData = {
-        breakdownComponent: state.studentViewing.studentInfo.currentLocation
-          ? state.studentViewing.studentInfo.currentLocation
-          : state.studentViewing.studentInfo.lessonProgress,
-        studentInfo: {
-          id: state.studentViewing.studentInfo.student.id,
-          firstName: state.studentViewing.studentInfo.student.firstName,
-          preferredName: state.studentViewing.studentInfo.student.preferredName
-            ? state.studentViewing.studentInfo.student.preferredName
-            : null,
-          lastName: state.studentViewing.studentInfo.student.lastName,
-        },
-        warmUpData: state.studentViewing.studentInfo.warmupData
-          ? state.studentViewing.studentInfo.warmupData
-          : null,
-        corelessonData: state.studentViewing.studentInfo.corelessonData
-          ? state.studentViewing.studentInfo.corelessonData
-          : null,
-        activityData: state.studentViewing.studentInfo.activityData
-          ? state.studentViewing.studentInfo.activityData
-          : null,
-      };
-      // console.log('display data: ', displayData);
-      dispatch({
-        type: 'SET_SHARE_MODE',
-        payload: state.studentViewing.studentInfo.currentLocation
-          ? state.studentViewing.studentInfo.currentLocation
-          : state.studentViewing.studentInfo.lessonProgress,
+  // ----------- 2 ---------- //
+
+  const updateOnIncomingStudentSubscriptionData = (subscriptionData: any) => {
+    const getPageIdx = lessonState.universalStudentDataID.find(
+      (dataRef: any) => dataRef.id === subscriptionData.id
+    )?.pageIdx;
+    const getPageData = subscriptionData.pageData;
+    lessonDispatch({
+      type: 'LOAD_STUDENT_SUBSCRIPTION_DATA',
+      payload: {stDataIdx: getPageIdx, subData: getPageData},
+    });
+  };
+
+  // ----------- 3 ---------- //
+
+  useEffect(() => {
+    if (subscriptionData) {
+      updateOnIncomingStudentSubscriptionData(subscriptionData);
+    }
+  }, [subscriptionData]);
+
+  // ##################################################################### //
+  // ##################### INITIAL STUDENT DATA FETCH #################### //
+  // ##################################################################### //
+
+  // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
+  const studentDataIdArray = (studentDataArray: any[]) => {
+    const idArr = studentDataArray
+      .reduce((acc: any[], dataObj: any, idx: number) => {
+        const idObj = {
+          id: dataObj.id,
+          pageIdx: lessonState.lessonData.lessonPlan.findIndex(
+            (lessonPlanObj: any) => lessonPlanObj.id === dataObj.lessonPageID
+          ),
+          lessonPageID: dataObj.lessonPageID,
+          update: false,
+        };
+        return [...acc, idObj];
+      }, [])
+      .sort((dataID1: any, dataID2: any) => {
+        if (dataID1.pageIdx < dataID2.pageIdx) {
+          return -1;
+        }
+        if (dataID1.pageIdx > dataID2.pageIdx) {
+          return 1;
+        }
       });
-      dispatch({type: 'SET_DISPLAY_DATA', payload: displayData});
+    return idArr;
+  };
+
+  // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
+  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
+    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
+      const findPageData = studentDataArray.find(
+        (dataObj: UniversalLessonStudentData) => dataObj.id === dataIdObj.id
+      )?.pageData;
+      if (Array.isArray(findPageData)) {
+        return [...acc, findPageData];
+      } else {
+        return [];
+      }
+    }, []);
+  };
+
+  // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  const getStudentData = async (studentAuthId: string) => {
+    const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus; // in the table this is called SyllabusLessonID, but it's just the syllabusID
+
+    try {
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: studentAuthId},
+          lessonID: {eq: lessonID},
+          syllabusLessonID: {eq: syllabusID},
+        },
+      };
+      const studentData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
+      );
+
+      // existing student rows
+      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+
+      if (studentDataRows.length > 0) {
+        subscription = subscribeToStudent();
+
+        const existStudentDataIdArray = studentDataIdArray(studentDataRows);
+        const filteredData = filterStudentData(existStudentDataIdArray, studentDataRows);
+
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {
+            dataIdReferences: existStudentDataIdArray,
+            filteredStudentData: filteredData,
+          },
+        });
+      } else {
+        throw 'No student data records for this lesson...';
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  /**
-   * USEEFFECT that listens for changes to expected end date in state,
-   * and then triggers the save mutation
-   */
+  // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
+
+  const clearStudentData = async () => {
+    lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+  };
+
+  useEffect(() => {
+    if (lessonState.studentViewing === '') {
+      lessonDispatch({type: 'UNLOAD_STUDENT_DATA'});
+    }
+
+    if (lessonState.studentViewing !== '') {
+      clearStudentData().then((_: void) =>
+        getStudentData(lessonState.studentViewing).then((_: void) =>
+          console.log('getStudentData teacher - ', 'getted')
+        )
+      );
+    }
+  }, [lessonState.studentViewing]);
+
+  // ##################################################################### //
+  // ################## STUDENT SHARE AND VIEW CONTROLS ################## //
+  // ##################################################################### //
   const handleQuitShare = () => {
     dispatch({type: 'QUIT_SHARE_MODE'});
     setIsSameStudentShared(false);
@@ -226,111 +260,283 @@ const LessonControl = () => {
   };
 
   /**
-   * LESSON CONTROL
+   * VIEWING A STUDENT
+   *  1. compare new studentViewing ID
+   *  2. if it's not the same as before, and not ''
+   *  3. unsubscribe
+   *  4. mutate the room table
+   *
+   *  --then--
+   *  5. subscribe
    */
 
-  const handleCompleteClassroom = async () => {
-    let completedSyllabusLessonData = {
-      id: state.syllabusLessonID,
-      status: 'Inactive',
-      complete: true,
-      endDate: awsFormatDate(dateString('-', 'WORLD')),
-    };
-
-    try {
-      const completedSyllabusLesson = await API.graphql(
-        graphqlOperation(customMutations.updateSyllabusLesson, {
-          input: completedSyllabusLessonData,
-        })
-      );
-      dispatch({type: 'SAVED_CHANGES'});
-    } catch (err) {
-      console.error(err);
+  const handleRoomUpdate = async (payload: any) => {
+    if (typeof payload === 'object' && Object.keys(payload).length > 0) {
+      try {
+        const updateRoom: any = await API.graphql(
+          graphqlOperation(mutations.updateRoom, {
+            input: payload,
+          })
+        );
+      } catch (e) {
+        console.error('handleRoomUpdate - ', e);
+      }
+    } else {
+      console.log('incorrect data for handleRoomUpdate() - ', payload);
     }
   };
 
-  const handleOpenSyllabusLesson = async () => {
-    let startedSyllabusLessonData = {
-      id: state.syllabusLessonID,
-      status: 'Active',
-      complete: false,
-      startDate: awsFormatDate(dateString('-', 'WORLD')),
-    };
-
+  // ##################################################################### //
+  // ############################ LESSON FETCH ########################### //
+  // ##################################################################### //
+  const getSyllabusLesson = async (lessonID?: string) => {
+    // lessonID will be undefined for testing
     try {
-      console.log(startedSyllabusLessonData);
-      const startedSyllabusLesson = await API.graphql(
-        graphqlOperation(customMutations.updateSyllabusLesson, {
-          input: startedSyllabusLessonData,
-        })
+      const universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
-    } catch (err) {
-      console.error(err);
+      const response = universalLesson.data.getUniversalLesson;
+      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+    } catch (e) {
+      console.error('getSyllabusLesson() - error fetching lesson', e);
     }
+
+    // else {
+    //   setTimeout(() => {
+    //     lessonDispatch({type: 'SET_LESSON_DATA', payload: exampleUniversalLesson});
+    //   }, 1000);
+    // }
   };
 
+  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
+  useEffect(() => {
+    const {lessonID} = urlParams;
+
+    if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
+      getSyllabusLesson(lessonID).then((_: void) =>
+        console.log('Lesson Mount - ', 'Lesson fetched!')
+      );
+    }
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      lessonDispatch({type: 'CLEANUP'});
+    };
+  }, []);
+
+  // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+  // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (lessonState.lessonData) {
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+      history.push(`${match.url}/${0}`);
+
+      const getRoomData = getLocalStorageData('room_info');
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+
+      if (
+        lessonState.lessonData.lessonPlan &&
+        lessonState.lessonData.lessonPlan.length > 0
+      ) {
+        lessonDispatch({
+          type: 'SET_ROOM_SUBSCRIPTION_DATA',
+          payload: {
+            ClosedPages: getRoomData.ClosedPages,
+            studentViewing: '',
+          },
+        });
+      }
+    }
+  }, [lessonState.lessonData.id]);
+
+  // ##################################################################### //
+  // ################### OTHER SHARING / VIEWING LOGIC ################### //
+  // ##################################################################### //
+
+  // ~~~~~~ AUTO PAGE NAVIGATION LOGIC ~~~~~ //
+  useEffect(() => {
+    if (lessonState.studentViewing !== '') {
+      const viewedStudentLocation = controlState.roster.find(
+        (student: any) => student.personAuthID === lessonState.studentViewing
+      )?.currentLocation;
+
+      if (viewedStudentLocation !== '') {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: viewedStudentLocation});
+        history.push(`${match.url}/${viewedStudentLocation}`);
+      } else {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/0`);
+      }
+    }
+  }, [controlState.roster, lessonState.studentViewing]);
+
+  // ~~~~~ PREVENT DOUBLE SHARING LOGIC ~~~~ //
+  const [isSameStudentShared, setIsSameStudentShared] = useState(false);
+  // useEffect(() => {
+  //   if (
+  //     !state.displayData ||
+  //     !state.displayData.studentInfo ||
+  //     !state.studentViewing.studentInfo ||
+  //     !state.studentViewing.studentInfo.student
+  //   ) {
+  //     setIsSameStudentShared(false);
+  //   }
+  //
+  //   if (
+  //     state.displayData &&
+  //     state.displayData.studentInfo &&
+  //     state.studentViewing.studentInfo &&
+  //     state.studentViewing.studentInfo.student
+  //   ) {
+  //     if (
+  //       state.displayData.studentInfo.id === state.studentViewing.studentInfo.student.id
+  //     ) {
+  //       setIsSameStudentShared(true);
+  //     }
+  //
+  //     if (
+  //       state.displayData.studentInfo.id !== state.studentViewing.studentInfo.student.id
+  //     ) {
+  //       setIsSameStudentShared(false);
+  //     }
+  //
+  //     if (
+  //       state.displayData.studentInfo.id ===
+  //         state.studentViewing.studentInfo.student.id &&
+  //       !state.studentViewing.live
+  //     ) {
+  //       setIsSameStudentShared(false);
+  //     }
+  //   }
+  // }, [state.displayData, state.studentViewing]);
+
+  // ~ SHARE A VIEWED STUDENT'S DATA LOGIC ~ //
+  const handleShareStudentData = async () => {
+    // if (state.studentViewing.studentInfo) {
+    //   let displayData = {
+    //     breakdownComponent: state.studentViewing.studentInfo.currentLocation
+    //       ? state.studentViewing.studentInfo.currentLocation
+    //       : state.studentViewing.studentInfo.lessonProgress,
+    //     studentInfo: {
+    //       id: state.studentViewing.studentInfo.student.id,
+    //       firstName: state.studentViewing.studentInfo.student.firstName,
+    //       preferredName: state.studentViewing.studentInfo.student.preferredName
+    //         ? state.studentViewing.studentInfo.student.preferredName
+    //         : null,
+    //       lastName: state.studentViewing.studentInfo.student.lastName,
+    //     },
+    //     warmUpData: state.studentViewing.studentInfo.warmupData
+    //       ? state.studentViewing.studentInfo.warmupData
+    //       : null,
+    //     corelessonData: state.studentViewing.studentInfo.corelessonData
+    //       ? state.studentViewing.studentInfo.corelessonData
+    //       : null,
+    //     activityData: state.studentViewing.studentInfo.activityData
+    //       ? state.studentViewing.studentInfo.activityData
+    //       : null,
+    //   };
+    //   // console.log('display data: ', displayData);
+    //   dispatch({
+    //     type: 'SET_SHARE_MODE',
+    //     payload: state.studentViewing.studentInfo.currentLocation
+    //       ? state.studentViewing.studentInfo.currentLocation
+    //       : state.studentViewing.studentInfo.lessonProgress,
+    //   });
+    //   dispatch({type: 'SET_DISPLAY_DATA', payload: displayData});
+    // }
+  };
+
+  // ##################################################################### //
+  // ################### CLASSROOM AND PLANNER CONTROL ################### //
+  // ##################################################################### //
   const handleOpen = async () => {
-    await handleOpenSyllabusLesson();
-    dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
-    setOpen(true);
+    await handleOpenPlanner();
+    //   dispatch({type: 'START_CLASSROOM', payload: '1989-11-02z'});
   };
 
   const handleComplete = async () => {
-    await handleCompleteClassroom();
-    dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
-    setOpen(true);
+    //   await handleCompletePlanner();
+    //   dispatch({type: 'COMPLETE_CLASSROOM', payload: dateString('-', 'US')});
     handleHome();
   };
 
-  const handleGoToUserManagement = () => {
-    history.push('/dashboard/manage-users');
+  const handleUpdatePlanner = async () => {
+    // let updatedSyllabusLessonData: any = {
+    //   id: state.syllabusLessonID,
+    //   status: state.open ? 'Active' : 'Inactive',
+    //   complete: state.complete ? state.complete : false,
+    //   viewing:
+    //     state.studentViewing.studentInfo && state.studentViewing.studentInfo.personAuthID
+    //       ? state.studentViewing.studentInfo.personAuthID
+    //       : null,
+    //   displayData: state.displayData,
+    //   lessonPlan: state.pages,
+    //   startDate: '1989-11-02',
+    //   endDate: '2077-11-02',
+    // };
+    //
+    // try {
+    //   console.log('attempt handle update syl lesson: ', updatedSyllabusLessonData);
+    //   const updatedSyllabusLesson = await API.graphql(
+    //     graphqlOperation(customMutations.updateSyllabusLesson, {
+    //       input: updatedSyllabusLessonData,
+    //     })
+    //   );
+    //   dispatch({type: 'SAVED_CHANGES'});
+    // } catch (err) {
+    //   console.error('handleUpdateSyllabusLesson - ', err);
+    // }
   };
 
-  const handleHome = () => {
-    history.push('/dashboard/home');
+  /**
+   * CLASSROOM CONTROL AND UPDATING PLANNER
+   * close the lesson off in the planner
+   */
+  const handleCompletePlanner = async () => {
+    // let completedSyllabusLessonData = {
+    //   id: state.syllabusLessonID,
+    //   status: 'Inactive',
+    //   complete: true,
+    //   endDate: awsFormatDate(dateString('-', 'WORLD')),
+    // };
+    //
+    // try {
+    //   const completedSyllabusLesson = await API.graphql(
+    //     graphqlOperation(customMutations.updateSyllabusLesson, {
+    //       input: completedSyllabusLessonData,
+    //     })
+    //   );
+    //   dispatch({type: 'SAVED_CHANGES'});
+    // } catch (err) {
+    //   console.error(err);
+    // }
   };
 
-  const {visible, setVisible, ref} = useOutsideAlerter(false);
-
-  /*
-   *
-   * Passing components upwards as popups
-   *
-   * */
-  const [quickRegister, setQuickRegister] = useState(false);
-  const [instructions, setInstructions] = useState({
-    visible: false,
-    available: false,
-    content: null,
-  });
-
-  const [homePopup, setHomePopup] = useState(false);
-  const [lessonButton, setLessonButton] = useState(false);
-
-  const handleClick = () => {
-    setVisible((prevState: any) => !prevState);
+  const handleOpenPlanner = async () => {
+    // let startedSyllabusLessonData = {
+    //   id: state.syllabusLessonID,
+    //   status: 'Active',
+    //   complete: false,
+    //   startDate: awsFormatDate(dateString('-', 'WORLD')),
+    // };
+    //
+    // try {
+    //   console.log(startedSyllabusLessonData);
+    //   const startedSyllabusLesson = await API.graphql(
+    //     graphqlOperation(customMutations.updateSyllabusLesson, {
+    //       input: startedSyllabusLessonData,
+    //     })
+    //   );
+    // } catch (err) {
+    //   console.error(err);
+    // }
   };
-
-  const handleHomePopup = () => {
-    setHomePopup((prevState: any) => !prevState);
-  };
-
-  const handleLessonButton = () => {
-    setLessonButton((prevState: any) => !prevState);
-  };
-
-  if (state.status !== 'loaded') {
-    return <ComponentLoading />;
-  }
 
   return (
     <div className={`w-full h-screen bg-gray-200 overflow-hidden`}>
       <div className={`relative w-full h-full flex flex-col`}>
-        {/**
-         * POPUPS SECTION:
-         * DEFINITELY NEEDS SOME RESTRUCTURING AND OPTIMIZATION
-         * /}
-
         {/* QUICK REGISTER */}
 
         {quickRegister && (
@@ -394,9 +600,8 @@ const LessonControl = () => {
         </div>
 
         {/* START TOP MENU */}
+
         <TopMenu
-          shareable={shareable}
-          setShareable={setShareable}
           isSameStudentShared={isSameStudentShared}
           handleOpen={handleOpen}
           handleComplete={handleComplete}
@@ -406,47 +611,61 @@ const LessonControl = () => {
           handleQuitShare={handleQuitShare}
           handleClick={handleClick}
           handleHomePopup={handleHomePopup}
-          pageViewed={pageViewed}
           handlePageChange={handlePageChange}
           setQuickRegister={setQuickRegister}
         />
+
         {/* END TOP MENU */}
 
-        <div className={`w-full h-8.5/10 flex rounded-lg`}>
+        <div className={`w-full h-full lg:h-8.5/10 flex flex-col lg:flex-row rounded-lg`}>
           {/* LEFT SECTION */}
           <div
             className={`${
               fullscreen ? 'hidden' : ''
-            } w-4/10 min-w-100 max-w-160 h-full flex flex-col items-center `}>
+            } w-full lg:w-4/10 min-w-100 lg:max-w-160 h-1/4 lg:h-full flex flex-col items-center `}>
             <div className={`h-full w-full flex flex-col justify-between items-center`}>
               <div className={`h-full`}>
                 <ErrorBoundary fallback={<h1>Error in the Classroster</h1>}>
                   <ClassRoster
-                    handleUpdateSyllabusLesson={handleUpdateSyllabusLesson}
+                    handleUpdateSyllabusLesson={handleUpdatePlanner}
                     handleShareStudentData={handleShareStudentData}
                     isSameStudentShared={isSameStudentShared}
                     handleQuitShare={handleQuitShare}
                     handleQuitViewing={handleQuitViewing}
                     handlePageChange={handlePageChange}
+                    handleRoomUpdate={handleRoomUpdate}
                   />
                 </ErrorBoundary>
               </div>
+            </div>
+          </div>
+          {/* FOR MOBILE */}
+          <div className="block lg:hidden">
+            {/* <div className="relative w-full h-16 flex flex-row justify-center items-center pl-2 m-2.5">
+              <div className="h-8 align-middle font-bold text-xs leading-8 ">
+                {lessonPlannerDict[userLanguage]['OTHER_LABELS']['LESSON_CONTROL']}:
+              </div>
+
+              <HamburgerMenu
+                handleClick={handleClick}
+                setQuickRegister={setQuickRegister}
+                handleHomePopup={handleHomePopup}
+              />
+            </div> */}
+            <div className="relative w-full h-12 flex flex-col items-center z-100">
+              <LessonControlBar handlePageChange={handlePageChange} />
             </div>
           </div>
 
           {/* RIGHT SECTION */}
           <div
             className={`relative 
-            ${fullscreen ? 'w-full' : 'w-6/10'} relative 
-            w-6/10 lg:w-full h-full flex flex-col items-center`}>
+            ${fullscreen ? 'w-full' : 'w-6/10'} 
+            w-6/10 w-full h-full flex flex-col items-center`}
+            style={mobile && !fullscreen ? {height: 'calc(75% - 80px)'} : null}>
             <StudentWindowTitleBar
-              setFullscreenInstructions={setFullscreenInstructions}
-              fullscreenInstructions={fullscreenInstructions}
               handleFullscreen={handleFullscreen}
               fullscreen={fullscreen}
-              pageViewed={pageViewed}
-              instructions={instructions}
-              setInstructions={setInstructions}
             />
 
             <div
@@ -456,28 +675,6 @@ const LessonControl = () => {
                           relative w-full  
                           border-t-2 border-black
                           overflow-y-scroll overflow-x-hidden`}>
-              {/**
-               *
-               * INSTRUCTIONS
-               *
-               * */}
-              {instructions.visible && instructions.available ? (
-                <div
-                  className={`
-                            ${fullscreen ? 'h-full' : 'h-full'}
-                            absolute w-full
-                            border-t-2 border-black
-                            overflow-hidden bg-black bg-opacity-40 z-100`}>
-                  <div
-                    className={`absolute w-full h-full shadow-xl text-lg flex justify-center items-center animate-fadeIn`}>
-                    <div
-                      className={` w-5/10 h-5/10  mx-auto my-auto bg-light-gray p-4 rounded-xl`}>
-                      {instructions.content}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-
               {/**
                *
                * COMPONENT
@@ -497,15 +694,9 @@ const LessonControl = () => {
                    *
                    *
                    */}
-                  {checkpointsItems && (
-                    <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
-                      <Body
-                        fullscreenInstructions={fullscreenInstructions}
-                        setInstructions={setInstructions}
-                        checkpointsItems={checkpointsItems}
-                      />
-                    </ErrorBoundary>
-                  )}
+                  <ErrorBoundary fallback={<h1>Error in the Teacher's Lesson</h1>}>
+                    <CoreUniversalLesson />
+                  </ErrorBoundary>
                 </Suspense>
               </div>
             </div>

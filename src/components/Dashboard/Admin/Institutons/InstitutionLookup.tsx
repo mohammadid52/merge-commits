@@ -18,6 +18,7 @@ import SectionTitle from '../../../Atoms/SectionTitle';
 import PageCountSelector from '../../../Atoms/PageCountSelector';
 import { getAsset } from '../../../../assets';
 import useDictionary from '../../../../customHooks/dictionary';
+import InstitutionRowLoader from './InstitutionRowLoader';
 
 /**
  * This component represents the bulk code of the institutions-lookup/all-institutions page
@@ -247,9 +248,9 @@ const InstitutionLookup: React.FC = () => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  if (status !== 'done') {
-    return <LessonLoading />;
-  }
+  // if (status !== 'done') {
+  //   return <LessonLoading />;
+  // }
   {
     return (
       <div className={`w-full h-full`}>
@@ -280,7 +281,7 @@ const InstitutionLookup: React.FC = () => {
               className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
               onClick={toggleSortDimention}>
               <IconContext.Provider
-                value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+                value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
                 {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
               </IconContext.Provider>
             </button>
@@ -321,7 +322,15 @@ const InstitutionLookup: React.FC = () => {
                     {InstitutionDict[userLanguage]['TABLE']['ACTION']}
                   </div>
                 </div>
-                {currentList && currentList.length ? (
+                {status !== 'done' ? (
+                  Array(3)
+                    .fill(' ')
+                    .map((_: any, index: number) => (
+                      <Fragment key={index}>
+                        <InstitutionRowLoader />
+                      </Fragment>
+                    ))
+                ) : currentList && currentList.length ? (
                   currentList.map((instituteObject, i) => (
                     <InstitutionRow
                       key={`instituteRow${i}`}

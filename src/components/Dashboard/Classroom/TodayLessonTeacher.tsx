@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../../../contexts/GlobalContext';
-import { useHistory } from 'react-router-dom';
-import { CurriculumInfo } from './Classroom';
+import React, {useEffect, useState} from 'react';
+import {CurriculumInfo} from './Classroom';
 import StandardLessonCard from './LessonCards/StandardLessonCard';
 
 interface ClassProps {

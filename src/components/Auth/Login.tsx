@@ -402,7 +402,7 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                         <label className="flex items-center justify-end">
                           <input
                             type="checkbox"
-                            className="form-checkbox w-4 h-10"
+                            className="form-checkbox w-5 h-5"
                             checked={isChecked}
                             onChange={toggleCheckBox}
                           />

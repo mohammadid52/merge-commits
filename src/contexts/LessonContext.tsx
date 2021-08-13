@@ -1,7 +1,5 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
-import {lessonState} from '../state/LessonState';
-import {lessonReducer} from '../reducers/LessonReducer';
 import * as customSubscriptions from '../customGraphql/customSubscriptions';
 import * as customMutations from '../customGraphql/customMutations';
 import * as mutations from '../graphql/mutations';
@@ -11,7 +9,9 @@ import {Auth} from '@aws-amplify/auth';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {standardTheme} from './GlobalContext';
 import {getClientKey} from '../utilities/strings';
-import {handleFetchAndCache} from '../utilities/sessionData';
+// import { handleFetchAndCache } from '../utilities/sessionData';
+import {lessonStateOLD} from '../state/LessonStateOLD';
+import {lessonReducerOLD} from '../reducers/LessonReducerOLD';
 
 interface LessonProps {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ interface DataObject {
 export const LessonContext = React.createContext(null);
 
 export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
-  const [state, dispatch] = useReducer(lessonReducer, lessonState);
+  const [state, dispatch] = useReducer(lessonReducerOLD, lessonStateOLD);
   const theme = standardTheme;
   // const location = useLocation();
   const history = useHistory();
@@ -131,73 +131,73 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
     loadPersonData();
   }, []);
 
-  async function createPersonLocation() {
-    const newLocation = {
-      personAuthID: state.studentAuthID,
-      personEmail: state.studentUsername,
-      syllabusLessonID: state.syllabusLessonID,
-      roomID: '0',
-      currentLocation: state.currentPage,
-      lessonProgress: state.lessonProgress,
-    };
-    try {
-      const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
-      );
-    } catch (e) {
-      console.error('create PersonLocation : ', e);
-    } finally {
-      setRecentOp('created');
-    }
-  }
+  // async function createPersonLocation() {
+  //   const newLocation = {
+  //     personAuthID: state.studentAuthID,
+  //     personEmail: state.studentUsername,
+  //     syllabusLessonID: state.syllabusLessonID,
+  //     roomID: '0',
+  //     currentLocation: state.currentPage,
+  //     lessonProgress: state.lessonProgress,
+  //   };
+  //   try {
+  //     const newPersonLocationMutation: any = await API.graphql(
+  //       graphqlOperation(mutations.createPersonLocation, {input: newLocation})
+  //     );
+  //   } catch (e) {
+  //     console.error('create PersonLocation : ', e);
+  //   } finally {
+  //     setRecentOp('created');
+  //   }
+  // }
 
-  async function updatePersonLocation() {
-    const updatedLocation = {
-      id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
-      personAuthID: state.studentAuthID,
-      personEmail: state.studentUsername,
-      syllabusLessonID: state.syllabusLessonID,
-      roomID: '0',
-      currentLocation: state.currentPage,
-      lessonProgress: state.lessonProgress,
-    };
-    try {
-      if (recentOp === 'created') {
-        await loadPersonData();
-      }
-      // console.log('updated', personLocationObj);
-      const newPersonLocationMutation: any = await API.graphql(
-        graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
-      );
-      setPersonLocationObj(updatedLocation);
-      // console.log('updated person location...');
-    } catch (e) {
-      console.error('update PersonLocation : ', e);
-    } finally {
-      setRecentOp('updated');
-    }
-  }
+  // async function updatePersonLocation() {
+  //   const updatedLocation = {
+  //     id: personLocationObj && personLocationObj.id ? personLocationObj.id : '',
+  //     personAuthID: state.studentAuthID,
+  //     personEmail: state.studentUsername,
+  //     syllabusLessonID: state.syllabusLessonID,
+  //     roomID: '0',
+  //     currentLocation: state.currentPage,
+  //     lessonProgress: state.lessonProgress,
+  //   };
+  //   try {
+  //     if (recentOp === 'created') {
+  //       await loadPersonData();
+  //     }
+  //     // console.log('updated', personLocationObj);
+  //     const newPersonLocationMutation: any = await API.graphql(
+  //       graphqlOperation(mutations.updatePersonLocation, {input: updatedLocation})
+  //     );
+  //     setPersonLocationObj(updatedLocation);
+  //     // console.log('updated person location...');
+  //   } catch (e) {
+  //     console.error('update PersonLocation : ', e);
+  //   } finally {
+  //     setRecentOp('updated');
+  //   }
+  // }
 
-  useEffect(() => {
-    if (loaded && state.syllabusLessonID && state.studentAuthID) {
-      if (recentOp === 'created' || recentOp === 'updated') {
-        if (personLocationObj && personLocationObj.currentLocation) {
-          updatePersonLocation();
-        }
-      }
-      if (recentOp === '') {
-        createPersonLocation();
-      }
-    }
-    return () => setLoaded(false);
-  }, [loaded, state.syllabusLessonID, state.studentAuthID]);
+  // useEffect(() => {
+  //   if (loaded && state.syllabusLessonID && state.studentAuthID) {
+  //     if (recentOp === 'created' || recentOp === 'updated') {
+  //       if (personLocationObj && personLocationObj.currentLocation) {
+  //         updatePersonLocation();
+  //       }
+  //     }
+  //     if (recentOp === '') {
+  //       createPersonLocation();
+  //     }
+  //   }
+  //   return () => setLoaded(false);
+  // }, [loaded, state.syllsabusLessonID, state.studentAuthID]);
 
-  useEffect(() => {
-    if (recentOp !== '') {
-      updatePersonLocation();
-    }
-    return () => setRecentOp('');
-  }, [state.currentPage]);
+  // useEffect(() => {
+  //   if (recentOp !== '') {
+  //     updatePersonLocation();
+  //   }
+  //   return () => setRecentOp('');
+  // }, [state.currentPage]);
 
   //  END OF LOCATION TRACKING SCRIPT
 
@@ -282,23 +282,23 @@ export const LessonContextProvider: React.FC = ({children}: LessonProps) => {
    * GET SYLLABUS LESSON
    */
   async function getSyllabusLesson() {
-    const {lessonID} = urlParams;
-    const queryObj = {
-      name: 'customQueries.getSyllabusLesson',
-      valueObj: {id: lessonID},
-    };
-    if (lessonID) {
-      try {
-        const classroom = await handleFetchAndCache(queryObj);
-        setLesson(classroom.data.getSyllabusLesson);
-        getOrCreateStudentData();
-        subscription = subscribeToSyllabusLesson();
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      history.push('/dashboard');
-    }
+    // const {lessonID} = urlParams;
+    // const queryObj = {
+    //   name: 'customQueries.getSyllabusLesson',
+    //   valueObj: {id: lessonID},
+    // };
+    // if (lessonID) {
+    //   try {
+    //     const classroom = await handleFetchAndCache(queryObj);
+    //     setLesson(classroom.data.getSyllabusLesson);
+    //     getOrCreateStudentData();
+    //     subscription = subscribeToSyllabusLesson();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   history.push('/dashboard');
+    // }
   }
 
   useEffect(() => {

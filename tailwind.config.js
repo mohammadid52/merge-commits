@@ -1,4 +1,6 @@
 module.exports = {
+  darkMode: 'class',
+
   purge: {
     enabled: false,
     content: [
@@ -12,7 +14,21 @@ module.exports = {
   corePlugins: {
     translate: true,
   },
+
   theme: {
+    placeholderColor: {
+      gray: {
+        100: '#f7fafc',
+        200: '#edf2f7',
+        300: '#e2e8f0',
+        400: '#cbd5e0',
+        500: '#a0aec0',
+        600: '#718096',
+        700: '#4a5568',
+        800: '#2d3748',
+        900: '#1a202c',
+      },
+    },
     flexGrow: {
       0: 0,
       default: 1,
@@ -53,6 +69,7 @@ module.exports = {
       '5xl': '3rem',
       '6xl': '4rem',
       '7xl': '5rem',
+      '8xl': '6rem',
       '5.5xl': '3.5rem',
       '4.5xl': '2.75rem',
     },
@@ -66,6 +83,7 @@ module.exports = {
       25: 25,
       75: 75,
       100: 100,
+      1000: 1000,
       auto: 'auto',
     },
     opacity: {
@@ -100,6 +118,7 @@ module.exports = {
     },
     inset: {
       0: '0rem',
+      0.5: '0.5rem',
       1: '1rem',
       2.5: '2.5rem',
       2: '2rem',
@@ -133,6 +152,7 @@ module.exports = {
       29: '29rem',
       30: '30rem',
       '1/2': '50%',
+      auto: 'auto',
     },
     fontFamily: {
       open: ['Open Sans', 'sans-serif'],
@@ -700,16 +720,20 @@ module.exports = {
   },
   variants: {
     animation: ['responsive', 'hover', 'focus'],
-    backgroundColor: ['responsive', 'hover', 'focus', 'active'],
-    color: ['responsive', 'hover', 'focus', 'active'],
+    backgroundColor: ['dark', 'responsive', 'hover', 'focus', 'active'],
+    color: ['dark', 'responsive', 'hover', 'focus', 'active'],
     border: ['responsive', 'hover', 'focus', 'active'],
-    borderColor: ['responsive', 'hover', 'focus', 'active'],
+    borderColor: ['dark', 'responsive', 'hover', 'focus', 'active'],
     boxShadow: ['responsive', 'hover', 'focus', 'active'],
     height: ['responsive', 'hover', 'focus'],
     minHeight: ['responsive', 'hover', 'focus'],
     zIndex: ['responsive', 'hover', 'focus'],
     position: ['responsive', 'hover', 'focus'],
     display: ['group-hover', 'responsive', 'group-focus'],
+    textColor: ['dark', 'responsive', 'hover', 'focus'],
   },
-  plugins: [],
+  // for slide over
+
+  plugins: [require('@tailwindcss/forms')],
+  // plugins: [],
 };

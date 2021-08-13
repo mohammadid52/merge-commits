@@ -106,14 +106,13 @@
     top: 0;
     z-index: 9999;
     border-radius: 3px;
-    transition: opacity 0.5s;
     transform: translateX(-10px);
     transition: all 0.15s ease-in-out;
   }
 
   &:hover {
     .custom_tooltip {
-      transform: translateX(0px);
+      transform: translateX(0);
       opacity: 1;
       visibility: visible;
     }
@@ -125,7 +124,11 @@
   user-select: none;
   position: relative;
   transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
-
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    z-index: 99;
+    height: 100%;
+  }
   .sidenav_sub_icon_wrapper {
     font-size: 12px;
     width: 12px;
@@ -479,7 +482,7 @@
 
 [data-tooltip] {
   position: relative;
-  z-index: 9999;
+  z-index: 10;
 }
 
 /* Positioning and visibility settings of the tooltip */
@@ -763,6 +766,7 @@
     transform: translateX(-100px);
   }
 }
+
 .comment-box {
   transition: all 0.15s ease-in-out;
   &:focus-within {
@@ -834,6 +838,20 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.hierarchy_submenu {
+  &:hover {
+    & .edit_icon {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  & .edit_icon {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+}
+
 .dark-backdrop {
   opacity: 0.75;
   animation-name: darkBackdrop;
@@ -880,7 +898,7 @@
 }
 
 .custom-scrollbar {
-  scrollbar-color: #eee white;
+  scrollbar-color: rgba(160, 174, 192, 1) white;
   scrollbar-width: thin;
 }
 
@@ -935,4 +953,173 @@
     visibility: hidden;
   }
   transition: all 0.3s ease-in-out;
+}
+
+.picker-wrapper {
+  * {
+    width: auto;
+  }
+}
+
+.form-button {
+  &:hover .arrow-icon {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  & .arrow-icon {
+    transform: translateX(-5px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s linear, transform 0.3s linear;
+  }
+}
+
+.customShadow {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+}
+.questionItemChild:first-child {
+  margin-top: 1.5rem;
+}
+.questionItemChild:last-child {
+  margin-bottom: 1.5rem;
+}
+.ulb-datepicker {
+  .react-datepicker__close-icon {
+    &::after {
+      height: 26px;
+      width: 26px;
+      font-size: 18px;
+    }
+    width: auto;
+  }
+  .react-datepicker__navigation-icon::before {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.wrapperClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  border: 1px solid rgba(50, 50, 62, 1);
+  color: white;
+}
+
+.wrapperClassName.mediumDark {
+  background-color: rgba(50, 50, 62, 0);
+  border: 1px solid rgba(50, 50, 62, 0.089);
+  color: white;
+}
+
+.toolbarClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  border: 1px solid #9ca3af;
+  color: white;
+}
+.toolbarClassName.mediumDark {
+  background-color: rgb(199, 199, 204);
+  border: 1px solid #9ca3af;
+  color: white;
+}
+
+.editorClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  color: white;
+}
+
+.editorClassName {
+  background-color: rgba(255, 255, 255, 1);
+  color: #000;
+  height: 20rem !important;
+}
+
+.toolbarClassName.previewMode {
+  display: none;
+}
+
+.editorClassName.previewMode {
+  border: 1px solid #9ca3af;
+  border-radius: 8px;
+}
+
+.toolbarClassName.iconoclast
+  .rdw-colorpicker-modal
+  .rdw-colorpicker-modal-header
+  .rdw-colorpicker-modal-style-label-active {
+  border-bottom: 2px solid #667eea !important;
+}
+.toolbarClassName.curate
+  .rdw-colorpicker-modal
+  .rdw-colorpicker-modal-header
+  .rdw-colorpicker-modal-style-label-active {
+  border-bottom: 2px solid #0081cb !important;
+}
+.rdw-colorpicker-modal-header {
+  color: #000;
+}
+
+// -------------------------------------------------
+
+// datepicker library config styles
+.react-datepicker-popper {
+  width: auto;
+}
+
+.datePickerWrapper.light .react-datepicker__input-container input {
+  background-color: rgb(237, 242, 247);
+  color: rgb(50, 50, 62);
+}
+
+.react-datepicker__input-container input {
+  border-radius: 1rem;
+  background-color: rgb(39, 39, 48);
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__navigation-icon::before,
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+  height: 13px !important;
+
+  top: 10px !important;
+  width: 13px !important;
+}
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+  right: 80px !important;
+  top: 0 !important;
+}
+.react-datepicker__year-option--selected {
+  width: auto !important;
+}
+
+// Search Styles
+
+.rotateSearchIcon {
+  transition: 3s linear;
+  animation: searchIconRotation infinite 3s;
+  transform: rotateZ(0deg);
+}
+
+@keyframes searchIconRotation {
+  from {
+    transform: rotateZ(90deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
+
+.react-datepicker__tab-loop {
+  width: auto;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }

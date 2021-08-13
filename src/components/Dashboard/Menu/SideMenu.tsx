@@ -1,12 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useLocation} from 'react-router';
+import {IoIosMenu} from 'react-icons/io';
+import {RiArrowRightSLine} from 'react-icons/ri';
 import {GlobalContext} from '../../../contexts/GlobalContext';
+import useDeviceDetect from '../../../customHooks/deviceDetect';
 import SignOutButton from '../../Auth/SignOut';
 import {getAsset} from '../../../assets';
 import Links from './Links';
-import {useHistory} from 'react-router';
 import ProfileLink from './ProfileLink';
-import {IoIosMenu} from 'react-icons/io';
-import {RiArrowRightSLine} from 'react-icons/ri';
 import Tooltip from '../../Atoms/Tooltip';
 
 interface SideMenuProps {
@@ -28,14 +29,22 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
     setLessonLoading,
     handleRoomSelection,
   } = props;
+  const {mobile} = useDeviceDetect();
   const {dispatch, theme, clientKey} = useContext(GlobalContext);
   const history = useHistory();
+  const { pathname } = useLocation();
   const [collapse, setCollapse] = useState(false);
 
   const handleLink = (e: React.MouseEvent) => {
     history.push('/dashboard/home');
     dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'homepage'}});
   };
+
+  useEffect(() => {
+    if (mobile) {
+      setCollapse(true);
+    }
+  }, [pathname, mobile]);
 
   return (
     <>
@@ -91,7 +100,7 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
               <div className="flex-1 flex flex-col">
                 <ProfileLink
                   handleRoomSelection={handleRoomSelection}
-                  setActiveRoomSyllabus={setActiveRoomSyllabus}
+                  // setActiveRoomSyllabus={setActiveRoomSyllabus}
                   setLessonLoading={setLessonLoading}
                   setSyllabusLoading={setSyllabusLoading}
                   setActiveRoomName={setActiveRoomName}
@@ -99,10 +108,10 @@ const SideMenu: React.FC<SideMenuProps> = ({children, ...props}: SideMenuProps) 
                   setCurrentPage={setCurrentPage}
                   currentPage={currentPage}
                 />
-                <nav className="flex-1 py-4 space-y-1">
+                <nav className="flex-1 py-4 space-y-1 h-full overflow-y-auto overflow-x-hidden">
                   <Links
                     handleRoomSelection={handleRoomSelection}
-                    setActiveRoomSyllabus={setActiveRoomSyllabus}
+                    // setActiveRoomSyllabus={setActiveRoomSyllabus}
                     setLessonLoading={setLessonLoading}
                     setSyllabusLoading={setSyllabusLoading}
                     setActiveRoomName={setActiveRoomName}

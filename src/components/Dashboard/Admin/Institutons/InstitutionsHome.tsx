@@ -82,30 +82,30 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/room-edit`}
           render={() => <EditRoom />} // Edit current room.
         />
-        <Route
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/edit`}
           render={() => <EditCurricular />} // Edit current curricular
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/add`}
           render={() => <AddLearningObjective />} // Add new topic to curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/edit/:id`}
           render={() => <EditLearningObjective />} // Edit curricular topic
         />
-        <Route
+        {/* <Route
           path={`${match.url}/curricular/:curricularId/topic/add`}
           render={() => <AddTopic />} // Add new topic to curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/curricular/:curricularId/topic/edit/:id`}
           render={() => <EditTopic />} // Edit curricular topic
         />
-        <Route
+        {/* <Route
           path={`${match.url}/curricular/:curricularId/measurement/add`}
           render={() => <AddMeasurement />} // Add new measurement to curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/curricular/:curricularId/measurement/edit/:id`}
           render={() => <EditMeasurement />} // Edit curricular measurement

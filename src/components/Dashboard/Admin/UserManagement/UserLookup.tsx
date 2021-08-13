@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react';
-import { useHistory } from 'react-router-dom';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useEffect, useContext, Fragment} from 'react';
+import {useHistory} from 'react-router-dom';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import {
   AiOutlineUsergroupAdd,
   AiOutlineArrowUp,
   AiOutlineArrowDown,
 } from 'react-icons/ai';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import * as queries from '../../../../graphql/queries';
 import * as customQueries from '../../../../customGraphql/customQueries';
-import { getAsset } from '../../../../assets';
+import {getAsset} from '../../../../assets';
 
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+// import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
 import ListStudents from './ListStudents';
 import List from './List';
 import Pagination from '../../../Atoms/Pagination';
@@ -24,18 +24,20 @@ import PageCountSelector from '../../../Atoms/PageCountSelector';
 import SearchInput from '../../../Atoms/Form/SearchInput';
 import Selector from '../../../Atoms/Form/Selector';
 import useDictionary from '../../../../customHooks/dictionary';
+import UserListLoader from './UserListLoader';
 
 const UserLookup = () => {
-  const { state, theme, userLanguage, clientKey } = useContext(GlobalContext);
+  const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const history = useHistory();
   const [status, setStatus] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [userList, setUserList] = useState([]);
   const [userCount, setUserCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(0);
   const [lastPage, setLastPage] = useState(false);
   const [firstPage, setFirstPage] = useState(false);
-  const { UserLookupDict, paginationPage, BreadcrumsTitles } = useDictionary(clientKey);
+  const {UserLookupDict, paginationPage, BreadcrumsTitles} = useDictionary(clientKey);
   const [searchInput, setSearchInput] = useState({
     value: '',
     isActive: false,
@@ -53,7 +55,7 @@ const UserLookup = () => {
   // ...End.
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['PEOPLE'],
       url: '/dashboard/manage-users',
@@ -151,13 +153,13 @@ const UserLookup = () => {
 
   const removeSearchAction = () => {
     backToInitials();
-    setSearchInput({ value: '', isActive: false });
+    setSearchInput({value: '', isActive: false});
   };
 
   const fetchSortedList = () => {
     const newUserList = [...totalUserList].sort((a, b) =>
       a[sortingType.value]?.toLowerCase() > b[sortingType.value]?.toLowerCase() &&
-        sortingType.asc
+      sortingType.asc
         ? 1
         : -1
     );
@@ -209,28 +211,30 @@ const UserLookup = () => {
   const getTeacherList = (data: any) => {
     return data && data.length > 0
       ? data.reduce((acc: any[], dataObj: any) => {
-        const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
-        const teacherIsPresent = acc?.find(
-          (teacher: any) =>
-            teacher?.firstName === teacherObj?.firstName &&
-            teacher?.lastName === teacherObj?.lastName
-        );
-        if (teacherIsPresent) {
-          return acc;
-        } else {
-          return [...acc, teacherObj];
-        }
-      }, [])
+          const teacherObj = dataObj?.class?.rooms?.items[0]?.teacher;
+          const teacherIsPresent = acc?.find(
+            (teacher: any) =>
+              teacher?.firstName === teacherObj?.firstName &&
+              teacher?.lastName === teacherObj?.lastName
+          );
+          if (teacherIsPresent) {
+            return acc;
+          } else {
+            return [...acc, teacherObj];
+          }
+        }, [])
       : [];
   };
 
   const fetchAllPerson = async () => {
-    let resp: any = await API.graphql(graphqlOperation(queries.listPersons, {
-      limit: 500
-    }));
-    const users = resp?.data?.listPersons?.items
+    let resp: any = await API.graphql(
+      graphqlOperation(queries.listPersons, {
+        limit: 500,
+      })
+    );
+    const users = resp?.data?.listPersons?.items;
     return users;
-  }
+  };
 
   const fetchAllUsersList = async () => {
     const isTeacher = state.user.role === 'TR' || state.user.role === 'FLW';
@@ -238,18 +242,19 @@ const UserLookup = () => {
 
     let authIds: any[] = [];
     try {
+      setLoading(true);
       if (isTeacher) {
         try {
           const dashboardDataFetch: any = await API.graphql(
             graphqlOperation(customQueries.getTeacherLookUp, {
-              filter: { teacherAuthID: { eq: teacherAuthID } },
+              filter: {teacherAuthID: {eq: teacherAuthID}},
             })
           );
 
           const response = await dashboardDataFetch;
           let arrayOfResponseObjects = response?.data?.listRooms?.items;
           arrayOfResponseObjects = arrayOfResponseObjects.map((item: any) => {
-            return { class: { rooms: { items: arrayOfResponseObjects } } };
+            return {class: {rooms: {items: arrayOfResponseObjects}}};
           });
 
           const students = getStudentsList(arrayOfResponseObjects);
@@ -283,7 +288,7 @@ const UserLookup = () => {
                 or: [...authIdFilter],
               },
             })
-          )
+          );
           response = users?.data?.listPersons?.items;
         } else {
           users = await fetchAllPerson();
@@ -304,6 +309,7 @@ const UserLookup = () => {
         setTotalUserList(usersList);
         setTotalUserNum(usersList.length);
       }
+      setLoading(false);
       setStatus('done');
     } catch (error) {
       console.error(error);
@@ -349,9 +355,9 @@ const UserLookup = () => {
     fetchSortedList();
   }, [sortingType.value, sortingType.asc]);
 
-  if (status !== 'done') {
-    return <LessonLoading />;
-  }
+  // if (status !== 'done') {
+    // return <LessonLoading />;
+  // }
 
   return (
     <div className={`w-full h-full`}>
@@ -382,7 +388,7 @@ const UserLookup = () => {
             className={`w-28 bg-gray-100 mr-4 p-3 border-gray-400  border-0 rounded border-l-none rounded-l-none ${theme.outlineNone} `}
             onClick={toggleSortDimention}>
             <IconContext.Provider
-              value={{ size: '1.5rem', color: theme.iconColor[themeColor] }}>
+              value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
               {sortingType.asc ? <AiOutlineArrowUp /> : <AiOutlineArrowDown />}
             </IconContext.Provider>
           </button>
@@ -421,7 +427,15 @@ const UserLookup = () => {
                 }
 
               </div>
-              {userList.length > 0 ? (
+              {loading ? (
+                Array(3)
+                  .fill(' ')
+                  .map((_: any, index: number) => (
+                    <Fragment key={index}>
+                      <UserListLoader />
+                    </Fragment>
+                  ))
+              ) : userList.length > 0 ? (
                 userList.map((item: any, key: number) => (
                   // <div key={key}>
                   //   {state.user.role === 'FLW' ? (

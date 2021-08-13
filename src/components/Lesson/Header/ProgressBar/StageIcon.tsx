@@ -1,8 +1,8 @@
-import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import React, {ReactElement, ReactNode, useContext, useEffect, useState} from 'react';
+import {LessonContext} from '../../../../contexts/LessonContext';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import usePrevious from '../../../../customHooks/previousProps';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {
   FaCheck,
   FaHeadphonesAlt,
@@ -15,24 +15,20 @@ import {
   FaScroll,
   FaTrophy,
 } from 'react-icons/fa';
-import { AiOutlineHome } from 'react-icons/ai';
+import {AiOutlineHome} from 'react-icons/ai';
 import StageLabels from '../../../General/LabelSwitch';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
 
-interface StageIconProps {
-  iconID: string | number;
-  stage: string;
-  type: string;
-  active: boolean;
-  open: boolean;
-  disabled: boolean;
-  counter?: number;
+interface StageIconProps extends UniversalLessonPage {
+  pageNr?: number;
   clickable: boolean;
   userAtEnd?: boolean;
 }
 
 const StageIcon = (props: StageIconProps) => {
-  const { iconID, stage, type, active, disabled, open, counter, clickable } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {pageNr, id, enabled, open, active, label, clickable} = props;
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const previousProps = usePrevious(open);
   const [recentOpened, setRecentOpened] = useState<boolean>(false);
   const match = useRouteMatch();
@@ -91,10 +87,10 @@ const StageIcon = (props: StageIconProps) => {
         ${theme.elem.text}
         ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
         ${centerFix === 'noCenter' && '-translate-x-1/2'} 
-        ${state.currentPage === iconID ? 'text-opacity-100' : ''}
-        ${state.currentPage !== iconID ? 'text-opacity-50' : ''}
+        ${state.currentPage === id ? 'text-opacity-100' : ''}
+        ${state.currentPage !== id ? 'text-opacity-50' : ''}
         `}>
-        <StageLabels label={props.stage.charAt(0).toUpperCase() + props.stage.slice(1)} counter={counter} />
+        <StageLabels label={label} />
       </div>
     );
   };
@@ -111,16 +107,11 @@ const StageIcon = (props: StageIconProps) => {
    *
    */
 
-  /*const clickable = !disabled && open;*/
-
   const handleLink = () => {
-    if (!clickable) {
-      return;
+    if (clickable) {
+      // history.push(`${match.url}/${pageNr}`);
+      lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
     }
-
-    history.push(`${match.url}/${state.pages[iconID].stage}`);
-    // dispatch({type: 'PAGE_FORWARD'});
-    dispatch({ type: 'JUMP_PAGE', payload: props.iconID });
   };
 
   const iconColor = () => {
@@ -137,50 +128,18 @@ const StageIcon = (props: StageIconProps) => {
     }
   };
 
-
-  if (disabled) return null;
-
-  if (type === 'breakdown') {
-    return (
-      <>
-        <div
-          className={`relative h-8 w-8 origin-center flex justify-center items-center rounded-full z-50
-          ${clickable ? 'cursor-pointer' : 'cursor-default'}`}
-          onClick={handleLink}>
-          <IconContext.Provider value={{ color: iconColor() }}>
-            <div
-              className={`h-8 w-8 origin-center rounded-full bg-black
-                            
-                        `}>
-              <div
-                className={` 
-                                ${recentOpened ? 'animate-activation' : ''}
-                                ${!open ? 'opacity-60  border-0 border-white border-opacity-20' : ''}
-                                ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
-                                ${
-                                  open && !active ? 'bg-darker-gray' : ''
-                                } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
-                {iconSwitch(type)}
-              </div>
-            </div>
-            {/* ICON LABEL */}
-            {iconLabel('center')}
-            {/* ICON LABEL - END */}
-          </IconContext.Provider>
-        </div>
-      </>
-    );
-  }
+  if (!enabled) return null;
 
   return (
     <>
-      <div className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-50`}>
+      <div
+        className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-50`}>
         <div
           className={`relative h-8 w-8 origin-center rounded-full flex items-center justify-center 
                     ${clickable ? 'cursor-pointer' : 'cursor-default'}
                     ${recentOpened ? 'animate-activation' : ''}`}
-          onClick={handleLink}>
-          <IconContext.Provider value={{ color: iconColor(), size: '0.9rem' }}>
+          onClick={clickable ? () => handleLink() : () => {}}>
+          <IconContext.Provider value={{color: iconColor(), size: '0.9rem'}}>
             <div
               className={`h-8 w-8 origin-center rounded-full bg-black
                             
@@ -188,12 +147,20 @@ const StageIcon = (props: StageIconProps) => {
               <div
                 className={` 
                                 ${recentOpened ? 'animate-activation' : ''}
-                                ${!open ? 'opacity-60  border-0 border-white border-opacity-20' : ''}
-                                ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
+                                ${
+                                  !open
+                                    ? 'opacity-60  border-0 border-white border-opacity-20'
+                                    : ''
+                                }
+                                ${
+                                  open || active || id <= lessonState.currentPage
+                                    ? 'bg-blueberry'
+                                    : ''
+                                } 
                                 ${
                                   open && !active ? 'bg-darker-gray' : ''
                                 } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
-                {iconSwitch(type)}
+                {iconSwitch(id)}
               </div>
             </div>
           </IconContext.Provider>

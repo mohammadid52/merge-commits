@@ -7,38 +7,39 @@ import {Switch, Route, useRouteMatch, useHistory} from 'react-router-dom';
 import Storage from '@aws-amplify/storage';
 import useUrlState from '@ahooksjs/use-url-state';
 import ReactHtmlParser from 'react-html-parser';
+import {find, findIndex} from 'lodash';
+import slice from 'lodash/slice';
+import sortBy from 'lodash/sortBy';
+import {MdCancel, MdImage} from 'react-icons/md';
+import {BsCameraVideoFill} from 'react-icons/bs';
+import {BiLinkAlt} from 'react-icons/bi';
+import {HiEmojiHappy} from 'react-icons/hi';
+import EmojiPicker from 'emoji-picker-react';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
 import * as queries from '../../../../graphql/queries';
 import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
-
 import {GlobalContext} from '../../../../contexts/GlobalContext';
-import UserInformation from './UserInformation';
-import UserEdit from './UserEdit';
+import useDictionary from '../../../../customHooks/dictionary';
+import {getImageFromS3} from '../../../../utilities/services';
+import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
+import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
+
 import BreadCrums from '../../../Atoms/BreadCrums';
 import Buttons from '../../../Atoms/Buttons';
-import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
-import {getImageFromS3} from '../../../../utilities/services';
-import useDictionary from '../../../../customHooks/dictionary';
-import ProfileCropModal from '../../Profile/ProfileCropModal';
 import Loader from '../../../Atoms/Loader';
-import {getUniqItems, initials, stringToHslColor} from '../../../../utilities/strings';
-import slice from 'lodash/slice';
-import sortBy from 'lodash/sortBy';
-import {BiLinkAlt} from 'react-icons/bi';
-import {find, findIndex} from 'lodash';
-import {MdCancel, MdImage} from 'react-icons/md';
-import {BsCameraVideoFill} from 'react-icons/bs';
-import {getAsset} from '../../../../assets';
 import Modal from '../../../Atoms/Modal';
 import ModalPopUp from '../../../Molecules/ModalPopUp';
+
+import UserInformation from './UserInformation';
+import UserEdit from './UserEdit';
+import LessonLoading from '../../../Lesson/Loading/ComponentLoading';
+import ProfileCropModal from '../../Profile/ProfileCropModal';
+import {getAsset} from '../../../../assets';
 import Feedback from './Feedback';
-import FormInput from '../../../Atoms/Form/FormInput';
-import {AddQuestionModalDict} from '../../../../dictionary/dictionary.iconoclast';
-import {HiEmojiHappy} from 'react-icons/hi';
-import EmojiPicker from 'emoji-picker-react';
-import ClickAwayListener from 'react-click-away-listener';
+import Attendance from './Attendance';
+import {IoIosTime} from 'react-icons/io';
 
 export interface UserInfo {
   authId: string;
@@ -61,6 +62,7 @@ export interface UserInfo {
   updatedAt: string;
   birthdate?: string;
   onDemand?: boolean;
+  rooms: any[];
 }
 
 export interface AnthologyContentInterface {
@@ -94,10 +96,12 @@ const User = () => {
   const [upImage, setUpImage] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState<string>('');
 
   const tabs = [
     {name: 'User Information', current: true},
-    {name: 'Associated Classrooms', current: false},
+    {name: 'Coursework & Attendance', current: false},
     {name: 'Notebook', current: false},
   ];
 
@@ -130,6 +134,7 @@ const User = () => {
     updatedAt: '',
     birthdate: null,
     onDemand: false,
+    rooms: [],
   });
 
   const [imageUrl, setImageUrl] = useState('');
@@ -148,8 +153,10 @@ const User = () => {
       last: false,
     },
     {
-      title: curTab,
-
+      title: [
+        user.preferredName ? user.preferredName : user.firstName,
+        user.lastName,
+      ].join(' '),
       url: `${location.pathname}${location.search}`,
       last: true,
     },
@@ -202,6 +209,7 @@ const User = () => {
       const studentRooms: any = studentClasses
         ?.map((item: any) => item?.rooms?.items)
         ?.flat(1);
+      userData.rooms = studentRooms;
       const studentCurriculars: any = studentRooms
         .map((item: any) => item?.curricula?.items)
         .flat(1);
@@ -409,9 +417,32 @@ const User = () => {
     setUrlState({t: value});
   };
 
+  const switchMainTab = (tab: string) => {
+    setCurTab(tab);
+    history.push(`/dashboard/manage-users/user?id=${id}&tab=${tab}`);
+  };
+
+  const handleClassRoomClick = (roomId: string) => {
+    setSelectedRoomId(roomId);
+    setIsTimelineOpen(true);
+  };
+
+  const goToClassroom = () => {
+    setSelectedRoomId('');
+    setIsTimelineOpen(false);
+  };
+
   const AssociatedClasses = ({list}: any) => {
     return (
       <div className="flex flex-col">
+        <div className="flex justify-end mb-4">
+          <Buttons
+            label={'Timeline'}
+            onClick={() => setIsTimelineOpen(true)}
+            btnClass="mr-4"
+            Icon={IoIosTime}
+          />
+        </div>
         <div className="overflow-x-auto">
           <div className="align-middle inline-block min-w-full">
             <div className=" overflow-hidden border-b-0 border-gray-200 sm:rounded-lg">
@@ -421,12 +452,12 @@ const User = () => {
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Classname
+                      Institution
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 w-auto text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Institution
+                      Classroom
                     </th>
                     <th
                       scope="col"
@@ -441,19 +472,20 @@ const User = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {list.map((item: any, idx: number) => {
-                    const rooms = item?.class?.rooms.items;
-                    const curriculum = rooms.length > 0 ? rooms[0].curricula : null;
-                    const teacher = rooms.length > 0 ? rooms[0].teacher : null;
+                  {list.map((room: any, idx: number) => {
+                    const curriculum = room.curricula;
+                    const teacher = room.teacher;
                     return (
                       <tr
-                        key={`${item.class?.name}_${idx}`}
+                        key={`${room.id}`}
                         className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
-                        <td className="px-6 py-4 w-auto whitespace-nowrap text-sm font-medium text-gray-900">
-                          {item?.class?.name}
-                        </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
-                          {item?.class?.institution?.name}
+                          {room?.class?.institution?.name}
+                        </td>
+                        <td
+                          className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500 font-bold cursor-pointer"
+                          onClick={() => handleClassRoomClick(room.id)}>
+                          {room.name}
                         </td>
                         <td className="px-6 py-4 w-auto whitespace-nowrap text-sm text-gray-500">
                           {teacher
@@ -1481,12 +1513,20 @@ const User = () => {
               </div>
             </div>
           )}
-          {curTab === 'Associated Classrooms' &&
+          {curTab === 'Coursework & Attendance' &&
             user?.classes?.items.length > 0 &&
             user.role === 'ST' && (
               <div
                 className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
-                <AssociatedClasses list={user?.classes?.items} />
+                {isTimelineOpen ? (
+                  <Attendance
+                    id={id}
+                    goToClassroom={goToClassroom}
+                    selectedRoomId={selectedRoomId}
+                  />
+                ) : (
+                  <AssociatedClasses list={user?.rooms} />
+                )}
               </div>
             )}
 
@@ -1511,6 +1551,13 @@ const User = () => {
                 </div>
               </div>
             ))}
+
+          {curTab === 'Timeline' && (
+            <div
+              className={`w-full white_back py-8 px-4 ${theme.elem.bg} ${theme.elem.text} ${theme.elem.shadow} mb-8`}>
+              <Attendance id={id} goToClassroom={() => switchMainTab(tabs[1].name)} />
+            </div>
+          )}
         </div>
         {showCropper && (
           <ProfileCropModal

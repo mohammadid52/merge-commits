@@ -30,6 +30,11 @@
   width: 16rem;
 }
 
+.custom-editor-description ul, .custom-editor-description ol {
+  list-style: inherit;
+  list-style-position: inside;
+}
+
 /* .pagetitle-container {
   @apply my-4 p-4;
 }

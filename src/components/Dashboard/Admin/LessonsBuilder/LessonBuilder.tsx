@@ -1,7 +1,7 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoArrowUndoCircleOutline, IoDocumentText, IoCardSharp} from 'react-icons/io5';
+import {IoDocumentText, IoCardSharp} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -13,30 +13,42 @@ import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
-import WizardScroller from '../../../Atoms/WizardScroller';
+import Loader from '../../../Atoms/Loader';
+import StepComponent, {IStepElementInterface} from '../../../Atoms/StepComponent';
 
 import AddNewLessonForm from './StepActionComponent/AddNewLessonForm';
-import AssessmentInstuctions from './StepActionComponent/AssessmentInstuctions';
-import CheckpointBuilder from './StepActionComponent/CheckpointBuilder';
-import PreviewForm from './StepActionComponent/PreviewForm';
+import LessonActivities from './StepActionComponent/LessonActivities';
+import LessonCourse from './StepActionComponent/LessonCourse/LessonCourse';
+import LearningEvidence from './StepActionComponent/LearningEvidence/LearningEvidence';
 import {
   InstructionInitialState,
   SavedLessonDetailsProps,
   LessonPlansProps,
 } from './LessonEdit';
 import useDictionary from '../../../../customHooks/dictionary';
+import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
+import {languageList, lessonTypeList} from '../../../../utilities/staticData';
+import {getImageFromS3Static} from '../../../../utilities/services';
 
 export interface InitialData {
   name: string;
   type: InputValueObject;
+  duration: string;
   purpose: string;
   purposeHtml: string;
   objective: string;
   objectiveHtml: string;
+  notes?: string;
+  notesHtml?: string;
   languages: {id: string; name: string; value: string}[];
   institution?: InputValueObject;
   language: string[];
+  imageCaption?: string;
+  imageUrl?: string;
+  imagePreviewUrl?: string;
+  studentSummary?: string;
 }
 export interface InputValueObject {
   id: string;
@@ -52,33 +64,29 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const {designersList, institutionList} = props;
   const history = useHistory();
   const match = useRouteMatch();
-  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
-  const {BreadcrumsTitles, LessonBuilderDict} = useDictionary(clientKey);
-
-  const breadCrumsList = [
-    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONS'],
-      url: '/dashboard/lesson-builder',
-      last: false,
-    },
-    {
-      title: BreadcrumsTitles[userLanguage]['LESSONPLANBUILDER'],
-      url: `${match.url}`,
-      last: true,
-    },
-  ];
+  const params = useQuery(location.search);
+  const step = params.get('step');
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
+  const {AddNewLessonFormDict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
 
   const initialData = {
     name: '',
     type: {id: '', name: '', value: ''},
+    duration: '1',
     purpose: '',
     purposeHtml: '<p></p>',
     objective: '',
     objectiveHtml: '<p></p>',
+    notes: '',
+    notesHtml: '<p></p>',
     languages: [{id: '1', name: 'English', value: 'EN'}],
     institution: {id: '', name: '', value: ''},
     language: [''],
+    imageUrl: '',
+    imageCaption: '',
+    studentSummary: '',
   };
   const instructionInitialState = {
     introductionTitle: '',
@@ -100,21 +108,31 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
   ];
 
+  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [curriculumLoading, setCurriculumLoading] = useState(false);
   const [formData, setFormData] = useState<InitialData>(initialData);
   const [measurementList, setMeasurementList] = useState([]);
-  const [selectedMeasurement, setSelectedMeasurement] = useState([]);
+  const [selectedMeasurements, setSelectedMeasurements] = useState([]);
   const [savedLessonDetails, setSavedLessonDetails] = useState<SavedLessonDetailsProps>({
     lessonPlans: null,
     lessonInstructions: instructionInitialState,
   });
   const [selectedDesigners, setSelectedDesigners] = useState([]);
-  const [lessonId, setLessonId] = useState('');
-  const [activeStep, setActiveStep] = useState('Overview');
+  const [curriculumList, setCurriculumList] = useState([]);
+  const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
+  const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
+  const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
     message: LessonBuilderDict[userLanguage]['MESSAGES']['UNSAVE'],
+    url: '',
+  });
+  const [serverMessage, setServerMessage] = useState({
+    isError: false,
+    message: '',
   });
 
   const [checkpointSaveModal, setCheckpointSaveModal] = useState({
@@ -156,6 +174,96 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [showModal, setShowModal] = useState(false);
   const [savingUnsavedCP, setSavingUnsavedCP] = useState(false);
   const [individualFieldEmpty, setIndividualFieldEmpty] = useState(false);
+
+  const getInstitutionByID = async (id: string) => {
+    try {
+      const inst: any = await API.graphql(
+        graphqlOperation(customQueries.getInstitution, {id})
+      );
+      return inst.data.getInstitution;
+    } catch (error) {
+      console.error('@getInstitutionByID: ', error);
+    }
+  };
+
+  const fetchUniversalLessonDetails = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {
+          id: lessonId,
+        })
+      );
+      const savedData = result.data.getUniversalLesson;
+      setUniversalLessonDetails(savedData);
+
+      if (savedData.institutionID) {
+        const institution = await getInstitutionByID(savedData.institutionID);
+        setSelectedMeasurements(savedData.rubrics);
+        setFormData({
+          ...formData,
+          ...savedData,
+          imageCaption: savedData.cardCaption,
+          imageUrl: savedData.cardImage,
+          imagePreviewUrl: savedData.cardImage
+            ? getImageFromS3Static(savedData.cardImage)
+            : '',
+          name: savedData.title,
+          type:
+            savedData.type &&
+            lessonTypeList.find((item: any) => item.value === savedData.type),
+          purposeHtml: savedData?.purpose ? savedData.purpose : '',
+          notesHtml: savedData?.notes ? savedData.notes : '',
+          objectiveHtml: savedData.objectives ? savedData.objectives[0] : '',
+          languages: savedData.language.map((it: any) =>
+            languageList.find((it2: any) => it2.value === it)
+          ),
+          studentSummary: savedData.summary,
+          institution: {
+            id: institution?.id,
+            name: institution?.name,
+            value: institution?.name,
+          },
+        });
+      }
+
+      const designers = designersList.filter((item: any) =>
+        savedData?.designers?.includes(item.id)
+      );
+      setSelectedDesigners(designers);
+      setLoading(false);
+    } catch (error) {
+      console.error(error.message);
+      console.log('Error while fetching lesson data');
+      history.push(`/dashboard/lesson-builder`);
+    }
+  };
+
+  // old query
+  // const result: any = await API.graphql(
+  //   graphqlOperation(customQueries.getLesson, {
+  //     id: lessonId,
+  //   })
+  // );
+
+  useEffect(() => {
+    if (lessonId) {
+      setLoading(true);
+      fetchUniversalLessonDetails();
+    } else {
+      setUniversalLessonDetails({
+        id: '',
+        summary: '',
+        designers: [''],
+        teachers: [''],
+        categories: [''],
+        lessonPlan: [],
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCurriculum();
+  }, [formData?.institution]);
 
   const hasUnsavedCheckpoint = (
     val: boolean,
@@ -316,9 +424,103 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   };
 
+  const fetchCurriculum = async () => {
+    try {
+      setCurriculumLoading(true);
+      const list: any = await API.graphql(
+        graphqlOperation(customQueries.listCurriculumsForLessons, {
+          filter: {
+            institutionID: {eq: formData?.institution?.id},
+          },
+        })
+      );
+      const curriculums = list.data?.listCurriculums?.items;
+      setCurriculumList(curriculums);
+      let selectedCurriculums: any = [];
+      curriculums.map((curriculum: any) => {
+        const assignedSyllabi = curriculum.universalSyllabus?.items.filter(
+          (syllabus: any) =>
+            syllabus.lessons?.items.filter((lesson: any) => lesson.lessonID === lessonId)
+              .length
+        );
+        const isCourseAdded = Boolean(assignedSyllabi.length);
+        if (isCourseAdded) {
+          selectedCurriculums.push({
+            ...curriculum,
+            assignedSyllabi,
+            // : assignedSyllabi.map((syllabus: any) => syllabus.name),
+            assignedSyllabusId: assignedSyllabi.map((syllabus: any) => syllabus.id),
+          });
+        }
+      });
+      setSelectedCurriculumList(selectedCurriculums);
+      setCurriculumLoading(false);
+    } catch (error) {
+      setCurriculumLoading(false);
+    }
+  };
+
+  const handleTabSwitch = (step: string) => {
+    const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=${step}`;
+    setServerMessage({
+      isError: false,
+      message: ''
+    })
+    if (unsavedChanges) {
+      setWarnModal({
+        show: true,
+        message: 'Do you want to save changes before going?',
+        url: redirectionUrl,
+      });
+    } else {
+      setUnsavedChanges(false)
+      history.push(redirectionUrl);
+    }
+  };
+  const updateMeasurementList = async (rubrics: string[] | null) => {
+    try {
+      setUpdating(true);
+      const newRubrics = rubrics.filter((rubric: any) => !rubric.id);
+      if (newRubrics?.length) {
+        await API.graphql(
+          graphqlOperation(mutations.batchAddLessonRubrics, {
+            lessonRubrics: newRubrics.map((rubric: any) => ({
+              lessonID: lessonId,
+              rubricID: rubric.rubricID,
+            })),
+          })
+        );
+      }
+      const rubricsToBeRemoved = rubrics.filter(
+        (rubric: any) => rubric.id && !rubric.checked
+      );
+      if (rubricsToBeRemoved?.length) {
+        await API.graphql(
+          graphqlOperation(mutations.batchDeleteLessonRubrics, {
+            lessonRubrics: rubricsToBeRemoved.map((rubric: any) => ({
+              id: rubric.id,
+            })),
+          })
+        );
+      }
+      setServerMessage({
+        isError: false,
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['MEASUREMENTADDSUCCESS'],
+      });
+      setUnsavedChanges(false);
+      setUpdating(false);
+    } catch (error) {
+      setUpdating(false);
+      setServerMessage({
+        isError: true,
+        message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATEERR'],
+      });
+    }
+  };
+
   const currentStepComp = (currentStep: string) => {
     switch (currentStep) {
-      case 'Overview':
+      case 'overview':
         return (
           <AddNewLessonForm
             lessonId={lessonId}
@@ -330,64 +532,46 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             setSelectedDesigners={setSelectedDesigners}
             postLessonCreation={postLessonCreation}
             allMeasurement={measurementList}
-            lessonMeasurements={selectedMeasurement}
-            setLessonMeasurements={setSelectedMeasurement}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
           />
         );
-      case 'Instructions':
+      case 'activities':
         return (
-          <AssessmentInstuctions
+          <LessonActivities
+            loading={loading}
             lessonId={lessonId}
-            setUnsavedChanges={setUnsavedChanges}
-            savedInstructions={savedLessonDetails?.lessonInstructions}
-            updateParentState={(obj) => onInstructionSaved(obj)}
-            lessonType={formData.type?.value}
-            lessonName={formData.name}
+            lessonName={formData?.name}
+            universalLessonDetails={universalLessonDetails}
           />
         );
-      case 'Builder':
+      case 'courses':
         return (
-          <CheckpointBuilder
-            lessonPlans={savedLessonDetails?.lessonPlans}
-            designersList={designersList}
-            lessonID={lessonId}
-            updateLessonPlan={updateLessonPlan}
-            setUnsavedChanges={setUnsavedChanges}
-            activeStep={activeStep}
-            lessonName={formData.name}
+          <LessonCourse
+            curriculumList={curriculumList}
+            fetchCurriculum={fetchCurriculum}
+            institution={formData?.institution}
+            lessonId={lessonId}
+            lessonPlans={universalLessonDetails?.lessonPlan}
             lessonType={formData.type?.value}
-            hasUnsavedCheckpoint={(
-              val: boolean,
-              isIndividualEmpty: boolean,
-              data: any,
-              data2: any,
-              selectedDesigners: any[]
-            ) =>
-              hasUnsavedCheckpoint(val, isIndividualEmpty, data, data2, selectedDesigners)
-            }
+            loading={curriculumLoading}
+            selectedCurriculums={selectedCurriculumList}
           />
         );
-      case 'Preview Details':
+      case 'learning-evidence':
         return (
-          <PreviewForm
-            lessonName={formData.name}
-            lessonID={lessonId}
-            lessonPlans={savedLessonDetails.lessonPlans || []}
-            lessonType={formData.type?.value}
+          <LearningEvidence
+            fetchLessonRubrics={fetchLessonRubrics}
+            institutionId={formData?.institution?.id}
+            lessonId={lessonId}
+            selectedMeasurements={selectedMeasurements}
+            setSelectedMeasurements={setSelectedMeasurements}
+            setUnsavedChanges={setUnsavedChanges}
+            serverMessage={serverMessage}
+            updating={updating}
+            updateMeasurementList={updateMeasurementList}
           />
         );
-      // default:
-      //   return <AddNewLessonForm
-      //     changeLessonType={changeLessonType}
-      //     formData={formData}
-      //     setFormData={setFormData}
-      //     designersList={designersList}
-      //     selectedDesigners={selectedDesigners}
-      //     setSelectedDesigners={setSelectedDesigners}
-      //     postLessonCreation={postLessonCreation}
-      //   />;
     }
   };
 
@@ -411,7 +595,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     if (unsavedChanges) {
       toggleModal();
     } else {
-      goBack();
+      history.push('/dashboard/lesson-builder');
     }
   };
 
@@ -420,43 +604,73 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     toggleModal();
   };
 
+  const saveBeforeLeave = async () => {
+    if (activeStep === 'learning-evidence') {
+      await updateMeasurementList(selectedMeasurements);
+      setServerMessage({
+        isError: false,
+        message: '',
+      });
+      discardChanges();
+    }
+  };
+
   const toggleModal = () => {
     setWarnModal({
       ...warnModal,
       show: !warnModal.show,
     });
   };
-  const fetchMeasurementList = async () => {
-    try {
-      let list: any = await API.graphql(graphqlOperation(customQueries.listRubrics));
-      list = list.data.listRubrics?.items || [];
-      const measuList = list.sort((a: any, b: any) =>
-        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-      );
-      const filteredList = measuList.map((item: any) => {
-        return {
-          id: item.id,
-          name: item.name,
-          value: item.name,
-          topic: item?.topic?.name,
-        };
-      });
-      setMeasurementList(filteredList);
-    } catch {
-      console.log('Error while fetching lesson data');
-    }
+
+  const toggleUnSaveModal = (url?: string) => {
+    setWarnModal({
+      ...warnModal,
+      message: 'Do you want to save changes before going?',
+      show: !warnModal.show,
+      url,
+    });
   };
 
-  const postLessonCreation = (lessonId: string) => {
+  const discardChanges = () => {
+    history.push(warnModal.url);
+    setWarnModal({
+      ...warnModal,
+      show: !warnModal.show,
+    });
+    setUnsavedChanges(false);
+  };
+
+  const fetchLessonRubrics = async () => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.listLessonRubricss, {
+          filter: {
+            lessonID: {eq: lessonId},
+          },
+        })
+      );
+      const rubricList = result.data?.listLessonRubricss.items.map((rubric: any) => ({
+        ...rubric,
+        checked: true,
+      }));
+      setSelectedMeasurements(rubricList);
+    } catch (error) {}
+  };
+
+  const postLessonCreation = (lessonId: string, action?: string) => {
     const currentSteps = [...lessonBuilderSteps];
     const updatedState = currentSteps.map((item) => ({...item, isDisabled: false}));
     setLessonBuilderSteps(updatedState);
     setLessonId(lessonId);
-    if (formData.type?.id === '1') {
-      setActiveStep('Preview Details');
-    } else {
-      setActiveStep('Instructions');
+    if (action === 'add') {
+      const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=activities`;
+      history.push(redirectionUrl);
     }
+    // if (formData.type?.id === '1') {
+    //   setActiveStep('Preview Details');
+    // } else {
+    //   setActiveStep('Instructions');
+    // }
   };
 
   const onInstructionSaved = (obj: InstructionInitialState) => {
@@ -480,75 +694,116 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   }, [formData.type?.id]);
 
   useEffect(() => {
-    fetchMeasurementList();
-  }, []);
+    if (step) {
+      setActiveStep(step);
+    }
+  }, [step]);
+
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['LESSONS'],
+      url: '/dashboard/lesson-builder',
+      last: false,
+    },
+    {
+      title: loading ? 'Loading...' : formData?.name,
+      url: `${match.url}`,
+      last: true,
+    },
+  ];
+
+  const steps: IStepElementInterface[] = [
+    {
+      title: 'Overview',
+      description: 'Capture core details of your lesson',
+      stepValue: 'overview',
+      icon: <IoCardSharp />,
+      isComplete: true,
+    },
+    {
+      title: 'Activities',
+      description: 'Create class and home work here',
+      stepValue: 'activities',
+      icon: <FaQuestionCircle />,
+      disabled: !Boolean(lessonId),
+      isComplete: false,
+      tooltipText: 'Add overview details in step 1 to continue',
+    },
+    {
+      title: 'Courses',
+      description: 'Assign lessons to courses',
+      stepValue: 'courses',
+      icon: <FaQuestionCircle />,
+      disabled: !(universalLessonDetails && universalLessonDetails.lessonPlan?.length),
+      isComplete: false,
+      tooltipText: 'Create lesson activities in step 2 to continue',
+    },
+    {
+      title: 'Learning Evidence',
+      description: 'Link measurements to activities',
+      stepValue: 'learning-evidence',
+      icon: <FaQuestionCircle />,
+      disabled: !(
+        Boolean(selectedMeasurements?.length) || Boolean(selectedCurriculumList.length)
+      ),
+      isComplete: false,
+      tooltipText: 'Assign your lesson to courses in step 3 to continue',
+    },
+  ];
+
   return (
     <div className="w-full h-full">
       {/* Section Header */}
       <BreadCrums
         items={breadCrumsList}
         unsavedChanges={unsavedChanges}
-        toggleModal={toggleModal}
+        toggleModal={toggleUnSaveModal}
       />
       <div className="flex justify-between">
         <SectionTitle
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go back"
             btnClass="mr-4"
             onClick={gobackToLessonsList}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body */}
       <PageWrapper>
         <div className="w-full m-auto">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
-          <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
-            <div className="sm:col-span-1">
-              <WizardScroller
-                stepsList={lessonBuilderSteps}
-                activeStep={activeStep}
-                setActiveStep={(step) => {
-                  if (individualFieldEmpty) {
-                    setWarnModal2({
-                      stepOnHold: step,
-                      show: true,
-                      message: 'Please fill all required fields to save this checkpoint',
-                    });
-                  } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
-                    setIndividualFieldEmpty(false);
-                    setWarnModal2({
-                      ...warnModal2,
-                      stepOnHold: step,
-                      show: true,
-                      message: 'You have unsaved checkpoint. Do you want to save it?',
-                    });
-                  } else {
-                    setIndividualFieldEmpty(false);
+          <StepComponent
+            steps={steps}
+            activeStep={activeStep}
+            handleTabSwitch={handleTabSwitch}
+          />
 
-                    setActiveStep(step);
-                    setHistoryList([...historyList, step]);
-                  }
-                }}
-              />
-            </div>
-            <div className="sm:col-span-4">
-              <Fragment>
-                <div className="mx-6">{currentStepComp(activeStep)}</div>
-              </Fragment>
-            </div>
+          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+            {loading ? (
+              <div className="h-100 flex justify-center items-center">
+                <div className="w-5/10">
+                  <Loader />
+                  <p className="mt-2 text-center">
+                    Fetching lesson details please wait...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="">{currentStepComp(activeStep)}</div>
+            )}
           </div>
         </div>
         {warnModal.show && (
           <ModalPopUp
-            closeAction={toggleModal}
-            saveAction={onModalSave}
+            closeAction={discardChanges}
+            saveAction={saveBeforeLeave}
             saveLabel="Yes"
             message={warnModal.message}
           />

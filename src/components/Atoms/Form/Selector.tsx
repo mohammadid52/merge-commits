@@ -3,6 +3,7 @@ import {getAsset} from '../../../assets';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaSpinner} from 'react-icons/fa';
+import {ExclamationCircleIcon} from '@heroicons/react/outline';
 
 interface SelectorProps {
   list?: {id: number; name: string | number}[];
@@ -14,6 +15,8 @@ interface SelectorProps {
   disabled?: boolean;
   loading?: boolean;
   label?: string;
+  noOptionMessage?: string;
+  error?: string;
 }
 
 const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
@@ -25,8 +28,10 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     disabled,
     arrowHidden,
     placeholder,
+    error = '',
     onChange,
     loading = false,
+    noOptionMessage = '',
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -72,10 +77,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
 
   return (
     <div className="relative" ref={currentRef}>
-      {label && 
-      <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-        {label}
-      </label>}
+      {label && (
+        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+          {label}
+        </label>
+      )}
       <span className="inline-block w-full h-full rounded-md shadow-sm">
         <button
           disabled={disabled || loading}
@@ -86,7 +92,11 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
           aria-labelledby="listbox-label"
           className={`${
             disabled || loading ? 'bg-gray-100' : ''
-          } flex relative items-center cursor-pointer relative w-full h-full rounded-md  border-0 border-gray-300 bg-white pl-3 py-2 text-left focus:outline-none transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
+          } flex focus:outline-none focus:ring-2 focus:ring-${
+            themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+          }-600 focus:border-transparent  relative items-center cursor-pointer  w-full h-full rounded-md ${
+            error.length === 0 ? 'border-gray-300' : 'border-red-300'
+          }  border-0 bg-white pl-3 py-2 text-left transition ease-in-out duration-150 sm:text-sm sm:leading-5 ${
             btnClass ? btnClass : ''
           }`}>
           <span className="block truncate text-gray-700">
@@ -122,6 +132,14 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                 <FaSpinner />
               </IconContext.Provider>
             )}
+            {error.length > 0 && (
+              <ExclamationCircleIcon
+                className={`h-5 relative mr-4 w-5 text-red-500 ${
+                  error.length === 0 ? 'hidden' : ''
+                }`}
+                aria-hidden="true"
+              />
+            )}
           </div>
         </button>
       </span>
@@ -138,8 +156,13 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
                   key={key}
                   onClick={() => updateSelectedItem(item.value, item.name, item.id)}
                   id={item.id}
+                  tabIndex={-1}
                   role="option"
-                  className={`hover:${theme.backGroundLight[themeColor]} hover:text-white flex cursor-pointer select-none relative py-2 px-4`}>
+                  className={`hover:${
+                    theme.backGroundLight[themeColor]
+                  } hover:text-white flex cursor-pointer select-none relative py-2 px-4 focus:outline-none focus:ring-2 focus:ring-${
+                    themeColor === 'iconoclastIndigo' ? 'indigo' : 'blue'
+                  }-600 focus:border-transparent`}>
                   <span
                     className={`${selectedItem === item.name ? 'display' : 'hidden'} ${
                       theme.textColor[themeColor]
@@ -164,7 +187,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
               ))
             ) : (
               <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal">No Results</span>
+                <span className="font-normal">{noOptionMessage || 'No Results'}</span>
               </li>
             )}
           </ul>

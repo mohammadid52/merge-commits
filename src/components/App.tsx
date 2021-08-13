@@ -17,5 +17,4 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-// export default withAuthenticator(App);
+// test push

@@ -1,423 +1,309 @@
-import { lessonState, LessonStateType, PagesType } from '../state/LessonState';
-// import { useStudentTimer } from '../customHooks/timer'
+import {
+  StudentPageInput,
+  UniversalLesson,
+  UniversalLessonPage,
+  UniversalLessonStudentData,
+} from '../interfaces/UniversalLessonInterfaces';
+import {lessonStateType, lessonState as initialLessonState} from '../state/LessonState';
 
 export type LessonActions =
   | {
+      type: 'TEST';
+      payload: '';
+    }
+  | {
       type: 'SET_INITIAL_STATE';
+      payload: {universalLessonID: string};
+    }
+  | {
+      type: 'SET_UPDATE_STATE';
+      payload: boolean;
+    }
+  | {
+      type: 'SET_SUBSCRIBE_FUNCTION';
+      payload: {subscribeFunc: Function};
+    }
+  | {
+      type: 'SET_SUBSCRIPTION';
+      payload: {subscription: any};
+    }
+  | {
+      type: 'SET_ROOM_SUBSCRIPTION_DATA';
       payload: {
-        syllabusLessonID: string;
-        data?: any;
-        pages: PagesType;
-        displayData?: any;
-        word_bank?: any;
-        subscribeFunc: () => any;
+        ClosedPages?: string[] | any;
+        activeLessonId?: string | null;
+        createdAt?: string;
+        currentPage?: number | null;
+        disabledPages?: string[] | any;
+        displayData?: UniversalLessonStudentData[] | null;
+        id: string;
+        studentViewing?: string | '';
+        updatedAt?: string;
       };
     }
   | {
-      type: 'UPDATE_CHECKPOINT_DATA';
-      payload: any[];
+      type: 'SET_LESSON_DATA';
+      payload: UniversalLesson;
     }
   | {
-      type: 'UPDATE_LESSON_PLAN';
+      type: 'SET_INITIAL_STUDENT_DATA';
       payload: {
-        pages: PagesType;
-        displayData?: any;
-        viewing?: string;
+        requiredInputs: [string[]];
+        studentData: UniversalLessonStudentData[];
       };
     }
   | {
-      type: 'UPDATE_STUDENT_STATUS';
-      payload: string;
+      type: 'LOAD_STUDENT_DATA';
+      payload: {
+        dataIdReferences: {
+          id: string;
+          pageIdx: number;
+          lessonPageID: string;
+          update: boolean;
+        }[];
+        filteredStudentData?: StudentPageInput[];
+      };
     }
   | {
-      type: 'SET_SAVE_FUNCTION';
-      payload: Promise<void>;
+      type: 'LOAD_STUDENT_SUBSCRIPTION_DATA';
+      payload: {
+        stDataIdx: number;
+        subData: StudentPageInput[];
+      };
+    }
+  | {
+      type: 'UPDATE_PERSON_LOCATION';
+      payload: any;
+    }
+  | {
+      type: 'UNLOAD_STUDENT_DATA';
+      payload: any;
+    }
+  | {
+      type: 'SET_UPDATE_STATUS';
+      payload: {pageIdx: number};
+    }
+  | {
+      type: 'UPDATE_STUDENT_DATA';
+      payload: {pageIdx: number; data: StudentPageInput};
+    }
+  | {
+      type: 'COMPLETE_STUDENT_UPDATE';
+      payload: any;
+    }
+  | {
+      type: 'SET_DISPLAY_DATA';
+      payload: UniversalLessonStudentData;
     }
   | {
       type: 'SET_CURRENT_PAGE';
       payload: number;
     }
   | {
-      type: 'SET_PROGRESS';
+      type: 'SET_CLOSED_PAGES';
+      payload: string[];
+    }
+  | {
+      type: 'TOGGLE_OPEN_PAGE';
       payload: number;
     }
   | {
-      type: 'SET_INITIAL_COMPONENT_STATE';
-      payload: {
-        [key: string]: any;
-      };
-    }
-  | {
-      type: 'SET_INITIAL_COMPONENT_STATE_FROM_DB';
-      payload: {
-        [key: string]: any;
-      };
-    }
-  | {
-      type: 'UPDATE_COMPONENT_STATE';
-      payload: {
-        componentName: string;
-        inputName: string;
-        content: any;
-      };
-    }
-  | {
-      type: 'CLEAR_QUESTION_DATA';
+      type: 'INCREMENT_SAVE_COUNT';
       payload: any;
     }
   | {
-      type: 'SET_QUESTION_DATA';
-      payload: {
-        data: any;
-      };
-    }
-  | {
-      type: 'SET_QUESTION_DATA_UPDATE';
-      payload: {
-        data: any;
-      };
-    }
-  | {
-      type: 'ERROR';
-      payload: string;
-    }
-  | {
-      type: 'ADD_WORD';
-      payload: string;
-    }
-  | {
-      type: 'OPEN_LESSON';
-      payload: string;
-    }
-  | {
-      type: 'ACTIVATE_LESSON';
-      payload: string;
-    }
-  | {
-      type: 'ACTIVATE_CHECKPOINT';
-      payload: string;
-    }
-  | {
-      type: 'SET_PAGE';
-      payload: number;
-    }
-  | {
-      type: 'JUMP_PAGE';
-      payload: number;
-    }
-  | {
-      type: 'SET_SUBSCRIPTION';
-      payload: {
-        subscription: any;
-      };
-    }
-  | {
-      type: 'SET_STUDENT_INFO';
-      payload: {
-        studentDataID: string;
-        studentUsername: string;
-        studentAuthID: string;
-      };
-    }
-  | {
-      type: 'SET_LESSON_PROGRESS';
-      payload: string;
-    }
-  | {
       type: 'CLEANUP';
-    }
-  | {
-      type:
-        | 'TEST'
-        | 'PAGE_FORWARD'
-        | 'PAGE_BACK'
-        | 'CAN_CONTINUE'
-        | 'NO_CONTINUE'
-        | 'FINISH'
-        | 'SAVED_CHANGES'
-        | 'SET_LOADING'
-        | 'INCREMENT_SAVE_COUNT';
+      payload: any;
     };
 
-export const lessonReducer = (state: LessonStateType, action: LessonActions) => {
+export const lessonReducer = (state: any, action: LessonActions) => {
   switch (action.type) {
     case 'TEST':
-      // console.log('done')
+      console.log('lessonReducer test...');
       break;
     case 'SET_INITIAL_STATE':
       return {
         ...state,
-        status: 'loaded',
-        syllabusLessonID: action.payload.syllabusLessonID,
-        data: action.payload.data,
-        pages: action.payload.pages,
-        word_bank: action.payload.word_bank,
-        displayData: action.payload.displayData,
+        universalLessonID: action.payload.universalLessonID,
+      };
+    case 'SET_UPDATE_STATE':
+      return {
+        ...state,
+        updated: action.payload,
+      };
+    case 'SET_SUBSCRIBE_FUNCTION':
+      return {
+        ...state,
         subscribeFunc: action.payload.subscribeFunc,
-      };
-    case 'UPDATE_CHECKPOINT_DATA':
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          lesson: { ...state.data.lesson, checkpoints: { ...state.data.lesson.checkpoints, items: action.payload } },
-        },
-      };
-    case 'SET_CURRENT_PAGE':
-      return {
-        ...state,
-        currentPage: action.payload,
-        lessonProgress: action.payload,
-        pages: state.pages.map((page: {}, key: number) => {
-          if (key <= action.payload) {
-            return {
-              ...page,
-              active: true,
-            };
-          } else {
-            return page;
-          }
-        }),
-      };
-    case 'SET_PROGRESS':
-      return {
-        ...state,
-        pages: state.pages.map((page: {}, key: number) => {
-          if (key <= action.payload) {
-            return {
-              ...page,
-              active: true,
-            };
-          } else {
-            return page;
-          }
-        }),
       };
     case 'SET_SUBSCRIPTION':
       return {
         ...state,
         subscription: action.payload.subscription,
       };
-    case 'ERROR':
-      return {
-        ...state,
-        error: action.payload,
-      };
-    case 'UPDATE_STUDENT_STATUS':
-      // console.log('status', action.payload);
-      return {
-        ...state,
-        studentStatus: action.payload,
-      };
-    case 'SET_SAVE_FUNCTION':
-      return {
-        ...state,
-        saveFunction: action.payload,
-      };
-    case 'SET_STUDENT_INFO':
-      return {
-        ...state,
-        studentDataID: action.payload.studentDataID,
-        studentUsername: action.payload.studentUsername,
-        studentAuthID: action.payload.studentAuthID,
-      };
-    case 'SET_LOADING':
-      return {
-        ...state,
-        status: 'loading',
-      };
-    case 'ADD_WORD':
-      return {
-        ...state,
-        new_words: [...state.new_words, action.payload],
-        word_bank: [...state.word_bank, action.payload],
-      };
-    case 'SET_INITIAL_COMPONENT_STATE_FROM_DB':
-      return {
-        ...state,
-        firstSave: true,
-        componentState: action.payload,
-      };
-    case 'SET_INITIAL_COMPONENT_STATE':
-      // console.log('set initial component state -->', { [action.payload.name]: action.payload.content });
-      return {
-        ...state,
-        componentState: {
-          ...state.componentState,
-          [action.payload.name]: action.payload.content,
-        },
-      };
-    case 'UPDATE_COMPONENT_STATE':
-      // console.log('update component state -->', { [action.payload.inputName]: action.payload.content });
-
-      return {
-        ...state,
-        unsavedChanges: true,
-        studentStatus: 'ACTIVE',
-        componentState: {
-          ...state.componentState,
-          [action.payload.componentName]: {
-            ...state.componentState[action.payload.componentName],
-            [action.payload.inputName]: action.payload.content,
-          },
-        },
-      };
-    case 'UPDATE_LESSON_PLAN':
-      //console.log('UPDATE_LESSON_PLAN: pages >> ', action.payload.pages)
-      return {
-        ...state,
-        status: 'loaded',
-        displayData: action.payload.displayData,
-        pages: action.payload.pages,
-        viewing: action.payload.viewing === state.studentAuthID,
-      };
-    case 'INCREMENT_SAVE_COUNT':
-      return {
-        ...state,
-        saveCount: state.saveCount + 1,
-      };
-    case 'CAN_CONTINUE':
-      return {
-        ...state,
-        canContinue: true,
-      };
-    case 'NO_CONTINUE':
-      return {
-        ...state,
-        canContinue: false,
-      };
-    case 'FINISH':
-      return {
-        ...state,
-        canContinue: false,
-      };
-    case 'SAVED_CHANGES':
-      return {
-        ...state,
-        unsavedChanges: false,
-      };
-    case 'OPEN_LESSON':
-      return {
-        ...state,
-        pages: state.pages.map((page) => {
-          if (action.payload !== page.stage) {
-            return page;
-          } else {
-            return {
-              ...page,
-              open: true,
-            };
-          }
-        }),
-      };
-    case 'CLEAR_QUESTION_DATA':
-      let clearQuestions = {};
-      return { ...state, questionData: clearQuestions };
-    case 'SET_QUESTION_DATA':
-      // let payloadKeys = Object.keys(action.payload.data);
-      // let updatedQuestionData: any = state.questionData;
-      //
-      // if (!updatedQuestionData[action.payload.key]) {
-      //   updatedQuestionData = action.payload.data;
-      //   return {
-      //     ...state,
-      //     questionData: updatedQuestionData,
-      //   };
-      // }
-      //
-      // let updatedQuestionDataObject = updatedQuestionData[action.payload.key];
-      //
-      // payloadKeys.forEach((key: string) => {
-      //   if (
-      //     action.payload.data[key] !== '' &&
-      //     action.payload.data[key] !== null &&
-      //     action.payload.data[key] !== undefined
-      //   ) {
-      //     updatedQuestionDataObject[key] = action.payload.data[key];
-      //   }
-      // });
-
-      // console.log('reducer payload -> ', action.payload.data);
-
-      return {
-        ...state,
-        studentStatus: 'ACTIVE',
-        questionData: action.payload.data,
-      };
-    case 'SET_QUESTION_DATA_UPDATE':
-      return {
-        ...state,
-        questionDataUpdate: action.payload.data,
-      };
-    case 'ACTIVATE_LESSON':
-      return {
-        ...state,
-        pages: state.pages.map((page) => {
-          if (action.payload !== page.stage) {
-            return page;
-          } else {
-            return {
-              ...page,
-              active: true,
-            };
-          }
-        }),
-      };
-    case 'ACTIVATE_CHECKPOINT':
-      return {
-        ...state,
-        pages: state.pages.map((page) => {
-          if (page.stage !== 'checkpoint') {
-            return page;
-          } else {
-            if (action.payload !== page.type) {
-              return page;
+    case 'SET_ROOM_SUBSCRIPTION_DATA':
+      const havePagesChanged = Object.keys(action.payload).includes('ClosedPages');
+      const mappedClosedPages = havePagesChanged
+        ? state.lessonData.lessonPlan.map((page: UniversalLessonPage, idx: number) => {
+            if (action.payload.ClosedPages?.includes(page.id)) {
+              return {...page, open: false};
             } else {
-              return {
-                ...page,
-                active: true,
-              };
+              return {...page, open: true};
             }
-          }
-        }),
-      };
-    case 'SET_PAGE':
+          })
+        : state.lessonData.lessonPlan;
+
       return {
         ...state,
-        currentPage: action.payload,
+        lessonData: {
+          ...state.lessonData,
+          lessonPlan: mappedClosedPages,
+        },
+        displayData: action.payload.displayData
+          ? action.payload.displayData
+          : state.displayData,
+        studentViewing:
+          action.payload.studentViewing === ''
+            ? ''
+            : action.payload.studentViewing
+            ? action.payload.studentViewing
+            : state.studentViewing,
       };
-    case 'JUMP_PAGE':
+    case 'SET_LESSON_DATA':
       return {
         ...state,
-        pages: state.pages.map((page: {}, key: number) => {
-          if (key <= action.payload) {
+        lessonData: action.payload,
+      };
+    case 'SET_INITIAL_STUDENT_DATA':
+      const requiredInputs = action.payload.requiredInputs;
+      const studentData = action.payload.studentData;
+      return {
+        ...state,
+        requiredInputs: requiredInputs,
+        studentData: studentData,
+      };
+    case 'LOAD_STUDENT_DATA':
+      return {
+        ...state,
+        loaded: true,
+        universalStudentDataID: action.payload.dataIdReferences,
+        studentData: action.payload.filteredStudentData
+          ? action.payload.filteredStudentData
+          : state.studentData,
+      };
+    case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
+      const stDataIdx = action.payload.stDataIdx;
+      const subData = action.payload.subData;
+      const newStudentData =
+        state.studentData.length > 0
+          ? state.studentData.map((inputArr: StudentPageInput[], inputArrIdx: number) => {
+              if (inputArrIdx === stDataIdx) {
+                return subData;
+              } else {
+                return inputArr;
+              }
+            })
+          : [];
+      // console.log('state.studentData [IDX] - ', state.studentData[stDataIdx]);
+      // console.log('newStudentData [IDX] - ', newStudentData[stDataIdx]);
+      if (newStudentData.length > 0) {
+        return {
+          ...state,
+          studentData: newStudentData,
+        };
+      } else {
+        return state;
+      }
+    case 'UPDATE_PERSON_LOCATION':
+      return {
+        ...state,
+        personLocationObj: action.payload,
+      };
+
+    case 'UNLOAD_STUDENT_DATA':
+      return {
+        ...state,
+        loaded: false,
+        universalStudentDataID: [],
+        studentData: [],
+      };
+    case 'UPDATE_STUDENT_DATA':
+      const pageIdx = action.payload.pageIdx;
+      const domID = action.payload.data.domID;
+      const newInput = action.payload.data.input;
+
+      const updatedStudentDataIdArray = state?.universalStudentDataID.map(
+        (dataIdObj: any, idObjIdx: number) => {
+          if (dataIdObj.pageIdx == pageIdx) {
             return {
-              ...page,
-              active: true,
+              ...dataIdObj,
+              update: true,
             };
           } else {
-            return page;
+            return dataIdObj;
           }
-        }),
-        studentStatus: 'ACTIVE',
-        lessonProgress: state.lessonProgress >= action.payload ? state.lessonProgress : action.payload,
+        }
+      );
+
+      // update single object
+      const updatedTargetStudentData =
+        state?.studentData[pageIdx].map((studentPageInput: StudentPageInput) => {
+          return {
+            domID: studentPageInput.domID,
+            input: studentPageInput.domID === domID ? newInput : studentPageInput.input,
+          };
+        }) || [];
+      // merge updated object into original array
+      const mappedStudentData = state?.studentData.map(
+        (pageData: StudentPageInput[], idx: number) => {
+          if (idx === pageIdx) {
+            return updatedTargetStudentData;
+          } else {
+            return pageData;
+          }
+        }
+      );
+
+      return {
+        ...state,
+        updated: true,
+        universalStudentDataID: [...updatedStudentDataIdArray],
+        studentData: mappedStudentData,
+      };
+    case 'COMPLETE_STUDENT_UPDATE':
+      const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
+        return {...obj, update: false};
+      });
+      return {
+        ...state,
+        universalStudentDataID: resetDataIdArray,
+        updated: false,
+      };
+    case 'SET_DISPLAY_DATA':
+      return {...state, displayData: [action.payload]};
+    case 'SET_CURRENT_PAGE':
+      return {
+        ...state,
         currentPage: action.payload,
+        lessonProgress:
+          action.payload > state.lessonProgress ? action.payload : state.lessonProgress,
       };
-    case 'PAGE_FORWARD':
-      return {
-        ...state,
-        studentStatus: 'ACTIVE',
-        lessonProgress: state.lessonProgress === state.currentPage ? state.currentPage + 1 : state.lessonProgress,
-        currentPage: state.currentPage + 1,
-      };
-    case 'PAGE_BACK':
-      return {
-        ...state,
-        studentStatus: 'ACTIVE',
-        currentPage: state.currentPage - 1,
-      };
+    case 'TOGGLE_OPEN_PAGE':
+      const mappedPages = state.lessonData.lessonPlan.map(
+        (page: UniversalLessonPage, idx: number) => {
+          if (idx !== action.payload) {
+            return page;
+          } else {
+            return {...page, open: page.open === false ? true : false};
+          }
+        }
+      );
+      return {...state, lessonData: {...state.lessonData, lessonPlan: mappedPages}};
+    case 'INCREMENT_SAVE_COUNT':
+      return {...state, saveCount: state.saveCount + 1};
     case 'CLEANUP':
-      return lessonState;
+      console.log('cleanup...');
+      return initialLessonState;
     default:
       return state;
   }

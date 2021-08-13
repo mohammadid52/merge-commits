@@ -1,13 +1,26 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
+import {FaBook} from 'react-icons/fa';
+import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
-import Tooltip from '../../Atoms/Tooltip';
 import {getAsset} from '../../../assets';
 
+import Buttons from '../../Atoms/Buttons';
+// import ProgressBar from './ProgressBar';
+
 const SyllabusSwitch = (props: DashboardProps) => {
-  const {activeRoom, currentPage, syllabusLoading, handleSyllabusActivation} = props;
+  const {
+    classRoomActiveSyllabus,
+    curriculumName,
+    activeRoom,
+    currentPage,
+    syllabusLoading,
+    handleSyllabusActivation,
+    institutionId
+  } = props;
+    const history = useHistory();
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -15,51 +28,74 @@ const SyllabusSwitch = (props: DashboardProps) => {
   const getBG = (theme = 'indigo') => {
     return `text-${theme}-500 hover:bg-${theme}-400`;
   };
+
   return (
     <>
-      {syllabusLoading ? (
-        <div
-          className={`shadow text-center bg-white rounded-lg p-6 ${theme.elem.textDark}`}>
-          Loading units...
+      {syllabusLoading && !(state.roomData?.syllabus?.length > 0) ? (
+        <div className="relative shadow rounded-lg flex mb-8">
+          <div className="animate-pulse space-y-8 flex flex-col">
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
+              <div className={'h-12 bg-gray-400 rounded-lg'} />
+              <div className={'h-12 bg-gray-400 rounded-lg'} />
+            </div>
+          </div>
         </div>
-      ) : null}
-
-      <div className={`grid grid-cols-3 md:grid-cols-2 gap-2`}>
-        {!syllabusLoading && state.roomData?.syllabus?.length > 0
-          ? state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
-              return (
-                <div
-                  key={`testSyllabus_${i}`}
-                  id={`testSyllabus_${i}`}
-                  className={`flex relative flex-col bg-white rounded-lg shadow py-4 pb-10 justify-center items-center`}>
-                  <div className={``}>
-                    <p className={`text-sm text-semibold text-darker-gray text-center`}>
-                      Unit Name:
-                    </p>
-                    <p className={`text-base py-4 my-2 text-darker-gray text-center`}>
+      ) : state.roomData?.syllabus?.length > 0 ? (
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-2`}>
+          {state.roomData.syllabus.map((syllabus: Syllabus, i: number) => {
+            // const progressPercentage = completedLessons;
+            return (
+              <div
+                key={`testSyllabus_${i}`}
+                id={`testSyllabus_${i}`}
+                className={`flex relative flex-col ${
+                  classRoomActiveSyllabus === syllabus.id ? 'bg-white' : 'bg-gray-400'
+                } rounded-lg shadow justify-center items-center`}>
+                <div className={`flex justify-between p-2`}>
+                  <div className="flex items-center">
+                    <span className="w-auto">
+                      <FaBook className="w-6 h-6" />
+                    </span>
+                    <span className={`text-sm 2xl:text-base text-darker-gray pl-2`}>
                       {syllabus.name}
-                    </p>
+                    </span>
                   </div>
 
-                  {!syllabus.active ? (
+                  {classRoomActiveSyllabus !== syllabus.id ? (
                     <div
-                      className={`${getBG(
-                        themeColor === 'iconoclast' ? 'indigo' : 'blue'
-                      )} text-center rounded-b-lg absolute bottom-0 left-0 right-0 cursor-pointer text-base  hover:text-white transition-all font-semibold w-auto py-2 duration-150`}
+                      className={`${theme.btn.iconoclastIndigo} text-center rounded-lg cursor-pointer text-sm 2xl:text-base hover:text-white transition-all w-24 py-1 duration-150`}
                       onClick={() => handleSyllabusActivation(syllabus.id)}>
-                      Activate
+                      Select
                     </div>
                   ) : (
                     <div
-                      className={`w-full absolute rounded-b-lg bottom-0 left-0 right-0 py-2 flex justify-center  items-center text-base bg-green-400 text-white  font-semibold`}>
+                      className={`w-24 rounded-lg py-1 flex justify-center  items-center text-base bg-green-400 text-white font-semibold`}>
                       Active
                     </div>
                   )}
                 </div>
-              );
-            })
-          : null}
-      </div>
+                {/* <ProgressBar progressPercentage={60} /> */}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div>
+          No units or lessons have been created for {curriculumName}. Please complete
+          curriculum set up to continue.
+          <div className="flex justify-center">
+            <Buttons
+              label="Go to Curriculum"
+              btnClass="mr-4 mt-4"
+              onClick={() =>
+                history.push(
+                  `/dashboard/manage-institutions/institution?id=${institutionId}&tab=2`
+                )
+              }
+            />
+          </div>
+        </div>
+      )}
 
       {activeRoom === '' ? (
         <div className={`py-4 px-6 bg-white rounded-lg shadow`}>

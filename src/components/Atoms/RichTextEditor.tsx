@@ -4,25 +4,50 @@ import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import {EditorState, convertToRaw, ContentState} from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import {useULBContext} from '../../contexts/UniversalLessonBuilderContext';
+import useInLessonCheck from '../../customHooks/checkIfInLesson';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
   initialValue: string;
+  theme?: 'iconoclastIndigo' | 'curate';
   fullWHOverride?: boolean;
+  rounded?: boolean;
+  dark?: boolean;
+  mediumDark?: boolean;
+  customStyle?: boolean;
+  features?: string[];
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
-  const {onChange, initialValue, fullWHOverride} = props;
+  const {
+    onChange,
+    initialValue,
+    fullWHOverride,
+    dark = false,
+    mediumDark = false,
+    customStyle = false,
+    rounded = false,
+    features = [],
+    theme,
+  } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
 
+  const ulbContext = useULBContext();
+  const previewMode = ulbContext?.previewMode ? ulbContext.previewMode : undefined;
+
   const options: string[] = [
     'inline',
-    'list',
-    'textAlign',
     'blockType',
     'fontSize',
     'fontFamily',
+    'list',
+    'textAlign',
+    'colorPicker',
+    'link',
+    'emoji',
+    'remove',
     'history',
   ];
   const onEditorStateChange = (editorState: any) => {
@@ -48,19 +73,41 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     setEditorState(editorState);
   }, []);
 
+  const toolbarClassName = `${
+    customStyle
+      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} toolbarClassName ${
+          previewMode ? 'previewMode' : ''
+        } text-black`
+      : 'toolbarClassName'
+  }`;
+  const wrapperClassName = `${
+    customStyle
+      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} wrapperClassName ${
+          previewMode ? 'previewMode' : ''
+        }  ${fullWHOverride ? 'flex flex-col' : ''}`
+      : 'wrapperClassName'
+  }`;
+  const editorClassName = `${
+    customStyle
+      ? `${dark ? 'dark' : ''} editorClassName ${previewMode ? 'previewMode' : ''}  ${
+          fullWHOverride ? 'flex-1' : ''
+        }`
+      : 'editorClassName'
+  }`;
+
   return (
     <Editor
       editorState={editorState}
-      toolbarClassName="toolbarClassName"
-      wrapperClassName={`wrapperClassName ${fullWHOverride ? 'flex flex-col' : ''}`}
-      editorClassName={`editorClassName ${fullWHOverride ? 'flex-1' : ''}`}
+      toolbarClassName={toolbarClassName}
+      wrapperClassName={wrapperClassName}
+      editorClassName={editorClassName}
       onEditorStateChange={onEditorStateChange}
       toolbar={{
-        options: options,
+        options: features.length > 0 ? features : options,
         inline: {
           inDropdown: false,
-          options: ['bold', 'italic', 'underline'],
-          className: 'toolItemClassName',
+          options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
+          className: `${dark ? 'dark' : ''} toolItemClassName`,
         },
         list: {inDropdown: true, className: 'dropdownClassName'},
         textAlign: {inDropdown: true, className: 'dropdownClassName'},
@@ -84,7 +131,10 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           className: 'plainText dropdownClassName',
         },
         colorPicker: {
-          className: 'toolItemClassName',
+          className: ` ${
+            customStyle ? `${dark ? 'dark' : ''} text-black` : ''
+          }  toolItemClassName ${theme}`,
+          colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff'],
         },
       }}
     />

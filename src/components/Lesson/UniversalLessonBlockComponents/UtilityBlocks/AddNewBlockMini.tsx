@@ -1,36 +1,37 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
-
+import useDictionary from '../../../../customHooks/dictionary';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {PlusSmIcon} from '@heroicons/react/outline';
 export const AddNewBlockMini = (props: RowWrapperProps) => {
-  const {mode, hasContent, contentID, idx, hoveredID, handleModalPopToggle} = props;
+  const {idx, handleModalPopToggle} = props;
   const {setNewBlockSeqId} = useULBContext();
+  const {userLanguage, clientKey} = useContext(GlobalContext);
+  const {LessonBuilderDict} = useDictionary(clientKey);
 
   return (
-    <div
-      className={`
-      group
-      w-full
-      flex flex-col justify-center items-center
-      z-50`}>
-      <button
-        onClick={() => {
-          handleModalPopToggle('ADD_CONTENT');
-          setNewBlockSeqId(idx);
-        }}
-        className={`
-        w-auto 
-        p-2
-        cursor-pointer 
-        text-xs text-center text-gray-600 group-hover:text-gray-200
-        bg-gray-600 bg-opacity-20 
-        group-hover:bg-opacity-95 
-        rounded-full z-50`}>
-        Add New Block
-      </button>
-      <div
-        className={`absolute border-b-0 border-dashed border-blue-400 border-opacity-20 group-hover:border-opacity-80`}
-      />
+    <div className="relative">
+      <div className="absolute inset-0 flex items-center" aria-hidden="true">
+        <div
+          className={`w-full border-t-0  border-opacity-30 dark:border-gray-300 border-gray-700`}
+        />
+      </div>
+      <div className="relative flex justify-center">
+        <button
+          onClick={() => {
+            handleModalPopToggle('ADD_CONTENT');
+            setNewBlockSeqId(idx);
+          }}
+          type="button"
+          className={`transition-all duration-200  inline-flex w-auto items-center shadow-sm px-4 py-1.5 border border-gray-700 dark:border-gray-300  text-sm leading-5 font-medium rounded-full text-gray-600 dark:text-white dark:bg-gray-700 bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+          <PlusSmIcon
+            className={`-ml-1.5 mr-1 h-5 w-5 text-gray-600 dark:text-gray-400`}
+            aria-hidden="true"
+          />
+          <span>{LessonBuilderDict[userLanguage]['BUTTON']['ADD_ROW']}</span>
+        </button>
+      </div>
     </div>
   );
 };

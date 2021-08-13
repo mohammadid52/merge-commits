@@ -1,7 +1,4 @@
 import React, {useContext} from 'react';
-import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {AiOutlineClockCircle, AiOutlineUser} from 'react-icons/ai';
-import Start from '../Start';
 
 import {LessonCardProps} from '../Classroom';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
@@ -24,18 +21,15 @@ const StandardLessonCard = (props: LessonCardProps) => {
   return (
     <div
       key={keyProps}
-      className={`relative bg-white shadow rounded-lg flex mb-8 ${theme.elem.textDark} `}>
+      className={`relative bg-white shadow rounded-lg flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
       {/**
        *  LEFT SECTION IMAGE
        */}
-      {lessonType !== 'survey' && <SideImage lessonProps={lessonProps} />}
+      <SideImage lessonProps={lessonProps} />
       {/**
        *  RIGHT SECTION
        */}
-      <div
-        className={`${
-          lessonType !== 'survey' ? 'w-7.5/10' : 'w-full'
-        } flex flex-col rounded-b`}>
+      <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
         <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
         <BottomBar

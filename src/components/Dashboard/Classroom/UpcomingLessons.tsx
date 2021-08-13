@@ -12,13 +12,13 @@ const UpcomingLessons: React.FC<LessonProps> = (props: LessonProps) => {
 
   return (
     <div className={`relative flex flex-wrap justify-start`}>
-      {lessons.length === 0 && (
+      {lessons?.length === 0 && (
         <div className={`flex justify-center items-center w-full h-48`}>
           <p className="text-center text-lg text-gray-500">No Upcoming Lessons...</p>
         </div>
       )}
 
-      {lessons && lessons.length > 0
+      {lessons && lessons?.length > 0
         ? lessons.map((lesson: any, i: number) => (
             <div
               key={`upcoming-${i}_parent`}

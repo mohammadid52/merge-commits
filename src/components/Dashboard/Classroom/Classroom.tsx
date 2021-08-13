@@ -13,7 +13,10 @@ import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
+import BreadCrums from '../../Atoms/BreadCrums';
 import DashboardContainer from '../DashboardContainer';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../../graphql/mutations';
 
 interface Artist {
   id: string;
@@ -57,7 +60,13 @@ export interface Lesson {
     language?: string;
     summary?: string;
     purpose?: string;
+    duration?: number | null;
+    cardImage?: string | null;
+    cardCaption?: string;
+    totalEstTime?: number;
   };
+  session?: number;
+  sessionHeading?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -78,47 +87,43 @@ export interface LessonCardProps {
   roomID?: string;
 }
 
+const range = (from: number, to: number, step: number = 1) => {
+  let i = from;
+  const range = [];
+
+  while (i <= to) {
+    range.push(i);
+    i += step;
+  }
+
+  return range;
+};
+
 const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const {
+    classRoomActiveSyllabus,
     isTeacher,
     currentPage,
     activeRoomInfo,
+    setActiveRoomInfo,
     activeRoomName,
-    visibleLessonGroup,
-    setVisibleLessonGroup,
-    handleSyllabusActivation,
     lessonLoading,
     syllabusLoading,
     handleRoomSelection,
   } = props;
+  // ##################################################################### //
+  // ############################ BASIC STATE ############################ //
+  // ##################################################################### //
   const {state, theme, dispatch, clientKey, userLanguage} = useContext(GlobalContext);
-  const themeColor = getAsset(clientKey, 'themeClassName');
-
   const showClassDetails: boolean = !isEmpty(activeRoomInfo);
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
+  const themeColor = getAsset(clientKey, 'themeClassName');
+  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
 
-  const {classRoomDict} = useDictionary(clientKey);
-  const [survey] = useState<any>({
-    display: false,
-    data: null,
-  });
-
-  const [lessonGroupCount, setLessonGroupCount] = useState<{
-    today: number;
-    upcoming: number;
-    completed: number;
-  }>({
-    today: 0,
-    upcoming: 0,
-    completed: 0,
-  });
-
-  // useEffect(() => {
-  //   throw new Error('Test error');
-  // }, []);
-
-  //  INITIALIZE CURRENT PAGE LOCATION
+  // ##################################################################### //
+  // #################### ROOM SWITCHING (DEPRECATED) #################### //
+  // ##################################################################### //
   useEffect(() => {
     if (state.user.role === 'ST') {
       dispatch({type: 'UPDATE_CURRENTPAGE', payload: {data: 'classroom'}});
@@ -139,83 +144,86 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   }, [roomId, state.roomData.rooms]);
 
+  // ##################################################################### //
+  // ########################## TAB LESSON COUNT ######################### //
+  // ##################################################################### //
+  const [lessonGroupCount, setLessonGroupCount] = useState<{
+    open: number;
+    completed: number;
+  }>({
+    open: 0,
+    completed: 0,
+  });
+
+  // ##################################################################### //
+  // ########################## LESSON GROUPING ########################## //
+  // ##################################################################### //
   /**
-   * ASSESSMENTS & SURVEYS
-   *  Array which filters out only surveys/assessments
+   * Open Lessons
    */
-  const assessmentsSurveys =
-    state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson) => {
-          if (
-            lesson?.lesson?.type.includes('survey') ||
-            lesson?.lesson?.type.includes('assessment')
-          ) {
-            return lesson;
-          }
-        })
+  const openLessons =
+    state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
+      ? state.roomData.lessons.filter(
+          (lesson: Lesson) =>
+            activeRoomInfo?.completedLessons.findIndex(
+              (item: {lessonID?: string | null; time?: string | null}) =>
+                item.lessonID === lesson.lessonID
+            ) < 0
+        )
       : [];
 
-  /**
-   * Today's Lessons -
-   *  This array is a filter of lessons which are open & not completed
-   *  (If there were enough lessons, this array should
-   *  actually be a filter of lessons from today)
-   */
-  const todayLessons =
-    state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson) => {
-          if (lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
-            if (lesson?.status === 'Active' && lesson?.lesson.type !== 'survey') {
-              if (!lesson.complete) {
-                return lesson;
-              }
-            }
-          }
-        })
-      : [];
-
-  /**
-   * Upcoming Lessons -
-   *  This array is a filter of lessons which are closed, but not completed
-   */
-  const upcomingLessons =
-    state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson) => {
-          if (lesson.hasOwnProperty('lesson') && lesson.lesson !== null) {
-            if (lesson.status === 'Inactive' && lesson.lesson?.type !== 'survey') {
-              if (!lesson.complete) {
-                return lesson;
-              }
-            }
-          }
-        })
-      : [];
-
-  const todayAndUpcomingLessons = [...todayLessons, ...upcomingLessons];
-
-  // if there are top widgets
-  const thereAreTopWidgets: boolean = state.roomData.widgets.some(
-    (widget: any) => widget.placement === 'topbar'
-  );
   /**
    * Completed Lessons -
    *  This array is a filter of lessons which are completed, closed or open
    */
   const completedLessons =
-    state.roomData.lessons.length > 0
-      ? state.roomData.lessons.filter((lesson: Lesson) => {
-          if (lesson.complete) {
-            return lesson;
-          }
-        })
+    state.roomData.lessons?.length && activeRoomInfo?.completedLessons?.length
+      ? state.roomData.lessons.filter(
+          (lesson: Lesson) =>
+            activeRoomInfo?.completedLessons.findIndex(
+              (item: {lessonID?: string | null; time?: string | null}) =>
+                item.lessonID === lesson.lessonID
+            ) > -1
+        )
       : [];
 
+  // reconstructing lesson data after adding some calculated fields
+  let count: number = 0;
+  let lessonData = state.roomData.lessons;
+  lessonData?.map((item: any) => {
+    let temp = Math.ceil(count + item.lesson.duration);
+    item.sessionHeading = `Session ${
+      item.lesson.duration > 1
+        ? range(Math.ceil(count) + 1, temp)
+            .join(', ')
+            .replace(/, ([^,]*)$/, ' & $1')
+        : temp
+    }`;
+    count += item.lesson.duration;
+    item.session = Math.ceil(count);
+    item.lesson = {
+      ...item.lesson,
+      totalEstTime:
+        Math.ceil(
+          item.lesson.lessonPlan.reduce(
+            (total: number, obj: any) => Number(obj.estTime) + total,
+            0
+          ) / 5
+        ) * 5,
+    };
+    return item;
+  });
+
   useEffect(() => {
-    if (state.roomData.lessons.length > 0) {
+    if (state.roomData.lessons?.length > 0) {
       setLessonGroupCount({
-        today: todayLessons.length,
-        upcoming: upcomingLessons.length,
+        open: openLessons.length,
         completed: completedLessons.length,
+      });
+    } else {
+      setLessonGroupCount({
+        open: 0,
+        completed: 0,
       });
     }
   }, [state.roomData.lessons]);
@@ -231,6 +239,9 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     });
   };
 
+  // ##################################################################### //
+  // ########################### ADDITIONAL UI ########################### //
+  // ##################################################################### //
   const Counter: React.FC<{count: number}> = ({count}) => {
     return (
       <div
@@ -243,7 +254,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const tabs = [
     {
       index: 0,
-      icon: <Counter count={lessonGroupCount.today} />,
+      icon: <Counter count={lessonGroupCount.open} />,
       title: !isTeacher
         ? classRoomDict[userLanguage]['LESSON_TABS']['TAB_ONE']
         : classRoomDict[userLanguage]['LESSON_TABS']['TAB_TWO'],
@@ -256,7 +267,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               activeRoomInfo={activeRoomInfo}
               isTeacher={isTeacher}
               lessonLoading={lessonLoading}
-              lessons={!isTeacher ? todayLessons : todayAndUpcomingLessons}
+              lessons={openLessons}
             />
           </div>
         </div>
@@ -264,50 +275,56 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     },
     {
       index: 1,
-      icon: <Counter count={lessonGroupCount.upcoming} />,
-      title: 'Upcoming',
-      active: false,
-      content: (
-        <div className={`bg-opacity-10`}>
-          <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <UpcomingLessons activeRoomInfo={activeRoomInfo} lessons={upcomingLessons} />
-          </div>
-        </div>
-      ),
-    },
-    {
-      index: 2,
       icon: <Counter count={lessonGroupCount.completed} />,
       title: 'Completed',
       active: false,
       content: (
         <div className={`bg-opacity-10`}>
           <div className={`${theme.section} p-4 text-xl m-auto`}>
-            <CompletedLessons
-              isTeacher={isTeacher}
-              lessons={sortedLessons(completedLessons, 'expectedEndDate')}
-            />
+            {/*<CompletedLessons isTeacher={isTeacher} lessons={completedLessons} />*/}
           </div>
         </div>
       ),
     },
   ];
 
-  const tabsForTeacher = tabs
-    .filter((tab) => tab.index !== 1)
-    .map((tab) => {
-      if (tab.index === 2) {
-        const modifiedTab = {
-          ...tab,
-          index: tab.index - 1,
-        };
-        return modifiedTab;
-      } else {
-        return {
-          ...tab,
-        };
-      }
-    });
+  // ##################################################################### //
+  // ###################### TEACHER SYLLABUS CONTROL ##################### //
+  // ##################################################################### //
+  const handleSyllabusActivation = async (syllabusID: string) => {
+    const input = {
+      id: activeRoomInfo.id,
+      institutionID: activeRoomInfo.institutionID,
+      classID: activeRoomInfo.classID,
+      teacherAuthID: activeRoomInfo.teacherAuthID,
+      teacherEmail: activeRoomInfo.teacherEmail,
+      name: activeRoomInfo.name,
+      maxPersons: activeRoomInfo.maxPersons,
+      activeSyllabus: syllabusID,
+    };
+
+    try {
+      const updateRoomMutation: any = API.graphql(
+        graphqlOperation(mutations.updateRoom, {
+          input,
+        })
+      );
+      await updateRoomMutation;
+    } catch (e) {
+      console.error('handleSyllabusActivation: ', e);
+    } finally {
+      setActiveRoomInfo({...activeRoomInfo, activeSyllabus: syllabusID});
+    }
+  };
+
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
+      url: `/dashboard/classroom/${roomId}`,
+      last: true,
+    },
+  ];
 
   return (
     <>
@@ -315,9 +332,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         bannerImg={bannerImg}
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
-        <div className="mx-auto max-w-256">
+        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+            <BreadCrums items={breadCrumsList} />
+            {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
               <span>
                 {!isTeacher
                   ? activeRoomName !== ''
@@ -326,78 +344,85 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   : null}
                 {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
               </span>
-            </div>
+            </div> */}
             <div>
-              <span className={`mr-0 float-right text-gray-600 text-right`}>
+              <span
+                className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
                 <DateAndTime />
               </span>
             </div>
           </div>
           <div>
-            {/* {thereAreTopWidgets && (
-              <div className={`bg-opacity-10`}>
-                <div className={`pb-4 m-auto`}>
-                  <TopWidgetBar />
-                </div>
-              </div>
-            )} */}
-            {isTeacher && state.currentPage === 'lesson-planner' && (
+            {/*{isTeacher && state.currentPage === 'lesson-planner' && (*/}
+            {isTeacher && (
               <>
                 <SectionTitleV3
+                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
-                  title={classRoomDict[userLanguage]['UNIT_TITLE']}
+                  title={`${
+                    Boolean(state.roomData?.syllabus?.length)
+                      ? `${classRoomDict[userLanguage]['STEP']} 1:`
+                      : ''
+                  } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
+                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''
+                  }`}
+                  subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
-                  <div className={`pb-4 m-auto`}>
+                  <div className={`pb-4 m-auto px-0`}>
                     <SyllabusSwitch
                       activeRoom={state.activeRoom}
+                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      completedLessons={activeRoomInfo?.completedLessons}
                       currentPage={currentPage}
-                      syllabusLoading={syllabusLoading}
+                      curriculumName={state.roomData?.curriculum?.name}
                       handleSyllabusActivation={handleSyllabusActivation}
+                      institutionId={activeRoomInfo?.institutionID}
+                      syllabusLoading={syllabusLoading}
                     />
                   </div>
                 </div>
               </>
             )}
-            {state.roomData.lessons.length > 0 && assessmentsSurveys.length > 0 ? (
+
+            {Boolean(state.roomData?.syllabus?.length) && (
               <>
                 <SectionTitleV3
+                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
-                  title={classRoomDict[userLanguage]['ASSESSMENT_TITLE']}
+                  title={`${
+                    isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''
+                  } ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${
+                    state.roomData?.activeSyllabus?.name
+                  }`}
+                  subtitle={
+                    isTeacher
+                      ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                      : 'To enter classroom, select open lesson for this week'
+                  }
                 />
+
                 <div className={`bg-opacity-10`}>
-                  <div className={`text-xl m-auto`}>
-                    <SurveyCard
-                      roomID={roomId}
+                  <div className={`pb-4 text-xl m-auto`}>
+                    <Today
+                      activeRoom={state.activeRoom}
+                      activeRoomInfo={activeRoomInfo}
                       isTeacher={isTeacher}
-                      link={'/lesson/on-boarding-survey-1'}
-                      lessons={assessmentsSurveys}
-                      lessonType={`survey`}
-                      accessible={survey.display}
+                      lessonLoading={lessonLoading}
+                      lessons={lessonData}
                     />
                   </div>
                 </div>
               </>
-            ) : null}
-
-            {!isTeacher &&
-            state.roomData.lessons.length > 0 &&
-            assessmentsSurveys.length > 0 ? (
-              <SectionTitleV3
-                fontSize="2xl"
-                fontStyle="bold"
-                title={classRoomDict[userLanguage]['LIST_LESSON']}
-              />
-            ) : null}
-
-            {showClassDetails && (
+            )}
+            {/* {showClassDetails && (
               <div
                 className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-                <UnderlinedTabs tabs={!isTeacher ? tabs : tabsForTeacher} />
+                <UnderlinedTabs activeTab={0} tabs={tabs} />
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </DashboardContainer>

@@ -76,7 +76,7 @@ const QuoteBlock = (props: QuoteBlockProps) => {
           } 
           h-full w-full flex flex-col justify-start  p-4 transition-all duration-500 ease-in-out overflow-hidden rounded-lg`}>
           <p className="w-full leading-7 font-semibold">{title}</p>
-          <div className="text-xl header-font  font-light">"{description}"</div>
+          <div className="text-xl header-font  font-light">"{subtitle}"</div>
         </div>
 
         {/* STANDARD HERO TEXT */}
@@ -84,9 +84,9 @@ const QuoteBlock = (props: QuoteBlockProps) => {
           className={`
           ${heroIsActive ? 'opacity-0' : 'opacity-100'} 
           absolute bottom-0 opacity-100 h-full flex flex-col justify-end transition-all duration-500 ease-in-out`}>
-          <div className="absolute bottom-0 left-0 p-2 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg">
+          <div className="absolute bottom-0 left-0 p-4 h-auto mb-0 flex flex-col bg-gradient-to-r from-black20 rounded-b-lg">
             <div className="text-xl header-font  font-light">{title}</div>
-            <div className="w-full text-4.5xl leading-none font-light">{subtitle}</div>
+            <div className="w-full text-4.5xl leading-none font-light">{description}</div>
           </div>
         </div>
       </div>

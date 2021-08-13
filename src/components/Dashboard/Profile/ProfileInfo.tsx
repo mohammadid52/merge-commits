@@ -71,12 +71,12 @@ const ProfileInfo = (props: UserInfoProps) => {
       <div className="w-full md:px-4 pt-4">
         <div className="bg-white shadow-5 overflow-hidden sm:rounded-lg mb-4">
           <div className="border-b-0 border-gray-200 sm:px-6">
-            <h3 className="px-0 pr-0 py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
+            <h3 className="px-0 pr-0 pl-2 py-2 md:pl-0 md:py-5 text-lg leading-6 font-medium text-gray-900 uppercase">
               {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['TITLE']}{' '}
             </h3>
           </div>
           <div className="px-4 py-5 sm:px-6">
-            <dl className="grid grid-cols-1 grid-rows-2 gap-x-2 gap-y-4 sm:grid-cols-3">
+            <dl className="grid grid-cols-2 grid-rows-2 gap-x-1 sm:gap-x-2 gap-y-4 sm:grid-cols-3">
               <div className="sm:col-span-1 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['FIRST_NAME']}
@@ -111,7 +111,7 @@ const ProfileInfo = (props: UserInfoProps) => {
                 </dt>
                 <dd className="mt-1 text-sm leading-5 text-gray-900">{language()}</dd>
               </div>
-              <div className="sm:col-span-2 p-2">
+              <div className="col-span-2 p-2">
                 <dt className="text-sm leading-5 font-medium text-gray-500">
                   {dashboardProfileDict[userLanguage]['PERSONAL_INFO']['EMAIL']}
                 </dt>

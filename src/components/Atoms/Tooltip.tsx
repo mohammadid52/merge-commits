@@ -1,16 +1,29 @@
 import React from 'react';
 interface TooltipProps {
   text: string;
+  id?: string;
   children: any;
   show?: boolean;
   placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
+  additionalClass?: string;
 }
-
-const Tooltip = ({text, show = true, placement = 'right', children}: TooltipProps) => {
+/**  
+ @text the main text content
+ @show to show/hide tooltip. default true
+**/
+const Tooltip = ({
+  text,
+  id,
+  show = true,
+  placement = 'right',
+  children,
+  additionalClass = '',
+}: TooltipProps) => {
   if (show) {
     return (
       <div
-        className="font-medium w-auto absolute"
+        id={id}
+        className={`font-medium w-auto absolute ${additionalClass}`}
         data-tooltip={text}
         data-tooltip-location={placement}>
         {children}
