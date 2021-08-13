@@ -451,17 +451,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 <div className="grid grid-cols-2">
                   <div className="px-3 py-4">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                      {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
-                    </label>
-                    <MultipleSelector
-                      selectedItems={selectedDesigners}
-                      placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
-                      list={designersList}
-                      onChange={selectDesigner}
-                    />
-                  </div>
-                  <div className="px-3 py-4">
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                       {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
                       <span className="text-red-500"> * </span>
                     </label>
@@ -477,6 +466,17 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                     {validation.institution && (
                       <p className="text-red-600 text-sm">{validation.institution}</p>
                     )}
+                  </div>
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
+                    </label>
+                    <MultipleSelector
+                      selectedItems={selectedDesigners}
+                      placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
+                      list={designersList}
+                      onChange={selectDesigner}
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">

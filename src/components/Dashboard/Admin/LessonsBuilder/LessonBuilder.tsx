@@ -806,6 +806,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             saveAction={saveBeforeLeave}
             saveLabel="Yes"
             message={warnModal.message}
+            loading={updating}
           />
         )}
         {warnModal2.show && (

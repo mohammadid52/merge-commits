@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {useHistory, useLocation, useParams} from 'react-router';
 import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import {FaTrash} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import find from 'lodash/find';
 
 import BreadCrums from '../../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../../Atoms/SectionTitle';
@@ -28,9 +28,9 @@ import {getAsset} from '../../../../../../../assets';
 import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-import findIndex from 'lodash/findIndex';
 import {fetchDesigners} from '../../../../../../../utilities/utils';
-import {FaTrash} from 'react-icons/fa';
+import { DeleteActionBtn } from '../../../../../../Atoms/DeleteActionBtn';
+
 interface EditSyllabusProps {}
 interface InitialData {
   name: string;
@@ -227,7 +227,13 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             lesson.measurements = result.data?.listLessonRubricss.items;
           })
         );
-        setSavedLessonsList([...savedData.lessons?.items]);
+        const sortedLessonsList = [...savedData.lessons?.items]
+          .map((t: any) => {
+            let index = savedData.universalLessonsSeq.indexOf(t.id);
+            return {...t, index};
+          })
+          .sort((a: any, b: any) => (a.index > b.index ? 1 : -1));
+        setSavedLessonsList(sortedLessonsList);
         setFetchingDetails(false);
       } catch (err) {
         console.log('err', err);
@@ -884,7 +890,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                         <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>{EditSyllabusDict[userLanguage]['measurement']}</span>
                         </div>
-                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                        <div className="w-1/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                           <span>{EditSyllabusDict[userLanguage]['action']}</span>
                         </div>
                       </div>
@@ -926,8 +932,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                                 ? item?.measurements?.map(
                                                     (rubric: any, index: number) =>
                                                       index ===
-                                                      item?.measurements?.length -
-                                                        1
+                                                      item?.measurements?.length - 1
                                                         ? rubric?.rubric?.name + '.'
                                                         : rubric?.rubric?.name + ', '
                                                   )
@@ -960,9 +965,11 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                                             </div>
                                              */}
                                             <span
-                                              className={`w-1/10 flex items-center text-left px-8 py-3 cursor-pointer`}
+                                              className={`w-1/10 flex items-center justify-center text-left px-8 py-3 cursor-pointer`}
                                               onClick={() => onDelete(item)}>
-                                              <FaTrash />
+                                              <DeleteActionBtn
+                                                handleClick={() => onDelete(item)}
+                                              />
                                             </span>
                                           </div>
                                         </div>
