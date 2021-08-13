@@ -70,9 +70,9 @@ const WritingBlock = (props: WritingBlockProps) => {
 
   const onAddClick = () => {
     const modifiedHTML = `${selectedLS.text}`;
-    const conc = fields.poemText.concat(modifiedHTML);
+    const conc = fields.poemText.concat(selectedLS.text);
 
-    setFields({poemText: conc, poemHtml: `<p>${conc}</p>`});
+    setFields({...fields, poemText: conc});
     // handleUpdateStudentData(id, [modifiedHTML]);
   };
 

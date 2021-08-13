@@ -22,30 +22,26 @@ const EditingBlock = (props: EditingBlockProps) => {
     handleUpdateStudentData,
   } = props;
 
-  const onEditorStateChange = (
-    html: string,
-    text: string,
-    fieldHtml: string,
-    field: string
-  ) => {};
-  const sampleMarkup =
-    '<b>Bold text</b>, <i>Italic text</i><br/ ><br />' +
-    '<a href="http://www.facebook.com">Example link</a>';
-  // handleUpdateStudentData(id, [html]);
-  const blocksFromHTML = convertFromHTML(sampleMarkup);
-  const state = ContentState.createFromBlockArray(
-    blocksFromHTML.contentBlocks,
-    blocksFromHTML.entityMap
-  );
-  console.log();
   return (
     <div className="w-full flex flex-col">
       <div className={`w-full h-full rounded-xl text-black`}>
-        <RichTextEditor
+        {/* <RichTextEditor
           initialValue={fields.poemHtml}
           onChange={(html, text) =>
             setFields({...fields, poemText: text, poemHtml: html})
           }
+        /> */}
+
+        <textarea
+          id={id}
+          className={`w-full h-64 py-2 px-4 dark:text-white text-gray-900 mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray`}
+          name="story"
+          // onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
+          // value={isInLesson ? getValue(inputID) : value}
+          value={fields.poemText}
+          rows={3}
+          cols={250}
+          onChange={(e) => setFields({...fields, poemText: e.target.value})}
         />
       </div>
     </div>

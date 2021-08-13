@@ -27,6 +27,7 @@ const PoemBlock = (props: PoemBlockProps) => {
     poemText: '',
   });
 
+  console.log('🚀 ~ file: PoemBlock.tsx ~ line 26 ~ PoemBlock ~ fields', fields);
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
