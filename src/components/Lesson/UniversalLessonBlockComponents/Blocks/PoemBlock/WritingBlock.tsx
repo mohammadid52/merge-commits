@@ -5,6 +5,7 @@ import {AiOutlinePlus} from 'react-icons/ai';
 import {
   StudentPageInput,
   PartContentSub,
+  Options,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 
@@ -37,43 +38,10 @@ const WritingBlock = (props: WritingBlockProps) => {
     state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
 
-  const handleAddInput = () => {
-    setPoemInput([
-      ...poemInput,
-      {
-        domID: `line_${nanoid(4)}`,
-        input: [''],
-      },
-    ]);
-  };
-
-  const handleDeleteInput = (e: React.MouseEvent) => {
-    const {id} = e.target as HTMLElement;
-    const filtered = poemInput.filter((input: StudentPageInput) => input.domID !== id);
-    setPoemInput(filtered);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {id, value} = e.target as HTMLSelectElement;
-    const mapped = poemInput.map((input: StudentPageInput) => {
-      if (input.domID === id) {
-        return {
-          domID: input.domID,
-          input: [value],
-        };
-      } else {
-        return input;
-      }
-    });
-    setPoemInput(mapped);
-  };
-
   const onAddClick = () => {
-    const modifiedHTML = `${selectedLS.text}`;
-    const conc = fields.poemText.concat(modifiedHTML);
-
-    setFields({poemText: conc, poemHtml: `<p>${conc}</p>`});
-    // handleUpdateStudentData(id, [modifiedHTML]);
+    const concatenatedValue = fields.poemText.concat(selectedLS.text);
+    setFields({...fields, poemText: concatenatedValue});
+    handleUpdateStudentData(id, [fields.poemText]);
   };
 
   const [selectedLS, setSelectedLS] = useState({
@@ -84,7 +52,7 @@ const WritingBlock = (props: WritingBlockProps) => {
     <div className="w-full flex items-center space-x-4">
       <div className={`w-full flex flex-col   rounded-lg`}>
         {/* MAP THE LINE PROMPTS */}
-        {poemInput.map((inputObj: StudentPageInput, idx: number) => (
+        {/* {poemInput.map((inputObj: StudentPageInput, idx: number) => (
           <div key={`${inputObj.domID}`}>
             <select
               id={`${inputObj.domID}`}
@@ -95,14 +63,29 @@ const WritingBlock = (props: WritingBlockProps) => {
               <option value={''} disabled selected>
                 Select a line starter
               </option>
-              {linestarters.map((line: PartContentSub, idx2: number) => (
-                <option value={line.value} key={`line_${idx}_${idx2}`}>
-                  {line.value}
+              {linestarters.map((line: Options, idx2: number) => (
+                <option value={line.text} key={`line_${idx}_${idx2}`}>
+                  {line.text}
                 </option>
               ))}
             </select>
           </div>
-        ))}
+        ))} */}
+        <div>
+          <select
+            value={selectedLS.text}
+            onChange={(e) => setSelectedLS({...selectedLS, text: e.target.value})}
+            className={`bg-gray-200 dark:bg-charcoal block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${themeTextColor} rounded-md`}>
+            <option value={''} disabled selected>
+              Select a line starter
+            </option>
+            {linestarters.map((line: Options, idx2: number) => (
+              <option value={line.text} key={`line_${idx2}`}>
+                {line.text}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div
         onClick={onAddClick}

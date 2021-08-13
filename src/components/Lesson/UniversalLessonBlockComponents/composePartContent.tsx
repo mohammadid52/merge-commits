@@ -50,9 +50,10 @@ const composePartContent = (
         mode={mode}
       />
     );
-  } else if (type === FORM_TYPES.POEM) {
+  } else if (type === FORM_TYPES.POEM || type === FORM_TYPES.WRITING_EXERCISE) {
     return (
       <PoemBlock
+        writingExercise={type === FORM_TYPES.WRITING_EXERCISE}
         id={id}
         type={type}
         value={value}
