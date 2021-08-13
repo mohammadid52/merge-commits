@@ -566,8 +566,10 @@ const classRoomDict: any = {
       TEACH: 'TEACH',
       ACTIVE: 'ACTIVE',
       COMPLETED: 'COMPLETED',
-      OPENED: 'Opened',
-      CLOSED: 'Closed'
+      OPENED: 'OPEN',
+      CLOSED: 'CLOSED',
+      SURVEY: 'SURVEY',
+      UPCOMING: 'UPCOMING',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
@@ -603,6 +605,10 @@ const classRoomDict: any = {
       TEACH: 'TBD',
       ACTIVE: 'TBD',
       COMPLETED: 'TBD',
+      OPENED: 'TBD',
+      CLOSED: 'TBD',
+      SURVEY: 'TBD',
+      UPCOMING: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,

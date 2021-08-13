@@ -473,6 +473,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         url: redirectionUrl,
       });
     } else {
+      setUnsavedChanges(false)
       history.push(redirectionUrl);
     }
   };

@@ -246,6 +246,10 @@ const CurricularView = (props: CurricularViewProps) => {
     }
   }, [designersId]);
 
+  const closeCurricularModal = () => {
+    setCurricularModal(false)
+  }
+
   const {name, institute, description, objectives, languages} = curricularData;
   return (
     <div>
@@ -392,11 +396,12 @@ const CurricularView = (props: CurricularViewProps) => {
           title={EditCurriculardict[userLanguage]['TITLE']}
           showHeaderBorder={true}
           showFooter={false}
-          // closeAction={onMeasurementClose}
+          closeAction={closeCurricularModal}
         >
           <EditCurricular
             curricularDetails={curricularData}
             postUpdateDetails={postUpdateDetails}
+            closeAction={closeCurricularModal}
           />
         </Modal>
       )}

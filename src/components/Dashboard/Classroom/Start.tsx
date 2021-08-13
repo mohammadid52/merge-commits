@@ -166,14 +166,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
       // if (type === 'survey' || type === 'assessment') {
       //   toggleEnableDisable();
       // } else {
-        if (isActive) {
-          if (!attendanceRecorded) {
-            recordAttendance();
-          }
-          history.push(`${`/lesson-control/${lessonKey}`}`);
-        } else {
-          toggleLessonSwitchAlert();
+      if (isActive) {
+        if (!attendanceRecorded) {
+          recordAttendance();
         }
+        history.push(`${`/lesson-control/${lessonKey}`}`);
+      } else {
+        toggleLessonSwitchAlert();
+      }
       // }
     }
   };
@@ -230,7 +230,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     if (isTeacher) {
       if (type === 'survey' || type === 'assessment') {
         if (isCompleted || isActive) {
-          return classRoomDict[userLanguage]['SURVEY'];
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
@@ -249,10 +249,20 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         }
       }
     } else {
-      if (isCompleted) {
-        return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+      if (type === 'survey' || type === 'assessment') {
+        if (isCompleted || isActive) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
+        } else {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['UPCOMING'];
+        }
       } else {
-        return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
+        if (isCompleted) {
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
+        } else if(isActive){
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['START'];
+        } else{
+          return classRoomDict[userLanguage]['BOTTOM_BAR']['UPCOMING'];
+        }
       }
     }
   };
@@ -269,7 +279,7 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             ? classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED']
             : isCompleted
             ? classRoomDict[userLanguage]['BOTTOM_BAR']['CLOSED']
-            : classRoomDict[userLanguage]['SURVEY'].toUpperCase();
+            : classRoomDict[userLanguage]['BOTTOM_BAR']['SURVEY'];
         default:
           return type.toUpperCase();
       }
@@ -319,7 +329,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
             : `${firstPart()} ${secondPart()}`
         }
-        disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive) || isCompleted}
+        disabled={
+          loading || (!open && !isTeacher) || (!isTeacher && !isActive) || isCompleted
+        }
         overrideClass={true}
         btnClass={`rounded 
         ${studentTeacherButtonTheme()}

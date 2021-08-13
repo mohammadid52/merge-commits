@@ -27,12 +27,13 @@ import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
 
 interface EditCurricularProps {
+  closeAction: () => void;
   curricularDetails: any;
-  postUpdateDetails: (data:any) => void;
+  postUpdateDetails: (data: any) => void;
 }
 
 const EditCurricular = (props: EditCurricularProps) => {
-  const {curricularDetails, postUpdateDetails} = props;
+  const {closeAction, curricularDetails, postUpdateDetails} = props;
   const initialData = {
     id: '',
     name: '',
@@ -677,7 +678,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         <Buttons
           btnClass="py-3 px-12 text-sm mr-4"
           label="Cancel"
-          onClick={history.goBack}
+          onClick={closeAction}
           transparent
         />
         <Buttons
