@@ -32,7 +32,7 @@ const BUTTONS: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',
@@ -41,6 +41,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
+    CLASSROOM: 'Classroom',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
     EDITCLASSROOM: 'Edit Classroom',
@@ -553,7 +554,11 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Lesson Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
-    UNIT_TITLE: 'Unit Manager',
+    STEP: 'Step',
+    UNIT_TITLE: 'Select Unit',
+    UNIT_SUB_TITLE: 'Select unit for list of corresponding lessons',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -561,6 +566,8 @@ const classRoomDict: any = {
       TEACH: 'TEACH',
       ACTIVE: 'ACTIVE',
       COMPLETED: 'COMPLETED',
+      OPENED: 'Opened',
+      CLOSED: 'Closed'
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
@@ -584,14 +591,18 @@ const classRoomDict: any = {
     SURVEY: 'TBD',
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
+    STEP: 'TBD',
     UNIT_TITLE: 'TBD',
+    UNIT_SUB_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
       ENABLE: 'TBD',
       TEACH: 'TBD',
       ACTIVE: 'TBD',
-      COMPLETED: 'TBD'
+      COMPLETED: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,
@@ -1495,7 +1506,7 @@ const LEARINGOBJECTIVEDICT: any = {
       'This curricular does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Learning Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {
@@ -1557,6 +1568,7 @@ const TOPICLISTDICT: any = {
     TOPIC: 'Topics',
     EDIT: 'Edit',
     INFO: 'This learning objective does not have any topics. Please create a new one.',
+    ADD: 'Add Topic',
     ADDNEW: 'Add New Topic',
     FETCH: 'Fetching topics list...',
   },

@@ -549,7 +549,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      getOrCreateStudentData();
+      //getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 

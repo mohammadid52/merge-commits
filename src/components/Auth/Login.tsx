@@ -402,7 +402,7 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                         <label className="flex items-center justify-end">
                           <input
                             type="checkbox"
-                            className="form-checkbox w-4 h-10"
+                            className="form-checkbox w-5 h-5"
                             checked={isChecked}
                             onChange={toggleCheckBox}
                           />
@@ -437,11 +437,14 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                         'Enter'
                       )}
                     </button>
-                    <NavLink to="/forgot-password">
+                    {/* <NavLink to="/forgot-password">
                       <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
-                        Forgot your password?
+                        Request your session leader to reset your password.
                       </div>
-                    </NavLink>
+                    </NavLink> */}
+                    <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
+                        Request your session leader to reset your password.
+                      </div>
                   </div>
                 </div>
               </>

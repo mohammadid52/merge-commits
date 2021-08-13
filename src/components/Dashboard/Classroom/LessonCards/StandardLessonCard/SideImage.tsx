@@ -9,7 +9,7 @@ const SideImage = (props: LessonCardProps) => {
 
   return (
     <div
-      className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
+      className={`w-full h-48 md:h-auto sm:w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
@@ -20,14 +20,14 @@ const SideImage = (props: LessonCardProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <div className="h-6/10 flex justify-center items-center" />
+      <div className="h-24 sm:h-6/10 flex justify-center items-center" />
 
       <div className="mt-4">
         <div className="h-1/10 pl-6">
           <div
-            className="tracking-widest border-b-0 text-gray-300 border-ketchup"
+            className="tracking-widest border-b-0 text-2xl md:text-lg text-gray-300 border-ketchup"
             style={{textShadow: '1px 1px black'}}>
-            FEATURED PERSON
+            {lessonProps?.lesson?.cardCaption}
           </div>
         </div>
         <div className="h-14 flex flex-row-reverse">

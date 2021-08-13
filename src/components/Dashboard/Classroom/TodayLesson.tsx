@@ -1,10 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {LessonProps} from './Classroom';
 import StandardLessonCard from './LessonCards/StandardLessonCard';
 import {GlobalContext} from '../../../contexts/GlobalContext';
 import useDictionary from '../../../customHooks/dictionary';
 import Loader from '../../Atoms/Loader';
 import {getLocalStorageData} from '../../../utilities/localStorage';
+import ClassroomLoader from './ClassroomLoader';
 
 const Today: React.FC<LessonProps> = (props: LessonProps) => {
   const {activeRoom, activeRoomInfo, isTeacher, lessonLoading, lessons} = props;
@@ -22,16 +23,15 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
 
   return (
     <>
-      {classRoomDict && lessonLoading ? (
-        <div className={`${emptyStyles}`}>
-          <div className="w-3/10">
-            <Loader color="rgba(107, 114, 128, 1)" />
-            <p className="mt-2 text-center text-lg text-gray-500">Loading lessons...</p>
-          </div>
-        </div>
-      ) : null}
-
-      {!lessonLoading && lessons.length > 0
+      {classRoomDict && lessonLoading
+        ? Array(3)
+            .fill(' ')
+            .map((_: any, index: number) => (
+              <Fragment key={index}>
+                <ClassroomLoader />
+              </Fragment>
+            ))
+        : lessons?.length
         ? lessons.map((lesson: any, key: number) => {
             return (
               <div id={`todayLesson_${key}_wrapper`} key={`todayLesson_${key}_wrapper`}>
@@ -47,9 +47,7 @@ const Today: React.FC<LessonProps> = (props: LessonProps) => {
               </div>
             );
           })
-        : null}
-
-      {activeRoom !== '' && !lessonLoading && lessons.length === 0 ? (
+        : activeRoom !== '' && !lessonLoading && lessons?.length === 0 ? (
         <div className={`${emptyStyles}`}>
           <p className="text-center text-lg text-gray-500">
             {classRoomDict[userLanguage].MESSAGES.NO_LESSONS}

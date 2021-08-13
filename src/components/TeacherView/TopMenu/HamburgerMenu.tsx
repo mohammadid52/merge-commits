@@ -15,8 +15,6 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = (
   const { handleClick, setQuickRegister, handleHomePopup } = props;
   const [hamburgerOpen, setHamburgerOpen] = useState<boolean>(false);
 
-
-
   return (
     <div className="w-8 mr-4 flex flex-col content-between ">
       <div className="relative flex flex-col my-auto justify-around">

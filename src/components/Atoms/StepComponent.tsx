@@ -30,7 +30,7 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
   ) => {
     return (
       <div
-        className={`border border-gray-200 ${
+        className={`h-full border border-gray-200 ${
           stepValue === activeStep ? '' : 'border-b-0'
         } lg:border-0 ${
           index === 0
@@ -118,7 +118,7 @@ const StepComponent = ({activeStep, handleTabSwitch, steps}: IStepComponentInter
                 !step.disabled ? handleTabSwitch(step.stepValue || step.title) : null
               }>
               {step.disabled ? (
-                <Tooltip text={step.tooltipText} placement={step.tooltipPlacement || 'top'}>
+                <Tooltip additionalClass="h-full" text={step.tooltipText} placement={step.tooltipPlacement || 'top'}>
                   {renderStepElement(step, index)}
                 </Tooltip>
               ) : (

@@ -28,7 +28,7 @@ const BUTTONS: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Organiation Management',
@@ -543,7 +543,10 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Session Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
+    STEP: 'Step',
     UNIT_TITLE: 'Module Manager',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -573,7 +576,10 @@ const classRoomDict: any = {
     SURVEY: 'TBD',
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
+    STEP: 'TBD',
     UNIT_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -1492,7 +1498,7 @@ const LEARINGOBJECTIVEDICT: any = {
     INFO: 'This curricular does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {
@@ -1553,6 +1559,7 @@ const TOPICLISTDICT: any = {
     TOPIC: 'Topics',
     EDIT: 'Edit',
     INFO: 'This objective does not have any topics. Please create a new one.',
+    ADD: 'Add Topic',
     ADDNEW: 'Add New Topic',
     FETCH: 'Fetching topics list...',
   },

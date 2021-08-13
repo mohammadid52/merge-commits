@@ -163,9 +163,9 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
     }
 
     if (isTeacher) {
-      if (type === 'survey' || type === 'assessment') {
-        toggleEnableDisable();
-      } else {
+      // if (type === 'survey' || type === 'assessment') {
+      //   toggleEnableDisable();
+      // } else {
         if (isActive) {
           if (!attendanceRecorded) {
             recordAttendance();
@@ -174,22 +174,14 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         } else {
           toggleLessonSwitchAlert();
         }
-      }
+      // }
     }
   };
 
   const discardChanges = async () => {
     await API.graphql(
       graphqlOperation(mutations.updateRoom, {
-        input: {
-          id: roomID,
-          activeLessons: [
-            state.roomData.activeLessons && state.roomData.activeLessons.length > 0
-              ? state.roomData.activeLessons
-              : [],
-            lessonKey,
-          ],
-        },
+        input: {id: roomID, activeLessons: [...activeRoomInfo?.activeLessons, lessonKey]},
       })
     );
     history.push(`${`/lesson-control/${lessonKey}`}`);
@@ -237,11 +229,16 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   const firstPart = () => {
     if (isTeacher) {
       if (type === 'survey' || type === 'assessment') {
-        if (open) {
-          return classRoomDict[userLanguage]['BOTTOM_BAR']['DISABLE'];
+        if (isCompleted || isActive) {
+          return classRoomDict[userLanguage]['SURVEY'];
         } else {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
         }
+        // if (open) {
+        //   return classRoomDict[userLanguage]['BOTTOM_BAR']['DISABLE'];
+        // } else {
+        // return classRoomDict[userLanguage]['BOTTOM_BAR']['ENABLE'];
+        // }
       } else {
         if (isCompleted) {
           return classRoomDict[userLanguage]['BOTTOM_BAR']['COMPLETED'];
@@ -268,7 +265,11 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
         case 'assessment':
           return classRoomDict[userLanguage]['ASSESSMENT'].toUpperCase();
         case 'survey':
-          return classRoomDict[userLanguage]['SURVEY'].toUpperCase();
+          return isActive
+            ? classRoomDict[userLanguage]['BOTTOM_BAR']['OPENED']
+            : isCompleted
+            ? classRoomDict[userLanguage]['BOTTOM_BAR']['CLOSED']
+            : classRoomDict[userLanguage]['SURVEY'].toUpperCase();
         default:
           return type.toUpperCase();
       }
@@ -278,23 +279,34 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
   };
 
   const studentTeacherButtonTheme = () => {
-    if (type === 'lesson') {
-      if (isActive) {
-        return theme.btn.lessonStart;
-      } else {
-        return theme.btn.iconoclastIndigo;
-      }
+    // if (type === 'lesson') {
+    if (isCompleted) {
+      return 'bg-gray-500 text-white hover:bg-gray-600 active:bg-gray-600 focus:bg-gray-600';
+    } else if (isActive) {
+      return theme.btn.lessonStart;
     } else {
-      if (!isTeacher) {
-        return theme.btn.surveyStart;
-      } else {
-        if (open) {
-          return theme.btn.surveyStart;
-        } else {
-          return theme.btn.lessonStart;
-        }
-      }
+      return theme.btn.iconoclastIndigo;
     }
+    // }
+    // else {
+    //   if (!isTeacher) {
+    //     return theme.btn.surveyStart;
+    //   } else {
+    //     if (open) {
+    //       return theme.btn.surveyStart;
+    //     } else {
+    //       return theme.btn.lessonStart;
+    //     }
+    //   }
+    // }
+  };
+
+  const onCloseModal = () => {
+    setWarnModal({
+      message: '',
+      activeLessonsId: [],
+      show: false,
+    });
   };
 
   return (
@@ -307,17 +319,18 @@ const Start: React.FC<StartProps> = (props: StartProps) => {
             ? classRoomDict[userLanguage]['MESSAGES'].PLEASE_WAIT
             : `${firstPart()} ${secondPart()}`
         }
-        disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive)}
+        disabled={loading || (!open && !isTeacher) || (!isTeacher && !isActive) || isCompleted}
         overrideClass={true}
-        btnClass={`
+        btnClass={`rounded 
         ${studentTeacherButtonTheme()}
         h-full w-full text-xs focus:outline-none ${
           !open ? 'opacity-80' : 'opacity-100'
-        } transition duration-150 ease-in-out`}
+        } transition duration-150 ease-in-out py-2 sm:py-auto`}
       />
       {warnModal.show && (
         <ModalPopUp
-          closeAction={discardChanges}
+          closeAction={onCloseModal}
+          cancelAction={discardChanges}
           saveAction={handleMarkAsCompleteClick}
           saveLabel="Yes"
           cancelLabel="No"

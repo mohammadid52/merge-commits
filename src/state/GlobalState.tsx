@@ -3,8 +3,10 @@ export interface globalStateType {
     upcomingLessons: any[];
   };
   roomData: {
+    curriculum: any;
     rooms: any[];
     syllabus: any[];
+    activeSyllabus: any;
     lessons: any[];
     widgets: any[];
   };
@@ -38,8 +40,10 @@ export const globalState: globalStateType = {
     upcomingLessons: [],
   },
   roomData: {
+    curriculum: {},
     rooms: [],
     syllabus: [],
+    activeSyllabus: {},
     lessons: [],
     widgets: [],
   },

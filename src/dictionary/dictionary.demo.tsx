@@ -89,7 +89,7 @@ const EditQuestionModalDict: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',
@@ -604,7 +604,10 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Lesson Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
+    STEP: 'Step',
     UNIT_TITLE: 'Unit Manager',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -634,7 +637,10 @@ const classRoomDict: any = {
     SURVEY: 'TBD',
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
+    STEP: 'TBD',
     UNIT_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -1523,7 +1529,7 @@ const LEARINGOBJECTIVEDICT: any = {
       'This curricular does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Learning Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {

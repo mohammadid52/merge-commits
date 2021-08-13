@@ -273,9 +273,9 @@ const ClassRoster = (props: classRosterProps) => {
         className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
         <div
           className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
-          <span>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
+          <span className="w-auto">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
           <span
-            className={`w-auto absolute right-0 translate-x-4`}
+            className={`w-8`}
             onClick={handleManualRefresh}>
             <IconContext.Provider value={{color: '#EDF2F7'}}>
               <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
