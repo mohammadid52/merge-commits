@@ -2825,6 +2825,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'Lesson type is required',
       INSTITUTE: 'Institute is required field.',
       LANGUAGE: 'Language selection is required',
+      STUDENT_SUMMARY: 'Student summary is required',
+      IMAGE_CAPTION: 'Image Overlay text is required',
     },
     MESSAGES: {
       REMOVE: 'Are you sure you want to remove this measurement?',
@@ -2866,6 +2868,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'TBD',
       INSTITUTE: 'TBD',
       LANGUAGE: 'TBD',
+      STUDENT_SUMMARY: 'TBD',
+      IMAGE_CAPTION: 'TBD',
     },
     MESSAGES: {
       REMOVE: 'TBD',

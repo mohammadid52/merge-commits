@@ -652,8 +652,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         ...rubric,
         checked: true,
       }));
-      console.log(rubricList, 'rubricList+++++++++++');
-
       setSelectedMeasurements(rubricList);
     } catch (error) {}
   };

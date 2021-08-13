@@ -37,78 +37,70 @@ const InputModalComponent = ({
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      loadDataAndAddToState();
-    }
-
-    return () => {
-      loadDataAndAddToState();
-    };
-  }, [inputObj]);
-
-  const loadDataAndAddToState = () => {
-    setNumbered(contentType.includes('numbered'));
-    if (inputObj[0].type === FORM_TYPES.RADIO) {
-      const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
-      setRadioList(
-        inputObj.map((input: any) => ({
-          id: input.id,
-          options: input.options,
-          label: input.label,
-          required: input.isRequired,
-          inLine: inLine,
-          type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
-        }))
-      );
-      setSelectedFormType(SELECT_ONE);
-    } else if (inputObj[0].type === FORM_TYPES.MULTIPLE) {
-      const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
-      setManyOptionList(
-        inputObj.map((input: any) => {
-          return {
+      setNumbered(contentType.includes('numbered'));
+      if (inputObj[0].type === FORM_TYPES.RADIO) {
+        const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
+        setRadioList(
+          inputObj.map((input: any) => ({
             id: input.id,
             options: input.options,
             label: input.label,
-            inLine: inLine,
             required: input.isRequired,
+            inLine: inLine,
             type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
-          };
-        })
-      );
-      setSelectedFormType(SELECT_MANY);
-    } else if (inputObj[0].type === FORM_TYPES.EMOJI) {
-      setEmojiInputList(
-        inputObj.map((input: any) => ({
-          ...input,
-          title: input.label,
-          placeholder: input.value,
-          required: input.isRequired,
-        }))
-      );
-      setSelectedFormType(INPUT_WITH_EMOJI);
-    } else if (inputObj[0].type === FORM_TYPES.LINK) {
-      setLinkList(
-        inputObj.map((input: any) => ({
-          ...input,
-          title: input.label,
-          placeholder: input.value,
-          required: input.isRequired,
-        }))
-      );
-      setSelectedFormType(LINK);
-    } else {
-      setInputList(
-        inputObj.map((input: any) => ({
-          ...input,
-          textArea: input.type.includes('area'),
-          title: input.label,
-          placeholder: input.value,
-          required: input.isRequired,
-        }))
-      );
-      setSelectedFormType(INPUT);
+          }))
+        );
+        setSelectedFormType(SELECT_ONE);
+      } else if (inputObj[0].type === FORM_TYPES.MULTIPLE) {
+        const inLine = inputObj[0]?.class && inputObj[0].class.includes('flex-row');
+        setManyOptionList(
+          inputObj.map((input: any) => {
+            return {
+              id: input.id,
+              options: input.options,
+              label: input.label,
+              inLine: inLine,
+              required: input.isRequired,
+              type: input.type === FORM_TYPES.RADIO ? SELECT_ONE : SELECT_MANY,
+            };
+          })
+        );
+        setSelectedFormType(SELECT_MANY);
+      } else if (inputObj[0].type === FORM_TYPES.EMOJI) {
+        setEmojiInputList(
+          inputObj.map((input: any) => ({
+            ...input,
+            title: input.label,
+            placeholder: input.value,
+            required: input.isRequired,
+          }))
+        );
+        setSelectedFormType(INPUT_WITH_EMOJI);
+      } else if (inputObj[0].type === FORM_TYPES.LINK) {
+        setLinkList(
+          inputObj.map((input: any) => ({
+            ...input,
+            title: input.label,
+            placeholder: input.value,
+            required: input.isRequired,
+          }))
+        );
+        setSelectedFormType(LINK);
+      } else {
+        setInputList(
+          inputObj.map((input: any) => ({
+            ...input,
+            textArea: input.type.includes('area'),
+            title: input.label,
+            placeholder: input.value,
+            required: input.isRequired,
+          }))
+        );
+        setSelectedFormType(INPUT);
+      }
+      setIsEditingMode(true);
     }
-    setIsEditingMode(true);
-  };
+  }, [inputObj]);
 
   //  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<INPUT LIST STARTS HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   const [inputList, setInputList] = useState([

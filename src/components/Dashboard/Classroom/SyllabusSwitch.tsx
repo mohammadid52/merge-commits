@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import {FaBook} from 'react-icons/fa';
+import {useHistory} from 'react-router';
 import {DashboardProps} from '../Dashboard';
 import {Syllabus} from './Classroom';
 import {GlobalContext} from '../../../contexts/GlobalContext';
@@ -17,8 +18,9 @@ const SyllabusSwitch = (props: DashboardProps) => {
     currentPage,
     syllabusLoading,
     handleSyllabusActivation,
-    // completedLessons
+    institutionId
   } = props;
+    const history = useHistory();
   const {state, theme, clientKey, userLanguage} = useContext(GlobalContext);
   const {classRoomDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -81,11 +83,17 @@ const SyllabusSwitch = (props: DashboardProps) => {
         <div>
           No units or lessons have been created for {curriculumName}. Please complete
           curriculum set up to continue.
-          <Buttons
-            label="Go to Curriculum"
-            btnClass="mr-4 mt-4"
-            onClick={() => console.log()}
-          />
+          <div className="flex justify-center">
+            <Buttons
+              label="Go to Curriculum"
+              btnClass="mr-4 mt-4"
+              onClick={() =>
+                history.push(
+                  `/dashboard/manage-institutions/institution?id=${institutionId}&tab=2`
+                )
+              }
+            />
+          </div>
         </div>
       )}
 
