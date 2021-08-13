@@ -6,8 +6,8 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 import {lessonReducer} from '../reducers/LessonReducer';
 import {lessonState as lessonStateObject} from '../state/LessonState';
-import { lessonControlReducer } from '../reducers/LessonControlReducer';
-import { lessonControlState } from '../state/LessonControlState';
+import {lessonControlReducer} from '../reducers/LessonControlReducer';
+import {lessonControlState} from '../state/LessonControlState';
 
 export const standardTheme = {
   bg: 'bg-dark-gray',
@@ -17,7 +17,8 @@ export const standardTheme = {
   },
   blockQuote: 'px-4 border-l-4 border-white border-opacity-50 bg-black bg-opacity-40',
   banner: '',
-  section: 'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
+  section:
+    'w-full md:max-w-none lg:max-w-192 2xl:max-w-256 mx-auto  flex flex-col justify-between items-center z-50',
   elem: {
     bg: 'bg-dark-block',
     title: 'text-lg font-semibold text-gray-200',
@@ -64,6 +65,9 @@ export const standardTheme = {
       'bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-600 focus:bg-indigo-600',
     curateBlue:
       'bg-theme-blue text-white hover:bg-blue-500 active:bg-blue-500 focus:bg-blue-500',
+    delete: 'bg-red-500 text-white hover:bg-red-600 active:bg-red-600 focus:bg-red-600',
+    confirm:
+      'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
     cancel: 'bg-white text-gray-600  border-0 border-gray-600 hover:bg-gray-200',
     lessonStart:
       'bg-green-500 text-white hover:bg-green-600 active:bg-green-600 focus:bg-green-600',
@@ -148,7 +152,10 @@ export const GlobalContextProvider = ({children}: GlobalProps) => {
    */
   const [state, dispatch] = useReducer(globalReducer, globalState);
   const [lessonState, lessonDispatch] = useReducer(lessonReducer, lessonStateObject);
-  const [controlState, controlDispatch] = useReducer(lessonControlReducer, lessonControlState);
+  const [controlState, controlDispatch] = useReducer(
+    lessonControlReducer,
+    lessonControlState
+  );
 
   const theme = standardTheme;
   const globalStateAccess = state;

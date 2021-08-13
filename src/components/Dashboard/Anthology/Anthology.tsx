@@ -21,9 +21,9 @@ import {Auth} from '@aws-amplify/auth';
 import {useParams} from 'react-router-dom';
 
 export type ViewEditMode = {
-  mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | '';
+  mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
   dataID: string;
-  idx: number;
+  option: number;
 };
 
 const Anthology = () => {
@@ -168,9 +168,21 @@ const Anthology = () => {
     } catch (e) {
       console.error('error updating journal data - ', e);
     } finally {
-      console.log('updated journal data...');
+      // console.log('updated journal data...');
       if (notesChanged) setNotesChanged(false);
       if (saveInProgress) setSaveInProgress(false);
+    }
+  };
+
+  const deleteJournalData = async () => {
+    try {
+      const deleteJournalData: any = await API.graphql(
+        graphqlOperation(mutations.deleteUniversalJournalData, {
+          input: {id: viewEditMode.dataID},
+        })
+      );
+    } catch (e) {
+      console.error('error deleting journal data - ', e);
     }
   };
 
@@ -200,7 +212,7 @@ const Anthology = () => {
         }
       }),
     };
-    console.log('input - ', html);
+    // console.log('input - ', html);
     setJournalEntryData(updatedNotesData);
     if (!notesChanged) setNotesChanged(true);
   };
@@ -211,14 +223,15 @@ const Anthology = () => {
   const [viewEditMode, setViewEditMode] = useState<ViewEditMode>({
     mode: '',
     dataID: '',
-    idx: 0,
+    option: 0,
   });
 
   const handleEditToggle = (
-    editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
-    dataID: string
+    editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | 'delete' | '',
+    dataID: string,
+    option?: number
   ) => {
-    setViewEditMode({mode: editMode, dataID: dataID, idx: 0});
+    setViewEditMode({mode: editMode, dataID: dataID, option: option | 0});
   };
 
   const handleResetJournalEntry = async () => {
@@ -256,6 +269,9 @@ const Anthology = () => {
       } else if (viewEditMode.mode === 'savenew') {
         await createJournalData();
         await handleResetJournalEntry();
+        await listUniversalJournalData();
+      } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
+        await deleteJournalData();
         await listUniversalJournalData();
       } else if (viewEditMode.mode === '') {
         await handleResetJournalEntry();

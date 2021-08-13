@@ -118,4 +118,6 @@ export interface UniversalJournalData {
   type?: string;
   feedbacks?: string[];
   entryData?: {domID: string; type: string; input: string}[];
+  updatedAt?: any;
+  createdAt?: any;
 }

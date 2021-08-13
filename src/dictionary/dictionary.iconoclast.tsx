@@ -230,6 +230,7 @@ const anthologyDict: any = {
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
+      CONFIRM: 'Confirm',
     },
   },
   ES: {
@@ -246,6 +247,7 @@ const anthologyDict: any = {
       ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
+      CONFIRM: 'Confirm',
     },
   },
 };
@@ -567,7 +569,7 @@ const classRoomDict: any = {
       ACTIVE: 'ACTIVE',
       COMPLETED: 'COMPLETED',
       OPENED: 'Opened',
-      CLOSED: 'Closed'
+      CLOSED: 'Closed',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
