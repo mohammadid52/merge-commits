@@ -14,7 +14,7 @@ import {createFilterToFetchSpecificItemsOnly} from '../../../../../../utilities/
 
 import BreadCrums from '../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../Atoms/SectionTitle';
-import Buttons from '../../../../../Atoms/Buttons';
+import Modal from '../../../../../Atoms/Modal';
 import PageWrapper from '../../../../../Atoms/PageWrapper';
 import Tooltip from '../../../../../Atoms/Tooltip';
 import UnderlinedTabs from '../../../../../Atoms/UnderlinedTabs';
@@ -25,7 +25,8 @@ import CheckpointList from './TabsListing/CheckpointList';
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../customHooks/dictionary';
 import {goBackBreadCrumb} from '../../../../../../utilities/functions';
-import { getAsset } from '../../../../../../assets';
+import {getAsset} from '../../../../../../assets';
+import EditCurricular from '../EditCurricular';
 
 interface CurricularViewProps {
   tabProps?: any;
@@ -34,6 +35,7 @@ interface InitialData {
   id: string;
   name: string;
   description: string;
+  summary: string;
   objectives: string;
   languages: {id: string; name: string; value: string}[];
   institute: {
@@ -41,8 +43,11 @@ interface InitialData {
     name: string;
     value: string;
   };
+  image: string;
   syllabusList: any[];
   syllabusSequence: any[];
+  type: string;
+  designers: any[];
 }
 
 const CurricularView = (props: CurricularViewProps) => {
@@ -64,6 +69,7 @@ const CurricularView = (props: CurricularViewProps) => {
   const initialData = {
     id: '',
     name: '',
+    image: '',
     institute: {
       id: '',
       name: '',
@@ -72,17 +78,23 @@ const CurricularView = (props: CurricularViewProps) => {
     syllabusList: [] as any,
     syllabusSequence: [] as any,
     description: '',
+    summary: '',
     languages: [{id: '1', name: 'English', value: 'EN'}],
     objectives: '',
+    type: '',
+    designers: [] as any,
   };
 
+  const [curricularModal, setCurricularModal] = useState(false);
   const [curricularData, setCurricularData] = useState<InitialData>(initialData);
   const [designersId, setDesignersID] = useState([]);
   const [personsDataList, setPersonsDataList] = useState([]);
   const [loading, setLoading] = useState(true);
   const {clientKey, userLanguage, theme} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {curricularviewdict, BreadcrumsTitles} = useDictionary(clientKey);
+  const {curricularviewdict, BreadcrumsTitles, EditCurriculardict} = useDictionary(
+    clientKey
+  );
 
   const breadCrumsList = [
     {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
@@ -140,6 +152,34 @@ const CurricularView = (props: CurricularViewProps) => {
     tabProps.setTabsData({...tabProps.tabsData, instCurr: tab});
   };
 
+  const postUpdateDetails = (data: any) => {
+    const savedLanguages = languageList.filter((item) =>
+      data.languages?.includes(item.value)
+    );
+    setCurricularData({
+      ...curricularData,
+      id: data.id,
+      name: data.name,
+      image: data.image,
+      institute: {
+        id: data.institution.id,
+        name: data.institution.name,
+        value: data.institution.name,
+      },
+      description: data.description,
+      designers: data.designers,
+      summary: data.summary,
+      objectives: data.objectives,
+      // syllabusList: data.syllabi?.items,
+      syllabusList: data.universalSyllabus?.items,
+      syllabusSequence: data.universalSyllabusSeq,
+      type: data.type,
+      languages: savedLanguages ? savedLanguages : [],
+    });
+    setDesignersID(data?.designers);
+    setCurricularModal(false);
+  };
+
   const fetchCurricularData = async () => {
     const currID = params.get('id');
     if (currID) {
@@ -156,16 +196,20 @@ const CurricularView = (props: CurricularViewProps) => {
           ...curricularData,
           id: savedData.id,
           name: savedData.name,
+          image: savedData.image,
           institute: {
             id: savedData.institution.id,
             name: savedData.institution.name,
             value: savedData.institution.name,
           },
           description: savedData.description,
+          designers: savedData.designers,
+          summary: savedData.summary,
           objectives: savedData.objectives,
           // syllabusList: savedData.syllabi?.items,
           syllabusList: savedData.universalSyllabus?.items,
           syllabusSequence: savedData.universalSyllabusSeq,
+          type: savedData.type,
           languages: savedLanguages ? savedLanguages : [],
         });
         setDesignersID(savedData?.designers);
@@ -201,6 +245,8 @@ const CurricularView = (props: CurricularViewProps) => {
       fetchPersonsData();
     }
   }, [designersId]);
+
+  console.log(curricularData, 'curricularData');
 
   const {name, institute, description, objectives, languages} = curricularData;
   return (
@@ -247,7 +293,10 @@ const CurricularView = (props: CurricularViewProps) => {
                   <Tooltip key={'id'} text={'Edit Curriculum Details'} placement="top">
                     <span
                       className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
-                      <HiPencil className="w-6 h-6 pl-2" />
+                      <HiPencil
+                        className="w-6 h-6 pl-2"
+                        onClick={() => setCurricularModal(true)}
+                      />
                     </span>
                   </Tooltip>
                 </h3>
@@ -339,6 +388,20 @@ const CurricularView = (props: CurricularViewProps) => {
           </div>
         </div>
       </PageWrapper>
+      {curricularModal && (
+        <Modal
+          showHeader={true}
+          title={EditCurriculardict[userLanguage]['TITLE']}
+          showHeaderBorder={true}
+          showFooter={false}
+          // closeAction={onMeasurementClose}
+        >
+          <EditCurricular
+            curricularDetails={curricularData}
+            postUpdateDetails={postUpdateDetails}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

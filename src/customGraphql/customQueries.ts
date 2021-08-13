@@ -2459,6 +2459,7 @@ export const getCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      summary
       description
       objectives
       languages
@@ -2467,6 +2468,7 @@ export const getCurriculum = /* GraphQL */ `
         name
       }
       designers
+      image
       syllabi {
         items {
           id
