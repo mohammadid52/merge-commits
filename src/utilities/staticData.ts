@@ -28,7 +28,19 @@ export const scrim: any = [
   {id: '3', name: 'Top'},
 ];
 
+/**
+ * This is response data values for select one list
+ */
 export const optionResponses = [
+  {
+    title: 'Difficulty',
+    content: [
+      {id: uuidv4(), text: 'Very Difficult'},
+      {id: uuidv4(), text: 'Difficult'},
+      {id: uuidv4(), text: 'Easy'},
+      {id: uuidv4(), text: 'Very easy'},
+    ],
+  },
   {
     title: 'Frequency',
     content: [

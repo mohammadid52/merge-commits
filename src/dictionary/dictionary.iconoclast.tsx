@@ -230,6 +230,7 @@ const anthologyDict: any = {
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
+      CONFIRM: 'Confirm',
     },
   },
   ES: {
@@ -246,6 +247,7 @@ const anthologyDict: any = {
       ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
+      CONFIRM: 'Confirm',
     },
   },
 };

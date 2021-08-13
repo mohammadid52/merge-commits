@@ -10,6 +10,7 @@ import Buttons from '../../Atoms/Buttons';
 
 import SingleNote from './AnthologyContentNote';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {dateFromServer} from '../../../utilities/time';
 
 interface ContentCardProps {
   viewEditMode?: ViewEditMode;
@@ -70,6 +71,11 @@ const AnthologyContent = (props: ContentCardProps) => {
 
     return (
       <>
+        <div className={`flex px-4`}>
+          <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
+            Updated: {dateFromServer(contentObj?.updatedAt)}
+          </p>
+        </div>
         <>
           {viewEditMode.mode === 'create' &&
             viewEditMode.dataID === createTemplate.syllabusLessonID && (
@@ -177,6 +183,11 @@ const AnthologyContent = (props: ContentCardProps) => {
 
     return (
       <>
+        <div className={`flex px-4`}>
+          <p className={`text-right italic ${theme.lessonCard.subtitle}`}>
+            Updated: {dateFromServer(contentObj?.updatedAt)}
+          </p>
+        </div>
         <div className={`mb-2`}>
           <FormInput
             id={organized.header.domID}

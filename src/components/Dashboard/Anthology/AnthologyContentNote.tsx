@@ -776,8 +776,8 @@ const SingleNote = ({
       <div
         id={`anthology_${subSection}${idx}`}
         className={`flex flex-col ${
-          idx !== contentLen - 1 && 'border-b-0'
-        } border-gray-200 px-6 py-6 p-2`}>
+          idx !== contentLen - 1 && 'border-b-2'
+        } border-gray-300 px-6 py-6 p-2`}>
         {viewEditMode &&
         viewEditMode.mode === 'edit' &&
         viewEditMode.dataID === contentObj.id
@@ -811,6 +811,29 @@ const SingleNote = ({
                 onClick={() => handleEditToggle('edit', contentObj.id)}>
                 {anthologyDict[userLanguage].ACTIONS.EDIT}
               </div>
+
+              {viewEditMode.mode === 'delete' &&
+              viewEditMode.option === 0 &&
+              viewEditMode.dataID === contentObj.id ? (
+                <div className="w-auto flex items-center justify-between">
+                  <div
+                    className={`${theme.btn.confirm}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                    onClick={() => handleEditToggle('delete', contentObj.id, 1)}>
+                    {anthologyDict[userLanguage].ACTIONS.CONFIRM}
+                  </div>
+                  <div
+                    className={`${theme.btn.cancel}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
+                    onClick={() => handleEditToggle('', '', 0)}>
+                    {anthologyDict[userLanguage].ACTIONS.CANCEL}
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`${theme.btn.delete}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
+                  onClick={() => handleEditToggle('delete', contentObj.id, 0)}>
+                  {anthologyDict[userLanguage].ACTIONS.DELETE}
+                </div>
+              )}
               {/* <div
                 onClick={() => setShowComments(!showComments)}
                 className={`${
