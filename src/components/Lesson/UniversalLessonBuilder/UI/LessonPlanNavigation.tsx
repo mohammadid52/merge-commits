@@ -57,11 +57,10 @@ const LessonPlanNavigation = ({
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
 
   useEffect(() => {
-    const parentContainer = document.getElementById('universalLessonBuilderContainer');
+    const parentContainer = document.querySelector('html');
     if (parentContainer) {
       if (fetchingLessonDetails) {
         parentContainer.classList.add('dark');
-
         setSettings({...settings, darkMode: true});
         handleThemeChange(true);
       } else {
@@ -85,7 +84,8 @@ const LessonPlanNavigation = ({
   };
 
   const updateTheme = () => {
-    const parentContainer = document.getElementById('universalLessonBuilderContainer');
+    const parentContainer = document.querySelector('html');
+
     if (parentContainer) {
       if (settings.darkMode) {
         parentContainer.classList.remove('dark');

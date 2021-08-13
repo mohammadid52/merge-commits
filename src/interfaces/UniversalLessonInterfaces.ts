@@ -61,7 +61,7 @@ export interface PartContent {
   id: string;
   type?: string;
   value: PartContentSub[];
-  label?: string;
+  label?: string; // its not correct. There is not property like label in API.ts
   class?: string;
   [key: string]: any;
 }

@@ -1,26 +1,26 @@
-import {ContentState, convertFromHTML, EditorState} from 'draft-js';
-import React from 'react';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import CustomRichTextEditor from '../HighlighterBlock/CustomRichTextEditor';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
 
 interface EditingBlockProps {
   id?: string;
   poemWriting?: string;
   handleUpdateStudentData?: (domID: string, input: string[]) => void;
-  setPoemWriting?: React.Dispatch<React.SetStateAction<string>>;
-  fields?: {poemHtml: string; poemText: string};
-  setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
 }
 
 const EditingBlock = (props: EditingBlockProps) => {
+  const {id, poemWriting, handleUpdateStudentData} = props;
+
   const {
-    id,
-    poemWriting,
-    fields,
-    setFields,
-    setPoemWriting,
-    handleUpdateStudentData,
-  } = props;
+    state: {user},
+  } = useContext(GlobalContext);
+
+  const onChange = (e: any) => {
+    handleUpdateStudentData(id, [e.target.value]);
+  };
+
+  const isInLesson = useInLessonCheck();
+  const isStudent = user.role === 'ST';
 
   return (
     <div className="w-full flex flex-col">
@@ -34,14 +34,12 @@ const EditingBlock = (props: EditingBlockProps) => {
 
         <textarea
           id={id}
-          className={`w-full h-64 py-2 px-4 dark:text-white text-gray-900 mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray`}
+          className={`editingBlock w-full h-64 py-2 px-4 dark:text-white text-gray-900 mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray`}
           name="story"
-          // onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
-          // value={isInLesson ? getValue(inputID) : value}
-          value={fields.poemText}
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
+          value={poemWriting}
           rows={3}
           cols={250}
-          onChange={(e) => setFields({...fields, poemText: e.target.value})}
         />
       </div>
     </div>

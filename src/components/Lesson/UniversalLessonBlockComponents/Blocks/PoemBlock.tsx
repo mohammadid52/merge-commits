@@ -5,17 +5,18 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {noop} from 'lodash';
+import {isEmpty, noop} from 'lodash';
 
 interface PoemBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
   classString?: string;
+  writingExercise?: boolean;
 }
 
 const PoemBlock = (props: PoemBlockProps) => {
-  const {id, value, classString} = props;
+  const {id, value, classString = 'title-show || lineStarter-hide'} = props;
 
   const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
@@ -27,7 +28,6 @@ const PoemBlock = (props: PoemBlockProps) => {
     poemText: '',
   });
 
-  console.log('🚀 ~ file: PoemBlock.tsx ~ line 26 ~ PoemBlock ~ fields', fields);
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
@@ -61,66 +61,35 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   };
 
-  // // init poemInput so the first linestarter shows up
-  useEffect(() => {
-    if (poemInput.length === 0 && value.length > 0) {
-      setPoemInput([
-        {
-          domID: value[0].id,
-          input: [value[0].value],
-        },
-      ]);
-    }
-  }, [value]);
-
-  // // init poemWriting for WYSIWYG
-  useEffect(() => {
-    if (isInLesson && isStudent) {
-      if (poemInput.length > 0) {
-        const concatenated = poemInput.reduce(
-          (acc: string, poemInputObj: StudentPageInput) => {
-            return `${acc}<p>${poemInputObj.input[0]}</p>`;
-          },
-          ''
-        );
-        handleUpdateStudentData(id, [concatenated]);
-      }
-    }
-  }, [poemInput]);
-
-  const handleSaveAndEdit = () => {
-    setSaveAndEdit(!saveAndEdit);
-  };
+  const [title, lineStarter] = classString?.split(' || ');
 
   return (
     <div
       className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
       <div className="relative flex flex-col justify-between items-center p-4">
-        <WritingBlock
-          id={id}
-          linestarters={value}
-          poemInput={poemInput}
-          setPoemInput={setPoemInput}
-          saveAndEdit={saveAndEdit}
-          fields={fields}
-          setFields={setFields}
-          setPoemWriting={setPoemWriting}
-          setSaveAndEdit={setSaveAndEdit}
-          handleUpdateStudentData={handleUpdateStudentData}
-        />
-        <div className="border-0 border-gray-400 rounded-md p-4 mt-4">
-          <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            {classString}
-          </h1>
-          <EditingBlock
+        {value && value[0].options && lineStarter === 'lineStarter-show' ? (
+          <WritingBlock
             id={id}
-            setPoemWriting={setPoemWriting}
-            // keep this one
-            // poemWriting={isInLesson ? poemWriting : ''}
-            // this is for testing
-            poemWriting={poemWriting}
+            linestarters={value[0].options}
+            poemInput={poemInput}
+            setPoemInput={setPoemInput}
+            saveAndEdit={saveAndEdit}
             fields={fields}
             setFields={setFields}
+            setPoemWriting={setPoemWriting}
+            setSaveAndEdit={setSaveAndEdit}
+            handleUpdateStudentData={handleUpdateStudentData}
+          />
+        ) : null}
+        <div className="bg-gray-700 rounded-md p-4 mt-4">
+          {value && value[0].label && title === 'title-show' && (
+            <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
+              {value[0].label}
+            </h1>
+          )}
+          <EditingBlock
+            id={id}
+            poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
             handleUpdateStudentData={
               isInLesson && isStudent ? handleUpdateStudentData : noop
             }
