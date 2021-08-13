@@ -304,6 +304,11 @@ const HeaderModalComponent = ({
           {colorPickerActive && (
             <ColorPicker
               isMainPage
+              noneLabel="No Border"
+              onNoneClick={() => {
+                setSelectedValues({...selectedValues, color: 'No Border'});
+                setColorPickerActive(false);
+              }}
               classString={classString}
               callbackColor={handleColorPickerSelect}
               styleString={{top: '100%'}}

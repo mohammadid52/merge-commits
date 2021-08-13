@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {LessonActions} from '../reducers/LessonReducerOLD';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as customMutations from '../customGraphql/customMutations';
-import {AnthologyContentInterface} from '../components/Dashboard/Anthology/Anthology';
 import * as mutations from '../graphql/mutations';
 import {useParams} from 'react-router-dom';
 import {lessonStateOLD} from '../state/LessonStateOLD';

@@ -437,11 +437,14 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                         'Enter'
                       )}
                     </button>
-                    <NavLink to="/forgot-password">
+                    {/* <NavLink to="/forgot-password">
                       <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
-                        Forgot your password?
+                        Request your session leader to reset your password.
                       </div>
-                    </NavLink>
+                    </NavLink> */}
+                    <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
+                        Request your session leader to reset your password.
+                      </div>
                   </div>
                 </div>
               </>

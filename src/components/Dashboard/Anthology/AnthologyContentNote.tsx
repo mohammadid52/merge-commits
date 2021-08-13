@@ -227,7 +227,7 @@ const Feedbacks = ({
       const studentDataUpdate: any = await API.graphql(
         graphqlOperation(mutations.updateStudentData, {
           input: {
-            id: item.studentDataID,
+            id: item.dataID,
             status: item.status,
             syllabusLessonID: item.syllabusLessonID,
             studentID: item.studentID,
@@ -264,7 +264,7 @@ const Feedbacks = ({
       const studentDataUpdate: any = await API.graphql(
         graphqlOperation(mutations.updateStudentData, {
           input: {
-            id: item.studentDataID,
+            id: item.dataID,
             status: item.status,
             syllabusLessonID: item.syllabusLessonID,
             studentID: item.studentID,
@@ -722,6 +722,7 @@ const SingleNote = ({
   editModeView,
   viewModeView,
   contentObj,
+  currentContentObj,
 }: any) => {
   const [showComments, setShowComments] = useState(false);
   const [feedbackData, setFeedbackData] = useState([]);
@@ -754,9 +755,9 @@ const SingleNote = ({
     }
   };
 
-  useEffect(() => {
-    getFeedBackData();
-  }, []);
+  // useEffect(() => {
+  //   getFeedBackData();
+  // }, []);
 
   const getFeedBackData = async () => {
     setLoadingComments(true);
@@ -769,6 +770,7 @@ const SingleNote = ({
       setLoadingComments(false);
     }
   };
+
   return (
     <ContentCard hasBackground={false} key={`anthology_${subSection}${idx}`}>
       <div
@@ -778,21 +780,18 @@ const SingleNote = ({
         } border-gray-200 px-6 py-6 p-2`}>
         {viewEditMode &&
         viewEditMode.mode === 'edit' &&
-        viewEditMode.studentDataID === contentObj.studentDataID &&
-        viewEditMode.idx === getContentObjIndex(contentObj)
+        viewEditMode.dataID === contentObj.id
           ? editModeView(contentObj)
           : viewModeView(contentObj)}
         {/**
          *  section:  VIEW/EDIT BUTTON
          */}
         <div className={`flex pt-2 flex-col  mt-2`}>
-          {viewEditMode.mode === 'edit' &&
-          viewEditMode.studentDataID === contentObj.studentDataID &&
-          viewEditMode.idx === getContentObjIndex(contentObj) ? (
+          {viewEditMode.mode === 'edit' && viewEditMode.dataID === contentObj.id ? (
             <div className="flex items-center">
               <Buttons
                 onClick={() => {
-                  handleEditToggle('', '', 0);
+                  handleEditToggle('', '');
                   onCancel(contentObj.type);
                 }}
                 label={anthologyDict[userLanguage].ACTIONS.CANCEL}
@@ -801,13 +800,7 @@ const SingleNote = ({
               />
 
               <Buttons
-                onClick={() =>
-                  handleEditToggle(
-                    'save',
-                    contentObj.studentDataID,
-                    getContentObjIndex(contentObj)
-                  )
-                }
+                onClick={() => handleEditToggle('save', contentObj.id)}
                 label={anthologyDict[userLanguage].ACTIONS.SAVE}
               />
             </div>
@@ -815,16 +808,10 @@ const SingleNote = ({
             <div className="flex items-center justify-between">
               <div
                 className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                onClick={() =>
-                  handleEditToggle(
-                    'edit',
-                    contentObj.studentDataID,
-                    getContentObjIndex(contentObj)
-                  )
-                }>
+                onClick={() => handleEditToggle('edit', contentObj.id)}>
                 {anthologyDict[userLanguage].ACTIONS.EDIT}
               </div>
-              <div
+              {/* <div
                 onClick={() => setShowComments(!showComments)}
                 className={`${
                   feedbackData.length > 0 ? theme.btn[themeColor] : 'bg-gray-500'
@@ -843,7 +830,7 @@ const SingleNote = ({
                     <Loader color="#fff" />
                   </span>
                 )}
-              </div>
+              </div> */}
             </div>
           )}
           {showComments && (

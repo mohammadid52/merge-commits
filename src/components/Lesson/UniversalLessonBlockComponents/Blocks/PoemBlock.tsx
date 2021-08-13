@@ -5,20 +5,27 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {isString} from 'lodash';
+import {noop} from 'lodash';
 
 interface PoemBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
+  classString?: string;
 }
 
 const PoemBlock = (props: PoemBlockProps) => {
-  const {id, value} = props;
-  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {id, value, classString} = props;
+
+  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
   // const [poemWriting, setPoemWriting] = useState<string>('');
   const [saveAndEdit, setSaveAndEdit] = useState<boolean>(false);
+  const [poemWriting, setPoemWriting] = useState('');
+  const [fields, setFields] = useState({
+    poemHtml: '',
+    poemText: '',
+  });
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -41,9 +48,11 @@ const PoemBlock = (props: PoemBlockProps) => {
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
+
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
+
     if (getInput) {
       return getInput.input;
     } else {
@@ -85,31 +94,38 @@ const PoemBlock = (props: PoemBlockProps) => {
   return (
     <div
       className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
-      <div className="relative flex flex-col justify-between items-center">
-        {!saveAndEdit ? (
-          <WritingBlock
-            id={id}
-            linestarters={value}
-            poemInput={poemInput}
-            setPoemInput={setPoemInput}
-            saveAndEdit={saveAndEdit}
-            setSaveAndEdit={setSaveAndEdit}
-          />
-        ) : (
+      <div className="relative flex flex-col justify-between items-center p-4">
+        <WritingBlock
+          id={id}
+          linestarters={value}
+          poemInput={poemInput}
+          setPoemInput={setPoemInput}
+          saveAndEdit={saveAndEdit}
+          fields={fields}
+          setFields={setFields}
+          setPoemWriting={setPoemWriting}
+          setSaveAndEdit={setSaveAndEdit}
+          handleUpdateStudentData={handleUpdateStudentData}
+        />
+        <div className="border-0 border-gray-400 rounded-md p-4 mt-4">
+          <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
+            {classString}
+          </h1>
           <EditingBlock
             id={id}
-            poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
+            setPoemWriting={setPoemWriting}
+            // keep this one
+            // poemWriting={isInLesson ? poemWriting : ''}
+            // this is for testing
+            poemWriting={poemWriting}
+            fields={fields}
+            setFields={setFields}
             handleUpdateStudentData={
-              isInLesson && isStudent ? handleUpdateStudentData : undefined
+              isInLesson && isStudent ? handleUpdateStudentData : noop
             }
           />
-        )}
+        </div>
       </div>
-      <button
-        onClick={() => handleSaveAndEdit()}
-        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 text-gray-200`}>
-        Save and Edit Your Poem
-      </button>
     </div>
   );
 };

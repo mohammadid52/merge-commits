@@ -57,12 +57,14 @@ const LessonPlanNavigation = ({
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
 
   useEffect(() => {
-    if (fetchingLessonDetails) {
-      setSettings({...settings, darkMode: true});
-      handleThemeChange(true);
-    } else {
-      const parentContainer = document.getElementById('universalLessonBuilderContainer');
-      if (parentContainer) {
+    const parentContainer = document.getElementById('universalLessonBuilderContainer');
+    if (parentContainer) {
+      if (fetchingLessonDetails) {
+        parentContainer.classList.add('dark');
+
+        setSettings({...settings, darkMode: true});
+        handleThemeChange(true);
+      } else {
         if (universalLessonDetails.darkMode) {
           parentContainer.classList.add('dark');
 
