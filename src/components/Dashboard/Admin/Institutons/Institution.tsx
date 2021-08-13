@@ -132,6 +132,11 @@ const Institution = (props: InstitutionProps) => {
     getInstitutionData();
   }, []);
 
+  useEffect(() => {
+    const {tab} = urlQueryParams;
+    props.tabProps.setTabsData({...props.tabProps.tabsData, inst: Number(tab) || 0});
+  }, [urlQueryParams.tab]);
+
   const updateServiceProviders = (item: any) => {
     const instData = institutionData;
     instData.serviceProviders.items.push(item);

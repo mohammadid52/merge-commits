@@ -5,7 +5,7 @@ import {IconContext} from 'react-icons';
 import {HiPencil} from 'react-icons/hi';
 import {IoAdd} from 'react-icons/io5';
 import {IoIosAdd} from 'react-icons/io';
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+// import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 import {reorder, stringToHslColor} from '../../../../../../../utilities/strings';
 
@@ -589,10 +589,18 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                           )
                                         )}
                                         <div
-                                          className={`text-base ${theme.text.active} cursor-pointer`}
+                                          className={`text-sm ${theme.text.active} cursor-pointer flex`}
                                           onClick={() =>
                                             createNewMeasurement(topic.id, learning.id)
                                           }>
+                                          <span className="w-auto flex items-center mr-1">
+                                            <IconContext.Provider
+                                              value={{
+                                                color: theme.iconColor[themeColor],
+                                              }}>
+                                              <IoAdd className="w-4 h-4" />
+                                            </IconContext.Provider>
+                                          </span>
                                           Add new measurement
                                         </div>
                                       </>
@@ -617,10 +625,18 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                                       </div>
                                     ) : (
                                       <div
-                                        className={`text-base ${theme.text.active}  cursor-pointer`}
+                                        className={`text-base ${theme.text.active}  cursor-pointer flex`}
                                         onClick={() =>
                                           createNewMeasurement(topic.id, learning.id)
                                         }>
+                                        <span className="w-auto flex items-center mr-1">
+                                          <IconContext.Provider
+                                            value={{
+                                              color: theme.iconColor[themeColor],
+                                            }}>
+                                            <IoAdd className="w-4 h-4" />
+                                          </IconContext.Provider>
+                                        </span>
                                         Add measurement
                                       </div>
                                     )}

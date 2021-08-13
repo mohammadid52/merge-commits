@@ -76,6 +76,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     institution: '',
     image: '',
     studentSummary: '',
+    imageCaption: '',
     isError: true,
   });
   const [showCropper, setShowCropper] = useState(false);
@@ -255,6 +256,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
     } else {
       msgs.studentSummary = '';
     }
+    if (!formData.imageCaption?.trim().length) {
+      isValid = false;
+      msgs.imageCaption =
+        AddNewLessonFormDict[userLanguage]['VALIDATION']['IMAGE_CAPTION'];
+    } else {
+      msgs.imageCaption = '';
+    }
     // TODO: Add validation for repeating lesson names.
     setValidation({...msgs});
     return isValid;
@@ -338,6 +346,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
               message: AddNewLessonFormDict[userLanguage]['MESSAGES']['UPDATE'],
               isError: false,
               image: '',
+              imageCaption:'',
               institution: '',
               languages: '',
               studentSummary: '',
@@ -353,6 +362,7 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
             isError: true,
             institution: '',
             image: '',
+            imageCaption: '',
             languages: '',
             studentSummary: '',
           });
@@ -613,13 +623,13 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                         id="imageCaption"
                         onChange={onInputChange}
                         name="imageCaption"
-                        maxLength={15}
+                        maxLength={25}
                       />
-                      {validation.name && (
-                        <p className="text-red-600 text-sm">{validation.name}</p>
+                      {validation.imageCaption && (
+                        <p className="text-red-600 text-sm">{validation.imageCaption}</p>
                       )}
                       <div className="text-right text-gray-400">
-                        {imageCaption.length} of 15
+                        {imageCaption.length} of 25
                       </div>
                     </div>
                     {/* </div> */}
