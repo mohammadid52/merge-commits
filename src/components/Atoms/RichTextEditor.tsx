@@ -17,6 +17,9 @@ interface RichTextEditorProps {
   mediumDark?: boolean;
   customStyle?: boolean;
   features?: string[];
+  /**
+   * Don't use this if the content is serious
+   */
   withStyles?: boolean;
 }
 
@@ -31,7 +34,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     rounded = false,
     features = [],
     theme,
-    withStyles,
+    withStyles = false,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
