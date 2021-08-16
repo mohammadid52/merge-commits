@@ -86,6 +86,19 @@ const PoemBlock = (props: PoemBlockProps) => {
             <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
               {value[0].label}
             </h1>
+            // <input
+            //   id={id}
+            //   // disabled={mode === 'building'}
+            //   className={`w-full py-2 px-4  mt-2 rounded-xl bg-gray-100 dark:bg-darker-gray placeholder-gray-500 dark:placeholder-gray-700`}
+            //   name={'text'}
+            //   type={'text'}
+            //   onChange={
+            //     isInLesson && isStudent
+            //       ? (e) => handleUpdateStudentData(id, [e.target.value])
+            //       : noop
+            //   }
+            //   value={isInLesson ? getStudentDataValue(id)[0] : value}
+            // />
           )}
           <EditingBlock
             id={id}
