@@ -41,7 +41,7 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const {selectedPageID, universalLessonDetails} = useULBContext();
+  const {selectedPageID, universalLessonDetails, selID} = useULBContext();
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
@@ -99,7 +99,15 @@ const BuilderRowComposer = (props: RowComposerProps) => {
         [
           selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <div key={`row_pagepart_${idx}`} className="relative">
+            <div
+              key={`row_pagepart_${idx}`}
+              className={`relative ${
+                selID?.pageContentID && !selID?.partContentID
+                  ? `opacity-${
+                      pagePart.id === selID?.pageContentID ? '100' : '50'
+                    } transition-opacity duration-200`
+                  : ''
+              }`}>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -142,6 +150,15 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                   {(provided) => {
                                     return (
                                       <li
+                                        className={
+                                          selID?.pageContentID && selID?.partContentID
+                                            ? `transition-opacity duration-200 opacity-${
+                                                selID?.partContentID === content.id
+                                                  ? '100'
+                                                  : '50'
+                                              } `
+                                            : ''
+                                        }
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}>
