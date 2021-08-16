@@ -85,8 +85,8 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     fetchingLessonDetails,
     setLessonPlanFields,
     setEditMode,
-    toolbarOnTop,
 
+    pushUserToThisId,
     previewMode,
     setPreviewMode,
   } = useULBContext();
@@ -201,10 +201,33 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
         universalLessonDetails.lessonPlan[universalLessonDetails.lessonPlan.length - 1]
           .id;
       setSelectedPageID(pageID);
+      pushUserToThisId(universalLessonDetails.id, pageID);
     } else {
       goToLessonPlan();
     }
   };
+
+  /**
+   * This is very important thing to implement.
+   * When user type weird / wrong pageId or lessonId
+   * the ULB will show normal black data page.
+   * THIS SHOULD NOT HAPPEN
+   */
+  const checkPageIdOnLoad = () => {
+    // First collect all page ids of current lesson
+    const ids = map(universalLessonDetails.lessonPlan, (page) => page.id);
+    // then check if current pageId is in the `ids` or not
+    if (ids && ids.length > 0 && !ids.includes(selectedPageID)) {
+      setSelectedPageID(ids[0]);
+      pushUserToThisId(universalLessonDetails.id, ids[0]);
+    }
+  };
+
+  useEffect(() => {
+    if (!fetchingLessonDetails) {
+      checkPageIdOnLoad();
+    }
+  }, [fetchingLessonDetails]);
 
   const getLessonById = async (lessonId: string) => {
     try {
@@ -244,6 +267,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       title: 'TBD',
       estTime: 1,
       tags: [],
+      interactionType: [],
       description: '',
       class: '',
       pageContent:

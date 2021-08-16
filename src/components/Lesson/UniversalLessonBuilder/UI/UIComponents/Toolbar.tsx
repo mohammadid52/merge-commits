@@ -216,21 +216,24 @@ const Toolbar = ({
         );
 
         const data = res.data.updateUniversalLesson;
-        // if (data.id === universalLessonDetails.id) {
+
         // update local state if any page of current lesson is being copied
         setUniversalLessonDetails({...data});
-        // }
 
         setSelectedPageID(newPage.id);
         setSelectedId({pageId: '', lessonId: ''});
 
         setStatus('none');
         setShowDataForCopyClone(false);
+        // navigate user to newly created page
         if (universalLessonDetails.id && newPage.id) {
           history.push(
             `/dashboard/lesson-builder/lesson/page-builder?lessonId=${universalLessonDetails.id}&pageId=${newPage.id}`
           );
         }
+        // when user is navigated to the page show modal with lesson page details
+        setNewLessonPlanShow(true);
+        setEditMode(true);
       });
     });
   };
