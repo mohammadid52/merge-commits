@@ -2277,6 +2277,7 @@ export const getClassDetails = /* GraphQL */ `
         items {
           id
           classID
+          group
           studentID
           studentEmail
           studentAuthID
@@ -2307,6 +2308,10 @@ export const listTopics = /* GraphQL */ `
         curriculumID
         name
         description
+        distinguished
+        excelled
+        adequite
+        basic
         learningObjectiveID
         learningObjective {
           name
@@ -2455,6 +2460,7 @@ export const getCurriculum = /* GraphQL */ `
       institutionID
       name
       type
+      summary
       description
       objectives
       languages
@@ -2463,6 +2469,7 @@ export const getCurriculum = /* GraphQL */ `
         name
       }
       designers
+      image
       syllabi {
         items {
           id
@@ -3550,6 +3557,27 @@ export const listRoomsByActiveSyllabusId = /* GraphQL */ `
       items {
         id
         activeSyllabus
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getStaffsForInstitution = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institution {
+          id
+          name
+        }
+        staffMember {
+          firstName
+          lastName
+        }
+        createdAt
+        updatedAt
       }
       nextToken
     }

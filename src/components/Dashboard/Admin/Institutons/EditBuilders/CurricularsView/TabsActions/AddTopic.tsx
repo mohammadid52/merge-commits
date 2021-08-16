@@ -1,181 +1,193 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useContext, useEffect, useState} from 'react';
+import {useHistory, useParams} from 'react-router';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import BreadCrums from '../../../../../../Atoms/BreadCrums';
 import SectionTitle from '../../../../../../Atoms/SectionTitle';
 import Buttons from '../../../../../../Atoms/Buttons';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import FormInput from '../../../../../../Atoms/Form/FormInput';
 import TextArea from '../../../../../../Atoms/Form/TextArea';
-import Selector from '../../../../../../Atoms/Form/Selector'
+import Selector from '../../../../../../Atoms/Form/Selector';
 import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../../customGraphql/customMutations'
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 interface AddTopicProps {
-
+  curricularId: string;
+  onCancel?: () => void;
+  postMutation: (data: any) => void;
+  topicData: any;
 }
 
 const AddTopic = (props: AddTopicProps) => {
-  const { } = props;
-  const history = useHistory();
-  const urlParams: any = useParams()
-  const curricularId = urlParams.curricularId;
+  const {curricularId, onCancel, postMutation, topicData} = props;
 
   const useQuery = () => {
     return new URLSearchParams(location.search);
   };
 
   const urlGetParams: any = useQuery();
-  const learningId = urlGetParams.get('lid'); // Find a code from params.
-  const { theme, clientKey,userLanguage } = useContext(GlobalContext);
-  const {AddTopicDict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const {AddTopicDict, BreadcrumsTitles} = useDictionary(clientKey);
 
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [learning, setLearning] = useState({ id: '', name: '', value: '' });
-  const [validation, setValidation] = useState({ name: '', learning: '' })
+  const [learning, setLearning] = useState({id: '', name: '', value: ''});
+  const [validation, setValidation] = useState({name: '', learning: ''});
   const [learnings, setLearnings] = useState([]);
   const [topicIds, setTopicIds] = useState([]);
   const [evalution, setEvalution] = useState({
     distinguished: '',
     excelled: '',
     adequite: '',
-    basic: ''
-  })
+    basic: '',
+  });
 
-  const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: learning?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
-    { title: BreadcrumsTitles[userLanguage]['AddTopic'], url: `/dashboard/curricular/${curricularId}/topic/add`, last: true }
-  ];
+  useEffect(() => {
+    if (topicData?.id) {
+      setName(topicData.name);
+      setDescription(topicData.description);
+      setEvalution({
+        distinguished: topicData.distinguished,
+        excelled: topicData.excelled,
+        adequite: topicData.adequite,
+        basic: topicData.basic,
+      });
+    }
+  }, [topicData?.id]);
 
   const onInputChange = (e: any) => {
     if (e.target.name === 'name') {
-      const value = e.target.value
-      setName(value)
-      if (value.length && validation.name) setValidation({ ...validation, name: '' });
-    } else if (e.target.name === 'description') setDescription(e.target.value)
+      const value = e.target.value;
+      setName(value);
+      if (value.length && validation.name) setValidation({...validation, name: ''});
+    } else if (e.target.name === 'description') setDescription(e.target.value);
     else {
       setEvalution({
         ...evalution,
-        [e.target.name]: e.target.value
-      })
+        [e.target.name]: e.target.value,
+      });
     }
-  }
+  };
 
   const validateForm = () => {
-    let isValid = true
+    let isValid = true;
     const msgs = validation;
     if (!name.length) {
       isValid = false;
       msgs.name = AddTopicDict[userLanguage]['messages']['namerequired'];
     } else {
-      msgs.name = ''
+      msgs.name = '';
     }
-    if (!learning.id) {
-      isValid = false;
-      msgs.learning = AddTopicDict[userLanguage]['messages']['objectiverequired'];
-    } else {
-      msgs.learning = ''
-    }
-    setValidation({ ...msgs });
+    // if (!learning.id) {
+    //   isValid = false;
+    //   msgs.learning = AddTopicDict[userLanguage]['messages']['objectiverequired'];
+    // } else {
+    //   msgs.learning = '';
+    // }
+    setValidation({...msgs});
     return isValid;
-  }
+  };
 
   const saveTopicDetails = async () => {
-    const isValid = validateForm()
+    const isValid = validateForm();
     if (isValid) {
+      setLoading(true);
       const input = {
-        name, description, distinguished, excelled, adequite, basic,
+        name,
+        description,
+        distinguished,
+        excelled,
+        adequite,
+        basic,
         curriculumID: curricularId,
-        learningObjectiveID: learning.id,
+        learningObjectiveID: topicData.learningObjectiveID,
       };
-      const item: any = await API.graphql(graphqlOperation(customMutations.createTopic, { input }));
-      const addedItem = item.data.createTopic
-      if (!topicIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `t_${learning.id}`, sequence: [addedItem.id] } }));
-        seqItem = seqItem.data.createCSequences
-        console.log('seqItem', seqItem)
+      if (topicData?.id) {
+        const item: any = await API.graphql(
+          graphqlOperation(customMutations.updateTopic, {
+            input: {...input, id: topicData.id},
+          })
+        );
+        const updatedItem = item.data.updateTopic;
+        if (updatedItem) {
+          postMutation(updatedItem);
+        }else{
+          setLoading(false);
+        }
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `t_${learning.id}`, sequence: [...topicIds, addedItem.id] } }));
-        seqItem = seqItem.data.updateCSequences
-        console.log('seqItem', seqItem)
+        const item: any = await API.graphql(
+          graphqlOperation(customMutations.createTopic, {input})
+        );
+        const addedItem = item.data.createTopic;
+        if (addedItem) {
+          postMutation(addedItem);
+        }else{
+          setLoading(false);
+        }
       }
-      if (addedItem) {
-        history.goBack()
-      } else {
-        console.log('Could not add topic');
-      }
+      console.log('Could not add topic');
     }
-  }
+  };
 
   const selectLearning = (val: string, name: string, id: string) => {
     if (validation.learning) {
-      setValidation({ ...validation, learning: '' })
+      setValidation({...validation, learning: ''});
     }
-    setLearning({ id, name, value: val })
-  }
+    setLearning({id, name, value: val});
+  };
 
   const fetchTopicsSequence = async (leraningID: string) => {
-    let seq: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `t_${leraningID}` }))
-    seq = seq?.data?.getCSequences?.sequence || []
-    setTopicIds(seq)
-  }
-
-  const fetchLoListData = async () => {
-    let list: any = await API.graphql(graphqlOperation(queries.listLearningObjectives, {
-      filter: { curriculumID: { eq: curricularId } },
-    }))
-    list = list?.data?.listLearningObjectives?.items || []
-    list = list.map((item: any) => ({ id: item.id, name: item.name, value: item.name }));
-    setLearnings(list)
-    if (learningId) {
-      setLearning(list.find((item: any) => item.id === learningId));
-    }
-  }
-
-  useEffect(() => {
-    fetchLoListData()
-  }, [])
+    let seq: any = await API.graphql(
+      graphqlOperation(queries.getCSequences, {id: `t_${leraningID}`})
+    );
+    seq = seq?.data?.getCSequences?.sequence || [];
+    setTopicIds(seq);
+  };
 
   useEffect(() => {
     if (learning?.id) {
-      fetchTopicsSequence(learning?.id)
+      fetchTopicsSequence(learning?.id);
     }
-  }, [learning.id])
+  }, [learning.id]);
 
-  const { distinguished, excelled, adequite, basic } = evalution;
+  const {distinguished, excelled, adequite, basic} = evalution;
 
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
-
+    <div className="min-w-256">
       {/* Section Header */}
-      <BreadCrums items={breadCrumsList} />
+      {/* <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title={AddTopicDict[userLanguage]['title']} subtitle={AddTopicDict[userLanguage]['subtitle']} />
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={history.goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
-      </div>
+      </div> */}
 
       {/* Body section */}
-      <PageWrapper>
-        <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddTopicDict[userLanguage]['heading']}</h3>
-          <div className="">
+      {/* <PageWrapper> */}
+      <div className="w-full m-auto">
+        {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddTopicDict[userLanguage]['heading']}</h3> */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="px-3 py-4">
+            <FormInput
+              value={name}
+              id="name"
+              onChange={onInputChange}
+              name="name"
+              label={AddTopicDict[userLanguage]['topicname']}
+              isRequired
+              maxLength={30}
+              showCharacterUsage
+            />
+            {validation.name && <p className="text-red-600">{validation.name}</p>}
+          </div>
+          <div></div>
 
-            <div className="px-3 py-4">
-              <FormInput value={name} id='name' onChange={onInputChange} name='name' label={AddTopicDict[userLanguage]['topicname']} isRequired />
-              {
-                validation.name && <p className="text-red-600">{validation.name}</p>
-              }
-            </div>
-
-            {/* <div className="px-3 py-4">
+          {/* <div className="px-3 py-4">
               <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                 {AddTopicDict[userLanguage]['learningobj']} <span className="text-red-500">*</span>
               </label>
@@ -185,32 +197,71 @@ const AddTopic = (props: AddTopicProps) => {
               }
             </div> */}
 
-            <div className="px-3 py-4">
-              <TextArea id='description' value={description} onChange={onInputChange} name='description' label={AddTopicDict[userLanguage]['description']} />
-            </div>
+          <div className="px-3 py-4">
+            <TextArea
+              id="description"
+              value={description}
+              onChange={onInputChange}
+              name="description"
+              label={AddTopicDict[userLanguage]['description']}
+            />
+          </div>
 
-            <div className="px-3 py-4">
-              <TextArea id='distinguished' value={distinguished} onChange={onInputChange} name='distinguished' label="Distinguished" />
-            </div>
-            <div className="px-3 py-4">
-              <TextArea id='excelled' value={excelled} onChange={onInputChange} name='excelled' label="Excelled" />
-            </div>
-            <div className="px-3 py-4">
-              <TextArea id='adequite' value={adequite} onChange={onInputChange} name='adequite' label="Adequate" />
-            </div>
-            <div className="px-3 py-4">
-              <TextArea id='basic' value={basic} onChange={onInputChange} name='basic' label="Basic" />
-            </div>
-
+          <div className="px-3 py-4">
+            <TextArea
+              id="distinguished"
+              value={distinguished}
+              onChange={onInputChange}
+              name="distinguished"
+              label="Distinguished"
+            />
+          </div>
+          <div className="px-3 py-4">
+            <TextArea
+              id="excelled"
+              value={excelled}
+              onChange={onInputChange}
+              name="excelled"
+              label="Excelled"
+            />
+          </div>
+          <div className="px-3 py-4">
+            <TextArea
+              id="adequite"
+              value={adequite}
+              onChange={onInputChange}
+              name="adequite"
+              label="Adequate"
+            />
+          </div>
+          <div className="px-3 py-4">
+            <TextArea
+              id="basic"
+              value={basic}
+              onChange={onInputChange}
+              name="basic"
+              label="Basic"
+            />
           </div>
         </div>
-        <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10 mr-4" label={AddTopicDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
-          <Buttons btnClass="py-3 px-10 ml-4" label={AddTopicDict[userLanguage]['button']['save']} onClick={saveTopicDetails} />
-        </div>
-      </PageWrapper>
+      </div>
+      <div className="flex my-8 justify-center">
+        <Buttons
+          btnClass="py-3 px-10 mr-4"
+          label={AddTopicDict[userLanguage]['button']['cancel']}
+          onClick={onCancel}
+          transparent
+        />
+        <Buttons
+          btnClass="py-3 px-10 ml-4"
+          label={AddTopicDict[userLanguage]['button']['save']}
+          onClick={saveTopicDetails}
+          disabled={loading}
+        />
+      </div>
+      {/* </PageWrapper> */}
     </div>
-  )
-}
+  );
+};
 
-export default AddTopic
+export default AddTopic;

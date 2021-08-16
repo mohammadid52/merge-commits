@@ -19,6 +19,7 @@
     "@headlessui/react": "^1.1.0",
     "@tailwindcss/postcss7-compat": "^2.0.4",
     "@types/amplify": "^1.1.24",
+    "@types/draft-convert": "^2.1.4",
     "@types/lodash": "^4.14.168",
     "@types/node": "^13.13.21",
     "@types/react": "^16.9.50",

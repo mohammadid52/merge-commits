@@ -75,7 +75,7 @@ const StudentsTiles = (props: {
     <>
       <SectionTitleV3
         title={title}
-        extraContainerClass="max-w-256 px-6"
+        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 px-6"
         fontSize="xl"
         fontStyle="semibold"
         borderBottom

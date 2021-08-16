@@ -63,7 +63,7 @@ const SelectMany = ({
         const {label, text, id} = item;
 
         return (
-          <div className={`flex my-2 w-auto justify-center items-center mr-8`}>
+          <div className={`flex my-2 w-auto justify-center items-center mr-8 `}>
             <input
               id={id}
               data-key={id}
@@ -135,7 +135,7 @@ const SelectOne = ({
       {value.map((item: any) => {
         const {label, text, id} = item;
         return (
-          <div className={`w-auto flex justify-center items-center mr-8 `}>
+          <div key={id} className={`w-auto flex justify-center items-center mr-8 my-2`}>
             <input
               id={id}
               data-key={id}
@@ -507,7 +507,13 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
 
             <div className={`w-auto datePickerWrapper ${lessonPageTheme}`}>
               <CustomDatePicker
+                handleUpdateStudentData={handleUpdateStudentData}
                 id={inputID}
+                inputID={inputID}
+                mode={mode}
+                themeTextColor={themeTextColor}
+                lessonPageTheme={lessonPageTheme}
+                themePlaceholderColor={themePlaceholderColor}
                 disabled={false}
                 onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
                 value={isInLesson ? getValue(inputID) : value}

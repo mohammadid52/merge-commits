@@ -125,6 +125,12 @@
   position: relative;
   transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    z-index: 99;
+    height: 100%;
+  }
+
   .sidenav_sub_icon_wrapper {
     font-size: 12px;
     width: 12px;
@@ -1001,8 +1007,20 @@
   border: 1px solid rgba(50, 50, 62, 1);
   color: white;
 }
+
+.wrapperClassName.mediumDark {
+  background-color: rgba(50, 50, 62, 0);
+  border: 1px solid rgba(50, 50, 62, 0.089);
+  color: white;
+}
+
 .toolbarClassName.dark {
   background-color: rgba(50, 50, 62, 1);
+  border: 1px solid #9ca3af;
+  color: white;
+}
+.toolbarClassName.mediumDark {
+  background-color: rgb(199, 199, 204);
   border: 1px solid #9ca3af;
   color: white;
 }
@@ -1013,6 +1031,7 @@
 }
 
 .editorClassName {
+  background-color: rgba(255, 255, 255, 1);
   color: #000;
   height: 20rem !important;
 }
@@ -1097,5 +1116,21 @@
   }
   to {
     transform: rotateZ(0deg);
+  }
+}
+
+.react-datepicker__tab-loop {
+  width: auto;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.paragraph-block {
+  & ol,
+  & ul {
+    list-style: initial;
+    list-style-position: inside;
   }
 }

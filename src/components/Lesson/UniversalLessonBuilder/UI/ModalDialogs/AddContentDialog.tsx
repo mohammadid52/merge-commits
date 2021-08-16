@@ -168,6 +168,14 @@ const AddContentDialog = ({
       iconForeground: 'text-red-700',
       iconBackground: 'bg-red-100',
     },
+    {
+      name: 'Writing Exercise ⭐',
+      subtitle: 'Add Writing Exercise',
+      type: FORM_TYPES.WRITING_EXERCISE,
+      icon: BsNewspaper,
+      iconForeground: 'text-red-700',
+      iconBackground: 'bg-red-100',
+    },
 
     {
       name: 'Radio',

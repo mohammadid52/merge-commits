@@ -9,7 +9,7 @@ const SideImage = (props: LessonCardProps) => {
 
   return (
     <div
-      className={`w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
+      className={`w-full h-48 md:h-auto sm:w-2.5/10 ${theme.dashboard.bg} rounded-tl rounded-bl shadow`}
       style={{
         /* stylelint-disable */
         backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),url(${
@@ -20,23 +20,21 @@ const SideImage = (props: LessonCardProps) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <div className="h-6/10 flex justify-center items-center" />
+      <div className="h-30 sm:h-7/10 flex justify-center items-center" />
 
-      <div className="mt-4">
-        <div className="h-1/10 pl-6">
+      <div className="">
+        {/* <div className="h-1/10 pl-6">
           <div
-            className="tracking-widest border-b-0 text-gray-300 border-ketchup"
+            className="tracking-widest text-center text-2xl md:text-lg text-gray-300"
             style={{textShadow: '1px 1px black'}}>
-            FEATURED PERSON
+            {lessonProps?.lesson?.cardCaption}
           </div>
-        </div>
+        </div> */}
         <div className="h-14 flex flex-row-reverse">
           <h2
-            className={`first w-full text-2xl sm:text-xl text-right  font-medium tracking-widest mt-2 mr-1 text-gray-200`}
+            className={`first w-full text-base 2xl:text-xl text-right font-bold tracking-widest mb-2 mx-2 text-gray-200`}
             style={{textShadow: '1px 1px black'}}>
-            {lessonProps && lessonProps.lesson?.artist?.name
-              ? lessonProps.lesson?.artist?.name
-              : null}
+            {lessonProps?.lesson?.cardCaption}
           </h2>
         </div>
       </div>

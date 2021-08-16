@@ -16,4 +16,5 @@ export interface LessonHeaderBarProps extends LessonComponentsInterface {
   overlay?: string;
   isAtEnd?: boolean;
   setisAtEnd?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleRequiredNotification?: () => void;
 }

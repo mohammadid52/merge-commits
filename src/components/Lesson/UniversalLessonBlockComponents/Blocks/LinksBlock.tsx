@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {LinkPreview} from '@dhaiwat10/react-link-preview';
+import {useEffect} from 'react';
 
 interface LinksBlockProps extends RowWrapperProps {
   id?: string;
@@ -14,12 +15,9 @@ const LinksBlock = (props: LinksBlockProps) => {
   const {
     state: {lessonPage: {theme: lessonPageTheme = '', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-  const iconColor = lessonPageTheme === 'light' ? 'black' : 'white';
-
-  const isDark = lessonPageTheme !== 'light';
 
   return (
-    <div id={id} className="h-full w-full flex flex-col items-center rounded-lg">
+    <div className="h-full w-full flex flex-col items-center rounded-lg">
       <div className="w-full h-full flex flex-row items-center justify-center">
         <div className="h-full w-full flex flex-row">
           {value &&
@@ -30,9 +28,10 @@ const LinksBlock = (props: LinksBlockProps) => {
                 key: number
               ) => (
                 <div
+                  id={id + 'custom'}
                   key={`${id}_${key}`}
-                  className="h-full p-2 flex justify-center items-start px-4">
-                  <LinkPreview url={item.value} />
+                  className="h-full  p-2 flex justify-center items-start px-4">
+                  <LinkPreview url={item.value} height={400} imageHeight={200} />
                 </div>
               )
             )}

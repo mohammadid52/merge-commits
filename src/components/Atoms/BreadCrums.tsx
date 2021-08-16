@@ -40,13 +40,13 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
           <ol className="list-none flex items-center justify-start">
             {items.map((item, i) => (
               <li
-                className="flex items-center w-auto mr-2"
+                className="flex items-center w-auto mr-1 md:mr-2"
                 style={{minWidth: 'fit-content'}}
                 key={i}>
                 {!item.goBack ? (
                   <div onClick={() => goToUrl(item.url)}>
                     <span
-                      className={`mr-2 cursor-pointer  ${
+                      className={`mr-1 md:mr-2 cursor-pointer text-sm md:text-base ${
                         item.last ? theme.text.secondary : theme.text.default
                       }`}>
                       {i === 0 ? item.title.toUpperCase() : item.title}
@@ -54,7 +54,7 @@ const BreadCrums: React.FC<BreadCrumProps> = (brdPrps: BreadCrumProps) => {
                   </div>
                 ) : (
                   <span
-                    className={`mr-2 cursor-pointer ${
+                    className={`mr-1 md:mr-2 cursor-pointer text-sm md:text-base ${
                       item.last ? theme.text.secondary : theme.text.default
                     }`}
                     onClick={() => (unsavedChanges ? toggleModal() : history.goBack())}>

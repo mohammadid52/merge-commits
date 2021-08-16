@@ -13,9 +13,10 @@ const MainSummary = (props: LessonCardProps) => {
   };
 
   return (
-    <div className={`h-44 p-4 px-5 flex flex-col justify-start items-center`}>
-      <h1 className={`${theme.lessonCard.title} font-medium`}>
-        <span>
+    <div className={`sm:h-44 p-4 px-5 flex flex-col justify-start items-center`}>
+      <h1
+        className={`${theme.lessonCard.title} flex-col sm:flex-row w-full font-medium`}>
+        <span className="w-full">
           {lessonProps.lesson && lessonProps.lesson.title
             ? lessonProps.lesson.title
             : null}

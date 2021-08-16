@@ -43,7 +43,7 @@ const RoomTiles = (props: {
   return (
     <>
       <SectionTitleV3
-        extraContainerClass="max-w-256 my-8 px-6"
+        extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256 my-8 px-6"
         title={DashboardDict[userLanguage]['YOUR_CLASSROOMS']}
         withButton={
           classList &&
@@ -72,7 +72,7 @@ const RoomTiles = (props: {
                   transition: 'width 2s',
                   transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
                 }}
-                className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
+                className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2 lg:max-w-none">
                 {classList
                   .slice(0, showMore ? classList.length : 3)
                   .map((item, idx: number) => {
@@ -120,13 +120,13 @@ const RoomTiles = (props: {
                               <a className="hover:underline">{type}</a>
                             </p>
                             <a href="#" className="block mt-2">
-                              <p className="text-lg text-gray-900">
+                              <p className="text-base 2xl:text-lg text-gray-900">
                                 <span className="font-semibold">{name}</span>{' '}
-                                <span className="text-lg text-semibold text-gray-900">
+                                <span className="text-base 2xl:text-lg text-semibold text-gray-900">
                                   {isTeacher && `${roomName}`}
                                 </span>
                               </p>
-                              <p className="mt-2 text-sm text-gray-800">
+                              <p className="mt-2 text-xs 2xl:text-sm text-gray-800">
                                 {limitDesc(summary, 250)}
                               </p>
                             </a>
@@ -152,14 +152,14 @@ const RoomTiles = (props: {
                               </a>
                             </div>
                             <div className="ml-3 w-auto">
-                              <p className="text-sm font-medium text-gray-900">
+                              <p className="text-xs 2xl:text-sm font-medium text-gray-900">
                                 <a className="hover:underline">
                                   {firstName + ' ' + lastName}
                                 </a>
                               </p>
                               <p
                                 style={{maxWidth: '99%'}}
-                                className="overflow-hidden pr-2 overflow-ellipsis space-x-1 text-sm text-gray-500">
+                                className="overflow-hidden pr-2 overflow-ellipsis space-x-1 text-xs 2xl:text-sm text-gray-500">
                                 {roomName}
                               </p>
                             </div>

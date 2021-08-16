@@ -7,7 +7,10 @@ import {useQuery} from '../../../../customHooks/urlParam';
 import {updateLessonPageToDB} from '../../../../utilities/updateLessonPageToDB';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import CustomToggle from './Toggle';
-import {BiBook} from 'react-icons/bi';
+import {BiBook, BiSun} from 'react-icons/bi';
+
+import {BsMoon} from 'react-icons/bs';
+import Tooltip from '../../../Atoms/Tooltip';
 
 interface ILessonPlanNavigationProps {
   selectedPageID: string;
@@ -54,16 +57,24 @@ const LessonPlanNavigation = ({
   const [settings, setSettings] = useState(INITIAL_SETTINGS);
 
   useEffect(() => {
-    if (fetchingLessonDetails) {
-      setSettings({...settings, darkMode: true});
-      handleThemeChange(true);
-    } else {
-      if (universalLessonDetails.darkMode) {
+    const parentContainer = document.querySelector('html');
+    if (parentContainer) {
+      if (fetchingLessonDetails) {
+        parentContainer.classList.add('dark');
         setSettings({...settings, darkMode: true});
         handleThemeChange(true);
       } else {
-        setSettings({...settings, darkMode: false});
-        handleThemeChange(false);
+        if (universalLessonDetails.darkMode) {
+          parentContainer.classList.add('dark');
+
+          setSettings({...settings, darkMode: true});
+          handleThemeChange(true);
+        } else {
+          parentContainer.classList.remove('dark');
+
+          setSettings({...settings, darkMode: false});
+          handleThemeChange(false);
+        }
       }
     }
   }, [universalLessonDetails, fetchingLessonDetails]);
@@ -73,6 +84,15 @@ const LessonPlanNavigation = ({
   };
 
   const updateTheme = () => {
+    const parentContainer = document.querySelector('html');
+
+    if (parentContainer) {
+      if (settings.darkMode) {
+        parentContainer.classList.remove('dark');
+      } else {
+        parentContainer.classList.add('dark');
+      }
+    }
     setSettings({...settings, darkMode: !settings.darkMode});
     handleThemeChange(!settings.darkMode);
     wait(1000).then(async () => {
@@ -162,25 +182,25 @@ const LessonPlanNavigation = ({
         </Droppable>
       </DragDropContext>
 
-      <div className="ml-2 w-2/10 bg-white h-12 flex items-center p-4 mr-3">
-        <div className="flex items-center text-base">
-          Theme:{' '}
-          <CustomToggle
-            enabledColor={'bg-yellow-400 text-yellow-500'}
-            disabledColor={'bg-gray-600 text-gray-500'}
-            setEnabled={updateTheme}
-            enabled={!darkMode}
-          />
-        </div>
-        <div className="flex items-center text-base">
-          Classwork:{' '}
-          <CustomToggle
-            enabledColor={'bg-indigo-600'}
-            disabledColor={'bg-gray-700'}
-            setEnabled={() => {}}
-            enabled={true}
-          />
-        </div>
+      <div className="ml-2 w-auto bg-white h-12 flex items-center p-4 mr-3">
+        <Tooltip text="Switch to homework" placement="bottom">
+          <button
+            type="button"
+            className="w-auto hover:inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Classroom
+          </button>
+        </Tooltip>
+        <Tooltip text={`Switch to ${darkMode ? 'light' : 'dark'} mode`} placement="left">
+          <div
+            className={`rounded hover:bg-gray-100 cursor-pointer transition-all h-12 w-12 flex items-center justify-center `}
+            onClick={updateTheme}>
+            {darkMode ? (
+              <BsMoon className="text-lg text-blue-800" />
+            ) : (
+              <BiSun className="text-lg text-orange-400" />
+            )}
+          </div>
+        </Tooltip>
       </div>
     </div>
   );

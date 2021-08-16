@@ -33,7 +33,8 @@ export interface ULBSelectionProps {
     contentType: string,
     replacementValue?: any,
     addBlockAtPosition?: number,
-    classString?: string
+    classString?: string,
+    partType?: string
   ) => void;
   updateBlockContentULBHandler?: (
     targetID: string,
@@ -99,7 +100,8 @@ export interface IContentTypeComponentProps {
     contentType: string,
     inputValue: any,
     position?: number,
-    classString?: string
+    classString?: string,
+    partType?: string
   ) => void;
   updateBlockContentULBHandler: (
     targetID: string,

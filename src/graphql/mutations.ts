@@ -12433,6 +12433,8 @@ export const createUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      lessonID
+      lessonType
       createdAt
       updatedAt
     }
@@ -12455,6 +12457,8 @@ export const updateUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      lessonID
+      lessonType
       createdAt
       updatedAt
     }
@@ -12477,6 +12481,8 @@ export const deleteUniversalJournalData = /* GraphQL */ `
         input
       }
       feedbacks
+      lessonID
+      lessonType
       createdAt
       updatedAt
     }

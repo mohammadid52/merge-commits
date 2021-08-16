@@ -261,6 +261,10 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchCurriculum();
+  }, [formData?.institution]);
+
   const hasUnsavedCheckpoint = (
     val: boolean,
     isIndividualEmpty: boolean,
@@ -469,6 +473,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         url: redirectionUrl,
       });
     } else {
+      setUnsavedChanges(false)
       history.push(redirectionUrl);
     }
   };
@@ -648,8 +653,6 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         ...rubric,
         checked: true,
       }));
-      console.log(rubricList, 'rubricList+++++++++++');
-
       setSelectedMeasurements(rubricList);
     } catch (error) {}
   };
@@ -803,6 +806,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             saveAction={saveBeforeLeave}
             saveLabel="Yes"
             message={warnModal.message}
+            loading={updating}
           />
         )}
         {warnModal2.show && (

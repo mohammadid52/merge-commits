@@ -1,23 +1,23 @@
+import {remove} from 'lodash';
 import React, {useContext, useEffect, useState} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import useDictionary from '../../../../../customHooks/dictionary';
 import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   Options,
   PartContentSub,
 } from '../../../../../interfaces/UniversalLessonInterfaces';
-import FormInput from '../../../../Atoms/Form/FormInput';
+import Info from '../../../../Atoms/Alerts/Info';
 import Buttons from '../../../../Atoms/Buttons';
-import {EditQuestionModalDict} from '../../../../../dictionary/dictionary.iconoclast';
-import {GlobalContext} from '../../../../../contexts/GlobalContext';
-import {nanoid} from 'nanoid';
-import {isEmpty, remove} from 'lodash';
-import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
-import {FORM_TYPES} from '../common/constants';
-import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
-import {FaTrashAlt} from 'react-icons/fa';
+import FormInput from '../../../../Atoms/Form/FormInput';
 import Toggle from '../Toggle';
 import {v4 as uuidv4} from 'uuid';
+import {FaTrashAlt} from 'react-icons/fa';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
+import {FORM_TYPES} from '../common/constants';
 
-interface ILinestarterModalDialogProps extends IContentTypeComponentProps {
+interface WEProps extends IContentTypeComponentProps {
   inputObj?: any;
   selectedPageID?: string;
   classString?: string;
@@ -57,37 +57,36 @@ const newLinestarterObj: Options = {
   text: 'New linestarter...',
 };
 
-const LinestarterModalDialog = ({
-  closeAction,
-  inputObj,
-  createNewBlockULBHandler,
-  updateBlockContentULBHandler,
-  askBeforeClose,
-  setUnsavedChanges,
-  classString = 'title-show || lineStarter-hide',
-}: ILinestarterModalDialogProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+const WritingExerciseModal = (props: WEProps) => {
+  const {
+    closeAction,
+    inputObj,
+    createNewBlockULBHandler,
+    updateBlockContentULBHandler,
+    askBeforeClose,
+    setUnsavedChanges,
+    classString = 'title-show || lineStarter-hide',
+  } = props;
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
-  //////////////////////////
-  //  DATA STORAGE         //
-  //////////////////////////
-  const [inputFieldsArray, setInputFieldsArray] = useState<Options[]>(
-    initialInputFieldsState
-  );
   // states here
-  const [enable, setEnable] = useState<{title: boolean}>({
+  const [enable, setEnable] = useState<{title: boolean; lineStarter: boolean}>({
     title: true,
+    lineStarter: false,
   });
 
-  const [fields, setFields] = useState({title: ''});
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      const [title] = classString.split(' || ');
+      const [title, lineStarter] = classString.split(' || ');
       if (title === 'title-show') {
         enable.title = true;
       } else {
         enable.title = false;
+      }
+      if (lineStarter === 'lineStarter-show') {
+        enable.lineStarter = true;
+      } else {
+        enable.lineStarter = false;
       }
 
       setFields({...fields, title: inputObj[0].label});
@@ -99,6 +98,19 @@ const LinestarterModalDialog = ({
       setIsEditingMode(true);
     }
   }, [inputObj]);
+
+  const [fields, setFields] = useState({title: ''});
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {value, id} = event.target;
+    setFields({...fields, [id]: value});
+  };
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {EditQuestionModalDict} = useDictionary(clientKey);
+
+  const [inputFieldsArray, setInputFieldsArray] = useState<Options[]>(
+    initialInputFieldsState
+  );
 
   //////////////////////////
   //  FOR DATA UPDATE     //
@@ -114,28 +126,23 @@ const LinestarterModalDialog = ({
     setInputFieldsArray(newInputFieldsArray);
   };
 
+  const onLSChange = (e: React.FormEvent) => {
+    setUnsavedChanges(true);
+    const {id, value} = e.target as HTMLFormElement;
+    handleUpdateInputFields(id, value);
+  };
+
   const handleAddNewLinestarter = () => {
-    const longerInputFieldsArray: PartContentSub[] = [
+    const longerInputFieldsArray: Options[] = [
       ...inputFieldsArray,
-      {...newLinestarterObj, id: `${newLinestarterObj.id}${nanoid(4)}`},
+      {...newLinestarterObj, id: `${newLinestarterObj.id}${uuidv4()}`},
     ];
     setInputFieldsArray(longerInputFieldsArray);
   };
 
-  const handleDeleteLinestarter = (linestarterIdx: number) => {
-    const shorterInputFieldsArray: Options[] = inputFieldsArray.filter(
-      (inputObj: Options, idx: number) => idx !== linestarterIdx
-    );
-    setInputFieldsArray(shorterInputFieldsArray);
-  };
-
-  //////////////////////////
-  //  FOR NORMAL INPUT    //
-  //////////////////////////
-  const onChange = (e: React.FormEvent) => {
-    setUnsavedChanges(true);
-    const {id, value} = e.target as HTMLFormElement;
-    handleUpdateInputFields(id, value);
+  const removeItemFromList = (id: string) => {
+    remove(inputFieldsArray, (n) => n.id === id);
+    setInputFieldsArray([...inputFieldsArray]);
   };
 
   const addToDB = async (list: any) => {
@@ -148,47 +155,21 @@ const LinestarterModalDialog = ({
 
     await updateLessonPageToDB(input);
   };
-  // const onLineCreate = async () => {
-  //   if (isEditingMode) {
-  //     const updatedList = updateBlockContentULBHandler(
-  //       '',
-  //       '',
-  //       FORM_TYPES.POEM,
-  //       enable.lineStarter ? inputFieldsArray : [{}],
-  //       0,
-  //       enable.title ? fields.title : ''
-  //     );
-  //     await addToDB(updatedList);
-  //   } else {
-  //     const updatedList = createNewBlockULBHandler(
-  //       '',
-  //       '',
-  //       FORM_TYPES.POEM,
-  //       enable.lineStarter ? inputFieldsArray : [{}],
-  //       0,
-  //       enable.title ? fields.title : ''
-  //     );
-  //     await addToDB(updatedList);
-  //   }
-
-  //   // clear fields
-  //   setInputFieldsArray(initialInputFieldsState);
-  //   setUnsavedChanges(false);
-  // };
-
-  const onLineCreate = async () => {
+  const on_WE_Create = async () => {
     const inputObjArray = {
       id: uuidv4(),
-      type: '',
+      type: FORM_TYPES.WRITING_EXERCISE,
       label: fields.title,
       options: inputFieldsArray,
     };
-    const dynamicClass = `title-${enable.title ? 'show' : 'hide'} || lineStarter-show`;
+    const dynamicClass = `title-${enable.title ? 'show' : 'hide'} || lineStarter-${
+      enable.lineStarter ? 'show' : 'hide'
+    }`;
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
         '',
         '',
-        FORM_TYPES.POEM,
+        FORM_TYPES.WRITING_EXERCISE,
         [inputObjArray],
         0,
         // this is a trick to keep the label stored in DB even after disabling it
@@ -199,7 +180,7 @@ const LinestarterModalDialog = ({
       const updatedList = createNewBlockULBHandler(
         '',
         '',
-        FORM_TYPES.POEM,
+        FORM_TYPES.WRITING_EXERCISE,
 
         [inputObjArray],
         0,
@@ -214,12 +195,9 @@ const LinestarterModalDialog = ({
     setUnsavedChanges(false);
   };
 
-  const removeItemFromList = (id: string) => {
-    remove(inputFieldsArray, (n) => n.id === id);
-    setInputFieldsArray([...inputFieldsArray]);
-  };
   return (
     <div>
+      <Info text="Note: This component is for journal" />
       <div className="grid grid-cols-2 my-2 gap-4">
         <div
           className={`col-span-2 ${
@@ -248,14 +226,14 @@ const LinestarterModalDialog = ({
             id="title"
             className=""
             value={fields.title}
-            onChange={(e) => setFields({...fields, title: e.target.value})}
+            onChange={onChange}
             placeHolder="Add instructional text here"
           />
         </div>
 
-        <div className={`col-span-2 `}>
+        <div className={`col-span-2 ${!enable.lineStarter ? 'hidden' : ''}`}>
           <DividerBlock bgWhite value="Line Starter Builder" />
-          {inputFieldsArray.map((inputObj: Options, idx: number) => {
+          {inputFieldsArray.map((inputObj: PartContentSub, idx: number) => {
             return (
               <div className="mb-2" key={`linestarter_${idx}`}>
                 <label
@@ -266,7 +244,7 @@ const LinestarterModalDialog = ({
                 <div className="mb-2 relative">
                   <FormInput
                     key={`lineStarter_${idx}`}
-                    onChange={onChange}
+                    onChange={onLSChange}
                     value={inputFieldsArray[idx]?.text}
                     id={inputFieldsArray[idx]?.id}
                     placeHolder={inputFieldsArray[idx]?.text}
@@ -285,12 +263,24 @@ const LinestarterModalDialog = ({
           })}
         </div>
         <div className="col-span-2 mt-1 mb-4 flex items-center justify-between">
-          <Buttons
-            btnClass="py-1 px-4 text-xs mr-2 self-end"
-            label={'+ Add field'}
-            onClick={handleAddNewLinestarter}
-            transparent
-          />
+          <div className="flex items-center justify-between w-56">
+            <span className=" w-auto">Show Linestarter</span>
+            <Toggle
+              enabledColor="bg-blue-600"
+              disabledColor="bg-gray-300"
+              setEnabled={() => setEnable({...enable, lineStarter: !enable.lineStarter})}
+              enabled={enable.lineStarter}
+            />
+          </div>
+
+          {enable.lineStarter && (
+            <Buttons
+              btnClass="py-1 px-4 text-xs mr-2"
+              label={'+ Add field'}
+              onClick={handleAddNewLinestarter}
+              transparent
+            />
+          )}
         </div>
       </div>
 
@@ -306,7 +296,7 @@ const LinestarterModalDialog = ({
           <Buttons
             btnClass="py-1 px-8 text-xs ml-2"
             label={EditQuestionModalDict[userLanguage]['BUTTON']['SAVE']}
-            onClick={onLineCreate}
+            onClick={on_WE_Create}
           />
         </div>
       </div>
@@ -314,4 +304,4 @@ const LinestarterModalDialog = ({
   );
 };
 
-export default LinestarterModalDialog;
+export default WritingExerciseModal;

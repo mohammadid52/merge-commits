@@ -19,46 +19,29 @@ const StandardLessonCard = (props: LessonCardProps) => {
   const {theme} = useContext(GlobalContext);
 
   return (
-    <>
-      <div className="relative mb-2">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t-0 border-gray-600"></div>
-        </div>
-        <div className="relative flex justify-center">
-          <span
-            className="px-2 text-sm text-gray-500 w-auto"
-            style={{
-              backgroundColor: '#f0f2f5',
-            }}>
-            {lessonProps.sessionHeading}
-          </span>
-        </div>
-      </div>
+    <div
+      key={keyProps}
+      className={`relative bg-white shadow rounded-lg flex flex-col md:flex-row mb-8 ${theme.elem.textDark} `}>
+      {/**
+       *  LEFT SECTION IMAGE
+       */}
+      <SideImage lessonProps={lessonProps} />
+      {/**
+       *  RIGHT SECTION
+       */}
+      <div className={`w-full md:w-7.5/10 flex flex-col rounded-b`}>
+        <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
 
-      <div
-        key={keyProps}
-        className={`relative bg-white shadow rounded-lg flex mb-8 ${theme.elem.textDark} `}>
-        {/**
-         *  LEFT SECTION IMAGE
-         */}
-        <SideImage lessonProps={lessonProps} />
-        {/**
-         *  RIGHT SECTION
-         */}
-        <div className={` w-7.5/10 flex flex-col rounded-b`}>
-          <MainSummary lessonType={lessonType} lessonProps={lessonProps} />
-
-          <BottomBar
-            isTeacher={isTeacher}
-            activeRoomInfo={activeRoomInfo}
-            accessible={accessible}
-            roomID={roomID}
-            lessonProps={lessonProps}
-            lessonType={lessonType}
-          />
-        </div>
+        <BottomBar
+          isTeacher={isTeacher}
+          activeRoomInfo={activeRoomInfo}
+          accessible={accessible}
+          roomID={roomID}
+          lessonProps={lessonProps}
+          lessonType={lessonType}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

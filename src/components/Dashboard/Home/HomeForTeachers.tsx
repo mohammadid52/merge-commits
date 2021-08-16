@@ -219,7 +219,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
         <>
           {/* Hero Section */}
           <div className="relative">
-            <div className="absolute inset-0 w-full h-60">
+            <div className="absolute inset-0 w-full h-32 2xl:h-60">
               <div className=" bg-black bg-opacity-60 z-0 w-full h-full absolute" />
               <img
                 className="object-cover w-full h-full bg-center bg-no-repeat bg-contain"
@@ -228,9 +228,7 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               />
             </div>
             <div className="relative h-full flex items-center justify-center flex-col max-w-7xl">
-              <h1
-                style={{fontSize: '6rem'}}
-                className="z-10 flex align-center self-auto items-center justify-center h-60 text-9xl font-extrabold tracking-tight text-center text-white sm:text-9xl	lg:text-9xl">
+              <h1 className="z-10 flex align-center self-auto items-center justify-center h-32 2xl:h-60 text-9xl font-extrabold tracking-tight text-center text-white text-4xl md:text-6xl 2xl:text-8xl pb-4 2xl:pb-6">
                 Dashboard
               </h1>
             </div>
@@ -238,8 +236,8 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
           {/* Header */}
           {user && (
             <div
-              className={`w-full max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-              <h2 className={`text-base text-center font-normal`}>
+              className={`w-full lg:max-w-192 md:max-w-none 2xl:max-w-256 mx-auto z-10 flex flex-col justify-between  items-center -mt-4 2xl:-mt-6 mb-4 px-6 py-1 2xl:py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+              <h2 className={`text-sm 2xl:text-base text-center font-normal`}>
                 Welcome,{' '}
                 <span className="font-semibold">
                   {user.preferredName ? user.preferredName : user.firstName}
@@ -248,37 +246,38 @@ const HomeForTeachers = (props: ClassroomControlProps) => {
               </h2>
             </div>
           )}
+          <div className="px-5">
+            {/* Classroom Section */}
 
-          {/* Classroom Section */}
-
-          <RoomTiles
-            isTeacher
-            handleRoomSelection={handleRoomSelection}
-            classList={getClassList()}
-          />
-
-          {/* Teachers Section */}
-          {teacherList && teacherList.length > 0 && (
-            <div className="my-6">
-              <SectionTitleV3
-                title={`Your Team`}
-                fontSize="lg"
-                fontStyle="semibold"
-                extraContainerClass="max-w-256"
-                borderBottom
-                extraClass="leading-6 text-gray-900"
-              />
-              <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
-            </div>
-          )}
-          {/* Classmates Section */}
-          <div className="my-6">
-            <StudentsTiles
+            <RoomTiles
               isTeacher
-              title={`Your Students`}
-              state={state}
-              studentsList={studentsList}
+              handleRoomSelection={handleRoomSelection}
+              classList={getClassList()}
             />
+
+            {/* Teachers Section */}
+            {teacherList && teacherList.length > 0 && (
+              <div className="my-6">
+                <SectionTitleV3
+                  title={`Your Team`}
+                  fontSize="lg"
+                  fontStyle="semibold"
+                  extraContainerClass="lg:max-w-192 md:max-w-none 2xl:max-w-256"
+                  borderBottom
+                  extraClass="leading-6 text-gray-900"
+                />
+                <TeacherRows coTeachersList={coTeachersList} teachersList={teacherList} />
+              </div>
+            )}
+            {/* Classmates Section */}
+            <div className="my-6">
+              <StudentsTiles
+                isTeacher
+                title={`Your Students`}
+                state={state}
+                studentsList={studentsList}
+              />
+            </div>
           </div>
         </>
       ) : (

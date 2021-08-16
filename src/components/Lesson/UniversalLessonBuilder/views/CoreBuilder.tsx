@@ -341,7 +341,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
       )}
 
       <div
-        className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll ${themeBackgroundColor} ${
+        className={`relative grid gap-4 p-4 grid-cols-5 h-full overflow-hidden overflow-y-scroll dark:bg-dark-gray transition-all duration-200 bg-white ${
           activePageData && activePageData.class ? activePageData.class : ''
         }`}>
         <div

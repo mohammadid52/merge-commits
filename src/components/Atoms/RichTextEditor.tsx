@@ -14,8 +14,13 @@ interface RichTextEditorProps {
   fullWHOverride?: boolean;
   rounded?: boolean;
   dark?: boolean;
+  mediumDark?: boolean;
   customStyle?: boolean;
   features?: string[];
+  /**
+   * Don't use this if the content is serious
+   */
+  withStyles?: boolean;
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
@@ -24,10 +29,12 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     initialValue,
     fullWHOverride,
     dark = false,
+    mediumDark = false,
     customStyle = false,
     rounded = false,
     features = [],
     theme,
+    withStyles = false,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -52,8 +59,20 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     const editorStateHtml: string = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
+
     const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
-    onChange(editorStateHtml, editorStatePlainText);
+
+    if (withStyles) {
+      // Please don't use this if the content is important and serious
+      if (editorRef && editorRef.current) {
+        // @ts-ignore
+        const withStylesHtml = editorRef?.current?.editor.editor.innerHTML;
+        onChange(withStylesHtml, editorStatePlainText);
+      }
+    } else {
+      onChange(editorStateHtml, editorStatePlainText);
+    }
+
     setEditorState(editorState);
   };
 
@@ -73,16 +92,16 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const toolbarClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} toolbarClassName ${
+      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} toolbarClassName ${
           previewMode ? 'previewMode' : ''
         } text-black`
       : 'toolbarClassName'
   }`;
   const wrapperClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} wrapperClassName ${previewMode ? 'previewMode' : ''}  ${
-          fullWHOverride ? 'flex flex-col' : ''
-        }`
+      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} wrapperClassName ${
+          previewMode ? 'previewMode' : ''
+        }  ${fullWHOverride ? 'flex flex-col' : ''}`
       : 'wrapperClassName'
   }`;
   const editorClassName = `${
@@ -93,8 +112,17 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       : 'editorClassName'
   }`;
 
+  const editorRef = React.useRef();
+
+  useEffect(() => {
+    if (editorRef && editorRef.current) {
+      // @ts-ignore
+    }
+  }, [editorRef]);
+
   return (
     <Editor
+      ref={editorRef}
       editorState={editorState}
       toolbarClassName={toolbarClassName}
       wrapperClassName={wrapperClassName}

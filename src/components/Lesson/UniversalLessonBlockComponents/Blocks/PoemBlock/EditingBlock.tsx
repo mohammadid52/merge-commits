@@ -1,5 +1,6 @@
-import React from 'react';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
 
 interface EditingBlockProps {
   id?: string;
@@ -10,23 +11,35 @@ interface EditingBlockProps {
 const EditingBlock = (props: EditingBlockProps) => {
   const {id, poemWriting, handleUpdateStudentData} = props;
 
-  const setEditorContent = (html: string, text: string, idKey: string) => {
-    handleUpdateStudentData(id, [html]);
+  const {
+    state: {user},
+  } = useContext(GlobalContext);
+
+  const onChange = (e: any) => {
+    handleUpdateStudentData(id, [e.target.value]);
   };
-  // handleUpdateStudentData(id, [html]);
+
+  const isInLesson = useInLessonCheck();
+  const isStudent = user.role === 'ST';
 
   return (
     <div className="w-full flex flex-col">
-      <div className={`w-full h-full rounded-xl p-4 text-black`}>
-        <h3
-          className={`relative w-auto pb-2 mb-2  mt-4 flex flex-row items-center border-b-4 border-sea-green font-medium text-left text-gray-100 text-xl`}>
-          Edit
-        </h3>
-        <RichTextEditor
-          initialValue={poemWriting}
-          onChange={(htmlContent, plainText) =>
-            setEditorContent(htmlContent, plainText, id)
+      <div className={`w-full h-full rounded-xl text-black`}>
+        {/* <RichTextEditor
+          initialValue={fields.poemHtml}
+          onChange={(html, text) =>
+            setFields({...fields, poemText: text, poemHtml: html})
           }
+        /> */}
+
+        <textarea
+          id={id}
+          className={`editingBlock w-full h-64 py-2 px-4 dark:text-white text-gray-900 mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray`}
+          name="story"
+          onChange={isInLesson && isStudent ? (e) => onChange(e) : () => {}}
+          value={poemWriting}
+          rows={3}
+          cols={250}
         />
       </div>
     </div>

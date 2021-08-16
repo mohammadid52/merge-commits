@@ -32,6 +32,12 @@ import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
 import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
 
+const groupOptions = [
+  {id: 1, name: 'Blue'},
+  {id: 2, name: 'Black'},
+  {id: 3, name: 'Red'},
+];
+
 interface EditClassProps {}
 
 const EditClass = (props: EditClassProps) => {
@@ -43,7 +49,7 @@ const EditClass = (props: EditClassProps) => {
   const match = useRouteMatch();
 
   const initialData = {id: '', name: '', institute: {id: '', name: '', value: ''}};
-  const defaultNewMember = {id: '', name: '', value: '', avatar: ''};
+  const defaultNewMember = {id: '', name: '', value: '', avatar: '', group: ''};
   const [classData, setClassData] = useState(initialData);
   const [messages, setMessages] = useState({show: false, message: '', isError: false});
   const [classStudents, setClassStudents] = useState([]);
@@ -55,6 +61,7 @@ const EditClass = (props: EditClassProps) => {
   const [newMember, setNewMember] = useState(defaultNewMember);
   const [statusEdit, setStatusEdit] = useState('');
   const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [previousName, setPreviousName] = useState('');
@@ -79,12 +86,12 @@ const EditClass = (props: EditClassProps) => {
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: classData?.institute?.name,
       goBack: true,
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['EDITCLASS'],
+      title: classData?.name,
       url: `${match.url}?id=${urlParams.get('id')}`,
       last: true,
     },
@@ -115,6 +122,7 @@ const EditClass = (props: EditClassProps) => {
         selectedStudentsIds.push(stu.student.id);
         return {
           id: stu.id,
+          group: stu.group,
           status: stu.status,
           student: {
             ...stu.student,
@@ -209,13 +217,14 @@ const EditClass = (props: EditClassProps) => {
       name: name,
       value: str,
       avatar: avatar,
+      group: '',
     });
   };
 
-  const addStudentInClass = () => {
+  const addStudentInClass = async() => {
     if (newMember.id) {
       const {id, name, avatar} = newMember;
-      saveClassStudent(id, classData.id);
+      await saveClassStudent(id, classData.id);
       setNewMember(defaultNewMember);
     }
     setFilteredStudents([]);
@@ -223,9 +232,11 @@ const EditClass = (props: EditClassProps) => {
 
   const saveClassStudent = async (id: string, classId: string) => {
     try {
+      setAdding(true);
       const selected = students.find((item: any) => item.id === id);
       const input = {
         classID: classId,
+        group: newMember.group,
         studentID: id,
         studentAuthID: selected.authId,
         studentEmail: selected.email,
@@ -239,10 +250,12 @@ const EditClass = (props: EditClassProps) => {
         ...classStudents,
         {
           id: newStudent.id,
+          group: newStudent.group,
           status: newStudent.status,
           student: {...selected},
         },
       ]);
+      setAdding(false);
     } catch (err) {
       console.log('saveClassStudent', err);
       setMessages({
@@ -427,6 +440,13 @@ const EditClass = (props: EditClassProps) => {
     }
   };
 
+  const onGroupChange = (_: string, name: string) => {
+    setNewMember((prevValues) => ({
+      ...prevValues,
+      group: name,
+    }));
+  };
+
   return (
     <div className="">
       <BreadCrums items={breadCrumsList} />
@@ -448,54 +468,69 @@ const EditClass = (props: EditClassProps) => {
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
             {dictionary.heading}
           </h3>
-          <div className="">
-            <div className="flex items-center">
-              <div>
-                <FormInput
-                  value={classData.name}
-                  id="className"
-                  onChange={onNameChange}
-                  name="className"
-                  label={dictionary.NAME_INPUT_LABEL}
-                  isRequired
-                />
-              </div>
-              <Buttons
-                btnClass="ml-4 py-1 mt-auto"
-                label="Save"
-                onClick={saveClassDetails}
-                transparent={!unsavedChanges}
-                disabled={!unsavedChanges}
+          <div className="grid grid-cols-5 gap-4">
+            <div className="col-span-4">
+              <FormInput
+                value={classData.name}
+                id="className"
+                onChange={onNameChange}
+                name="className"
+                label={dictionary.NAME_INPUT_LABEL}
+                isRequired
               />
             </div>
+            <Buttons
+              btnClass="ml-5 mr-10 py-1 mt-auto"
+              label="Save"
+              onClick={saveClassDetails}
+              transparent={!unsavedChanges}
+              disabled={!unsavedChanges}
+            />
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center w-6/10 m-auto px-2">
-          <label className="block text-xs font-semibold mb-1  leading-5 text-gray-700">
-            Add students to class
-          </label>
-          <div className="flex items-center justify-between">
-            <SearchSelectorWithAvatar
-              selectedItem={newMember}
-              list={searching ? filteredStudents : students}
-              placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
-              onChange={onStudentSelect}
-              fetchStudentList={fetchStudentList}
-              clearFilteredStudents={clearFilteredStudents}
-              searchStatus={searching}
-              searchCallback={setSearching}
-              imageFromS3={false}
-            />
-
+        <div className="flex flex-col items-center justify-center w-6/10 m-auto px-2 mb-4">
+          <div className="grid grid-cols-5 gap-4">
+            <div className="col-span-2">
+              <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                Add students to class
+              </label>
+              <div className="flex items-center justify-between">
+                <SearchSelectorWithAvatar
+                  selectedItem={newMember}
+                  list={searching ? filteredStudents : students}
+                  placeholder={dictionary.ADD_STUDENT_PLACEHOLDER}
+                  onChange={onStudentSelect}
+                  fetchStudentList={fetchStudentList}
+                  clearFilteredStudents={clearFilteredStudents}
+                  searchStatus={searching}
+                  searchCallback={setSearching}
+                  imageFromS3={false}
+                />
+              </div>
+            </div>
+            <div className="col-span-2">
+              <label className="block text-xs font-semibold mb-1 leading-5 text-gray-700">
+                {dictionary.GROUP}
+              </label>
+              <div className="flex items-center justify-between">
+                <Selector
+                  selectedItem={newMember?.group}
+                  list={groupOptions}
+                  placeholder={dictionary.GROUP_PLACEHOLDER}
+                  onChange={onGroupChange}
+                  disabled={!newMember?.id}
+                />
+              </div>
+            </div>
             <Buttons
-              btnClass="ml-5 py-1 px-5 mt-auto"
+              btnClass="ml-5 mr-10 py-1 px-5 mt-auto"
               label={dictionary.ADD_STUDENT_BUTTON}
               onClick={addStudentInClass}
+              disabled={adding || !newMember.id}
             />
           </div>
         </div>
-
         {classStudents ? (
           <Fragment>
             {!loading ? (
@@ -509,12 +544,13 @@ const EditClass = (props: EditClassProps) => {
                       <div className="flex w-5/10 items-center px-4 py-2">
                         {dictionary.TABLE.NAME}
                       </div>
-                      <div className="w-3/10">{dictionary.TABLE.STATUS}</div>
-                      <div className="w-1/10">{dictionary.TABLE.ACTIONS}</div>
+                      <div className="w-2/10 px-3">{dictionary.TABLE.GROUP}</div>
+                      <div className="w-3/10 px-3">{dictionary.TABLE.STATUS}</div>
+                      <div className="w-1/10 px-3">{dictionary.TABLE.ACTIONS}</div>
                     </div>
                   </div>
 
-                  <div className="mb-4 w-9/10 m-auto px-2 max-h-88 overflow-y-scroll">
+                  <div className="mb-4 w-9/10 m-auto pl-2 max-h-88 overflow-y-scroll">
                     {classStudents.map((item, index) => (
                       <div
                         key={item.id}
@@ -561,6 +597,7 @@ const EditClass = (props: EditClassProps) => {
                             </div>
                           </div>
                         </div>
+                        <div className="w-2/10 px-3">{item.group || '-'}</div>
 
                         {statusEdit === item.id ? (
                           <div className="w-3/10 mr-6 px-3">

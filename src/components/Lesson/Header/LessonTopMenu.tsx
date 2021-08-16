@@ -13,7 +13,12 @@ import {
   UniversalLessonPage,
 } from '../../../interfaces/UniversalLessonInterfaces';
 
-const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
+const LessonTopMenu = ({
+  handlePopup,
+  isAtEnd,
+  setisAtEnd,
+  handleRequiredNotification,
+}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
   const history = useHistory();
   const match = useRouteMatch();
@@ -73,9 +78,15 @@ const LessonTopMenu = ({handlePopup, isAtEnd, setisAtEnd}: LessonHeaderBarProps)
           type: 'SET_CURRENT_PAGE',
           payload: lessonState.currentPage + 1,
         });
+      } else {
+        handleRequiredNotification();
       }
-    } else if (userAtEnd() && validateRequired(lessonState.currentPage)) {
-      handlePopup();
+    } else if (userAtEnd()) {
+      if (validateRequired(lessonState.currentPage)) {
+        handlePopup();
+      } else {
+        handleRequiredNotification();
+      }
     }
   };
 

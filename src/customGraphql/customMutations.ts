@@ -583,6 +583,7 @@ export const createClassStudent = /* GraphQL */ `
   ) {
     createClassStudent(input: $input, condition: $condition) {
       id
+      group
       classID
       studentID
       status
@@ -715,6 +716,10 @@ export const updateTopic = /* GraphQL */ `
       learningObjectiveID
       name
       description
+      distinguished
+      excelled
+      adequite
+      basic
       createdAt
       updatedAt
     }
@@ -746,10 +751,6 @@ export const updateRubric = /* GraphQL */ `
       id
       name
       criteria
-      distinguished
-      excelled
-      adequite
-      basic
       topicID
       curriculumID
       createdAt

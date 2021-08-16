@@ -186,6 +186,14 @@ const Toolbar = ({
 
   const [status, setStatus] = useState('none');
 
+  /**
+   *
+   * @param action copy | clone
+   * What does this function do?
+   * Well, This function will copy or clone the selected page from selected lesson and create new lesson page with unique ids but with same data with styles (clone) or only styles (copy)
+   *
+   * The wait timers are just to longer the process time. Becuase cloning process is fast
+   */
   const onCopyCloneAction = (action: string = 'copy') => {
     setStatus('loading');
     wait(2000).then(() => {
@@ -228,6 +236,12 @@ const Toolbar = ({
   };
   const [treeViewData, setTreeViewData] = useState<any>({});
 
+  /**
+   *
+   * @param data Whole lesson
+   * This function creates a separate data strutcture for tree view component only.
+   * It would be better if this remain unchange 😉
+   */
   const prepareTreeViewData = (data: UniversalLessonPage[]) => {
     const dataForTreeView = {
       title: 'root',
@@ -254,6 +268,10 @@ const Toolbar = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchStatus, setSearchStatus] = useState('none');
 
+  /**
+   * Load lessons only based on what user has search
+   * ✊ SAVE API RESPONSE. SAVE INTERNET DATA ✊
+   */
   const loadLessonsOnSearch = async () => {
     if (searchQuery.length >= 3) {
       setSearchStatus('searching');
@@ -452,7 +470,7 @@ const Toolbar = ({
       <div
         hidden={previewMode}
         ref={toolbarRef}
-        className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+        className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200  w-auto p-2`}>
         <div className="flex items-center">
           <Container>
             <Button
@@ -515,7 +533,7 @@ const Toolbar = ({
           toolbarOnTop ? 'opacity-0 translate-x-100' : 'opacity-100 translate-x-0'
         } transform duration-200 transition-all w-16 fixed right-5 z-10`}>
         <div
-          className={`customShadow rounded-lg toolbar ${themeSecBackgroundColor} w-auto p-2`}>
+          className={`customShadow rounded-lg toolbar bg-white dark:bg-gray-700 transition-all duration-200 w-auto p-2`}>
           <div className="flex items-center flex-col">
             <div
               className={`flex items-center flex-col w-auto ${

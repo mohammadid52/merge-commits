@@ -12,6 +12,7 @@ const LessonHeaderBar = ({
   lessonDataLoaded,
   isAtEnd,
   setisAtEnd,
+  handleRequiredNotification,
 }: LessonHeaderBarProps) => {
   const history = useHistory();
   const {lessonState, theme} = useContext(GlobalContext);
@@ -97,6 +98,7 @@ const LessonHeaderBar = ({
         handlePopup={handlePopup}
         isAtEnd={isAtEnd}
         setisAtEnd={setisAtEnd}
+        handleRequiredNotification={handleRequiredNotification}
       />
 
       {/**

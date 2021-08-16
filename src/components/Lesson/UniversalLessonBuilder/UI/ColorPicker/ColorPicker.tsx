@@ -1,5 +1,6 @@
 import React from 'react';
 import {FaCheck, FaSortUp} from 'react-icons/fa';
+import Buttons from '../../../../Atoms/Buttons';
 
 interface ColorPickerProps {
   callbackColor: (pickedColor: string) => void;
@@ -7,6 +8,9 @@ interface ColorPickerProps {
   isPagePart?: boolean;
   isMainPage?: boolean;
   styleString?: {[key: string]: string};
+
+  noneLabel?: string;
+  onNoneClick?: () => void;
 }
 
 interface ColorObject {
@@ -15,7 +19,15 @@ interface ColorObject {
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
-  const {callbackColor, classString, isMainPage, isPagePart, styleString} = props;
+  const {
+    callbackColor,
+    classString,
+    noneLabel,
+    onNoneClick,
+    isMainPage,
+    isPagePart,
+    styleString,
+  } = props;
 
   const availableColors: ColorObject[] = [
     {value: 'gray', label: 'Gray'},
@@ -93,7 +105,17 @@ const ColorPicker = (props: ColorPickerProps) => {
         <FaSortUp size="40" />
       </div>
       <div className={`bg-white my-3 rounded-lg p-4`}>
-        <p className={`text-black w-auto text-2xl`}>Select a color</p>
+        <div className="flex items-center justify-between">
+          <p className={`text-black w-auto text-2xl`}>Select a color</p>
+          {noneLabel && (
+            <Buttons
+              onClick={onNoneClick}
+              btnClass="py-1 px-4 text-xs "
+              label={noneLabel}>
+              {noneLabel}
+            </Buttons>
+          )}
+        </div>
         <div className={`my-4`}>
           {availableColors.length > 0 && colorCodes.length > 0 ? colorGrid() : null}
         </div>

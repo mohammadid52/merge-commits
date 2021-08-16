@@ -19,10 +19,11 @@ interface TabsProps {
   activeTab?: number;
   updateTab?: Function;
   tabs: ITabElementProps[];
+  hideTooltip?: boolean;
 }
 
 const UnderlinedTabs = (props: TabsProps) => {
-  const {tabs, activeTab} = props;
+  const {tabs, activeTab, hideTooltip} = props;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [openTab, setOpenTab] = useState<number>(0);
@@ -39,7 +40,7 @@ const UnderlinedTabs = (props: TabsProps) => {
   }, [activeTab]);
   const renderButtonText = (tab: any) => {
     return (
-      <div className="flex items-center w-auto">
+      <div id={tab.id} className="flex items-center w-auto">
         {tab.icon && (
           <span className="w-8 h-8 flex items-center mr-4">
             <IconContext.Provider
@@ -73,15 +74,30 @@ const UnderlinedTabs = (props: TabsProps) => {
               }`}
               disabled={tab.disabled}
               type="button">
-              {tab.tooltipText ? (
-                <Tooltip
-                  key={tab.id}
-                  text={tab.tooltipText}
-                  placement={tab.tooltipPlacement}>
-                  {renderButtonText(tab)}
-                </Tooltip>
+              {!hideTooltip ? (
+                tab.tooltipText ? (
+                  <Tooltip
+                    id={tab.id}
+                    key={tab.id}
+                    text={tab.tooltipText}
+                    placement={tab.tooltipPlacement}>
+                    {renderButtonText(tab)}
+                  </Tooltip>
+                ) : (
+                  renderButtonText(tab)
+                )
               ) : (
-                renderButtonText(tab)
+                <>
+                  {tab.icon && (
+                    <span className="w-8 h-8 flex items-center mr-4">
+                      <IconContext.Provider
+                        value={{size: '1.5rem', color: theme.iconColor[themeColor]}}>
+                        {tab.icon}
+                      </IconContext.Provider>
+                    </span>
+                  )}
+                  {tab.title}
+                </>
               )}
             </button>
           </div>

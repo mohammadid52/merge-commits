@@ -28,7 +28,7 @@ const BUTTONS: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Organiation Management',
@@ -222,6 +222,7 @@ const anthologyDict: any = {
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
+      CONFIRM: 'Confirm',
     },
   },
   ES: {
@@ -238,6 +239,7 @@ const anthologyDict: any = {
       ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
+      CONFIRM: 'Confirm',
     },
   },
 };
@@ -380,6 +382,8 @@ const editClassDict: any = {
     STUDENTS: 'Participants',
     ADD_STUDENT_PLACEHOLDER: 'Select new participant',
     ADD_STUDENT_BUTTON: 'Add',
+    GROUP: 'Group',
+    GROUP_PLACEHOLDER: 'Select Group',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     NOSTUDENT: 'No participants added in the cohort.',
@@ -400,6 +404,7 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'Participant Name',
+      GROUP: 'Group',
       STATUS: 'Status',
       ACTIONS: 'Actions',
     },
@@ -411,6 +416,8 @@ const editClassDict: any = {
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
     ADD_STUDENT_BUTTON: 'Añadir',
+    GROUP: 'TBD',
+    GROUP_PLACEHOLDER: 'TBD',
     UPDATING: 'TBD',
     CANCEL: 'TBD',
     NOSTUDENT: 'TBD',
@@ -431,6 +438,7 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
+      GROUP: 'TBD',
       STATUS: 'estado',
       ACTIONS: 'comportamiento',
     },
@@ -543,7 +551,10 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Session Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
+    STEP: 'Step',
     UNIT_TITLE: 'Module Manager',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -551,6 +562,10 @@ const classRoomDict: any = {
       TEACH: 'TEACH',
       ACTIVE: 'ACTIVE',
       COMPLETED: 'COMPLETED',
+      OPENED: 'OPEN',
+      CLOSED: 'CLOSED',
+      SURVEY: 'SURVEY',
+      UPCOMING: 'UPCOMING',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Session`,
@@ -562,6 +577,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
+      NODESIGNEROPTION: 'Select Institute first',
     },
   },
   ES: {
@@ -573,7 +589,10 @@ const classRoomDict: any = {
     SURVEY: 'TBD',
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
+    STEP: 'TBD',
     UNIT_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
@@ -581,6 +600,10 @@ const classRoomDict: any = {
       TEACH: 'TBD',
       ACTIVE: 'TBD',
       COMPLETED: 'TBD',
+      OPENED: 'TBD',
+      CLOSED: 'TBD',
+      SURVEY: 'TBD',
+      UPCOMING: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,
@@ -592,6 +615,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
+      NODESIGNEROPTION: 'TBD',
     },
   },
 };
@@ -1492,7 +1516,7 @@ const LEARINGOBJECTIVEDICT: any = {
     INFO: 'This curricular does not have any objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {
@@ -1553,6 +1577,7 @@ const TOPICLISTDICT: any = {
     TOPIC: 'Topics',
     EDIT: 'Edit',
     INFO: 'This objective does not have any topics. Please create a new one.',
+    ADD: 'Add Topic',
     ADDNEW: 'Add New Topic',
     FETCH: 'Fetching topics list...',
   },
@@ -2787,6 +2812,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'Session type is required',
       INSTITUTE: 'Organization is required field.',
       LANGUAGE: 'Language selection is required',
+      STUDENT_SUMMARY: 'Student summary is required',
+      IMAGE_CAPTION: 'Image Overlay text is required',
     },
     MESSAGES: {
       REMOVE: 'Are you sure you want to remove this measurement?',
@@ -2827,6 +2854,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'TBD',
       INSTITUTE: 'TBD',
       LANGUAGE: 'TBD',
+      STUDENT_SUMMARY: 'TBD',
+      IMAGE_CAPTION: 'TBD',
     },
     MESSAGES: {
       REMOVE: 'TBD',
