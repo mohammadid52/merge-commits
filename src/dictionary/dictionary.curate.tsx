@@ -382,6 +382,8 @@ const editClassDict: any = {
     STUDENTS: 'Participants',
     ADD_STUDENT_PLACEHOLDER: 'Select new participant',
     ADD_STUDENT_BUTTON: 'Add',
+    GROUP: 'Group',
+    GROUP_PLACEHOLDER: 'Select Group',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     NOSTUDENT: 'No participants added in the cohort.',
@@ -402,6 +404,7 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'Participant Name',
+      GROUP: 'Group',
       STATUS: 'Status',
       ACTIONS: 'Actions',
     },
@@ -413,6 +416,8 @@ const editClassDict: any = {
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
     ADD_STUDENT_BUTTON: 'Añadir',
+    GROUP: 'TBD',
+    GROUP_PLACEHOLDER: 'TBD',
     UPDATING: 'TBD',
     CANCEL: 'TBD',
     NOSTUDENT: 'TBD',
@@ -433,6 +438,7 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
+      GROUP: 'TBD',
       STATUS: 'estado',
       ACTIONS: 'comportamiento',
     },
@@ -571,6 +577,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
+      NODESIGNEROPTION: 'Select Institute first',
     },
   },
   ES: {
@@ -608,6 +615,7 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
+      NODESIGNEROPTION: 'TBD',
     },
   },
 };

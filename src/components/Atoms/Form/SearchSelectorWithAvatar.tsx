@@ -151,6 +151,7 @@ const SearchSelectorWithAvatar = (props: selectorProps) => {
           {showList ? (
             <input
               autoFocus
+              className="p-0 border-none"
               onChange={handleSearchChange}
               id={`searchForStudent`}
               type={`text`}

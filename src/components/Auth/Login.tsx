@@ -413,7 +413,7 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                       </div>
                     </>
                   )}
-                  <div className="relative h-4.5/10 flex flex-col justify-center items-center">
+                  <div className="relative flex flex-col justify-center items-center">
                     <button
                       disabled={isToggled}
                       className={`p-3 mb-4 ${getAsset(

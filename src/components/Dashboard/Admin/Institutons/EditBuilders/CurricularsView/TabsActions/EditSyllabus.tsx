@@ -69,6 +69,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
   };
   const [syllabusData, setSyllabusData] = useState<InitialData>(initialData);
   const [loading, setIsLoading] = useState(false);
+  const [addingLesson, setAddingLesson] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [fetchingDetails, setFetchingDetails] = useState(false);
   const [editState, setEditState] = useState<{id: string; action?: string}>({
@@ -433,6 +434,7 @@ const EditSyllabus = (props: EditSyllabusProps) => {
 
   const addNewLesson = async () => {
     try {
+      setAddingLesson(true);
       const selectedLesson = allLessonsList.find(
         (item) => item.id === selecetedLesson.id
       );
@@ -475,13 +477,15 @@ const EditSyllabus = (props: EditSyllabusProps) => {
             })
           );
         });
-        updateLessonSequence([newLesson.id]);
+        await updateLessonSequence([newLesson.id]);
       } else {
-        updateLessonSequence([...lessonsIds, newLesson.id]);
+        await updateLessonSequence([...lessonsIds, newLesson.id]);
       }
       setSelectedLesson({id: '', name: '', value: ''});
       setSavedLessonsList([...savedLessonsList, newLesson]);
+      setAddingLesson(false);
     } catch {
+      setAddingLesson(false);
       setMessages({
         show: true,
         message: EditSyllabusDict[userLanguage]['messages']['updateerr'],
@@ -498,6 +502,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
         graphqlOperation(mutations.deleteUniversalSyllabusLesson, {
           input: {id: item.uniqlessonId},
         })
+      );
+      await updateLessonSequence(
+        lessonsIds.filter((lessonId) => lessonId !== item.uniqlessonId)
       );
       setSelectedLessonsList((list: any) =>
         list.filter((_item: any) => _item.id !== item.id)
@@ -855,9 +862,9 @@ const EditSyllabus = (props: EditSyllabusProps) => {
                   <div className="ml-4 w-auto">
                     <Buttons
                       btnClass="ml-4 py-1"
-                      label="Add"
+                      label={addingLesson ? 'Adding' : 'Add'}
                       onClick={addNewLesson}
-                      disabled={selecetedLesson.value ? false : true}
+                      disabled={!Boolean(selecetedLesson.value) || addingLesson}
                     />
                   </div>
                 </div>

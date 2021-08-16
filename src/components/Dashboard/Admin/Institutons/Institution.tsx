@@ -95,7 +95,7 @@ const Institution = (props: InstitutionProps) => {
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: institutionData.name,
       url: `${location.pathname}${location.search}`,
       last: true,
     },

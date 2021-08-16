@@ -583,6 +583,7 @@ export const createClassStudent = /* GraphQL */ `
   ) {
     createClassStudent(input: $input, condition: $condition) {
       id
+      group
       classID
       studentID
       status
