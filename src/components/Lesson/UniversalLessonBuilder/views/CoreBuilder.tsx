@@ -241,6 +241,11 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     const replaceAllExistingIds: UniversalLessonPage = {
       ...selectedPage,
       id: uuidv4(),
+      title: 'TBD',
+      estTime: 1,
+      tags: [],
+      description: '',
+      class: '',
       pageContent:
         selectedPage.pageContent && selectedPage.pageContent.length > 0
           ? map(selectedPage.pageContent, (pgContent) => ({
@@ -287,6 +292,7 @@ export const CoreBuilder = (props: CoreBuilderProps) => {
     const replaceAllExistingIds: UniversalLessonPage = {
       ...selectedPage,
       id: uuidv4(),
+
       pageContent:
         selectedPage.pageContent && selectedPage.pageContent.length > 0
           ? map(selectedPage.pageContent, (pgContent) => ({
