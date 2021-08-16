@@ -66,7 +66,8 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
     selectedPageID,
     setUniversalLessonDetails,
     selID,
-
+    selIDForHover,
+    setSelIDForHover,
     setSelID,
   } = useULBContext();
 
@@ -449,13 +450,13 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
         <button
           onMouseEnter={() => {
             if (isComponent) {
-              setSelID({pageContentID, partContentID});
+              setSelIDForHover({pageContentID, partContentID});
             } else {
-              setSelID({partContentID: '', pageContentID});
+              setSelIDForHover({partContentID: '', pageContentID});
             }
           }}
           onMouseLeave={() => {
-            clearIds();
+            setSelIDForHover({partContentID: '', pageContentID: ''});
           }}
           className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 cursor-pointer`}
           onClick={() => {

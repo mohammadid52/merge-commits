@@ -152,6 +152,10 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
+  const [selIDForHover, setSelIDForHover] = useState({
+    pageContentID: '',
+    partContentID: '',
+  });
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
 
@@ -183,6 +187,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         universalLessonDetails,
         selectedPageID,
         lessonPlanFields,
+        selIDForHover,
+        setSelIDForHover,
         setLessonPlanFields,
         activeTab,
         setActiveTab,

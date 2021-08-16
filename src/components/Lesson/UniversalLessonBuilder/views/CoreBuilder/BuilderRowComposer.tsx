@@ -29,7 +29,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   const {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-  const {previewMode, updateMovableList, enableDnD} = useULBContext();
 
   const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {
@@ -41,7 +40,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const {selectedPageID, universalLessonDetails, selID} = useULBContext();
+  const {
+    selectedPageID,
+    universalLessonDetails,
+    selIDForHover,
+    previewMode,
+    updateMovableList,
+    enableDnD,
+  } = useULBContext();
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
@@ -102,9 +108,9 @@ const BuilderRowComposer = (props: RowComposerProps) => {
             <div
               key={`row_pagepart_${idx}`}
               className={`relative ${
-                selID?.pageContentID && !selID?.partContentID
+                selIDForHover?.pageContentID && !selIDForHover?.partContentID
                   ? `opacity-${
-                      pagePart.id === selID?.pageContentID ? '100' : '50'
+                      pagePart.id === selIDForHover?.pageContentID ? '100' : '50'
                     } transition-opacity duration-200`
                   : ''
               }`}>
@@ -151,9 +157,11 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                     return (
                                       <li
                                         className={
-                                          selID?.pageContentID && selID?.partContentID
+                                          selIDForHover?.pageContentID &&
+                                          selIDForHover?.partContentID
                                             ? `transition-opacity duration-200 opacity-${
-                                                selID?.partContentID === content.id
+                                                selIDForHover?.partContentID ===
+                                                content.id
                                                   ? '100'
                                                   : '50'
                                               } `
