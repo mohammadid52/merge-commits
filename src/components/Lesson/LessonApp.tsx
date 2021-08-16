@@ -137,6 +137,10 @@ const LessonApp = () => {
         }
         lessonDispatch({type: 'CLEANUP'});
       });
+      // if (subscription) {
+      //   subscription.unsubscribe();
+      // }
+      // lessonDispatch({type: 'CLEANUP'});
     };
   }, []);
 
@@ -545,7 +549,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      // getOrCreateStudentData();
+      //getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 
@@ -555,7 +559,6 @@ const LessonApp = () => {
 
   const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
   const previousLocation = usePrevious(personLocationObj);
-  const {lessonID} = urlParams;
 
   useEffect(() => {
     if (personLocationObj && personLocationObj.id) {
@@ -567,29 +570,35 @@ const LessonApp = () => {
   // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
 
   const getPersonLocation = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    let input = {
+      personAuthID: {eq: studentAuthId},
+      personEmail: email,
+    };
+
     try {
       let userLocations: any = await API.graphql(
-        graphqlOperation(customQueries.listPersonLocations, {
-          filter: {
-            personAuthID: {eq: state.user.authId},
-            personEmail: {eq: state.user.email},
-            syllabusLessonID: {eq: getRoomData.activeSyllabus},
-            lessonID: {eq: lessonID},
-          },
-        })
+        graphqlOperation(customQueries.listPersonLocations, input)
       );
 
       const responseItems = userLocations.data.listPersonLocations.items;
+      console.log('getPersonLocation - ', responseItems);
 
       if (responseItems.length > 0) {
-        const response = responseItems[0];
-        const existLocationObj = {
-          ...response,
-          roomID: getRoomData.id,
-          currentLocation: '0',
-        };
-        setPersonLocationObj(existLocationObj);
-        console.log('getPersonLocation - ', 'location exists');
+        // const response = responseItems[0];
+        // const existLocationObj = {
+        //   ...response,
+        //   roomID: getRoomData.id,
+        //   currentLocation: '0',
+        // };
+        // setPersonLocationObj(existLocationObj);
+        // console.log('getPersonLocation - ', 'location exists');
+        await leaveRoomLocation();
+        await createPersonLocation();
       } else {
         await createPersonLocation();
       }
@@ -599,9 +608,14 @@ const LessonApp = () => {
   };
 
   const createPersonLocation = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
     const newLocation = {
-      personAuthID: state.user.authId,
-      personEmail: state.user.email,
+      personAuthID: studentAuthId,
+      personEmail: email,
       syllabusLessonID: getRoomData.activeSyllabus,
       lessonID: lessonID,
       roomID: getRoomData.id,
@@ -682,7 +696,21 @@ const LessonApp = () => {
     }
   }, [lessonState.currentPage]);
 
-  // ~~~~~ PERSON LOCATION DB FUNCTIONS ~~~~ //
+  // ##################################################################### //
+  // ######################### NAVIGATION CONTROL ######################## //
+  // ##################################################################### //
+
+  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
+    false
+  );
+  const handleRequiredNotification = () => {
+    if (!showRequiredNotification) {
+      setShowRequiredNotification(true);
+      setTimeout(() => {
+        setShowRequiredNotification(false);
+      }, 1250);
+    }
+  };
 
   const userAtEnd = () => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
@@ -693,6 +721,17 @@ const LessonApp = () => {
       <FloatingSideMenu />
       <div
         className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
+        <div
+          className={`opacity-${
+            showRequiredNotification
+              ? '100 translate-x-0 transform z-100'
+              : '0 translate-x-10 transform'
+          } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+          <p className="text-white font-medium tracking-wide">
+            <span className="text-red-500">*</span>Please fill all the required fields
+          </p>
+        </div>
+
         <div className="fixed z-50">
           <LessonHeaderBar
             lessonDataLoaded={lessonDataLoaded}
@@ -700,6 +739,7 @@ const LessonApp = () => {
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
+            handleRequiredNotification={handleRequiredNotification}
           />
         </div>
         <div className="relative top-6 lesson-body-container">
@@ -718,7 +758,13 @@ const LessonApp = () => {
             </ErrorBoundary>
           )}
 
-          {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
+          {lessonDataLoaded && (
+            <Foot
+              isAtEnd={isAtEnd}
+              setisAtEnd={setisAtEnd}
+              handleRequiredNotification={handleRequiredNotification}
+            />
+          )}
         </div>
       </div>
     </>

@@ -45,9 +45,9 @@ const LessonCourse = ({
   // const [curriculumList, setCurriculumList] = useState([]);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
 
-  useEffect(() => {
-    fetchCurriculum();
-  }, [institution]);
+  // useEffect(() => {
+  //   fetchCurriculum();
+  // }, [institution]);
 
   useEffect(() => {
     setSelectedCurriculumList(selectedCurriculums);

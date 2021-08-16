@@ -152,20 +152,28 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
+  const [selIDForHover, setSelIDForHover] = useState({
+    pageContentID: '',
+    partContentID: '',
+  });
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
-  const [addContentModal, setAddContentModal] = useState<{show: boolean; type: string}>({
+
+  const [suggestionModal, setSuggestionModal] = useState({
     show: false,
-    type: '',
+    data: [{title: '', content: [{id: '', text: ''}]}],
+    selectedResponse: [],
+    idx: 0,
   });
+
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
         selectedLessonID,
-        addContentModal,
-        setAddContentModal,
+        suggestionModal,
+        setSuggestionModal,
         editMode,
         toolbarOnTop,
         setToolbarOnTop,
@@ -179,6 +187,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         universalLessonDetails,
         selectedPageID,
         lessonPlanFields,
+        selIDForHover,
+        setSelIDForHover,
         setLessonPlanFields,
         activeTab,
         setActiveTab,

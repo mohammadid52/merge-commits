@@ -5,20 +5,28 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {isString} from 'lodash';
+import {isEmpty, noop} from 'lodash';
 
 interface PoemBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
+  classString?: string;
+  writingExercise?: boolean;
 }
 
 const PoemBlock = (props: PoemBlockProps) => {
-  const {id, value} = props;
-  const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {id, value, classString = 'title-show || lineStarter-hide'} = props;
+
+  const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
   // const [poemWriting, setPoemWriting] = useState<string>('');
   const [saveAndEdit, setSaveAndEdit] = useState<boolean>(false);
+  const [poemWriting, setPoemWriting] = useState('');
+  const [fields, setFields] = useState({
+    poemHtml: '',
+    poemText: '',
+  });
 
   // ##################################################################### //
   // ######################## STUDENT DATA CONTEXT ####################### //
@@ -41,9 +49,11 @@ const PoemBlock = (props: PoemBlockProps) => {
 
   const getStudentDataValue = (domID: string) => {
     const pageData = lessonState.studentData[lessonState.currentPage];
+
     const getInput = pageData
       ? pageData.find((inputObj: StudentPageInput) => inputObj.domID === domID)
       : undefined;
+
     if (getInput) {
       return getInput.input;
     } else {
@@ -51,65 +61,54 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   };
 
-  // // init poemInput so the first linestarter shows up
-  useEffect(() => {
-    if (poemInput.length === 0 && value.length > 0) {
-      setPoemInput([
-        {
-          domID: value[0].id,
-          input: [value[0].value],
-        },
-      ]);
-    }
-  }, [value]);
-
-  // // init poemWriting for WYSIWYG
-  useEffect(() => {
-    if (isInLesson && isStudent) {
-      if (poemInput.length > 0) {
-        const concatenated = poemInput.reduce(
-          (acc: string, poemInputObj: StudentPageInput) => {
-            return `${acc}<p>${poemInputObj.input[0]}</p>`;
-          },
-          ''
-        );
-        handleUpdateStudentData(id, [concatenated]);
-      }
-    }
-  }, [poemInput]);
-
-  const handleSaveAndEdit = () => {
-    setSaveAndEdit(!saveAndEdit);
-  };
+  const [title, lineStarter] = classString?.split(' || ');
 
   return (
     <div
       className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
-      <div className="relative flex flex-col justify-between items-center">
-        {!saveAndEdit ? (
+      <div className="relative flex flex-col justify-between items-center p-4">
+        {value && value[0].options && lineStarter === 'lineStarter-show' ? (
           <WritingBlock
             id={id}
-            linestarters={value}
+            linestarters={value[0].options}
             poemInput={poemInput}
             setPoemInput={setPoemInput}
             saveAndEdit={saveAndEdit}
+            fields={fields}
+            setFields={setFields}
+            setPoemWriting={setPoemWriting}
             setSaveAndEdit={setSaveAndEdit}
+            handleUpdateStudentData={handleUpdateStudentData}
           />
-        ) : (
+        ) : null}
+        <div className="bg-gray-700 rounded-md p-4 mt-4">
+          {value && value[0].label && title === 'title-show' && (
+            <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
+              {value[0].label}
+            </h1>
+            // <input
+            //   id={id}
+            //   // disabled={mode === 'building'}
+            //   className={`w-full py-2 px-4  mt-2 rounded-xl bg-gray-100 dark:bg-darker-gray placeholder-gray-500 dark:placeholder-gray-700`}
+            //   name={'text'}
+            //   type={'text'}
+            //   onChange={
+            //     isInLesson && isStudent
+            //       ? (e) => handleUpdateStudentData(id, [e.target.value])
+            //       : noop
+            //   }
+            //   value={isInLesson ? getStudentDataValue(id)[0] : value}
+            // />
+          )}
           <EditingBlock
             id={id}
             poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
             handleUpdateStudentData={
-              isInLesson && isStudent ? handleUpdateStudentData : undefined
+              isInLesson && isStudent ? handleUpdateStudentData : noop
             }
           />
-        )}
+        </div>
       </div>
-      <button
-        onClick={() => handleSaveAndEdit()}
-        className={`self-center w-auto px-3 h-8 bg-yellow-500 text-gray-900 flex justify-center items-center rounded-xl mt-2 text-gray-200`}>
-        Save and Edit Your Poem
-      </button>
     </div>
   );
 };

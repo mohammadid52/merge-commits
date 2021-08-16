@@ -30,7 +30,7 @@ const SurveyCard: React.FC<ClassProps> = (props: ClassProps) => {
 
   return (
     <>
-      {lessons && lessons.length > 0
+      {lessons && lessons?.length > 0
         ? lessons.map((lesson: any, key: number) => {
             return (
               <div key={`survey-${key}_wrapper`} id={`survey-${key}_wrapper`}>

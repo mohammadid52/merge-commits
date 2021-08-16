@@ -6,6 +6,8 @@ import { getImageFromS3 } from '../../../../utilities/services';
 import { getAsset } from '../../../../assets';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
+import axios from 'axios';
+import { requestResetPassword } from '../../../../utilities/urls';
 
 interface ListProps {
     item: any
@@ -16,8 +18,8 @@ const List = (props: ListProps) => {
     const match = useRouteMatch();
     const history = useHistory();
     const [imageUrl, setImageUrl] = useState('')
-    const { theme, clientKey,userLanguage } = useContext(GlobalContext);
-    const { BUTTONS  } = useDictionary(clientKey);
+    const { state, theme, clientKey, userLanguage } = useContext(GlobalContext);
+    const { BUTTONS } = useDictionary(clientKey);
     const themeColor = getAsset(clientKey, 'themeClassName');
 
     const initials = (firstName: string, lastName: string) => {
@@ -29,6 +31,14 @@ const List = (props: ListProps) => {
     const handleLink = (e: any) => {
         const { id } = e.target
         history.push(`${match.url}/user?id=${id}`)
+    }
+
+    const resetPassowrd = async (user: any) => {
+        try {
+            await axios.post(requestResetPassword, { email: user.email });
+        } catch (err) {
+            console.log('error', err);
+        }
     }
 
     const stringToHslColor = (str: string) => {
@@ -50,6 +60,27 @@ const List = (props: ListProps) => {
         getUrl();
 
     }, [item.image])
+
+    const showResetPasswordOption = (loggedUserRole: any, userRole: any) => {
+        let show = false;
+        if (loggedUserRole === 'ADM') {
+            show = true;
+        }
+        if (loggedUserRole === 'TR' && userRole === 'ST') {
+            show = true;
+        }
+        if (loggedUserRole === 'FLW' && userRole === 'ST') {
+            show = true;
+        }
+        if (show) {
+            return (
+                <div className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium" onClick={() => resetPassowrd(item)} >
+                    <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]}`}>RESET password</div>
+                </div>
+            )
+        }
+        return null;
+    }
 
     return (
         ///change INFO, MARGIN and WIDTH if needed
@@ -82,12 +113,6 @@ const List = (props: ListProps) => {
                         role={item.role ? item.role : '--'} />
                 </span>
             </div>
-            {/* <div className="w-3.5/10 flex justify-center px-8 py-4 whitespace-nowrap">
-                <div className="flex flex-col justify-center items-center">
-                    <div id={item.id} className="w-auto text-sm leading-5 text-gray-900">{item.institution ? item.institution : '--'}</div>
-                    <div id={item.id} className="w-auto text-sm leading-5 text-gray-500">{item.grade ? item.grade : '--'}</div>
-                </div>
-            </div> */}
             <div className="w-2/10 flex justify-center items-center px-8 py-4 whitespace-nowrap">
                 <div className="w-16 flex justify-center">
                     <UserStatus
@@ -95,9 +120,12 @@ const List = (props: ListProps) => {
                 </div>
             </div>
             <div className="w-2/10 flex justify-center items-center pr-4 py-4 cursor-pointer whitespace-nowrap text-right text-sm leading-5 font-medium" onClick={handleLink} >
-                <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor] }`}>{BUTTONS[userLanguage]['EDIT']}</div>
+                <div id={item.id} className={`flex justify-center ${theme.textColor[themeColor]}`}>{BUTTONS[userLanguage]['EDIT']}</div>
             </div>
-
+            {
+                state.user.role !== 'ST' ?
+                    showResetPasswordOption(state.user.role, item.role) : null
+            }
 
         </div>
     );

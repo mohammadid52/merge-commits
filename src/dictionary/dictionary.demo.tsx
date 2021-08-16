@@ -89,7 +89,7 @@ const EditQuestionModalDict: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',
@@ -283,6 +283,7 @@ const anthologyDict: any = {
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
+      CONFIRM: 'Confirm',
     },
   },
   ES: {
@@ -299,6 +300,7 @@ const anthologyDict: any = {
       ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
+      CONFIRM: 'Confirm',
     },
   },
 };
@@ -442,6 +444,8 @@ const editClassDict: any = {
     STUDENTS: 'STUDENTS',
     ADD_STUDENT_PLACEHOLDER: 'Select student',
     ADD_STUDENT_BUTTON: 'Add',
+    GROUP: 'Group',
+    GROUP_PLACEHOLDER: 'Select Group',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     NOSTUDENT: 'No students added in the class.',
@@ -462,6 +466,7 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'Participant Name',
+      GROUP: 'Group',
       STATUS: 'Status',
       ACTIONS: 'Actions',
     },
@@ -473,6 +478,8 @@ const editClassDict: any = {
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
     ADD_STUDENT_BUTTON: 'Añadir',
+    GROUP: 'TBD',
+    GROUP_PLACEHOLDER: 'TBD',
     UPDATING: 'TBD',
     CANCEL: 'TBD',
     NOSTUDENT: 'TBD',
@@ -493,6 +500,7 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
+      GROUP: 'TBD',
       STATUS: 'estado',
       ACTIONS: 'comportamiento',
     },
@@ -604,7 +612,10 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Lesson Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
+    STEP: 'Step',
     UNIT_TITLE: 'Unit Manager',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
@@ -612,6 +623,10 @@ const classRoomDict: any = {
       TEACH: 'TEACH',
       ACTIVE: 'ACTIVE',
       COMPLETED: 'COMPLETED',
+      OPENED: 'OPEN',
+      CLOSED: 'CLOSED',
+      SURVEY: 'SURVEY',
+      UPCOMING: 'UPCOMING',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
@@ -634,12 +649,19 @@ const classRoomDict: any = {
     SURVEY: 'TBD',
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
+    STEP: 'TBD',
     UNIT_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
       ENABLE: 'TBD',
       TEACH: 'TBD',
+      OPENED: 'TBD',
+      CLOSED: 'TBD',
+      SURVEY: 'TBD',
+      UPCOMING: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,
@@ -1523,7 +1545,7 @@ const LEARINGOBJECTIVEDICT: any = {
       'This curricular does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Learning Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {
@@ -2819,6 +2841,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'Lesson type is required',
       INSTITUTE: 'Institute is required field.',
       LANGUAGE: 'Language selection is required',
+      STUDENT_SUMMARY: 'Student summary is required',
+      IMAGE_CAPTION: 'Image Overlay text is required',
     },
     MESSAGES: {
       REMOVE: 'Are you sure you want to remove this measurement?',
@@ -2826,6 +2850,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'Lesson details saved successfully.',
       SAVEERR: 'Unable to save Lesson details, Please try again later.',
       LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
+      NODESIGNEROPTION: 'Select Institute first',
     },
     NEXT: 'Next',
     SAVE: 'Save',
@@ -2860,6 +2885,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'TBD',
       INSTITUTE: 'TBD',
       LANGUAGE: 'TBD',
+      STUDENT_SUMMARY: 'TBD',
+      IMAGE_CAPTION: 'TBD',
     },
     MESSAGES: {
       REMOVE: 'TBD',
@@ -2867,6 +2894,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'TBD',
       SAVEERR: 'TBD',
       LESSONNOTHAVE: 'TBD',
+      NODESIGNEROPTION: 'TBD',
     },
     SAVE: 'TBD',
     SAVING: 'TBD',

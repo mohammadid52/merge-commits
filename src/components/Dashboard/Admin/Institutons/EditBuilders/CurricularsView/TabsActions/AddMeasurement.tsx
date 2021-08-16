@@ -1,153 +1,143 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, useParams } from 'react-router'
-import { IoArrowUndoCircleOutline } from 'react-icons/io5'
-import API, { graphqlOperation } from '@aws-amplify/api';
-import BreadCrums from '../../../../../../Atoms/BreadCrums'
-import SectionTitle from '../../../../../../Atoms/SectionTitle'
-import Buttons from '../../../../../../Atoms/Buttons'
-import PageWrapper from '../../../../../../Atoms/PageWrapper'
-import FormInput from '../../../../../../Atoms/Form/FormInput'
-import TextArea from '../../../../../../Atoms/Form/TextArea'
-import Selector from '../../../../../../Atoms/Form/Selector'
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory, useParams} from 'react-router';
+import API, {graphqlOperation} from '@aws-amplify/api';
+
+import BreadCrums from '../../../../../../Atoms/BreadCrums';
+import SectionTitle from '../../../../../../Atoms/SectionTitle';
+import Buttons from '../../../../../../Atoms/Buttons';
+import PageWrapper from '../../../../../../Atoms/PageWrapper';
+import FormInput from '../../../../../../Atoms/Form/FormInput';
+import TextArea from '../../../../../../Atoms/Form/TextArea';
+
 import * as queries from '../../../../../../../graphql/queries';
 import * as mutations from '../../../../../../../graphql/mutations';
-import * as customMutations from '../../../../../../../customGraphql/customMutations'
+import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 interface AddMeasurementProps {
-
+  curricularId: string;
+  onCancel?: () => void;
+  postMutation: (data: any) => void;
+  rubricData: any;
+  topicId: string;
 }
 
 const AddMeasurement = (props: AddMeasurementProps) => {
-  const { } = props;
-  const history = useHistory();
-  const urlParams: any = useParams()
-  const curricularId = urlParams.curricularId;
-  const [topics, setTopics] = useState([]);
+  const {curricularId, onCancel, postMutation, rubricData, topicId} = props;
 
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [criteria, setCriteria] = useState('');
-  const [topic, setTopic] = useState({ id: '', name: '', value: '' })
-  const [validation, setValidation] = useState({ name: '', topic: '' })
+  const [topic, setTopic] = useState({id: '', name: '', value: ''});
+  const [validation, setValidation] = useState({name: '', topic: ''});
   const [measurementIds, setMeasurementIds] = useState([]);
-  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
-  
-  const {AddMeasurementDict, BreadcrumsTitles } = useDictionary(clientKey);
-  
-  const useQuery = () => {
-    return new URLSearchParams(location.search);
-  };
+  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
 
-  const urlGetParams: any = useQuery();
-  const topicId = urlGetParams.get('tid'); // Find a code from params.
+  const {AddMeasurementDict} = useDictionary(clientKey);
 
-
-  const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
-    { title: topic?.value, url: `/dashboard/manage-institutions/:instituteID/curricular?id=${curricularId}`, last: false, goBack: true },
-    { title: BreadcrumsTitles[userLanguage]['AddMeasurement'], url: `/dashboard/curricular/${curricularId}/measurement/add`, last: true }
-  ];
+  useEffect(() => {
+    if (rubricData?.id) {
+      setName(rubricData.name);
+      setCriteria(rubricData.criteria);
+    }
+  }, [rubricData?.id]);
 
   const onInputChange = (e: any) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (e.target.name === 'name') {
-      setName(value)
-      if (value.length && validation.name) setValidation({ ...validation, name: '' });
+      setName(value);
+      if (value.length && validation.name) setValidation({...validation, name: ''});
     }
-    if (e.target.name === 'criteria') setCriteria(value)
-  }
+    if (e.target.name === 'criteria') setCriteria(value);
+  };
 
-  const selectTopic = (val: string, name: string, id: string) => {
-    if (validation.topic) {
-      setValidation({ ...validation, topic: '' })
-    }
-    setTopic({ id, name, value: val })
-  }
-
-  const fetchTopics = async () => {
-    let list: any = await API.graphql(graphqlOperation(queries.listTopics, {
-      filter: { curriculumID: { eq: curricularId } },
-    }));
-    list = list.data.listTopics?.items || []
-    list = list.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      value: item.name
-    }));
-    setTopics(list)
-    if (topicId) {
-      setTopic(list.find((item: any) => item.id === topicId))
-    }
-  }
-  const fetchMeasurementSequence = async (topicId: string) => {
-    let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
-      { id: `m_${topicId}` }))
-    item = item?.data.getCSequences?.sequence || []
-    if (item) {
-      setMeasurementIds(item)
-    }
-  }
+  // const fetchMeasurementSequence = async (topicId: string) => {
+  //   let item: any = await API.graphql(graphqlOperation(queries.getCSequences,
+  //     { id: `m_${topicId}` }))
+  //   item = item?.data.getCSequences?.sequence || []
+  //   if (item) {
+  //     setMeasurementIds(item)
+  //   }
+  // }
 
   const validateForm = () => {
-    let isValid = true
+    let isValid = true;
     const msgs = validation;
     if (!name.length) {
       isValid = false;
       msgs.name = AddMeasurementDict[userLanguage]['messages']['namerequired'];
     } else {
-      msgs.name = ''
+      msgs.name = '';
     }
-    if (!topic.id) {
-      isValid = false;
-      msgs.topic = AddMeasurementDict[userLanguage]['messages']['topicrequired'];
-    } else {
-      msgs.topic = ''
-    }
-    setValidation({ ...msgs });
+    // if (!topic.id) {
+    //   isValid = false;
+    //   msgs.topic = AddMeasurementDict[userLanguage]['messages']['topicrequired'];
+    // } else {
+    //   msgs.topic = ''
+    // }
+    setValidation({...msgs});
     return isValid;
-  }
+  };
 
   const saveMeasurementDetails = async () => {
-    const isValid = validateForm()
+    const isValid = validateForm();
     if (isValid) {
+      setLoading(true);
       const input = {
-        name, topicID: topic.id,
+        name,
+        topicID: topicId,
         criteria,
-        curriculumID: curricularId
+        curriculumID: curricularId,
       };
-      const item: any = await API.graphql(graphqlOperation(customMutations.createRubric, { input }));
-      const addedItem = item.data.createRubric
-      if (!measurementIds.length) {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${topic.id}`, sequence: [addedItem.id] } }));
-        seqItem = seqItem.data.createCSequences
-        console.log('seqItem', seqItem)
+      if (rubricData?.id) {
+        const item: any = await API.graphql(
+          graphqlOperation(customMutations.updateRubric, {
+            input: {...input, id: rubricData?.id},
+          })
+        );
+        const updatedItem = item.data.updateRubric;
+        if (updatedItem) {
+          postMutation(updatedItem);
+        } else {
+          setLoading(false);
+        }
       } else {
-        let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${topic.id}`, sequence: [...measurementIds, addedItem.id] } }));
-        seqItem = seqItem.data.updateCSequences
-        console.log('seqItem', seqItem)
+        const item: any = await API.graphql(
+          graphqlOperation(customMutations.createRubric, {input})
+        );
+        const addedItem = item.data.createRubric;
+        if (addedItem) {
+          postMutation(addedItem);
+        } else {
+          setLoading(false);
+        }
       }
-      if (addedItem) {
-        history.goBack()
-      } else {
-        console.log('Could not add measurement');
-      }
+      // if (!measurementIds.length) {
+      //   let seqItem: any = await API.graphql(graphqlOperation(mutations.createCSequences, { input: { id: `m_${topic.id}`, sequence: [addedItem.id] } }));
+      //   seqItem = seqItem.data.createCSequences
+      //   console.log('seqItem', seqItem)
+      // } else {
+      //   let seqItem: any = await API.graphql(graphqlOperation(mutations.updateCSequences, { input: { id: `m_${topic.id}`, sequence: [...measurementIds, addedItem.id] } }));
+      //   seqItem = seqItem.data.updateCSequences
+      //   console.log('seqItem', seqItem)
+      // }
+      // if (addedItem) {
+      //   postMutation(addedItem);
+      // } else {
+      //   console.log('Could not add measurement');
+      // }
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchTopics()
-  }, [])
-
-  useEffect(() => {
-    if (topic?.id) {
-      fetchMeasurementSequence(topic.id)
-    }
-  }, [topic.id])
+  // useEffect(() => {
+  //   if (topic?.id) {
+  //     fetchMeasurementSequence(topic.id)
+  //   }
+  // }, [topic.id])
 
   return (
-    <div className="w-8/10 h-full mt-4 p-4">
-
-      {/* Section Header */}
+    <div className="min-w-172">
+      {/* Section Header
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title={AddMeasurementDict[userLanguage]['title']} subtitle={AddMeasurementDict[userLanguage]['subtitle']} />
@@ -157,20 +147,21 @@ const AddMeasurement = (props: AddMeasurementProps) => {
       </div>
 
       {/* Body section */}
-      <PageWrapper>
-        <div className="w-6/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">{AddMeasurementDict[userLanguage]['heading']}</h3>
-        </div>
-        <div className="w-6/10 m-auto">
-          <div className="">
-
-            <div className="px-3 py-4">
-              <FormInput id='name' value={name} onChange={onInputChange} name='name' label={AddMeasurementDict[userLanguage]['mlabel']} isRequired />
-              {
-                validation.name && <p className="text-red-600">{validation.name}</p>
-              }
-            </div>
-            {/* <div className="px-3 py-4">
+      {/* <PageWrapper> */}
+      <div className="w-full m-auto">
+        <div className="">
+          <div className="px-3 py-4">
+            <FormInput
+              id="name"
+              value={name}
+              onChange={onInputChange}
+              name="name"
+              label={AddMeasurementDict[userLanguage]['mlabel']}
+              isRequired
+            />
+            {validation.name && <p className="text-red-600">{validation.name}</p>}
+          </div>
+          {/* <div className="px-3 py-4">
               <div>
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {AddMeasurementDict[userLanguage]['selecttopic']} <span className="text-red-500">*</span>
@@ -182,18 +173,35 @@ const AddMeasurement = (props: AddMeasurementProps) => {
               </div>
             </div> */}
 
-            <div className="px-3 py-4">
-              <TextArea rows={3} id='criteria' value={criteria} onChange={onInputChange} name='criteria' label={AddMeasurementDict[userLanguage]['criterialabel']} />
-            </div>
+          <div className="px-3 py-4">
+            <TextArea
+              rows={3}
+              id="criteria"
+              value={criteria}
+              onChange={onInputChange}
+              name="criteria"
+              label={AddMeasurementDict[userLanguage]['criterialabel']}
+            />
           </div>
         </div>
-        <div className="flex my-8 justify-center">
-          <Buttons btnClass="py-3 px-10 mr-4" label={AddMeasurementDict[userLanguage]['button']['cancel']} onClick={history.goBack} transparent />
-          <Buttons btnClass="py-3 px-10 ml-4" label={AddMeasurementDict[userLanguage]['button']['save']} onClick={saveMeasurementDetails} />
-        </div>
-      </PageWrapper>
+      </div>
+      <div className="flex my-8 justify-center">
+        <Buttons
+          btnClass="py-3 px-10 mr-4"
+          label={AddMeasurementDict[userLanguage]['button']['cancel']}
+          onClick={onCancel}
+          transparent
+        />
+        <Buttons
+          btnClass="py-3 px-10 ml-4"
+          label={AddMeasurementDict[userLanguage]['button']['save']}
+          onClick={saveMeasurementDetails}
+          disabled={loading}
+        />
+      </div>
+      {/* </PageWrapper> */}
     </div>
-  )
-}
+  );
+};
 
-export default AddMeasurement
+export default AddMeasurement;

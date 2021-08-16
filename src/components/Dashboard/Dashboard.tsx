@@ -46,6 +46,11 @@ type userObject = {
   [key: string]: any;
 };
 
+export interface ICompletedLessons{
+  lessonID: string;
+  time: string;
+}
+
 export interface DashboardProps {
   classRoomActiveSyllabus?: string;
   loading?: boolean;
@@ -70,6 +75,9 @@ export interface DashboardProps {
   setSyllabusLoading?: React.Dispatch<React.SetStateAction<boolean>>;
   handleRoomSelection?: Function;
   justLoggedIn?: boolean;
+  completedLessons?: ICompletedLessons[];
+  curriculumName?: string;
+  institutionId?: string;
 }
 
 export interface ClassroomControlProps extends DashboardProps {
@@ -682,7 +690,20 @@ const Dashboard = (props: DashboardProps) => {
               data: mappedResponseObjects,
             },
           });
-
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'syllabus',
+              data: mappedResponseObjects,
+            },
+          });
+          dispatch({
+            type: 'UPDATE_ROOM',
+            payload: {
+              property: 'curriculum',
+              data: {name: response.name},
+            },
+          });
           setSyllabusLoading(false);
         } catch (e) {
           console.error('Curriculum ids ERR: ', e);
@@ -728,6 +749,13 @@ const Dashboard = (props: DashboardProps) => {
           payload: {
             property: 'lessons',
             data: lessons,
+          },
+        });
+        dispatch({
+          type: 'UPDATE_ROOM',
+          payload: {
+            property: 'activeSyllabus',
+            data: response,
           },
         });
       } catch (e) {

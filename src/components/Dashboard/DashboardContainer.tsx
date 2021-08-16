@@ -48,9 +48,9 @@ const DashboardContainer = ({
           <HeroBanner imgUrl={bannerImg} title={bannerTitle} />
           {user && (
             <div
-              className={`${theme.section} -mt-6 mb-4 px-6 py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
-              <h2 className={`text-base text-center font-normal`}>
-                <span className="font-semibold">{currentUnit() || 'Unit'}</span>
+              className={`${theme.section} -mt-4 2xl:-mt-6 mb-4 px-6 py-2 2xl:py-4 m-auto relative ${theme.backGround[themeColor]} text-white rounded`}>
+              <h2 className={`text-sm 2xl:text-xl text-center font-normal`}>
+                <span className="font-semibold">{'Classroom Manager'}</span>
               </h2>
             </div>
           )}

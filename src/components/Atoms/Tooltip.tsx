@@ -1,6 +1,7 @@
 import React from 'react';
 interface TooltipProps {
   text: string;
+  id?: string;
   children: any;
   show?: boolean;
   placement?: 'bottom' | 'top' | 'left' | 'right' | 'bottomleft';
@@ -12,7 +13,7 @@ interface TooltipProps {
 **/
 const Tooltip = ({
   text,
-
+  id,
   show = true,
   placement = 'right',
   children,
@@ -21,6 +22,7 @@ const Tooltip = ({
   if (show) {
     return (
       <div
+        id={id}
         className={`font-medium w-auto absolute ${additionalClass}`}
         data-tooltip={text}
         data-tooltip-location={placement}>

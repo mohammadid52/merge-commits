@@ -323,7 +323,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     contentType: string,
     inputObj: any,
     addBlockAtPosition: number,
-    classString?: string
+    classString?: string,
+    partType?: string
   ) => {
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
@@ -347,7 +348,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
               class: classString || '',
             },
           ],
-          partType: 'default',
+          partType: partType || 'default',
         });
         lessonPages[activePageIndex] = {
           ...lessonPages[activePageIndex],
@@ -505,7 +506,7 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
      *
      */
     <div
-      id={`universalLessonBuilder`}
+      id={`universalLessonBuilderContainer`}
       className="h-full bg-dark-gray flex overflow-hidden">
       <div
         onClick={() => {

@@ -10,8 +10,26 @@ import {BuilderRowWrapper} from '../../../UniversalLessonBuilder/views/CoreBuild
 import {FORM_TYPES} from '../../../UniversalLessonBuilder/UI/common/constants';
 
 const LessonRowComposer = () => {
-  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const {
+    state: {user, lessonPage = {}},
+    dispatch,
+    lessonState,
+    lessonDispatch,
+  } = useContext(GlobalContext);
   const [activePageData, setActivePageData] = useState<UniversalLessonPage>();
+
+  useEffect(() => {
+    const parentContainer = document.querySelector('html');
+    if (parentContainer) {
+      if (lessonPage) {
+        if (lessonPage.theme === 'dark') {
+          parentContainer.classList.add('dark');
+        } else {
+          parentContainer.classList.remove('dark');
+        }
+      }
+    }
+  }, [lessonPage]);
 
   useEffect(() => {
     const PAGES = lessonState.lessonData.lessonPlan;

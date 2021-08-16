@@ -189,9 +189,9 @@ const ChangePassword = (props: ChangePasswordProps) => {
         <div className="h-full px-4 py-5 sm:px-6 text-gray-800">
           <div className="text-center text-sm">{dictionary['CHANGE_PASSWORD']['INFO']}</div>
           <div className="w-full h-auto flex flex-col justify-between items-center my-4">
-            <div className="w-3.27/10 m-1 relative">
+            <div className="w-full md:w-1/2 m-1 relative">
               <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm flex justify-between items-center">
-                <div style={{ right: 0 }} className="absolute right-0 w-auto mr-2">
+                <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setOldPassToggle(!oldPassToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale">
@@ -227,9 +227,9 @@ const ChangePassword = (props: ChangePasswordProps) => {
               </div>
             </div>
 
-            <div className="w-3.27/10 m-1 relative">
+            <div className="w-full md:w-1/2 m-1 relative">
               <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm flex justify-between items-center">
-                <div style={{ right: 0 }} className="absolute right-0 w-auto mr-2">
+                <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassToggle(!passToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale">
@@ -264,9 +264,9 @@ const ChangePassword = (props: ChangePasswordProps) => {
               </div>
             </div>
 
-            <div className="w-3.27/10 m-1 relative">
+            <div className="w-full md:w-1/2 m-1 relative">
               <div className="border-0 border-gray-300 py-2 px-3 mt-1 rounded-md shadow-sm flex justify-between items-center">
-                <div style={{ right: 0 }} className="absolute right-0 w-auto mr-2">
+                <div className="absolute right-1 w-auto mr-2">
                   <div
                     onClick={() => setPassMatchToggle(!passMatchToggle)}
                     className="text-gray-500 cursor-pointer hover:text-grayscale">
@@ -327,13 +327,13 @@ const ChangePassword = (props: ChangePasswordProps) => {
 
       <div className="px-4 pt-4 w-full flex justify-center">
         <Buttons
-          btnClass="py-2 w-2.5/10 px-4 text-xs mr-2"
+          btnClass="py-2 w-auto md:w-2.5/10 px-4 text-xs mr-2"
           label={dictionary['CHANGE_PASSWORD']['CANCEL']}
           onClick={() => history.goBack()}
           transparent
         />
         <Buttons
-          btnClass="py-2 w-2.5/10 px-4 text-xs ml-2"
+          btnClass="py-2 w-auto px-4 text-xs ml-2"
           label={dictionary['CHANGE_PASSWORD']['SAVE']}
           onClick={handleSubmit}
         />

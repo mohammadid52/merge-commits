@@ -13,6 +13,7 @@ import useDictionary from '../../../customHooks/dictionary';
 import {getAsset} from '../../../assets';
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
+import BreadCrums from '../../Atoms/BreadCrums';
 import DashboardContainer from '../DashboardContainer';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../../../graphql/mutations';
@@ -61,6 +62,8 @@ export interface Lesson {
     purpose?: string;
     duration?: number | null;
     cardImage?: string | null;
+    cardCaption?: string;
+    totalEstTime?: number;
   };
   session?: number;
   sessionHeading?: string;
@@ -116,7 +119,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
   const match: any = useRouteMatch();
   const bannerImg = getAsset(clientKey, 'dashboardBanner1');
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {classRoomDict} = useDictionary(clientKey);
+  const {classRoomDict, BreadcrumsTitles} = useDictionary(clientKey);
 
   // ##################################################################### //
   // #################### ROOM SWITCHING (DEPRECATED) #################### //
@@ -184,22 +187,33 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
         )
       : [];
 
+  // reconstructing lesson data after adding some calculated fields
   let count: number = 0;
   let lessonData = state.roomData.lessons;
   lessonData?.map((item: any) => {
-    let temp = Math.round(count + item.lesson.duration);
+    let temp = Math.ceil(count + item.lesson.duration);
     item.sessionHeading = `Session ${
-      temp > 1
-        ? range(count + 1, temp)
+      item.lesson.duration > 1
+        ? range(Math.ceil(count) + 1, temp)
             .join(', ')
             .replace(/, ([^,]*)$/, ' & $1')
         : temp
     }`;
     count += item.lesson.duration;
-    item.session = Math.round(count);
+    item.session = Math.ceil(count);
+    item.lesson = {
+      ...item.lesson,
+      totalEstTime:
+        Math.ceil(
+          item.lesson.lessonPlan.reduce(
+            (total: number, obj: any) => Number(obj.estTime) + total,
+            0
+          ) / 5
+        ) * 5,
+    };
     return item;
   });
-  
+
   useEffect(() => {
     if (state.roomData.lessons?.length > 0) {
       setLessonGroupCount({
@@ -303,15 +317,25 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
     }
   };
 
+  const breadCrumsList = [
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOM'],
+      url: `/dashboard/classroom/${roomId}`,
+      last: true,
+    },
+  ];
+
   return (
     <>
       <DashboardContainer
         bannerImg={bannerImg}
         currentPage={state.currentPage}
         bannerTitle={classRoomDict[userLanguage]['TITLE']}>
-        <div className="mx-auto max-w-256">
+        <div className="px-5 2xl:px-0 lg:mx-auto lg:max-w-192 md:max-w-none 2xl:max-w-256">
           <div className="flex flex-row my-0 w-full py-0 mb-4 justify-between">
-            <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
+            <BreadCrums items={breadCrumsList} />
+            {/* <div className={`border-l-6 pl-4 ${theme.verticalBorder[themeColor]}`}>
               <span>
                 {!isTeacher
                   ? activeRoomName !== ''
@@ -320,9 +344,10 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   : null}
                 {isTeacher ? classRoomDict[userLanguage]['LESSON_PLANNER'] : null}
               </span>
-            </div>
+            </div> */}
             <div>
-              <span className={`mr-0 float-right text-gray-600 text-right`}>
+              <span
+                className={`mr-0 float-right text-sm md:text-base text-gray-600 text-right`}>
                 <DateAndTime />
               </span>
             </div>
@@ -332,34 +357,66 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
             {isTeacher && (
               <>
                 <SectionTitleV3
+                  extraContainerClass={'lg:px-0 px-4'}
                   fontSize="2xl"
                   fontStyle="bold"
-                  title={classRoomDict[userLanguage]['UNIT_TITLE']}
+                  title={`${
+                    Boolean(state.roomData?.syllabus?.length)
+                      ? `${classRoomDict[userLanguage]['STEP']} 1:`
+                      : ''
+                  } ${classRoomDict[userLanguage]['UNIT_TITLE']} ${
+                    !syllabusLoading ? `for ${state.roomData?.curriculum?.name}` : ''
+                  }`}
+                  subtitle={classRoomDict[userLanguage]['UNIT_SUB_TITLE']}
                 />
                 <div className={`bg-opacity-10`}>
-                  <div className={`pb-4 m-auto`}>
+                  <div className={`pb-4 m-auto px-0`}>
                     <SyllabusSwitch
-                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
                       activeRoom={state.activeRoom}
+                      classRoomActiveSyllabus={activeRoomInfo?.activeSyllabus}
+                      completedLessons={activeRoomInfo?.completedLessons}
                       currentPage={currentPage}
-                      syllabusLoading={syllabusLoading}
+                      curriculumName={state.roomData?.curriculum?.name}
                       handleSyllabusActivation={handleSyllabusActivation}
+                      institutionId={activeRoomInfo?.institutionID}
+                      syllabusLoading={syllabusLoading}
                     />
                   </div>
                 </div>
               </>
             )}
-            <div className={`bg-opacity-10`}>
-              <div className={`p-4 text-xl m-auto`}>
-                <Today
-                  activeRoom={state.activeRoom}
-                  activeRoomInfo={activeRoomInfo}
-                  isTeacher={isTeacher}
-                  lessonLoading={lessonLoading}
-                  lessons={lessonData}
+
+            {Boolean(state.roomData?.syllabus?.length) && (
+              <>
+                <SectionTitleV3
+                  extraContainerClass={'lg:px-0 px-4'}
+                  fontSize="2xl"
+                  fontStyle="bold"
+                  title={`${
+                    isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''
+                  } ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${
+                    state.roomData?.activeSyllabus?.name
+                  }`}
+                  subtitle={
+                    isTeacher
+                      ? classRoomDict[userLanguage]['LESSON_SUB_TITLE']
+                      : 'To enter classroom, select open lesson for this week'
+                  }
                 />
-              </div>
-            </div>
+
+                <div className={`bg-opacity-10`}>
+                  <div className={`pb-4 text-xl m-auto`}>
+                    <Today
+                      activeRoom={state.activeRoom}
+                      activeRoomInfo={activeRoomInfo}
+                      isTeacher={isTeacher}
+                      lessonLoading={lessonLoading}
+                      lessons={lessonData}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             {/* {showClassDetails && (
               <div
                 className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>

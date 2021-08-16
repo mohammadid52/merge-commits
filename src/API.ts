@@ -9,6 +9,7 @@ export type CreateClassStudentInput = {
   studentEmail: string,
   studentAuthID: string,
   status?: string | null,
+  group?: string | null,
 };
 
 export type ClassStudent = {

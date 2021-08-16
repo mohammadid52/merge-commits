@@ -35,7 +35,7 @@ const LessonsBuilderHome = () => {
   const fetchPersonsList = async () => {
     const result: any = await API.graphql(
       graphqlOperation(customQueries.listPersons, {
-        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
+        filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}, {role: {eq: 'FLW'}}]},
       })
     );
     const savedData = result.data.listPersons;
