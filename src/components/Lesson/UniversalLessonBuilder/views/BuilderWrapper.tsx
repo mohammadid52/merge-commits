@@ -88,6 +88,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     blockConfig,
     setBlockConfig,
     getCurrentPage,
+    suggestionModal,
+    setSuggestionModal,
   } = useULBContext();
 
   //@ts-ignore
@@ -221,12 +223,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       isEditingMode: false,
     });
   };
-  const [suggestionModal, setSuggestionModal] = useState({
-    show: false,
-    data: [{title: '', content: [{id: '', text: ''}]}],
-    selectedResponse: [],
-    idx: 0,
-  });
 
   const dialogLabelList = {
     VIEW_PAGES: 'VIEW_PAGES',
@@ -437,8 +433,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             inputObj={inputObj}
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
-            suggestionModal={suggestionModal}
-            setSuggestionModal={setSuggestionModal}
             updateContent={updateBlockContent}
             setUnsavedChanges={setUnsavedChanges}
             askBeforeClose={askBeforeClose}
@@ -581,10 +575,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
           <div style={{minWidth: '30rem'}} className="bg-white ">
             <Info text="Click on value to see options" />
             <div className="max-h-132 overflow-y-scroll overflow-x-hidden">
-              {suggestionModal.data.map((item) => (
+              {suggestionModal.data.map((item: any) => (
                 <Accordion
                   overrideBool={optionsCollapse}
                   onResponseSelect={(r: any) => {
+                    setOptionsCollapse(true);
                     setSuggestionModal({
                       ...suggestionModal,
                       show: false,

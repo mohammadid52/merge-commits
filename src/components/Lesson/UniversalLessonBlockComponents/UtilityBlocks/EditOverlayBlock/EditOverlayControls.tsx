@@ -447,6 +447,16 @@ const EditOverlayControls = (props: EditOverlayControlsProps) => {
 
       {!previewMode && (
         <button
+          onMouseEnter={() => {
+            if (isComponent) {
+              setSelID({pageContentID, partContentID});
+            } else {
+              setSelID({partContentID: '', pageContentID});
+            }
+          }}
+          onMouseLeave={() => {
+            clearIds();
+          }}
           className={`${themeSecBackgroundColor} ${themeTextColor} customShadow rounded-full h-8 w-8 hover:shadow-lg shadow-md transition-all duration-300 cursor-pointer`}
           onClick={() => {
             handleEditBlockToggle();

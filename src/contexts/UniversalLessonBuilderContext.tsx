@@ -155,13 +155,21 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
 
+  const [suggestionModal, setSuggestionModal] = useState({
+    show: false,
+    data: [{title: '', content: [{id: '', text: ''}]}],
+    selectedResponse: [],
+    idx: 0,
+  });
+
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
         previewMode,
         setPreviewMode,
         selectedLessonID,
-
+        suggestionModal,
+        setSuggestionModal,
         editMode,
         toolbarOnTop,
         setToolbarOnTop,
