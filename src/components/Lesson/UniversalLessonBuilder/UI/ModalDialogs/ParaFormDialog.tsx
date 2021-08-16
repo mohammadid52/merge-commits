@@ -85,6 +85,7 @@ const ParaModalComponent = ({
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className="col-span-2 max-w-256">
           <RichTextEditor
+            withStyles
             initialValue={paragraph}
             onChange={(htmlContent, plainText) =>
               onEditorStateChange(htmlContent, plainText, 'paragraphHtml', 'paragraph')
