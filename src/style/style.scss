@@ -124,11 +124,13 @@
   user-select: none;
   position: relative;
   transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
   @media screen and (max-width: 768px) {
     position: absolute;
     z-index: 99;
     height: 100%;
   }
+
   .sidenav_sub_icon_wrapper {
     font-size: 12px;
     width: 12px;
@@ -1123,4 +1125,12 @@
 
 ::-webkit-calendar-picker-indicator {
   filter: invert(1);
+}
+
+.paragraph-block {
+  & ol,
+  & ul {
+    list-style: initial;
+    list-style-position: inside;
+  }
 }

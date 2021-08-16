@@ -6,6 +6,8 @@ import {EditorState, convertToRaw, ContentState} from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../customHooks/checkIfInLesson';
+// import { convertToHTML } from 'draft-convert'; doesn't work
+import {stateToHTML} from 'draft-js-export-html';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -54,8 +56,11 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     const editorStateHtml: string = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
+
     const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
+
     onChange(editorStateHtml, editorStatePlainText);
+
     setEditorState(editorState);
   };
 
