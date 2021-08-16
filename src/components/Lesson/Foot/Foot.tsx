@@ -9,7 +9,11 @@ import {useOutsideAlerter} from '../../General/hooks/outsideAlerter';
 import {getLocalStorageData} from '../../../utilities/localStorage';
 import {StudentPageInput} from '../../../interfaces/UniversalLessonInterfaces';
 
-const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
+const Foot = ({
+  isAtEnd,
+  setisAtEnd,
+  handleRequiredNotification,
+}: LessonHeaderBarProps) => {
   const {state, dispatch, lessonState, lessonDispatch, clientKey, theme} = useContext(
     GlobalContext
   );
@@ -19,11 +23,11 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const PAGES = lessonState.lessonData.lessonPlan;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
-  const validateRequired = () => {
+  const validateRequired = (pageIdx: number) => {
     if (PAGES) {
-      const thisPageData = lessonState?.studentData[lessonState.currentPage];
-      const thisPageRequired = lessonState?.requiredInputs[lessonState.currentPage];
-      if (thisPageData.length > 0) {
+      const thisPageData = lessonState?.studentData[pageIdx];
+      const thisPageRequired = lessonState?.requiredInputs[pageIdx];
+      if (thisPageData && thisPageData.length > 0) {
         const areAnyEmpty = thisPageData.filter((input: StudentPageInput) => {
           if (thisPageRequired.includes(input.domID) && input.input[0] === '') {
             return input;
@@ -46,7 +50,7 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
   const canContinue = () => {
     if (PAGES) {
       return (
-        validateRequired() &&
+        validateRequired(lessonState.currentPage) &&
         lessonState.currentPage < PAGES.length - 1 &&
         PAGES[lessonState.currentPage + 1]?.open !== false
       );
@@ -54,6 +58,7 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
       return false;
     }
   };
+
   const userAtEnd = () => {
     return lessonState.currentPage === PAGES.length - 1;
   };
@@ -70,9 +75,15 @@ const Foot = ({isAtEnd, setisAtEnd}: LessonHeaderBarProps) => {
           type: 'SET_CURRENT_PAGE',
           payload: lessonState.currentPage + 1,
         });
+      } else {
+        handleRequiredNotification();
       }
-    } else if (userAtEnd() && validateRequired()) {
-      handlePopup();
+    } else if (userAtEnd()) {
+      if (validateRequired(lessonState.currentPage)) {
+        handlePopup();
+      } else {
+        handleRequiredNotification();
+      }
     }
   };
 
