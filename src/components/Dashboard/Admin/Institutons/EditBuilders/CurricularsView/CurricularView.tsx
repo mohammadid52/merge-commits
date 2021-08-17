@@ -396,8 +396,7 @@ const CurricularView = (props: CurricularViewProps) => {
           title={EditCurriculardict[userLanguage]['TITLE']}
           showHeaderBorder={true}
           showFooter={false}
-          closeAction={closeCurricularModal}
-        >
+          closeAction={closeCurricularModal}>
           <EditCurricular
             curricularDetails={curricularData}
             postUpdateDetails={postUpdateDetails}

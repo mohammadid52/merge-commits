@@ -1028,7 +1028,7 @@ const Institute_class: any = {
     EDIT: 'edit',
     INFO: 'This institute does not have any class. Please create a new class.',
     BUTTON: {
-      CREATE: 'Create new class',
+      ADD: 'New class',
     },
   },
   ES: {
@@ -1039,7 +1039,7 @@ const Institute_class: any = {
     EDIT: 'TBD',
     INFO: 'TBD',
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };
@@ -1047,7 +1047,7 @@ const InstitueCurriculam: any = {
   EN: {
     TITLE: 'INSTITUTE CURRICULAR',
     BUTTON: {
-      ADD: 'Add new Curricular',
+      ADD: 'New Curricular',
     },
     NO: 'No.',
     NAME: 'Curricular Name',
@@ -1085,7 +1085,7 @@ const InstitueRomms: any = {
       fetcherr: 'Error while fetching classroom data please Try again later.',
     },
     BUTTON: {
-      CREATE: 'Create new Classroom',
+      ADD: 'New Classroom',
     },
   },
   ES: {
@@ -1102,7 +1102,7 @@ const InstitueRomms: any = {
       fetcherr: 'TBD',
     },
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };

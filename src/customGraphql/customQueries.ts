@@ -1555,6 +1555,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
       items {
         id
         name
+        image
         description
         objectives
         languages
@@ -3580,6 +3581,15 @@ export const getStaffsForInstitution = /* GraphQL */ `
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+
+export const getInstitutionBasicInfo = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
     }
   }
 `;

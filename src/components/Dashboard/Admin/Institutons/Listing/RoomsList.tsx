@@ -11,6 +11,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
+import { AddButton } from '../../../../Atoms/Buttons/AddButton';
 
 interface RoomListProps {
   instId: string;
@@ -87,9 +88,9 @@ const RoomsList = (props: RoomListProps) => {
           ) : roomList.length > 0 ? (
             <Fragment>
               <div className="flex justify-end">
-                <Buttons
-                  btnClass="mx-4"
-                  label={InstitueRomms[userLanguage]['BUTTON']['CREATE']}
+                <AddButton
+                  className="mx-4"
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>

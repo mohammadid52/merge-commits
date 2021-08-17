@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment, useContext} from 'react';
-import {useRouteMatch} from 'react-router-dom';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 import {FaGraduationCap, FaChalkboardTeacher, FaHotel, FaHandshake} from 'react-icons/fa';
 
 import {
@@ -19,6 +19,9 @@ import CurriculumList from './Listing/CurriculumList';
 import RoomsList from './Listing/RoomsList';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
+import Tooltip from '../../../Atoms/Tooltip';
+import { HiPencil } from 'react-icons/hi';
+import { getAsset } from '../../../../assets';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -48,8 +51,10 @@ interface InstInfo {
 const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   const {institute, tabProps} = instProps;
   const match = useRouteMatch();
+  const history = useHistory();
   const [imageUrl, setImageUrl] = useState();
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
+  const themeColor = getAsset(clientKey, 'themeClassName');
   const {Institute_info, BreadcrumsTitles} = useDictionary(clientKey);
 
   const tabs = [
@@ -128,6 +133,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   }, [instProps?.institute.image]);
 
   const {
+    id,
     name,
     image,
     type,
@@ -193,8 +199,17 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
           <div className="">
             <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                <h3 className="text-lg flex items-center leading-6 font-medium text-gray-900">
                   {Institute_info[userLanguage]['TITLE']}
+                  <Tooltip key={'id'} text={'Edit Curriculum Details'} placement="top">
+                    <span
+                      className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
+                      <HiPencil
+                        className="w-6 h-6 pl-2"
+                        onClick={() => history.push(`${match.url}/edit?id=${id}`)}
+                      />
+                    </span>
+                  </Tooltip>
                 </h3>
               </div>
 

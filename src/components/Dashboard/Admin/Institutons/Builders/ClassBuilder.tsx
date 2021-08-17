@@ -12,6 +12,7 @@ import PageWrapper from '../../../../Atoms/PageWrapper';
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
+import {AddButton} from '../../../../Atoms/Buttons/AddButton';
 import {IconContext} from 'react-icons';
 import {
   stringToHslColor,
@@ -34,6 +35,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
     id: '',
     name: '',
     instituteId: '',
+    instituteName: '',
   };
   const [classData, setClassData] = useState(initialData);
   const [newMember, setNewMember] = useState({
@@ -72,7 +74,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: classData?.instituteName,
       goBack: true,
       last: false,
     },
@@ -96,6 +98,18 @@ const ClassBuilder = (props: ClassBuilderProps) => {
       });
     }
   };
+
+  const getBasicInstitutionInfo = async () => {
+    const result: any = await API.graphql(
+      graphqlOperation(customQueries.getInstitutionBasicInfo, {
+        id: params.get('id'),
+      })
+    );   
+    setClassData((prevData) => ({
+      ...prevData,
+      instituteName: result?.data?.getInstitution.name,
+    }));
+  }
 
   const getImageURL = async (uniqKey: string) => {
     const imageUrl: any = await getImageFromS3(uniqKey);
@@ -346,6 +360,7 @@ const ClassBuilder = (props: ClassBuilderProps) => {
         instituteId: instId,
       });
       getStudentsList();
+      getBasicInstitutionInfo();
     } else {
       history.push('/dashboard/manage-institutions');
     }
@@ -370,14 +385,14 @@ const ClassBuilder = (props: ClassBuilderProps) => {
           title={classBuilderdict[userLanguage]['TITLE']}
           subtitle={classBuilderdict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             btnClass=""
             label="Go Back"
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body section */}
@@ -412,8 +427,13 @@ const ClassBuilder = (props: ClassBuilderProps) => {
             searchCallback={setSearching}
             imageFromS3={false}
           />
-          <Buttons
+          {/* <Buttons
             btnClass="ml-4 py-1"
+            label={classBuilderdict[userLanguage]['BUTTON']['ADD']}
+            onClick={addMemberToList}
+          /> */}
+          <AddButton
+            className="ml-4 py-1"
             label={classBuilderdict[userLanguage]['BUTTON']['ADD']}
             onClick={addMemberToList}
           />
