@@ -34,7 +34,7 @@ export interface ULBSelectionProps {
     replacementValue?: any,
     addBlockAtPosition?: number,
     classString?: string,
-    partType?: string
+    customPageContentId?: string
   ) => void;
   updateBlockContentULBHandler?: (
     targetID: string,
@@ -42,7 +42,8 @@ export interface ULBSelectionProps {
     contentType: string,
     inputObj?: any,
     addBlockAtPosition?: number,
-    classString?: string
+    classString?: string,
+    customPageContentId?: string
   ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
@@ -101,7 +102,8 @@ export interface IContentTypeComponentProps {
     inputValue: any,
     position?: number,
     classString?: string,
-    partType?: string
+
+    customPageContentId?: string
   ) => void;
   updateBlockContentULBHandler: (
     targetID: string,
@@ -109,7 +111,8 @@ export interface IContentTypeComponentProps {
     contentType: string,
     inputValue: any,
     addBlockAtPosition?: number,
-    classString?: string
+    classString?: string,
+    customPageContentId?: string
   ) => void;
   setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
   askBeforeClose: () => void;

@@ -61,12 +61,13 @@ export interface PartContent {
   id: string;
   type?: string;
   value: PartContentSub[];
-  label?: string; // its not correct. There is not property like label in API.ts
+  label?: string; // its not correct. There is no property like label in API.ts
   class?: string;
   [key: string]: any;
 }
 
 export interface PartContentSub {
+  // this is end object
   id?: string;
   isRequired?: boolean;
   type?: string;

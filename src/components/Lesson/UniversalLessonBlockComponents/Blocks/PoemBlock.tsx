@@ -6,17 +6,16 @@ import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
 import {isEmpty, noop} from 'lodash';
+import {FormControlProps} from './FormBlock';
 
-interface PoemBlockProps extends RowWrapperProps {
-  id?: string;
-  value?: any;
-  type?: string;
-  classString?: string;
-  writingExercise?: boolean;
+interface PoemBlockProps extends FormControlProps {
+  onChange: (e: any) => void;
+  disabled: boolean;
 }
 
 const PoemBlock = (props: PoemBlockProps) => {
-  const {id, value, classString = 'title-show || lineStarter-hide'} = props;
+  const {id, inputID, onChange, value, disabled, classString} = props;
+  console.log('🚀 ~ file: PoemBlock.tsx ~ line 20 ~ PoemBlock ~ props', props);
 
   const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
@@ -61,12 +60,10 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   };
 
-  const [title, lineStarter] = classString?.split(' || ');
-
   return (
     <div
       className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
-      <div className="relative flex flex-col justify-between items-center p-4">
+      {/* <div className="relative flex flex-col justify-between items-center p-4">
         {value && value[0].options && lineStarter === 'lineStarter-show' ? (
           <WritingBlock
             id={id}
@@ -81,33 +78,32 @@ const PoemBlock = (props: PoemBlockProps) => {
             handleUpdateStudentData={handleUpdateStudentData}
           />
         ) : null}
-        <div className="bg-gray-700 rounded-md p-4 mt-4">
-          {value && value[0].label && title === 'title-show' && (
-            <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
-              {value[0].label}
-            </h1>
-            // <input
-            //   id={id}
-            //   // disabled={mode === 'building'}
-            //   className={`w-full py-2 px-4  mt-2 rounded-xl bg-gray-100 dark:bg-darker-gray placeholder-gray-500 dark:placeholder-gray-700`}
-            //   name={'text'}
-            //   type={'text'}
-            //   onChange={
-            //     isInLesson && isStudent
-            //       ? (e) => handleUpdateStudentData(id, [e.target.value])
-            //       : noop
-            //   }
-            //   value={isInLesson ? getStudentDataValue(id)[0] : value}
-            // />
-          )}
-          <EditingBlock
-            id={id}
-            poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
-            handleUpdateStudentData={
-              isInLesson && isStudent ? handleUpdateStudentData : noop
-            }
+      
+      </div> */}
+
+      <div className="bg-gray-700 rounded-md p-4 mt-4">
+        {value && (
+          // <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
+          //   {value[0].label}
+          // </h1>
+          <input
+            id={inputID}
+            disabled={disabled}
+            className={`w-full py-2 px-4  mt-2 rounded-xl bg-gray-100 dark:bg-darker-gray placeholder-gray-500 dark:placeholder-gray-700`}
+            name={'text'}
+            type={'text'}
+            placeholder={value[0].label}
+            onChange={onChange}
+            value={value}
           />
-        </div>
+        )}
+        {/* <EditingBlock
+          id={id}
+          poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
+          handleUpdateStudentData={
+            isInLesson && isStudent ? handleUpdateStudentData : noop
+          }
+        /> */}
       </div>
     </div>
   );
