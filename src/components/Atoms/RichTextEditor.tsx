@@ -17,6 +17,10 @@ interface RichTextEditorProps {
   mediumDark?: boolean;
   customStyle?: boolean;
   features?: string[];
+  /**
+   * Don't use this if the content is serious
+   */
+  withStyles?: boolean;
 }
 
 const RichTextEditor = (props: RichTextEditorProps) => {
@@ -30,6 +34,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     rounded = false,
     features = [],
     theme,
+    withStyles = false,
   } = props;
   const initialState: any = EditorState.createEmpty();
   const [editorState, setEditorState] = useState(initialState);
@@ -54,8 +59,20 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     const editorStateHtml: string = draftToHtml(
       convertToRaw(editorState.getCurrentContent())
     );
+
     const editorStatePlainText: string = editorState.getCurrentContent().getPlainText();
-    onChange(editorStateHtml, editorStatePlainText);
+
+    if (withStyles) {
+      // Please don't use this if the content is important and serious
+      if (editorRef && editorRef.current) {
+        // @ts-ignore
+        const withStylesHtml = editorRef?.current?.editor.editor.innerHTML;
+        onChange(withStylesHtml, editorStatePlainText);
+      }
+    } else {
+      onChange(editorStateHtml, editorStatePlainText);
+    }
+
     setEditorState(editorState);
   };
 
@@ -95,8 +112,17 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       : 'editorClassName'
   }`;
 
+  const editorRef = React.useRef();
+
+  useEffect(() => {
+    if (editorRef && editorRef.current) {
+      // @ts-ignore
+    }
+  }, [editorRef]);
+
   return (
     <Editor
+      ref={editorRef}
       editorState={editorState}
       toolbarClassName={toolbarClassName}
       wrapperClassName={wrapperClassName}

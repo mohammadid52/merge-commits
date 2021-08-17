@@ -40,7 +40,7 @@ export const BuilderRowWrapper = (props: RowWrapperProps) => {
 
   const customBorder =
     selID?.pageContentID === contentID && !selID?.partContentID
-      ? `border-2 ${themeBorder}`
+      ? `border-0 ${themeBorder}`
       : 'border-0 border-gray-400';
 
   return (

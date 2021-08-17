@@ -1,6 +1,6 @@
 import '@pathofdev/react-tag-input/build/index.css';
-import React, {Fragment, useContext, useEffect, useState} from 'react';
-import {Dialog, Transition} from '@headlessui/react';
+import React, {useContext, useEffect, useState} from 'react';
+import {Dialog} from '@headlessui/react';
 import {XIcon} from '@heroicons/react/outline';
 import Selector from '../../../../Atoms/Form/Selector';
 import {estimatedTimeList} from '../../../../../utilities/staticData';
@@ -10,7 +10,6 @@ import {useQuery} from '../../../../../customHooks/urlParam';
 import {v4 as uuidV4} from 'uuid';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import {graphqlOperation, API} from 'aws-amplify';
-import {Switch} from '@headlessui/react';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import {useHistory} from 'react-router';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
@@ -593,7 +592,7 @@ const NewLessonPlanSO = ({open, setOpen, pageDetails}: NewLessonPlanSOInterface)
                         <label
                           htmlFor="project-description"
                           className="block text-sm font-medium text-gray-900 sm:mt-px sm:pt-2">
-                          Activity Instructions
+                          Activity instructions
                         </label>
                       </div>
                       <div className="sm:col-span-3 " style={{maxWidth: '36rem'}}>
