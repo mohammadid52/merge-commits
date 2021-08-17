@@ -62,14 +62,18 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
   const params = useQuery();
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
-    { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true },
+    {title: roomData?.institute?.name, goBack: true, last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
+      url: `${match.url}`,
+      last: true,
+    },
   ];
 
   const createNewEntry = (field: string) => {
@@ -611,14 +615,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           title={RoomBuilderdict[userLanguage]['TITLE']}
           subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
             btnClass="mr-4"
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body section */}

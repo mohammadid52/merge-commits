@@ -418,14 +418,14 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
           title={CurricularBuilderdict[userLanguage]['TITLE']}
           subtitle={CurricularBuilderdict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
             btnClass="mr-4"
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body section */}

@@ -155,7 +155,7 @@ const Institution = (props: InstitutionProps) => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title="Institute Information" />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
             btnClass="mr-4"
@@ -170,7 +170,7 @@ const Institution = (props: InstitutionProps) => {
               Icon={FaEdit}
             />
           ) : null}
-        </div>
+        </div> */}
       </div>
       <PageWrapper>
         <Switch>
