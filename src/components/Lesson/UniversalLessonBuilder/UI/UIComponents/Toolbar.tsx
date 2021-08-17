@@ -5,11 +5,10 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
   AiOutlineFileAdd,
-  AiOutlineFileSearch,
   AiOutlineSave,
 } from 'react-icons/ai';
 import {IconType} from 'react-icons/lib';
-import {VscDiscard} from 'react-icons/vsc';
+
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useOnScreen from '../../../../../customHooks/useOnScreen';
@@ -17,7 +16,7 @@ import Tooltip from '../../../../Atoms/Tooltip';
 import {Dialog, Transition} from '@headlessui/react';
 import {CheckCircleIcon, XIcon} from '@heroicons/react/outline';
 import {Tree} from '../../UI/UIComponents/TreeView/Tree';
-import {find, isEmpty, map} from 'lodash';
+import {map} from 'lodash';
 import Info from '../../../../Atoms/Alerts/Info';
 import Buttons from '../../../../Atoms/Buttons';
 import {wait} from '../../../../../utilities/functions';
@@ -436,10 +435,10 @@ const Toolbar = ({
                 leave="transition-opacity duration-75"
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0">
-                <div className="mb-4">
+                <div className="my-4">
                   <label
                     className={`mb-1 text-gray-700 block text-xs font-semibold leading-5 `}>
-                    Select action:
+                    Select action :
                   </label>
                   <div className="border-0 p-4  flex items-center justify-around px-6 border-gray-200 rounded-md">
                     <Tooltip
@@ -517,7 +516,6 @@ const Toolbar = ({
 
           <Container>
             <Button color={themeTextColor} tooltip="Save changes" icon={AiOutlineSave} />
-            <Button color={themeTextColor} tooltip="Discard changes" icon={VscDiscard} />
 
             <Button
               color="text-red-500"
@@ -579,12 +577,6 @@ const Toolbar = ({
                 color={themeTextColor}
                 tooltip="Save changes"
                 icon={AiOutlineSave}
-                tooltipPlacement="left"
-              />
-              <Button
-                color={themeTextColor}
-                tooltip="Discard changes"
-                icon={VscDiscard}
                 tooltipPlacement="left"
               />
 
