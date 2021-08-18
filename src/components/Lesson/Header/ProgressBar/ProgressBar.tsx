@@ -1,27 +1,17 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import StageIcon from './StageIcon';
-import {LessonContext} from '../../../../contexts/LessonContext';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {
   StudentPageInput,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-
-interface Page {
-  active: boolean;
-  stage: string;
-  type: string;
-  open: boolean;
-  disabled: boolean;
-}
+import {BiBook} from 'react-icons/bi';
 
 const ProgressBar = () => {
-  const {lessonState, lessonDispatch} = useContext(GlobalContext);
+  const {lessonState} = useContext(GlobalContext);
   // const [clickable, setClickable] = useState<number>();
 
   const PAGES = lessonState.lessonData.lessonPlan;
-  const CURRENT_PAGE = lessonState.currentPage;
-  const LESSON_PROGRESS = lessonState.lessonProgress;
 
   // ~~~~~~~~~ SIMPLE LOGIC CHECKS ~~~~~~~~~ //
   const validateRequired = (pageIdx: number) => {
@@ -60,47 +50,7 @@ const ProgressBar = () => {
           return nextIdx;
         }
       }, null)
-    : 0;
-
-  const lessonProgressBar = () => {
-    return (
-      //  ICON
-      PAGES &&
-      PAGES.map((page: UniversalLessonPage, key: number) => {
-        return (
-          <div
-            key={`${key}_bar`}
-            className={`${
-              key < PAGES.length - 1 ? 'w-full' : 'w-auto'
-            } flex justify-center items-center`}>
-            <StageIcon
-              key={`${page.id}_progressIcon`}
-              pageNr={key}
-              id={page.id}
-              enabled={page.disabled !== true}
-              open={page.open !== false}
-              active={page.active !== false}
-              label={page.label}
-              clickable={key <= nextRequiredIdx && page.open !== false}
-            />
-
-            {/* PROGRESS BAR */}
-            {key < PAGES.length - 1 && (
-              <div
-                key={`${key}_bar`}
-                className="relative h-2 w-full bg-dark-gray z-10 flex items-center justify-center transform scale-x-125 ">
-                <div
-                  className={`h-2 w-full ${
-                    key < LESSON_PROGRESS ? 'bg-blueberry' : 'bg-dark-gray'
-                  }`}
-                />
-              </div>
-            )}
-          </div>
-        );
-      })
-    );
-  };
+    : null;
 
   /**
    * Explanation
@@ -109,15 +59,41 @@ const ProgressBar = () => {
    */
 
   return (
-    <>
-      <div className="hidden max-w-256 md:flex flex-col flex-grow items-center justify-center content-center z-0">
-        <div className="w-full max-w-256 flex items-center justify-between">
-          <div className="w-full flex flex-row items-center justify-between">
-            {lessonState.lessonData.lessonPlan && lessonProgressBar()}
+    <nav
+      className="bg-gray-800 border-b h-12 border-gray-200 flex rounded-lg"
+      aria-label="Breadcrumb">
+      <ol className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4  items-center sm:px-6 lg:px-8">
+        <li className="flex w-auto">
+          <div className="flex items-center">
+            <a href="#" className="text-gray-200">
+              <BiBook className="flex-shrink-0 h-5 w-5" aria-hidden="true" />
+              <span className="sr-only">Home</span>
+            </a>
           </div>
-        </div>
-      </div>
-    </>
+        </li>
+        {PAGES &&
+          PAGES.map((page: UniversalLessonPage, key: number) => {
+            // console.table({key: key, nextReq: nextRequiredIdx, pageOpen: page.open});
+            return (
+              <StageIcon
+                key={`${page.id}_progressIcon`}
+                pageNr={key}
+                id={page.id}
+                enabled={page.disabled !== true}
+                open={page.open !== false}
+                // active={page.active !== false}
+                active={key === lessonState?.currentPage}
+                label={page.label}
+                clickable={
+                  key === 0 ||
+                  ((nextRequiredIdx !== null ? key <= nextRequiredIdx : true) &&
+                    page.open !== false)
+                }
+              />
+            );
+          })}
+      </ol>
+    </nav>
   );
 };
 
