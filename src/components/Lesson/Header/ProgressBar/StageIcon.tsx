@@ -71,7 +71,7 @@ const StageIcon = (props: StageIconProps) => {
             // href={page.href}
 
             className={`  ${
-              active && open && enabled
+              active
                 ? 'border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
                 : null
             }        ${!enabled ? null : 'text-gray-500 '}
@@ -103,9 +103,9 @@ const StageIcon = (props: StageIconProps) => {
             
             ${!open ? 'hover:underline' : null}
             ${active && !open ? 'font-bold underline' : null}
-            ${open && enabled ? 'text-gray-500 ' : null}
+            ${!active && open && enabled ? 'text-gray-500 ' : null}
             ${
-              active && open && enabled
+              active
                 ? 'border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
                 : null
             }
@@ -134,7 +134,7 @@ const StageIcon = (props: StageIconProps) => {
           <a
             // href={page.href}
             className={`${
-              active && open && enabled
+              active
                 ? 'border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
                 : null
             } ${!enabled || !open ? 'line-through text-gray-500' : 'text-gray-500'}
