@@ -16,6 +16,7 @@ import {FaTrashAlt} from 'react-icons/fa';
 import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
 import DividerBlock from '../../../UniversalLessonBlockComponents/Blocks/DividerBlock';
 import {FORM_TYPES} from '../common/constants';
+import {nanoid} from 'nanoid';
 
 interface WEProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -156,35 +157,43 @@ const WritingExerciseModal = (props: WEProps) => {
     await updateLessonPageToDB(input);
   };
   const on_WE_Create = async () => {
-    const inputObjArray = {
-      id: uuidv4(),
+    const titleObj = {
+      id: `writing-exercise-title-${nanoid(6)}`,
       type: FORM_TYPES.WRITING_EXERCISE,
-      label: fields.title,
-      options: inputFieldsArray,
+      label: enable.title ? fields.title : null,
+      value: enable.title ? '' : null,
     };
-    const dynamicClass = `title-${enable.title ? 'show' : 'hide'} || lineStarter-${
-      enable.lineStarter ? 'show' : 'hide'
-    }`;
+
+    const lineStarterObject = {
+      id: `${FORM_TYPES.WRITING_EXERCISE}-content-${nanoid(6)}`,
+      type: `${FORM_TYPES.WRITING_EXERCISE}-content`,
+      options: enable.lineStarter ? inputFieldsArray : null,
+      value: '',
+    };
+
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
         '',
         '',
-        FORM_TYPES.WRITING_EXERCISE,
-        [inputObjArray],
+        `writing-exercise-form-default`,
+        [titleObj, lineStarterObject],
         0,
-        // this is a trick to keep the label stored in DB even after disabling it
-        dynamicClass
+
+        '',
+        'writing-exercise'
       );
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
         '',
         '',
-        FORM_TYPES.WRITING_EXERCISE,
+        `writing-exercise-form-default`,
 
-        [inputObjArray],
+        [titleObj, lineStarterObject],
+
         0,
-        dynamicClass
+        '',
+        'writing-exercise'
       );
 
       await addToDB(updatedList);

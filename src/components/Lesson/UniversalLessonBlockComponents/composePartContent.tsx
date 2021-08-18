@@ -50,17 +50,6 @@ const composePartContent = (
         mode={mode}
       />
     );
-  } else if (type === FORM_TYPES.POEM || type === FORM_TYPES.WRITING_EXERCISE) {
-    return (
-      <PoemBlock
-        writingExercise={type === FORM_TYPES.WRITING_EXERCISE}
-        id={id}
-        type={type}
-        value={value}
-        mode={mode}
-        classString={classString}
-      />
-    );
   } else if (type.includes('links')) {
     return <LinksBlock id={id} type={type} value={value} mode={mode} />;
   } else if (type.includes('header')) {

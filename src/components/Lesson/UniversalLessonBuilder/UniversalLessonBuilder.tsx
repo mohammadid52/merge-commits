@@ -22,6 +22,7 @@ import {LessonPlansProps} from '../../Dashboard/Admin/LessonsBuilder/LessonEdit'
 import BuilderWrapper from './views/BuilderWrapper';
 import {replaceTailwindClass} from './crudFunctions/replaceInString';
 import * as customQueries from '../../../customGraphql/customQueries';
+import {nanoid} from 'nanoid';
 
 interface UniversalLessonBuilderProps extends ULBSelectionProps {
   designersList?: {id: string; name: string; value: string}[];
@@ -324,7 +325,8 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
     inputObj: any,
     addBlockAtPosition: number,
     classString?: string,
-    partType?: string
+
+    customPageContentId?: string
   ) => {
     let temp = {...universalLessonDetails};
     const activePageIndex = universalLessonDetails.lessonPlan.findIndex(
@@ -336,19 +338,21 @@ const UniversalLessonBuilder = (props: UniversalLessonBuilderProps) => {
 
     switch (propertyToTarget) {
       case 'pageContent':
-        const pageContentId: string = `${selectedPageID}_part_${pageContentData.length}`;
+        const pageContentId: string = `${nanoid(6)}_part_${pageContentData.length}${`${
+          customPageContentId ? `_${customPageContentId}` : ''
+        }`}`;
         pageContentData.splice(addBlockAtPosition, 0, {
           class: 'rounded-lg',
           id: pageContentId,
           partContent: [
             {
-              id: `${pageContentId}_${contentType}_1`,
+              id: `${nanoid(6)}_${contentType}_1`,
               type: contentType,
               value: inputObj,
               class: classString || '',
             },
           ],
-          partType: partType || 'default',
+          partType: 'default',
         });
         lessonPages[activePageIndex] = {
           ...lessonPages[activePageIndex],
