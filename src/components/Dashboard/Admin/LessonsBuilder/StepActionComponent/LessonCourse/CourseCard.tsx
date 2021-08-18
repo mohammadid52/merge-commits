@@ -110,7 +110,7 @@ const CourseCard = ({curriculum, lessonId, loading, postDeletion}: any) => {
           className={`w-full py-2 font-medium text-md items-center inline-flex ${
             curriculum.assignedSyllabi?.length > 1 ? 'flex-col' : ''
           }`}>
-          <span className="w-auto mr-2">Unit{curriculum.assignedSyllabi?.length > 1 && '(s)'}: </span>
+          <span className={curriculum.assignedSyllabi?.length === 1 ? "w-auto mr-2" : 'ml-1'}>Unit{curriculum.assignedSyllabi?.length > 1 && '(s)'}: </span>
           <ul className="flex flex-wrap	w-full items-center">
             {curriculum.assignedSyllabi.map((syllabus: any, index: number) => (
               <li
