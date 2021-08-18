@@ -2814,16 +2814,6 @@ export const createCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      rooms {
-        items {
-          id
-          roomID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -2927,16 +2917,6 @@ export const updateCurriculum = /* GraphQL */ `
           type
           typeID
           checkpointID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
-      rooms {
-        items {
-          id
-          roomID
-          curriculumID
           createdAt
           updatedAt
         }
@@ -3050,16 +3030,6 @@ export const deleteCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      rooms {
-        items {
-          id
-          roomID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -3111,9 +3081,6 @@ export const createTopic = /* GraphQL */ `
         }
         universalSyllabusSeq
         checkpoints {
-          nextToken
-        }
-        rooms {
           nextToken
         }
         createdAt
@@ -3186,9 +3153,6 @@ export const updateTopic = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -3257,9 +3221,6 @@ export const deleteTopic = /* GraphQL */ `
         }
         universalSyllabusSeq
         checkpoints {
-          nextToken
-        }
-        rooms {
           nextToken
         }
         createdAt
@@ -3572,99 +3533,6 @@ export const createRoomCurriculum = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
         createdAt
         updatedAt
       }
@@ -3721,99 +3589,6 @@ export const updateRoomCurriculum = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
         createdAt
         updatedAt
       }
@@ -3870,99 +3645,6 @@ export const deleteRoomCurriculum = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
         createdAt
         updatedAt
       }
@@ -4833,9 +4515,6 @@ export const createCommonCheckpoint = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -4950,9 +4629,6 @@ export const updateCommonCheckpoint = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -5065,9 +4741,6 @@ export const deleteCommonCheckpoint = /* GraphQL */ `
         }
         universalSyllabusSeq
         checkpoints {
-          nextToken
-        }
-        rooms {
           nextToken
         }
         createdAt
@@ -11693,9 +11366,6 @@ export const createAttendance = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -11927,9 +11597,6 @@ export const updateAttendance = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -12159,9 +11826,6 @@ export const deleteAttendance = /* GraphQL */ `
         }
         universalSyllabusSeq
         checkpoints {
-          nextToken
-        }
-        rooms {
           nextToken
         }
         createdAt
