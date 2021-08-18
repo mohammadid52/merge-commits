@@ -75,27 +75,13 @@ const LinestarterModalDialog = ({
   const [inputFieldsArray, setInputFieldsArray] = useState<Options[]>(
     initialInputFieldsState
   );
-  // states here
-  const [enable, setEnable] = useState<{title: boolean}>({
-    title: true,
-  });
 
-  const [fields, setFields] = useState({title: ''});
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      const [title] = classString.split(' || ');
-      if (title === 'title-show') {
-        enable.title = true;
-      } else {
-        enable.title = false;
-      }
-
-      setFields({...fields, title: inputObj[0].label});
       if (inputObj[0].options) {
         setInputFieldsArray(inputObj[0].options);
       }
 
-      setEnable({...enable});
       setIsEditingMode(true);
     }
   }, [inputObj]);
@@ -177,33 +163,31 @@ const LinestarterModalDialog = ({
   // };
 
   const onLineCreate = async () => {
-    const inputObjArray = {
-      id: uuidv4(),
-      type: '',
-      label: fields.title,
+    const lineStarterObject = {
+      id: `${FORM_TYPES.POEM}-content-${nanoid(6)}`,
+      type: `${FORM_TYPES.POEM}-content`,
       options: inputFieldsArray,
+      value: '',
     };
-    const dynamicClass = `title-${enable.title ? 'show' : 'hide'} || lineStarter-show`;
+
     if (isEditingMode) {
       const updatedList = updateBlockContentULBHandler(
         '',
         '',
-        FORM_TYPES.POEM,
-        [inputObjArray],
-        0,
-        // this is a trick to keep the label stored in DB even after disabling it
-        dynamicClass
+        `poem-form-default`,
+
+        [lineStarterObject],
+        0
       );
       await addToDB(updatedList);
     } else {
       const updatedList = createNewBlockULBHandler(
         '',
         '',
-        FORM_TYPES.POEM,
+        `poem-form-default`,
 
-        [inputObjArray],
-        0,
-        dynamicClass
+        [lineStarterObject],
+        0
       );
 
       await addToDB(updatedList);
@@ -221,38 +205,6 @@ const LinestarterModalDialog = ({
   return (
     <div>
       <div className="grid grid-cols-2 my-2 gap-4">
-        <div
-          className={`col-span-2 ${
-            !enable.title ? 'pointer-events-none opacity-50' : ''
-          }`}>
-          <div className="flex items-center">
-            <label
-              htmlFor={'title'}
-              className={`text-gray-700 w-auto mr-3 block text-xs font-semibold leading-5 `}>
-              {'Title'}
-            </label>
-
-            <div className="flex items-center h-5 w-auto">
-              <input
-                id="show_title"
-                aria-describedby="show_title"
-                name="show_title"
-                checked={enable.title}
-                onChange={(e) => setEnable({...enable, title: !enable.title})}
-                type="checkbox"
-                className="pointer-events-auto  h-4 w-4 text-indigo-600 border-gray-500 rounded"
-              />
-            </div>
-          </div>
-          <FormInput
-            id="title"
-            className=""
-            value={fields.title}
-            onChange={(e) => setFields({...fields, title: e.target.value})}
-            placeHolder="Add instructional text here"
-          />
-        </div>
-
         <div className={`col-span-2 `}>
           <DividerBlock bgWhite value="Line Starter Builder" />
           {inputFieldsArray.map((inputObj: Options, idx: number) => {

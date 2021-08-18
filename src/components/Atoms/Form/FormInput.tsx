@@ -49,7 +49,6 @@ const FormInput: React.FC<FormInputProps> = (inputProps: FormInputProps) => {
     dark,
     min,
     max,
-
     onKeyDown,
   } = inputProps;
   const {theme, clientKey} = useContext(GlobalContext);

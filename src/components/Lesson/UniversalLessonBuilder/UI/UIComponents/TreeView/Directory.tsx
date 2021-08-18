@@ -5,8 +5,7 @@ import {FaBook, FaGraduationCap, FaBookOpen} from 'react-icons/fa';
 import {Item} from './Item';
 import {Tree} from './Tree';
 import {RiPagesLine} from 'react-icons/ri';
-import {CheckCircleIcon} from '@heroicons/react/outline';
-import {AiFillCopy} from 'react-icons/ai';
+import Buttons from '../../../../../Atoms/Buttons';
 
 export const Directory = ({
   item,
@@ -26,22 +25,28 @@ export const Directory = ({
   selPageId?: string;
 }>): JSX.Element => {
   const [toggle, setToggle] = useState<boolean>(false);
-  const onItemClicked = useCallback(
-    (event: React.MouseEvent<HTMLLIElement, MouseEvent>, item?: any) => {
-      event.stopPropagation();
-      if (item.type === 'page') {
-        onClick(item.id, item.lessonId);
-      }
+  const onItemClicked = (
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    item?: any
+  ) => {
+    event.stopPropagation();
+
+    onClick(item.id, item.lessonId);
+  };
+
+  const _toggle = (e: any) => {
+    e.stopPropagation();
+    console.log(item.type);
+    if (item.type !== 'page') {
       setToggle((prevValue) => !prevValue);
       if (setShow) {
         setShow(false);
       }
-    },
-    []
-  );
+    }
+  };
 
   return (
-    <Item onClick={(e) => onItemClicked(e, item)} onContextMenu={onContextMenu}>
+    <Item onClick={_toggle} onContextMenu={onContextMenu}>
       <span
         className={`${
           dark ? 'text-gray-900' : ''
@@ -62,11 +67,7 @@ export const Directory = ({
         </div>
 
         {item.type === 'page' ? (
-          <span className="w-auto">
-            {item.id === selPageId && (
-              <AiFillCopy className="h-5 w-5 text-green-400" aria-hidden="true" />
-            )}
-          </span>
+          <Buttons label="Select this" onClick={(e) => onItemClicked(e, item)} />
         ) : (
           <div className="w-auto" />
         )}

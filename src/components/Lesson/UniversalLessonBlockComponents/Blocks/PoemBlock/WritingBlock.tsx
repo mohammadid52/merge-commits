@@ -25,10 +25,9 @@ interface WritingBlockProps {
 const WritingBlock = (props: WritingBlockProps) => {
   const {
     id,
-    setPoemWriting,
+
     linestarters,
-    poemInput,
-    setPoemInput,
+
     setFields,
     fields,
     handleUpdateStudentData,
@@ -39,9 +38,15 @@ const WritingBlock = (props: WritingBlockProps) => {
   } = useContext(GlobalContext);
 
   const onAddClick = () => {
-    const concatenatedValue = fields.poemText.concat(selectedLS.text);
+    let concatenatedValue;
+    if (fields.poemText.charAt(fields.poemText.length - 1) === ' ') {
+      concatenatedValue = fields.poemText.concat(selectedLS.text);
+    } else {
+      concatenatedValue = fields.poemText.concat(` ${selectedLS.text}`);
+    }
+
     setFields({...fields, poemText: concatenatedValue});
-    handleUpdateStudentData(id, [fields.poemText]);
+    handleUpdateStudentData(id, [concatenatedValue]);
   };
 
   const [selectedLS, setSelectedLS] = useState({
@@ -53,6 +58,7 @@ const WritingBlock = (props: WritingBlockProps) => {
       <div className={`w-full flex flex-col   rounded-lg`}>
         {/* MAP THE LINE PROMPTS */}
         {/* {poemInput.map((inputObj: StudentPageInput, idx: number) => (
+   
           <div key={`${inputObj.domID}`}>
             <select
               id={`${inputObj.domID}`}

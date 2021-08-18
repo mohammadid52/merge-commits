@@ -997,7 +997,7 @@ const Institute_class: any = {
     EDIT: 'edit',
     INFO: 'This organization does not have any cohorts. Please create a new cohort.',
     BUTTON: {
-      CREATE: 'Create new cohort',
+      ADD: 'New class',
     },
   },
   ES: {
@@ -1008,7 +1008,7 @@ const Institute_class: any = {
     EDIT: 'TBD',
     INFO: 'TBD',
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };
@@ -1017,7 +1017,7 @@ const InstitueCurriculam: any = {
   EN: {
     TITLE: 'ORGANIZATION CURRICULAR',
     BUTTON: {
-      ADD: 'Add new Curricular',
+      ADD: 'New Curricular',
     },
     NO: 'No.',
     NAME: 'Curricular Name',
@@ -1056,7 +1056,7 @@ const InstitueRomms: any = {
       fetcherr: 'Error while fetching class data. Please try again later.',
     },
     BUTTON: {
-      CREATE: 'Create new Class',
+      ADD: 'New Classroom',
     },
   },
   ES: {
@@ -1073,7 +1073,7 @@ const InstitueRomms: any = {
       fetcherr: 'TBD',
     },
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };

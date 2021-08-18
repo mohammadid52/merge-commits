@@ -15,6 +15,8 @@ import {getImageFromS3} from '../../../../utilities/services';
 import noop from 'lodash/noop';
 import CustomDatePicker from './FormBlock/DatePicker';
 import ReviewSliderBlock from './ReviewSliderBlock';
+import PoemBlock from './PoemBlock';
+import WritingExerciseBlock from './FormBlock/WritingExerciseBlock';
 
 interface FormBlockProps extends RowWrapperProps {
   id?: string;
@@ -623,6 +625,47 @@ export const FormBlock = ({id, mode, numbered, value}: FormBlockProps) => {
             onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
             value={isInLesson ? getValue(inputID) : value}
           />
+        );
+      case FORM_TYPES.WRITING_EXERCISE:
+      case `${FORM_TYPES.WRITING_EXERCISE}-content`:
+        return (
+          <div
+            className={`border-0 border-gray-700 ${
+              type === FORM_TYPES.WRITING_EXERCISE
+                ? 'border-b-none rounded-b-none'
+                : 'border-t-none rounded-t-none'
+            } rounded-md`}>
+            <WritingExerciseBlock
+              title={type === FORM_TYPES.WRITING_EXERCISE}
+              value={isInLesson ? getValue(inputID) : value}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+              id={id}
+              type={type}
+              label={label}
+              options={options}
+              inputID={inputID}
+              disabled={mode === 'building'}
+              classString={classString}
+            />
+          </div>
+        );
+
+      case `${FORM_TYPES.POEM}-content`:
+        return (
+          <div className={`border-0 border-gray-700  rounded-md`}>
+            <WritingExerciseBlock
+              title={false}
+              value={isInLesson ? getValue(inputID) : value}
+              onChange={isInLesson && isStudent ? (e) => onChange(e) : noop}
+              id={id}
+              type={type}
+              label={label}
+              options={options}
+              inputID={inputID}
+              disabled={mode === 'building'}
+              classString={classString}
+            />
+          </div>
         );
       default:
         return <p>No valid form input type</p>;

@@ -10,6 +10,7 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
+import {AddButton} from '../../../../Atoms/Buttons/AddButton';
 
 import {
   stringToHslColor,
@@ -523,8 +524,8 @@ const EditClass = (props: EditClassProps) => {
                 />
               </div>
             </div>
-            <Buttons
-              btnClass="ml-5 mr-10 py-1 px-5 mt-auto"
+            <AddButton
+              className="ml-5 mr-10 py-1 px-5 mt-auto"
               label={dictionary.ADD_STUDENT_BUTTON}
               onClick={addStudentInClass}
               disabled={adding || !newMember.id}

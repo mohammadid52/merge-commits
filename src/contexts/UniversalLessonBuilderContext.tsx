@@ -1,5 +1,6 @@
 import {findIndex, get, update} from 'lodash';
 import React, {useContext, createContext, useState} from 'react';
+import {useHistory} from 'react-router';
 import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
 export const UniversalLessonBuilderContext = createContext(null);
 
@@ -166,6 +167,26 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
     idx: 0,
   });
 
+  const history = useHistory();
+
+  /**
+   *
+   * @param lessonId
+   * @param pageId
+   * @NOTE Use this function only for ULB navigation
+   */
+  const pushUserToThisId = (lessonId: string, pageId: string) => {
+    try {
+      history.push(
+        `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+      );
+    } catch (error) {
+      console.log(
+        '@pushUserToThisId: Error while navigating user to other page: ' + error
+      );
+    }
+  };
+
   return (
     <UniversalLessonBuilderContext.Provider
       value={{
@@ -178,6 +199,7 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         toolbarOnTop,
         setToolbarOnTop,
         selID,
+        pushUserToThisId,
         setSelID,
         setEditMode,
         setSelectedLessonID,
