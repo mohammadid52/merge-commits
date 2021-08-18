@@ -78,12 +78,12 @@ const CourseCard = ({curriculum, lessonId, loading, postDeletion}: any) => {
   }, []);
 
   const fetchCurriculumsRoom = async () => {
-    const result = await API.graphql(
-      graphqlOperation(customQueries.getCurriculumRooms, {
-        id: '1b7308ae-f850-4207-8d79-e122761bf5a7',
-      })
-    );
-    console.log(result, 'result for fetchCurriculumsRoom');
+    // const result = await API.graphql(
+    //   graphqlOperation(customQueries.getCurriculumRooms, {
+    //     id: '1b7308ae-f850-4207-8d79-e122761bf5a7',
+    //   })
+    // );
+    // console.log(result, 'result for fetchCurriculumsRoom');
   };
 
   return (
