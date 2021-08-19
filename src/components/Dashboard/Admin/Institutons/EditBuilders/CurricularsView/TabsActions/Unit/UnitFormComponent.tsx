@@ -228,13 +228,13 @@ const UnitFormComponent = ({
 
   return (
     <div className="bg-white shadow-5 overflow-hidden mb-4">
-      <div className={`border-b-0 p-4 pl-2 ${theme.borderColor[themeColor]} mt-6`}>
+      {/* <div className={`border-b-0 p-4 pl-2 ${theme.borderColor[themeColor]} mt-6`}>
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           {AddSyllabusDict[userLanguage]['heading']}
         </h3>
-      </div>
+      </div> */}
       <div className="m-auto">
-        <div className="px-4">
+        <div className="py-4 px-2">
           <div className="px-3 py-4 grid gap-x-6 grid-cols-2">
             <div>
               <FormInput

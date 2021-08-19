@@ -315,16 +315,14 @@ const LessonPlanManager = ({
     }
   };
 
-  console.log(dropdownLessonsList, selectedLessonsList, 'dropdownLessonsList');
-
   return (
     <div className="bg-white shadow-5 mb-4">
       {/* *************** SECTION HEADER ************ */}
       <div
-        className={`flex items-center justify-between border-b-0 p-4 pl-2 ${theme.borderColor[themeColor]} mt-6`}>
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+        className={`flex items-center justify-between p-2 pl-2 ${theme.borderColor[themeColor]}`}>
+        {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
           {SyllabusDict[userLanguage]['LESSON_PLAN_HEADING']}
-        </h3>
+        </h3> */}
         <div className="flex justify-end">
           <AddButton
             label={SyllabusDict[userLanguage]['ADD_NEW_LESSON']}

@@ -1845,6 +1845,7 @@ const SyllabusDict: any = {
       wantsave: 'Do you want to save changes before moving forward?',
       fetchlist: 'Error while fetching lessons list data.',
       fetchdesign: 'Error while fetching Designers list Please try again later.',
+      UPDATE_ERROR: 'Error while updating please try again later.',
     },
   },
   ES: {

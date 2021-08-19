@@ -1237,16 +1237,6 @@ export const getCurriculum = /* GraphQL */ `
         }
         nextToken
       }
-      rooms {
-        items {
-          id
-          roomID
-          curriculumID
-          createdAt
-          updatedAt
-        }
-        nextToken
-      }
       createdAt
       updatedAt
     }
@@ -1306,9 +1296,6 @@ export const listCurriculums = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
         createdAt
         updatedAt
       }
@@ -1359,9 +1346,6 @@ export const getTopic = /* GraphQL */ `
         }
         universalSyllabusSeq
         checkpoints {
-          nextToken
-        }
-        rooms {
           nextToken
         }
         createdAt
@@ -1650,99 +1634,6 @@ export const getRoomCurriculum = /* GraphQL */ `
         checkpoints {
           nextToken
         }
-        rooms {
-          nextToken
-        }
-        createdAt
-        updatedAt
-      }
-      room {
-        id
-        institutionID
-        classID
-        teacherAuthID
-        teacherEmail
-        name
-        maxPersons
-        filters
-        location
-        startDate
-        startTime
-        endDate
-        endTime
-        length
-        repeat
-        notes
-        activeSyllabus
-        frequency
-        coTeachers {
-          nextToken
-        }
-        institution {
-          id
-          name
-          type
-          district
-          address
-          addressLine2
-          city
-          state
-          zip
-          phone
-          website
-          image
-          isServiceProvider
-          filters
-          createdAt
-          updatedAt
-        }
-        teacher {
-          id
-          authId
-          status
-          email
-          role
-          type
-          firstName
-          preferredName
-          lastName
-          externalId
-          grade
-          onBoardSurvey
-          offBoardSurvey
-          phone
-          birthdate
-          image
-          language
-          filters
-          lastLoggedIn
-          lastLoggedOut
-          onDemand
-          createdAt
-          updatedAt
-        }
-        class {
-          id
-          institutionID
-          type
-          name
-          createdAt
-          updatedAt
-        }
-        curricula {
-          nextToken
-        }
-        activeLessonId
-        ClosedPages
-        disabledPages
-        studentViewing
-        displayData
-        currentPage
-        completedLessons {
-          lessonID
-          time
-        }
-        activeLessons
         createdAt
         updatedAt
       }
@@ -1774,35 +1665,6 @@ export const listRoomCurriculums = /* GraphQL */ `
           languages
           designers
           universalSyllabusSeq
-          createdAt
-          updatedAt
-        }
-        room {
-          id
-          institutionID
-          classID
-          teacherAuthID
-          teacherEmail
-          name
-          maxPersons
-          filters
-          location
-          startDate
-          startTime
-          endDate
-          endTime
-          length
-          repeat
-          notes
-          activeSyllabus
-          frequency
-          activeLessonId
-          ClosedPages
-          disabledPages
-          studentViewing
-          displayData
-          currentPage
-          activeLessons
           createdAt
           updatedAt
         }
@@ -4874,9 +4736,6 @@ export const getAttendance = /* GraphQL */ `
         }
         universalSyllabusSeq
         checkpoints {
-          nextToken
-        }
-        rooms {
           nextToken
         }
         createdAt
