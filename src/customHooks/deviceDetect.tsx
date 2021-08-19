@@ -48,7 +48,7 @@ const useDeviceDetect = () => {
     setDetectedDevice(userAgent);
     setIsMobile(mobileBoolean);
 
-    return () => console.log('UserAgent -> ', detectedDevice);
+    // return () => console.log('UserAgent -> ', detectedDevice);
   }, []);
 
   return {browser: detectedBrowser, device: detectedDevice, mobile: isMobile};

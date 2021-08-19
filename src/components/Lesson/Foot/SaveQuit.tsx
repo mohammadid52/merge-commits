@@ -48,7 +48,7 @@ const SaveQuit = (props: SaveQuitProps) => {
   }, [lessonState.updated]);
 
   useEffect(() => {
-    console.log('safeToLeave State - ', safeToLeave);
+    // console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
       history.push(`/dashboard/classroom/${getRoomData.id}`);
     }

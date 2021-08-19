@@ -58,7 +58,7 @@ const StageIcon = (props: StageIconProps) => {
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
           <svg
-            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+            className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
             fill="currentColor"
@@ -70,11 +70,13 @@ const StageIcon = (props: StageIconProps) => {
           <a
             // href={page.href}
 
-            className={`  ${
+            className={`
+            ${!active ? 'text-gray-500 ' : null}
+            ${
               active
-                ? 'border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
                 : null
-            }        ${!enabled ? null : 'text-gray-500 '}
+            }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {label}
           </a>
@@ -88,7 +90,7 @@ const StageIcon = (props: StageIconProps) => {
           ${clickable ? 'cursor-pointer' : 'cursor-default'}
           flex items-center w-auto group`}>
           <svg
-            className="flex-shrink-0 w-6 h-full text-gray-300 group-hover:text-gray-400 transition-all duration-150 "
+            className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
             viewBox="0 0 24 44"
             preserveAspectRatio="none"
             fill="currentColor"
@@ -99,14 +101,14 @@ const StageIcon = (props: StageIconProps) => {
 
           <a
             // href={page.href}
-            className={`${!enabled || !open ? 'line-through text-gray-500' : null}
+            className={`${
+              !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
+            }
             
-            ${!open ? 'hover:underline' : null}
-            ${active && !open ? 'font-bold underline' : null}
-            ${!active && open && enabled ? 'text-gray-500 ' : null}
+            ${!active ? 'text-gray-500 ' : null}
             ${
               active
-                ? 'border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
                 : null
             }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
@@ -134,10 +136,14 @@ const StageIcon = (props: StageIconProps) => {
           <a
             // href={page.href}
             className={`${
+              !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
+            }
+            ${!active ? 'text-gray-500 ' : null}
+            ${
               active
-                ? 'border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
                 : null
-            } ${!enabled || !open ? 'line-through text-gray-500' : 'text-gray-500'}
+            }
             ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
             {label}
           </a>
