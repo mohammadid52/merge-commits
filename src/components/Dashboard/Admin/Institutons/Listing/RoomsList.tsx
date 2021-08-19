@@ -156,9 +156,9 @@ const RoomsList = (props: RoomListProps) => {
           ) : (
             <Fragment>
               <div className="flex justify-center mt-8">
-                <Buttons
-                  btnClass="mx-4"
-                  label={InstitueRomms[userLanguage]['BUTTON']['CREATE']}
+                <AddButton
+                  className="mx-4"
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>

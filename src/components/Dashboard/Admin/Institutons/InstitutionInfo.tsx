@@ -11,6 +11,7 @@ import {
 } from '../../../../utilities/strings';
 import UnderlinedTabs from '../../../Atoms/UnderlinedTabs';
 import {IoPeople} from 'react-icons/io5';
+import {HiPencil} from 'react-icons/hi';
 import {getImageFromS3} from '../../../../utilities/services';
 import ClassList from './Listing/ClassList';
 import StaffBuilder from './Listing/StaffBuilder';
@@ -20,8 +21,7 @@ import RoomsList from './Listing/RoomsList';
 import useDictionary from '../../../../customHooks/dictionary';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import Tooltip from '../../../Atoms/Tooltip';
-import { HiPencil } from 'react-icons/hi';
-import { getAsset } from '../../../../assets';
+import {getAsset} from '../../../../assets';
 
 interface InstitutionInfoProps {
   institute?: InstInfo;
@@ -197,11 +197,11 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
 
           {/* General information section */}
           <div className="">
-            <div className="bg-white border-l-0 border-gray-200 overflow-hidden mb-4">
+            <div className="bg-white border-l-0 border-gray-200 mb-4">
               <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
                 <h3 className="text-lg flex items-center leading-6 font-medium text-gray-900">
                   {Institute_info[userLanguage]['TITLE']}
-                  <Tooltip key={'id'} text={'Edit Curriculum Details'} placement="top">
+                  <Tooltip key={'id'} text={'Edit Institution Details'} placement="top">
                     <span
                       className={`w-auto cursor-pointer hover:${theme.textColor[themeColor]}`}>
                       <HiPencil
@@ -212,69 +212,70 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                   </Tooltip>
                 </h3>
               </div>
-
-              <div className="grid grid-cols-2 divide-x-0 divide-gray-200 p-4">
-                <div className="p-2 px-4">
-                  <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
-                    <span className="text-gray-900 text-sm mr-2 w-3/10">
-                      {' '}
-                      {Institute_info[userLanguage]['ADDRESS']}:
-                    </span>
-                    <span className="w-auto">
-                      {address && (
-                        <Fragment>
-                          {address + ', '} <br />
-                        </Fragment>
-                      )}
-                      {addressLine2 && (
-                        <Fragment>
-                          {addressLine2 + ', '} <br />
-                        </Fragment>
-                      )}
-                      {city && city + ', '} {state && state} <br />
-                      {zip && zip}
-                    </span>
-                  </p>
-                  <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
-                    <span className="text-gray-900 text-sm mr-2 w-3/10">
-                      {' '}
-                      {Institute_info[userLanguage]['CONTACT']}:
-                    </span>
-                    <span className="w-auto">
-                      {phone ? formatPhoneNumber(phone) : '--'}
-                    </span>
-                  </p>
-                </div>
-                <div className="p-2 px-8">
-                  <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
-                    <span className="text-gray-900 text-sm mr-2 w-3/10">
-                      {' '}
-                      {Institute_info[userLanguage]['INSTITUTION_TYPE']}:
-                    </span>
-                    <span className="w-auto">{type ? type : '--'}</span>
-                  </p>
-                  <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
-                    <span className="text-gray-900 text-sm mr-2 w-3/10">
-                      {' '}
-                      {Institute_info[userLanguage]['WEBSITE']}:
-                    </span>
-                    {website ? (
-                      <span className="w-auto hover:text-blue-700">
-                        <a href={website} target="_blank">
-                          {getHostNameFromUrl(website)}
-                        </a>
+              <div className="overflow-hidden">
+                <div className="grid grid-cols-2 divide-x-0 divide-gray-200 p-4">
+                  <div className="p-2 px-4">
+                    <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
+                      <span className="text-gray-900 text-sm mr-2 w-3/10">
+                        {' '}
+                        {Institute_info[userLanguage]['ADDRESS']}:
                       </span>
-                    ) : (
-                      '--'
-                    )}
-                  </p>
-                  <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
-                    <span className="text-gray-900 text-sm mr-2 w-3/10">
-                      {' '}
-                      {Institute_info[userLanguage]['SERVICE_PROVIDER']}:
-                    </span>
-                    <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
-                  </p>
+                      <span className="w-auto">
+                        {address && (
+                          <Fragment>
+                            {address + ', '} <br />
+                          </Fragment>
+                        )}
+                        {addressLine2 && (
+                          <Fragment>
+                            {addressLine2 + ', '} <br />
+                          </Fragment>
+                        )}
+                        {city && city + ', '} {state && state} <br />
+                        {zip && zip}
+                      </span>
+                    </p>
+                    <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
+                      <span className="text-gray-900 text-sm mr-2 w-3/10">
+                        {' '}
+                        {Institute_info[userLanguage]['CONTACT']}:
+                      </span>
+                      <span className="w-auto">
+                        {phone ? formatPhoneNumber(phone) : '--'}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="p-2 px-8">
+                    <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
+                      <span className="text-gray-900 text-sm mr-2 w-3/10">
+                        {' '}
+                        {Institute_info[userLanguage]['INSTITUTION_TYPE']}:
+                      </span>
+                      <span className="w-auto">{type ? type : '--'}</span>
+                    </p>
+                    <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
+                      <span className="text-gray-900 text-sm mr-2 w-3/10">
+                        {' '}
+                        {Institute_info[userLanguage]['WEBSITE']}:
+                      </span>
+                      {website ? (
+                        <span className="w-auto hover:text-blue-700">
+                          <a href={website} target="_blank">
+                            {getHostNameFromUrl(website)}
+                          </a>
+                        </span>
+                      ) : (
+                        '--'
+                      )}
+                    </p>
+                    <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
+                      <span className="text-gray-900 text-sm mr-2 w-3/10">
+                        {' '}
+                        {Institute_info[userLanguage]['SERVICE_PROVIDER']}:
+                      </span>
+                      <span className="w-auto">{isServiceProvider ? 'YES' : 'NO'}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -15,6 +15,10 @@ import PageWrapper from '../../../../../Atoms/PageWrapper';
 
 import DetailTable from './DetailTable';
 import AddCourse from './AddCourse';
+import {IoIosAdd, IoIosClose} from 'react-icons/io';
+import {getImageFromS3, getImageFromS3Static} from '../../../../../../utilities/services';
+import {FaDoorOpen, FaGraduationCap, FaHotel, FaUser} from 'react-icons/fa';
+import CourseCard from './CourseCard';
 
 interface ILessonCourseProps {
   curriculumList: any[];
@@ -53,7 +57,14 @@ const LessonCourse = ({
     setSelectedCurriculumList(selectedCurriculums);
   }, [selectedCurriculums]);
 
-  const fetchClassRoomDetails = async (curricularId: string) => {
+  // useEffect(() => {
+  //   console.log(curriculumList, 'curriculumList inside useeffect');
+  //   if (curriculumList.length) {
+  //     fetchClassRoomDetails();
+  //   }
+  // }, [curriculumList]);
+
+  const fetchClassRoomDetails = async () => {
     setRoomLoading(true);
     const classroomsResult: any = await API.graphql(
       graphqlOperation(customQueries.getInstClassRooms, {id: institution?.id})
@@ -105,7 +116,7 @@ const LessonCourse = ({
 
   const postDeletion = () => {
     fetchCurriculum();
-  }
+  };
 
   const renderTableView = (curriculum: any) => {
     return (
@@ -117,7 +128,7 @@ const LessonCourse = ({
       />
     );
   };
-  
+
   const titleList = selectedCurriculumList.map((curriculum, index) => ({
     id: index,
     title: curriculum.name,
@@ -146,13 +157,24 @@ const LessonCourse = ({
               <Loader />
             </div>
           ) : titleList.length ? (
-            <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-              <Accordion
-                titleList={titleList}
-                actionOnAccordionClick={fetchClassRoomDetails}
-              />
+            <div className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none mt-8">
+              {selectedCurriculumList.map((curriculum) => (
+                <CourseCard
+                  curriculum={curriculum}
+                  lessonId={lessonId}
+                  loading={roomLoading}
+                  postDeletion={postDeletion}
+                  key={curriculum.id}
+                />
+              ))}
             </div>
           ) : (
+            // <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
+            //   <Accordion
+            //     titleList={titleList}
+            //     actionOnAccordionClick={fetchClassRoomDetails}
+            //   />
+            // </div>
             <div className="text-center p-16 mt-4">
               <p className="text-gray-600 font-medium">
                 {UnitLookupDict[userLanguage]['NOTADDED']}
