@@ -9,7 +9,6 @@ import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
-import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
@@ -31,6 +30,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import {getFilterORArray} from '../../../../utilities/strings';
 
 export interface InitialData {
   name: string;
@@ -61,7 +61,7 @@ interface LessonBuilderProps {
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const {designersList, institutionList} = props;
+  const {institutionList} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
@@ -108,6 +108,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
   ];
 
+  const [designersList, setDesignersList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [curriculumLoading, setCurriculumLoading] = useState(false);
@@ -124,6 +125,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
+  const [institutionData, setInstitutionData] = useState<any>(null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -140,6 +142,24 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     stepOnHold: '',
     message: '',
   });
+
+  const fetchStaffByInstitution = async (institutionID: string) => {
+    const staffList: any = await API.graphql(
+      graphqlOperation(customQueries.getStaffsForInstitution, {
+        filter: {institutionID: {eq: institutionID}},
+      })
+    );
+    console.log(staffList, 'staffList');
+    const listStaffs = staffList.data.listStaffs;
+    const updatedList = listStaffs?.items.map((item: any) => ({
+      id: item?.id,
+      name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+      value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+    }));
+    console.log(updatedList, 'updatedList', props.designersList, '++++++++++');
+
+    setDesignersList(updatedList);
+  };
 
   const savedCheckpointModal = () => {
     setActiveStep(checkpointSaveModal.stepOnHold);
@@ -198,6 +218,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
+        setInstitutionData(institution);
         setSelectedMeasurements(savedData.rubrics);
         setFormData({
           ...formData,
@@ -224,6 +245,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             value: institution?.name,
           },
         });
+        fetchStaffByInstitution(savedData.institutionID);
       }
 
       const designers = designersList.filter((item: any) =>
@@ -464,8 +486,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=${step}`;
     setServerMessage({
       isError: false,
-      message: ''
-    })
+      message: '',
+    });
     if (unsavedChanges) {
       setWarnModal({
         show: true,
@@ -473,7 +495,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         url: redirectionUrl,
       });
     } else {
-      setUnsavedChanges(false)
+      setUnsavedChanges(false);
       history.push(redirectionUrl);
     }
   };
@@ -534,6 +556,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             allMeasurement={measurementList}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
+            fetchStaffByInstitution={fetchStaffByInstitution}
           />
         );
       case 'activities':
@@ -776,16 +799,15 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       </div>
 
       {/* Body */}
-      <PageWrapper>
+      <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}>
         <div className="w-full m-auto">
-          {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <StepComponent
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
           />
 
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
             {loading ? (
               <div className="h-100 flex justify-center items-center">
                 <div className="w-5/10">

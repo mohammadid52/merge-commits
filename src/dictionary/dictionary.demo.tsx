@@ -468,6 +468,7 @@ const editClassDict: any = {
       NAME: 'Participant Name',
       GROUP: 'Group',
       STATUS: 'Status',
+      DATE: 'Date Added',
       ACTIONS: 'Actions',
     },
   },
@@ -502,6 +503,7 @@ const editClassDict: any = {
       NAME: 'nombre del estudiante',
       GROUP: 'TBD',
       STATUS: 'estado',
+      DATE: 'TBD',
       ACTIONS: 'comportamiento',
     },
   },
@@ -1827,6 +1829,35 @@ const AddProfileCheckpointDict: any = {
       labelrequired: 'TBD',
       minone: 'TBD',
       noquestion: 'TBD',
+    },
+  },
+};
+
+const SyllabusDict: any = {
+  EN: {
+    TITLE: 'Unit Builder',
+    LESSON_PLAN: 'LESSON PLAN MANAGER',
+    ADD_NEW_LESSON: 'New Lesson',
+    SELECT_LESSON: 'Select Lesson',
+    HEADING: 'UNIT INFORMATION',
+    LESSON_PLAN_HEADING: 'LESSON PLAN MANAGER',
+    MESSAGES: {
+      wantsave: 'Do you want to save changes before moving forward?',
+      fetchlist: 'Error while fetching lessons list data.',
+      fetchdesign: 'Error while fetching Designers list Please try again later.',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    LESSON_PLAN: 'TBD',
+    ADD_NEW_LESSON: 'TBD',
+    SELECT_LESSON: 'TBD',
+    HEADING: 'TBD',
+    LESSON_PLAN_HEADING: 'TBD',
+    MESSAGES: {
+      wantsave: 'TBD',
+      fetchlist: 'TBD',
+      fetchdesign: 'TBD',
     },
   },
 };
@@ -3325,6 +3356,15 @@ const DashboardDict: any = {
   },
 };
 
+const LearningEvidenceDict: any = {
+  EN: {
+    TITLE: 'Learning Evidence',
+  },
+  ES: {
+    TITLE: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3382,6 +3422,7 @@ export {
   EditTopicDict,
   ProfileCheckpointlookupDict,
   RegistrationDict,
+  SyllabusDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
@@ -3406,4 +3447,5 @@ export {
   LessonEditDict,
   LessonsListDict,
   EditQuestionModalDict,
+  LearningEvidenceDict,
 };

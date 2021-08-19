@@ -73,19 +73,6 @@ const CourseCard = ({curriculum, lessonId, loading, postDeletion}: any) => {
     );
   };
 
-  useEffect(() => {
-    fetchCurriculumsRoom();
-  }, []);
-
-  const fetchCurriculumsRoom = async () => {
-    const result = await API.graphql(
-      graphqlOperation(customQueries.getCurriculumRooms, {
-        id: '1b7308ae-f850-4207-8d79-e122761bf5a7',
-      })
-    );
-    console.log(result, 'result for fetchCurriculumsRoom');
-  };
-
   return (
     <div
       className="flex justify-between shadow flex-col white_back overflow-hidden"

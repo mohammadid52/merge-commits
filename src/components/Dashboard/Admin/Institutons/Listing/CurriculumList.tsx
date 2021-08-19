@@ -7,7 +7,7 @@ import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
-import { AddButton } from '../../../../Atoms/Buttons/AddButton';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};

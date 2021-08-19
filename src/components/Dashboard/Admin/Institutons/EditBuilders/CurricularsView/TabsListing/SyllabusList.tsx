@@ -5,12 +5,13 @@ import API, { graphqlOperation } from '@aws-amplify/api';
 
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import Buttons from '../../../../../../Atoms/Buttons';
+import Tooltip from '../../../../../../Atoms/Tooltip';
+import AddButton from '../../../../../../Atoms/Buttons/AddButton';
 import { reorder } from '../../../../../../../utilities/strings';
 import * as customMutations from '../../../../../../../customGraphql/customMutations';
 import { getAsset } from '../../../../../../../assets';
 import { GlobalContext } from '../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../customHooks/dictionary';
-import Tooltip from '../../../../../../Atoms/Tooltip';
 
 interface SyllabusListProps {
   curricularId?: string;
@@ -96,8 +97,8 @@ const SyllabusList = (props: SyllabusListProps) => {
               {list && list.length > 0 &&
                 <Fragment>
                   <div className="flex justify-end w-8/10 m-auto ">
-                    <Buttons
-                      btnClass="mx-4"
+                    <AddButton
+                      className="mx-4"
                       label={SyllabusDict[userLanguage]['ADDNEW']}
                       onClick={createNewSyllabus}
                     />

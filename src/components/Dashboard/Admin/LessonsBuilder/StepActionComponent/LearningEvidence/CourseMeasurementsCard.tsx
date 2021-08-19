@@ -38,7 +38,7 @@ const CourseMeasurementsCard = ({
             </div>
             <div className="text-lg inline-flex items-center">{curriculum.name}</div>
           </div>
-          <div className="mt-5 h-48 overflow-y-auto p-4 pt-0">
+          <div className="mt-5 h-96 overflow-y-auto p-4 pt-0">
             {curriculum.learningObjectiveData.map(
               (objective: any, objectiveIndex: number) => (
                 <div key={objective.id} className="pr-1 mb-2">

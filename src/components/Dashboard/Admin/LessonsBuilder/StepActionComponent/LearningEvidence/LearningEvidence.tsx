@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import * as queries from '../../../../../../graphql/queries';
+import * as mutations from '../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
@@ -44,7 +45,7 @@ const LearningEvidence = ({
   updateMeasurementList,
 }: ILearningEvidence) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict, BUTTONS} = useDictionary(clientKey);
+  const {AddNewLessonFormDict, LearningEvidenceDict, BUTTONS} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
   // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
@@ -83,13 +84,16 @@ const LearningEvidence = ({
     );
     rubricList = rubricList.data.listRubrics?.items || [];
 
-    const [results, topics]: any = await Promise.all([
+    const [results, learningObjectiveSeqResult, topics]: any = await Promise.all([
       await API.graphql(
         graphqlOperation(queries.listLearningObjectives, {
           filter: {
             curriculumID: {eq: curricularId},
           },
         })
+      ),
+      await API.graphql(
+        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
       ),
       await API.graphql(
         graphqlOperation(customQueries.listTopics, {
@@ -102,8 +106,11 @@ const LearningEvidence = ({
 
     const topicsList = topics.data?.listTopics?.items;
     const learningObjectives = results.data?.listLearningObjectives?.items;
+    const learningObjectiveSeq =
+      learningObjectiveSeqResult?.data?.getCSequences?.sequence || [];
 
     const learningObjectiveData = learningObjectives?.map((objective: any) => {
+      objective.index = learningObjectiveSeq.indexOf(objective.id);
       const associatedTopics = topicsList
         .filter((topic: any) => topic.learningObjectiveID === objective.id)
         .map((topic: any) => {
@@ -127,10 +134,10 @@ const LearningEvidence = ({
     setEvidenceListLoading(false);
     return {
       learningObjectiveData,
-      learningEvidenceList,
+      learningEvidenceList: learningEvidenceList.sort((a: any, b: any) =>
+        a.index > b.index ? 1 : -1
+      ),
     };
-    // setSelectedCurriculumList(temp);
-    // }
   };
 
   const fetchCurriculum = async () => {
@@ -161,7 +168,7 @@ const LearningEvidence = ({
         }
       });
       await Promise.all(
-        selectedCurriculums.map(async(curriculum: any) => {
+        selectedCurriculums.map(async (curriculum: any) => {
           const {learningObjectiveData, learningEvidenceList} = await fetchObjectives(
             curriculum.id
           );
@@ -227,23 +234,28 @@ const LearningEvidence = ({
   return (
     <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-8 border-0 border-gray-200">
+        <PageWrapper defaultClass="px-2 xl:px-8 border-0 border-gray-200">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
+            {LearningEvidenceDict[userLanguage]['TITLE']}
+          </h3>
           {loading ? (
             <div className="mt-4">
               <Loader />
             </div>
           ) : titleList.length ? (
             <>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-                {selectedCurriculumList.map((curriculum) => (
-                  <CourseMeasurementsCard
-                    curriculum={curriculum}
-                    handleCheckboxChange={handleCheckboxChange}
-                    selectedMeasurements={selectedMeasurements}
-                    setAddModalShow={setAddModalShow}
-                    key={curriculum.id}
-                  />
-                ))}
+              <div className="w-full flex justify-between">
+                <div className="grid px-2 xl:px-6 gap-5 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 lg:max-w-none">
+                  {selectedCurriculumList.map((curriculum) => (
+                    <CourseMeasurementsCard
+                      curriculum={curriculum}
+                      handleCheckboxChange={handleCheckboxChange}
+                      selectedMeasurements={selectedMeasurements}
+                      setAddModalShow={setAddModalShow}
+                      key={curriculum.id}
+                    />
+                  ))}
+                </div>
 
                 {/* <Accordion
                   titleList={titleList}
