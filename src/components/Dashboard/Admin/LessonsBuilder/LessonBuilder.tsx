@@ -557,7 +557,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             allMeasurement={measurementList}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
-            fetchStaffByInstitution={fetchStaffByInstitution}
+            //fetchStaffByInstitution={fetchStaffByInstitution}
           />
         );
       case 'activities':
