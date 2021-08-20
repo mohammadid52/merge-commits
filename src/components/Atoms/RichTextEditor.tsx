@@ -133,12 +133,6 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const editorRef = React.useRef();
 
-  useEffect(() => {
-    if (editorRef && editorRef.current) {
-      // @ts-ignore
-    }
-  }, [editorRef]);
-
   return (
     <Editor
       ref={editorRef}
