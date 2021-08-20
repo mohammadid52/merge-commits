@@ -5,10 +5,7 @@ import useDictionary from '../../../../customHooks/dictionary';
 import {useQuery} from '../../../../customHooks/urlParam';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 
-import {
-  PartContent,
-  UniversalLessonPage,
-} from '../../../../interfaces/UniversalLessonInterfaces';
+import {PartContent} from '../../../../interfaces/UniversalLessonInterfaces';
 import {CoreBuilder} from './CoreBuilder';
 
 import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
@@ -19,16 +16,14 @@ import NewPageDialog from '../UI/ModalDialogs/NewPageDialog';
 import AddContentDialog from '../UI/ModalDialogs/AddContentDialog';
 import UseTemplateDialog from '../UI/ModalDialogs/UseTemplateDialog';
 import PageSelector from '../UI/PageSelector';
-// import {Toolbar} from '../UI/Toolbar';
-// import {HierarchyPanel} from '../UI/HierarchyPanel';
-import {BuilderMenu} from '../UI/BuilderMenu';
+
 import HeaderModalComponent from '../UI/ModalDialogs/HeaderFormDialog';
 import ParaModalComponent from '../UI/ModalDialogs/ParaFormDialog';
 import InputModalComponent from '../UI/ModalDialogs/InputFormDialog';
 import YouTubeMediaDialog from '../UI/ModalDialogs/YouTubeMediaDialog';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import ImageFormComponent from '../UI/FormElements/ImageComponent';
-import EditPageNameDialog from '../UI/ModalDialogs/EditPageNameDialog';
+
 import TagInputDialog from '../UI/ModalDialogs/TagInputDialog';
 import CheckpointComponent from '../UI/ModalDialogs/CheckpointFormDialog';
 import JumbotronFormDialog from '../UI/ModalDialogs/JumbotronModalDialog';
@@ -54,14 +49,15 @@ import UniversalInputDialog from '../UI/ModalDialogs/UniversalInputDialog';
 import UniversalOptionDialog from '../UI/ModalDialogs/UniversalOptionDialog';
 import useUnsavedChanges from '../hooks/useUnsavedChanges';
 import LessonPlanNavigation from '../UI/LessonPlanNavigation';
-import NewLessonPlanSO from '../UI/UIComponents/NewLessonPlanSO';
+
 import {Accordion} from '../UI/UIComponents/Accordian';
 import ReviewSliderModal from '../UI/ModalDialogs/ReviewSliderModal';
 import DividerModal from '../UI/ModalDialogs/DividerModal';
 import TableModal from '../UI/ModalDialogs/TableModal';
 import {capitalizeFirstLetter} from '../../../../utilities/functions';
 import WritingExerciseModal from '../UI/ModalDialogs/WritingExerciseModal';
-
+import Info from '../../../Atoms/Alerts/Info';
+import Buttons from '../../../Atoms/Buttons';
 interface ExistingLessonTemplateProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
   universalBuilderStep?: string;
@@ -92,6 +88,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     blockConfig,
     setBlockConfig,
     getCurrentPage,
+    suggestionModal,
+    setSuggestionModal,
   } = useULBContext();
 
   //@ts-ignore
@@ -225,12 +223,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       isEditingMode: false,
     });
   };
-  const [suggestionModal, setSuggestionModal] = useState({
-    show: false,
-    data: [{title: '', content: [{id: '', text: ''}]}],
-    selectedResponse: [],
-    idx: 0,
-  });
 
   const dialogLabelList = {
     VIEW_PAGES: 'VIEW_PAGES',
@@ -441,8 +433,6 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
             inputObj={inputObj}
             isEditingMode={blockConfig.isEditingMode}
             createNewContent={createNewBlock}
-            suggestionModal={suggestionModal}
-            setSuggestionModal={setSuggestionModal}
             updateContent={updateBlockContent}
             setUnsavedChanges={setUnsavedChanges}
             askBeforeClose={askBeforeClose}
@@ -516,6 +506,8 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
     setUnsavedChanges,
   } = useUnsavedChanges(closeAction);
 
+  const [optionsCollapse, setOptionsCollapse] = useState(true);
+
   return (
     <div
       id={`builderWrapper`}
@@ -580,20 +572,30 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
               show: false,
             })
           }>
-          <div style={{minWidth: '30rem'}} className="bg-white">
-            {suggestionModal.data.map((item) => (
-              <Accordion
-                onResponseSelect={(r: any) => {
-                  setSuggestionModal({
-                    ...suggestionModal,
-                    show: false,
-                    selectedResponse: r,
-                  });
-                }}
-                title={item.title}
-                content={item.content}
-              />
-            ))}
+          <div style={{minWidth: '30rem'}} className="bg-white ">
+            <Info text="Click on value to see options" />
+            <div className="max-h-132 overflow-y-scroll overflow-x-hidden">
+              {suggestionModal.data.map((item: any) => (
+                <Accordion
+                  overrideBool={optionsCollapse}
+                  onResponseSelect={(r: any) => {
+                    setOptionsCollapse(true);
+                    setSuggestionModal({
+                      ...suggestionModal,
+                      show: false,
+                      selectedResponse: r,
+                    });
+                  }}
+                  title={item.title}
+                  content={item.content}
+                />
+              ))}
+            </div>
+            <Buttons
+              btnClass="mt-4"
+              label={`${optionsCollapse ? 'Show all options' : 'Collapse all options'} `}
+              onClick={() => setOptionsCollapse(!optionsCollapse)}
+            />
           </div>
         </Modal>
       )}

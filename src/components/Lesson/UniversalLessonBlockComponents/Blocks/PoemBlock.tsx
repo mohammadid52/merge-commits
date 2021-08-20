@@ -5,17 +5,17 @@ import {StudentPageInput} from '../../../../interfaces/UniversalLessonInterfaces
 import EditingBlock from './PoemBlock/EditingBlock';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useInLessonCheck from '../../../../customHooks/checkIfInLesson';
-import {noop} from 'lodash';
+import {isEmpty, noop} from 'lodash';
+import {FormControlProps} from './FormBlock';
 
-interface PoemBlockProps extends RowWrapperProps {
-  id?: string;
-  value?: any;
-  type?: string;
-  classString?: string;
+interface PoemBlockProps extends FormControlProps {
+  onChange: (e: any) => void;
+  disabled: boolean;
 }
 
 const PoemBlock = (props: PoemBlockProps) => {
-  const {id, value, classString} = props;
+  const {id, inputID, onChange, value, disabled, classString} = props;
+  console.log('🚀 ~ file: PoemBlock.tsx ~ line 20 ~ PoemBlock ~ props', props);
 
   const {state, lessonState, lessonDispatch} = useContext(GlobalContext);
   const [poemInput, setPoemInput] = useState<StudentPageInput[]>([]);
@@ -60,71 +60,50 @@ const PoemBlock = (props: PoemBlockProps) => {
     }
   };
 
-  // // init poemInput so the first linestarter shows up
-  useEffect(() => {
-    if (poemInput.length === 0 && value.length > 0) {
-      setPoemInput([
-        {
-          domID: value[0].id,
-          input: [value[0].value],
-        },
-      ]);
-    }
-  }, [value]);
-
-  // // init poemWriting for WYSIWYG
-  useEffect(() => {
-    if (isInLesson && isStudent) {
-      if (poemInput.length > 0) {
-        const concatenated = poemInput.reduce(
-          (acc: string, poemInputObj: StudentPageInput) => {
-            return `${acc}<p>${poemInputObj.input[0]}</p>`;
-          },
-          ''
-        );
-        handleUpdateStudentData(id, [concatenated]);
-      }
-    }
-  }, [poemInput]);
-
-  const handleSaveAndEdit = () => {
-    setSaveAndEdit(!saveAndEdit);
-  };
-
   return (
     <div
       className={`w-full max-w-256 mx-auto  flex flex-col justify-between items-center`}>
-      <div className="relative flex flex-col justify-between items-center p-4">
-        <WritingBlock
-          id={id}
-          linestarters={value}
-          poemInput={poemInput}
-          setPoemInput={setPoemInput}
-          saveAndEdit={saveAndEdit}
-          fields={fields}
-          setFields={setFields}
-          setPoemWriting={setPoemWriting}
-          setSaveAndEdit={setSaveAndEdit}
-          handleUpdateStudentData={handleUpdateStudentData}
-        />
-        <div className="border-0 border-gray-400 rounded-md p-4 mt-4">
-          <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
-            {classString}
-          </h1>
-          <EditingBlock
+      {/* <div className="relative flex flex-col justify-between items-center p-4">
+        {value && value[0].options && lineStarter === 'lineStarter-show' ? (
+          <WritingBlock
             id={id}
-            setPoemWriting={setPoemWriting}
-            // keep this one
-            // poemWriting={isInLesson ? poemWriting : ''}
-            // this is for testing
-            poemWriting={poemWriting}
+            linestarters={value[0].options}
+            poemInput={poemInput}
+            setPoemInput={setPoemInput}
+            saveAndEdit={saveAndEdit}
             fields={fields}
             setFields={setFields}
-            handleUpdateStudentData={
-              isInLesson && isStudent ? handleUpdateStudentData : noop
-            }
+            setPoemWriting={setPoemWriting}
+            setSaveAndEdit={setSaveAndEdit}
+            handleUpdateStudentData={handleUpdateStudentData}
           />
-        </div>
+        ) : null}
+      
+      </div> */}
+
+      <div className="bg-gray-700 rounded-md p-4 mt-4">
+        {value && (
+          // <h1 className="text-left text-lg font-medium mb-4 text-gray-900 dark:text-white">
+          //   {value[0].label}
+          // </h1>
+          <input
+            id={inputID}
+            disabled={disabled}
+            className={`w-full py-2 px-4  mt-2 rounded-xl bg-gray-100 dark:bg-darker-gray placeholder-gray-500 dark:placeholder-gray-700`}
+            name={'text'}
+            type={'text'}
+            placeholder={value[0].label}
+            onChange={onChange}
+            value={value}
+          />
+        )}
+        {/* <EditingBlock
+          id={id}
+          poemWriting={isInLesson ? getStudentDataValue(id)[0] : ''}
+          handleUpdateStudentData={
+            isInLesson && isStudent ? handleUpdateStudentData : noop
+          }
+        /> */}
       </div>
     </div>
   );

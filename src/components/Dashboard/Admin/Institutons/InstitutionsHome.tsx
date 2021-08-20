@@ -29,6 +29,7 @@ import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 import { DashboardProps } from '../../Dashboard';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const { setCurrentPage } = props;
@@ -112,11 +113,15 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
-          render={() => <AddSyllabus />} // Add new syllabus to curricular
+          render={() => <UnitBuilder />} // Add new syllabus to curricular
         />
+        {/* <Route
+          path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
+          render={() => <AddSyllabus />} // Add new syllabus to curricular
+        /> */}
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/edit`}
-          render={() => <EditSyllabus />} // Edit curricular syllabus
+          render={() => <UnitBuilder />} // Edit curricular syllabus
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/checkpoint/addNew`}

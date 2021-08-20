@@ -1,3 +1,13 @@
+// Authentication pages
+const AuthDict: any = {
+  EN: {
+    VERIFY_EMAIL: 'Verify Email',
+  },
+  ES: {
+    VERIFY_EMAIL: 'TBD',
+  },
+};
+
 const BUTTONS: any = {
   EN: {
     ADD: 'Add',
@@ -37,7 +47,9 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Cohort Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Class Creation',
+    CLASSROOMS: 'Classrooms',
     EDITCLASS: 'Edit Cohort',
+    CLASSES: 'Classes',
     EDITCURRICULUM: 'Edit Curriculm',
     EDITCLASSROOM: 'Edit Class',
     CURRICULUMBUILDER: 'Curriculum Builder',
@@ -56,9 +68,11 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Sessions',
     LESSONPLANBUILDER: 'Session Plan Builder',
+    LESSON_BUILDER: 'Lesson Builder',
     LESSON_EDITOR: 'Lesson Editor',
     STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
+    LOADING: 'Loading...',
   },
   ES: {
     HOME: 'CASA',
@@ -73,6 +87,7 @@ const BreadcrumsTitles: any = {
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
+    CLASSES: 'TBD',
     CURRICULUMBUILDER: 'TBD',
     LEARINGOBJECTIVE: 'TBD',
     AddMesurement: 'TBD',
@@ -382,6 +397,8 @@ const editClassDict: any = {
     STUDENTS: 'Participants',
     ADD_STUDENT_PLACEHOLDER: 'Select new participant',
     ADD_STUDENT_BUTTON: 'Add',
+    GROUP: 'Group',
+    GROUP_PLACEHOLDER: 'Select Group',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     NOSTUDENT: 'No participants added in the cohort.',
@@ -402,7 +419,9 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'Participant Name',
+      GROUP: 'Group',
       STATUS: 'Status',
+      DATE: 'Date Added',
       ACTIONS: 'Actions',
     },
   },
@@ -413,6 +432,8 @@ const editClassDict: any = {
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
     ADD_STUDENT_BUTTON: 'Añadir',
+    GROUP: 'TBD',
+    GROUP_PLACEHOLDER: 'TBD',
     UPDATING: 'TBD',
     CANCEL: 'TBD',
     NOSTUDENT: 'TBD',
@@ -433,7 +454,9 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
+      GROUP: 'TBD',
       STATUS: 'estado',
+      DATE: 'TBD',
       ACTIONS: 'comportamiento',
     },
   },
@@ -989,7 +1012,7 @@ const Institute_class: any = {
     EDIT: 'edit',
     INFO: 'This organization does not have any cohorts. Please create a new cohort.',
     BUTTON: {
-      CREATE: 'Create new cohort',
+      ADD: 'New class',
     },
   },
   ES: {
@@ -1000,7 +1023,7 @@ const Institute_class: any = {
     EDIT: 'TBD',
     INFO: 'TBD',
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };
@@ -1009,7 +1032,7 @@ const InstitueCurriculam: any = {
   EN: {
     TITLE: 'ORGANIZATION CURRICULAR',
     BUTTON: {
-      ADD: 'Add new Curricular',
+      ADD: 'New Curricular',
     },
     NO: 'No.',
     NAME: 'Curricular Name',
@@ -1048,7 +1071,7 @@ const InstitueRomms: any = {
       fetcherr: 'Error while fetching class data. Please try again later.',
     },
     BUTTON: {
-      CREATE: 'Create new Class',
+      ADD: 'New Classroom',
     },
   },
   ES: {
@@ -1065,7 +1088,7 @@ const InstitueRomms: any = {
       fetcherr: 'TBD',
     },
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };
@@ -1790,6 +1813,50 @@ const AddProfileCheckpointDict: any = {
       labelrequired: 'TBD',
       minone: 'TBD',
       noquestion: 'TBD',
+    },
+  },
+};
+
+const SyllabusDict: any = {
+  EN: {
+    TITLE: 'Unit Builder',
+    LESSON_PLAN: 'LESSON PLAN MANAGER',
+    ADD_NEW_LESSON: 'New Lesson',
+    SELECT_LESSON: 'Select Lesson',
+    HEADING: 'UNIT INFORMATION',
+    LESSON_PLAN_HEADING: 'LESSON PLAN MANAGER',
+    TABLE_HEADS: {
+      NUMBER: 'No.',
+      LESSON_NAME: 'Lesson Name',
+      MEASUREMENTS: 'Measurements',
+      TYPE: 'Type',
+      ACTION: 'Actions',
+    },
+    MESSAGES: {
+      wantsave: 'Do you want to save changes before moving forward?',
+      fetchlist: 'Error while fetching lessons list data.',
+      fetchdesign: 'Error while fetching Designers list Please try again later.',
+      UPDATE_ERROR: 'Error while updating please try again later.',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    LESSON_PLAN: 'TBD',
+    ADD_NEW_LESSON: 'TBD',
+    SELECT_LESSON: 'TBD',
+    HEADING: 'TBD',
+    LESSON_PLAN_HEADING: 'TBD',
+    TABLE_HEADS: {
+      NUMBER: 'TBD',
+      LESSON_NAME: 'TBD',
+      MEASUREMENTS: 'TBD',
+      TYPE: 'TBD',
+      ACTION: 'TBD',
+    },
+    MESSAGES: {
+      wantsave: 'TBD',
+      fetchlist: 'TBD',
+      fetchdesign: 'TBD',
     },
   },
 };
@@ -2813,6 +2880,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'Session details saved successfully.',
       SAVEERR: 'Unable to save Session details, Please try again later.',
       LESSONNOTHAVE: 'This session does not have any measurements, please add new one.',
+      NODESIGNEROPTION: 'Select Institution first',
     },
     SAVE: 'Save',
     SAVING: 'Saving...',
@@ -2855,6 +2923,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'TBD',
       SAVEERR: 'TBD',
       LESSONNOTHAVE: 'TBD',
+      NODESIGNEROPTION: 'TBD'
     },
     SAVE: 'TBD',
     SAVING: 'TBD',
@@ -3346,6 +3415,15 @@ const DashboardDict: any = {
   },
 };
 
+const LearningEvidenceDict: any = {
+  EN: {
+    TITLE: 'Learning Evidence',
+  },
+  ES: {
+    TITLE: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3353,6 +3431,7 @@ function paginationPage(lang: string, page: number, total: number) {
 }
 
 export {
+  AuthDict,
   CsvDict,
   DashboardDict,
   paginationPage,
@@ -3403,6 +3482,7 @@ export {
   EditTopicDict,
   ProfileCheckpointlookupDict,
   RegistrationDict,
+  SyllabusDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
@@ -3427,4 +3507,5 @@ export {
   LessonEditDict,
   LessonsListDict,
   EditQuestionModalDict,
+  LearningEvidenceDict,
 };

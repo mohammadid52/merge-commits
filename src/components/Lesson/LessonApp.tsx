@@ -446,7 +446,7 @@ const LessonApp = () => {
     const studentAuthId = user.username;
     const email = user.attributes.email;
 
-    console.log('getOrCreateData - user - ', user);
+    // console.log('getOrCreateData - user - ', user);
 
     try {
       const listFilter = {
@@ -549,7 +549,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      //getOrCreateStudentData();
+      getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 
@@ -586,24 +586,16 @@ const LessonApp = () => {
       );
 
       const responseItems = userLocations.data.listPersonLocations.items;
-      console.log('getPersonLocation - ', responseItems);
+      // console.log('getPersonLocation - ', responseItems);
 
       if (responseItems.length > 0) {
-        // const response = responseItems[0];
-        // const existLocationObj = {
-        //   ...response,
-        //   roomID: getRoomData.id,
-        //   currentLocation: '0',
-        // };
-        // setPersonLocationObj(existLocationObj);
-        // console.log('getPersonLocation - ', 'location exists');
         await leaveRoomLocation();
         await createPersonLocation();
       } else {
         await createPersonLocation();
       }
     } finally {
-      console.log('personLocation setup!');
+      // console.log('personLocation setup!');
     }
   };
 
@@ -632,9 +624,8 @@ const LessonApp = () => {
         id: response.id,
       };
       setPersonLocationObj(newLocationObj);
-      console.log('created new location - ', response);
     } catch (e) {
-      console.error('createPersonLocation - ', e);
+      // console.error('createPersonLocation - ', e);
     }
   };
 
@@ -680,9 +671,9 @@ const LessonApp = () => {
           },
         })
       );
-      console.log('left room...', storedLocation);
+      // console.log('left room...', storedLocation);
     } catch (e) {
-      console.error('error deleting location record - ', e);
+      // console.error('error deleting location record - ', e);
     }
   };
 
@@ -696,7 +687,21 @@ const LessonApp = () => {
     }
   }, [lessonState.currentPage]);
 
-  // ~~~~~ PERSON LOCATION DB FUNCTIONS ~~~~ //
+  // ##################################################################### //
+  // ######################### NAVIGATION CONTROL ######################## //
+  // ##################################################################### //
+
+  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
+    false
+  );
+  const handleRequiredNotification = () => {
+    if (!showRequiredNotification) {
+      setShowRequiredNotification(true);
+      setTimeout(() => {
+        setShowRequiredNotification(false);
+      }, 1250);
+    }
+  };
 
   const userAtEnd = () => {
     return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
@@ -707,6 +712,17 @@ const LessonApp = () => {
       <FloatingSideMenu />
       <div
         className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
+        <div
+          className={`opacity-${
+            showRequiredNotification
+              ? '100 translate-x-0 transform z-100'
+              : '0 translate-x-10 transform'
+          } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+          <p className="text-white font-medium tracking-wide">
+            <span className="text-red-500">*</span>Please fill all the required fields
+          </p>
+        </div>
+
         <div className="fixed z-50">
           <LessonHeaderBar
             lessonDataLoaded={lessonDataLoaded}
@@ -714,6 +730,7 @@ const LessonApp = () => {
             setOverlay={setOverlay}
             isAtEnd={isAtEnd}
             setisAtEnd={setisAtEnd}
+            handleRequiredNotification={handleRequiredNotification}
           />
         </div>
         <div className="relative top-6 lesson-body-container">
@@ -732,7 +749,13 @@ const LessonApp = () => {
             </ErrorBoundary>
           )}
 
-          {lessonDataLoaded && <Foot isAtEnd={isAtEnd} setisAtEnd={setisAtEnd} />}
+          {lessonDataLoaded && (
+            <Foot
+              isAtEnd={isAtEnd}
+              setisAtEnd={setisAtEnd}
+              handleRequiredNotification={handleRequiredNotification}
+            />
+          )}
         </div>
       </div>
     </>

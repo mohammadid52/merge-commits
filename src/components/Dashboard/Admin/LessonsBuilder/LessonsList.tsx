@@ -348,7 +348,7 @@ const LessonsList = () => {
                   </div>
                 </div>
                 {status !== 'done' ? (
-                  Array(3)
+                  Array(10)
                     .fill(' ')
                     .map((_: any, index: number) => (
                       <Fragment key={index}>

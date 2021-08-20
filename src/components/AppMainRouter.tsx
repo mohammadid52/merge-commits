@@ -61,6 +61,7 @@ const MainRouter: React.FC = () => {
     document
       .querySelector('meta[name="msapplication-config"]')
       .setAttribute('content', getAsset(clientKey, 'msapplicationConfig'));
+    document.querySelector('html').classList.add(clientKey);
   };
 
   const checkUserAuthenticated = async () => {

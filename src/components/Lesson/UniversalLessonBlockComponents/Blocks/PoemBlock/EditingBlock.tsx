@@ -1,51 +1,32 @@
-import {ContentState, convertFromHTML, EditorState} from 'draft-js';
 import React from 'react';
-import RichTextEditor from '../../../../Atoms/RichTextEditor';
-import CustomRichTextEditor from '../HighlighterBlock/CustomRichTextEditor';
 
 interface EditingBlockProps {
   id?: string;
-  poemWriting?: string;
-  handleUpdateStudentData?: (domID: string, input: string[]) => void;
-  setPoemWriting?: React.Dispatch<React.SetStateAction<string>>;
-  fields?: {poemHtml: string; poemText: string};
   setFields?: React.Dispatch<React.SetStateAction<{poemHtml: string; poemText: string}>>;
+  poemWriting?: string;
+  fields?: {poemHtml: string; poemText: string};
+  handleUpdateStudentData?: (domID: string, input: string[]) => void;
 }
 
 const EditingBlock = (props: EditingBlockProps) => {
-  const {
-    id,
-    poemWriting,
-    fields,
-    setFields,
-    setPoemWriting,
-    handleUpdateStudentData,
-  } = props;
+  const {id, poemWriting, handleUpdateStudentData, fields, setFields} = props;
 
-  const onEditorStateChange = (
-    html: string,
-    text: string,
-    fieldHtml: string,
-    field: string
-  ) => {};
-  const sampleMarkup =
-    '<b>Bold text</b>, <i>Italic text</i><br/ ><br />' +
-    '<a href="http://www.facebook.com">Example link</a>';
-  // handleUpdateStudentData(id, [html]);
-  const blocksFromHTML = convertFromHTML(sampleMarkup);
-  const state = ContentState.createFromBlockArray(
-    blocksFromHTML.contentBlocks,
-    blocksFromHTML.entityMap
-  );
-  console.log();
+  const onChange = (e: any) => {
+    handleUpdateStudentData(id, [e.target.value]);
+    setFields({...fields, poemText: e.target.value});
+  };
+
   return (
     <div className="w-full flex flex-col">
       <div className={`w-full h-full rounded-xl text-black`}>
-        <RichTextEditor
-          initialValue={fields.poemHtml}
-          onChange={(html, text) =>
-            setFields({...fields, poemText: text, poemHtml: html})
-          }
+        <textarea
+          id={id}
+          className={`editingBlock w-full h-64 py-2 px-4 dark:text-white text-gray-900 mt-2 rounded-xl bg-gray-200 dark:bg-darker-gray`}
+          name="story"
+          onChange={onChange}
+          value={poemWriting}
+          rows={3}
+          cols={250}
         />
       </div>
     </div>

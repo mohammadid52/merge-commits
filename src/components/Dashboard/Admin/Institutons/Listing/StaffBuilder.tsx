@@ -29,6 +29,8 @@ import * as mutations from '../../../../../graphql/mutations';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
 import Status from '../../../../Atoms/Status';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
+
 interface StaffBuilderProps {
   instituteId: String;
   serviceProviders: {items: {id: string; providerID: string}[]};
@@ -309,9 +311,9 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           </h3>
           <div className="flex justify-end">
             {!showAddSection ? (
-              <Buttons
-                btnClass="ml-4 py-1"
-                label={'Add staff member'}
+              <AddButton
+                className="ml-4 py-1"
+                label={'New staff member'}
                 onClick={showAddStaffSection}
               />
             ) : (

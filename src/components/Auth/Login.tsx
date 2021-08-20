@@ -1,31 +1,35 @@
-import React, { useContext, useState, useEffect } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { useCookies } from 'react-cookie';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { FaKey } from 'react-icons/fa';
-import { AiOutlineEye } from 'react-icons/ai';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { AiOutlineEyeInvisible } from 'react-icons/ai';
-import { MdEmail } from 'react-icons/md';
-import { useHistory, Link, NavLink } from 'react-router-dom';
+import React, {useContext, useState, useEffect} from 'react';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import Auth from '@aws-amplify/auth';
+import {
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineLoading3Quarters,
+} from 'react-icons/ai';
+import {useHistory, NavLink} from 'react-router-dom';
+import {useCookies} from 'react-cookie';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import axios from 'axios';
 import * as queries from '../../graphql/queries';
 import * as customMutations from '../../customGraphql/customMutations';
-import { getAsset } from '../../assets';
-import { createUserUrl } from '../../utilities/urls';
-import axios from 'axios';
+import useDictionary from '../../customHooks/dictionary';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {getAsset} from '../../assets';
+import {createUserUrl} from '../../utilities/urls';
+
 interface LoginProps {
   setJustLoggedIn?: any;
   updateAuthState: Function;
 }
 
-const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
+const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
-  const { theme, state, clientKey, dispatch } = useContext(GlobalContext);
-  let [message, setMessage] = useState<{ show: boolean; type: string; message: string }>({
+  const {userLanguage, clientKey, dispatch} = useContext(GlobalContext);
+  const {AuthDict} = useDictionary(clientKey);
+
+  let [message, setMessage] = useState<{show: boolean; type: string; message: string}>({
     show: false,
     type: '',
     message: '',
@@ -49,23 +53,23 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
     if (showPasswordField) {
       try {
         const user = await Auth.signIn(username, password);
-        dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
+        dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
         if (isChecked) {
-          setCookie('cred', { email: username, isChecked, password }, { path: '/' });
+          setCookie('cred', {email: username, isChecked, password}, {path: '/'});
         } else {
           removeCookie('cred');
         }
         setCookie(
           'auth',
-          { email: username, authId: user.username },
-          { secure: false, path: '/' }
+          {email: username, authId: user.username},
+          {secure: false, path: '/'}
         );
         sessionStorage.setItem(
           'accessToken',
           user.signInUserSession.accessToken.jwtToken
         );
         let userInfo: any = await API.graphql(
-          graphqlOperation(queries.getPerson, { email: username, authId: user.username })
+          graphqlOperation(queries.getPerson, {email: username, authId: user.username})
         );
         userInfo = userInfo.data.getPerson;
         dispatch({
@@ -87,22 +91,22 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
           lastLoggedIn: new Date().toISOString(),
         };
         const update: any = await API.graphql(
-          graphqlOperation(customMutations.updatePersonLoginTime, { input })
+          graphqlOperation(customMutations.updatePersonLoginTime, {input})
         );
         setJustLoggedIn(true);
         updateAuthState(true);
       } catch (error) {
-        console.log('error', error)
-        const errMsg = { show: true, type: 'error' };
+        console.log('error', error);
+        const errMsg = {show: true, type: 'error'};
         if (!username) {
-          setMessage({ ...errMsg, message: 'Please enter your email' });
+          setMessage({...errMsg, message: 'Please enter your email'});
         } else if (!username.includes('@')) {
           setMessage({
             ...errMsg,
             message: 'Your email is not in the expected email address format',
           });
         } else if (!password) {
-          setMessage({ ...errMsg, message: 'Please enter your password' });
+          setMessage({...errMsg, message: 'Please enter your password'});
         } else {
           manageSignInError(error, false);
         }
@@ -118,41 +122,44 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
             show: false,
             type: '',
             message: '',
-          })
+          });
           toggleLoading(false);
         }
       } catch (error) {
-        console.log('error', error)
+        console.log('error', error);
         if (error.code === 'NotAuthorizedException') {
           if (error.message === 'Incorrect username or password.') {
             setShowPasswordField(true);
-          } else if (error.message === 'Temporary password has expired and must be reset by an administrator.') {
+          } else if (
+            error.message ===
+            'Temporary password has expired and must be reset by an administrator.'
+          ) {
             try {
-              await axios.post(createUserUrl, { email: username, status: 'temporary' });
+              await axios.post(createUserUrl, {email: username, status: 'temporary'});
               setMessage({
                 show: true,
                 type: 'success',
-                message: 'Your account has been activated by the admin. Please click on enter or login and create you password to continue.',
-              })
+                message:
+                  'Your account has been activated by the admin. Please click on enter or login and create you password to continue.',
+              });
             } catch (err) {
-              console.log('Error temporary password could not be reset')
+              console.log('Error temporary password could not be reset');
             }
           }
-        }
-        else if (error.code === 'UserNotConfirmedException') {
+        } else if (error.code === 'UserNotConfirmedException') {
           try {
-            await axios.post(createUserUrl, { email: username, status: 'unconfirmed' });
+            await axios.post(createUserUrl, {email: username, status: 'unconfirmed'});
             setMessage({
               show: true,
               type: 'success',
-              message: 'Your account has been activated by the admin. Please click on enter or login and create you password to continue.',
-            })
+              message:
+                'Your account has been activated by the admin. Please click on enter or login and create you password to continue.',
+            });
             // confirm user, set password, and sign in which should ask them to create a new password.
           } catch (err) {
-            console.log('Error in resetting unconfirmed user.')
+            console.log('Error in resetting unconfirmed user.');
           }
-        }
-        else {
+        } else {
           manageSignInError(error, true);
         }
         toggleLoading(false);
@@ -195,8 +202,8 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
     });
   };
 
-  const handleChange = (e: { target: { id: any; value: any } }) => {
-    const { id, value } = e.target;
+  const handleChange = (e: {target: {id: any; value: any}}) => {
+    const {id, value} = e.target;
     setInput((input) => {
       if (id === 'email') {
         return {
@@ -233,15 +240,15 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
     try {
       await Auth.completeNewPassword(newUser, password);
       const user = await Auth.signIn(username, password);
-      dispatch({ type: 'LOG_IN', payload: { email: username, authId: user.username } });
+      dispatch({type: 'LOG_IN', payload: {email: username, authId: user.username}});
       setCookie(
         'auth',
-        { email: username, authId: user.username },
-        { secure: false, path: '/' }
+        {email: username, authId: user.username},
+        {secure: false, path: '/'}
       );
       sessionStorage.setItem('accessToken', user.signInUserSession.accessToken.jwtToken);
       let userInfo: any = await API.graphql(
-        graphqlOperation(queries.getPerson, { email: username, authId: user.username })
+        graphqlOperation(queries.getPerson, {email: username, authId: user.username})
       );
       userInfo = userInfo.data.getPerson;
       dispatch({
@@ -263,7 +270,7 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
         lastLoggedIn: new Date().toISOString(),
       };
       const update: any = await API.graphql(
-        graphqlOperation(customMutations.updatePersonLoginTime, { input })
+        graphqlOperation(customMutations.updatePersonLoginTime, {input})
       );
       updateAuthState(true);
       toggleLoading(false);
@@ -334,18 +341,19 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
               <>
                 <div
                   className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
-                  <p> Login </p>
+                  <p>{AuthDict[userLanguage].VERIFY_EMAIL} </p>
                 </div>
                 <div className="h-auto flex-grow flex flex-col justify-center">
                   <div className="w-full mb-2 flex flex-col justify-around items-center">
                     {message.show ? (
                       <p
-                        className={`text-xs text-center ${message.type === 'success'
+                        className={`text-xs text-center ${
+                          message.type === 'success'
                             ? 'text-green-500'
                             : message.type === 'error'
-                              ? 'text-red-500'
-                              : null
-                          }`}>
+                            ? 'text-red-500'
+                            : null
+                        }`}>
                         {message.message}
                       </p>
                     ) : null}
@@ -373,11 +381,11 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                             onClick={() => setPassToggle(!passToggle)}
                             className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
                             {passToggle ? (
-                              <IconContext.Provider value={{ className: 'w-auto ' }}>
+                              <IconContext.Provider value={{className: 'w-auto '}}>
                                 <AiOutlineEye size={24} />
                               </IconContext.Provider>
                             ) : (
-                              <IconContext.Provider value={{ className: 'w-auto' }}>
+                              <IconContext.Provider value={{className: 'w-auto'}}>
                                 <AiOutlineEyeInvisible size={24} />
                               </IconContext.Provider>
                             )}
@@ -413,7 +421,7 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                       </div>
                     </>
                   )}
-                  <div className="relative h-4.5/10 flex flex-col justify-center items-center">
+                  <div className="relative flex flex-col justify-center items-center">
                     <button
                       disabled={isToggled}
                       className={`p-3 mb-4 ${getAsset(
@@ -442,9 +450,9 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                         Request your session leader to reset your password.
                       </div>
                     </NavLink> */}
-                    <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
-                        Request your session leader to reset your password.
-                      </div>
+                    {/* <div className="text-bold text-center text-blueberry hover:text-blue-500 mb-2">
+                      Request your session leader to reset your password.
+                    </div> */}
                   </div>
                 </div>
               </>
@@ -458,24 +466,40 @@ const Login = ({ updateAuthState, setJustLoggedIn }: LoginProps) => {
                   <div className="w-full mb-2 flex flex-col justify-around items-center">
                     {message.show ? (
                       <p
-                        className={`text-xs text-center ${message.type === 'success'
+                        className={`text-xs text-center ${
+                          message.type === 'success'
                             ? 'text-green-500'
                             : message.type === 'error'
-                              ? 'text-red-500'
-                              : null
-                          }`}>
+                            ? 'text-red-500'
+                            : null
+                        }`}>
                         {message.message}
                       </p>
                     ) : null}
                   </div>
                   <div className="input relative w-full mb-4">
+                    <div className="absolute w-6 right-0 transform -translate-x-1">
+                      <div
+                        onClick={() => setPassToggle((prevToggle) => !prevToggle)}
+                        className="mr-2 text-gray-500 cursor-pointer hover:text-grayscale transform translate-y-1/2">
+                        {passToggle ? (
+                          <IconContext.Provider value={{className: 'w-auto '}}>
+                            <AiOutlineEye size={24} />
+                          </IconContext.Provider>
+                        ) : (
+                          <IconContext.Provider value={{className: 'w-auto'}}>
+                            <AiOutlineEyeInvisible size={24} />
+                          </IconContext.Provider>
+                        )}
+                      </div>
+                    </div>
                     <label className="hidden" htmlFor="password">
                       Password
                     </label>
                     <input
                       className="w-full p-3  border-0 border-medium-gray border-opacity-20 rounded-lg bg-light-gray bg-opacity-10"
                       placeholder="Password"
-                      type="password"
+                      type={passToggle ? 'text' : 'password'}
                       id="password"
                       name="password"
                       value={input.password}

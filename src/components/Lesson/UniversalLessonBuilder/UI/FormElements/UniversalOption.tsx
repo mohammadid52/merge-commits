@@ -13,6 +13,7 @@ import {classNames} from './TextInput';
 import {optionResponses} from '../../../../../utilities/staticData';
 import {isEmpty} from '@aws-amplify/core';
 import Tabs from '../UIComponents/Tabs';
+import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 
 const InputContainer = ({
   shouldShowActions,
@@ -292,8 +293,6 @@ const UniversalOption = ({
   setUnsavedChanges,
   askBeforeClose,
   createNewContent,
-  suggestionModal,
-  setSuggestionModal,
 }: any) => {
   const {
     clientKey,
@@ -301,6 +300,7 @@ const UniversalOption = ({
     state: {lessonPage: {theme: lessonPageTheme = 'dark', themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const {suggestionModal, setSuggestionModal} = useULBContext();
 
   const onOptionInputChange = (idx: number, idx2: number, e: any) => {
     update(list[idx], `options[${idx2}].text`, () => e.target.value);

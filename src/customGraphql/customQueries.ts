@@ -1555,6 +1555,7 @@ export const listCurriculumsForLessons = /* GraphQL */ `
       items {
         id
         name
+        image
         description
         objectives
         languages
@@ -2277,6 +2278,7 @@ export const getClassDetails = /* GraphQL */ `
         items {
           id
           classID
+          group
           studentID
           studentEmail
           studentAuthID
@@ -3558,6 +3560,71 @@ export const listRoomsByActiveSyllabusId = /* GraphQL */ `
         activeSyllabus
       }
       nextToken
+    }
+  }
+`;
+
+export const getStaffsForInstitution = /* GraphQL */ `
+  query ListStaffs($filter: ModelStaffFilterInput, $limit: Int, $nextToken: String) {
+    listStaffs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        institution {
+          id
+          name
+        }
+        staffMember {
+          firstName
+          lastName
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
+export const getInstitutionBasicInfo = /* GraphQL */ `
+  query GetInstitution($id: ID!) {
+    getInstitution(id: $id) {
+      id
+      name
+    }
+  }
+`;
+
+export const getCurriculumRooms = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      rooms {
+        items {
+          roomID
+          room {
+            id
+            name
+            institutionID
+            institution{
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getCurriculumBasicInfo = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      name
+      institution{
+        id
+        name
+      }
     }
   }
 `;

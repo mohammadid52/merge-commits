@@ -1,5 +1,6 @@
 import {findIndex, get, update} from 'lodash';
 import React, {useContext, createContext, useState} from 'react';
+import {useHistory} from 'react-router';
 import {UniversalLesson, PagePart} from '../interfaces/UniversalLessonInterfaces';
 export const UniversalLessonBuilderContext = createContext(null);
 
@@ -152,8 +153,39 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
   const [newLessonPlanShow, setNewLessonPlanShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [selID, setSelID] = useState({pageContentID: '', partContentID: ''});
+  const [selIDForHover, setSelIDForHover] = useState({
+    pageContentID: '',
+    partContentID: '',
+  });
 
   const [toolbarOnTop, setToolbarOnTop] = useState(true);
+
+  const [suggestionModal, setSuggestionModal] = useState({
+    show: false,
+    data: [{title: '', content: [{id: '', text: ''}]}],
+    selectedResponse: [],
+    idx: 0,
+  });
+
+  const history = useHistory();
+
+  /**
+   *
+   * @param lessonId
+   * @param pageId
+   * @NOTE Use this function only for ULB navigation
+   */
+  const pushUserToThisId = (lessonId: string, pageId: string) => {
+    try {
+      history.push(
+        `/dashboard/lesson-builder/lesson/page-builder?lessonId=${lessonId}&pageId=${pageId}`
+      );
+    } catch (error) {
+      console.log(
+        '@pushUserToThisId: Error while navigating user to other page: ' + error
+      );
+    }
+  };
 
   return (
     <UniversalLessonBuilderContext.Provider
@@ -161,11 +193,13 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         previewMode,
         setPreviewMode,
         selectedLessonID,
-
+        suggestionModal,
+        setSuggestionModal,
         editMode,
         toolbarOnTop,
         setToolbarOnTop,
         selID,
+        pushUserToThisId,
         setSelID,
         setEditMode,
         setSelectedLessonID,
@@ -175,6 +209,8 @@ export const UniversalLessonBuilderProvider = ({children}: any) => {
         universalLessonDetails,
         selectedPageID,
         lessonPlanFields,
+        selIDForHover,
+        setSelIDForHover,
         setLessonPlanFields,
         activeTab,
         setActiveTab,

@@ -22,6 +22,7 @@ import {getAsset} from '../../../../../assets';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
+  designerListLoading: boolean;
   designersList: InputValueObject[];
   selectedDesigners: InputValueObject[];
   changeLessonType: (type: string) => void;
@@ -32,6 +33,7 @@ interface AddNewLessonFormProps {
   lessonId: string;
   institutionList: any[];
   setUnsavedChanges: Function;
+  fetchStaffByInstitution: (institutionID: string) => void;
 }
 
 const periodOptions = [
@@ -49,7 +51,9 @@ const periodOptions = [
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {
+    fetchStaffByInstitution,
     formData,
+    designerListLoading,
     designersList,
     selectedDesigners,
     setSelectedDesigners,
@@ -112,6 +116,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       ...validation,
       [field]: '',
     });
+    if (field === 'institution') {
+      fetchStaffByInstitution(id);
+    }
   };
 
   const selectLanguage = (id: string, name: string, value: string) => {
@@ -451,17 +458,6 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                 <div className="grid grid-cols-2">
                   <div className="px-3 py-4">
                     <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
-                      {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
-                    </label>
-                    <MultipleSelector
-                      selectedItems={selectedDesigners}
-                      placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
-                      list={designersList}
-                      onChange={selectDesigner}
-                    />
-                  </div>
-                  <div className="px-3 py-4">
-                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                       {AddNewLessonFormDict[userLanguage]['SELECTINSTITUTION']}{' '}
                       <span className="text-red-500"> * </span>
                     </label>
@@ -477,6 +473,21 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                     {validation.institution && (
                       <p className="text-red-600 text-sm">{validation.institution}</p>
                     )}
+                  </div>
+                  <div className="px-3 py-4">
+                    <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
+                      {AddNewLessonFormDict[userLanguage]['SELECTDESIGNER']}
+                    </label>
+                    <MultipleSelector
+                      selectedItems={selectedDesigners}
+                      placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
+                      list={designersList}
+                      onChange={selectDesigner}
+                      noOptionMessage={
+                        designerListLoading ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING'] :
+                        AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
+                      }
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">

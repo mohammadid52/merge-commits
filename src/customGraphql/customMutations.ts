@@ -583,6 +583,7 @@ export const createClassStudent = /* GraphQL */ `
   ) {
     createClassStudent(input: $input, condition: $condition) {
       id
+      group
       classID
       studentID
       status
@@ -598,6 +599,18 @@ export const updateClassStudent = /* GraphQL */ `
     $condition: ModelClassStudentConditionInput
   ) {
     updateClassStudent(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;
+
+export const deleteClassStudent = /* GraphQL */ `
+  mutation DeleteClassStudent(
+    $input: DeleteClassStudentInput!
+    $condition: ModelClassStudentConditionInput
+  ) {
+    deleteClassStudent(input: $input, condition: $condition) {
       id
       status
     }

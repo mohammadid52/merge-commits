@@ -20,7 +20,7 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
 
   const Paragraph = ({inputID, inputValue}: any) => {
     return (
-      <div className="flex w-auto items-center p-4">
+      <div className="flex w-auto items-center p-4 paragraph-block">
         <p key={inputID} id={inputID} className={`whitespace-pre-wrap ${themeTextColor}`}>
           {ReactHtmlParser(inputValue.value)}
         </p>
@@ -28,12 +28,12 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
     );
   };
 
-  const composeParagraph = (inputID: string, inputValue: string, inputType: string) => {
-    switch (inputType) {
-      default:
-        return <Paragraph inputID={inputID} inputValue={inputValue} />;
-    }
-  };
+  // const composeParagraph = (inputID: string, inputValue: string, inputType: string) => {
+  //   switch (inputType) {
+  //     default:
+  //       return ;
+  //   }
+  // };
 
   return (
     <div className="w-auto">
@@ -41,7 +41,8 @@ export const ParagraphBlock = (props: ParagraphBlockProps) => {
         value.length > 0 &&
         value.map((v: any, i: number) => (
           <React.Fragment key={`paragraphBlock_${i}`}>
-            {composeParagraph(id, v, type)}
+            {/* {composeParagraph(id, v, type)} */}
+            <Paragraph inputID={id} inputValue={v} />
           </React.Fragment>
         ))}
     </div>

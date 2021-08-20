@@ -7,6 +7,7 @@ import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 
 interface ClassListProps {
   classes: {items: {name?: string; id: string}[]};
@@ -39,9 +40,9 @@ const ClassList = (props: ClassListProps) => {
           {classes.items && classes.items.length > 0 ? (
             <Fragment>
               <div className="flex justify-end w-full m-auto ">
-                <Buttons
-                  btnClass="mx-4"
-                  label={Institute_class[userLanguage]['BUTTON']['CREATE']}
+                <AddButton
+                  className="mx-4"
+                  label={Institute_class[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewClass}
                 />
               </div>
@@ -90,9 +91,9 @@ const ClassList = (props: ClassListProps) => {
           ) : (
             <Fragment>
               <div className="flex justify-center mt-8">
-                <Buttons
-                  btnClass="mx-4"
-                  label="Create new class"
+                <AddButton
+                  className="mx-4"
+                  label={Institute_class[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewClass}
                 />
               </div>

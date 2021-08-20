@@ -14,7 +14,6 @@ import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderConte
 import composePartContent from '../../../UniversalLessonBlockComponents/composePartContent';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import {FORM_TYPES} from '../../UI/common/constants';
-import {filter} from 'lodash';
 
 const BuilderRowComposer = (props: RowComposerProps) => {
   const {
@@ -30,7 +29,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   const {
     state: {lessonPage: {themeTextColor = ''} = {}},
   } = useContext(GlobalContext);
-  const {previewMode, updateMovableList, enableDnD} = useULBContext();
 
   const handleEditBlockToggle = (dataID: string) => {
     if (dataID) {
@@ -42,7 +40,14 @@ const BuilderRowComposer = (props: RowComposerProps) => {
     }
   };
 
-  const {selectedPageID, universalLessonDetails} = useULBContext();
+  const {
+    selectedPageID,
+    universalLessonDetails,
+    selIDForHover,
+    previewMode,
+    updateMovableList,
+    enableDnD,
+  } = useULBContext();
 
   const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
@@ -91,24 +96,24 @@ const BuilderRowComposer = (props: RowComposerProps) => {
   // this is only for header component
   const paddingForHeader = (type: any) => (type.includes('header') ? 'px-4 mb-3' : '');
 
-  const removeWEComponents = () => {
-    if (selectedPageDetails && selectedPageDetails.pageContent) {
-      return filter(
-        selectedPageDetails.pageContent,
-        (pgContent) => pgContent.partType !== 'writing-exercise'
-      );
-    }
-  };
-
-  const filteredLesson: UniversalLessonPage['pageContent'] = removeWEComponents();
-
   return (
     <>
-      {selectedPageID && filteredLesson && filteredLesson.length > 0 ? (
+      {selectedPageID &&
+      selectedPageDetails &&
+      selectedPageDetails.pageContent &&
+      selectedPageDetails.pageContent.length > 0 ? (
         [
-          filteredLesson.map((pagePart: PagePart, idx: number): any => (
+          selectedPageDetails.pageContent.map((pagePart: PagePart, idx: number): any => (
             // ONE ROW
-            <div key={`row_pagepart_${idx}`} className="relative">
+            <div
+              key={`row_pagepart_${idx}`}
+              className={`relative ${
+                selIDForHover?.pageContentID && !selIDForHover?.partContentID
+                  ? `opacity-${
+                      pagePart.id === selIDForHover?.pageContentID ? '100' : '50'
+                    } transition-opacity duration-200`
+                  : ''
+              }`}>
               <EditOverlayBlock
                 key={`pp_${idx}`}
                 mode={mode}
@@ -151,6 +156,17 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                   {(provided) => {
                                     return (
                                       <li
+                                        className={
+                                          selIDForHover?.pageContentID &&
+                                          selIDForHover?.partContentID
+                                            ? `transition-opacity duration-200 opacity-${
+                                                selIDForHover?.partContentID ===
+                                                content.id
+                                                  ? '100'
+                                                  : '50'
+                                              } `
+                                            : ''
+                                        }
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}>
@@ -189,7 +205,10 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                               )}`}>
                                               <div
                                                 className={`${
-                                                  content.type === FORM_TYPES.JUMBOTRON
+                                                  content.type === FORM_TYPES.JUMBOTRON ||
+                                                  content.type.includes(
+                                                    'writing-exercise'
+                                                  )
                                                     ? 'px-4 pt-4'
                                                     : content.type === 'header'
                                                     ? ''

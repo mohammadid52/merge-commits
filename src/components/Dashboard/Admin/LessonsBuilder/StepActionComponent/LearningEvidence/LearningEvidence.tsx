@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {API, graphqlOperation} from 'aws-amplify';
 
 import * as queries from '../../../../../../graphql/queries';
+import * as mutations from '../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../customGraphql/customQueries';
 
 import {GlobalContext} from '../../../../../../contexts/GlobalContext';
@@ -15,6 +16,7 @@ import PageWrapper from '../../../../../Atoms/PageWrapper';
 
 import AddEvidence from './AddEvidence';
 import MeasurementsList from './MeasurementsList';
+import CourseMeasurementsCard from './CourseMeasurementsCard';
 
 interface ILearningEvidence {
   fetchLessonRubrics: () => void;
@@ -37,12 +39,13 @@ const LearningEvidence = ({
   institutionId,
   serverMessage,
   setUnsavedChanges,
-  selectedMeasurements, setSelectedMeasurements,
+  selectedMeasurements,
+  setSelectedMeasurements,
   updating,
   updateMeasurementList,
 }: ILearningEvidence) => {
   const {clientKey, userLanguage} = useContext(GlobalContext);
-  const {AddNewLessonFormDict, BUTTONS} = useDictionary(clientKey);
+  const {AddNewLessonFormDict, LearningEvidenceDict, BUTTONS} = useDictionary(clientKey);
   const [addModalShow, setAddModalShow] = useState(false);
   const [selectedCurriculumList, setSelectedCurriculumList] = useState([]);
   // const [selectedMeasurements, setSelectedMeasurements] = useState<any>([]);
@@ -66,49 +69,55 @@ const LearningEvidence = ({
 
   const fetchObjectives = async (curricularId: string) => {
     const learningEvidenceList: any[] = [];
-    const activeIndex = selectedCurriculumList.findIndex(
-      (item) => item.id === curricularId
+    // const activeIndex = selectedCurriculumList.findIndex(
+    //   (item) => item.id === curricularId
+    // );
+    // const temp = [...selectedCurriculumList];
+    // if (!temp[activeIndex].learningEvidenceList) {
+    setEvidenceListLoading(true);
+    let rubricList: any = await API.graphql(
+      graphqlOperation(customQueries.listRubrics, {
+        filter: {
+          curriculumID: {eq: curricularId},
+        },
+      })
     );
-    const temp = [...selectedCurriculumList];
-    if (!temp[activeIndex].learningEvidenceList) {
-      setEvidenceListLoading(true);
-      let rubricList: any = await API.graphql(
-        graphqlOperation(customQueries.listRubrics, {
+    rubricList = rubricList.data.listRubrics?.items || [];
+
+    const [results, learningObjectiveSeqResult, topics]: any = await Promise.all([
+      await API.graphql(
+        graphqlOperation(queries.listLearningObjectives, {
           filter: {
             curriculumID: {eq: curricularId},
           },
         })
-      );
-      rubricList = rubricList.data.listRubrics?.items || [];
+      ),
+      await API.graphql(
+        graphqlOperation(queries.getCSequences, {id: `l_${curricularId}`})
+      ),
+      await API.graphql(
+        graphqlOperation(customQueries.listTopics, {
+          filter: {
+            curriculumID: {eq: curricularId},
+          },
+        })
+      ),
+    ]);
 
-      const [results, topics]: any = await Promise.all([
-        await API.graphql(
-          graphqlOperation(queries.listLearningObjectives, {
-            filter: {
-              curriculumID: {eq: curricularId},
-            },
-          })
-        ),
-        await API.graphql(
-          graphqlOperation(customQueries.listTopics, {
-            filter: {
-              curriculumID: {eq: curricularId},
-            },
-          })
-        ),
-      ]);
+    const topicsList = topics.data?.listTopics?.items;
+    const learningObjectives = results.data?.listLearningObjectives?.items;
+    const learningObjectiveSeq =
+      learningObjectiveSeqResult?.data?.getCSequences?.sequence || [];
 
-      const topicsList = topics.data?.listTopics?.items;
-      const learningObjectives = results.data?.listLearningObjectives?.items;
-
-      learningObjectives?.map((objective: any) => {
-        const associatedTopics = topicsList.filter(
-          (topic: any) => topic.learningObjectiveID === objective.id
-        );
-        associatedTopics.map((topic: any) => {
+    const learningObjectiveData = learningObjectives?.map((objective: any) => {
+      objective.index = learningObjectiveSeq.indexOf(objective.id);
+      const associatedTopics = topicsList
+        .filter((topic: any) => topic.learningObjectiveID === objective.id)
+        .map((topic: any) => {
           const associatedRubrics = rubricList.filter(
             (rubric: any) => rubric.topicID === topic.id
           );
+          topic.associatedRubrics = associatedRubrics;
           associatedRubrics.map((rubric: any) => {
             learningEvidenceList.push({
               learningObjectiveName: objective.name,
@@ -117,15 +126,18 @@ const LearningEvidence = ({
               rubricId: rubric.id,
             });
           });
+          return topic;
         });
-      });
-      temp[activeIndex] = {
-        ...temp[activeIndex],
-        learningEvidenceList,
-      };
-      setSelectedCurriculumList(temp);
-      setEvidenceListLoading(false);
-    }
+      objective.associatedTopics = associatedTopics;
+      return objective;
+    });
+    setEvidenceListLoading(false);
+    return {
+      learningObjectiveData,
+      learningEvidenceList: learningEvidenceList.sort((a: any, b: any) =>
+        a.index > b.index ? 1 : -1
+      ),
+    };
   };
 
   const fetchCurriculum = async () => {
@@ -155,6 +167,15 @@ const LearningEvidence = ({
           });
         }
       });
+      await Promise.all(
+        selectedCurriculums.map(async (curriculum: any) => {
+          const {learningObjectiveData, learningEvidenceList} = await fetchObjectives(
+            curriculum.id
+          );
+          curriculum.learningObjectiveData = learningObjectiveData;
+          curriculum.learningEvidenceList = learningEvidenceList;
+        })
+      );
       setSelectedCurriculumList(selectedCurriculums);
       setLoading(false);
     } catch (error) {
@@ -213,18 +234,33 @@ const LearningEvidence = ({
   return (
     <div className="flex m-auto justify-center">
       <div className="">
-        <PageWrapper defaultClass="px-8 border-0 border-gray-200">
+        <PageWrapper defaultClass="px-2 xl:px-8 border-0 border-gray-200">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
+            {LearningEvidenceDict[userLanguage]['TITLE']}
+          </h3>
           {loading ? (
             <div className="mt-4">
               <Loader />
             </div>
           ) : titleList.length ? (
             <>
-              <div className="w-full flex justify-between border-b-0 border-gray-200 mt-8">
-                <Accordion
+              <div className="w-full flex justify-between">
+                <div className="grid px-2 xl:px-6 gap-5 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 lg:max-w-none">
+                  {selectedCurriculumList.map((curriculum) => (
+                    <CourseMeasurementsCard
+                      curriculum={curriculum}
+                      handleCheckboxChange={handleCheckboxChange}
+                      selectedMeasurements={selectedMeasurements}
+                      setAddModalShow={setAddModalShow}
+                      key={curriculum.id}
+                    />
+                  ))}
+                </div>
+
+                {/* <Accordion
                   titleList={titleList}
                   actionOnAccordionClick={fetchObjectives}
-                />
+                /> */}
               </div>
               <div className="flex justify-end mt-8">
                 <Buttons
