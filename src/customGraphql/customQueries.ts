@@ -3593,3 +3593,38 @@ export const getInstitutionBasicInfo = /* GraphQL */ `
     }
   }
 `;
+
+export const getCurriculumRooms = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      rooms {
+        items {
+          roomID
+          room {
+            id
+            name
+            institutionID
+            institution{
+              id
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getCurriculumBasicInfo = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      name
+      institution{
+        id
+        name
+      }
+    }
+  }
+`;

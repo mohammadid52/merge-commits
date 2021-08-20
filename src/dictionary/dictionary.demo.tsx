@@ -1,3 +1,12 @@
+// Authentication pages
+const AuthDict: any = {
+  EN: {
+    VERIFY_EMAIL: 'Verify Email',
+  },
+  ES: {
+    VERIFY_EMAIL: 'TBD',
+  },
+};
 const BUTTONS: any = {
   EN: {
     ADD: 'Add',
@@ -98,6 +107,8 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
+    CLASSROOMS: 'Classrooms',
+    CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
     EDITCLASSROOM: 'Edit Classroom',
@@ -117,9 +128,11 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
+    LESSON_BUILDER: 'Lesson Builder',
     LESSON_EDITOR: 'Lesson Editor',
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
+    LOADING: 'Loading...',
   },
   ES: {
     HOME: 'CASA',
@@ -134,6 +147,7 @@ const BreadcrumsTitles: any = {
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
+    CLASSES: 'TBD',
     CURRICULUMBUILDER: 'TBD',
     LEARINGOBJECTIVE: 'TBD',
     AddMesurement: 'TBD',
@@ -468,6 +482,7 @@ const editClassDict: any = {
       NAME: 'Participant Name',
       GROUP: 'Group',
       STATUS: 'Status',
+      DATE: 'Date Added',
       ACTIONS: 'Actions',
     },
   },
@@ -502,6 +517,7 @@ const editClassDict: any = {
       NAME: 'nombre del estudiante',
       GROUP: 'TBD',
       STATUS: 'estado',
+      DATE: 'TBD',
       ACTIONS: 'comportamiento',
     },
   },
@@ -1831,6 +1847,50 @@ const AddProfileCheckpointDict: any = {
   },
 };
 
+const SyllabusDict: any = {
+  EN: {
+    TITLE: 'Unit Builder',
+    LESSON_PLAN: 'LESSON PLAN MANAGER',
+    ADD_NEW_LESSON: 'New Lesson',
+    SELECT_LESSON: 'Select Lesson',
+    HEADING: 'UNIT INFORMATION',
+    LESSON_PLAN_HEADING: 'LESSON PLAN MANAGER',
+    TABLE_HEADS: {
+      NUMBER: 'No.',
+      LESSON_NAME: 'Lesson Name',
+      MEASUREMENTS: 'Measurements',
+      TYPE: 'Type',
+      ACTION: 'Actions',
+    },
+    MESSAGES: {
+      wantsave: 'Do you want to save changes before moving forward?',
+      fetchlist: 'Error while fetching lessons list data.',
+      fetchdesign: 'Error while fetching Designers list Please try again later.',
+      UPDATE_ERROR: 'Error while updating please try again later.',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    LESSON_PLAN: 'TBD',
+    ADD_NEW_LESSON: 'TBD',
+    SELECT_LESSON: 'TBD',
+    HEADING: 'TBD',
+    LESSON_PLAN_HEADING: 'TBD',
+    TABLE_HEADS: {
+      NUMBER: 'TBD',
+      LESSON_NAME: 'TBD',
+      MEASUREMENTS: 'TBD',
+      TYPE: 'TBD',
+      ACTION: 'TBD',
+    },
+    MESSAGES: {
+      wantsave: 'TBD',
+      fetchlist: 'TBD',
+      fetchdesign: 'TBD',
+    },
+  },
+};
+
 const AddSyllabusDict: any = {
   EN: {
     title: 'Unit Builder',
@@ -2850,7 +2910,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'Lesson details saved successfully.',
       SAVEERR: 'Unable to save Lesson details, Please try again later.',
       LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
-      NODESIGNEROPTION: 'Select Institute first',
+      NODESIGNEROPTION: 'Select Institution first',
     },
     NEXT: 'Next',
     SAVE: 'Save',
@@ -3325,6 +3385,15 @@ const DashboardDict: any = {
   },
 };
 
+const LearningEvidenceDict: any = {
+  EN: {
+    TITLE: 'Learning Evidence',
+  },
+  ES: {
+    TITLE: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3332,6 +3401,7 @@ function paginationPage(lang: string, page: number, total: number) {
 }
 
 export {
+  AuthDict,
   CsvDict,
   paginationPage,
   BUTTONS,
@@ -3382,6 +3452,7 @@ export {
   EditTopicDict,
   ProfileCheckpointlookupDict,
   RegistrationDict,
+  SyllabusDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
@@ -3406,4 +3477,5 @@ export {
   LessonEditDict,
   LessonsListDict,
   EditQuestionModalDict,
+  LearningEvidenceDict,
 };

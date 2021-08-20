@@ -22,6 +22,7 @@ import {getAsset} from '../../../../../assets';
 
 interface AddNewLessonFormProps {
   formData: InitialData;
+  designerListLoading: boolean;
   designersList: InputValueObject[];
   selectedDesigners: InputValueObject[];
   changeLessonType: (type: string) => void;
@@ -32,6 +33,7 @@ interface AddNewLessonFormProps {
   lessonId: string;
   institutionList: any[];
   setUnsavedChanges: Function;
+  fetchStaffByInstitution: (institutionID: string) => void;
 }
 
 const periodOptions = [
@@ -49,7 +51,9 @@ const periodOptions = [
 
 const AddNewLessonForm = (props: AddNewLessonFormProps) => {
   const {
+    fetchStaffByInstitution,
     formData,
+    designerListLoading,
     designersList,
     selectedDesigners,
     setSelectedDesigners,
@@ -112,6 +116,9 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
       ...validation,
       [field]: '',
     });
+    if (field === 'institution') {
+      fetchStaffByInstitution(id);
+    }
   };
 
   const selectLanguage = (id: string, name: string, value: string) => {
@@ -476,6 +483,10 @@ const AddNewLessonForm = (props: AddNewLessonFormProps) => {
                       placeholder={AddNewLessonFormDict[userLanguage]['DESIGNER']}
                       list={designersList}
                       onChange={selectDesigner}
+                      noOptionMessage={
+                        designerListLoading ? AddNewLessonFormDict[userLanguage]['MESSAGES']['LOADING'] :
+                        AddNewLessonFormDict[userLanguage]['MESSAGES']['NODESIGNEROPTION']
+                      }
                     />
                   </div>
                 </div>
