@@ -70,6 +70,10 @@ const UnitBuilder = () => {
     languages: [{id: '1', name: 'English', value: 'EN'}],
   };
   const [syllabusData, setSyllabusData] = useState<IUnitData>(initialData);
+  const [curriculumData, setCurriculumData] = useState<any>({
+    name: '',
+    institution:{},
+  });
 
   useEffect(() => {
     if (step) {
@@ -88,8 +92,26 @@ const UnitBuilder = () => {
   };
 
   useEffect(() => {
+    fetchCurriculumBasicInfo()
     fetchSyllabusData();
   }, []);
+
+  const fetchCurriculumBasicInfo = async() => {
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumBasicInfo, {
+          id: curricularId,
+        })
+      );
+      const {name, institution} = result?.data.getCurriculum;
+      setCurriculumData({
+        name,
+        institution,
+      });
+    } catch (error) {
+      
+    }
+  }
 
   const fetchSyllabusData = async () => {
     if (syllabusId) {
@@ -159,17 +181,17 @@ const UnitBuilder = () => {
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: curriculumData.institution?.name || 'loading...',
       url: `/dashboard/manage-institutions/institution?id=${institutionId}`,
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
+      title: curriculumData.name || 'loading...',
       url: `/dashboard/manage-institutions/${institutionId}/curricular?id=${curricularId}`,
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['UnitBuilder'],
+      title: syllabusData?.name || BreadcrumsTitles[userLanguage]['UnitBuilder'],
       url: `/dashboard/manage-institutions/curricular/${curricularId}/syllabus/add`,
       last: true,
     },

@@ -1812,6 +1812,13 @@ const SyllabusDict: any = {
     SELECT_LESSON: 'Select Lesson',
     HEADING: 'UNIT INFORMATION',
     LESSON_PLAN_HEADING: 'LESSON PLAN MANAGER',
+    TABLE_HEADS: {
+      NUMBER: 'No.',
+      LESSON_NAME: 'Lesson Name',
+      MEASUREMENTS: 'Measurements',
+      TYPE: 'Type',
+      ACTION: 'Actions',
+    },
     MESSAGES: {
       wantsave: 'Do you want to save changes before moving forward?',
       fetchlist: 'Error while fetching lessons list data.',
@@ -1826,6 +1833,13 @@ const SyllabusDict: any = {
     SELECT_LESSON: 'TBD',
     HEADING: 'TBD',
     LESSON_PLAN_HEADING: 'TBD',
+    TABLE_HEADS: {
+      NUMBER: 'TBD',
+      LESSON_NAME: 'TBD',
+      MEASUREMENTS: 'TBD',
+      TYPE: 'TBD',
+      ACTION: 'TBD',
+    },
     MESSAGES: {
       wantsave: 'TBD',
       fetchlist: 'TBD',

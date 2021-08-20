@@ -79,19 +79,19 @@ const CourseCard = ({curriculum, lessonId, loading, postDeletion}: any) => {
       key={curriculum.id}>
       <div className="border-b-0 border-gray-200 p-4 pb-0 bg-gray-200">
         <div className="flex">
-          <div className="flex-shrink-0 h-10 w-10 flex items-center">
+          <div className="flex-shrink-0 h-14 w-14 flex items-center">
             {curriculum.image ? (
               <img
                 src={getImageFromS3Static(curriculum.image)}
-                className="h-8 w-8 rounded-full"
+                className="h-12 w-12 rounded-full"
               />
             ) : (
-              <span className="inline-flex items-center rounded-full border-0 border-gray-400 h-8 w-8 ">
+              <span className="inline-flex items-center rounded-full border-0 border-gray-400 h-12 w-12 ">
                 <FaGraduationCap />
               </span>
             )}
           </div>
-          <div className="text-lg inline-flex items-center">{curriculum.name}</div>
+          <div className="text-lg font-bold inline-flex items-center">{curriculum.name}</div>
         </div>
         <span
           className={`w-full py-2 font-medium text-md items-center inline-flex ${
@@ -116,10 +116,6 @@ const CourseCard = ({curriculum, lessonId, loading, postDeletion}: any) => {
           </ul>
         </span>
       </div>
-      {/* <span
-                    className="inline-flex items-center w-auto">
-                    <IoIosAdd className="w-10 h-10" />
-                  </span> */}
       <div className="p-4 pt-0">
         <div className="flex items-center py-1  my-4 whitespace-normal text-sm leading-5 text-gray-900">
           <span className="w-auto">
@@ -133,7 +129,6 @@ const CourseCard = ({curriculum, lessonId, loading, postDeletion}: any) => {
           {curriculum.associatedClassRoomData?.map(
             (classRoom: any, roomIndex: number) => (
               <div
-                // className={`border-b-0`}
                 key={classRoom.id}>
                 <div
                   className="flex items-center py-1 whitespace-normal text-sm leading-5 text-gray-900 cursor-pointer"

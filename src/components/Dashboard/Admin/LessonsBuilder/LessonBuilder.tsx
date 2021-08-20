@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoDocumentText, IoCardSharp} from 'react-icons/io5';
+import {IoDocumentText, IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -10,6 +10,7 @@ import * as customQueries from '../../../../customGraphql/customQueries';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
 import BreadCrums from '../../../Atoms/BreadCrums';
+import Buttons from '../../../Atoms/Buttons';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import Loader from '../../../Atoms/Loader';
@@ -788,14 +789,16 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={gobackToLessonsList}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div> */}
+        {params.get('from') ? (
+          <div className="flex justify-end py-4 mb-4 w-5/10">
+            <Buttons
+              label="Go back"
+              btnClass="mr-4"
+              onClick={() => history.goBack()}
+              Icon={IoArrowUndoCircleOutline}
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* Body */}

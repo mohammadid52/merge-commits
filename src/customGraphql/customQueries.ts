@@ -3615,3 +3615,16 @@ export const getCurriculumRooms = /* GraphQL */ `
     }
   }
 `;
+
+export const getCurriculumBasicInfo = /* GraphQL */ `
+  query GetCurriculum($id: ID!) {
+    getCurriculum(id: $id) {
+      id
+      name
+      institution{
+        id
+        name
+      }
+    }
+  }
+`;

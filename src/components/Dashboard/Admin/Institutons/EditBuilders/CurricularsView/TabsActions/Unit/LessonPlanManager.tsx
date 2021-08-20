@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {useHistory} from 'react-router';
 import API, {graphqlOperation} from '@aws-amplify/api';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 
 import {GlobalContext} from '../../../../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../../../../customHooks/dictionary';
@@ -9,11 +10,11 @@ import * as mutations from '../../../../../../../../graphql/mutations';
 import * as customQueries from '../../../../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../../../../customGraphql/customMutations';
 
-import Selector from '../../../../../../../Atoms/Form/Selector';
-import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
 import {getLessonType, reorder} from '../../../../../../../../utilities/strings';
+import Selector from '../../../../../../../Atoms/Form/Selector';
 import {DeleteActionBtn} from '../../../../../../../Atoms/Buttons/DeleteActionBtn';
 import AddButton from '../../../../../../../Atoms/Buttons/AddButton';
+import Loader from '../../../../../../../Atoms/Loader';
 import ModalPopUp from '../../../../../../../Molecules/ModalPopUp';
 import {getAsset} from '../../../../../../../../assets';
 
@@ -38,6 +39,7 @@ const LessonPlanManager = ({
   const {SyllabusDict} = useDictionary(clientKey);
   const themeColor = getAsset(clientKey, 'themeClassName');
 
+  const [loading, setLoading] = useState(false);
   const [addingLesson, setAddingLesson] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [allLessonsList, setAllLessonsList] = useState([]);
@@ -212,6 +214,7 @@ const LessonPlanManager = ({
 
   const fetchLessonsList = async () => {
     try {
+      setLoading(true);
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listUniversalLessonsOptions, {
           filter: {institutionID: {eq: institutionId}},
@@ -229,10 +232,9 @@ const LessonPlanManager = ({
           name: `${item.title} - ${item.type && getLessonType(item.type)}`,
           value: item.title,
         }));
-      console.log(updatedList, 'updatedList++++');
-
       setAllLessonsList([...sortedList]);
       setDropdownLessonsList([...updatedList]);
+      setLoading(false);
     } catch {
       setMessages({
         show: true,
@@ -308,9 +310,13 @@ const LessonPlanManager = ({
       // setEditLesson({type, id});
     } else {
       if (type === 'lesson') {
-        history.push(`/dashboard/lesson-builder/lesson/edit?lessonId=${id}`);
+        history.push(
+          `/dashboard/lesson-builder/lesson/edit?lessonId=${id}&from=lesson-planner`
+        );
       } else {
-        history.push(`/dashboard/lesson-builder/lesson/edit?assessmentId=${id}`);
+        history.push(
+          `/dashboard/lesson-builder/lesson/edit?assessmentId=${id}&from=lesson-planner`
+        );
       }
     }
   };
@@ -319,7 +325,7 @@ const LessonPlanManager = ({
     <div className="bg-white shadow-5 mb-4">
       {/* *************** SECTION HEADER ************ */}
       <div
-        className={`flex items-center justify-between p-2 pl-2 ${theme.borderColor[themeColor]}`}>
+        className={`flex items-center justify-between p-4 ${theme.borderColor[themeColor]}`}>
         {/* <h3 className="text-lg leading-6 font-medium text-gray-900">
           {SyllabusDict[userLanguage]['LESSON_PLAN_HEADING']}
         </h3> */}
@@ -332,7 +338,7 @@ const LessonPlanManager = ({
       </div>
       {/* *************** ADD LESSON TO SYLLABUS SECTION ************ */}
       <div className="w-full m-auto p-4">
-        <div className="my-12 w-6/10 m-auto flex items-center justify-center">
+        <div className="my-8 w-6/10 m-auto flex items-center justify-center">
           <div className="mr-4">
             <Selector
               selectedItem={selecetedLesson.value}
@@ -360,24 +366,30 @@ const LessonPlanManager = ({
 
         {/* *************** LESSONS LIST ************ */}
         <div>
-          {selectedLessonsList && selectedLessonsList.length > 0 ? (
+          {loading ? (
+            <div className="h-100 flex justify-center items-center">
+              <div className="w-5/10">
+                <Loader />
+              </div>
+            </div>
+          ) : selectedLessonsList && selectedLessonsList.length > 0 ? (
             <div>
               {/* *************** LESSONS TABLE HEADERS ************ */}
               <div className="flex justify-between w-full  px-8 py-4 whitespace-nowrap border-b-0 border-gray-200">
                 <div className="w-.5/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['no']}</span>
+                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['NUMBER']}</span>
                 </div>
                 <div className="w-2/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['name']}</span>
+                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['LESSON_NAME']}</span>
                 </div>
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['type']}</span>
+                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['MEASUREMENTS']}</span>
                 </div>
                 <div className="w-3/10 px-8 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['measurement']}</span>
+                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['TYPE']}</span>
                 </div>
                 <div className="w-1/10 px-8 py-3 bg-gray-50 text-center text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                  <span>{SyllabusDict[userLanguage]['action']}</span>
+                  <span>{SyllabusDict[userLanguage]['TABLE_HEADS']['ACTION']}</span>
                 </div>
               </div>
 
