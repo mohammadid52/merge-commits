@@ -268,11 +268,33 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         }
       );
 
+      // const updatedExerciseData =
+      //   state?.exerciseData && state?.exerciseData[pageIdx].length > 0
+      //     ? state?.exerciseData[pageIdx].map((exercise: any) => {
+      //         return {
+      //           ...exercise,
+      //           entryData: exercise.entryData.map((entry: any) => {
+      //             if (entry.domID === domID) {
+      //               return {
+      //                 ...entry,
+      //                 input: newInput,
+      //               };
+      //             } else {
+      //               return entry;
+      //             }
+      //           }),
+      //         };
+      //       })
+      //     : [];
+
+      console.log('this page exercise data - ', state?.exerciseData[pageIdx]);
+
       return {
         ...state,
         updated: true,
         universalStudentDataID: [...updatedStudentDataIdArray],
         studentData: mappedStudentData,
+        // exerciseData: updatedExerciseData,
       };
     case 'COMPLETE_STUDENT_UPDATE':
       const resetDataIdArray = state.universalStudentDataID.map((obj: any) => {
