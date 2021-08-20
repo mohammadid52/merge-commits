@@ -1,6 +1,9 @@
 /* OTHER / GENERAL */
 @import 'general/scrollbars';
 
+/* THEME */
+@import 'theme.scss';
+
 /* MAIN PARTS */
 @import 'lessons';
 
@@ -16,8 +19,8 @@ $gray-600: #4b5563;
 $gray-700: #374151;
 $gray-800: #1f2937;
 $gray-900: #111827;
-$indigo-50: #eff6ff;
-$indigo-100: #dbeafe;
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
 
 /*
   NOTE: This file should be converted into simple css file and
@@ -1060,7 +1063,7 @@ $indigo-100: #dbeafe;
   &.light {
     color: $gray-900;
     border: 1px solid $gray-200;
-    background-color: #fff;
+    background-color: $gray-200;
   }
   border-radius: 8px;
   height: 20rem !important;
@@ -1095,16 +1098,6 @@ $indigo-100: #dbeafe;
     border-radius: 10px;
     background: #fff;
   }
-}
-
-.toolbarClassName.previewMode {
-  display: none;
-}
-
-.editorClassName.previewMode {
-  border: 2px solid $gray-600;
-
-  border-radius: 8px;
 }
 
 .toolbarClassName.iconoclast

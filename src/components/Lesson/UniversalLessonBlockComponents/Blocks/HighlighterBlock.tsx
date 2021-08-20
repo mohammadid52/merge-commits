@@ -137,7 +137,16 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   };
 
   const features: string[] = ['colorPicker', 'remove', 'inline'];
+  // useEffect(() => {
+  //   window.addEventListener('beforeunload', function (e) {
+  //     var confirmationMessage =
+  //       'It looks like you have been editing something. ' +
+  //       'If you leave before saving, your changes will be lost.';
 
+  //     (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+  //     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+  //   });
+  // },[]);
   return (
     <div className={`p-4`}>
       <CustomRichTextEditor
@@ -162,6 +171,19 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
           />
         </div>
       )}
+      {/* {!isInLesson && !previewMode && (
+        <span className="w-auto relative inline-flex rounded-md shadow-sm">
+          <button
+            type="button"
+            className="w-auto inline-flex items-center px-4 py-2 border-0  text-base leading-6 font-medium rounded-md transition ease-in-out duration-150 ">
+            Save
+          </button>
+          <span className="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full iconoclast:bg-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 iconoclast:bg-main"></span>
+          </span>
+        </span>
+      )} */}
     </div>
   );
 };
