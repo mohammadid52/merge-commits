@@ -29,7 +29,8 @@ import * as mutations from '../../../../../graphql/mutations';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
 import Status from '../../../../Atoms/Status';
-import { AddButton } from '../../../../Atoms/Buttons/AddButton';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
+
 interface StaffBuilderProps {
   instituteId: String;
   serviceProviders: {items: {id: string; providerID: string}[]};

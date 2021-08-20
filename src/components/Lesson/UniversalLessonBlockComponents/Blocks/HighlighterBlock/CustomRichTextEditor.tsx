@@ -6,6 +6,7 @@ import {EditorState, convertToRaw, ContentState} from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {useULBContext} from '../../../../../contexts/UniversalLessonBuilderContext';
 import useInLessonCheck from '../../../../../customHooks/checkIfInLesson';
+import {BsPencil} from 'react-icons/bs';
 
 interface RichTextEditorProps {
   onChange: (html: string, text: string) => void;
@@ -18,6 +19,10 @@ interface RichTextEditorProps {
   mediumDark?: boolean;
   customStyle?: boolean;
   features?: string[];
+  /**
+   * Don't use this if the content is serious
+   */
+  withStyles?: boolean;
 }
 
 const CustomRichTextEditor = (props: RichTextEditorProps) => {
@@ -30,6 +35,7 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     customStyle = false,
     rounded = false,
     features = [],
+    withStyles = false,
     theme,
   } = props;
   const initialState: any = EditorState.createEmpty();
@@ -85,30 +91,54 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
     }
   }, [initialValue]);
 
+  const editorRef = React.useRef();
+
+  useEffect(() => {
+    if (editorRef && editorRef?.current && withStyles) {
+      // @ts-ignore
+      editorRef?.current?.editor.editor.addEventListener('paste', function (e) {
+        // cancel paste
+        e.preventDefault();
+
+        // get text representation of clipboard
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        // insert text manually
+        // this is also not the recommended way to add text but not the worst idea.
+        // If you find better way or in future draftjs provides a feature for this
+        // then replace this with that.
+        // @ts-ignore
+        editorRef.current.editor.editor.innerHTML = text;
+      });
+    }
+  }, [editorRef]);
+
   const toolbarClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} toolbarClassName ${
-          previewMode ? 'previewMode' : ''
-        } text-black`
+      ? `${dark ? 'dark' : 'light'} ${
+          mediumDark ? 'mediumDark' : ''
+        } toolbarClassName customStyles ${previewMode ? 'previewMode' : ''} text-black`
       : 'toolbarClassName'
   }`;
   const wrapperClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} ${mediumDark ? 'mediumDark' : ''} wrapperClassName ${
-          previewMode ? 'previewMode' : ''
-        }  ${fullWHOverride ? 'flex flex-col' : ''}`
-      : 'wrapperClassName'
+      ? `${theme} ${dark ? 'dark' : 'light'} ${
+          mediumDark ? 'mediumDark' : ''
+        } wrapperClassName ${previewMode ? 'previewMode' : ''}  ${
+          fullWHOverride ? 'flex flex-col' : ''
+        }`
+      : 'wrapperClassName '
   }`;
   const editorClassName = `${
     customStyle
-      ? `${dark ? 'dark' : ''} editorClassName ${previewMode ? 'previewMode' : ''}  ${
-          fullWHOverride ? 'flex-1' : ''
-        }`
+      ? `${dark ? 'dark' : 'light'} editorClassName ${
+          previewMode ? 'previewMode' : ''
+        }  ${fullWHOverride ? 'flex-1' : ''}`
       : 'editorClassName'
   }`;
 
   return (
     <Editor
+      ref={editorRef}
       editorState={editorState}
       toolbarClassName={toolbarClassName}
       wrapperClassName={wrapperClassName}
@@ -119,12 +149,37 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
         inline: {
           inDropdown: false,
           options: ['bold', 'italic', 'underline', 'superscript', 'subscript'],
-          className: `${dark ? 'dark' : ''} toolItemClassName`,
+          className: `toolItemClassName`,
+          bold: {
+            icon: 'https://image.flaticon.com/icons/png/512/114/114304.png',
+            className: 'toolbarCustomIcon',
+          },
+          italic: {
+            icon: 'https://image.flaticon.com/icons/png/512/1827/1827983.png',
+            className: 'toolbarCustomIcon',
+          },
+          underline: {
+            icon: 'https://image.flaticon.com/icons/png/512/154/154623.png',
+            className: 'toolbarCustomIcon',
+          },
+          superscript: {
+            icon: 'https://image.flaticon.com/icons/png/512/32/32176.png',
+            className: 'toolbarCustomIcon',
+          },
+          subscript: {
+            icon: 'https://image.flaticon.com/icons/png/512/1828/1828084.png',
+            className: 'toolbarCustomIcon',
+          },
         },
-        list: {inDropdown: true, className: 'dropdownClassName'},
-        textAlign: {inDropdown: true, className: 'dropdownClassName'},
-        link: {inDropdown: true, className: 'dropdownClassName'},
-        history: {inDropdown: true, className: 'dropdownClassName'},
+
+        remove: {
+          icon: 'https://image.flaticon.com/icons/png/512/171/171383.png',
+          className: 'toolbarCustomIcon',
+        },
+        list: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+        textAlign: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+        link: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
+        history: {inDropdown: true, className: 'dropdownClassName toolbarCustomIcon'},
         fontFamily: {
           options: [
             'Arial',
@@ -134,18 +189,20 @@ const CustomRichTextEditor = (props: RichTextEditorProps) => {
             'Times New Roman',
             'Helvetica',
           ],
-          className: 'plainText dropdownBlockClassName',
+          className: 'plainText dropdownBlockClassName toolbarCustomIcon',
         },
         blockType: {
-          className: 'plainText dropdownBlockClassName',
+          className: 'plainText dropdownBlockClassName toolbarCustomIcon',
         },
         fontSize: {
-          className: 'plainText dropdownClassName',
+          className: 'plainText dropdownClassName toolbarCustomIcon',
         },
         colorPicker: {
+          icon: 'https://image.flaticon.com/icons/png/512/1250/1250615.png',
+
           className: ` ${
-            customStyle ? `${dark ? 'dark' : ''} text-black` : ''
-          }  toolItemClassName ${theme}`,
+            customStyle ? `${dark ? 'dark' : 'light'} text-black` : ''
+          }  toolItemClassName ${theme} toolbarCustomIcon`,
           colors: ['#DC2626', '#D97706', '#34D399', '#3B82F6', '#fff'],
         },
       }}

@@ -24,7 +24,7 @@ export const AddNewBlockMini = (props: RowWrapperProps) => {
             setNewBlockSeqId(idx);
           }}
           type="button"
-          className={`transition-all duration-200  inline-flex w-auto items-center shadow-sm px-4 py-1.5 border border-gray-700 dark:border-gray-300  text-sm leading-5 font-medium rounded-full text-gray-600 dark:text-white dark:bg-gray-700 bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}>
+          className={`transition-all duration-200  inline-flex w-auto items-center shadow-sm px-4 py-1.5   text-sm leading-5 font-medium rounded-full text-gray-600 dark:text-white dark:bg-gray-700 bg-gray-200 focus:outline-none `}>
           <PlusSmIcon
             className={`-ml-1.5 mr-1 h-5 w-5 text-gray-600 dark:text-gray-400`}
             aria-hidden="true"

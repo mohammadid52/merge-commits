@@ -605,6 +605,18 @@ export const updateClassStudent = /* GraphQL */ `
   }
 `;
 
+export const deleteClassStudent = /* GraphQL */ `
+  mutation DeleteClassStudent(
+    $input: DeleteClassStudentInput!
+    $condition: ModelClassStudentConditionInput
+  ) {
+    deleteClassStudent(input: $input, condition: $condition) {
+      id
+      status
+    }
+  }
+`;
+
 export const createRoomCoTeachers = /* GraphQL */ `
   mutation CreateRoomCoTeachers(
     $input: CreateRoomCoTeachersInput!

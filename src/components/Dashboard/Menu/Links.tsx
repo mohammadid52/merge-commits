@@ -138,8 +138,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           ];
         });
       case 'TR':
+      case 'BLD':
       case 'FLW':
-        return setLinks((links) => {
+        return setLinks(() => {
           return [
             {
               title: sideBarLinksDict[userLanguage].DASHBOARD,
@@ -153,15 +154,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Institutions',
               path: 'manage-institutions',
             },
-
-            {
+            role !== 'BLD' ? {
               title: sideBarLinksDict[userLanguage].PEOPLE,
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
               path: 'manage-users',
               subMenuItems: [{title: 'Add New Person', path: 'registration'}],
-            },
-            {
+            } : null,
+            role !== 'BLD' ? {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
@@ -179,7 +179,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                       handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
                   };
                 }),
-            },
+            } : null,
             // {
             //   title: sideBarLinksDict[userLanguage].NOTICEBOARD,
             //   name: sideBarLinksDict[userLanguage].NOTICEBOARD,
@@ -207,7 +207,7 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
             //   label: 'Universal Lesson Builder',
             //   path: 'universal-lesson-builder',
             // },
-          ];
+          ].filter(Boolean);
         });
       case 'ST':
         return setLinks((links) => {

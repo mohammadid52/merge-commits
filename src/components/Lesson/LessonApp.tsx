@@ -446,7 +446,7 @@ const LessonApp = () => {
     const studentAuthId = user.username;
     const email = user.attributes.email;
 
-    console.log('getOrCreateData - user - ', user);
+    // console.log('getOrCreateData - user - ', user);
 
     try {
       const listFilter = {
@@ -549,7 +549,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      //getOrCreateStudentData();
+      getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 
@@ -586,24 +586,16 @@ const LessonApp = () => {
       );
 
       const responseItems = userLocations.data.listPersonLocations.items;
-      console.log('getPersonLocation - ', responseItems);
+      // console.log('getPersonLocation - ', responseItems);
 
       if (responseItems.length > 0) {
-        // const response = responseItems[0];
-        // const existLocationObj = {
-        //   ...response,
-        //   roomID: getRoomData.id,
-        //   currentLocation: '0',
-        // };
-        // setPersonLocationObj(existLocationObj);
-        // console.log('getPersonLocation - ', 'location exists');
         await leaveRoomLocation();
         await createPersonLocation();
       } else {
         await createPersonLocation();
       }
     } finally {
-      console.log('personLocation setup!');
+      // console.log('personLocation setup!');
     }
   };
 
@@ -632,9 +624,8 @@ const LessonApp = () => {
         id: response.id,
       };
       setPersonLocationObj(newLocationObj);
-      console.log('created new location - ', response);
     } catch (e) {
-      console.error('createPersonLocation - ', e);
+      // console.error('createPersonLocation - ', e);
     }
   };
 
@@ -680,9 +671,9 @@ const LessonApp = () => {
           },
         })
       );
-      console.log('left room...', storedLocation);
+      // console.log('left room...', storedLocation);
     } catch (e) {
-      console.error('error deleting location record - ', e);
+      // console.error('error deleting location record - ', e);
     }
   };
 

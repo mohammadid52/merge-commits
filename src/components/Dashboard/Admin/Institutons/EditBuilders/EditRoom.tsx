@@ -68,15 +68,24 @@ const EditRoom = (props: EditRoomProps) => {
 
   const params = useQuery();
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
     {
-      title: BreadcrumsTitles[userLanguage]['EDITCLASSROOM'],
+      title: roomData.institute?.name || BreadcrumsTitles[userLanguage]['LOADING'],
+      goBack: true,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
+      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`,
+      last: false,
+    },
+    {
+      title: roomData.name,
       url: `/dashboard/room-edit?id=${params.get('id')}`,
       last: true,
     },
@@ -514,6 +523,9 @@ const EditRoom = (props: EditRoomProps) => {
         await saveRoomTeachers(roomData.id);
         await saveRoomCurricular(curriculaId, roomData.id, roomData.curricular.id);
         setUnsavedChanges(false);
+        history.push(
+          `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`
+        );
       } catch {
         setMessages({
           show: true,
@@ -684,9 +696,9 @@ const EditRoom = (props: EditRoomProps) => {
       <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title={RoomEDITdict[userLanguage]['TITLE']} subtitle={RoomEDITdict[userLanguage]['SUBTITLE']} />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {params.get('from') ? <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
-        </div>
+        </div> : null}
       </div>
 
       {/* Body section */}

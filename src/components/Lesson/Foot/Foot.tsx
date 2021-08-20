@@ -173,7 +173,7 @@ const Foot = ({
           {/* BACK BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">
-            <div
+            {/* <div
               className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                 lessonState.currentPage > 0
                   ? 'cursor-pointer bg-dark-red'
@@ -181,24 +181,24 @@ const Foot = ({
               } }`}
               onClick={handleBack}>
               <div className="w-auto h-auto text-white">Back</div>
-            </div>
+            </div> */}
           </div>
 
           {/* LOGO */}
           <div className="w-3.3/10 flex justify-center items-center">
-            <NavLink to="/dashboard">
-              <img
-                className="h-20 px-4"
-                src={getAsset(clientKey, 'main_logo')}
-                alt="Logo"
-              />
-            </NavLink>
+            {/* <NavLink to="/dashboard"> */}
+            <img
+              className="h-20 px-4"
+              src={getAsset(clientKey, 'main_logo')}
+              alt="Logo"
+            />
+            {/* </NavLink> */}
           </div>
 
           {/* FORWARD BUTTON */}
 
           <div className="w-3.3/10 flex justify-center items-center">
-            <div
+            {/* <div
               className={`z-0  w-24 h-8 text-center flex justify-center items-center rounded-full ${
                 canContinue() || userAtEnd()
                   ? 'bg-sea-green cursor-pointer'
@@ -206,7 +206,7 @@ const Foot = ({
               } `}
               onClick={handleForward}>
               <div className="w-auto h-auto text-white">Continue</div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

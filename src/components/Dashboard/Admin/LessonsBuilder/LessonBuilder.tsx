@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoDocumentText, IoCardSharp} from 'react-icons/io5';
+import {IoDocumentText, IoCardSharp, IoArrowUndoCircleOutline} from 'react-icons/io5';
 import {FaRegEye, FaQuestionCircle} from 'react-icons/fa';
 
 import * as customMutations from '../../../../customGraphql/customMutations';
@@ -9,8 +9,8 @@ import * as mutations from '../../../../graphql/mutations';
 import * as customQueries from '../../../../customGraphql/customQueries';
 
 import ModalPopUp from '../../../Molecules/ModalPopUp';
-import Buttons from '../../../Atoms/Buttons';
 import BreadCrums from '../../../Atoms/BreadCrums';
+import Buttons from '../../../Atoms/Buttons';
 import SectionTitle from '../../../Atoms/SectionTitle';
 import PageWrapper from '../../../Atoms/PageWrapper';
 import Loader from '../../../Atoms/Loader';
@@ -31,6 +31,7 @@ import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 import {languageList, lessonTypeList} from '../../../../utilities/staticData';
 import {getImageFromS3Static} from '../../../../utilities/services';
+import {getFilterORArray} from '../../../../utilities/strings';
 
 export interface InitialData {
   name: string;
@@ -61,15 +62,16 @@ interface LessonBuilderProps {
 }
 
 const LessonBuilder = (props: LessonBuilderProps) => {
-  const {designersList, institutionList} = props;
+  const {institutionList} = props;
   const history = useHistory();
   const match = useRouteMatch();
   const params = useQuery(location.search);
   const step = params.get('step');
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
-  const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, AddNewLessonFormDict, LessonBuilderDict} = useDictionary(
+    clientKey
+  );
 
   const initialData = {
     name: '',
@@ -108,6 +110,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     {name: 'Preview Details', icon: <FaRegEye />, isDisabled: true},
   ];
 
+  const [designersList, setDesignersList] = useState([]);
+  const [designerListLoading, setDesignersListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [curriculumLoading, setCurriculumLoading] = useState(false);
@@ -124,6 +128,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const [lessonId, setLessonId] = useState(params.get('lessonId') || '');
   const [activeStep, setActiveStep] = useState('overview');
   const [lessonBuilderSteps, setLessonBuilderSteps] = useState(lessonScrollerStep);
+  const [institutionData, setInstitutionData] = useState<any>(null);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
     show: false,
@@ -140,6 +145,28 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     stepOnHold: '',
     message: '',
   });
+
+  const fetchStaffByInstitution = async (institutionID: string) => {
+    setDesignersList([]);
+    try {
+      setDesignersListLoading(true);
+      const staffList: any = await API.graphql(
+        graphqlOperation(customQueries.getStaffsForInstitution, {
+          filter: {institutionID: {eq: institutionID}},
+        })
+      );
+      const listStaffs = staffList.data.listStaffs;
+      const updatedList = listStaffs?.items.map((item: any) => ({
+        id: item?.id,
+        name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+      }));
+      setDesignersList(updatedList);
+      setDesignersListLoading(false);
+    } catch (error) {
+      setDesignersListLoading(false);
+    }
+  };
 
   const savedCheckpointModal = () => {
     setActiveStep(checkpointSaveModal.stepOnHold);
@@ -198,6 +225,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
 
       if (savedData.institutionID) {
         const institution = await getInstitutionByID(savedData.institutionID);
+        setInstitutionData(institution);
         setSelectedMeasurements(savedData.rubrics);
         setFormData({
           ...formData,
@@ -224,6 +252,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             value: institution?.name,
           },
         });
+        fetchStaffByInstitution(savedData.institutionID);
       }
 
       const designers = designersList.filter((item: any) =>
@@ -464,8 +493,8 @@ const LessonBuilder = (props: LessonBuilderProps) => {
     const redirectionUrl = `${match.url}?lessonId=${lessonId}&step=${step}`;
     setServerMessage({
       isError: false,
-      message: ''
-    })
+      message: '',
+    });
     if (unsavedChanges) {
       setWarnModal({
         show: true,
@@ -473,7 +502,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
         url: redirectionUrl,
       });
     } else {
-      setUnsavedChanges(false)
+      setUnsavedChanges(false);
       history.push(redirectionUrl);
     }
   };
@@ -527,6 +556,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             changeLessonType={changeLessonType}
             formData={formData}
             setFormData={setFormData}
+            designerListLoading={designerListLoading}
             designersList={designersList}
             selectedDesigners={selectedDesigners}
             setSelectedDesigners={setSelectedDesigners}
@@ -534,6 +564,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             allMeasurement={measurementList}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
+            fetchStaffByInstitution={fetchStaffByInstitution}
           />
         );
       case 'activities':
@@ -707,7 +738,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       last: false,
     },
     {
-      title: loading ? 'Loading...' : formData?.name,
+      title: params.get('lessonId')
+        ? loading
+          ? 'Loading...'
+          : formData?.name
+        : BreadcrumsTitles[userLanguage]['LESSON_BUILDER'],
       url: `${match.url}`,
       last: true,
     },
@@ -765,27 +800,28 @@ const LessonBuilder = (props: LessonBuilderProps) => {
           title={LessonBuilderDict[userLanguage]['TITLE']}
           subtitle={LessonBuilderDict[userLanguage]['SUBTITLE']}
         />
-        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
-          <Buttons
-            label="Go back"
-            btnClass="mr-4"
-            onClick={gobackToLessonsList}
-            Icon={IoArrowUndoCircleOutline}
-          />
-        </div> */}
+        {params.get('from') ? (
+          <div className="flex justify-end py-4 mb-4 w-5/10">
+            <Buttons
+              label="Go back"
+              btnClass="mr-4"
+              onClick={() => history.goBack()}
+              Icon={IoArrowUndoCircleOutline}
+            />
+          </div>
+        ) : null}
       </div>
 
       {/* Body */}
-      <PageWrapper>
+      <PageWrapper defaultClass={'px-2 xl:px-4 white_back'}>
         <div className="w-full m-auto">
-          {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <StepComponent
             steps={steps}
             activeStep={activeStep}
             handleTabSwitch={handleTabSwitch}
           />
 
-          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-8">
+          <div className="grid grid-cols-1 divide-x-0 divide-gray-400 px-2 xl:px-8">
             {loading ? (
               <div className="h-100 flex justify-center items-center">
                 <div className="w-5/10">

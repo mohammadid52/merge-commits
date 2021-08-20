@@ -7,6 +7,7 @@ import SideMenu from '../Lesson/Header/SideMenu';
 import {LessonHeaderBarProps} from '../../interfaces/LessonComponentsInterfaces';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getLocalStorageData} from '../../utilities/localStorage';
+import useStudentTimer from '../../customHooks/timer';
 
 const LessonHeaderBar = ({
   lessonDataLoaded,
@@ -15,6 +16,7 @@ const LessonHeaderBar = ({
   handleRequiredNotification,
 }: LessonHeaderBarProps) => {
   const history = useHistory();
+  const initializeTimer = useStudentTimer();
   const {lessonState, theme} = useContext(GlobalContext);
 
   // ##################################################################### //
@@ -51,7 +53,7 @@ const LessonHeaderBar = ({
   }, [lessonState.updated]);
 
   useEffect(() => {
-    console.log('safeToLeave State - ', safeToLeave);
+    // console.log('safeToLeave State - ', safeToLeave);
     if (safeToLeave === true) {
       handlePopup();
       history.push(`/dashboard/classroom/${getRoomData.id}`);
@@ -109,9 +111,9 @@ const LessonHeaderBar = ({
        *
        */}
 
-      {lessonDataLoaded && (
+      {/* {lessonDataLoaded && (
         <SideMenu lessonDataLoaded={lessonDataLoaded} handlePopup={handlePopup} />
-      )}
+      )} */}
     </div>
   );
 };

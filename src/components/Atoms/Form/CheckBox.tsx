@@ -6,11 +6,10 @@ interface CheckBoxProps {
   value: boolean;
   onChange?: (e: any) => void;
   name: string;
-  checkboxSizeClassName?: string;
 }
 
 const CheckBox = (checkBoxProps: CheckBoxProps) => {
-  const {label, value, onChange, name, checkboxSizeClassName = 'h-6 w-6'} = checkBoxProps;
+  const {label, value, onChange, name} = checkBoxProps;
   const {theme} = useContext(GlobalContext);
 
   return (
@@ -19,7 +18,7 @@ const CheckBox = (checkBoxProps: CheckBoxProps) => {
         type="checkbox"
         checked={value ? true : false}
         name={name}
-        className={`form-checkbox cursor-pointer text-indigo-500 mx-2 ${checkboxSizeClassName}`}
+        className={`form-checkbox cursor-pointer text-indigo-500 mx-2 h-6 w-6`}
         onChange={onChange}
       />
       {label ? (
