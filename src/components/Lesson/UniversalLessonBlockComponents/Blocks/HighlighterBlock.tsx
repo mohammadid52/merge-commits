@@ -39,7 +39,10 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     lessonDispatch,
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const {previewMode} = useULBContext();
+  const isInLesson = useInLessonCheck();
+
+  const switchContext = isInLesson ? undefined : useULBContext();
+  const previewMode = isInLesson ? false : switchContext.previewMode;
 
   // ##################################################################### //
   // ########################## ULB FUNCTIONS ? ########################## //
@@ -78,7 +81,6 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
   // ######################## STUDENT DATA CONTEXT ####################### //
   // ##################################################################### //
   const isStudent = user && user.role === 'ST';
-  const isInLesson = useInLessonCheck();
   const [editorState, setEditorState] = useState('');
 
   // ~~~~~~~~~~ INIT DEFAULT STATE ~~~~~~~~~ //
