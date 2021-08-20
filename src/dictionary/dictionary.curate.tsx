@@ -47,6 +47,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Cohort Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Class Creation',
+    CLASSROOMS: 'Classrooms',
     EDITCLASS: 'Edit Cohort',
     CLASSES: 'Classes',
     EDITCURRICULUM: 'Edit Curriculm',
@@ -67,9 +68,11 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Sessions',
     LESSONPLANBUILDER: 'Session Plan Builder',
+    LESSON_BUILDER: 'Lesson Builder',
     LESSON_EDITOR: 'Lesson Editor',
     STUDENTS: 'Participants',
     STUDENTS_NOTEBOOK: 'Students Journal',
+    LOADING: 'Loading...',
   },
   ES: {
     HOME: 'CASA',
@@ -591,7 +594,6 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
-      NODESIGNEROPTION: 'Select Institute first',
     },
   },
   ES: {
@@ -629,7 +631,6 @@ const classRoomDict: any = {
       SELECT_CLASSROOM: 'Select a cohort to see applicable sessions...',
       NO_LESSONS: 'No sessions...',
       SELECT_CLASSROOM_WIDGETS: 'Select a room to see editable widgets...',
-      NODESIGNEROPTION: 'TBD',
     },
   },
 };
@@ -2879,6 +2880,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'Session details saved successfully.',
       SAVEERR: 'Unable to save Session details, Please try again later.',
       LESSONNOTHAVE: 'This session does not have any measurements, please add new one.',
+      NODESIGNEROPTION: 'Select Institution first',
     },
     SAVE: 'Save',
     SAVING: 'Saving...',
@@ -2921,6 +2923,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'TBD',
       SAVEERR: 'TBD',
       LESSONNOTHAVE: 'TBD',
+      NODESIGNEROPTION: 'TBD'
     },
     SAVE: 'TBD',
     SAVING: 'TBD',

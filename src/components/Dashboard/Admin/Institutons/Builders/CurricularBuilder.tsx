@@ -245,11 +245,11 @@ const CurricularBuilder = (props: CurricularBuilderProps) => {
   const fetchPersonsList = async () => {
     try {
       const result: any = await API.graphql(
-        graphqlOperation(customQueries.listPersons, {
-          filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
+        graphqlOperation(customQueries.getStaffsForInstitution, {
+          filter: {institutionID: {eq: params.get('id')}},
         })
       );
-      const savedData = result.data.listPersons;
+      const savedData = result.data.listStaffs;
       const updatedList = savedData?.items.map((item: { id: string; firstName: string; lastName: string }) => ({
         id: item?.id,
         name: `${item?.firstName || ''} ${item.lastName || ''}`,

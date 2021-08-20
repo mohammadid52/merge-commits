@@ -111,6 +111,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   ];
 
   const [designersList, setDesignersList] = useState([]);
+  const [designerListLoading, setDesignersListLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [curriculumLoading, setCurriculumLoading] = useState(false);
@@ -146,21 +147,25 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   });
 
   const fetchStaffByInstitution = async (institutionID: string) => {
-    const staffList: any = await API.graphql(
-      graphqlOperation(customQueries.getStaffsForInstitution, {
-        filter: {institutionID: {eq: institutionID}},
-      })
-    );
-    console.log(staffList, 'staffList');
-    const listStaffs = staffList.data.listStaffs;
-    const updatedList = listStaffs?.items.map((item: any) => ({
-      id: item?.id,
-      name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-      value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
-    }));
-    console.log(updatedList, 'updatedList', props.designersList, '++++++++++');
-
-    setDesignersList(updatedList);
+    setDesignersList([]);
+    try {
+      setDesignersListLoading(true);
+      const staffList: any = await API.graphql(
+        graphqlOperation(customQueries.getStaffsForInstitution, {
+          filter: {institutionID: {eq: institutionID}},
+        })
+      );
+      const listStaffs = staffList.data.listStaffs;
+      const updatedList = listStaffs?.items.map((item: any) => ({
+        id: item?.id,
+        name: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+        value: `${item?.staffMember?.firstName || ''} ${item?.staffMember.lastName || ''}`,
+      }));
+      setDesignersList(updatedList);
+      setDesignersListLoading(false);
+    } catch (error) {
+      setDesignersListLoading(false);
+    }
   };
 
   const savedCheckpointModal = () => {
@@ -551,6 +556,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             changeLessonType={changeLessonType}
             formData={formData}
             setFormData={setFormData}
+            designerListLoading={designerListLoading}
             designersList={designersList}
             selectedDesigners={selectedDesigners}
             setSelectedDesigners={setSelectedDesigners}
@@ -558,7 +564,7 @@ const LessonBuilder = (props: LessonBuilderProps) => {
             allMeasurement={measurementList}
             institutionList={institutionList}
             setUnsavedChanges={setUnsavedChanges}
-            // fetchStaffByInstitution={fetchStaffByInstitution}
+            fetchStaffByInstitution={fetchStaffByInstitution}
           />
         );
       case 'activities':
@@ -732,7 +738,11 @@ const LessonBuilder = (props: LessonBuilderProps) => {
       last: false,
     },
     {
-      title: loading ? 'Loading...' : formData?.name,
+      title: params.get('lessonId')
+        ? loading
+          ? 'Loading...'
+          : formData?.name
+        : BreadcrumsTitles[userLanguage]['LESSON_BUILDER'],
       url: `${match.url}`,
       last: true,
     },

@@ -51,7 +51,7 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
-    CLASSROOM: 'Classroom',
+    CLASSROOMS: 'Classrooms',
     CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
@@ -72,10 +72,12 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
+    LESSON_BUILDER: 'Lesson Builder',
     LESSON_EDITOR: 'Lesson Editor',
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
     ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
+    LOADING:"Loading..."
   },
   ES: {
     HOME: 'CASA',
@@ -2962,7 +2964,8 @@ const AddNewLessonFormDict: any = {
       LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
       MEASUREMENTALREADYADDED: 'This measurment is already added.',
       MEASUREMENTADDSUCCESS: 'Lesson measurment list updated successfully.',
-      NODESIGNEROPTION: 'Select Institute first',
+      NODESIGNEROPTION: 'Select Institution first',
+      LOADING: 'Loading...'
     },
     NEXT: 'Next',
     SAVE: 'Save',
