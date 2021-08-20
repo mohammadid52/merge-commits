@@ -52,6 +52,7 @@ const BreadcrumsTitles: any = {
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
+    CLASSROOM: 'Classroom',
     CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
@@ -77,7 +78,7 @@ const BreadcrumsTitles: any = {
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
     ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
-    LOADING:"Loading..."
+    LOADING: 'Loading...',
   },
   ES: {
     HOME: 'CASA',
@@ -89,6 +90,8 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
+    CLASSROOMS: 'TBD',
+    CLASSROOM: 'TBD',
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',

@@ -194,13 +194,13 @@ const AddLearningObjective = (props: AddLearningObjectiveProps) => {
       </div>
       <div className="flex my-4 justify-center">
         <Buttons
-          btnClass="py-3 px-10 mr-2"
+          btnClass="py-3 px-2 2xl:px-10 mr-2"
           label={'Cancel'}
           onClick={handleCancel}
           transparent
         />
         <Buttons
-          btnClass="py-3 px-10"
+          btnClass="py-3 px-2 2xl:px-10 px-10"
           label={ADDLEARINGOBJDICT[userLanguage]['SAVE']}
           onClick={saveLearningObjectiveDetails}
           disabled={loading}
