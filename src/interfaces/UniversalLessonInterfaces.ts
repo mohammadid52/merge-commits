@@ -103,6 +103,12 @@ export interface StudentPageInput {
   comments?: TeacherStudentComments[];
 }
 
+export interface StudentExerciseData {
+  id: string;
+  entryData?: {domID: string; input: string}[];
+  feedbacks?: string[];
+}
+
 export interface TeacherStudentComments {
   commentBy: string;
   comment: string;

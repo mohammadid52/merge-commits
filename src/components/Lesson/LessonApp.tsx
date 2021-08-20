@@ -193,24 +193,44 @@ const LessonApp = () => {
   const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
 
   // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
+
   const initializeStudentData = async () => {
     if (studentDataInitialized === false && PAGES) {
       const mappedPages = PAGES.reduce(
-        (inputs: {required: any[]; initialized: any[]}, page: UniversalLessonPage) => {
+        (
+          inputs: {
+            required: any[];
+            initialized: any[];
+            exercises: any[];
+          },
+          page: UniversalLessonPage
+        ) => {
           const currentPageParts = page.pageContent;
           const reducedPageInputs = currentPageParts.reduce(
             (
-              pageInputsAcc: {requiredIdAcc: string[]; pageInputAcc: StudentPageInput[]},
+              pageInputsAcc: {
+                requiredIdAcc: string[];
+                pageInputAcc: StudentPageInput[];
+                pageExerciseAcc: any[];
+              },
               pagePart: PagePart
             ) => {
               if (pagePart.hasOwnProperty('partContent')) {
                 const partInputs = pagePart.partContent.reduce(
                   (
-                    partInputAcc: {requiredIdAcc: string[]; pageInputAcc: any[]},
+                    partInputAcc: {
+                      requiredIdAcc: string[];
+                      pageInputAcc: any[];
+                      pageExerciseAcc: any[];
+                    },
                     partContent: PartContent
                   ) => {
+                    //  CHECK WHICH INPUT TYPE  //
                     const isForm = /form/g.test(partContent.type);
                     const isOtherInput = /input/g.test(partContent.type);
+                    const isExercise = /exercise/g.test(partContent.type);
+
+                    // -------- IF FORM ------- //
                     if (isForm) {
                       const formSubInputs = partContent.value.reduce(
                         (
@@ -233,6 +253,12 @@ const LessonApp = () => {
                         },
                         {reqId: [], pgInput: []}
                       );
+
+                      const exerciseObj = {
+                        id: partContent.id,
+                        entryData: formSubInputs.pgInput,
+                      };
+
                       return {
                         requiredIdAcc: [
                           ...partInputAcc.requiredIdAcc,
@@ -242,8 +268,13 @@ const LessonApp = () => {
                           ...partInputAcc.pageInputAcc,
                           ...formSubInputs.pgInput,
                         ],
+                        pageExerciseAcc: isExercise
+                          ? [...partInputAcc.pageExerciseAcc, exerciseObj]
+                          : partInputAcc.pageExerciseAcc,
                       };
-                    } else if (isOtherInput) {
+                    }
+                    // ---- IF OTHER INPUT ---- //
+                    else if (isOtherInput) {
                       return {
                         requiredIdAcc: partContent.isRequired
                           ? [...partInputAcc.requiredIdAcc, partContent.id]
@@ -255,13 +286,15 @@ const LessonApp = () => {
                             input: [''],
                           },
                         ],
+                        pageExerciseAcc: partInputAcc.pageExerciseAcc,
                       };
                     } else {
                       return partInputAcc;
                     }
                   },
-                  {requiredIdAcc: [], pageInputAcc: []}
+                  {requiredIdAcc: [], pageInputAcc: [], pageExerciseAcc: []}
                 );
+
                 return {
                   requiredIdAcc: [
                     ...pageInputsAcc.requiredIdAcc,
@@ -271,26 +304,36 @@ const LessonApp = () => {
                     ...pageInputsAcc.pageInputAcc,
                     ...partInputs.pageInputAcc,
                   ],
+                  pageExerciseAcc: [
+                    ...pageInputsAcc.pageExerciseAcc,
+                    ...partInputs.pageExerciseAcc,
+                  ],
                 };
               } else {
                 return pageInputsAcc;
               }
             },
-            {requiredIdAcc: [], pageInputAcc: []}
+            {requiredIdAcc: [], pageInputAcc: [], pageExerciseAcc: []}
           );
+
           return {
             required: [...inputs.required, reducedPageInputs.requiredIdAcc],
             initialized: [...inputs.initialized, reducedPageInputs.pageInputAcc],
+            exercises: [...inputs.exercises, reducedPageInputs.pageExerciseAcc],
           };
         },
-        {required: [], initialized: []}
+
+        {required: [], initialized: [], exercises: []}
       );
+
+      console.log('mappedPages - ', mappedPages);
 
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
           requiredInputs: mappedPages.required,
           studentData: mappedPages.initialized,
+          exerciseData: mappedPages.exercises,
         },
       });
       setStudentDataInitialized(true);
@@ -549,7 +592,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      getOrCreateStudentData();
+      // getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 

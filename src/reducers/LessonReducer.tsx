@@ -1,4 +1,5 @@
 import {
+  StudentExerciseData,
   StudentPageInput,
   UniversalLesson,
   UniversalLessonPage,
@@ -49,7 +50,8 @@ export type LessonActions =
       type: 'SET_INITIAL_STUDENT_DATA';
       payload: {
         requiredInputs: [string[]];
-        studentData: UniversalLessonStudentData[];
+        studentData: [StudentPageInput[]];
+        exerciseData: [StudentExerciseData[]];
       };
     }
   | {
@@ -177,10 +179,12 @@ export const lessonReducer = (state: any, action: LessonActions) => {
     case 'SET_INITIAL_STUDENT_DATA':
       const requiredInputs = action.payload.requiredInputs;
       const studentData = action.payload.studentData;
+      const exerciseData = action.payload.exerciseData;
       return {
         ...state,
         requiredInputs: requiredInputs,
         studentData: studentData,
+        exerciseData: exerciseData,
       };
     case 'LOAD_STUDENT_DATA':
       return {
