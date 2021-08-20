@@ -143,6 +143,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
       <CustomRichTextEditor
         theme={themeColor}
         features={features}
+        withStyles
         rounded
         customStyle
         dark={theme === 'dark'}
