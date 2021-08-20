@@ -77,6 +77,25 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   };
 
   useEffect(() => {
+    if (editorRef && editorRef?.current && withStyles) {
+      // @ts-ignore
+      editorRef?.current?.editor.editor.addEventListener('paste', function (e) {
+        // cancel paste
+        e.preventDefault();
+
+        // get text representation of clipboard
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        // insert text manually
+        // this is also not the recommended way to add text but not the worst idea.
+        // If you find better way or in future draftjs provides a feature for this
+        // then replace this with that.
+        // @ts-ignore
+        editorRef.current.editor.editor.innerHTML = text;
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     const html = initialValue ? initialValue : '<p></p>';
     const contentBlock = htmlToDraft(html);
 
