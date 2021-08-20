@@ -69,8 +69,9 @@ const LessonBuilder = (props: LessonBuilderProps) => {
   const step = params.get('step');
   const {clientKey, userLanguage} = useContext(GlobalContext);
   const {setUniversalLessonDetails, universalLessonDetails} = useULBContext();
-  const {AddNewLessonFormDict} = useDictionary(clientKey);
-  const {BreadcrumsTitles, BUTTONS, LessonBuilderDict} = useDictionary(clientKey);
+  const {BreadcrumsTitles, AddNewLessonFormDict, LessonBuilderDict} = useDictionary(
+    clientKey
+  );
 
   const initialData = {
     name: '',

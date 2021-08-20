@@ -1,3 +1,13 @@
+// Authentication pages
+const AuthDict: any = {
+  EN:{
+    VERIFY_EMAIL: 'Verify Email'
+  },
+  ES:{
+    VERIFY_EMAIL: 'TBD'
+  }
+};
+
 // Buttons
 const BUTTONS: any = {
   EN: {
@@ -42,6 +52,7 @@ const BreadcrumsTitles: any = {
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOM: 'Classroom',
+    CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
     EDITCLASSROOM: 'Edit Classroom',
@@ -79,6 +90,7 @@ const BreadcrumsTitles: any = {
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
+    CLASSES: 'TBD',
     CURRICULUMBUILDER: 'TBD',
     LEARINGOBJECTIVE: 'TBD',
     AddMesurement: 'TBD',
@@ -3501,6 +3513,7 @@ function paginationPage(lang: string, page: number, total: number) {
 }
 
 export {
+  AuthDict,
   CsvDict,
   paginationPage,
   BUTTONS,
