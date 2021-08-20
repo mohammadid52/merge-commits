@@ -39,6 +39,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
     lessonDispatch,
   } = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
+  const {previewMode} = useULBContext();
 
   // ##################################################################### //
   // ########################## ULB FUNCTIONS ? ########################## //
@@ -142,6 +143,7 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
       <CustomRichTextEditor
         theme={themeColor}
         features={features}
+        withStyles
         rounded
         customStyle
         dark={theme === 'dark'}
@@ -152,8 +154,8 @@ const HighlighterBlock = (props: HighlighterBlockProps) => {
             : () => {}
         }
       />
-      {!isInLesson && (
-        <div className="w-auto flex items-center justify-end">
+      {!isInLesson && !previewMode && (
+        <div className="w-auto flex items-center justify-end mt-4">
           <Buttons
             onClick={onHighlighterBlockCreate}
             label={saving ? 'saving' : 'save'}
