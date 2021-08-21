@@ -12,7 +12,7 @@ import PageWrapper from '../../../../Atoms/PageWrapper';
 import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
-import {AddButton} from '../../../../Atoms/Buttons/AddButton';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 import {IconContext} from 'react-icons';
 import {
   stringToHslColor,

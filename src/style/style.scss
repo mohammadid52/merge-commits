@@ -1,8 +1,26 @@
 /* OTHER / GENERAL */
 @import 'general/scrollbars';
 
+/* THEME */
+@import 'theme.scss';
+
 /* MAIN PARTS */
 @import 'lessons';
+
+$iconoclast: #667eea;
+$curate: #0081cb;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
 
 /*
   NOTE: This file should be converted into simple css file and
@@ -1014,10 +1032,21 @@
   color: white;
 }
 
-.toolbarClassName.dark {
-  background-color: rgba(50, 50, 62, 1);
-  border: 1px solid #9ca3af;
-  color: white;
+.toolbarClassName {
+  &.dark {
+    background-color: $gray-700;
+    border: none;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+  &.light {
+    border: 1px solid #e5e7eb;
+    background-color: #fff;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border-radius: 8px; // color: white;
+  }
 }
 .toolbarClassName.mediumDark {
   background-color: rgb(199, 199, 204);
@@ -1025,37 +1054,63 @@
   color: white;
 }
 
-.editorClassName.dark {
-  background-color: rgba(50, 50, 62, 1);
-  color: white;
-}
-
 .editorClassName {
-  background-color: rgba(255, 255, 255, 1);
-  color: #000;
-  height: 20rem !important;
-}
-
-.toolbarClassName.previewMode {
-  display: none;
-}
-
-.editorClassName.previewMode {
-  border: 1px solid #9ca3af;
+  &.dark {
+    background-color: $gray-700;
+    color: white;
+    border: 2px solid $gray-600;
+  }
+  &.light {
+    color: $gray-900;
+    border: 1px solid rgba(237, 242, 247, 1);
+    background-color: rgba(237, 242, 247, 1);
+  }
   border-radius: 8px;
+  height: 20rem !important;
+  padding: 1rem;
+  &.dark::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    background: $gray-700;
+  }
+
+  &.dark::-webkit-scrollbar-thumb {
+    background: $gray-600;
+    -webkit-border-radius: 10px;
+  }
+
+  &.dark::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: $gray-700;
+  }
+  &.light::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    background: #fff;
+  }
+
+  &.light::-webkit-scrollbar-thumb {
+    background: $gray-100;
+    -webkit-border-radius: 10px;
+  }
+
+  &.light::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #fff;
+  }
 }
 
 .toolbarClassName.iconoclast
   .rdw-colorpicker-modal
   .rdw-colorpicker-modal-header
   .rdw-colorpicker-modal-style-label-active {
-  border-bottom: 2px solid #667eea !important;
+  border-bottom: 2px solid $iconoclast !important;
 }
 .toolbarClassName.curate
   .rdw-colorpicker-modal
   .rdw-colorpicker-modal-header
   .rdw-colorpicker-modal-style-label-active {
-  border-bottom: 2px solid #0081cb !important;
+  border-bottom: 2px solid $curate !important;
 }
 .rdw-colorpicker-modal-header {
   color: #000;
@@ -1132,5 +1187,84 @@
   & ul {
     list-style: initial;
     list-style-position: inside;
+  }
+}
+
+// Draftjs Toolbar icon styles
+
+.toolbarCustomIcon {
+  border: none !important;
+  padding: 0.7rem !important;
+  height: 2rem !important;
+  &:hover {
+    box-shadow: none !important;
+    color: #fff;
+  }
+  .iconoclastIndigo &:hover {
+    background-color: $iconoclast;
+  }
+  .curateBlue &:hover {
+    background-color: $curate;
+  }
+  &:focus {
+    outline: none;
+  }
+
+  // .dark img {
+  //   height: 1rem;
+  //   filter: invert(100%);
+  //   width: 1rem;
+  // }
+  // .light {
+  //   img {
+  //     height: 1rem;
+  //     width: 1rem;
+  //   }
+  //   &:hover img {
+  //     filter: invert(100%);
+  //   }
+  // }
+}
+
+.dark .toolbarCustomIcon {
+  img {
+    height: 1rem;
+    filter: invert(100%);
+    width: 1rem;
+  }
+}
+.light .toolbarCustomIcon {
+  img {
+    height: 1rem;
+    width: 1rem;
+  }
+  &:hover img {
+    filter: invert(100%);
+  }
+}
+.customStyles .rdw-option-wrapper:not(:hover) {
+  background: $gray-600;
+}
+.customStyles.light .rdw-option-wrapper:not(:hover) {
+  background-color: $indigo-50;
+}
+.customStyles .rdw-option-wrapper {
+  border-radius: 6px;
+}
+
+.iconoclastIndigo .customStyles .rdw-option-active {
+  background-color: $iconoclast;
+  box-shadow: none;
+}
+.curateBlue .customStyles .rdw-option-active {
+  background-color: $curate;
+  box-shadow: none;
+}
+
+.customStyles {
+  .rdw-colorpicker-wrapper,
+  .rdw-remove-wrapper,
+  .rdw-inline-wrapper {
+    margin-bottom: 0 !important;
   }
 }

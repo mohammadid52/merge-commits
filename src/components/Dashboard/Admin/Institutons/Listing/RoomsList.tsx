@@ -11,7 +11,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
-import { AddButton } from '../../../../Atoms/Buttons/AddButton';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 
 interface RoomListProps {
   instId: string;

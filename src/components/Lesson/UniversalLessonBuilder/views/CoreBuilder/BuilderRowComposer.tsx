@@ -203,7 +203,6 @@ const BuilderRowComposer = (props: RowComposerProps) => {
                                               className={`${paddingForHeader(
                                                 content.type
                                               )}`}>
-                                              {console.log(content.type)}
                                               <div
                                                 className={`${
                                                   content.type === FORM_TYPES.JUMBOTRON ||

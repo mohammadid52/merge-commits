@@ -86,7 +86,7 @@ const LessonsBuilderHome = () => {
 
   return (
     <>
-      <div className={`w-full h-full p-8 flex justify-center`}>
+      <div className={`w-full h-full px-2 xl:px-8 py-8 flex justify-center`}>
         {/*<UniversalLessonBuilderProvider>*/}
         <Switch>
           <Route

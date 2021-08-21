@@ -455,13 +455,13 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
     <div className="p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-4 bg-gray-100">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
             {LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
           </h3>
           {!loading ? (
             <Fragment>
               {Boolean(learnings?.length) && (
-                <div className="flex justify-end w-fulll px-6 pb-4 m-auto ">
+                <div className="flex justify-end w-fulll px-6 pb-4 m-auto">
                   <Buttons
                     btnClass=""
                     label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}

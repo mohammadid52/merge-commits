@@ -1,48 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {LessonActions} from '../reducers/LessonReducerOLD';
+import {useContext, useEffect, useState} from 'react';
 import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customMutations from '../customGraphql/customMutations';
 import * as mutations from '../graphql/mutations';
-import {useParams} from 'react-router-dom';
-import {lessonStateOLD} from '../state/LessonStateOLD';
-import {lessonState} from '../state/LessonState';
-import {globalState} from '../state/GlobalState';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
-
-interface inputs {
-  subscription?: any;
-  subscribeFunc?: () => any;
-  dispatch: React.Dispatch<LessonActions>;
-  callback?: () => Promise<void>;
-  state?: any;
-  lessonState?: any;
-  lessonDispatch?: any;
-}
-
-interface timerStateType {
-  subscription?: any;
-  subscribeFunc?: () => any;
-  dispatch: React.Dispatch<LessonActions>;
-  callback?: () => Promise<void>;
-  state?: any;
-  lessonState?: any;
-  activeTimer?: any;
-  idleTimer?: any;
-  autoSaveInterval?: any;
-}
-
-const timerInitialParams: timerStateType = {
-  subscription: null,
-  subscribeFunc: null,
-  dispatch: null,
-  callback: null,
-  state: globalState,
-  lessonState: lessonState,
-  activeTimer: null,
-  idleTimer: null,
-  autoSaveInterval: null,
-};
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
@@ -81,7 +41,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 4000;
+  const STANDARD_INTERVAL = 8000;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {

@@ -111,13 +111,13 @@ const LessonTopMenu = ({
   return (
     <>
       <div
-        className={` ${theme.toolbar.bg} shadow-1 h-16 w-full flex justify-center items-center content-center py-4 px-6`}>
+        className={`${theme.toolbar.bg} shadow-1 w-full flex justify-center items-center content-center py-2 px-6`}>
         <div className="w-full flex flex-row items-center justify-between">
           <div className="flex flex-row justify-center">
             {/* BACK BUTTON */}
 
             <div
-              className={`mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
+              className={`my-auto mr-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
                 lessonState.currentPage > 0
                   ? 'cursor-pointer bg-dark-red'
                   : 'cursor-default bg-darker-gray'
@@ -135,12 +135,12 @@ const LessonTopMenu = ({
 
             {/* PROGRESS BAR */}
 
-            <ProgressBar />
+            <ProgressBar handleHome={() => handlePopup(false)} />
 
             {/* FORWARD BUTTON */}
 
             <div
-              className={`ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
+              className={`my-auto ml-4 text-sm flex justify-between items-center rounded-full w-8 h-8 z-30 ${
                 canContinue()
                   ? 'bg-sea-green cursor-pointer'
                   : 'bg-dark-gray cursor-default'
@@ -158,9 +158,6 @@ const LessonTopMenu = ({
           </div>
         </div>
       </div>
-
-      {/* ICON LABEL HOVER BAR */}
-      <div className={`w-full h-6 bg-darker-gray`} />
     </>
   );
 };
