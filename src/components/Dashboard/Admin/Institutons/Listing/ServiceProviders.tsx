@@ -15,7 +15,7 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as mutations from '../../../../../graphql/mutations';
 import Tooltip from '../../../../Atoms/Tooltip';
-import { AddButton } from '../../../../Atoms/Buttons/AddButton';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 interface ServiceProvidersProps {
   instId: string;
   serviceProviders: {

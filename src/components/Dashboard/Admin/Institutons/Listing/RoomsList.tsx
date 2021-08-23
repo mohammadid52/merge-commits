@@ -11,7 +11,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
-import { AddButton } from '../../../../Atoms/Buttons/AddButton';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 
 interface RoomListProps {
   instId: string;
@@ -156,9 +156,9 @@ const RoomsList = (props: RoomListProps) => {
           ) : (
             <Fragment>
               <div className="flex justify-center mt-8">
-                <Buttons
-                  btnClass="mx-4"
-                  label={InstitueRomms[userLanguage]['BUTTON']['CREATE']}
+                <AddButton
+                  className="mx-4"
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>

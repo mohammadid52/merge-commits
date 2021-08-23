@@ -385,6 +385,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.HIGHLIGHTER:
         return <HighlighterFormDialog {...commonProps} />;
       case FORM_TYPES.POEM:
+      case 'poem-form-default':
         return <LinestarterModalDialog {...commonProps} />;
       case FORM_TYPES.KEYWORDS:
         return <KeywordModalDialog {...commonProps} />;
@@ -392,6 +393,7 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <LinksModalDialog {...commonProps} />;
 
       case FORM_TYPES.WRITING_EXERCISE:
+      case `writing-exercise-form-default`:
         return (
           <WritingExerciseModal classString={selectedContentClass} {...commonProps} />
         );
@@ -445,7 +447,11 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
         return <ReviewSliderModal {...commonProps} />;
 
       default:
-        break;
+        return (
+          <div className="flex items-center justify-center">
+            <h3>Invalid type:{type} Please check it again</h3>
+          </div>
+        );
     }
   };
 
@@ -487,12 +493,14 @@ const BuilderWrapper = (props: ExistingLessonTemplateProps) => {
       case FORM_TYPES.HIGHLIGHTER:
         return 'Highlighter Component';
       case FORM_TYPES.POEM:
+      case 'poem-form-default':
         return 'Poem Component';
       case FORM_TYPES.LINK:
         return 'Link Component';
       case FORM_TYPES.REVIEW_SLIDER:
         return 'Review Slider Component';
       case FORM_TYPES.WRITING_EXERCISE:
+      case 'writing-exercise-form-default':
         return 'Writing Exercise Component';
       default:
         return `${capitalizeFirstLetter(type)} Component`;

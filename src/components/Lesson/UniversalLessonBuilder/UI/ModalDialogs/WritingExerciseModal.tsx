@@ -66,7 +66,6 @@ const WritingExerciseModal = (props: WEProps) => {
     updateBlockContentULBHandler,
     askBeforeClose,
     setUnsavedChanges,
-    classString = 'title-show || lineStarter-hide',
   } = props;
   const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
 
@@ -78,21 +77,22 @@ const WritingExerciseModal = (props: WEProps) => {
 
   useEffect(() => {
     if (inputObj && inputObj.length) {
-      const [title, lineStarter] = classString.split(' || ');
-      if (title === 'title-show') {
+      const title = inputObj[0].label;
+      const lineStarter = inputObj[1].options;
+      if (title) {
         enable.title = true;
       } else {
         enable.title = false;
       }
-      if (lineStarter === 'lineStarter-show') {
+      if (lineStarter) {
         enable.lineStarter = true;
       } else {
         enable.lineStarter = false;
       }
 
       setFields({...fields, title: inputObj[0].label});
-      if (inputObj[0].options) {
-        setInputFieldsArray(inputObj[0].options);
+      if (lineStarter) {
+        setInputFieldsArray(lineStarter);
       }
 
       setEnable({...enable});
@@ -157,15 +157,16 @@ const WritingExerciseModal = (props: WEProps) => {
     await updateLessonPageToDB(input);
   };
   const on_WE_Create = async () => {
+    const uniqKey = nanoid(6);
     const titleObj = {
-      id: `writing-exercise-title-${nanoid(6)}`,
+      id: `writing-exercise-title-${uniqKey}`,
       type: FORM_TYPES.WRITING_EXERCISE,
       label: enable.title ? fields.title : null,
       value: enable.title ? '' : null,
     };
 
     const lineStarterObject = {
-      id: `${FORM_TYPES.WRITING_EXERCISE}-content-${nanoid(6)}`,
+      id: `${FORM_TYPES.WRITING_EXERCISE}-content-${uniqKey}`,
       type: `${FORM_TYPES.WRITING_EXERCISE}-content`,
       options: enable.lineStarter ? inputFieldsArray : null,
       value: '',

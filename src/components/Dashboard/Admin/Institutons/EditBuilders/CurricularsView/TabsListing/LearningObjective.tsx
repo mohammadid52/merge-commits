@@ -10,7 +10,7 @@ import {IoIosAdd} from 'react-icons/io';
 import {reorder, stringToHslColor} from '../../../../../../../utilities/strings';
 
 import Buttons from '../../../../../../Atoms/Buttons';
-import {DeleteActionBtn} from '../../../../../../Atoms/DeleteActionBtn';
+import {DeleteActionBtn} from '../../../../../../Atoms/Buttons/DeleteActionBtn';
 import Modal from '../../../../../../Atoms/Modal';
 import PageWrapper from '../../../../../../Atoms/PageWrapper';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
@@ -454,14 +454,14 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   return (
     <div className="p-8 flex m-auto justify-center">
       <div className="">
-        <PageWrapper>
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+        <PageWrapper defaultClass="px-4 bg-gray-100">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
             {LEARINGOBJECTIVEDICT[userLanguage]['TITLE']}
           </h3>
           {!loading ? (
             <Fragment>
               {Boolean(learnings?.length) && (
-                <div className="flex justify-end w-9/10 m-auto ">
+                <div className="flex justify-end w-fulll px-6 pb-4 m-auto">
                   <Buttons
                     btnClass=""
                     label={LEARINGOBJECTIVEDICT[userLanguage]['BUTTON']['ADD']}
@@ -482,7 +482,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                           ref={provided.innerRef}
                           className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none"> */}
                   {isFormOpen && (
-                    <div className="flex shadow flex-col rounded-lg overflow-hidden">
+                    <div className="flex shadow flex-col overflow-hidden white_back">
                       <AddLearningObjective
                         curricularId={curricularId}
                         handleCancel={handleCancel}
@@ -502,7 +502,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                     //       {...provided.draggableProps}
                     //       {...provided.dragHandleProps}>
                     <div
-                      className="flex shadow flex-col rounded-lg overflow-hidden"
+                      className="flex shadow flex-col white_back overflow-hidden"
                       key={learning.id}>
                       <div className="flex-shrink-0">
                         <div className="p-4">

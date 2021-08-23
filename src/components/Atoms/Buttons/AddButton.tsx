@@ -9,7 +9,7 @@ interface IAddButtonActionInterface {
   disabled?: boolean;
 }
 
-export const AddButton = ({
+const AddButton = ({
   className,
   disabled = false,
   onClick,
@@ -27,3 +27,5 @@ export const AddButton = ({
     />
   );
 };
+
+export default AddButton;

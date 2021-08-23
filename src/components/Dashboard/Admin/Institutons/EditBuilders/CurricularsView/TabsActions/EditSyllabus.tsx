@@ -29,7 +29,7 @@ import {GlobalContext} from '../../../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../../../Molecules/ModalPopUp';
 import useDictionary from '../../../../../../../customHooks/dictionary';
 import {fetchDesigners} from '../../../../../../../utilities/utils';
-import { DeleteActionBtn } from '../../../../../../Atoms/DeleteActionBtn';
+import { DeleteActionBtn } from '../../../../../../Atoms/Buttons/DeleteActionBtn';
 
 interface EditSyllabusProps {}
 interface InitialData {
