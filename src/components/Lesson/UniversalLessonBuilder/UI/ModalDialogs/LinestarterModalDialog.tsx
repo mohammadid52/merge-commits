@@ -206,7 +206,6 @@ const LinestarterModalDialog = ({
     <div>
       <div className="grid grid-cols-2 my-2 gap-4">
         <div className={`col-span-2 `}>
-          <DividerBlock bgWhite value="Line Starter Builder" />
           {inputFieldsArray.map((inputObj: Options, idx: number) => {
             return (
               <div className="mb-2" key={`linestarter_${idx}`}>

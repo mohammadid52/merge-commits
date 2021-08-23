@@ -8,6 +8,7 @@ import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToD
 import {v4 as uuidv4} from 'uuid';
 import RichTextEditor from '../../../../Atoms/RichTextEditor';
 import {isEmpty} from '@aws-amplify/core';
+import htmlToDraft from 'html-to-draftjs';
 
 interface IParaModalComponentProps extends IContentTypeComponentProps {
   inputObj?: any;
@@ -79,6 +80,12 @@ const ParaModalComponent = ({
   };
 
   const {paragraph} = fields;
+
+  // function extractContent(html: string) {
+  //   return new DOMParser().parseFromString(html, 'text/html').documentElement.textContent;
+  // }
+
+  // console.log(extractContent(paragraph));
 
   return (
     <div>
