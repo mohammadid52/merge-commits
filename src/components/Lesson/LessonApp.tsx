@@ -11,6 +11,7 @@ import {
   PagePart,
   PartContent,
   PartContentSub,
+  StudentExerciseData,
   StudentPageInput,
   UniversalLessonPage,
 } from '../../interfaces/UniversalLessonInterfaces';
@@ -205,8 +206,8 @@ const LessonApp = () => {
           },
           page: UniversalLessonPage
         ) => {
-          const currentPageParts = page.pageContent;
-          const reducedPageInputs = currentPageParts.reduce(
+          const pageParts = page.pageContent;
+          const reducedPageInputs = pageParts.reduce(
             (
               pageInputsAcc: {
                 requiredIdAcc: string[];
@@ -326,7 +327,7 @@ const LessonApp = () => {
         {required: [], initialized: [], exercises: []}
       );
 
-      console.log('mappedPages - ', mappedPages);
+      // console.log('mappedPages - ', mappedPages);
 
       lessonDispatch({
         type: 'SET_INITIAL_STUDENT_DATA',
@@ -371,27 +372,45 @@ const LessonApp = () => {
     return idArr;
   };
 
-  // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
+  // ~ FILTER/MERGE PAGEDATA & EXERCISEDATA  //
+  // ------- FILTERING ------ //
   const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
-    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
-      const findPageData = studentDataArray.find(
-        (studentDataIdObj: UniversalLessonStudentData) =>
-          studentDataIdObj.id === dataIdObj.id
-      )?.pageData;
-      if (Array.isArray(findPageData)) {
-        return [...acc, findPageData];
-      } else {
-        return [];
+    return studentDataIdArray.reduce(
+      (
+        acc: {pageData: StudentPageInput[]; exerciseData: StudentExerciseData[]},
+        dataIdObj: any
+      ) => {
+        const findPageData = studentDataArray.find(
+          (studentDataIdObj: UniversalLessonStudentData) =>
+            studentDataIdObj.id === dataIdObj.id
+        )?.pageData;
+        const findExerciseData = studentDataArray.find(
+          (studentDataIdObj: UniversalLessonStudentData) =>
+            studentDataIdObj.id === dataIdObj.id
+        )?.exerciseData;
+
+        return {
+          pageData: Array.isArray(findPageData)
+            ? [...acc.pageData, findPageData]
+            : [...acc.pageData, []],
+          exerciseData: Array.isArray(findExerciseData)
+            ? [...acc.exerciseData, findExerciseData]
+            : [...acc.exerciseData, []],
+        };
+      },
+      {
+        pageData: [],
+        exerciseData: [],
       }
-    }, []);
+    );
   };
 
-  // ~~~~ CHECK AND MERGE NEW INPUT DATA ~~~ //
+  // -------- MERGING ------- //
   const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
     const differenceData = studentDataArray.reduce(
       //@ts-ignore
-      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageDataIdx: number) => {
-        const notYetSavedData = initStudentDataArray[pageDataIdx].reduce(
+      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageIdx: number) => {
+        const notYetSavedData = initStudentDataArray[pageIdx].reduce(
           (diffPageData: any[], initPageData: any) => {
             const foundInLoaded = loadedInput.find(
               (inputObj: any) => inputObj.domID === initPageData.domID
@@ -400,6 +419,33 @@ const LessonApp = () => {
               return diffPageData;
             } else {
               return [...diffPageData, initPageData];
+            }
+          },
+          []
+        );
+
+        return [...diffArray, [...loadedInput, ...notYetSavedData]];
+      },
+      []
+    );
+
+    return differenceData;
+  };
+
+  // ~~~ CHECK AD MERGE NEW EXERCISE DATA ~~ //
+  const mergedExerciseData = (exerciseDataArray: any[], initExerciseDataArray: any[]) => {
+    const differenceData = exerciseDataArray.reduce(
+      //@ts-ignore
+      (diffArray: any[], loadedInput: StudentExerciseData[] | [], pageIdx: number) => {
+        const notYetSavedData = initExerciseDataArray[pageIdx].reduce(
+          (diffExerciseData: any[], initExerciseData: any) => {
+            const foundInLoaded = loadedInput.find(
+              (inputObj: any) => inputObj.id === initExerciseData.id
+            );
+            if (foundInLoaded) {
+              return diffExerciseData;
+            } else {
+              return [...diffExerciseData, initExerciseData];
             }
           },
           []
@@ -468,8 +514,8 @@ const LessonApp = () => {
         currentLocation: indexOfPage,
         lessonProgress: '0',
         pageData: lessonState.studentData[indexOfPage],
-        hasExerciseData: lessonState.exercistData[indexOfPage]?.length > 0,
-        exerciseData: lessonState.exercistData[indexOfPage],
+        hasExerciseData: lessonState.exerciseData[indexOfPage]?.length > 0,
+        exerciseData: lessonState.exerciseData[indexOfPage],
       };
 
       const newStudentData: any = await API.graphql(
@@ -503,7 +549,7 @@ const LessonApp = () => {
       };
 
       const studentData: any = await API.graphql(
-        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
       );
 
       // existing student rows
@@ -546,13 +592,21 @@ const LessonApp = () => {
           combinedStudentDataIdArray,
           combinedRecords
         );
-        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        const finalData = mergedStudentData(
+          filteredData.pageData,
+          lessonState.studentData
+        );
+        const concatExerciseData = mergedExerciseData(
+          filteredData.exerciseData,
+          lessonState.exerciseData
+        );
         // console.log('merged data', finalData);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: combinedStudentDataIdArray,
             filteredStudentData: finalData,
+            filteredExerciseData: concatExerciseData,
           },
         });
       } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
@@ -561,13 +615,21 @@ const LessonApp = () => {
           existStudentDataIdArray,
           currentStudentData
         );
-        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        const finalData = mergedStudentData(
+          filteredData.pageData,
+          lessonState.studentData
+        );
+        const concatExerciseData = mergedExerciseData(
+          filteredData.exerciseData,
+          lessonState.exerciseData
+        );
         // console.log('merged data', finalData);
         lessonDispatch({
           type: 'LOAD_STUDENT_DATA',
           payload: {
             dataIdReferences: existStudentDataIdArray,
             filteredStudentData: finalData,
+            filteredExerciseData: concatExerciseData,
           },
         });
       }

@@ -18,7 +18,6 @@ export interface lessonStateType {
   updated?: boolean;
   requiredInputs?: [string[]];
   studentData?: [StudentPageInput[]];
-  hasExerciseData?: boolean;
   exerciseData?: [StudentExerciseData[]];
   viewing?: boolean;
   displayData?: string[];
@@ -43,7 +42,6 @@ export const lessonState: lessonStateType = {
   updated: false,
   requiredInputs: [[]],
   studentData: [[]],
-  hasExerciseData: false,
   exerciseData: [[]],
   viewing: false,
   displayData: [],

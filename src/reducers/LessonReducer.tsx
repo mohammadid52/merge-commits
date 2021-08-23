@@ -63,7 +63,8 @@ export type LessonActions =
           lessonPageID: string;
           update: boolean;
         }[];
-        filteredStudentData?: StudentPageInput[];
+        filteredStudentData?: [StudentPageInput[]];
+        filteredExerciseData?: [StudentExerciseData[]];
       };
     }
   | {
@@ -194,6 +195,9 @@ export const lessonReducer = (state: any, action: LessonActions) => {
         studentData: action.payload.filteredStudentData
           ? action.payload.filteredStudentData
           : state.studentData,
+        exerciseData: action.payload.filteredExerciseData
+          ? action.payload.filteredExerciseData
+          : state.exerciseData,
       };
     case 'LOAD_STUDENT_SUBSCRIPTION_DATA':
       const stDataIdx = action.payload.stDataIdx;

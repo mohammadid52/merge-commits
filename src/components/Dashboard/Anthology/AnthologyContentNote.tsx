@@ -715,7 +715,6 @@ const SingleNote = ({
   subSection,
   idx,
   contentLen,
-  getContentObjIndex,
   handleEditToggle,
   onCancel,
   viewEditMode,
@@ -791,7 +790,7 @@ const SingleNote = ({
             <div className="flex items-center">
               <Buttons
                 onClick={() => {
-                  handleEditToggle('', '');
+                  handleEditToggle('', '', 0, '');
                   onCancel(contentObj.type);
                 }}
                 label={anthologyDict[userLanguage].ACTIONS.CANCEL}
@@ -800,7 +799,9 @@ const SingleNote = ({
               />
 
               <Buttons
-                onClick={() => handleEditToggle('save', contentObj.id)}
+                onClick={() =>
+                  handleEditToggle('save', contentObj.id, 0, contentObj?.recordID)
+                }
                 label={anthologyDict[userLanguage].ACTIONS.SAVE}
               />
             </div>
@@ -808,7 +809,9 @@ const SingleNote = ({
             <div className="flex items-center justify-between">
               <div
                 className={`${theme.btn[themeColor]}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2`}
-                onClick={() => handleEditToggle('edit', contentObj.id)}>
+                onClick={() =>
+                  handleEditToggle('edit', contentObj.id, 0, contentObj?.recordID)
+                }>
                 {anthologyDict[userLanguage].ACTIONS.EDIT}
               </div>
 
@@ -823,7 +826,7 @@ const SingleNote = ({
                   </div>
                   <div
                     className={`${theme.btn.cancel}  w-auto py-1 p-2 rounded-md transition-all duration-300 text-sm cursor-pointer mt-4 mb-2 ml-2`}
-                    onClick={() => handleEditToggle('', '', 0)}>
+                    onClick={() => handleEditToggle('', '', 0, '')}>
                     {anthologyDict[userLanguage].ACTIONS.CANCEL}
                   </div>
                 </div>
