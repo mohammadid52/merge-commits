@@ -341,7 +341,11 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
               <>
                 <div
                   className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
-                  <p>{AuthDict[userLanguage].VERIFY_EMAIL} </p>
+                  <p>
+                    {showPasswordField
+                      ? AuthDict[userLanguage].LOGIN
+                      : AuthDict[userLanguage].VERIFY_EMAIL}{' '}
+                  </p>
                 </div>
                 <div className="h-auto flex-grow flex flex-col justify-center">
                   <div className="w-full mb-2 flex flex-col justify-around items-center">

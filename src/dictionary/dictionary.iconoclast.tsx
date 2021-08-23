@@ -1,11 +1,13 @@
 // Authentication pages
 const AuthDict: any = {
-  EN:{
-    VERIFY_EMAIL: 'Verify Email'
+  EN: {
+    VERIFY_EMAIL: 'Verify Email',
+    LOGIN: 'Log In',
   },
-  ES:{
-    VERIFY_EMAIL: 'TBD'
-  }
+  ES: {
+    VERIFY_EMAIL: 'TBD',
+    LOGIN: 'TBD'
+  },
 };
 
 // Buttons
@@ -2274,6 +2276,7 @@ const RegistrationDict: any = {
     lastplaceholder: 'Doe',
     email: 'Email',
     emailplaceholder: 'email@email.com',
+    GROUP_PLACEHOLDER: 'Select group for student',
     button: {
       submit: 'Submit',
     },
@@ -2287,6 +2290,8 @@ const RegistrationDict: any = {
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
+      GROUP_NO_OPTION: 'Select class first',
+      ROLE_NO_OPTION: 'Select role first',
     },
   },
   ES: {
