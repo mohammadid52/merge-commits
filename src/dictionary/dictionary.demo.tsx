@@ -1,21 +1,38 @@
+// Authentication pages
+const AuthDict: any = {
+  EN: {
+    VERIFY_EMAIL: 'Verify Email',
+    LOGIN: 'Log In',
+  },
+  ES: {
+    VERIFY_EMAIL: 'TBD',
+    LOGIN: 'TBD',
+  },
+};
 const BUTTONS: any = {
   EN: {
     ADD: 'Add',
     ADD_NEW: 'Add New',
     EDIT: 'Edit',
     SAVE: 'Save',
+    SAVING: 'Saving',
     CANCEL: 'Cancel',
     PUBLISH: 'Publish',
     YES: 'Yes',
+    CREATE: 'Create',
+    CREATING: 'Creating',
   },
   ES: {
     ADD: 'Añadir',
     ADD_NEW: 'Añadir nuevo',
     EDIT: 'Edit',
     SAVE: 'Salvar',
+    SAVING: 'TBD',
     CANCEL: 'Cancelar',
     PUBLISH: 'TBD',
     YES: 'TBD',
+    CREATE: 'TBD',
+    CREATING: 'TBD',
   },
 };
 
@@ -83,7 +100,7 @@ const EditQuestionModalDict: any = {
 // Breadcrumbs
 const BreadcrumsTitles: any = {
   EN: {
-    HOME: 'HOME',
+    HOME: 'Home',
     PROFILE: 'PROFILE',
     PEOPLE: 'PEOPLE',
     INSTITUTION_MANAGEMENT: 'Institution Management',
@@ -92,6 +109,9 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
+    CLASSROOMS: 'Classrooms',
+    CLASSROOM: 'Classroom',
+    CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
     EDITCLASSROOM: 'Edit Classroom',
@@ -111,8 +131,11 @@ const BreadcrumsTitles: any = {
     UserInfo: 'User Information',
     LESSONS: 'Lessons',
     LESSONPLANBUILDER: 'Lesson Plan Builder',
+    LESSON_BUILDER: 'Lesson Builder',
+    LESSON_EDITOR: 'Lesson Editor',
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
+    LOADING: 'Loading...',
   },
   ES: {
     HOME: 'CASA',
@@ -124,9 +147,12 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
+    CLASSROOMS: 'TBD',
+    CLASSROOM: 'TBD',
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
+    CLASSES: 'TBD',
     CURRICULUMBUILDER: 'TBD',
     LEARINGOBJECTIVE: 'TBD',
     AddMesurement: 'TBD',
@@ -143,6 +169,7 @@ const BreadcrumsTitles: any = {
     UserInfo: 'TBD',
     LESSONS: 'TBD',
     LESSONPLANBUILDER: 'TBD',
+    LESSON_EDITOR: 'TBD',
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
   },
@@ -275,6 +302,7 @@ const anthologyDict: any = {
       ADD: 'Add More',
       CANCEL: 'Cancel',
       DELETE: 'Delete',
+      CONFIRM: 'Confirm',
     },
   },
   ES: {
@@ -291,6 +319,7 @@ const anthologyDict: any = {
       ADD: 'Añadir más',
       CANCEL: 'Cancelar',
       DELETE: 'Deletar',
+      CONFIRM: 'Confirm',
     },
   },
 };
@@ -434,6 +463,8 @@ const editClassDict: any = {
     STUDENTS: 'STUDENTS',
     ADD_STUDENT_PLACEHOLDER: 'Select student',
     ADD_STUDENT_BUTTON: 'Add',
+    GROUP: 'Group',
+    GROUP_PLACEHOLDER: 'Select Group',
     UPDATING: 'updating...',
     CANCEL: 'Cancel',
     NOSTUDENT: 'No students added in the class.',
@@ -454,7 +485,9 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'Participant Name',
+      GROUP: 'Group',
       STATUS: 'Status',
+      DATE: 'Date Added',
       ACTIONS: 'Actions',
     },
   },
@@ -465,6 +498,8 @@ const editClassDict: any = {
     STUDENTS: 'ALUMNAS',
     ADD_STUDENT_PLACEHOLDER: 'Agregar nuevo alumno',
     ADD_STUDENT_BUTTON: 'Añadir',
+    GROUP: 'TBD',
+    GROUP_PLACEHOLDER: 'TBD',
     UPDATING: 'TBD',
     CANCEL: 'TBD',
     NOSTUDENT: 'TBD',
@@ -485,7 +520,9 @@ const editClassDict: any = {
     TABLE: {
       SNO: 'No.',
       NAME: 'nombre del estudiante',
+      GROUP: 'TBD',
       STATUS: 'estado',
+      DATE: 'TBD',
       ACTIONS: 'comportamiento',
     },
   },
@@ -596,12 +633,21 @@ const classRoomDict: any = {
     SURVEY: 'Survey',
     LESSON_PLANNER: 'Lesson Planner',
     ASSESSMENT_TITLE: 'Surveys & Assessments',
+    STEP: 'Step',
     UNIT_TITLE: 'Unit Manager',
+    LESSON_TITLE: 'Select Lesson',
+    LESSON_SUB_TITLE: 'Click on lesson you want to teach',
     BOTTOM_BAR: {
       START: 'START',
       DISABLE: 'DISABLE',
       ENABLE: 'ENABLE',
       TEACH: 'TEACH',
+      ACTIVE: 'ACTIVE',
+      COMPLETED: 'COMPLETED',
+      OPENED: 'OPEN',
+      CLOSED: 'CLOSED',
+      SURVEY: 'SURVEY',
+      UPCOMING: 'UPCOMING',
     },
     LESSON_TABS: {
       TAB_ONE: `Today's Lesson`,
@@ -624,12 +670,19 @@ const classRoomDict: any = {
     SURVEY: 'TBD',
     LESSON_PLANNER: 'TBD',
     ASSESSMENT_TITLE: 'TBD',
+    STEP: 'TBD',
     UNIT_TITLE: 'TBD',
+    LESSON_TITLE: 'TBD',
+    LESSON_SUB_TITLE: 'TBD',
     BOTTOM_BAR: {
       START: 'TBD',
       DISABLE: 'TBD',
       ENABLE: 'TBD',
       TEACH: 'TBD',
+      OPENED: 'TBD',
+      CLOSED: 'TBD',
+      SURVEY: 'TBD',
+      UPCOMING: 'TBD',
     },
     LESSON_TABS: {
       TAB_ONE: `TBD`,
@@ -659,6 +712,7 @@ const lessonPlannerDict: any = {
     CORELESSON_BREAKDOWN: 'CoreLesson/Breakdown',
     ACTIVITY_BREAKDOWN: 'Activity/Breakdown',
     OTHER_LABELS: {
+      ROOM_NAME: 'Room',
       STUDDENT_ONLINE: 'Students Online',
       TOPIC: 'Topic',
       START_DATE: 'Start Date',
@@ -692,6 +746,7 @@ const lessonPlannerDict: any = {
     CORELESSON_BREAKDOWN: 'TBD',
     ACTIVITY_BREAKDOWN: 'TBD',
     OTHER_LABELS: {
+      ROOM_NAME: 'TBD',
       STUDDENT_ONLINE: 'TBD',
       TOPIC: 'TBD',
       START_DATE: 'TBD',
@@ -994,7 +1049,7 @@ const Institute_class: any = {
     EDIT: 'edit',
     INFO: 'This institute does not have any class. Please create a new class.',
     BUTTON: {
-      CREATE: 'Create new class',
+      ADD: 'New class',
     },
   },
   ES: {
@@ -1005,7 +1060,7 @@ const Institute_class: any = {
     EDIT: 'TBD',
     INFO: 'TBD',
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };
@@ -1013,7 +1068,7 @@ const InstitueCurriculam: any = {
   EN: {
     TITLE: 'INSTITUTE CURRICULAR',
     BUTTON: {
-      ADD: 'Add new Curricular',
+      ADD: 'New Curricular',
     },
     NO: 'No.',
     NAME: 'Curricular Name',
@@ -1051,7 +1106,7 @@ const InstitueRomms: any = {
       fetcherr: 'Error while fetching classroom data please Try again later.',
     },
     BUTTON: {
-      CREATE: 'Create new Classroom',
+      ADD: 'New Classroom',
     },
   },
   ES: {
@@ -1068,7 +1123,7 @@ const InstitueRomms: any = {
       fetcherr: 'TBD',
     },
     BUTTON: {
-      CREATE: 'TBD',
+      ADD: 'TBD',
     },
   },
 };
@@ -1485,7 +1540,7 @@ const curricularviewdict: any = {
 
 const CHECKPOINTSDICT: any = {
   EN: {
-    TITLE: 'CURRICULAR CHECKPOINTS',
+    TITLE: 'Demographics & Information (Curricular)',
     INFO: 'This curricular does not have any checkpoints yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
@@ -1511,7 +1566,7 @@ const LEARINGOBJECTIVEDICT: any = {
       'This curricular does not have any learning objectives yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
-      ADD: 'Add New Learning Objective',
+      ADD: 'Add Learning Objective',
     },
   },
   ES: {
@@ -1793,6 +1848,50 @@ const AddProfileCheckpointDict: any = {
       labelrequired: 'TBD',
       minone: 'TBD',
       noquestion: 'TBD',
+    },
+  },
+};
+
+const SyllabusDict: any = {
+  EN: {
+    TITLE: 'Unit Builder',
+    LESSON_PLAN: 'LESSON PLAN MANAGER',
+    ADD_NEW_LESSON: 'New Lesson',
+    SELECT_LESSON: 'Select Lesson',
+    HEADING: 'UNIT INFORMATION',
+    LESSON_PLAN_HEADING: 'LESSON PLAN MANAGER',
+    TABLE_HEADS: {
+      NUMBER: 'No.',
+      LESSON_NAME: 'Lesson Name',
+      MEASUREMENTS: 'Measurements',
+      TYPE: 'Type',
+      ACTION: 'Actions',
+    },
+    MESSAGES: {
+      wantsave: 'Do you want to save changes before moving forward?',
+      fetchlist: 'Error while fetching lessons list data.',
+      fetchdesign: 'Error while fetching Designers list Please try again later.',
+      UPDATE_ERROR: 'Error while updating please try again later.',
+    },
+  },
+  ES: {
+    TITLE: 'TBD',
+    LESSON_PLAN: 'TBD',
+    ADD_NEW_LESSON: 'TBD',
+    SELECT_LESSON: 'TBD',
+    HEADING: 'TBD',
+    LESSON_PLAN_HEADING: 'TBD',
+    TABLE_HEADS: {
+      NUMBER: 'TBD',
+      LESSON_NAME: 'TBD',
+      MEASUREMENTS: 'TBD',
+      TYPE: 'TBD',
+      ACTION: 'TBD',
+    },
+    MESSAGES: {
+      wantsave: 'TBD',
+      fetchlist: 'TBD',
+      fetchdesign: 'TBD',
     },
   },
 };
@@ -2208,6 +2307,8 @@ const RegistrationDict: any = {
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
+      GROUP_NO_OPTION: 'Select class first',
+      ROLE_NO_OPTION: 'Select role first',
     },
   },
   ES: {
@@ -2233,6 +2334,8 @@ const RegistrationDict: any = {
       userrol: 'TBD',
       loading: 'TBD',
       institution: 'TBD',
+      GROUP_NO_OPTION: 'TBD',
+      ROLE_NO_OPTION: 'TBD',
     },
   },
 };
@@ -2789,10 +2892,14 @@ const AddNewLessonFormDict: any = {
     LANGUAGE: 'Language',
     SELECTDESIGNER: 'Select Designers',
     DESIGNER: 'Designers',
+    DURATION: 'Duration (weeks)',
+    MATERIALS: 'Materials',
     PURPOSE: 'Purpose',
-    OBJECTIVE: 'Objective',
+    OBJECTIVE: 'Lesson Objectives',
+    REMINDERANDNOTES: 'Reminder & Notes',
     MEASUREMENTLESSON: 'Lesson Measurements',
     SELECTMEASURE: 'Select Measurement',
+    IMAGE_CAPTION: 'Image Overlay Text',
     NO: 'No.',
     MEASUREMENT: 'Measurement',
     TOPIC: 'Topic',
@@ -2803,6 +2910,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'Lesson type is required',
       INSTITUTE: 'Institute is required field.',
       LANGUAGE: 'Language selection is required',
+      STUDENT_SUMMARY: 'Student summary is required',
+      IMAGE_CAPTION: 'Image Overlay text is required',
     },
     MESSAGES: {
       REMOVE: 'Are you sure you want to remove this measurement?',
@@ -2810,6 +2919,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'Lesson details saved successfully.',
       SAVEERR: 'Unable to save Lesson details, Please try again later.',
       LESSONNOTHAVE: 'This lesson does not have any measurements, please add new one.',
+      NODESIGNEROPTION: 'Select Institution first',
     },
     NEXT: 'Next',
     SAVE: 'Save',
@@ -2826,10 +2936,14 @@ const AddNewLessonFormDict: any = {
     LANGUAGE: 'TBD',
     SELECTDESIGNER: 'TBD',
     DESIGNER: 'TBD',
+    DURATION: 'TBD',
+    MATERIALS: 'TBD',
     PURPOSE: 'TBD',
     OBJECTIVE: 'TBD',
+    REMINDERANDNOTES: 'TBD',
     MEASUREMENTLESSON: 'TBD',
     SELECTMEASURE: 'TBD',
+    IMAGE_CAPTION: 'TBD',
     NO: 'TBD',
     MEASUREMENT: 'TBD',
     TOPIC: 'TBD',
@@ -2840,6 +2954,8 @@ const AddNewLessonFormDict: any = {
       TYPE: 'TBD',
       INSTITUTE: 'TBD',
       LANGUAGE: 'TBD',
+      STUDENT_SUMMARY: 'TBD',
+      IMAGE_CAPTION: 'TBD',
     },
     MESSAGES: {
       REMOVE: 'TBD',
@@ -2847,6 +2963,7 @@ const AddNewLessonFormDict: any = {
       SAVE: 'TBD',
       SAVEERR: 'TBD',
       LESSONNOTHAVE: 'TBD',
+      NODESIGNEROPTION: 'TBD',
     },
     SAVE: 'TBD',
     SAVING: 'TBD',
@@ -3044,18 +3161,128 @@ const LessonBuilderDict: any = {
   EN: {
     TITLE: 'LESSON PLAN BUILDER',
     SUBTITLE: 'Build lessons, surveys or assessments here.',
-
+    BUTTON: {
+      ADD_PLAN: 'Add new page',
+      EDIT: 'Edit',
+      VIEW: 'View',
+      PREVIEW: 'Preview',
+      SAVE: 'Save',
+    },
+    LESSON_PLAN_COLUMN: {
+      ID: 'id',
+      PAGE_TITLE: 'Page Title',
+      PLAN_LABEL: 'Plan Label',
+      DESCRIPTION: 'Description',
+      ESTIMATED_TIME: 'Estimated Time',
+      ACTION: 'Action',
+    },
+    LESSON_PLAN_FORM: {
+      DESCRIPTION: 'Description',
+      ESTIMATED_TIME: 'Estimated Time',
+      HEADING: 'Create new lesson plan',
+      ID: 'Id',
+      LABEL: 'Lesson plan label',
+      TITLE: 'Page title',
+    },
+    LESSON_CLASSROOM_ACTIVITY_TABLE: {
+      ACTIVITY_LABEL: 'Activity Label',
+      ACTIVITY_NAME: 'Activity name',
+      INTERACTION_TYPE: 'Interaction Type',
+      INSTRUCTION: 'Instructions',
+      ESTIMATED_TIME: 'Estimated Time',
+      ACTION: 'Actions',
+      ADD_NEW_ACTIVITY: 'New Class Activity',
+      HEADING: 'Class Activities',
+    },
+    LESSON_HOMEWORK_ACTIVITY_TABLE: {
+      ACTIVITY_LABEL: 'Activity Label',
+      ACTIVITY_NAME: 'Activity name',
+      INSTRUCTION: 'Instructions',
+      ESTIMATED_TIME: 'Estimated Time',
+      ACTION: 'Actions',
+      ADD_NEW_ACTIVITY: 'New Homework',
+      HEADING: 'Homework/Challenges',
+    },
     MESSAGES: {
       UNSAVE: 'You have unsaved changes, do you still want to continue?',
+      PUBLISH_DISABLED_INFO: 'Complete lesson summary and plan tabs to continue',
     },
+    INFORMATION_HEADING: 'General Information',
+    NAME: 'Lesson Name',
+    OWNER: 'Institution Owner',
+    DESCRIPTION: 'Description',
+    DESIGNER: 'Designers',
+    DURATION: 'Duration',
+    LANGUAGE: 'Languages',
+    LESSON_PLAN_LABEL: 'Lesson Plan Label',
+    OBJECTIVE: 'Objective',
+    PURPOSE: 'Purpose',
+    RESOURCES: 'Resources',
+    NOTES: 'Notes & Reflection',
+    SUMMARY: 'Student Summary',
   },
   ES: {
     TITLE: 'TBD',
     SUBTITLE: 'TBD',
-
+    BUTTON: {
+      ADD_PLAN: 'TBD',
+      EDIT: 'TBD',
+      VIEW: 'TBD',
+      PREVIEW: 'TBD',
+      SAVE: 'TBD',
+    },
+    LESSON_PLAN_COLUMN: {
+      ID: 'TBD',
+      PAGE_TITLE: 'TBD',
+      PLAN_LABEL: 'TBD',
+      DESCRIPTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      ACTION: 'TBD',
+    },
+    LESSON_PLAN_FORM: {
+      DESCRIPTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      HEADING: 'TBD',
+      ID: 'TBD',
+      LABEL: 'TBD',
+      TITLE: 'TBD',
+    },
+    LESSON_CLASSROOM_ACTIVITY_TABLE: {
+      ACTIVITY_LABEL: 'TBD',
+      ACTIVITY_NAME: 'TBD',
+      INSTRUCTION: 'TBD',
+      INTERACTION_TYPE: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      ACTION: 'TBD',
+      ADD_NEW_ACTIVITY: 'TBD',
+      HEADING: 'TBD',
+    },
+    LESSON_HOMEWORK_ACTIVITY_TABLE: {
+      ACTIVITY_LABEL: 'TBD',
+      ACTIVITY_NAME: 'TBD',
+      INSTRUCTION: 'TBD',
+      ESTIMATED_TIME: 'TBD',
+      ACTION: 'TBD',
+      ADD_NEW_ACTIVITY: 'TBD',
+      HEADING: 'TBD',
+    },
     MESSAGES: {
       UNSAVE: 'TBD',
+      PUBLISH_DISABLED_INFO: 'TBD',
     },
+    INFORMATION_HEADING: 'TBD',
+    NAME: 'TBD',
+    OWNER: 'TBD',
+    DESCRIPTION: 'TBD',
+    DESIGNER: 'TBD',
+    DURATION: 'TBD',
+    LANGUAGE: 'TBD',
+    LESSON_PLAN_LABEL: 'TBD',
+    OBJECTIVE: 'TBD',
+    PURPOSE: 'TBD',
+    RESOURCES: 'TBD',
+    NOTES: 'TBD',
+    SUMMARY: 'TBD',
   },
 };
 
@@ -3167,6 +3394,15 @@ const DashboardDict: any = {
   },
 };
 
+const LearningEvidenceDict: any = {
+  EN: {
+    TITLE: 'Learning Evidence',
+  },
+  ES: {
+    TITLE: 'TBD',
+  },
+};
+
 function paginationPage(lang: string, page: number, total: number) {
   if (lang === 'EN') return `Showing Page ${page + 1} of ${total} pages`;
   if (lang === 'ES') return `Mostrando página ${page + 1} de ${total} páginas`;
@@ -3174,6 +3410,7 @@ function paginationPage(lang: string, page: number, total: number) {
 }
 
 export {
+  AuthDict,
   CsvDict,
   paginationPage,
   BUTTONS,
@@ -3224,6 +3461,7 @@ export {
   EditTopicDict,
   ProfileCheckpointlookupDict,
   RegistrationDict,
+  SyllabusDict,
   UserDict,
   UserEditDict,
   UserInformationDict,
@@ -3248,4 +3486,5 @@ export {
   LessonEditDict,
   LessonsListDict,
   EditQuestionModalDict,
+  LearningEvidenceDict,
 };

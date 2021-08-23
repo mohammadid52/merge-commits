@@ -6,15 +6,18 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Buttons from '../../../../Atoms/Buttons';
 import ULBFileUploader from '../../../../Atoms/Form/FileUploader';
 
-import { IContentTypeComponentProps } from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {getImageFromS3, getImageFromS3Static} from '../../../../../utilities/services';
+import {IContentTypeComponentProps} from '../../../../../interfaces/UniversalLessonBuilderInterfaces';
 import {
   EditQuestionModalDict,
   UniversalBuilderDict,
 } from '../../../../../dictionary/dictionary.iconoclast';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {updateLessonPageToDB} from '../../../../../utilities/updateLessonPageToDB';
+import ProgressBar from '../ProgressBar';
 
 interface IImageInput {
-  url: string;
+  value: string;
   width: string;
   height: string;
   caption?: string;
@@ -22,82 +25,142 @@ interface IImageInput {
 }
 
 interface IImageFormComponentProps extends IContentTypeComponentProps {
-  inputObj?: IImageInput;
+  handleGalleryModal: () => void;
+  inputObj?: IImageInput[];
+  selectedImageFromGallery?: string;
+  customVideo?: boolean;
 }
 
 const ImageFormComponent = ({
   inputObj,
   closeAction,
   createNewBlockULBHandler,
+  updateBlockContentULBHandler,
+  handleGalleryModal,
+  setUnsavedChanges,
+  customVideo = false,
+  askBeforeClose,
+  selectedImageFromGallery,
 }: IImageFormComponentProps) => {
-  const {userLanguage} = useContext(GlobalContext);
+  const {
+    userLanguage,
+    state: {user},
+  } = useContext(GlobalContext);
+  const [openGallery, setOpenGallery] = useState<boolean>(false);
+  const [isEditingMode, setIsEditingMode] = useState<boolean>(false);
   const [imageInputs, setImageInputs] = useState<IImageInput>({
-    url: '',
+    value: '',
     imageData: null,
     width: 'auto',
     height: 'auto',
     caption: '',
   });
+
+  const [uploadProgress, setUploadProgress] = useState<string | number>(0);
+
   const [errors, setErrors] = useState<IImageInput>({
-    url: '',
+    value: '',
     width: '',
     height: '',
   });
   const [loading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (inputObj && inputObj.url) {
-      setImageInputs(inputObj);
+    if (inputObj && inputObj.length) {
+      setImageInputs(inputObj[0]);
+      setIsEditingMode(true);
     }
   }, [inputObj]);
-  const updateFileUrl = (previewUrl: string, imageData: File|null) => {
-    setImageInputs((prevValues) => ({...prevValues, url: previewUrl, imageData}));
-    setErrors((prevValues) => ({...prevValues, url: ''}));
+
+  // To update the selected image from gallery to input object
+  useEffect(() => {
+    if (selectedImageFromGallery) {
+      setImageInputs((prevValues) => ({
+        ...prevValues,
+        value: selectedImageFromGallery,
+        imageData: null,
+      }));
+    }
+  }, [selectedImageFromGallery]);
+
+  const updateFileUrl = (previewUrl: string, imageData: File | null) => {
+    setImageInputs((prevValues) => ({...prevValues, value: previewUrl, imageData}));
+    setErrors((prevValues) => ({...prevValues, value: ''}));
   };
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUnsavedChanges(true);
     const name: string = (event.target as HTMLInputElement).name;
     const value: string = (event.target as HTMLInputElement).value;
     setImageInputs((prevValues) => ({...prevValues, [name]: value}));
     setErrors((prevValues) => ({...prevValues, [name]: ''}));
   };
 
-  const onSave = async(event: React.FormEvent<HTMLFormElement>) => {
+  const addToDB = async (list: any) => {
+    // closeAction();
+
+    const input = {
+      id: list.id,
+      lessonPlan: [...list.lessonPlan],
+    };
+
+    await updateLessonPageToDB(input);
+  };
+
+  const onSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValid: boolean = validateFormFields();
     if (isValid) {
-      let temp = imageInputs.imageData.name.split('.');
-      const extension = temp.pop();
-      const fileName = `${Date.now()}_${temp
-        .join(' ')
-        .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
-      setIsLoading(true);
-      await uploadImageToS3(
-        imageInputs.imageData,
-        `${fileName}`,
-        'image/jpeg'
-      );
-      createNewBlockULBHandler('', 'pageContent', 'image', [
-        {
-          ...imageInputs,
-          url: `ULB/content_image_${fileName}`,
-        },
-      ]);
+      let {imageData, ...payload} = imageInputs;
+      if (imageInputs.imageData) {
+        let temp = imageData.name.split('.');
+        const extension = temp.pop();
+        const fileName = `${Date.now()}_${temp
+          .join(' ')
+          .replace(new RegExp(/[ +!@#$%^&*().]/g), '_')}.${extension}`;
+        setIsLoading(true);
+        await uploadImageToS3(imageData, `${fileName}`, 'image/jpeg');
+
+        payload = {
+          ...payload,
+          value: `ULB/${user.id}/content_image_${fileName}`,
+        };
+        if (isEditingMode) {
+          const updatedList = updateBlockContentULBHandler(
+            '',
+            '',
+            customVideo ? 'custom_video' : 'image',
+            [payload]
+          );
+
+          await addToDB(updatedList);
+        } else {
+          const updatedList = createNewBlockULBHandler(
+            '',
+            '',
+            customVideo ? 'custom_video' : 'image',
+            [payload]
+          );
+
+          await addToDB(updatedList);
+        }
+      }
+
       setIsLoading(false);
-      closeAction();
+      setUnsavedChanges(false);
     }
   };
 
   const validateFormFields = () => {
-    const {url = '', width = '', height = ''} = imageInputs;
+    const {value = '', width = '', height = ''} = imageInputs;
     let isValid = true;
     let errorMsgs = {
-      url: '',
+      value: '',
       width: '',
       height: '',
     };
-    if (!url) {
+    if (!value) {
       isValid = false;
-      errorMsgs.url =
+      errorMsgs.value =
         UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_REQUIRED'];
     }
     if (!width || (width !== 'auto' && !Number(width))) {
@@ -108,46 +171,75 @@ const ImageFormComponent = ({
     if (!height || (height !== 'auto' && !Number(height))) {
       isValid = false;
       errorMsgs.height =
-        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_HEIGHT'];;
+        UniversalBuilderDict[userLanguage]['FORMS_ERROR_MSG']['IMAGE_HEIGHT'];
     }
     setErrors(errorMsgs);
     return isValid;
   };
 
-    const uploadImageToS3 = async (file: any, id: string, type: string) => {
-      // Upload file to s3 bucket
+  const uploadImageToS3 = async (file: any, id: string, type: string) => {
+    // Upload file to s3 bucket
 
-      return new Promise((resolve, reject) => {
-        Storage.put(`ULB/content_image_${id}`, file, {
-          contentType: type,
-          ContentEncoding: 'base64',
+    return new Promise((resolve, reject) => {
+      Storage.put(`ULB/${user.id}/content_image_${id}`, file, {
+        contentType: type,
+        ContentEncoding: 'base64',
+        progressCallback: ({loaded, total}: any) => {
+          const progress = (loaded * 100) / total;
+          setUploadProgress(progress.toFixed(0));
+        },
+      })
+        .then((result: any) => {
+          console.log('File successfully uploaded to s3', result);
+
+          setUploadProgress('done');
+          resolve(true);
         })
-          .then((result: any) => {
-            console.log('File successfully uploaded to s3', result);
-            resolve(true);
-          })
-          .catch((err: any) => {
-            setErrors((prevValues) => ({
-              ...prevValues,
-              url: 'Unable to upload image. Please try again later. ',
-            }));
-            console.log('Error in uploading file to s3', err);
-            reject(err);
-          });
-      });
-    };
+        .catch((err: any) => {
+          setErrors((prevValues) => ({
+            ...prevValues,
+            value: 'Unable to upload image. Please try again later. ',
+          }));
+          console.log('Error in uploading file to s3', err);
+          reject(err);
+        });
+    });
+  };
 
-  const {caption = '', url = '', width = '', height = ''} = imageInputs;
+  console.log(
+    '🚀 ~ file: ImageComponent.tsx ~ line 238 ~ useEffect ~ uploadProgress',
+    uploadProgress
+  );
+  useEffect(() => {
+    if (uploadProgress === 'done') {
+      closeAction();
+    }
+  }, [uploadProgress]);
+
+  const {caption = '', value = '', width = '', height = '', imageData} = imageInputs;
   return (
     <div>
       <form onSubmit={onSave}>
         <div className={`grid grid-cols-2 gap-3`}>
-          <ULBFileUploader
-            acceptedFilesFormat={'image/*'}
-            updateFileUrl={updateFileUrl}
-            fileUrl={url}
-            error={errors?.url}
-          />
+          <div
+            className={
+              'border-0 border-dashed border-gray-400 rounded-lg h-35 cursor-pointer p-2'
+            }>
+            <ULBFileUploader
+              acceptedFilesFormat={customVideo ? 'video/*' : 'image/*'}
+              updateFileUrl={updateFileUrl}
+              fileUrl={value}
+              error={errors?.value}
+              customVideo={customVideo}
+              showPreview={true}
+            />
+            <div className="flex flex-col items-center justify-center text-gray-400">
+              --- Or ---
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <Buttons label={'Browse'} onClick={handleGalleryModal} />
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <FormInput
@@ -180,17 +272,50 @@ const ImageFormComponent = ({
                 onChange={handleInputChange}
                 name="caption"
                 label={'Caption'}
-                placeHolder={'Enter image caption here'}
+                placeHolder={`Enter ${customVideo ? 'video' : 'image'} caption here`}
               />
             </div>
           </div>
         </div>
+        {value ? (
+          customVideo ? (
+            <div className="w-72 h-auto mx-auto mt-6">
+              <video
+                controls
+                className="rounded-lg mx-auto"
+                src={imageData ? value : getImageFromS3Static(value)}>
+                <source />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          ) : (
+            <div>
+              <img
+                src={imageData ? value : getImageFromS3Static(value)}
+                alt=""
+                className={`w-auto h-30 pt-4`}
+              />
+            </div>
+          )
+        ) : null}
+
+        {loading && uploadProgress !== 'done' && (
+          <ProgressBar
+            status={
+              uploadProgress < 99
+                ? `Uploading ${customVideo ? 'Video' : 'Image'}`
+                : 'Upload Done'
+            }
+            progress={uploadProgress}
+          />
+        )}
+
         <div className="flex mt-8 justify-center px-6 pb-4">
           <div className="flex justify-end">
             <Buttons
               btnClass="py-1 px-4 text-xs mr-2"
               label={EditQuestionModalDict[userLanguage]['BUTTON']['CANCEL']}
-              onClick={closeAction}
+              onClick={askBeforeClose}
               transparent
             />
             <Buttons

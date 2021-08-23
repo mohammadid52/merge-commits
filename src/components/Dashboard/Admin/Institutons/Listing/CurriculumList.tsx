@@ -7,6 +7,7 @@ import {getAsset} from '../../../../../assets';
 import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Tooltip from '../../../../Atoms/Tooltip';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 
 interface CurriculumListProps {
   curricular: {items: {name?: string; id: string}[]};
@@ -41,8 +42,8 @@ const CurriculumList = (props: CurriculumListProps) => {
           {curricular.items && curricular.items.length > 0 ? (
             <Fragment>
               <div className="flex justify-end w-full m-auto ">
-                <Buttons
-                  btnClass="mx-4"
+                <AddButton
+                  className="mx-4"
                   label={InstitueCurriculam[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewCurricular}
                 />

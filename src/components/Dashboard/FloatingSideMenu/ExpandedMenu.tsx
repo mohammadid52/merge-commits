@@ -8,35 +8,26 @@ import {FileWidgetsSmall} from './SectionContent/FileWidgetsSmall';
 import RoomChat from '../../RoomChat/RoomChat';
 import NotesForm from '../../Lesson/LessonComponents/Notes/NotesForm';
 import useDictionary from '../../../customHooks/dictionary';
+import {FloatingSideMenuProps} from './FloatingSideMenu';
 
 // GET ALL THE RELEVANT WIDGETS HERE
 
-const ExpandedMenu = (props: {
-  menuState?: number;
-  setMenuState?: (level: number, section: string) => void;
-  focusSection?: string;
-  setFocusSection?: React.Dispatch<React.SetStateAction<string>>;
-  chatroom?: any;
-  setChatroom?: React.Dispatch<React.SetStateAction<any>>;
-}) => {
-  const {
-    menuState,
-    setMenuState,
-    focusSection,
-    setFocusSection,
-    chatroom,
-    setChatroom,
-  } = props;
+const ExpandedMenu = ({
+  menuState,
+  setMenuState,
+  focusSection,
+  setFocusSection,
+  chatroom,
+  setChatroom,
+  notesData,
+  notesInitialized,
+  setNotesInitialized,
+  getOrCreateJournalData,
+  updateNotesContent,
+  saveInProgress,
+}: FloatingSideMenuProps) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
-  const { lessonDict } = useDictionary(clientKey);
-
-  const setSelectedChatroom = (roomObj: any) => {
-    if (!chatroom || (chatroom && chatroom.name !== roomObj.name)) {
-      setChatroom(roomObj);
-    }
-
-    setMenuState(2, 'Chatroom');
-  };
+  const {lessonDict} = useDictionary(clientKey);
 
   const [widgets, setWidgets] = useState<any>([]);
 
@@ -74,7 +65,7 @@ const ExpandedMenu = (props: {
         transform transition-transform ease-in-out duration-400  z-100
         ${menuState > 0 && focusSection === 'Chatroom' ? 'bg-container' : ''}
         ${menuState > 0 && focusSection !== 'Chatroom' ? 'bg-gray-600' : ''}
-        ${menuState > 0 ? '' : 'w-0 invisible'}
+        ${menuState > 0 ? 'rounded-r-lg' : 'w-0 invisible'}
          `}>
         <SideMenuSection
           menuState={menuState}
@@ -84,7 +75,7 @@ const ExpandedMenu = (props: {
           focusSection={focusSection}>
           <Rooms
             chatroom={chatroom}
-            setSelectedChatroom={setSelectedChatroom}
+            setSelectedChatroom={setChatroom}
             focusSection={focusSection}
             setFocusSection={setFocusSection}
           />
@@ -123,8 +114,17 @@ const ExpandedMenu = (props: {
             setMenuState={setMenuState}
             sectionLabel={`Notes`}
             sectionTitle={`Notes for this ${lessonDict[userLanguage].CLASS}`}
-            focusSection={focusSection}>
-            <NotesForm focusSection={focusSection}/>
+            focusSection={focusSection}
+            saveInProgress={saveInProgress}>
+            <NotesForm
+              focusSection={focusSection}
+              notesData={notesData}
+              notesInitialized={notesInitialized}
+              setNotesInitialized={setNotesInitialized}
+              getOrCreateJournalData={getOrCreateJournalData}
+              updateNotesContent={updateNotesContent}
+              saveInProgress={saveInProgress}
+            />
           </SideMenuSection>
         )}
       </div>

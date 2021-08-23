@@ -13,6 +13,7 @@ interface MultipleSelectorProps {
   selectedItems?: {id?: string; name?: string; value?: string}[];
   btnClass?: string;
   arrowHidden?: boolean;
+  noOptionMessage?: string;
   placeholder: string;
   onChange: (id: string, name: string, value: string) => void;
   disabled?: boolean;
@@ -29,6 +30,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
     arrowHidden,
     placeholder,
     onChange,
+    noOptionMessage,
   } = props;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -77,6 +79,8 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
       } else {
         setModifiedList(list);
       }
+    } else {
+      setModifiedList([]);
     }
   }, [list, withAvatar]);
 
@@ -205,7 +209,7 @@ const MultipleSelector = (props: MultipleSelectorProps) => {
               )
             ) : (
               <li className="flex justify-center relative py-2 px-4">
-                <span className="font-normal"> No Results</span>
+                <span className="font-normal"> {noOptionMessage || 'No Results'}</span>
               </li>
             )}
           </ul>

@@ -431,13 +431,15 @@ const ProfileEdit = (props: UserInfoProps) => {
         <form>
           <div>
             <div className="h-auto bg-white border-l-0 border-gray-200 mb-4">
-              <div className="px-4 py-5 border-b-0 border-gray-200 sm:px-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 uppercase">
+              <div className="px-4 py-1 md:py-5 border-b-0 border-gray-200 sm:px-6">
+                <h3 className="text-sm md:text-lg leading-6 font-medium text-gray-900 uppercase">
                   {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['TITLE']}
                   <NavLink
                     className="text-gray-500 lowercase text-right float-right w-auto"
                     to={path}>
-                    <p className="font-medium text-base">Click here to edit password</p>
+                    <p className="font-medium text-sm md:text-base">
+                      Click here to edit password
+                    </p>
                   </NavLink>
                 </h3>
               </div>
@@ -446,7 +448,17 @@ const ProfileEdit = (props: UserInfoProps) => {
                 <div className="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6 text-gray-900">
                   <>
                     <div className="sm:col-span-3 p-2">
-                      <label
+                      <FormInput
+                        value={user.firstName}
+                        onChange={onChange}
+                        id="firstName"
+                        name="firstName"
+                        label={
+                          dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']
+                        }
+                        isRequired
+                      />
+                      {/* <label
                         htmlFor="firstName"
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['FIRST_NAME']}
@@ -459,7 +471,7 @@ const ProfileEdit = (props: UserInfoProps) => {
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.firstName}
                         />
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="sm:col-span-3 p-2">
@@ -468,13 +480,12 @@ const ProfileEdit = (props: UserInfoProps) => {
                         className="block text-sm font-medium leading-5 text-gray-700">
                         {dashboardProfileDict[userLanguage]['EDIT_PROFILE']['LAST_NAME']}
                       </label>
-                      <div className="mt-1  border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
+                      <div className="mt-1 border-0 border-gray-300 py-2 px-3 rounded-md shadow-sm">
                         <input
                           id="lastName"
                           onChange={onChange}
                           className="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                           defaultValue={user.lastName}
-                          type="text"
                         />
                       </div>
                     </div>

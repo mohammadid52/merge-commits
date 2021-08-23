@@ -29,6 +29,7 @@ import ProfileCheckpointlookup from './EditBuilders/CurricularsView/TabsActions/
 import EditProfileCheckpoint from './EditBuilders/CurricularsView/TabsActions/EditProfileCheckpoint';
 import { DashboardProps } from '../../Dashboard';
 import { GlobalContext } from '../../../../contexts/GlobalContext';
+import UnitBuilder from './EditBuilders/CurricularsView/TabsActions/Unit/UnitBuilder';
 
 const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   const { setCurrentPage } = props;
@@ -82,41 +83,45 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
           path={`${match.url}/room-edit`}
           render={() => <EditRoom />} // Edit current room.
         />
-        <Route
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/edit`}
           render={() => <EditCurricular />} // Edit current curricular
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/add`}
           render={() => <AddLearningObjective />} // Add new topic to curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/learning-objective/edit/:id`}
           render={() => <EditLearningObjective />} // Edit curricular topic
         />
-        <Route
+        {/* <Route
           path={`${match.url}/curricular/:curricularId/topic/add`}
           render={() => <AddTopic />} // Add new topic to curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/curricular/:curricularId/topic/edit/:id`}
           render={() => <EditTopic />} // Edit curricular topic
         />
-        <Route
+        {/* <Route
           path={`${match.url}/curricular/:curricularId/measurement/add`}
           render={() => <AddMeasurement />} // Add new measurement to curricular
-        />
+        /> */}
         <Route
           path={`${match.url}/curricular/:curricularId/measurement/edit/:id`}
           render={() => <EditMeasurement />} // Edit curricular measurement
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
-          render={() => <AddSyllabus />} // Add new syllabus to curricular
+          render={() => <UnitBuilder />} // Add new syllabus to curricular
         />
+        {/* <Route
+          path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/add`}
+          render={() => <AddSyllabus />} // Add new syllabus to curricular
+        /> */}
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/syllabus/edit`}
-          render={() => <EditSyllabus />} // Edit curricular syllabus
+          render={() => <UnitBuilder />} // Edit curricular syllabus
         />
         <Route
           path={`${match.url}/:institutionId/curricular/:curricularId/checkpoint/addNew`}

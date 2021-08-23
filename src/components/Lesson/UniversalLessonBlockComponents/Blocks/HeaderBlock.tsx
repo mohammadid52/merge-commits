@@ -1,58 +1,39 @@
-import React from 'react';
+import './styles/HeaderStyles.scss';
+import React, {useContext} from 'react';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {RowWrapperProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
 
 interface HeaderBlockProps extends RowWrapperProps {
   id?: string;
   value?: any;
   type?: string;
+  pagePartId: string;
 }
 
 export const HeaderBlock = (props: HeaderBlockProps) => {
-  const {
-    mode,
-    id,
-    dataIdAttribute,
-    value,
-    type,
-    handleEditBlockToggle,
-    classString,
-  } = props;
+  const {id, value, type, classString} = props;
 
-  const composeHeader = (inputID: string, inputValue: string, inputType: string) => {
-    switch (inputType) {
-      case 'header-default':
-        return (
-          <h2
-            className={`
-            relative
-            w-full text-xl font-semibold  text-left flex flex-row items-center text-gray-100 mt-4 border-b border-white border-opacity-10`}>
-            {inputValue}
-          </h2>
-        );
-      case 'header-section':
-        return (
-          <h3
-            className={`
-            ${classString || 'border-sea-green text-xl'}
-            relative
-            w-full flex border-b-4  font-medium text-left  flex-row items-center text-gray-100 mt-4`}>
-            {inputValue}
-          </h3>
-        );
-      default:
-        return <p id={inputID}>{inputValue}</p>;
-    }
+  const {
+    state: {lessonPage: {themeTextColor = ''} = {}},
+  } = useContext(GlobalContext);
+
+  const composeHeader = (inputID: string, inputValue: any, inputType: string) => {
+    return (
+      <h3
+        id={inputID}
+        className={`relative ${classString} w-full flex font-medium   text-left flex-row items-center ${themeTextColor} mt-4 mb-2"`}>
+        {inputValue.value}
+      </h3>
+    );
   };
 
   return (
-    <>
+    <div className="w-auto">
       {value &&
         value.length > 0 &&
         value.map((v: any, i: number) => (
-          <div key={id} className={`p-4`}>
-            {composeHeader(id, v, type)}
-          </div>
+          <div key={id}>{composeHeader(id, v, type)}</div>
         ))}
-    </>
+    </div>
   );
 };

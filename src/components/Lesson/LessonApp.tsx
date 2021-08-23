@@ -1,408 +1,762 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {LessonContext} from '../../contexts/LessonContext';
-import Body from './Body/Body';
-// import Foot from './Foot/_Foot';
 import LessonHeaderBar from '../Header/LessonHeaderBar';
-import Foot from './Foot/Foot';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as customQueries from '../../customGraphql/customQueries';
-import {useParams} from 'react-router-dom';
-import {Auth} from '@aws-amplify/auth';
-import * as queries from '../../graphql/queries';
-import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
-import * as customMutations from '../../customGraphql/customMutations';
-import NotesForm from './LessonComponents/Notes/NotesForm';
+import {useHistory, useParams, useRouteMatch} from 'react-router-dom';
 import FloatingSideMenu from '../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
+import {GlobalContext} from '../../contexts/GlobalContext';
+import {exampleUniversalLesson} from './UniversalLessonBuilder/example_data/exampleUniversalLessonData';
+import Foot from './Foot/Foot';
+import CoreUniversalLesson from './UniversalLesson/views/CoreUniversalLesson';
+import {
+  PagePart,
+  PartContent,
+  PartContentSub,
+  StudentPageInput,
+  UniversalLessonPage,
+} from '../../interfaces/UniversalLessonInterfaces';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import * as mutations from '../../graphql/mutations';
+import * as customSubscriptions from '../../customGraphql/customSubscriptions';
+import * as customQueries from '../../customGraphql/customQueries';
+import * as queries from '../../graphql/queries';
+import {Auth} from '@aws-amplify/auth';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {UniversalLessonStudentData} from '../../API';
+import SaveQuit from './Foot/SaveQuit';
+import LessonPageLoader from './LessonPageLoader';
+import usePrevious from '../../customHooks/previousProps';
 
 const LessonApp = () => {
-  const {state, theme, dispatch} = useContext(LessonContext);
+  const {state, dispatch, lessonState, lessonDispatch, theme} = useContext(GlobalContext);
+  const history = useHistory();
+  const match = useRouteMatch();
   const urlParams: any = useParams();
+  const getRoomData = getLocalStorageData('room_info');
 
-  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
-
+  // ##################################################################### //
+  // ######################### BASIC UI CONTROLS ######################### //
+  // ##################################################################### //
   const [overlay, setOverlay] = useState<string>('');
-  const [recentQuestionOp, setRecentQuestionOp] = useState<string>('');
-  const [checkpointIdList, setCheckpointIdList] = useState<string[]>(['']);
-  const [checkpointsLoaded, setCheckpointsLoaded] = useState<boolean>(false);
-  const [checkpointsItems, setCheckpointsItems] = useState<any[]>([]);
-  const [checkpointsSequence, setCheckpointsSequence] = useState<string[]>(['']);
-  const [checkpointsQuestionsSequence, setCheckpointsQuestionsSequence] = useState<
-    {[key: string]: string[]}[]
-  >([]);
-  const [reordered, setReordered] = useState<boolean>(false);
+  const [isAtEnd, setisAtEnd] = useState<boolean>(false);
+  //  NAVIGATION CONSTANTS
+  const PAGES = lessonState?.lessonData?.lessonPlan;
+  const CURRENT_PAGE = lessonState.currentPage;
 
+  // ##################################################################### //
+  // ######################### SUBSCRIPTION SETUP ######################## //
+  // ##################################################################### //
+  let subscription: any;
+  const [subscriptionData, setSubscriptionData] = useState<any>();
+
+  // ----------- 1 ---------- //
+  //  PUT LESSON SUBSCRIPTION FUNCTION IN CONTEXT  //
+
+  useEffect(() => {
+    if (lessonState.lessonData.id) {
+      lessonDispatch({
+        type: 'SET_SUBSCRIBE_FUNCTION',
+        payload: {
+          subscribeFunc: subscribeToRoom,
+        },
+      });
+    }
+  }, [lessonState.lessonData.id]);
+
+  // ----------- 2 ---------- //
+  //  UPDATE CONTEXT WITH SUBSCRIPTION DATA  //
+
+  const subscribeToRoom = () => {
+    const roomSubscription = API.graphql(
+      graphqlOperation(customSubscriptions.onChangeRoom, {id: getRoomData.id})
+      // @ts-ignore
+    ).subscribe({
+      next: (roomData: any) => {
+        const updatedRoomData = roomData.value.data.onChangeRoom;
+        setSubscriptionData(updatedRoomData);
+      },
+    });
+
+    return roomSubscription;
+  };
+
+  // ----------- 3 ---------- //
+
+  const updateOnIncomingSubscriptionData = (subscriptionData: any) => {
+    console.log('updateOnIncomingSubscriptionData - ', subscriptionData);
+    setLocalStorageData('room_info', {
+      ...getRoomData,
+      ClosedPages: subscriptionData.ClosedPages,
+    });
+    lessonDispatch({type: 'SET_ROOM_SUBSCRIPTION_DATA', payload: subscriptionData});
+  };
+
+  // ----------- 4 ---------- //
   /**
-   *
-   *
-   * HELP SECTION:
-   *
-   *  On mount ->
-   *  1. setLessonDataLoaded -> true;
-   *  2. setCheckpointIdList()
-   *
-   *  Then ->
-   *  3. getAllCheckpoints()
-   *
-   *  Then ->
-   *  4. getOrCreateQuestionData()
+   * Once step 2 updates subscriptionData,
+   * this useEffect will invoke the function
+   * at step 3
    *
    */
 
   useEffect(() => {
-    if (Object.keys(state.data)?.length > 0 && state.data.lesson && state.pages) {
-      setLessonDataLoaded(true);
+    if (subscriptionData) {
+      updateOnIncomingSubscriptionData(subscriptionData);
     }
-  }, [state.data]);
+  }, [subscriptionData]);
 
-  /**
-   * Function and useEffect for getting/setting checkpoints if
-   * condition is met and lesson plans include
-   * checkpoints in their name
-   */
-
-  const getAllCheckpointQuestionsSequence = async (cpIdList: string[]) => {
-    if (cpIdList && cpIdList.length > 0) {
-      const questionSequences = Promise.all(
-        cpIdList.map(async (cpId: string) => {
-          const questionSequences: any = await API.graphql(
-            graphqlOperation(queries.getCSequences, {id: `Ch_Ques_${cpId}`})
-          );
-          return {[`${cpId}`]: questionSequences.data.getCSequences?.sequence};
-        })
+  // ##################################################################### //
+  // ############################ LESSON FETCH ########################### //
+  // ##################################################################### //
+  const getSyllabusLesson = async (lessonID?: string) => {
+    // lessonID will be undefined for testing
+    try {
+      const universalLesson: any = await API.graphql(
+        graphqlOperation(customQueries.getUniversalLesson, {id: lessonID})
       );
-      return questionSequences;
+      const response = universalLesson.data.getUniversalLesson;
+      lessonDispatch({type: 'SET_LESSON_DATA', payload: response});
+    } catch (e) {
+      console.error('error getting lesson - ', lessonID, ' ', e);
     }
   };
 
-  const getAllCheckpointSequence = () => {
-    const lessonPlan = state.data.lesson.lessonPlan;
-    return (
-      lessonPlan &&
-      lessonPlan.length > 0 &&
-      lessonPlan.map((lessonPlanObj: any) => {
-        return {[`${lessonPlanObj.LessonComponentID}`]: lessonPlanObj?.sequence};
-      })
-    );
-  };
-
-  const getAllCheckpoints = async (cpIdList: string[]) => {
-    if (cpIdList && cpIdList.length > 0) {
-      try {
-        const checkpoints: any = await API.graphql(
-          graphqlOperation(customQueries.listCheckpoints, {
-            filter: {...createFilterToFetchSpecificItemsOnly(cpIdList, 'id')},
-          })
-        );
-
-        const items = checkpoints.data.listCheckpoints.items;
-        setCheckpointsItems(items);
-      } catch (e) {
-        console.error('err fetch checkpoints ::: ', e);
-      } finally {
-        setCheckpointsLoaded(true);
-      }
-    } else {
-      setCheckpointsLoaded(false);
-    }
-  };
-
-  const reorderCheckpoints = (checkpointsArray: any[], orderArray: string[]) => {
-    const ordered = orderArray.map((seqObj: any) => {
-      const key = Object.keys(seqObj);
-      const val: string[] = Object.values(seqObj);
-      const findCP = checkpointsArray.find((cpObj: any) => cpObj.id === key[0]);
-      return findCP;
-    });
-    return ordered;
-  };
-
-  const reorderCheckpointQuestions = (
-    checkpointQuestions: any[],
-    orderArray: string[]
-  ) => {
-    const ordered = orderArray.map((qStr: string) => {
-      const findQ = checkpointQuestions.find((qObj: any) => qObj.question.id === qStr);
-      return findQ;
-    });
-    return ordered;
-  };
-
-  const setCheckpointsToLessonData = (checkpointsArray: any[]) => {
-    setCheckpointsItems(checkpointsArray);
-  };
-
+  // ~~~~~~~~~~~~~~ GET LESSON ~~~~~~~~~~~~~ //
   useEffect(() => {
-    const reorderProcess = async () => {
-      if (checkpointsLoaded && checkpointsItems) {
-        if (state.data.lesson.type !== 'lesson') {
-          if (checkpointsSequence?.length === checkpointsItems?.length) {
-            const ordered = reorderCheckpoints(checkpointsItems, checkpointsSequence);
-            setCheckpointsToLessonData(ordered);
-          }
+    const {lessonID} = urlParams;
+    if (lessonID) {
+      lessonDispatch({type: 'SET_INITIAL_STATE', payload: {universalLessonID: lessonID}});
+      getSyllabusLesson(lessonID).then((_: void) =>
+        console.log('Lesson Mount - ', 'Lesson fetched!')
+      );
+    }
+    return () => {
+      const leaveRoom = leaveRoomLocation();
+      Promise.resolve(leaveRoom).then((_: void) => {
+        if (subscription) {
+          subscription.unsubscribe();
         }
-      }
+        lessonDispatch({type: 'CLEANUP'});
+      });
+      // if (subscription) {
+      //   subscription.unsubscribe();
+      // }
+      // lessonDispatch({type: 'CLEANUP'});
     };
+  }, []);
 
-    const reorderProcess2 = async () => {
-      if (checkpointsLoaded && checkpointsQuestionsSequence?.length > 0) {
-        const mapCheckpointQuestions = checkpointsItems.map((checkpoint: any) => {
-          const questions = checkpoint.questions.items;
-          const questionsOrder = checkpointsQuestionsSequence.reduce(
-            (acc: any[], seqObj: any) => {
-              const key = Object.keys(seqObj);
-              const val: string[] = Object.values(seqObj);
-              if (key[0] === checkpoint.id) {
-                //@ts-ignore
-                return [...acc, ...val[0]];
+  // ~~~~~~~~~~ RESPONSE TO FETCH ~~~~~~~~~~ //
+
+  // ~~~~~~~~~~~~~~~ GET ROOM ~~~~~~~~~~~~~~ //
+
+  const getRoomSetup = async (roomID: string) => {
+    try {
+      const initialRoomSetup = await API.graphql(
+        graphqlOperation(customQueries.getRoomSetup, {id: roomID})
+      );
+      //@ts-ignore
+      const response = initialRoomSetup.data.getRoom;
+      setSubscriptionData(response);
+    } catch (e) {
+      console.error('error gettingRoom - ', e);
+    }
+  };
+
+  // ~~~~~~~~~~~~~ LESSON SETUP ~~~~~~~~~~~~ //
+  const [lessonDataLoaded, setLessonDataLoaded] = useState<boolean>(false);
+  useEffect(() => {
+    if (lessonState.lessonData && lessonState.lessonData.id) {
+      setLessonDataLoaded(true);
+      // Initialize page url and context
+      if (CURRENT_PAGE !== '' && CURRENT_PAGE !== undefined) {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: CURRENT_PAGE});
+        history.push(`${match.url}/${CURRENT_PAGE}`);
+      } else {
+        lessonDispatch({type: 'SET_CURRENT_PAGE', payload: 0});
+        history.push(`${match.url}/${0}`);
+      }
+
+      // Initialize closed pages based on room-configuration
+
+      if (
+        lessonState.lessonData.lessonPlan &&
+        lessonState.lessonData.lessonPlan.length > 0
+      ) {
+        getRoomSetup(getRoomData.id);
+        subscription = subscribeToRoom();
+      }
+    }
+  }, [lessonState.lessonData.id]);
+
+  // ##################################################################### //
+  // ###################### INITIALIZE STUDENT DATA ###################### //
+  // ##################################################################### //
+  const [studentDataInitialized, setStudentDataInitialized] = useState<boolean>(false);
+
+  // ~~~~~~~~ INITIALIZE STUDENTDATA ~~~~~~~ //
+  const initializeStudentData = async () => {
+    if (studentDataInitialized === false && PAGES) {
+      const mappedPages = PAGES.reduce(
+        (inputs: {required: any[]; initialized: any[]}, page: UniversalLessonPage) => {
+          const currentPageParts = page.pageContent;
+          const reducedPageInputs = currentPageParts.reduce(
+            (
+              pageInputsAcc: {requiredIdAcc: string[]; pageInputAcc: StudentPageInput[]},
+              pagePart: PagePart
+            ) => {
+              if (pagePart.hasOwnProperty('partContent')) {
+                const partInputs = pagePart.partContent.reduce(
+                  (
+                    partInputAcc: {requiredIdAcc: string[]; pageInputAcc: any[]},
+                    partContent: PartContent
+                  ) => {
+                    const isForm = /form/g.test(partContent.type);
+                    const isOtherInput = /input/g.test(partContent.type);
+                    if (isForm) {
+                      const formSubInputs = partContent.value.reduce(
+                        (
+                          subPartAcc: {reqId: string[]; pgInput: any[]},
+                          partContentSub: PartContentSub
+                        ) => {
+                          return {
+                            ...subPartAcc,
+                            reqId: partContentSub.isRequired
+                              ? [...subPartAcc.reqId, partContentSub.id]
+                              : subPartAcc.reqId,
+                            pgInput: [
+                              ...subPartAcc.pgInput,
+                              {
+                                domID: partContentSub.id,
+                                input: [''],
+                              },
+                            ],
+                          };
+                        },
+                        {reqId: [], pgInput: []}
+                      );
+                      return {
+                        requiredIdAcc: [
+                          ...partInputAcc.requiredIdAcc,
+                          ...formSubInputs.reqId,
+                        ],
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          ...formSubInputs.pgInput,
+                        ],
+                      };
+                    } else if (isOtherInput) {
+                      return {
+                        requiredIdAcc: partContent.isRequired
+                          ? [...partInputAcc.requiredIdAcc, partContent.id]
+                          : partInputAcc.requiredIdAcc,
+                        pageInputAcc: [
+                          ...partInputAcc.pageInputAcc,
+                          {
+                            domID: partContent.id,
+                            input: [''],
+                          },
+                        ],
+                      };
+                    } else {
+                      return partInputAcc;
+                    }
+                  },
+                  {requiredIdAcc: [], pageInputAcc: []}
+                );
+                return {
+                  requiredIdAcc: [
+                    ...pageInputsAcc.requiredIdAcc,
+                    ...partInputs.requiredIdAcc,
+                  ],
+                  pageInputAcc: [
+                    ...pageInputsAcc.pageInputAcc,
+                    ...partInputs.pageInputAcc,
+                  ],
+                };
               } else {
-                return acc;
+                return pageInputsAcc;
               }
             },
-            []
+            {requiredIdAcc: [], pageInputAcc: []}
           );
-
-          if (questionsOrder) {
-            // @ts-ignore
-            const ordered = reorderCheckpointQuestions(questions, questionsOrder);
-            return {...checkpoint, questions: {...checkpoint.questions, items: ordered}};
-          } else {
-            return checkpoint;
-          }
-        });
-
-        setCheckpointsToLessonData(mapCheckpointQuestions);
-      } else {
-        console.log('skipped reorderProcess2()');
-      }
-    };
-
-    const process = async () => {
-      await reorderProcess();
-      await reorderProcess2();
-    };
-
-    if (checkpointsLoaded && checkpointsQuestionsSequence?.length > 0) {
-      process();
-      setReordered(true);
-    }
-  }, [checkpointsLoaded, checkpointsSequence, checkpointsQuestionsSequence]);
-
-  /**
-   *
-   * FINAL CONTEXT DISPATCH AFTER REORDERING
-   * AND PROCESSING
-   *
-   */
-  useEffect(() => {
-    if (checkpointsItems?.length > 0) {
-      const initCheckpointsObj = checkpointsItems?.reduce(
-        (acc: any, checkpointObj: any) => {
-          const initQuestionObj = checkpointObj?.questions?.items?.reduce(
-            (acc: any[], questionObj: any) => {
-              return [...acc, {qid: questionObj.question.id, response: []}];
-            },
-            []
-          );
-          return {...acc, [checkpointObj?.id]: initQuestionObj};
+          return {
+            required: [...inputs.required, reducedPageInputs.requiredIdAcc],
+            initialized: [...inputs.initialized, reducedPageInputs.pageInputAcc],
+          };
         },
-        {}
+        {required: [], initialized: []}
       );
 
-      dispatch({
-        type: 'UPDATE_CHECKPOINT_DATA',
-        payload: checkpointsItems,
-      });
-
-      dispatch({
-        type: 'SET_QUESTION_DATA',
+      lessonDispatch({
+        type: 'SET_INITIAL_STUDENT_DATA',
         payload: {
-          data: initCheckpointsObj,
+          requiredInputs: mappedPages.required,
+          studentData: mappedPages.initialized,
         },
       });
+      setStudentDataInitialized(true);
     }
-  }, [checkpointsItems, reordered]);
-
-  useEffect(() => {
-    const getAdditionalLessonData = async () => {
-      if (state.data && state.data?.lessonPlan) {
-        await getAllCheckpoints(checkpointIdList);
-      }
-      if (lessonDataLoaded && state.data.lesson.type !== 'lesson') {
-        const checkpointSequences = await getAllCheckpointSequence();
-        setCheckpointsSequence(checkpointSequences);
-      }
-      if (lessonDataLoaded && state.data.lesson.type !== 'lesson') {
-        const questionSequences = await getAllCheckpointQuestionsSequence(
-          checkpointIdList
-        );
-        setCheckpointsQuestionsSequence(questionSequences);
-      }
-    };
-    if (!checkpointsLoaded && checkpointIdList && checkpointIdList.length > 0) {
-      getAdditionalLessonData();
-    }
-  }, [checkpointIdList]);
-
-  const getAllCheckpointIds = () => {
-    const lessonPlan = state.data.lessonPlan;
-    return (
-      lessonPlan &&
-      lessonPlan.length > 0 &&
-      lessonPlan.reduce((acc: string[], lessonPlanObj: any, i: number) => {
-        const isCheckpoint = lessonPlanObj.stage.includes('checkpoint');
-        if (isCheckpoint) {
-          const matchArray = lessonPlanObj.stage.match(/checkpoint\?id=(.*)/) || [];
-          if (matchArray.length > 1) {
-            return [...acc, matchArray[1]];
-          } else {
-            return acc;
-          }
-        } else {
-          return acc;
-        }
-      }, [])
-    );
   };
 
-  useEffect(() => {
-    if (lessonDataLoaded && state.data.hasOwnProperty('lessonPlan')) {
-      setCheckpointIdList(getAllCheckpointIds);
-    }
-  }, [lessonDataLoaded, state.data]);
+  // ##################################################################### //
+  // ################# GET OR CREATE STUDENT DATA RECORDS ################ //
+  // ##################################################################### //
 
-  /**
-   * GET or CREATE QUESTION DATA
-   */
-  const createQuestionData = async (responseObj: any) => {
-    try {
-      const newQuestionData = await API.graphql(
-        graphqlOperation(customMutations.createQuestionData, {input: responseObj})
+  // ~~~~~ CREATE DB DATA ID REFERENCES ~~~~ //
+  const studentDataIdArray = (studentDataArray: any[]) => {
+    const idArr = studentDataArray
+      .reduce((acc: any[], studentDataIdObj: any, idx: number) => {
+        const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+          (lessonPlanPage: UniversalLessonPage) =>
+            lessonPlanPage.id === studentDataIdObj.lessonPageID
+        );
+        const idObj = {
+          id: studentDataIdObj.id,
+          pageIdx: indexOfPage,
+          lessonPageID: studentDataIdObj.lessonPageID,
+          update: false,
+        };
+        return [...acc, idObj];
+      }, [])
+      .sort((dataID1: any, dataID2: any) => {
+        if (dataID1.pageIdx < dataID2.pageIdx) {
+          return -1;
+        }
+        if (dataID1.pageIdx > dataID2.pageIdx) {
+          return 1;
+        }
+      });
+    return idArr;
+  };
+
+  // ~~~~~~ FILTER STUDENT DATA ARRAYS ~~~~~ //
+  const filterStudentData = (studentDataIdArray: any[], studentDataArray: any[]) => {
+    return studentDataIdArray.reduce((acc: StudentPageInput[], dataIdObj: any) => {
+      const findPageData = studentDataArray.find(
+        (studentDataIdObj: UniversalLessonStudentData) =>
+          studentDataIdObj.id === dataIdObj.id
+      )?.pageData;
+      if (Array.isArray(findPageData)) {
+        return [...acc, findPageData];
+      } else {
+        return [];
+      }
+    }, []);
+  };
+
+  // ~~~~ CHECK AND MERGE NEW INPUT DATA ~~~ //
+  const mergedStudentData = (studentDataArray: any[], initStudentDataArray: any[]) => {
+    const differenceData = studentDataArray.reduce(
+      //@ts-ignore
+      (diffArray: any[], loadedInput: StudentPageInput[] | [], pageDataIdx: number) => {
+        const notYetSavedData = initStudentDataArray[pageDataIdx].reduce(
+          (diffPageData: any[], initPageData: any) => {
+            const foundInLoaded = loadedInput.find(
+              (inputObj: any) => inputObj.domID === initPageData.domID
+            );
+            if (foundInLoaded) {
+              return diffPageData;
+            } else {
+              return [...diffPageData, initPageData];
+            }
+          },
+          []
+        );
+
+        return [...diffArray, [...loadedInput, ...notYetSavedData]];
+      },
+      []
+    );
+
+    return differenceData;
+  };
+
+  // ~~~~~~~~~~ FILTER EXTRA PAGES ~~~~~~~~~ //
+  const filterExtraPages = (lessonPlanPages: any[], studentDataRecords: any[]) => {
+    const extraPagesArray = lessonPlanPages.reduce(
+      (extraPageArray: any[], lessonPage: UniversalLessonPage) => {
+        const findInStudentDataRecords = studentDataRecords.find(
+          (data: UniversalLessonStudentData) => data.lessonPageID === lessonPage.id
+        );
+        if (findInStudentDataRecords === undefined) {
+          return [...extraPageArray, lessonPage];
+        } else {
+          return extraPageArray;
+        }
+      },
+      []
+    );
+    const currentLessonRecords = studentDataRecords.reduce(
+      (currentLessonRecords: any[], studentData: UniversalLessonStudentData) => {
+        const isStudentDataFromLesson = lessonPlanPages.find(
+          (lessonPage: UniversalLessonPage) => lessonPage.id === studentData.lessonPageID
+        );
+        if (isStudentDataFromLesson !== undefined) {
+          return [...currentLessonRecords, studentData];
+        } else {
+          return currentLessonRecords;
+        }
+      },
+      []
+    );
+    return {
+      extraPages: extraPagesArray,
+      currentRecords: currentLessonRecords,
+    };
+  };
+
+  // ~~~~~~~ RECORD CREATION FUNTION ~~~~~~~ //
+  const loopCreateStudentData = async (
+    lessonPages: any[],
+    lessonID: string,
+    authId: string,
+    email: string
+  ) => {
+    const createdRecords = lessonPages.map(async (lessonPage: any, idx: number) => {
+      const indexOfPage = lessonState?.lessonData?.lessonPlan?.findIndex(
+        (lessonPlanPage: UniversalLessonPage) => lessonPlanPage.id === lessonPage.id
       );
+      const input = {
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        lessonPageID: lessonPage.id,
+        studentID: authId,
+        studentAuthID: authId,
+        studentEmail: email,
+        currentLocation: indexOfPage,
+        lessonProgress: '0',
+        pageData: lessonState.studentData[indexOfPage],
+      };
+
+      const newStudentData: any = await API.graphql(
+        graphqlOperation(mutations.createUniversalLessonStudentData, {
+          input,
+        })
+      );
+      const returnedData = newStudentData.data.createUniversalLessonStudentData;
+      return returnedData;
+    });
+    return createdRecords;
+  };
+
+  // ~~~~~~~~~~~ THE MAIN FUNTION ~~~~~~~~~~ //
+  const getOrCreateStudentData = async () => {
+    const {lessonID} = urlParams;
+    const syllabusID = getRoomData.activeSyllabus;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    // console.log('getOrCreateData - user - ', user);
+
+    try {
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: studentAuthId},
+          lessonID: {eq: lessonID},
+          syllabusLessonID: {eq: syllabusID},
+        },
+      };
+
+      const studentData: any = await API.graphql(
+        graphqlOperation(queries.listUniversalLessonStudentDatas, listFilter)
+      );
+
+      // existing student rows
+      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+
+      const filteredData = filterExtraPages(PAGES, studentDataRows);
+      const extraPages = filteredData.extraPages;
+      const currentStudentData = filteredData.currentRecords;
+
+      /**
+       * NEW RECORD CREATION LOGIC:
+       *   - if no student records for this lesson, make all new records per page
+       *   - if student records exist, but an additional page has been added, create records for these pages
+       */
+      if (studentDataRows?.length === 0) {
+        const createNewRecords = await loopCreateStudentData(
+          PAGES,
+          lessonID,
+          studentAuthId,
+          email
+        );
+        const newRecords = await Promise.all(createNewRecords);
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {
+            dataIdReferences: studentDataIdArray(newRecords),
+          },
+        });
+      } else if (extraPages?.length > 0 && currentStudentData?.length > 0) {
+        const createExtraRecords = await loopCreateStudentData(
+          extraPages,
+          lessonID,
+          studentAuthId,
+          email
+        );
+        const extraRecords = await Promise.all(createExtraRecords);
+        const combinedRecords = [...extraRecords, ...currentStudentData];
+        const combinedStudentDataIdArray = studentDataIdArray(combinedRecords);
+        const filteredData = filterStudentData(
+          combinedStudentDataIdArray,
+          combinedRecords
+        );
+        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        // console.log('merged data', finalData);
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {
+            dataIdReferences: combinedStudentDataIdArray,
+            filteredStudentData: finalData,
+          },
+        });
+      } else if (currentStudentData?.length > 0 && extraPages?.length === 0) {
+        const existStudentDataIdArray = studentDataIdArray(currentStudentData);
+        const filteredData = filterStudentData(
+          existStudentDataIdArray,
+          currentStudentData
+        );
+        const finalData = mergedStudentData(filteredData, lessonState.studentData);
+        // console.log('merged data', finalData);
+        lessonDispatch({
+          type: 'LOAD_STUDENT_DATA',
+          payload: {
+            dataIdReferences: existStudentDataIdArray,
+            filteredStudentData: finalData,
+          },
+        });
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleCreateQuestionData = async () => {
-    let studentID: string;
-    let studentAuthID: string;
+  // ~~ INITIALIZE STUDENT DATA STRUCTURE ~~ //
+  useEffect(() => {
+    if (
+      !lessonState.loaded &&
+      lessonState.lessonData.lessonPlan &&
+      lessonState.lessonData.lessonPlan.length > 0
+    ) {
+      initializeStudentData();
+    }
+  }, [lessonState.lessonData.lessonPlan]);
 
-    await Auth.currentAuthenticatedUser().then((user: any) => {
-      studentID = user.attributes.email;
-      studentAuthID = user.attributes.sub;
-    });
+  // ~~~~~ GET & CREATE DB DATA RECORDS ~~~~ //
+  useEffect(() => {
+    if (
+      !lessonState.loaded &&
+      lessonState.studentData &&
+      lessonState.studentData?.length === PAGES?.length
+    ) {
+      getOrCreateStudentData();
+    }
+  }, [lessonState.studentData]);
 
-    if (typeof state.questionData === 'object') {
-      let checkpointIdKeys = Object.keys(state.questionData); // doFirst, checkpoint_1
-      await checkpointIdKeys?.reduce((_: any, key: string) => {
-        let responseObject = {
-          syllabusLessonID: state.syllabusLessonID,
-          checkpointID: key,
-          componentType: state.data.lesson.type,
-          lessonID: state.data.lesson.id,
-          authID: studentAuthID,
-          email: studentID,
-          responseObject: state.questionData[key],
-        };
+  // ##################################################################### //
+  // ####################### MANAGE PERSON LOCATION ###################### //
+  // ##################################################################### //
 
-        createQuestionData(responseObject);
-      }, null);
-      setRecentQuestionOp('created');
+  const [personLocationObj, setPersonLocationObj] = useState<any>(undefined);
+  const previousLocation = usePrevious(personLocationObj);
+
+  useEffect(() => {
+    if (personLocationObj && personLocationObj.id) {
+      updatePersonLocation(personLocationObj);
+      setLocalStorageData('person_location', personLocationObj);
+    }
+  }, [personLocationObj]);
+
+  // ~~~~~~ LESSON LOAD LOCATION FETC ~~~~~~ //
+
+  const getPersonLocation = async () => {
+    const {lessonID} = urlParams;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    let input = {
+      personAuthID: {eq: studentAuthId},
+      personEmail: email,
+    };
+
+    try {
+      let userLocations: any = await API.graphql(
+        graphqlOperation(customQueries.listPersonLocations, input)
+      );
+
+      const responseItems = userLocations.data.listPersonLocations.items;
+      // console.log('getPersonLocation - ', responseItems);
+
+      if (responseItems.length > 0) {
+        await leaveRoomLocation();
+        await createPersonLocation();
+      } else {
+        await createPersonLocation();
+      }
+    } finally {
+      // console.log('personLocation setup!');
     }
   };
 
-  const getOrCreateQuestionData = async () => {
+  const createPersonLocation = async () => {
     const {lessonID} = urlParams;
-    let studentID: string;
-    let studentAuthID: string;
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
 
-    await Auth.currentAuthenticatedUser().then((user: any) => {
-      studentID = user.attributes.email;
-      studentAuthID = user.attributes.sub;
-    });
-
-    // console.log('getOrCreateQuestionData -> recentQuestionOp, ', recentQuestionOp)
-
+    const newLocation = {
+      personAuthID: studentAuthId,
+      personEmail: email,
+      syllabusLessonID: getRoomData.activeSyllabus,
+      lessonID: lessonID,
+      roomID: getRoomData.id,
+      currentLocation: '0',
+      lessonProgress: '0',
+    };
     try {
-      const questionDatas: any = await API.graphql(
-        graphqlOperation(queries.listQuestionDatas, {
-          filter: {
-            syllabusLessonID: {eq: lessonID},
-            email: {eq: studentID},
+      const newUserLocation: any = await API.graphql(
+        graphqlOperation(mutations.createPersonLocation, {input: newLocation})
+      );
+      const response = newUserLocation.data.createPersonLocation;
+      const newLocationObj = {
+        ...newLocation,
+        id: response.id,
+      };
+      setPersonLocationObj(newLocationObj);
+    } catch (e) {
+      // console.error('createPersonLocation - ', e);
+    }
+  };
+
+  useEffect(() => {
+    if (personLocationObj === undefined) {
+      const fetchLocation = getPersonLocation();
+      Promise.resolve(fetchLocation).then((_: any) => {
+        console.log('...initialized location');
+      });
+    }
+  }, [lessonState.lessonData.id]);
+
+  // ~~~~~~~~~~ LOCATION UPDATING ~~~~~~~~~~ //
+
+  const updatePersonLocation = async (updatedLocationObj: any) => {
+    const locationUpdateProps = {
+      id: updatedLocationObj.id,
+      personAuthID: updatedLocationObj.personAuthID,
+      personEmail: updatedLocationObj.personEmail,
+      lessonID: updatedLocationObj.lessonID,
+      syllabusLessonID: updatedLocationObj.syllabusLessonID,
+      roomID: updatedLocationObj.roomID,
+      currentLocation: updatedLocationObj.currentLocation,
+      lessonProgress: updatedLocationObj.lessonProgress,
+    };
+    try {
+      const newPersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.updatePersonLocation, {input: locationUpdateProps})
+      );
+    } catch (e) {
+      console.error('updatePersonLocation - ', e);
+    }
+  };
+
+  const leaveRoomLocation = async () => {
+    const storedLocation = getLocalStorageData('person_location');
+    try {
+      const deletePersonLocationMutation: any = await API.graphql(
+        graphqlOperation(mutations.deletePersonLocation, {
+          input: {
+            personEmail: storedLocation.personEmail,
+            personAuthID: storedLocation.personAuthID,
           },
         })
       );
-      const listQuestionDatasItems = questionDatas.data.listQuestionDatas.items;
-
-      const questionDataUpdateArray = questionDatas?.data?.listQuestionDatas?.items?.reduce(
-        (acc: any[], val: any) => {
-          return [
-            ...acc,
-            {
-              id: val.id,
-              checkpointID: val.checkpointID,
-            },
-          ];
-        },
-        []
-      );
-
-      const noQuestionDatas = questionDatas.data.listQuestionDatas.items?.length === 0;
-      const existQuestionDatas = questionDatas.data.listQuestionDatas.items?.length > 0;
-
-      if (noQuestionDatas && recentQuestionOp === '') {
-        await handleCreateQuestionData();
-      }
-
-      if (
-        (existQuestionDatas && recentQuestionOp === '') ||
-        (existQuestionDatas && recentQuestionOp === 'created')
-      ) {
-        dispatch({
-          type: 'SET_QUESTION_DATA_UPDATE',
-          payload: {data: questionDataUpdateArray},
-        });
-        setRecentQuestionOp('fetched');
-      }
+      // console.log('left room...', storedLocation);
     } catch (e) {
-      console.error('getOrCreateQuestionData -> ', e);
+      // console.error('error deleting location record - ', e);
     }
   };
 
-  // Init questionData in DB if necessary
   useEffect(() => {
-    if (checkpointsLoaded && state.data.lesson.type === 'lesson') {
-      if (recentQuestionOp === '' || recentQuestionOp === 'created') {
-        getOrCreateQuestionData();
-      }
+    if (personLocationObj && personLocationObj.id && lessonState.currentPage >= 0) {
+      setPersonLocationObj({
+        ...personLocationObj,
+        currentLocation: lessonState.currentPage,
+        lessonProgress: lessonState.lessonProgress,
+      });
     }
-  }, [checkpointsLoaded, recentQuestionOp]);
+  }, [lessonState.currentPage]);
+
+  // ##################################################################### //
+  // ######################### NAVIGATION CONTROL ######################## //
+  // ##################################################################### //
+
+  const [showRequiredNotification, setShowRequiredNotification] = useState<boolean>(
+    false
+  );
+  const handleRequiredNotification = () => {
+    if (!showRequiredNotification) {
+      setShowRequiredNotification(true);
+      setTimeout(() => {
+        setShowRequiredNotification(false);
+      }, 1250);
+    }
+  };
+
+  const userAtEnd = () => {
+    return lessonState.currentPage === lessonState.lessonData?.lessonPlan?.length - 1;
+  };
 
   return (
     <>
       <FloatingSideMenu />
-      <div className={`${theme.bg} w-full md:h-screen flex flex-col items-start`}>
-        <LessonHeaderBar
-          lessonDataLoaded={lessonDataLoaded}
-          checkpointsLoaded={checkpointsLoaded}
-          overlay={overlay}
-          setOverlay={setOverlay}
-        />
-        {/*<NotificationBar />*/}
-
+      <div
+        className={`${theme.bg} w-full h-full flex flex-col items-start overflow-y-auto`}>
         <div
-          className={`fixed w-1/2 right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 ${
-            overlay === '' ? 'z-0' : 'z-50'
-          }`}>
-          <NotesForm overlay={overlay} setOverlay={setOverlay} />
+          className={`opacity-${
+            showRequiredNotification
+              ? '100 translate-x-0 transform z-100'
+              : '0 translate-x-10 transform'
+          } absolute bottom-5 right-5 w-96 py-4 px-6 rounded-md shadow bg-gray-800 duration-300 transition-all`}>
+          <p className="text-white font-medium tracking-wide">
+            <span className="text-red-500">*</span>Please fill all the required fields
+          </p>
         </div>
 
-        <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
-          {lessonDataLoaded && <Body checkpointsItems={checkpointsItems} />}
-        </ErrorBoundary>
+        <div className="fixed z-50">
+          <LessonHeaderBar
+            lessonDataLoaded={lessonDataLoaded}
+            overlay={overlay}
+            setOverlay={setOverlay}
+            isAtEnd={isAtEnd}
+            setisAtEnd={setisAtEnd}
+            handleRequiredNotification={handleRequiredNotification}
+          />
+        </div>
+        <div className="relative top-6 lesson-body-container">
+          {!lessonDataLoaded ? (
+            <div className="mt-4 mb-8 lesson-page-container">
+              <LessonPageLoader />
+            </div>
+          ) : (
+            <ErrorBoundary fallback={<h1>Error in the Lesson App</h1>}>
+              {/*{lessonDataLoaded && <Body />}*/}
+              {/* ADD LESSONWRAPPER HERE */}
+              <div className="mt-4 mb-8 lesson-page-container">
+                <CoreUniversalLesson />
+                {userAtEnd() ? <SaveQuit roomID={getRoomData?.id} /> : null}
+              </div>
+            </ErrorBoundary>
+          )}
 
-        {lessonDataLoaded && <Foot />}
+          {lessonDataLoaded && (
+            <Foot
+              isAtEnd={isAtEnd}
+              setisAtEnd={setisAtEnd}
+              handleRequiredNotification={handleRequiredNotification}
+            />
+          )}
+        </div>
       </div>
     </>
   );

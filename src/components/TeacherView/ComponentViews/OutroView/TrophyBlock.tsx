@@ -1,5 +1,4 @@
 import React, {useContext} from 'react';
-import {LessonContext} from '../../../../contexts/LessonContext';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
 import {FaTrophy, FaPenFancy, FaScroll} from 'react-icons/fa';
 

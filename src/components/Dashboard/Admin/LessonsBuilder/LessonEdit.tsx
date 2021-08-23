@@ -70,6 +70,7 @@ const LessonEdit = (props: LessonEditProps) => {
   const initialData = {
     name: '',
     type: {id: '', name: '', value: ''},
+    duration:'',
     purpose: '',
     purposeHtml: '<p></p>',
     objective: '',
@@ -123,6 +124,29 @@ const LessonEdit = (props: LessonEditProps) => {
         lessonId ? `lessonId=${lessonId}}` : `assessmentId=${assessmentId}`
       }`,
       last: true,
+    },
+  ];
+  const tabs = [
+    {
+      index: 0,
+      title: 'Overview',
+      icon: <IoCardSharp />,
+      active: true,
+      content: <>Overview</>,
+    },
+    {
+      index: 0,
+      title: 'Builder',
+      icon: <FaQuestionCircle />,
+      active: true,
+      content: <>Builder</>,
+    },
+    {
+      index: 0,
+      title: 'Assign Units & Publish',
+      icon: <FaUnity />,
+      active: true,
+      content: <>Assign Units & Publish</>,
     },
   ];
   const assessmentScrollerStep = [
@@ -252,7 +276,7 @@ const LessonEdit = (props: LessonEditProps) => {
 
   const checkValidUrl = async () => {
     if ((!lessonId && !assessmentId) || (lessonId && assessmentId)) {
-      console.log('Invalid url');
+      console.log('@LessonEdit: Invalid url');
       history.push(`/dashboard/lesson-builder`);
     } else {
       setLoading(true);
@@ -511,8 +535,9 @@ const LessonEdit = (props: LessonEditProps) => {
             setUnsavedChanges={setUnsavedChanges}
             activeStep={activeStep}
             lessonName={formData.name}
-            lessonType={formData.type?.value}/>
-        )
+            lessonType={formData.type?.value}
+          />
+        );
       case 'Preview Details':
         return (
           <PreviewForm
@@ -570,9 +595,35 @@ const LessonEdit = (props: LessonEditProps) => {
 
       {/* Body */}
       <PageWrapper>
-        <div className='w-full m-auto'>
+        <div className="w-full m-auto">
           {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">LESSON BUILDER</h3> */}
           <div className="grid grid-cols-5 divide-x-0 divide-gray-400 p-4">
+            {/* <UnderlinedTabs
+              tabs={tabs}
+              activeTab={0}
+              updateTab={(step: any) => {
+                if (individualFieldEmpty) {
+                  setWarnModal2({
+                    stepOnHold: step,
+                    show: true,
+                    message: 'Please fill all required fields to save this checkpoint',
+                  });
+                } else if (isCheckpUnsaved && showModal && step !== 'Builder') {
+                  setIndividualFieldEmpty(false);
+                  setWarnModal2({
+                    ...warnModal2,
+                    stepOnHold: step,
+                    show: true,
+                    message: 'You have unsaved checkpoint. Do you want to save it?',
+                  });
+                } else {
+                  setIndividualFieldEmpty(false);
+
+                  setActiveStep(step);
+                  setHistoryList([...historyList, step]);
+                }
+              }}
+            /> */}
             <div className="sm:col-span-1">
               <WizardScroller
                 stepsList={
@@ -603,7 +654,8 @@ const LessonEdit = (props: LessonEditProps) => {
                 }}
               />
             </div>
-            <div className='sm:col-span-4'>
+
+            <div className="sm:col-span-4">
               {loading ? (
                 <p className="h-100 flex justify-center items-center">
                   Fetching lesson details pleas wait...

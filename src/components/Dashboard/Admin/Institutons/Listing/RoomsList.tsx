@@ -11,6 +11,7 @@ import Buttons from '../../../../Atoms/Buttons';
 import useDictionary from '../../../../../customHooks/dictionary';
 import Loader from '../../../../Atoms/Loader';
 import Tooltip from '../../../../Atoms/Tooltip';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 
 interface RoomListProps {
   instId: string;
@@ -75,12 +76,21 @@ const RoomsList = (props: RoomListProps) => {
             {InstitueRomms[userLanguage]['TITLE']}
           </h3>
 
-          {!loading && roomList.length > 0 ? (
+          {loading ? (
+            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
+              <div className="w-5/10">
+                <Loader color="rgba(107, 114, 128, 1)" />
+                <p className="mt-2 text-center text-lg text-gray-500">
+                  {InstitueRomms[userLanguage]['LOADING']}
+                </p>
+              </div>
+            </div>
+          ) : roomList.length > 0 ? (
             <Fragment>
               <div className="flex justify-end">
-                <Buttons
-                  btnClass="mx-4"
-                  label={InstitueRomms[userLanguage]['BUTTON']['CREATE']}
+                <AddButton
+                  className="mx-4"
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>
@@ -143,12 +153,12 @@ const RoomsList = (props: RoomListProps) => {
                 ))}
               </div>
             </Fragment>
-          ) : roomList.length <= 0 ? (
+          ) : (
             <Fragment>
               <div className="flex justify-center mt-8">
-                <Buttons
-                  btnClass="mx-4"
-                  label={InstitueRomms[userLanguage]['BUTTON']['CREATE']}
+                <AddButton
+                  className="mx-4"
+                  label={InstitueRomms[userLanguage]['BUTTON']['ADD']}
                   onClick={createNewRoom}
                 />
               </div>
@@ -157,15 +167,6 @@ const RoomsList = (props: RoomListProps) => {
                 {messages.message}
               </p>
             </Fragment>
-          ) : (
-            <div className="py-20 text-center mx-auto flex justify-center items-center w-full h-48">
-              <div className="w-5/10">
-                <Loader color="rgba(107, 114, 128, 1)" />
-                <p className="mt-2 text-center text-lg text-gray-500">
-                  {InstitueRomms[userLanguage]['LOADING']}
-                </p>
-              </div>
-            </div>
           )}
         </PageWrapper>
       </div>

@@ -15,19 +15,25 @@ interface ModalProps {
   isImage?: boolean;
   closeOnBackdrop?: boolean;
   intenseOpacity?: boolean;
+  titleButton?: React.ReactElement;
 }
 
 const ModalHeader = (headerProps: {
   title?: string;
   onClick?: () => void;
+  titleButton?: React.ReactElement;
   showBorder?: boolean;
 }) => {
-  const {title, onClick, showBorder} = headerProps;
+  const {title, onClick, showBorder, titleButton} = headerProps;
   const {theme} = useContext(GlobalContext);
 
   return (
     <div className={`${theme.modals.header} ${showBorder ? 'border-b-0' : ''}`}>
-      {title && <h3 className="text-xl font-semibold">{title}</h3>}
+      <div className="flex items-center">
+        {title && <h3 className="w-auto text-xl font-semibold">{title}</h3>}
+        {titleButton}
+      </div>
+
       <button className={`ml-auto w-auto ${theme.outlineNone}`} onClick={onClick}>
         <span className="w-8 h-8 ml-4 flex cursor-pointer hover:bg-gray-200 items-center justify-center rounded transition-all duration-150">
           <IconContext.Provider value={{size: '1.5rem', color: '#000000'}}>
@@ -78,10 +84,12 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
     closeAction,
     saveAction,
     closeOnBackdrop = false,
+    titleButton,
   } = modalProps;
   const {theme} = useContext(GlobalContext);
   useEffect(() => {
     const close = (e: any) => {
+      // close modal on ESC press
       if (e.keyCode === 27) {
         closeAction();
       }
@@ -97,7 +105,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
         } fixed inset-0 z-40 bg-black`}></div>
       <div
         onClick={() => closeOnBackdrop && closeAction()}
-        className="modal show justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+        className="fixed modal show justify-center items-center flex overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
         <div
           onClick={(e) => {
             if (closeOnBackdrop) {
@@ -108,6 +116,7 @@ const Modal: React.FC<ModalProps> = (modalProps: ModalProps) => {
           <div className={`${theme.modals.content}`}>
             {showHeader && (
               <ModalHeader
+                titleButton={titleButton}
                 title={title}
                 onClick={closeAction}
                 showBorder={showHeaderBorder}

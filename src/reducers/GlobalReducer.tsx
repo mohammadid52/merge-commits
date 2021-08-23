@@ -1,5 +1,5 @@
 // import React from 'react';
-import { globalStateType, globalState } from '../state/GlobalState';
+import {globalStateType, globalState} from '../state/GlobalState';
 
 type globalActions =
   | {
@@ -25,7 +25,8 @@ type globalActions =
   | {
       type: 'UPDATE_ACTIVEROOM';
       payload: {
-        data: string;
+        roomID: string;
+        syllabusID: string;
       };
     }
   | {
@@ -33,6 +34,12 @@ type globalActions =
       payload: {
         property: string;
         data: any;
+      };
+    }
+  | {
+      type: 'UPDATE_LESSON_PAGE_THEME';
+      payload: {
+        theme: 'light' | 'dark';
       };
     }
   | {
@@ -89,10 +96,14 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         currentPage: action.payload.data,
       };
     case 'UPDATE_ACTIVEROOM':
-      // console.log('new activeroom - ', action.payload.data)
       return {
         ...state,
-        activeRoom: action.payload.data,
+        activeRoom: action.payload.roomID,
+        activeSyllabus: action.payload.syllabusID,
+        roomData: {
+          ...state.roomData,
+          syllabus: [],
+        },
       };
     case 'TOGGLE_LESSON':
       return {
@@ -100,6 +111,19 @@ export const globalReducer = (state: globalStateType, action: globalActions) => 
         roomData: {
           ...state.roomData,
           [action.payload.property]: action.payload.data,
+        },
+      };
+    case 'UPDATE_LESSON_PAGE_THEME':
+      return {
+        ...state,
+        lessonPage: {
+          theme: action.payload.theme,
+          themeTextColor:
+            action.payload.theme === 'light' ? 'text-dark-gray' : 'text-white',
+          themeBackgroundColor:
+            action.payload.theme === 'light' ? 'bg-white' : 'bg-dark-gray',
+          themeSecBackgroundColor:
+            action.payload.theme === 'light' ? 'bg-white' : 'bg-gray-700',
         },
       };
     case 'SET_USER':

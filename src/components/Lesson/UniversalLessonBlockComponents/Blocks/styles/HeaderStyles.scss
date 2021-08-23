@@ -1,0 +1,346 @@
+// common css
+
+.animated-border-on::after {
+  animation: animateBorder 1s linear;
+}
+
+.fade__animation {
+  animation: fade 1.5s ease-in-out;
+}
+
+.fade__animation-longer {
+  animation: fade 3s ease-in-out;
+}
+
+.fade__animation-short {
+  animation: fade 1s ease-in-out;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animated-border {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-border::after {
+  height: 4px;
+  position: absolute;
+  content: '';
+  bottom: -5px;
+  left: 0;
+  border-radius: 10px;
+  width: 100%;
+}
+
+@keyframes animateBorder {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+// dynamic colors
+// Dont change these classes
+
+// ------------- RED -------------
+.animated-border-red-100::after {
+  background-color: #fee2e2;
+}
+
+.animated-border-red-200::after {
+  background-color: #fecaca;
+}
+
+.animated-border-red-300::after {
+  background-color: #fca5a5;
+}
+
+.animated-border-red-400::after {
+  background-color: #f87171;
+}
+
+.animated-border-red-500::after {
+  background-color: #ef4444;
+}
+
+.animated-border-red-600::after {
+  background-color: #dc2626;
+}
+
+.animated-border-red-700::after {
+  background-color: #b91c1c;
+}
+
+.animated-border-red-800::after {
+  background-color: #991b1b;
+}
+
+.animated-border-red-900::after {
+  background-color: #7f1d1d;
+}
+
+// ------------- GRAY -------------
+.animated-border-gray-100::after {
+  background-color: #f3f4f6;
+}
+
+.animated-border-gray-200::after {
+  background-color: #e5e7eb;
+}
+
+.animated-border-gray-300::after {
+  background-color: #d1d5db;
+}
+
+.animated-border-gray-400::after {
+  background-color: #9ca3af;
+}
+
+.animated-border-gray-500::after {
+  background-color: #6b7280;
+}
+
+.animated-border-gray-600::after {
+  background-color: #4b5563;
+}
+
+.animated-border-gray-700::after {
+  background-color: #374151;
+}
+
+.animated-border-gray-800::after {
+  background-color: #1f2937;
+}
+
+.animated-border-gray-900::after {
+  background-color: #111827;
+}
+
+// ------------- YELLOW  -------------
+.animated-border-yellow-100::after {
+  background-color: #fef3c7;
+}
+
+.animated-border-yellow-200::after {
+  background-color: #fde68a;
+}
+
+.animated-border-yellow-300::after {
+  background-color: #fcd34d;
+}
+
+.animated-border-yellow-400::after {
+  background-color: #fbbf24;
+}
+
+.animated-border-yellow-500::after {
+  background-color: #f59e0b;
+}
+
+.animated-border-yellow-600::after {
+  background-color: #d97706;
+}
+
+.animated-border-yellow-700::after {
+  background-color: #b45309;
+}
+
+.animated-border-yellow-800::after {
+  background-color: #92400e;
+}
+
+.animated-border-yellow-900::after {
+  background-color: #78350f;
+}
+// ------------- GREEN  -------------
+.animated-border-green-100::after {
+  background-color: #d1fae5;
+}
+
+.animated-border-green-200::after {
+  background-color: #a7f3d0;
+}
+
+.animated-border-green-300::after {
+  background-color: #6ee7b7;
+}
+
+.animated-border-green-400::after {
+  background-color: #34d399;
+}
+
+.animated-border-green-500::after {
+  background-color: #10b981;
+}
+
+.animated-border-green-600::after {
+  background-color: #059669;
+}
+
+.animated-border-green-700::after {
+  background-color: #047857;
+}
+
+.animated-border-green-800::after {
+  background-color: #065f46;
+}
+
+.animated-border-green-900::after {
+  background-color: #064e3b;
+}
+// ------------- BLUE  -------------
+.animated-border-blue-100::after {
+  background-color: #dbeafe;
+}
+
+.animated-border-blue-200::after {
+  background-color: #bfdbfe;
+}
+
+.animated-border-blue-300::after {
+  background-color: #93c5fd;
+}
+
+.animated-border-blue-400::after {
+  background-color: #60a5fa;
+}
+
+.animated-border-blue-500::after {
+  background-color: #3b82f6;
+}
+
+.animated-border-blue-600::after {
+  background-color: #2563eb;
+}
+
+.animated-border-blue-700::after {
+  background-color: #1d4ed8;
+}
+
+.animated-border-blue-800::after {
+  background-color: #1e40af;
+}
+
+.animated-border-blue-900::after {
+  background-color: #1e3a8a;
+}
+// ------------- INDIGO  -------------
+.animated-border-indigo-100::after {
+  background-color: #e0e7ff;
+}
+
+.animated-border-indigo-200::after {
+  background-color: #c7d2fe;
+}
+
+.animated-border-indigo-300::after {
+  background-color: #a5b4fc;
+}
+
+.animated-border-indigo-400::after {
+  background-color: #818cf8;
+}
+
+.animated-border-indigo-500::after {
+  background-color: #6366f1;
+}
+
+.animated-border-indigo-600::after {
+  background-color: #4f46e5;
+}
+
+.animated-border-indigo-700::after {
+  background-color: #4338ca;
+}
+
+.animated-border-indigo-800::after {
+  background-color: #3730a3;
+}
+
+.animated-border-indigo-900::after {
+  background-color: #312e81;
+}
+// ------------- PURPLE  -------------
+.animated-border-purple-100::after {
+  background-color: #ede9fe;
+}
+
+.animated-border-purple-200::after {
+  background-color: #ddd6fe;
+}
+
+.animated-border-purple-300::after {
+  background-color: #c4b5fd;
+}
+
+.animated-border-purple-400::after {
+  background-color: #a78bfa;
+}
+
+.animated-border-purple-500::after {
+  background-color: #8b5cf6;
+}
+
+.animated-border-purple-600::after {
+  background-color: #7c3aed;
+}
+
+.animated-border-purple-700::after {
+  background-color: #6d28d9;
+}
+
+.animated-border-purple-800::after {
+  background-color: #5b21b6;
+}
+
+.animated-border-purple-900::after {
+  background-color: #4c1d95;
+}
+// ------------- PINK  -------------
+.animated-border-pink-100::after {
+  background-color: #fce7f3;
+}
+
+.animated-border-pink-200::after {
+  background-color: #fbcfe8;
+}
+
+.animated-border-pink-300::after {
+  background-color: #f9a8d4;
+}
+
+.animated-border-pink-400::after {
+  background-color: #f472b6;
+}
+
+.animated-border-pink-500::after {
+  background-color: #ec4899;
+}
+
+.animated-border-pink-600::after {
+  background-color: #db2777;
+}
+
+.animated-border-pink-700::after {
+  background-color: #be185d;
+}
+
+.animated-border-pink-800::after {
+  background-color: #9d174d;
+}
+
+.animated-border-pink-900::after {
+  background-color: #831843;
+}

@@ -1,12 +1,11 @@
-/**************************************
- * UNIVERSAL LESSON BUILDER INTERFACES*
- ***************************************/
-//
-export interface UniversalLesson{
+// ##################################################################### //
+// #################### UNIVERSAL LESSON INTERFACES #################### //
+// ##################################################################### //
+export interface UniversalLesson {
   id: string;
   isDraft?: boolean; //will determine if curriculum builder can see lesson to add to syllabus
   institute?: string;
-  designers: string[];
+  designers?: string[];
   teachers?: string[];
   summary?: string;
   purpose?: string; //input this information on LESSON
@@ -15,8 +14,9 @@ export interface UniversalLesson{
   unit?: string; //get this information from LESSON PLAN BUILDER
   categories?: string[];
   additionalFiles?: string[];
-  universalLessonPlan: UniversalLessonPlanStage[];
-  universalLessonPages: UniversalLessonPage[];
+  institutionID?: string;
+  lessonPlan: UniversalLessonPage[];
+  darkMode?: boolean;
 }
 
 export interface UniversalLessonPlanStage {
@@ -36,42 +36,57 @@ interface UniversalLessonPages {
 //
 export interface UniversalLessonPage {
   id: string;
+  enabled?: boolean;
+  open?: boolean;
+  active?: boolean;
   label?: string;
-  title: string;
-  description: string;
-  class: string;
-  pageContent: PagePart[];
-  dataLifecycleManagements?: boolean; //will determine if cleanup happens for page
+  tags?: string[];
+  title?: string;
+  description?: string;
+  class?: string;
   estTime?: number;
-  [key: string]:any;
+  pageContent?: PagePart[];
+  [key: string]: any;
 }
 
 export interface PagePart {
   id: string;
-  partType: 'component' | 'default';
+  partType: 'component' | 'default' | string;
   class: string;
   partContent: PartContent[];
-  [key: string]:any;
+  [key: string]: any;
 }
 
 export interface PartContent {
   id: string;
   type?: string;
-  value: any[];
-  [key: string]:any;
+  value: PartContentSub[];
+  label?: string; // its not correct. There is no property like label in API.ts
+  class?: string;
+  [key: string]: any;
 }
 
 export interface PartContentSub {
+  // this is end object
   id?: string;
+  isRequired?: boolean;
   type?: string;
   label?: string;
   value?: string;
+  class?: string;
+  options?: Options[];
+  placeholderText?: string;
 }
 
-/**************************************
- * UNIVERSAL LESSON SETUP DATA && STUDENT DATA INTERFACES   *
- **************************************/
-//
+export interface Options {
+  id?: string;
+  label?: string;
+  text?: string;
+}
+
+// ##################################################################### //
+// ################### UNIVERSAL LESSON STUDENT DATA ################### //
+// ##################################################################### //
 export interface UniversalLessonStudentData {
   id: string;
   universalLessonID: string;
@@ -80,15 +95,30 @@ export interface UniversalLessonStudentData {
   studentID: string;
   currentLocation: string;
   lessonProgress: string;
-  pageData: StudentDataPageData[];
+  pageData: StudentPageInput[];
 }
-
-export interface StudentDataPageData {
-  pagePartID: string;
-  pagePartInput: PagePartInput[];
-}
-
-export interface PagePartInput {
+export interface StudentPageInput {
   domID: string;
-  input: string;
+  input: string[];
+  comments?: TeacherStudentComments[];
+}
+
+export interface TeacherStudentComments {
+  commentBy: string;
+  comment: string;
+}
+
+// ##################################################################### //
+// ####################### UNIVERSAL JOURNAL DATA ###################### //
+// ##################################################################### //
+export interface UniversalJournalData {
+  id: string;
+  studentID: string;
+  studentAuthID: string;
+  studentEmail: string;
+  type?: string;
+  feedbacks?: string[];
+  entryData?: {domID: string; type: string; input: string}[];
+  updatedAt?: any;
+  createdAt?: any;
 }

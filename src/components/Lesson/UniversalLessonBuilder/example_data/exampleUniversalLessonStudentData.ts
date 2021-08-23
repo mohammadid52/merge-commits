@@ -1,4 +1,4 @@
-import { UniversalLessonStudentData } from '../../../../interfaces/UniversalLessonInterfaces';
+import {UniversalLessonStudentData} from '../../../../interfaces/UniversalLessonInterfaces';
 
 /**
  *
@@ -12,8 +12,7 @@ import { UniversalLessonStudentData } from '../../../../interfaces/UniversalLess
  *
  */
 
-
-const exampleStudentDataMutation: UniversalLessonStudentData = {
+export const exampleStudentDataMutation: UniversalLessonStudentData = {
   id: '000001',
   universalLessonID: '7ad8e2ce-2882-4d8c-9b03-383310a56482',
   universalLessonPageID: 'page_2',
@@ -23,31 +22,30 @@ const exampleStudentDataMutation: UniversalLessonStudentData = {
   lessonProgress: '2',
   pageData: [
     {
-      pagePartID: 'page_2_part_1',
-      pagePartInput: [
-        {
-          domID: 'title',
-          input: 'My story title',
-        }, {
-          domID: 'story',
-          input: 'My story content',
-        },
-      ],
+      domID: 'title',
+      input: ['My story title'],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
     },
     {
-      pagePartID: 'page_2_part_2',
-      pagePartInput: [
-        {
-          domID: 'culture',
-          input: 'Dutch'
-        },{
-          domID: 'storyteller',
-          input: 'Grandmother'
-        },{
-          domID: 'lessons',
-          input: 'Perseverance'
-        }
-      ]
-    }
+      domID: 'story',
+      input: ['My story content'],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
+    },
+
+    {
+      domID: 'culture',
+      input: ['Dutch'],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
+    },
+    {
+      domID: 'storyteller',
+      input: ['Grandmother'],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
+    },
+    {
+      domID: 'lessons',
+      input: ['Perseverance'],
+      comments: [{commentBy: 'xxx', comment: 'abc'}],
+    },
   ],
 };

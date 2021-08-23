@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
-import { IoArrowUndoCircleOutline } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory, useLocation, useRouteMatch} from 'react-router-dom';
+import {IoArrowUndoCircleOutline} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutation from '../../../../../customGraphql/customMutations';
@@ -13,14 +13,17 @@ import BreadCrums from '../../../../Atoms/BreadCrums';
 import Buttons from '../../../../Atoms/Buttons';
 import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
-import { createFilterToFetchSpecificItemsOnly, getFilterORArray } from '../../../../../utilities/strings';
+import {
+  createFilterToFetchSpecificItemsOnly,
+  getFilterORArray,
+} from '../../../../../utilities/strings';
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
-import { getImageFromS3 } from '../../../../../utilities/services';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {getImageFromS3} from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
-import { getAsset } from '../../../../../assets';
+import {getAsset} from '../../../../../assets';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
-import { goBackBreadCrumb } from '../../../../../utilities/functions';
+import {goBackBreadCrumb} from '../../../../../utilities/functions';
 
 interface RoomBuilderProps {}
 
@@ -32,13 +35,13 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const initialData = {
     id: '',
     name: '',
-    institute: { id: '', name: '', value: '' },
-    teacher: { id: '', name: '', value: '' },
-    classRoom: { id: '', name: '', value: '' },
-    curricular: { id: '', name: '', value: '' },
+    institute: {id: '', name: '', value: ''},
+    teacher: {id: '', name: '', value: ''},
+    classRoom: {id: '', name: '', value: ''},
+    curricular: {id: '', name: '', value: ''},
     maxPersons: '',
   };
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
   const [roomData, setRoomData] = useState(initialData);
   const [institutionList, setInstitutionList] = useState([]);
@@ -47,10 +50,10 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   const [curricularList, setCurricularList] = useState([]);
   const [coTeachersList, setCoTeachersList] = useState(teachersList);
   const [selectedCoTeachers, setSelectedCoTeachers] = useState<
-    { email?: string; authId: string; value?: string; id?: string; name?: string }[]
+    {email?: string; authId: string; value?: string; id?: string; name?: string}[]
   >([]);
 
-  const { RoomBuilderdict, BreadcrumsTitles } = useDictionary(clientKey);
+  const {RoomBuilderdict, BreadcrumsTitles} = useDictionary(clientKey);
   const [messages, setMessages] = useState({
     show: false,
     message: '',
@@ -62,23 +65,36 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
   const params = useQuery();
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'], goBack: true, last: false },
-    { title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'], url: `${match.url}`, last: true },
+    {title: roomData?.institute?.name, goBack: true, last: false},
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOMS'],
+      url: `/dashboard/manage-institutions/institution?id=${roomData.institute?.id}&tab=4`,
+      last: false,
+    },
+    {
+      title: BreadcrumsTitles[userLanguage]['CLASSROOM_CREATION'],
+      url: `${match.url}`,
+      last: true,
+    },
   ];
 
   const createNewEntry = (field: string) => {
     if (field === 'teacher') {
       history.push('/dashboard/registration');
     } else if (field === 'curricular') {
-      history.push(`/dashboard/manage-institutions/institution/curricular-creation?id=${roomData?.institute?.id}`);
+      history.push(
+        `/dashboard/manage-institutions/institution/curricular-creation?id=${roomData?.institute?.id}`
+      );
     } else if (field === 'class') {
-      history.push(`/dashboard/manage-institutions/institution/class-creation?id=${roomData?.institute?.id}`);
+      history.push(
+        `/dashboard/manage-institutions/institution/class-creation?id=${roomData?.institute?.id}`
+      );
     }
   };
   const selectTeacher = (val: string, name: string, id: string) => {
@@ -90,7 +106,9 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         value: val,
       },
     });
-    const filteredDefaultTeacher: object[] = teachersList.filter((coTeacher: any) => coTeacher.id !== id);
+    const filteredDefaultTeacher: object[] = teachersList.filter(
+      (coTeacher: any) => coTeacher.id !== id
+    );
     setCoTeachersList(filteredDefaultTeacher);
     setSelectedCoTeachers((list: any) => list.filter((d: any) => d.id !== id));
   };
@@ -102,7 +120,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
 
     if (!selectedItem) {
       const selectedItem = coTeachersList.find((item) => item.id === id);
-      updatedList = [...currentCoTeachers, { id, name, value, ...selectedItem }];
+      updatedList = [...currentCoTeachers, {id, name, value, ...selectedItem}];
     } else {
       updatedList = currentCoTeachers.filter((item) => item.id !== id);
     }
@@ -127,9 +145,9 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           name: name,
           value: val,
         },
-        teacher: { id: '', name: '', value: '' },
-        classRoom: { id: '', name: '', value: '' },
-        curricular: { id: '', name: '', value: '' },
+        teacher: {id: '', name: '', value: ''},
+        classRoom: {id: '', name: '', value: ''},
+        curricular: {id: '', name: '', value: ''},
       });
     }
     removeErrorMsg();
@@ -159,19 +177,23 @@ const RoomBuilder = (props: RoomBuilderProps) => {
   };
 
   const getFirstSyllabus = async (curriculumID: string) => {
-    if(curriculumID){
-      const syllabusCSequenceFetch = await API.graphql(
-        graphqlOperation(queries.getCSequences, {
-          id: `s_${curriculumID}`,
+    if (curriculumID) {
+      const syllabusCSequenceFetch: any = await API.graphql(
+        graphqlOperation(customQueries.getCurriculumUniversalSyllabusSequence, {
+          id: `${curriculumID}`,
         })
       );
+
       //@ts-ignore
-      const syllabusSequenceArray = syllabusCSequenceFetch.data.getCSequences;
+      const syllabusSequenceArray =
+        syllabusCSequenceFetch.data.getCurriculum?.universalSyllabusSeq;
       //@ts-ignore
-      const firstSyllabusID = syllabusSequenceArray.sequence.length > 0 ? syllabusCSequenceFetch.data.getCSequences.sequence[0] : '';
+      const firstSyllabusID = syllabusSequenceArray?.length
+        ? syllabusSequenceArray[0]
+        : '';
       return firstSyllabusID;
     }
-  }
+  };
 
   const removeErrorMsg = () => {
     if (messages.show) {
@@ -243,7 +265,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listStaffs, {
-          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
       const listStaffs = list.data.listStaffs.items;
@@ -255,17 +277,25 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         });
       } else {
         const sortedList = listStaffs.sort((a: any, b: any) =>
-          a.staffMember?.firstName?.toLowerCase() > b.staffMember?.firstName?.toLowerCase() ? 1 : -1
+          a.staffMember?.firstName?.toLowerCase() >
+          b.staffMember?.firstName?.toLowerCase()
+            ? 1
+            : -1
         );
         const filterByRole = sortedList.filter(
-          (teacher: any) => teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
+          (teacher: any) =>
+            teacher.staffMember?.role === 'TR' || teacher.staffMember?.role === 'FLW'
         );
         const staffList = filterByRole
           .filter((staff: any) => staff.staffMember)
           .map((item: any) => ({
             id: item.staffMember?.id,
-            name: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
-            value: `${item.staffMember?.firstName || ''} ${item.staffMember?.lastName || ''}`,
+            name: `${item.staffMember?.firstName || ''} ${
+              item.staffMember?.lastName || ''
+            }`,
+            value: `${item.staffMember?.firstName || ''} ${
+              item.staffMember?.lastName || ''
+            }`,
             email: item.staffMember?.email ? item.staffMember?.email : '',
             image: item.staffMember?.image,
             authId: item.staffMember?.authId ? item.staffMember?.authId : '',
@@ -299,7 +329,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listClasss, {
-          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
       const listClass = list.data.listClasss?.items;
@@ -310,11 +340,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           isError: true,
         });
       } else {
-        const sortedList = listClass.sort((a: any, b: any) => (a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1));
+        const sortedList = listClass.sort((a: any, b: any) =>
+          a.name?.toLowerCase() > b.name?.toLowerCase() ? 1 : -1
+        );
         const filteredClassList = sortedList.filter((classItem: any) => {
           return (
             classItem?.institution?.isServiceProvider === false ||
-            (classItem?.institution?.isServiceProvider === true && classItem?.institution?.id === instId)
+            (classItem?.institution?.isServiceProvider === true &&
+              classItem?.institution?.id === instId)
           );
         });
 
@@ -338,7 +371,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     try {
       const list: any = await API.graphql(
         graphqlOperation(queries.listCurriculums, {
-          filter: { or: getFilterORArray(allInstiId, 'institutionID') },
+          filter: {or: getFilterORArray(allInstiId, 'institutionID')},
         })
       );
       const sortedList = list.data.listCurriculums?.items.sort((a: any, b: any) =>
@@ -364,8 +397,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       const list: any = await API.graphql(
         graphqlOperation(queries.listRooms, {
           filter: {
-            institutionID: { eq: roomData.institute.id },
-            name: { eq: roomData.name },
+            institutionID: {eq: roomData.institute.id},
+            name: {eq: roomData.name},
           },
         })
       );
@@ -429,7 +462,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
       if (!isUniq) {
         setMessages({
           show: true,
-          message: RoomBuilderdict[userLanguage]['messages']['validation']['classroomexist'],
+          message:
+            RoomBuilderdict[userLanguage]['messages']['validation']['classroomexist'],
           isError: true,
         });
         return false;
@@ -450,11 +484,12 @@ const RoomBuilder = (props: RoomBuilderProps) => {
         };
 
         const addCurricular: any = await API.graphql(
-          graphqlOperation(mutation.createRoomCurriculum, { input: curricularInput })
+          graphqlOperation(mutation.createRoomCurriculum, {input: curricularInput})
         );
         setMessages({
           show: true,
-          message: RoomBuilderdict[userLanguage]['messages']['success']['classroomdetail'],
+          message:
+            RoomBuilderdict[userLanguage]['messages']['success']['classroomdetail'],
           isError: false,
         });
         setRoomData(initialData);
@@ -495,34 +530,37 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     if (newItems.length > 0) {
       await Promise.all(
         newItems.map(async (teacher) => {
-          await API.graphql(graphqlOperation(customMutation.createRoomCoTeachers, { input: teacher }));
+          await API.graphql(
+            graphqlOperation(customMutation.createRoomCoTeachers, {input: teacher})
+          );
         })
       );
     }
   };
 
-  const test = async () => {
-    const activeSyllabus = await getFirstSyllabus(roomData.curricular.id);
-    console.log(activeSyllabus);
-  }
-
   const createNewRoom = async () => {
     setLoading(true);
     const isValid = await validateForm();
+
     if (isValid) {
       try {
-
         const input = {
           institutionID: roomData.institute.id,
-          activeSyllabus: roomData.curricular.id ? await getFirstSyllabus(roomData.curricular.id) : '',
+          activeSyllabus: roomData.curricular.id
+            ? await getFirstSyllabus(roomData.curricular.id)
+            : '',
           classID: roomData.classRoom.id,
-          teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id).authId,
-          teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id).email,
+          teacherAuthID: teachersList.find((item: any) => item.id === roomData.teacher.id)
+            .authId,
+          teacherEmail: teachersList.find((item: any) => item.id === roomData.teacher.id)
+            .email,
           name: roomData.name,
           maxPersons: roomData.maxPersons,
         };
 
-        const newRoom: any = await API.graphql(graphqlOperation(customMutation.createRoom, { input: input }));
+        const newRoom: any = await API.graphql(
+          graphqlOperation(customMutation.createRoom, {input: input})
+        );
         const roomId = newRoom.data.createRoom.id;
         if (roomData.curricular.id) {
           await saveRoomCurricular(roomId, roomData.curricular.id);
@@ -581,7 +619,9 @@ const RoomBuilder = (props: RoomBuilderProps) => {
 
   useEffect(() => {
     if (roomData.institute.id) {
-      const instName = institutionList.find((item: { id: string }) => item.id === roomData.institute.id).name;
+      const instName = institutionList.find(
+        (item: {id: string}) => item.id === roomData.institute.id
+      ).name;
       if (instName) {
         setRoomData({
           ...roomData,
@@ -601,7 +641,7 @@ const RoomBuilder = (props: RoomBuilderProps) => {
     }
   }, [institutionList]);
 
-  const { name, curricular, classRoom, maxPersons, institute, teacher } = roomData;
+  const {name, curricular, classRoom, maxPersons, institute, teacher} = roomData;
 
   return (
     <div className="">
@@ -612,14 +652,14 @@ const RoomBuilder = (props: RoomBuilderProps) => {
           title={RoomBuilderdict[userLanguage]['TITLE']}
           subtitle={RoomBuilderdict[userLanguage]['SUBTITLE']}
         />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
             btnClass="mr-4"
             onClick={() => goBackBreadCrumb(breadCrumsList, history)}
             Icon={IoArrowUndoCircleOutline}
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Body section */}
@@ -655,7 +695,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
             <div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomBuilderdict[userLanguage]['TEACHER_LABEL']} <span className="text-red-500"> *</span>
+                  {RoomBuilderdict[userLanguage]['TEACHER_LABEL']}{' '}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <SelectorWithAvatar
                   selectedItem={teacher}
@@ -684,7 +725,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']} <span className="text-red-500"> *</span>
+                  {RoomBuilderdict[userLanguage]['CLASS_NAME_LABEL']}{' '}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <Selector
                   selectedItem={classRoom.value}
@@ -716,7 +758,8 @@ const RoomBuilder = (props: RoomBuilderProps) => {
               </div>
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {RoomBuilderdict[userLanguage]['MAXSTUDENT_LABEL']} <span className="text-red-500"> *</span>
+                  {RoomBuilderdict[userLanguage]['MAXSTUDENT_LABEL']}{' '}
+                  <span className="text-red-500"> *</span>
                 </label>
                 <input
                   type="number"

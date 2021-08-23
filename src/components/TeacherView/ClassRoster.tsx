@@ -1,24 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import { IoMdRefresh } from 'react-icons/io';
+import React, {useState, useContext, useEffect} from 'react';
+import {IconContext} from 'react-icons/lib/esm/iconContext';
+import {IoMdRefresh} from 'react-icons/io';
 
-import { LessonControlContext } from '../../contexts/LessonControlContext';
 import useDictionary from '../../customHooks/dictionary';
-import { GlobalContext } from '../../contexts/GlobalContext';
-
+import {GlobalContext} from '../../contexts/GlobalContext';
 import RosterRow from './ClassRoster/RosterRow';
 
 import * as queries from '../../graphql/queries';
 import * as subscriptions from '../../graphql/subscriptions';
 
-/**
- * Function imports
- */
-import { lc } from '../../utilities/strings';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import exp from 'constants';
-import { useCookies } from 'react-cookie';
-import { getClass } from '../../graphql/queries';
+import API, {graphqlOperation} from '@aws-amplify/api';
+import {getLocalStorageData, setLocalStorageData} from '../../utilities/localStorage';
+import {useParams} from 'react-router-dom';
 
 interface classRosterProps {
   handleUpdateSyllabusLesson: () => Promise<void>;
@@ -27,34 +20,35 @@ interface classRosterProps {
   handleQuitViewing: () => void;
   isSameStudentShared: boolean;
   handlePageChange?: any;
-}
-
-enum SortByEnum {
-  FNAME = 'firstName',
-  PAGE = 'lessonProgress',
-  ACTION = 'action',
+  handleRoomUpdate?: (payload: any) => void;
 }
 
 const ClassRoster = (props: classRosterProps) => {
   // Essentials
   const {
-    handleUpdateSyllabusLesson,
     handleShareStudentData,
     isSameStudentShared,
     handleQuitShare,
     handleQuitViewing,
     handlePageChange,
+    handleRoomUpdate,
   } = props;
-  const { state, dispatch } = useContext(LessonControlContext);
-  const { clientKey, userLanguage } = useContext(GlobalContext);
-  const { lessonPlannerDict } = useDictionary(clientKey);
+  const {lessonState, lessonDispatch, controlState, controlDispatch} = useContext(
+    GlobalContext
+  );
+  const {clientKey, userLanguage} = useContext(GlobalContext);
+  const {lessonPlannerDict} = useDictionary(clientKey);
+  const urlParams: any = useParams();
+  const getRoomData = getLocalStorageData('room_info');
 
-  const [cookies] = useCookies(['room_info']);
-
-  // Loading state
+  // ##################################################################### //
+  // ########################### LOADING STATE ########################### //
+  // ##################################################################### //
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Roster related
+  // ##################################################################### //
+  // ############################ ALL STUDENTS ########################### //
+  // ##################################################################### //
   const [classStudents, setClassStudents] = useState<any[]>([]);
   const [personLocationStudents, setPersonLocationStudents] = useState<any[]>([]);
   const [updatedStudent, setUpdatedStudent] = useState<any>({});
@@ -62,17 +56,38 @@ const ClassRoster = (props: classRosterProps) => {
 
   let subscription: any;
 
-  // Load students from the class associated with the current Room,
-  // with this we'll be able to compared which students are online/offline
-  const getClassStudents = async (cookieClassID: string) => {
+  // ~~~~~~~~~~~~~~ INITIALIZE ~~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (Object.keys(getRoomData).length > 0 && getRoomData.hasOwnProperty('classID')) {
+      getClassStudents(getRoomData?.classID);
+    }
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+      setViewedStudent('');
+      lessonDispatch({
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: ''},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+    };
+  }, []);
+
+  // ##################################################################### //
+  // ########################## GETTING STUDENTS ######################### //
+  // ##################################################################### //
+
+  // ~~~~~~~~~ FETCH CLASS STUDENTS ~~~~~~~~ //
+  const getClassStudents = async (sessionClassID: string) => {
     try {
       const classStudents: any = await API.graphql(
         graphqlOperation(queries.listClassStudents, {
-          filter: { classID: { contains: cookieClassID } },
+          filter: {classID: {contains: sessionClassID}},
         })
       );
       const classStudentList = classStudents.data.listClassStudents.items;
-      const initClassStudentList = classStudentList.map((student: any, i: number) => {
+      const initClassStudentList = classStudentList.map((student: any) => {
         return {
           id: '',
           personAuthID: student.studentAuthID,
@@ -90,37 +105,46 @@ const ClassRoster = (props: classRosterProps) => {
         };
       });
       setClassStudents(initClassStudentList);
-      // dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: initClassStudentList } });
+      controlDispatch({
+        type: 'UPDATE_STUDENT_ROSTER',
+        payload: {students: initClassStudentList},
+      });
     } catch (e) {
       console.error('getClassStudents - ', e);
     }
   };
 
-  useEffect(() => {
-    if (cookies['room_info']) {
-      const roomInfoCookie = cookies['room_info'];
-      if (Object.keys(roomInfoCookie).length > 0 && roomInfoCookie.hasOwnProperty('classID')) {
-        getClassStudents(roomInfoCookie['classID']);
-      }
-    }
-  }, [cookies]);
+  // ~~~~ FETCH STUDENTS IN THIS LESSON ~~~~ //
 
-  // load students from PersonLocation -> syllabusLessonID into roster
+  const {lessonID} = urlParams;
+
   const getSyllabusLessonStudents = async () => {
     setLoading(true);
     try {
       const syllabusLessonStudents: any = await API.graphql(
         graphqlOperation(queries.listPersonLocations, {
-          filter: { syllabusLessonID: { contains: state.syllabusLessonID } },
+          filter: {
+            syllabusLessonID: {eq: getRoomData.activeSyllabus},
+            lessonID: {eq: lessonID},
+            roomID: {eq: getRoomData.id},
+          },
         })
       );
-      const syllabusLessonStudentList = syllabusLessonStudents.data.listPersonLocations.items;
-      const studentsFromThisClass = syllabusLessonStudentList.filter((student: any)=>{
-        const findStudentInClasslist = classStudents.find((student2: any) => student2.personEmail === student.personEmail);
-        if(findStudentInClasslist) return findStudentInClasslist;
-      })
+      const syllabusLessonStudentList =
+        syllabusLessonStudents.data.listPersonLocations.items;
+      const studentsFromThisClass = syllabusLessonStudentList.filter((student: any) => {
+        const findStudentInClasslist = classStudents.find(
+          (student2: any) => student2.personEmail === student.personEmail
+        );
+        if (findStudentInClasslist) {
+          return findStudentInClasslist;
+        }
+      });
       setPersonLocationStudents(studentsFromThisClass);
-      dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: studentsFromThisClass } });
+      controlDispatch({
+        type: 'UPDATE_STUDENT_ROSTER',
+        payload: {students: studentsFromThisClass},
+      });
       subscription = subscribeToPersonLocations();
     } catch (e) {
       console.error('getSyllabusLessonstudents - ', e);
@@ -130,17 +154,22 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   useEffect(() => {
-    if (state.syllabusLessonID && state.roster.length === 0) {
+    if (lessonState.lessonData.id /*&& controlState.roster.length === 0*/) {
       getSyllabusLessonStudents();
     }
-  }, [state.syllabusLessonID]);
+  }, [lessonState.lessonData.id]);
 
-  // Subscriptions and updating
+  // ##################################################################### //
+  // #################### SUBSCRIBE TO LOCATION CHANGE ################### //
+  // ##################################################################### //
   const subscribeToPersonLocations = () => {
-    const syllabusLessonID = state.syllabusLessonID;
     // @ts-ignore
     const personLocationSubscription = API.graphql(
-      graphqlOperation(subscriptions.onChangePersonLocation, { syllabusLessonID: syllabusLessonID })
+      graphqlOperation(subscriptions.onChangePersonLocation, {
+        syllabusLessonID: getRoomData.activeSyllabus,
+        lessonID: lessonID,
+        roomID: getRoomData.id,
+      })
       //@ts-ignore
     ).subscribe({
       next: (locationData: any) => {
@@ -153,32 +182,34 @@ const ClassRoster = (props: classRosterProps) => {
     return personLocationSubscription;
   };
 
-  //
-
-  // Update the student roster
+  // ~~~~~~~~~~~~ UPDATE ROSTER ~~~~~~~~~~~~ //
   useEffect(() => {
-    console.log('current location: ', state.studentViewing?.studentInfo?.currentLocation);
     const updateStudentRoster = (newStudent: any) => {
       const studentExists =
-        personLocationStudents.filter((student: any) => student.personAuthID === newStudent.personAuthID).length > 0;
+        personLocationStudents.filter(
+          (student: any) => student.personAuthID === newStudent.personAuthID
+        ).length > 0;
 
       if (studentExists) {
         // console.log('student exists YES', ' --> update loc')
         const existRoster = personLocationStudents.map((student: any) => {
           if (student.personAuthID === newStudent.personAuthID) {
-            return { ...student, currentLocation: newStudent.currentLocation };
+            return {...student, currentLocation: newStudent.currentLocation};
           } else {
             return student;
           }
         });
         setPersonLocationStudents(existRoster);
-        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: existRoster } });
+        controlDispatch({
+          type: 'UPDATE_STUDENT_ROSTER',
+          payload: {students: existRoster},
+        });
         setUpdatedStudent({});
       } else {
         // console.log('student exists NO', ' --> update loc')
         const newRoster = [...personLocationStudents, newStudent];
         setPersonLocationStudents(newRoster);
-        dispatch({ type: 'UPDATE_STUDENT_ROSTER', payload: { students: newRoster } });
+        controlDispatch({type: 'UPDATE_STUDENT_ROSTER', payload: {students: newRoster}});
         setUpdatedStudent({});
       }
     };
@@ -187,16 +218,37 @@ const ClassRoster = (props: classRosterProps) => {
     }
   }, [updatedStudent]);
 
+  // ##################################################################### //
+  // ########################### FUNCTIONALITY ########################### //
+  // ##################################################################### //
   const handleSelect = async (e: any) => {
-    const { id } = e.target;
-    const selected = state.roster.filter((student: any) => {
-      return student.personAuthID === id;
-    });
+    const {id} = e.target;
 
-    // console.log('row ID : ', id)
-    setViewedStudent(id);
-    dispatch({ type: 'SET_STUDENT_VIEWING', payload: selected[0] });
+    if (lessonState.studentViewing === id) {
+      setViewedStudent('');
+      lessonDispatch({
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: ''},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: ''});
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: ''});
+    } else {
+      setViewedStudent(id);
+      lessonDispatch({
+        type: 'SET_ROOM_SUBSCRIPTION_DATA',
+        payload: {id: getRoomData.id, studentViewing: id},
+      });
+      setLocalStorageData('room_info', {...getRoomData, studentViewing: id});
+      await handleRoomUpdate({id: getRoomData.id, studentViewing: id});
+    }
   };
+
+  // ~~~~~~~~~~~~~~~ CLEAN UP ~~~~~~~~~~~~~~ //
+  useEffect(() => {
+    if (lessonState.studentViewing === '' && viewedStudent !== '') {
+      setViewedStudent('');
+    }
+  }, [lessonState.studentViewing]);
 
   const handleManualRefresh = () => {
     if (loading === false) {
@@ -205,7 +257,7 @@ const ClassRoster = (props: classRosterProps) => {
   };
 
   const inactiveStudents = classStudents.filter((student: any) => {
-    const isInStateRoster = state.roster.find(
+    const isInStateRoster = controlState.roster.find(
       (studentTarget: any) => studentTarget.personAuthID === student.personAuthID
     );
     if (isInStateRoster === undefined) {
@@ -214,36 +266,48 @@ const ClassRoster = (props: classRosterProps) => {
   });
 
   return (
-    <div className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
+    <div
+      className={`w-full h-full bg-light-gray bg-opacity-20 overflow-y-auto overflow-x-hidden`}>
       {/* TABLE HEAD */}
-      <div className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
-        <div className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
-          <span>{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
-          <span className={`w-auto absolute right-0 translate-x-4`} onClick={handleManualRefresh}>
-            <IconContext.Provider value={{ color: '#EDF2F7' }}>
+      <div
+        className={`w-full h-8 flex py-2 pl-2 pr-1 text-white bg-darker-gray bg-opacity-40`}>
+        <div
+          className={`w-3.5/10 relative mx-2 flex items-center hover:underline cursor-pointer text-xs`}>
+          <span className="w-auto">{lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['ONE']}</span>
+          <span
+            className={`w-8`}
+            onClick={handleManualRefresh}>
+            <IconContext.Provider value={{color: '#EDF2F7'}}>
               <IoMdRefresh size={28} className={`${loading ? 'animate-spin' : null}`} />
             </IconContext.Provider>
           </span>
         </div>
-        <div className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>
+        <div
+          className={`w-3.5/10 mx-2 flex items-center overflow-hidden text-center text-xs `}>
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['TWO']}
         </div>
-        <div className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>
+        <div
+          className={`w-2/10 mx-2 flex items-center justify-center rounded-lg text-xs`}>
           {lessonPlannerDict[userLanguage]['OTHER_LABELS']['COLUMN']['THREE']}
         </div>
       </div>
 
       {/* ROWS */}
       <div className={`w-full flex flex-col items-center`}>
-        {state.roster.length > 0 ? (
-          <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['IN_CLASS']}
+        {controlState.roster.length > 0 ? (
+          <div
+            className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+            {
+              lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
+                'IN_CLASS'
+              ]
+            }
           </div>
         ) : null}
 
         {/* STUDENTS - Active */}
-        {state.roster.length > 0
-          ? state.roster.map((student: any, key: number) => (
+        {controlState.roster.length > 0
+          ? controlState.roster.map((student: any, key: number) => (
               <RosterRow
                 key={key}
                 keyProp={key}
@@ -270,8 +334,13 @@ const ClassRoster = (props: classRosterProps) => {
 
         {/* STUDENTS - INActive */}
         {inactiveStudents.length > 0 ? (
-          <div className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
-            {lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION']['NOT_IN_CLASS']}
+          <div
+            className={`w-full pl-4 text-xs font-semibold text-white bg-medium-gray bg-opacity-20`}>
+            {
+              lessonPlannerDict[userLanguage]['OTHER_LABELS']['STUDENT_SECTION'][
+                'NOT_IN_CLASS'
+              ]
+            }
           </div>
         ) : null}
         {inactiveStudents.length > 0

@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { getAsset } from '../../../../assets';
-import { GlobalContext } from '../../../../contexts/GlobalContext';
+import React, {useContext} from 'react';
+import {useHistory, useRouteMatch} from 'react-router-dom';
+import {getAsset} from '../../../../assets';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
 import useDictionary from '../../../../customHooks/dictionary';
 
 interface LessonsListRow {
@@ -17,22 +17,25 @@ interface LessonsListRow {
 const LessonsListRow = (props: LessonsListRow) => {
   const match = useRouteMatch();
   const history = useHistory();
-  const { theme, clientKey, userLanguage } = useContext(GlobalContext);
+  const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const { BUTTONS } = useDictionary(clientKey);
+  const {BUTTONS} = useDictionary(clientKey);
 
   const handleLessonsEdit = (type: string) => {
-    if (type === 'Lesson') {
-      history.push(`${match.url}/lesson/edit?lessonId=${id}`);
-    } else {
-      history.push(`${match.url}/lesson/edit?assessmentId=${id}`);
-    }
+    // if (type === 'Lesson') {
+    //   history.push(`${match.url}/lesson/edit?lessonId=${id}`);
+    // } else {
+    //   history.push(`${match.url}/lesson/view?assessmentId=${id}`);
+    // }
+    history.push(`${match.url}/lesson/edit?lessonId=${id}`);
   };
 
-  const { id, index, title, type, languages, createdAt, updatedAt } = props;
+  const {id, index, title, type, languages, createdAt, updatedAt} = props;
   return (
-    <div id={id} className="flex justify-between bg-white w-full border-b-0 border-gray-200">
-      <div className="w-.5/10 flex justify-center items-center px-4 py-4 whitespace-normal text-sm leading-5 font-medium">
+    <div
+      id={id}
+      className="flex justify-between bg-white w-full border-b-0 border-gray-200">
+      <div className="w-.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 font-medium">
         {index + 1}.
       </div>
       <div
@@ -45,22 +48,29 @@ const LessonsListRow = (props: LessonsListRow) => {
           {type ? type : '--'}
         </span>
       </div> */}
-      <div className="w-1/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+      <div className="w-1/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">{type ? type : '--'}</span>
       </div>
 
       <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
-        <span className="w-auto">{createdAt ? new Date(createdAt).toLocaleDateString() : '--'}</span>
-      </div>
-
-      <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
-        <span className="w-auto">{updatedAt ? new Date(updatedAt).toLocaleDateString() : '--'}</span>
+        <span className="w-auto">
+          {createdAt ? new Date(createdAt).toLocaleDateString() : '--'}
+        </span>
       </div>
 
       <div className="w-1.5/10 flex justify-center items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
         <span className="w-auto">
+          {updatedAt ? new Date(updatedAt).toLocaleDateString() : '--'}
+        </span>
+      </div>
+
+      <div className="w-1.5/10 flex justify-start items-center px-8 py-4 whitespace-normal text-sm leading-5 text-gray-500">
+        <span className="w-auto">
           {languages?.length
-            ? languages.map((language, index) => language + `${index === languages.length - 1 ? '.' : ', '}`)
+            ? languages.map(
+                (language, index) =>
+                  language + `${index === languages.length - 1 ? '.' : ', '}`
+              )
             : '--'}
         </span>
       </div>

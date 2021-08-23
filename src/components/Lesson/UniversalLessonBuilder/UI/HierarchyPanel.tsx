@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SlideOutTreeView} from './HierarchyPanel/SlideOutTreeView';
 import {Transition} from '@headlessui/react';
 import {
@@ -7,13 +7,20 @@ import {
   UniversalLesson,
   UniversalLessonPage,
 } from '../../../../interfaces/UniversalLessonInterfaces';
-import { ULBSelectionProps } from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import {ULBSelectionProps} from '../../../../interfaces/UniversalLessonBuilderInterfaces';
+import ClickAwayListener from 'react-click-away-listener';
+import {useULBContext} from '../../../../contexts/UniversalLessonBuilderContext';
 
-interface HierarchyPanelProps extends ULBSelectionProps{
+interface HierarchyPanelProps extends ULBSelectionProps {
   mode?: 'building' | 'viewing';
   universalLessonDetails: UniversalLesson;
   hierarchyVisible?: boolean;
   setHierarchyVisible?: React.Dispatch<React.SetStateAction<boolean>>;
+  editMode?: boolean;
+  setEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditModal?: React.Dispatch<
+    React.SetStateAction<{show: boolean; content: string; editOnlyId: boolean}>
+  >;
 }
 
 export const HierarchyPanel = (props: HierarchyPanelProps) => {
@@ -22,14 +29,13 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
     hierarchyVisible,
     setHierarchyVisible,
     selectedPageID,
-    setSelectedPageID,
-    selectedPagePartID,
-    setSelectedPagePartID,
-    selectedPartContentID,
-    setSelectedPartContentID,
+
+    editMode,
+    setEditMode,
+    setEditModal,
   } = props;
 
-  const selectedPageDetails = universalLessonDetails.universalLessonPages.find(
+  const selectedPageDetails = universalLessonDetails.lessonPlan.find(
     (page: UniversalLessonPage) => page.id === selectedPageID
   );
 
@@ -42,34 +48,43 @@ export const HierarchyPanel = (props: HierarchyPanelProps) => {
       setHierarchyVisible(false);
     }
   }, [selectedPageID]);
+  const {theme} = useULBContext();
 
   return (
     <div
-      className={`${hierarchyVisible ? 'relative w-48 h-0 bg-gray-400 z-50' : 'hidden'}`}>
+      className={`${
+        hierarchyVisible ? 'relative min-w-72 max-w-96 h-0 bg-gray-400 z-50' : 'hidden'
+      }`}>
       <Transition
         show={hierarchyVisible}
         enter="transition duration-200"
         enterFrom="opacity-0 transform -translate-x-48"
         enterTo="opacity-100 transform translate-x-0"
-        leave="transition duration-200"
+        leave="transition duration-300"
         leaveFrom="opacity-100 transform translate-x-0"
         leaveTo="opacity-0 transform -translate-x-48">
-        <>
-          {/* Header */}
-          <div className="relative bg-white py-2 ">
-            <div className="absolute inset-0 flex items-center" aria-hidden="true">
-              <div className="w-full border-t border-gray-400"></div>
+        <ClickAwayListener onClickAway={() => setHierarchyVisible(false)}>
+          <div className="m-2 ">
+            {/* Header */}
+            <div className={`${theme.bg} relative text-white  py-2 rounded-t-md`}>
+              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                <div className="w-full border-t border-gray-400"></div>
+              </div>
+              <div className="relative flex items-center justify-center px-4 text-center">
+                <span className="text-md text-white font-semibold w-auto">Layers</span>]
+              </div>
             </div>
-            <div className="relative flex text-center">
-              <span className="text-sm text-gray-900">Layers</span>
-            </div>
-          </div>
 
-          {/* The Tree View */}
-          <SlideOutTreeView
-            selectedPageDetails={selectedPageDetails}
-          />
-        </>
+            {/* The Tree View */}
+            <SlideOutTreeView
+              editMode={editMode}
+              setHierarchyVisible={setHierarchyVisible}
+              setEditModal={setEditModal}
+              setEditMode={setEditMode}
+              selectedPageDetails={selectedPageDetails}
+            />
+          </div>
+        </ClickAwayListener>
       </Transition>
     </div>
   );

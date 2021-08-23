@@ -15,6 +15,7 @@ import * as customQueries from '../../../../../customGraphql/customQueries';
 import * as customMutations from '../../../../../customGraphql/customMutations';
 import * as mutations from '../../../../../graphql/mutations';
 import Tooltip from '../../../../Atoms/Tooltip';
+import AddButton from '../../../../Atoms/Buttons/AddButton';
 interface ServiceProvidersProps {
   instId: string;
   serviceProviders: {
@@ -168,8 +169,8 @@ const ServiceProviders = (props: ServiceProvidersProps) => {
               placeholder={dictionary.ADD_PLACEHOLDER}
               onChange={onServProChange}
             />
-            <Buttons
-              btnClass="ml-4 py-1"
+            <AddButton
+              className="ml-4 py-1"
               label={BUTTONS[userLanguage].ADD}
               onClick={addPartner}
             />

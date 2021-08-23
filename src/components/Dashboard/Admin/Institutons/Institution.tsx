@@ -95,7 +95,7 @@ const Institution = (props: InstitutionProps) => {
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: institutionData.name,
       url: `${location.pathname}${location.search}`,
       last: true,
     },
@@ -132,6 +132,11 @@ const Institution = (props: InstitutionProps) => {
     getInstitutionData();
   }, []);
 
+  useEffect(() => {
+    const {tab} = urlQueryParams;
+    props.tabProps.setTabsData({...props.tabProps.tabsData, inst: Number(tab) || 0});
+  }, [urlQueryParams.tab]);
+
   const updateServiceProviders = (item: any) => {
     const instData = institutionData;
     instData.serviceProviders.items.push(item);
@@ -150,7 +155,7 @@ const Institution = (props: InstitutionProps) => {
       <BreadCrums items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle title="Institute Information" />
-        <div className="flex justify-end py-4 mb-4 w-5/10">
+        {/* <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons
             label="Go Back"
             btnClass="mr-4"
@@ -165,7 +170,7 @@ const Institution = (props: InstitutionProps) => {
               Icon={FaEdit}
             />
           ) : null}
-        </div>
+        </div> */}
       </div>
       <PageWrapper>
         <Switch>

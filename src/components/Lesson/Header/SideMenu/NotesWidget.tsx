@@ -15,7 +15,7 @@ const NotesWidget = (props: LessonHeaderBarProps) => {
   };
 
   return (
-    <div className={`cursor-pointer flex flex-col justify-center items-center mb-4`}>
+    <div className={`cursor-pointer flex flex-col justify-center items-center mx-2 mb-4`}>
       <div className={`w-12 h-12 flex justify-center items-center bg-white rounded-full`} onClick={handleToggle}>
         <IconContext.Provider value={{ size: '1.5rem' }}>
           <BsPencilSquare color={`black`} />

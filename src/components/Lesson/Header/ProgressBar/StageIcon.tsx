@@ -1,42 +1,24 @@
-import React, { ReactElement, ReactNode, useContext, useEffect, useState } from 'react';
-import { LessonContext } from '../../../../contexts/LessonContext';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import React, {useContext, useEffect, useState} from 'react';
 import usePrevious from '../../../../customHooks/previousProps';
-import { IconContext } from 'react-icons/lib/esm/iconContext';
-import {
-  FaCheck,
-  FaHeadphonesAlt,
-  FaHourglassStart,
-  FaListAlt,
-  FaMap,
-  FaPencilRuler,
-  FaPenFancy,
-  FaQuestion,
-  FaScroll,
-  FaTrophy,
-} from 'react-icons/fa';
-import { AiOutlineHome } from 'react-icons/ai';
-import StageLabels from '../../../General/LabelSwitch';
+import {GlobalContext} from '../../../../contexts/GlobalContext';
+import {UniversalLessonPage} from '../../../../interfaces/UniversalLessonInterfaces';
+import {useHistory, useRouteMatch} from 'react-router-dom';
 
-interface StageIconProps {
-  iconID: string | number;
-  stage: string;
-  type: string;
-  active: boolean;
-  open: boolean;
-  disabled: boolean;
-  counter?: number;
+interface StageIconProps extends UniversalLessonPage {
+  pageNr?: number;
   clickable: boolean;
   userAtEnd?: boolean;
 }
 
 const StageIcon = (props: StageIconProps) => {
-  const { iconID, stage, type, active, disabled, open, counter, clickable } = props;
-  const { state, theme, dispatch } = useContext(LessonContext);
+  const {pageNr, enabled, open, active, label, clickable} = props;
+  const {lessonState, lessonDispatch} = useContext(GlobalContext);
   const previousProps = usePrevious(open);
   const [recentOpened, setRecentOpened] = useState<boolean>(false);
-  const match = useRouteMatch();
   const history = useHistory();
+  const match = useRouteMatch();
+
+  const PAGES = lessonState.lessonData.lessonPlan;
 
   useEffect(() => {
     const wasClosed = previousProps === false;
@@ -50,55 +32,6 @@ const StageIcon = (props: StageIconProps) => {
     }
   }, [open]);
 
-  const iconSwitch = (type: string): ReactNode => {
-    switch (type) {
-      case 'intro':
-        return <FaHourglassStart />;
-      case 'map-game':
-        return <FaMap />;
-      case 'story':
-        return <FaScroll />;
-      case 'lyrics':
-        return <FaHeadphonesAlt />;
-      case 'poem':
-        return <FaPenFancy />;
-      case 'breakdown':
-        return <FaQuestion />;
-      case 'outro':
-        return <FaTrophy />;
-      case 'survey':
-        return <FaCheck />;
-      case 'profile':
-        return <FaCheck />;
-      case 'list':
-        return <FaListAlt />;
-      case 'home':
-        return <AiOutlineHome />;
-      default:
-        return <FaPencilRuler />;
-    }
-  };
-
-  /**
-   * Micro component for the icon labels
-   * @param centerFix - Additional TRUE | FALSE for if the label doesn't center correctly
-   */
-  const iconLabel = (centerFix: 'center' | 'noCenter'): ReactElement => {
-    return (
-      <div
-        className={`
-        absolute transform translate-y-12 text-center z-50 w-20 flex flex-row
-        ${theme.elem.text}
-        ${centerFix === 'center' && 'left-1/2 -translate-x-1/2'} 
-        ${centerFix === 'noCenter' && '-translate-x-1/2'} 
-        ${state.currentPage === iconID ? 'text-opacity-100' : ''}
-        ${state.currentPage !== iconID ? 'text-opacity-50' : ''}
-        `}>
-        <StageLabels label={props.stage.charAt(0).toUpperCase() + props.stage.slice(1)} counter={counter} />
-      </div>
-    );
-  };
-
   /**
    *
    *
@@ -111,100 +44,115 @@ const StageIcon = (props: StageIconProps) => {
    *
    */
 
-  /*const clickable = !disabled && open;*/
-
   const handleLink = () => {
-    if (!clickable) {
-      return;
-    }
-
-    history.push(`${match.url}/${state.pages[iconID].stage}`);
-    // dispatch({type: 'PAGE_FORWARD'});
-    dispatch({ type: 'JUMP_PAGE', payload: props.iconID });
+    history.push(`${match.url}/${pageNr}`);
+    lessonDispatch({type: 'SET_CURRENT_PAGE', payload: pageNr});
   };
 
-  const iconColor = () => {
-    if (open && active) {
-      return 'EDF2F7';
-    }
+  const stageButtonChoice = () => {
+    if (pageNr === 0) {
+      return (
+        <div
+          onClick={clickable ? () => handleLink() : () => {}}
+          className={`${recentOpened ? 'animate-activation' : ''} 
+          ${clickable ? 'cursor-pointer' : 'cursor-default'}
+          flex items-center w-auto group`}>
+          <svg
+            className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
+            viewBox="0 0 24 44"
+            preserveAspectRatio="none"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          </svg>
 
-    if (open && !active) {
-      return '4DEDF2F7';
-    }
+          <a
+            // href={page.href}
 
-    if (!open && !active) {
-      return '4DEDF2F7';
+            className={`
+            ${!active ? 'text-gray-500 ' : null}
+            ${
+              active
+                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                : null
+            }
+            ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+            {label}
+          </a>
+        </div>
+      );
+    } else if (pageNr < PAGES.length - 1) {
+      return (
+        <div
+          onClick={clickable ? () => handleLink() : () => {}}
+          className={`${recentOpened ? 'animate-activation' : ''} 
+          ${clickable ? 'cursor-pointer' : 'cursor-default'}
+          flex items-center w-auto group`}>
+          <svg
+            className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
+            viewBox="0 0 24 44"
+            preserveAspectRatio="none"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          </svg>
+
+          <a
+            // href={page.href}
+            className={`${
+              !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
+            }
+            
+            ${!active ? 'text-gray-500 ' : null}
+            ${
+              active
+                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                : null
+            }
+            ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+            {label}
+          </a>
+        </div>
+      );
+    } else {
+      return (
+        <div
+          onClick={clickable ? () => handleLink() : () => {}}
+          className={`${recentOpened ? 'animate-activation' : ''} 
+          ${clickable ? 'cursor-pointer' : 'cursor-default'}
+          flex items-center w-auto group`}>
+          <svg
+            className="flex-shrink-0 w-6 h-full text-gray-200 group-hover:text-gray-300 transition-all duration-150 "
+            viewBox="0 0 24 44"
+            preserveAspectRatio="none"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          </svg>
+
+          <a
+            // href={page.href}
+            className={`${
+              !enabled || !open ? 'line-through text-gray-500 hover:underline' : null
+            }
+            ${!active ? 'text-gray-500 ' : null}
+            ${
+              active
+                ? 'font-bold border-b-0 border-indigo-400 text-indigo-200 hover:text-indigo-300'
+                : null
+            }
+            ml-4 cursor-pointer w-auto  text-sm font-medium transform hover:scale-110 transition-transform duration-150`}>
+            {label}
+          </a>
+        </div>
+      );
     }
   };
 
-
-  if (disabled) return null;
-
-  if (type === 'breakdown') {
-    return (
-      <>
-        <div
-          className={`relative h-8 w-8 origin-center flex justify-center items-center rounded-full z-50
-          ${clickable ? 'cursor-pointer' : 'cursor-default'}`}
-          onClick={handleLink}>
-          <IconContext.Provider value={{ color: iconColor() }}>
-            <div
-              className={`h-8 w-8 origin-center rounded-full bg-black
-                            
-                        `}>
-              <div
-                className={` 
-                                ${recentOpened ? 'animate-activation' : ''}
-                                ${!open ? 'opacity-60  border-0 border-white border-opacity-20' : ''}
-                                ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
-                                ${
-                                  open && !active ? 'bg-darker-gray' : ''
-                                } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
-                {iconSwitch(type)}
-              </div>
-            </div>
-            {/* ICON LABEL */}
-            {iconLabel('center')}
-            {/* ICON LABEL - END */}
-          </IconContext.Provider>
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <div className={`flex-grow-0 w-auto flex flex-row justify-around items-center z-50`}>
-        <div
-          className={`relative h-8 w-8 origin-center rounded-full flex items-center justify-center 
-                    ${clickable ? 'cursor-pointer' : 'cursor-default'}
-                    ${recentOpened ? 'animate-activation' : ''}`}
-          onClick={handleLink}>
-          <IconContext.Provider value={{ color: iconColor(), size: '0.9rem' }}>
-            <div
-              className={`h-8 w-8 origin-center rounded-full bg-black
-                            
-                        `}>
-              <div
-                className={` 
-                                ${recentOpened ? 'animate-activation' : ''}
-                                ${!open ? 'opacity-60  border-0 border-white border-opacity-20' : ''}
-                                ${open || active || iconID <= state.currentPage ? 'bg-blueberry' : ''} 
-                                ${
-                                  open && !active ? 'bg-darker-gray' : ''
-                                } h-8 w-8 flex justify-center items-center rounded-full z-30`}>
-                {iconSwitch(type)}
-              </div>
-            </div>
-          </IconContext.Provider>
-
-          {/* ICON LABEL */}
-          {iconLabel('center')}
-          {/* ICON LABEL - END */}
-        </div>
-      </div>
-    </>
-  );
+  return <li className="relative flex w-auto">{stageButtonChoice()}</li>;
 };
 
 export default StageIcon;

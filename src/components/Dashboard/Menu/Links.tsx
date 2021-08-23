@@ -35,10 +35,10 @@ export interface LinkProps {
   currentPage: string;
   image?: string;
   role?: string;
-  setActiveRoomName: Function;
+  setActiveRoomName?: Function;
   updateAuthState?: Function;
-  setActiveRoomSyllabus: Function;
-  setLessonLoading: Function;
+  setActiveRoomSyllabus?: Function;
+  setLessonLoading?: Function;
   setSyllabusLoading: Function;
   handleRoomSelection: Function;
 }
@@ -138,8 +138,9 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
           ];
         });
       case 'TR':
+      case 'BLD':
       case 'FLW':
-        return setLinks((links) => {
+        return setLinks(() => {
           return [
             {
               title: sideBarLinksDict[userLanguage].DASHBOARD,
@@ -153,15 +154,14 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Institutions',
               path: 'manage-institutions',
             },
-
-            {
+            role !== 'BLD' ? {
               title: sideBarLinksDict[userLanguage].PEOPLE,
               name: sideBarLinksDict[userLanguage].PEOPLE,
               label: 'People',
               path: 'manage-users',
               subMenuItems: [{title: 'Add New Person', path: 'registration'}],
-            },
-            {
+            } : null,
+            role !== 'BLD' ? {
               title: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               name: sideBarLinksDict[userLanguage].LESSON_PLANNER,
               label: 'Lesson Planner',
@@ -179,13 +179,13 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
                       handleRoomSelection(room.id, room.name, i, 'lesson-planner'),
                   };
                 }),
-            },
-            {
-              title: sideBarLinksDict[userLanguage].NOTICEBOARD,
-              name: sideBarLinksDict[userLanguage].NOTICEBOARD,
-              label: 'Noticeboard',
-              path: 'noticeboard',
-            },
+            } : null,
+            // {
+            //   title: sideBarLinksDict[userLanguage].NOTICEBOARD,
+            //   name: sideBarLinksDict[userLanguage].NOTICEBOARD,
+            //   label: 'Noticeboard',
+            //   path: 'noticeboard',
+            // },
             {
               title: sideBarLinksDict[userLanguage].LESSON_BUILDER,
               name: sideBarLinksDict[userLanguage].LESSON_BUILDER,
@@ -201,13 +201,13 @@ const Links: React.FC<LinkProps> = (linkProps: LinkProps) => {
               label: 'Research & Analytics',
               path: 'csv',
             },
-            {
-              title: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
-              name: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
-              label: 'Universal Lesson Builder',
-              path: 'universal-lesson-builder',
-            },
-          ];
+            // {
+            //   title: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
+            //   name: sideBarLinksDict[userLanguage].UNIVERSAL_LESSON_BUILDER,
+            //   label: 'Universal Lesson Builder',
+            //   path: 'universal-lesson-builder',
+            // },
+          ].filter(Boolean);
         });
       case 'ST':
         return setLinks((links) => {

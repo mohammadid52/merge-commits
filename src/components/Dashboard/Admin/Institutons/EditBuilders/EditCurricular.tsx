@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { IoArrowUndoCircleOutline, IoImage } from 'react-icons/io5';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import React, {useState, useEffect, useContext} from 'react';
+import {useHistory, useLocation, useParams} from 'react-router-dom';
+import {IoArrowUndoCircleOutline, IoImage} from 'react-icons/io5';
+import API, {graphqlOperation} from '@aws-amplify/api';
 import Storage from '@aws-amplify/storage';
 
 import * as customMutations from '../../../../../customGraphql/customMutations';
@@ -10,7 +10,7 @@ import * as mutation from '../../../../../graphql/mutations';
 import * as queries from '../../../../../graphql/queries';
 import ProfileCropModal from '../../../Profile/ProfileCropModal';
 
-import { languageList } from '../../../../../utilities/staticData';
+import {languageList} from '../../../../../utilities/staticData';
 import SectionTitle from '../../../../Atoms/SectionTitle';
 import PageWrapper from '../../../../Atoms/PageWrapper';
 import BreadCrums from '../../../../Atoms/BreadCrums';
@@ -19,24 +19,28 @@ import FormInput from '../../../../Atoms/Form/FormInput';
 import Selector from '../../../../Atoms/Form/Selector';
 import MultipleSelector from '../../../../Atoms/Form/MultipleSelector';
 import TextArea from '../../../../Atoms/Form/TextArea';
-import { getImageFromS3 } from '../../../../../utilities/services';
+import {getImageFromS3} from '../../../../../utilities/services';
 import useDictionary from '../../../../../customHooks/dictionary';
-import { GlobalContext } from '../../../../../contexts/GlobalContext';
-import { LessonEditDict } from '../../../../../dictionary/dictionary.iconoclast';
+import {GlobalContext} from '../../../../../contexts/GlobalContext';
+import {LessonEditDict} from '../../../../../dictionary/dictionary.iconoclast';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
-import { goBackBreadCrumb } from '../../../../../utilities/functions';
+import {goBackBreadCrumb} from '../../../../../utilities/functions';
 
-interface EditCurricularProps {}
+interface EditCurricularProps {
+  closeAction: () => void;
+  curricularDetails: any;
+  postUpdateDetails: (data: any) => void;
+}
 
 const EditCurricular = (props: EditCurricularProps) => {
-  const {} = props;
+  const {closeAction, curricularDetails, postUpdateDetails} = props;
   const initialData = {
     id: '',
     name: '',
     description: '',
     summary: '',
     type: '',
-    languages: [{ id: '1', name: 'English', value: 'EN' }],
+    languages: [{id: '1', name: 'English', value: 'EN'}],
     objectives: '',
     institute: {
       id: '',
@@ -76,8 +80,8 @@ const EditCurricular = (props: EditCurricularProps) => {
   const params = useQuery();
   const param: any = useParams();
 
-  const { clientKey, userLanguage, theme } = useContext(GlobalContext);
-  const { BreadcrumsTitles, EditCurriculardict } = useDictionary(clientKey);
+  const {clientKey, userLanguage, theme} = useContext(GlobalContext);
+  const {BreadcrumsTitles, EditCurriculardict} = useDictionary(clientKey);
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [warnModal, setWarnModal] = useState({
@@ -86,18 +90,22 @@ const EditCurricular = (props: EditCurricularProps) => {
   });
 
   const breadCrumsList = [
-    { title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false },
+    {title: BreadcrumsTitles[userLanguage]['HOME'], url: '/dashboard', last: false},
     {
       title: BreadcrumsTitles[userLanguage]['INSTITUTION_MANAGEMENT'],
       url: '/dashboard/manage-institutions',
       last: false,
     },
     {
-      title: BreadcrumsTitles[userLanguage]['INSTITUTION_INFO'],
+      title: curricularData.institute?.name,
       url: `/dashboard/manage-institutions/institution?id=${param.institutionId}`,
       last: false,
     },
-    { title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'], goBack: true, last: false },
+    {
+      title: BreadcrumsTitles[userLanguage]['CURRICULUMBUILDER'],
+      goBack: true,
+      last: false,
+    },
     {
       title: BreadcrumsTitles[userLanguage]['EDITCURRICULUM'],
       url: `/dashboard/manage-institutions/curricular/edit?id=${params.get('id')}`,
@@ -144,7 +152,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     const currentLanguages = curricularData.languages;
     const selectedItem = currentLanguages.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentLanguages, { id, name, value }];
+      updatedList = [...currentLanguages, {id, name, value}];
     } else {
       updatedList = currentLanguages.filter((item) => item.id !== id);
     }
@@ -181,7 +189,7 @@ const EditCurricular = (props: EditCurricularProps) => {
     const currentDesigners = selectedDesigners;
     const selectedItem = currentDesigners.find((item) => item.id === id);
     if (!selectedItem) {
-      updatedList = [...currentDesigners, { id, name, value }];
+      updatedList = [...currentDesigners, {id, name, value}];
     } else {
       updatedList = currentDesigners.filter((item) => item.id !== id);
     }
@@ -194,15 +202,17 @@ const EditCurricular = (props: EditCurricularProps) => {
     try {
       const result: any = await API.graphql(
         graphqlOperation(customQueries.listPersons, {
-          filter: { or: [{ role: { eq: 'TR' } }, { role: { eq: 'BLD' } }] },
+          filter: {or: [{role: {eq: 'TR'}}, {role: {eq: 'BLD'}}]},
         })
       );
       const savedData = result.data.listPersons;
-      const updatedList = savedData?.items.map((item: { id: string; firstName: string; lastName: string }) => ({
-        id: item?.id,
-        name: `${item?.firstName || ''} ${item.lastName || ''}`,
-        value: `${item?.firstName || ''} ${item.lastName || ''}`,
-      }));
+      const updatedList = savedData?.items.map(
+        (item: {id: string; firstName: string; lastName: string}) => ({
+          id: item?.id,
+          name: `${item?.firstName || ''} ${item.lastName || ''}`,
+          value: `${item?.firstName || ''} ${item.lastName || ''}`,
+        })
+      );
       setDesignersList(updatedList);
     } catch {
       setMessages({
@@ -217,7 +227,9 @@ const EditCurricular = (props: EditCurricularProps) => {
     if (isValid) {
       setSaving(true);
       try {
-        const languagesCode = curricularData.languages.map((item: { value: string }) => item.value);
+        const languagesCode = curricularData.languages.map(
+          (item: {value: string}) => item.value
+        );
         const designers = selectedDesigners.map((item) => item.id);
         let input = {
           id: curricularData.id,
@@ -229,15 +241,20 @@ const EditCurricular = (props: EditCurricularProps) => {
           objectives: [curricularData.objectives],
           languages: languagesCode,
           designers: designers,
-          image: null as any,
+          image: curricularDetails.image,
         };
 
         if (s3Image) {
           await uploadImageToS3(s3Image, curricularData.id, 'image/jpeg');
-          input = { ...input, image: `instituteImages/curricular_image_${curricularData.id}` };
+          input = {
+            ...input,
+            image: `instituteImages/curricular_image_${curricularData.id}`,
+          };
         }
 
-        const newCurricular = await API.graphql(graphqlOperation(mutation.updateCurriculum, { input: input }));
+        const newCurricular: any = await API.graphql(
+          graphqlOperation(mutation.updateCurriculum, {input: input})
+        );
 
         setMessages({
           show: true,
@@ -246,6 +263,7 @@ const EditCurricular = (props: EditCurricularProps) => {
         });
         setSaving(false);
         setUnsavedChanges(false);
+        postUpdateDetails(newCurricular?.data?.updateCurriculum);
       } catch {
         setSaving(false);
         setMessages({
@@ -283,8 +301,8 @@ const EditCurricular = (props: EditCurricularProps) => {
       const list: any = await API.graphql(
         graphqlOperation(queries.listCurriculums, {
           filter: {
-            institutionID: { eq: curricularData.institute.id },
-            name: { eq: curricularData.name },
+            institutionID: {eq: curricularData.institute.id},
+            name: {eq: curricularData.name},
           },
         })
       );
@@ -313,7 +331,10 @@ const EditCurricular = (props: EditCurricularProps) => {
         isError: true,
       });
       return false;
-    } else if (curricularData.name.trim() !== '' && previousName !== curricularData.name) {
+    } else if (
+      curricularData.name.trim() !== '' &&
+      previousName !== curricularData.name
+    ) {
       const isUniq = await checkUniqCurricularName();
       if (!isUniq) {
         setMessages({
@@ -337,8 +358,12 @@ const EditCurricular = (props: EditCurricularProps) => {
     const currID = params.get('id');
     if (currID) {
       try {
-        const result: any = await API.graphql(graphqlOperation(queries.getCurriculum, { id: currID }));
+        const result: any = await API.graphql(
+          graphqlOperation(queries.getCurriculum, {id: currID})
+        );
         const savedData = result.data.getCurriculum;
+        console.log(savedData, 'savedData');
+        
         setCurricularData({
           ...curricularData,
           id: savedData.id,
@@ -352,7 +377,9 @@ const EditCurricular = (props: EditCurricularProps) => {
           },
           description: savedData.description,
           objectives: savedData.objectives[0],
-          languages: languageList.filter((item) => savedData.languages.includes(item.value)),
+          languages: languageList.filter((item) =>
+            savedData.languages.includes(item.value)
+          ),
         });
         // Load from response value
         const imageUrl: any = savedData.image
@@ -378,10 +405,43 @@ const EditCurricular = (props: EditCurricularProps) => {
   };
 
   useEffect(() => {
-    fetchCurricularData();
+    // fetchCurricularData();
     getInstitutionList();
     fetchPersonsList();
   }, []);
+
+  useEffect(() => {
+    console.log(languageList, 'languageList');
+    
+    async function mapData(){
+        setCurricularData({
+          ...curricularData,
+          id: curricularDetails.id,
+          name: curricularDetails.name,
+          type: curricularDetails.type,
+          summary: curricularDetails.summary,
+          institute: curricularDetails.institute,
+          description: curricularDetails.description,
+          objectives: curricularDetails.objectives[0],
+          languages: curricularDetails.languages,
+        });
+        // Load from response value
+        const imageUrl: any = curricularDetails.image
+          ? await getImageFromS3(`instituteImages/curricular_image_${curricularDetails.id}`)
+          : null;
+        setImageUrl(imageUrl);
+
+        if (
+          curricularDetails &&
+          curricularDetails.designers &&
+          curricularDetails.designers.length
+        ) {
+          setDesignerIds([...curricularDetails?.designers]);
+        }
+        setPreviousName(curricularDetails.name);
+    }
+    mapData()
+  },[curricularDetails])
 
   useEffect(() => {
     if (designersList && Array.isArray(designersList) && designersList.length > 0) {
@@ -450,18 +510,26 @@ const EditCurricular = (props: EditCurricularProps) => {
   // Temporary List
   //*******//
   const typeList = [
-    { id: 0, name: 'In-School Programming' },
-    { id: 1, name: 'After-School Programming' },
-    { id: 2, name: 'Summer Intensives (2 week programming)' },
-    { id: 3, name: "Writer's Retreat" },
+    {id: 0, name: 'In-School Programming'},
+    {id: 1, name: 'After-School Programming'},
+    {id: 2, name: 'Summer Intensives (2 week programming)'},
+    {id: 3, name: "Writer's Retreat"},
   ];
   //*****//
 
-  const { name, description, objectives, type, languages, summary, institute } = curricularData;
+  const {
+    name,
+    description,
+    objectives,
+    type,
+    languages,
+    summary,
+    institute,
+  } = curricularData;
   return (
-    <div className="">
+    <div className="min-w-256">
       {/* Section Header */}
-      <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
+      {/* <BreadCrums unsavedChanges={unsavedChanges} toggleModal={toggleModal} items={breadCrumsList} />
       <div className="flex justify-between">
         <SectionTitle
           title={EditCurriculardict[userLanguage]['TITLE']}
@@ -470,75 +538,76 @@ const EditCurricular = (props: EditCurricularProps) => {
         <div className="flex justify-end py-4 mb-4 w-5/10">
           <Buttons label="Go Back" btnClass="mr-4" onClick={goBack} Icon={IoArrowUndoCircleOutline} />
         </div>
-      </div>
+      </div> */}
 
       {/* Body section */}
-      <PageWrapper>
-        <div className="w-9/10 m-auto">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
-            {EditCurriculardict[userLanguage]['HEADING']}
-          </h3>
-          <div className="h-9/10 flex flex-col md:flex-row">
-            <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
-              <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
-                <label className="cursor-pointer flex justify-center">
-                  {imageUrl ? (
-                    <img
-                      className={`profile w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
-                      src={imageUrl}
-                    />
-                  ) : (
-                    <div
-                      className={`profile justify-center lign-center items-center content-center  w-80 h-80 md:w-80 md:h-80 bg-gray-100 border flex border-gray-400`}>
-                      <IoImage className="fill-current text-gray-80" size={32} />
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => cropSelecetedImage(e)}
-                    onClick={(e: any) => (e.target.value = '')}
-                    accept="image/*"
-                    multiple={false}
+      {/* <PageWrapper> */}
+      <div className="w-full m-auto">
+        {/* <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          {EditCurriculardict[userLanguage]['HEADING']}
+        </h3> */}
+        <div className="h-9/10 flex flex-col md:flex-row">
+          <div className="w-auto p-4 mr-6 flex flex-col text-center items-center">
+            <button className="group hover:opacity-80 focus:outline-none focus:opacity-95 flex flex-col items-center mt-4">
+              <label className="cursor-pointer flex justify-center">
+                {imageUrl ? (
+                  <img
+                    className={`profile w-120 h-80 md:w-120 md:h-80 border flex flex-shrink-0 border-gray-400`}
+                    src={imageUrl}
                   />
-                </label>
-              </button>
-              <p className="text-gray-600 my-4">Click to edit curricular image</p>
-            </div>
-            <div className="h-6/10 md:flex-row">
-              <div className="px-3 py-4">
-                <FormInput
-                  value={name}
-                  id="curricularName"
-                  onChange={onChange}
-                  name="name"
-                  label={EditCurriculardict[userLanguage]['NAME']}
-                  isRequired
+                ) : (
+                  <div
+                    className={`profile justify-center lign-center items-center content-center  w-56 h-56 md:w-56 md:h-56 bg-gray-100 border flex border-gray-400`}>
+                    <IoImage className="fill-current text-gray-80" size={32} />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => cropSelecetedImage(e)}
+                  onClick={(e: any) => (e.target.value = '')}
+                  accept="image/*"
+                  multiple={false}
                 />
-              </div>
-              {/*
-               **
-               * Hide institution drop down since all the things are tied to the
-               * Institute, will add this later if need to add builders saperately.
-               */}
-              {/* <div className="px-3 py-4">
+              </label>
+            </button>
+            <p className="text-sm text-gray-600 my-4">Click to edit curricular image</p>
+          </div>
+          <div className="h-6/10 md:flex-row">
+            <div className="px-3 py-4">
+              <FormInput
+                value={name}
+                id="curricularName"
+                onChange={onChange}
+                name="name"
+                label={EditCurriculardict[userLanguage]['NAME']}
+                isRequired
+              />
+            </div>
+            {/*
+             **
+             * Hide institution drop down since all the things are tied to the
+             * Institute, will add this later if need to add builders saperately.
+             */}
+            {/* <div className="px-3 py-4">
               <label className="block text-m font-medium leading-5 text-gray-700 mb-1">
                 Institute
               </label>
               <Selector selectedItem={institute.value} placeholder="Select Institute" list={institutionList} onChange={selectInstitute} />
             </div> */}
 
-              <div className="px-3 py-4">
-                <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
-                  {EditCurriculardict[userLanguage]['LANGUAGE']}
-                </label>
-                <MultipleSelector
-                  selectedItems={languages}
-                  placeholder={EditCurriculardict[userLanguage]['LANGUAGE']}
-                  list={languageList}
-                  onChange={selectLanguage}
-                />
-              </div>
+            <div className="px-3 py-4">
+              <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+                {EditCurriculardict[userLanguage]['LANGUAGE']}
+              </label>
+              <MultipleSelector
+                selectedItems={languages}
+                placeholder={EditCurriculardict[userLanguage]['LANGUAGE']}
+                list={languageList}
+                onChange={selectLanguage}
+              />
+            </div>
+            <div className="grid grid-cols-2">
               <div className="px-3 py-4">
                 <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
                   {EditCurriculardict[userLanguage]['DESIGNER']}
@@ -558,68 +627,85 @@ const EditCurricular = (props: EditCurricularProps) => {
                   placeholder={EditCurriculardict[userLanguage]['TYPE']}
                   list={typeList}
                   onChange={(str: any, name: string) => {
-                    setCurricularData({ ...curricularData, type: name });
+                    setCurricularData({...curricularData, type: name});
                   }}
                   selectedItem={type || EditCurriculardict[userLanguage]['TYPE']}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <TextArea
-                  value={summary}
-                  id="summary"
-                  onChange={onChange}
-                  name="summary"
-                  label={EditCurriculardict[userLanguage]['SUMMARY']}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <TextArea
-                  value={description}
-                  id="description"
-                  onChange={onChange}
-                  name="description"
-                  label={EditCurriculardict[userLanguage]['DESCRIPTION']}
-                />
-              </div>
-              <div className="px-3 py-4">
-                <TextArea
-                  value={objectives}
-                  id="objectives"
-                  onChange={onChange}
-                  name="objectives"
-                  label={EditCurriculardict[userLanguage]['OBJECTIVE']}
                 />
               </div>
             </div>
           </div>
         </div>
-        {messages.show ? (
-          <div className="py-2 m-auto text-center">
-            <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
-              {messages.message && messages.message}
-            </p>
-          </div>
-        ) : null}
-        <div className="flex my-8 mt-12 justify-center">
-          <Buttons btnClass="py-3 px-12 text-sm mr-4" label="Cancel" onClick={history.goBack} transparent />
-          <Buttons
-            disabled={saving ? true : false}
-            btnClass="py-3 px-12 text-sm ml-4"
-            label={saving ? 'Saving...' : EditCurriculardict[userLanguage]['BUTTON']['SAVE']}
-            onClick={saveCurriculum}
+
+        <div className="px-3 py-4">
+          <TextArea
+            value={summary}
+            id="summary"
+            onChange={onChange}
+            name="summary"
+            label={EditCurriculardict[userLanguage]['SUMMARY']}
+            rows={3}
           />
         </div>
-        {showCropper && (
-          <ProfileCropModal
-            upImg={upImage}
-            saveCroppedImage={(img: string) => saveCroppedImage(img)}
-            closeAction={toggleCropper}
-          />
-        )}
-        {warnModal.show && (
-          <ModalPopUp closeAction={toggleModal} saveAction={onModalSave} saveLabel="Yes" message={warnModal.message} />
-        )}
-      </PageWrapper>
+        <div className="grid grid-cols-2">
+          <div className="px-3 py-4">
+            <TextArea
+              value={description}
+              id="description"
+              onChange={onChange}
+              name="description"
+              label={EditCurriculardict[userLanguage]['DESCRIPTION']}
+            />
+          </div>
+          <div className="px-3 py-4">
+            <TextArea
+              value={objectives}
+              id="objectives"
+              onChange={onChange}
+              name="objectives"
+              label={EditCurriculardict[userLanguage]['OBJECTIVE']}
+            />
+          </div>
+        </div>
+      </div>
+      {messages.show ? (
+        <div className="py-2 m-auto text-center">
+          <p className={`${messages.isError ? 'text-red-600' : 'text-green-600'}`}>
+            {messages.message && messages.message}
+          </p>
+        </div>
+      ) : null}
+      <div className="flex my-4 justify-center">
+        <Buttons
+          btnClass="py-3 px-12 text-sm mr-4"
+          label="Cancel"
+          onClick={closeAction}
+          transparent
+        />
+        <Buttons
+          disabled={saving ? true : false}
+          btnClass="py-3 px-12 text-sm ml-4"
+          label={
+            saving ? 'Saving...' : EditCurriculardict[userLanguage]['BUTTON']['SAVE']
+          }
+          onClick={saveCurriculum}
+        />
+      </div>
+      {showCropper && (
+        <ProfileCropModal
+          upImg={upImage}
+          saveCroppedImage={(img: string) => saveCroppedImage(img)}
+          closeAction={toggleCropper}
+        />
+      )}
+      {warnModal.show && (
+        <ModalPopUp
+          closeAction={toggleModal}
+          saveAction={onModalSave}
+          saveLabel="Yes"
+          message={warnModal.message}
+        />
+      )}
+      {/* </PageWrapper> */}
     </div>
   );
 };

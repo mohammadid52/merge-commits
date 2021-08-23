@@ -1,17 +1,13 @@
 import React, {useContext} from 'react';
-import ButtonsRound from '../../Atoms/ButtonsRound';
-import {AiOutlineSearch} from 'react-icons/ai';
-import {IoChatbubble, IoDocument} from 'react-icons/io5';
 import {CallLinkLauncher} from './Launchers/CallLinkLauncher';
 import {FloatingSideMenuProps} from './FloatingSideMenu';
-import {BsPencilSquare} from 'react-icons/bs';
-import {LessonContext} from '../../../contexts/LessonContext';
-import { NotesLauncher } from './Launchers/NotesLauncher';
-import { ChatroomListLauncher } from './Launchers/ChatroomListLauncher';
-import { FilesListLauncher } from './Launchers/FilesListLauncher';
+import {NotesLauncher} from './Launchers/NotesLauncher';
+import {ChatroomListLauncher} from './Launchers/ChatroomListLauncher';
+import {FilesListLauncher} from './Launchers/FilesListLauncher';
+import {GlobalContext} from '../../../contexts/GlobalContext';
 
 export const FloatingBar = (props: FloatingSideMenuProps) => {
-  const LessonCTX = useContext(LessonContext);
+  const {lessonState} = useContext(GlobalContext);
   const {menuState, setMenuState, focusSection, setFocusSection, chatroom} = props;
 
   const handleSectionButtons = (section: string, callback?: any, callbackArg?: any) => {
@@ -52,11 +48,11 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
         w-12 -translate-x-12 left-0 top-1/2 -translate-y-1/2
         absolute 
         transform transition-all ease-in-out duration-400 
-        ${menuState === 0 ? 'h-100' : ''}
-        ${menuState === 1 ? 'h-128' : ''}
-        ${menuState === 2 ? 'h-136' : ''}
-        ${menuState === 3 ? 'h-136' : ''}
-        bg-gray-700 border-r-1 border-gray-700 rounded-l-lg shadow
+        ${menuState === 0 ? 'h-100 rounded-lg' : ''}
+        ${menuState === 1 ? 'h-128 rounded-l-lg' : ''}
+        ${menuState === 2 ? 'h-136 rounded-l-lg' : ''}
+        ${menuState === 3 ? 'h-136 rounded-l-lg' : ''}
+        bg-gray-700 border-r-1 border-gray-700  shadow
         flex flex-col`}>
       {/*<div className={`flex-0 h-12 border-b-0 border-charcoal`}>*/}
       {/*  <ButtonsRound*/}
@@ -100,9 +96,11 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
       {/*  />*/}
       {/*</div>*/}
 
-      <FilesListLauncher callback={handleSectionButtons}
-                         menuState={menuState}
-                         focusSection={focusSection}/>
+      <FilesListLauncher
+        callback={handleSectionButtons}
+        menuState={menuState}
+        focusSection={focusSection}
+      />
 
       {/**
        *
@@ -129,7 +127,9 @@ export const FloatingBar = (props: FloatingSideMenuProps) => {
       {/*  />*/}
       {/*</div>*/}
 
-      {LessonCTX !== null ? <NotesLauncher callback={handleSectionButtons} /> : null}
+      {lessonState.lessonData && lessonState.lessonData.id ? (
+        <NotesLauncher callback={handleSectionButtons} />
+      ) : null}
 
       <div
         onClick={() => handleSectionButtons(focusSection)}

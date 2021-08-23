@@ -1,5 +1,8 @@
-import { PagePart, UniversalLesson, UniversalLessonPage } from './UniversalLessonInterfaces';
-import React from 'react';
+import {
+  PagePart,
+  UniversalLesson,
+  UniversalLessonPage,
+} from './UniversalLessonInterfaces';
 
 export interface ModalProps {
   saveAction?: () => void;
@@ -28,8 +31,19 @@ export interface ULBSelectionProps {
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    replacementValue?: string,
-    addBlockAtPosition?: number
+    replacementValue?: any,
+    addBlockAtPosition?: number,
+    classString?: string,
+    customPageContentId?: string
+  ) => void;
+  updateBlockContentULBHandler?: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputObj?: any,
+    addBlockAtPosition?: number,
+    classString?: string,
+    customPageContentId?: string
   ) => void;
   selectedPageID?: string;
   setSelectedPageID?: React.Dispatch<React.SetStateAction<string>>;
@@ -39,13 +53,27 @@ export interface ULBSelectionProps {
   setSelectedPagePartID?: React.Dispatch<React.SetStateAction<string>>;
   selectedPartContentID?: string;
   setSelectedPartContentID?: React.Dispatch<React.SetStateAction<string>>;
+  handleTagModalOpen?: (targetID: string, inputObj: any) => void;
 }
 
 export interface RowComposerProps extends ULBSelectionProps {
-  mode: 'building' | 'viewing';
+  mode: 'building' | 'viewing' | 'lesson';
   contentID?: string;
   dataIdAttribute?: string;
-  handleModalPopToggle?: (dialogToToggle: string, addBlockAtPosition?: Number) => void;
+  handleEditBlockContent?: (
+    type: string,
+    section: string,
+    inputObj: any,
+    targetId: string,
+    indexToUpdate: number,
+    classString?: string
+  ) => void;
+  handleModalPopToggle?: (
+    dialogToToggle: string,
+    position?: Number,
+    section?: string,
+    targetID?: string
+  ) => void;
 }
 
 export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
@@ -62,14 +90,30 @@ export interface RowWrapperProps extends RowComposerProps, ULBSelectionProps {
   handleEditBlockToggle?: () => void;
   idx?: number;
   isPagePart?: boolean;
+  rightMenu?: boolean;
 }
 
-export interface IContentTypeComponentProps{
+export interface IContentTypeComponentProps {
   closeAction: () => void;
   createNewBlockULBHandler: (
     targetID: string,
     propertyToTarget: string,
     contentType: string,
-    inputValue: any
+    inputValue: any,
+    position?: number,
+    classString?: string,
+
+    customPageContentId?: string
   ) => void;
+  updateBlockContentULBHandler: (
+    targetID: string,
+    propertyToTarget: string,
+    contentType: string,
+    inputValue: any,
+    addBlockAtPosition?: number,
+    classString?: string,
+    customPageContentId?: string
+  ) => void;
+  setUnsavedChanges: React.Dispatch<React.SetStateAction<boolean>>;
+  askBeforeClose: () => void;
 }

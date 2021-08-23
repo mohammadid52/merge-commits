@@ -1,8 +1,26 @@
 /* OTHER / GENERAL */
 @import 'general/scrollbars';
 
+/* THEME */
+@import 'theme.scss';
+
 /* MAIN PARTS */
 @import 'lessons';
+
+$iconoclast: #667eea;
+$curate: #0081cb;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+$indigo-50: #eef2ff;
+$indigo-100: #e0e7ff;
 
 /*
   NOTE: This file should be converted into simple css file and
@@ -106,14 +124,13 @@
     top: 0;
     z-index: 9999;
     border-radius: 3px;
-    transition: opacity 0.5s;
     transform: translateX(-10px);
     transition: all 0.15s ease-in-out;
   }
 
   &:hover {
     .custom_tooltip {
-      transform: translateX(0px);
+      transform: translateX(0);
       opacity: 1;
       visibility: visible;
     }
@@ -125,6 +142,12 @@
   user-select: none;
   position: relative;
   transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    z-index: 99;
+    height: 100%;
+  }
 
   .sidenav_sub_icon_wrapper {
     font-size: 12px;
@@ -479,7 +502,7 @@
 
 [data-tooltip] {
   position: relative;
-  z-index: 9999;
+  z-index: 10;
 }
 
 /* Positioning and visibility settings of the tooltip */
@@ -763,6 +786,7 @@
     transform: translateX(-100px);
   }
 }
+
 .comment-box {
   transition: all 0.15s ease-in-out;
   &:focus-within {
@@ -834,6 +858,20 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.hierarchy_submenu {
+  &:hover {
+    & .edit_icon {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  & .edit_icon {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+  }
+}
+
 .dark-backdrop {
   opacity: 0.75;
   animation-name: darkBackdrop;
@@ -880,7 +918,7 @@
 }
 
 .custom-scrollbar {
-  scrollbar-color: #eee white;
+  scrollbar-color: rgba(160, 174, 192, 1) white;
   scrollbar-width: thin;
 }
 
@@ -935,4 +973,297 @@
     visibility: hidden;
   }
   transition: all 0.3s ease-in-out;
+}
+
+.picker-wrapper {
+  * {
+    width: auto;
+  }
+}
+
+.form-button {
+  &:hover .arrow-icon {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  & .arrow-icon {
+    transform: translateX(-5px);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.1s linear, transform 0.3s linear;
+  }
+}
+
+.customShadow {
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.05);
+}
+.questionItemChild:first-child {
+  margin-top: 1.5rem;
+}
+.questionItemChild:last-child {
+  margin-bottom: 1.5rem;
+}
+.ulb-datepicker {
+  .react-datepicker__close-icon {
+    &::after {
+      height: 26px;
+      width: 26px;
+      font-size: 18px;
+    }
+    width: auto;
+  }
+  .react-datepicker__navigation-icon::before {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.wrapperClassName.dark {
+  background-color: rgba(50, 50, 62, 1);
+  border: 1px solid rgba(50, 50, 62, 1);
+  color: white;
+}
+
+.wrapperClassName.mediumDark {
+  background-color: rgba(50, 50, 62, 0);
+  border: 1px solid rgba(50, 50, 62, 0.089);
+  color: white;
+}
+
+.toolbarClassName {
+  &.dark {
+    background-color: $gray-700;
+    border: none;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+  &.light {
+    border: 1px solid #e5e7eb;
+    background-color: #fff;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border-radius: 8px; // color: white;
+  }
+}
+.toolbarClassName.mediumDark {
+  background-color: rgb(199, 199, 204);
+  border: 1px solid #9ca3af;
+  color: white;
+}
+
+.editorClassName {
+  &.dark {
+    background-color: $gray-700;
+    color: white;
+    border: 2px solid $gray-600;
+  }
+  &.light {
+    color: $gray-900;
+    border: 1px solid rgba(237, 242, 247, 1);
+    background-color: rgba(237, 242, 247, 1);
+  }
+  border-radius: 8px;
+  height: 20rem !important;
+  padding: 1rem;
+  &.dark::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    background: $gray-700;
+  }
+
+  &.dark::-webkit-scrollbar-thumb {
+    background: $gray-600;
+    -webkit-border-radius: 10px;
+  }
+
+  &.dark::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: $gray-700;
+  }
+  &.light::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    background: #fff;
+  }
+
+  &.light::-webkit-scrollbar-thumb {
+    background: $gray-100;
+    -webkit-border-radius: 10px;
+  }
+
+  &.light::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #fff;
+  }
+}
+
+.toolbarClassName.iconoclast
+  .rdw-colorpicker-modal
+  .rdw-colorpicker-modal-header
+  .rdw-colorpicker-modal-style-label-active {
+  border-bottom: 2px solid $iconoclast !important;
+}
+.toolbarClassName.curate
+  .rdw-colorpicker-modal
+  .rdw-colorpicker-modal-header
+  .rdw-colorpicker-modal-style-label-active {
+  border-bottom: 2px solid $curate !important;
+}
+.rdw-colorpicker-modal-header {
+  color: #000;
+}
+
+// -------------------------------------------------
+
+// datepicker library config styles
+.react-datepicker-popper {
+  width: auto;
+}
+
+.datePickerWrapper.light .react-datepicker__input-container input {
+  background-color: rgb(237, 242, 247);
+  color: rgb(50, 50, 62);
+}
+
+.react-datepicker__input-container input {
+  border-radius: 1rem;
+  background-color: rgb(39, 39, 48);
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__navigation-icon::before,
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+  height: 13px !important;
+
+  top: 10px !important;
+  width: 13px !important;
+}
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow {
+  right: 80px !important;
+  top: 0 !important;
+}
+.react-datepicker__year-option--selected {
+  width: auto !important;
+}
+
+// Search Styles
+
+.rotateSearchIcon {
+  transition: 3s linear;
+  animation: searchIconRotation infinite 3s;
+  transform: rotateZ(0deg);
+}
+
+@keyframes searchIconRotation {
+  from {
+    transform: rotateZ(90deg);
+  }
+  to {
+    transform: rotateZ(0deg);
+  }
+}
+
+.react-datepicker__tab-loop {
+  width: auto;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.paragraph-block {
+  & ol,
+  & ul {
+    list-style: initial;
+    list-style-position: inside;
+  }
+}
+
+// Draftjs Toolbar icon styles
+
+.toolbarCustomIcon {
+  border: none !important;
+  padding: 0.7rem !important;
+  height: 2rem !important;
+  &:hover {
+    box-shadow: none !important;
+    color: #fff;
+  }
+  .iconoclastIndigo &:hover {
+    background-color: $iconoclast;
+  }
+  .curateBlue &:hover {
+    background-color: $curate;
+  }
+  &:focus {
+    outline: none;
+  }
+
+  // .dark img {
+  //   height: 1rem;
+  //   filter: invert(100%);
+  //   width: 1rem;
+  // }
+  // .light {
+  //   img {
+  //     height: 1rem;
+  //     width: 1rem;
+  //   }
+  //   &:hover img {
+  //     filter: invert(100%);
+  //   }
+  // }
+}
+
+.dark .toolbarCustomIcon {
+  img {
+    height: 1rem;
+    filter: invert(100%);
+    width: 1rem;
+  }
+}
+.light .toolbarCustomIcon {
+  img {
+    height: 1rem;
+    width: 1rem;
+  }
+  &:hover img {
+    filter: invert(100%);
+  }
+}
+.customStyles .rdw-option-wrapper:not(:hover) {
+  background: $gray-600;
+}
+.customStyles.light .rdw-option-wrapper:not(:hover) {
+  background-color: $indigo-50;
+}
+.customStyles .rdw-option-wrapper {
+  border-radius: 6px;
+}
+
+.iconoclastIndigo .customStyles .rdw-option-active {
+  background-color: $iconoclast;
+  box-shadow: none;
+}
+.curateBlue .customStyles .rdw-option-active {
+  background-color: $curate;
+  box-shadow: none;
+}
+
+.customStyles {
+  .rdw-colorpicker-wrapper,
+  .rdw-remove-wrapper,
+  .rdw-inline-wrapper {
+    margin-bottom: 0 !important;
+  }
 }
