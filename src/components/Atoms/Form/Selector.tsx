@@ -15,6 +15,7 @@ interface SelectorProps {
   disabled?: boolean;
   loading?: boolean;
   label?: string;
+  labelTextClass?: string;
   noOptionMessage?: string;
   error?: string;
 }
@@ -32,6 +33,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
     onChange,
     loading = false,
     noOptionMessage = '',
+    labelTextClass = 'text-xs',
   } = selectorProps;
   const [showList, setShowList] = useState(false);
   const currentRef: any = useRef(null);
@@ -78,7 +80,7 @@ const Selector: React.FC<SelectorProps> = (selectorProps: SelectorProps) => {
   return (
     <div className="relative" ref={currentRef}>
       {label && (
-        <label className="block text-xs font-semibold leading-5 text-gray-700 mb-1">
+        <label className={`block ${labelTextClass} font-semibold leading-5 text-gray-700 mb-1`}>
           {label}
         </label>
       )}

@@ -424,3 +424,9 @@ export const statesList = [
     value: 'Wyoming',
   },
 ];
+
+export const groupOptions: any = [
+  {id: 1, name: 'Blue'},
+  {id: 2, name: 'Black'},
+  {id: 3, name: 'Red'},
+];
