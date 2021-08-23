@@ -148,9 +148,9 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
   } = instProps?.institute;
   return (
     <div>
-      <div className="h-9/10 flex px-4 flex-col">
+      <div className="h-9/10 flex px-0 md:px-4 flex-col">
         {/* Profile section */}
-        <div className="flex-row border-gray-200 border-b-0 flex items-center justify-center">
+        <div className="flex-col md:flex-row border-gray-200 border-b-0 flex items-center justify-center">
           <div className="w-auto p-4 mr-4 flex flex-col text-center items-center flex-shrink-0">
             {image ? (
               imageUrl ? (
@@ -213,7 +213,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                 </h3>
               </div>
               <div className="overflow-hidden">
-                <div className="grid grid-cols-2 divide-x-0 divide-gray-200 p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 md:divide-x-0 md:divide-gray-200 p-4">
                   <div className="p-2 px-4">
                     <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
                       <span className="text-gray-900 text-sm mr-2 w-3/10">
@@ -245,7 +245,7 @@ const InstitutionInfo = (instProps: InstitutionInfoProps) => {
                       </span>
                     </p>
                   </div>
-                  <div className="p-2 px-8">
+                  <div className="p-2 px-4 md:px-8">
                     <p className="text-base leading-5 font-regular text-gray-800 my-3 flex">
                       <span className="text-gray-900 text-sm mr-2 w-3/10">
                         {' '}
