@@ -157,15 +157,16 @@ const WritingExerciseModal = (props: WEProps) => {
     await updateLessonPageToDB(input);
   };
   const on_WE_Create = async () => {
+    const id = `writing-exercise-${nanoid(6)}`;
     const titleObj = {
-      id: `writing-exercise-title-${nanoid(6)}`,
+      id,
       type: FORM_TYPES.WRITING_EXERCISE,
       label: enable.title ? fields.title : null,
       value: enable.title ? '' : null,
     };
 
     const lineStarterObject = {
-      id: `${FORM_TYPES.WRITING_EXERCISE}-content-${nanoid(6)}`,
+      id,
       type: `${FORM_TYPES.WRITING_EXERCISE}-content`,
       options: enable.lineStarter ? inputFieldsArray : null,
       value: '',
