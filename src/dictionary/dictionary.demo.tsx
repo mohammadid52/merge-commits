@@ -2,9 +2,11 @@
 const AuthDict: any = {
   EN: {
     VERIFY_EMAIL: 'Verify Email',
+    LOGIN: 'Log In',
   },
   ES: {
     VERIFY_EMAIL: 'TBD',
+    LOGIN: 'TBD',
   },
 };
 const BUTTONS: any = {
@@ -108,6 +110,7 @@ const BreadcrumsTitles: any = {
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
+    CLASSROOM: 'Classroom',
     CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
@@ -144,6 +147,8 @@ const BreadcrumsTitles: any = {
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
+    CLASSROOMS: 'TBD',
+    CLASSROOM: 'TBD',
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
@@ -1535,7 +1540,7 @@ const curricularviewdict: any = {
 
 const CHECKPOINTSDICT: any = {
   EN: {
-    TITLE: 'CURRICULAR CHECKPOINTS',
+    TITLE: 'Demographics & Information (Curricular)',
     INFO: 'This curricular does not have any checkpoints yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
@@ -2302,6 +2307,8 @@ const RegistrationDict: any = {
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
+      GROUP_NO_OPTION: 'Select class first',
+      ROLE_NO_OPTION: 'Select role first',
     },
   },
   ES: {
@@ -2327,6 +2334,8 @@ const RegistrationDict: any = {
       userrol: 'TBD',
       loading: 'TBD',
       institution: 'TBD',
+      GROUP_NO_OPTION: 'TBD',
+      ROLE_NO_OPTION: 'TBD',
     },
   },
 };

@@ -386,7 +386,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
               </>
             )}
 
-            {Boolean(state.roomData?.syllabus?.length) && (
+            {Boolean(activeRoomInfo?.activeSyllabus) && (
               <>
                 <SectionTitleV3
                   extraContainerClass={'lg:px-0 px-4'}
@@ -395,7 +395,7 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                   title={`${
                     isTeacher ? `${classRoomDict[userLanguage]['STEP']} 2:` : ''
                   } ${classRoomDict[userLanguage]['LESSON_TITLE']} for ${
-                    state.roomData?.activeSyllabus?.name
+                    state.roomData?.activeSyllabus?.name || 'loading'
                   }`}
                   subtitle={
                     isTeacher
@@ -417,12 +417,6 @@ const Classroom: React.FC<DashboardProps> = (props: DashboardProps) => {
                 </div>
               </>
             )}
-            {/* {showClassDetails && (
-              <div
-                className={`w-full min-h-56 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-                <UnderlinedTabs activeTab={0} tabs={tabs} />
-              </div>
-            )} */}
           </div>
         </div>
       </DashboardContainer>
