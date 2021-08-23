@@ -323,14 +323,14 @@ const InstitutionLookup: React.FC = () => {
                   </div>
                 </div>
                 {status !== 'done' ? (
-                  Array(3)
+                  Array(10)
                     .fill(' ')
                     .map((_: any, index: number) => (
                       <Fragment key={index}>
                         <InstitutionRowLoader />
                       </Fragment>
                     ))
-                ) : currentList && currentList.length ? (
+                ) : currentList?.length ? (
                   currentList.map((instituteObject, i) => (
                     <InstitutionRow
                       key={`instituteRow${i}`}
@@ -351,26 +351,27 @@ const InstitutionLookup: React.FC = () => {
 
               {/* Pagination And Counter */}
               <div className="flex justify-center my-4">
-                {!searchInput.isActive && (
-                  <Fragment>
-                    <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
-                      {InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1}{' '}
-                      {InstitutionDict[userLanguage]['OF']} {totalPages}{' '}
-                      {InstitutionDict[userLanguage]['PAGES']}
-                    </span>
-                    <Pagination
-                      currentPage={currentPage + 1}
-                      setNext={goNextPage}
-                      setPrev={goPrevPage}
-                      firstPage={firstPage}
-                      lastPage={lastPage}
-                    />
-                    <PageCountSelector
-                      pageSize={userCount}
-                      setPageSize={(c: number) => setUserCount(c)}
-                    />
-                  </Fragment>
-                )}
+                {!searchInput.isActive &&
+                  currentList?.length && (
+                    <Fragment>
+                      <span className="py-3 px-5 w-auto flex-shrink-0 my-5 text-md leading-5 font-medium text-gray-900">
+                        {InstitutionDict[userLanguage]['SHOWPAGE']} {currentPage + 1}{' '}
+                        {InstitutionDict[userLanguage]['OF']} {totalPages}{' '}
+                        {InstitutionDict[userLanguage]['PAGES']}
+                      </span>
+                      <Pagination
+                        currentPage={currentPage + 1}
+                        setNext={goNextPage}
+                        setPrev={goPrevPage}
+                        firstPage={firstPage}
+                        lastPage={lastPage}
+                      />
+                      <PageCountSelector
+                        pageSize={userCount}
+                        setPageSize={(c: number) => setUserCount(c)}
+                      />
+                    </Fragment>
+                  )}
               </div>
             </div>
           </div>

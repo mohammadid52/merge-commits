@@ -1,6 +1,7 @@
 import React, {Fragment, useState, useEffect, useContext} from 'react';
 import {useHistory, useRouteMatch} from 'react-router-dom';
-import {IoArrowUndoCircleOutline, IoClose} from 'react-icons/io5';
+import {HiPencil} from 'react-icons/hi';
+import {FaSpinner, FaTimes} from 'react-icons/fa';
 import API, {graphqlOperation} from '@aws-amplify/api';
 
 import SelectorWithAvatar from '../../../../Atoms/Form/SelectorWithAvatar';
@@ -21,7 +22,7 @@ import {
   createFilterToFetchSpecificItemsOnly,
 } from '../../../../../utilities/strings';
 import {getImageFromS3} from '../../../../../utilities/services';
-import {statusList} from '../../../../../utilities/staticData';
+import {groupOptions} from '../../../../../utilities/staticData';
 import {getAsset} from '../../../../../assets';
 
 import * as customQueries from '../../../../../customGraphql/customQueries';
@@ -33,12 +34,6 @@ import {GlobalContext} from '../../../../../contexts/GlobalContext';
 import ModalPopUp from '../../../../Molecules/ModalPopUp';
 import {goBackBreadCrumb} from '../../../../../utilities/functions';
 import SearchSelectorWithAvatar from '../../../../Atoms/Form/SearchSelectorWithAvatar';
-
-const groupOptions = [
-  {id: 1, name: 'Blue'},
-  {id: 2, name: 'Black'},
-  {id: 3, name: 'Red'},
-];
 
 interface EditClassProps {}
 
@@ -62,11 +57,11 @@ const EditClass = (props: EditClassProps) => {
   const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [newMember, setNewMember] = useState(defaultNewMember);
-  const [statusEdit, setStatusEdit] = useState('');
+  const [studentIdToEdit, setStudentIdToEdit] = useState<string>('');
+  const [updating, setUpdating] = useState<boolean>(false);
   const [deleting, setDeleting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
-  const [updateStatus, setUpdateStatus] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [previousName, setPreviousName] = useState('');
   const [warnModal, setWarnModal] = useState({
@@ -237,8 +232,8 @@ const EditClass = (props: EditClassProps) => {
     });
     if (addMessage.message) {
       setAddMessage({
-        message:'',
-        isError: false
+        message: '',
+        isError: false,
       });
     }
   };
@@ -278,7 +273,9 @@ const EditClass = (props: EditClassProps) => {
           student: {...selected},
         },
       ]);
-      setStudents(prevStudents => prevStudents.filter(student => student.id !== newMember.id));
+      setStudents((prevStudents) =>
+        prevStudents.filter((student) => student.id !== newMember.id)
+      );
       setAdding(false);
       setAddMessage({
         message: 'Student added successfully',
@@ -293,27 +290,43 @@ const EditClass = (props: EditClassProps) => {
     }
   };
 
-  const onClassStudentStatusChange = async (
-    val: string,
-    name: string,
-    id: string,
-    studentId: string
-  ) => {
-    setUpdateStatus(true);
+  // const onClassStudentStatusChange = async (
+  //   val: string,
+  //   name: string,
+  //   id: string,
+  //   studentId: string
+  // ) => {
+  //   setUpdateStatus(true);
+  //   await API.graphql(
+  //     graphqlOperation(customMutations.updateClassStudent, {
+  //       input: {id: studentId, status: val},
+  //     })
+  //   );
+  //   const updatedSudents = classStudents.map((stu) => {
+  //     if (stu.id === studentId) {
+  //       stu.status = val;
+  //     }
+  //     return stu;
+  //   });
+  //   setClassStudents(updatedSudents);
+  //   setStatusEdit('');
+  //   setUpdateStatus(false);
+  // };
+
+  const onGroupEdit = async (studentId: string, group: string) => {
+    setUpdating(true);
     await API.graphql(
       graphqlOperation(customMutations.updateClassStudent, {
-        input: {id: studentId, status: val},
+        input: {id: studentId, group},
       })
     );
-    const updatedSudents = classStudents.map((stu) => {
-      if (stu.id === studentId) {
-        stu.status = val;
-      }
-      return stu;
-    });
-    setClassStudents(updatedSudents);
-    setStatusEdit('');
-    setUpdateStatus(false);
+    setClassStudents((prevStudent) =>
+      prevStudent.map((student) =>
+        student.id === studentId ? {...student, group} : student
+      )
+    );
+    setStudentIdToEdit('');
+    setUpdating(false);
   };
 
   const onDelete = (id: any) => {
@@ -673,43 +686,45 @@ const EditClass = (props: EditClassProps) => {
                             </div>
                           </div>
                         </div>
-                        <div className="w-2/10 px-3">{item.group || '-'}</div>
+                        {studentIdToEdit === item.id ? (
+                          <div className="w-2/10 mr-6 px-3">
+                            <Selector
+                              selectedItem={item.group}
+                              list={groupOptions}
+                              placeholder={dictionary.GROUP_PLACEHOLDER}
+                              onChange={(_: string, name: string) =>
+                                onGroupEdit(item.id, name)
+                              }
+                            />
+                          </div>
+                        ) : (
+                          <div
+                            className="w-2/10 px-3"
+                            onClick={() => setStudentIdToEdit(item.id)}>
+                            {item.group || '-'}
+                          </div>
+                        )}
                         <div className="w-3/10 px-3">
                           {item.createAt
                             ? new Date(item.createAt).toLocaleDateString()
                             : '--'}
                         </div>
 
-                        {/* {statusEdit === item.id ? (
-                          <div className="w-3/10 mr-6 px-3">
-                            <Selector
-                              selectedItem={item.status}
-                              placeholder="Select Status"
-                              list={statusList}
-                              onChange={(val, name, id) =>
-                                onClassStudentStatusChange(val, name, id, item.id)
-                              }
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-3/10 px-3">{item.status || 'Active'}</div>
-                        )} */}
-
                         <div className="w-1/10 px-3 flex justify-center cursor-pointer">
                           <DeleteActionBtn handleClick={() => onDelete(item.id)} />
-                          {/* {statusEdit === item.id ? (
+                          {studentIdToEdit === item.id ? (
                             <span
-                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                              onClick={() => setStatusEdit('')}>
-                              {updateStatus ? dictionary.UPDATING : dictionary.CANCEL}
+                              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${theme.textColor[themeColor]} ${updating ? 'animate-spin' : ''}`}
+                              onClick={() => setStudentIdToEdit('')}>
+                              {updating ? <FaSpinner /> : <FaTimes />}
                             </span>
                           ) : (
                             <span
-                              className={`w-6 h-6 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
-                              onClick={() => setStatusEdit(item.id)}>
-                              {dictionary.EDIT}
+                              className={`ml-2 w-4 h-4 flex items-center cursor-pointer ${theme.textColor[themeColor]}`}
+                              onClick={() => setStudentIdToEdit(item.id)}>
+                              <HiPencil />
                             </span>
-                          )} */}
+                          )}
                         </div>
                       </div>
                     ))}

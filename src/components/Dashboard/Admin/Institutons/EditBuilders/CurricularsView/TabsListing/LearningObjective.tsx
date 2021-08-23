@@ -452,7 +452,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
   };
 
   return (
-    <div className="p-8 flex m-auto justify-center">
+    <div className="py-2 px-0 2xl:p-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="px-4 bg-gray-100">
           <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
@@ -473,7 +473,7 @@ const LearningObjectiveList = (props: LearningObjectiveListProps) => {
                 </div>
               )}
               <div className="py-4">
-                <div className="grid px-6 gap-5 lg:grid-cols-3 lg:max-w-none">
+                <div className="grid px-6 gap-5 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 lg:max-w-none">
                   {/* <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="droppable" direction="horizontal">
                       {(provided, snapshot) => (

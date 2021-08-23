@@ -119,6 +119,13 @@ const CurricularView = (props: CurricularViewProps) => {
   const tabs = [
     {
       index: 0,
+      title: curricularviewdict[userLanguage]['TAB']['LEARINGOBJECTIVE'],
+      icon: <MdSpeakerNotes />,
+      active: true,
+      content: <LearningObjective curricularId={currID} institutionId={institutionId} />,
+    },
+    {
+      index: 1,
       title: curricularviewdict[userLanguage]['TAB']['UNIT'],
       icon: <BiNotepad />,
       active: false,
@@ -131,13 +138,6 @@ const CurricularView = (props: CurricularViewProps) => {
           syllabusSequence={curricularData.syllabusSequence}
         />
       ),
-    },
-    {
-      index: 1,
-      title: curricularviewdict[userLanguage]['TAB']['LEARINGOBJECTIVE'],
-      icon: <MdSpeakerNotes />,
-      active: true,
-      content: <LearningObjective curricularId={currID} institutionId={institutionId} />,
     },
     {
       index: 2,
