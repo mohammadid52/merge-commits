@@ -468,6 +468,8 @@ const LessonApp = () => {
         currentLocation: indexOfPage,
         lessonProgress: '0',
         pageData: lessonState.studentData[indexOfPage],
+        hasExerciseData: lessonState.exercistData[indexOfPage]?.length > 0,
+        exerciseData: lessonState.exercistData[indexOfPage],
       };
 
       const newStudentData: any = await API.graphql(
@@ -592,7 +594,7 @@ const LessonApp = () => {
       lessonState.studentData &&
       lessonState.studentData?.length === PAGES?.length
     ) {
-      // getOrCreateStudentData();
+      getOrCreateStudentData();
     }
   }, [lessonState.studentData]);
 
