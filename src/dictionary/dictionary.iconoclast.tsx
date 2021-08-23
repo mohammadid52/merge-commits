@@ -6,7 +6,7 @@ const AuthDict: any = {
   },
   ES: {
     VERIFY_EMAIL: 'TBD',
-    LOGIN: 'TBD'
+    LOGIN: 'TBD',
   },
 };
 
@@ -1515,7 +1515,7 @@ const curricularviewdict: any = {
 
 const CHECKPOINTSDICT: any = {
   EN: {
-    TITLE: 'CURRICULAR CHECKPOINTS',
+    TITLE: 'Demographics & Information (Curricular)',
     INFO: 'This curricular does not have any checkpoints yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
