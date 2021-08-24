@@ -1,33 +1,19 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import RichTextEditor from '../../../Atoms/RichTextEditor';
 import {FloatingSideMenuProps} from '../../../Dashboard/FloatingSideMenu/FloatingSideMenu';
 import {GlobalContext} from '../../../../contexts/GlobalContext';
 import {getAsset} from '../../../../assets';
-import {nanoid} from 'nanoid';
-import {Auth} from '@aws-amplify/auth';
-import {useParams} from 'react-router-dom';
-import API, {graphqlOperation} from '@aws-amplify/api';
-import * as queries from '../../../../graphql/queries';
-import * as mutations from '../../../../graphql/mutations';
 import {useEffect} from 'react';
 
 const NotesForm = ({
-  menuState,
-  setMenuState,
   focusSection,
-  setFocusSection,
-  chatroom,
-  setChatroom,
   notesData,
   notesInitialized,
-  setNotesInitialized,
   getOrCreateJournalData,
   updateNotesContent,
-  saveInProgress,
 }: FloatingSideMenuProps) => {
-  const {lessonState, clientKey} = useContext(GlobalContext);
+  const {clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const urlParams: any = useParams();
 
   useEffect(() => {
     if (!notesInitialized && focusSection === 'Notes') {
