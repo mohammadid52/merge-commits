@@ -1,4 +1,5 @@
 import {
+  StudentExerciseData,
   StudentPageInput,
   UniversalLessonStudentData,
 } from '../interfaces/UniversalLessonInterfaces';
@@ -17,6 +18,7 @@ export interface lessonStateType {
   updated?: boolean;
   requiredInputs?: [string[]];
   studentData?: [StudentPageInput[]];
+  exerciseData?: [StudentExerciseData[]];
   viewing?: boolean;
   displayData?: string[];
   saveCount?: number;
@@ -40,6 +42,7 @@ export const lessonState: lessonStateType = {
   updated: false,
   requiredInputs: [[]],
   studentData: [[]],
+  exerciseData: [[]],
   viewing: false,
   displayData: [],
   saveCount: 0,

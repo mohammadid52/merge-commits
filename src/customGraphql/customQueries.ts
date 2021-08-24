@@ -2093,6 +2093,52 @@ export const listInstitutions = /* GraphQL */ `
   }
 `;
 
+export const listUniversalLessonStudentDatas = /* GraphQL */ `
+  query ListUniversalLessonStudentDatas(
+    $id: ID
+    $filter: ModelUniversalLessonStudentDataFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUniversalLessonStudentDatas(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        syllabusLessonID
+        lessonID
+        lessonPageID
+        studentID
+        studentAuthID
+        studentEmail
+        currentLocation
+        lessonProgress
+        pageData {
+          domID
+          input
+        }
+        hasExerciseData
+        exerciseData {
+          id
+          entryData {
+            domID
+            input
+          }
+          feedbacks
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+
 export const listServiceProviders = /* GraphQL */ `
   query ListInstitutions(
     $id: ID
@@ -3605,7 +3651,7 @@ export const getCurriculumRooms = /* GraphQL */ `
             id
             name
             institutionID
-            institution{
+            institution {
               id
               name
             }
@@ -3621,7 +3667,7 @@ export const getCurriculumBasicInfo = /* GraphQL */ `
     getCurriculum(id: $id) {
       id
       name
-      institution{
+      institution {
         id
         name
       }
