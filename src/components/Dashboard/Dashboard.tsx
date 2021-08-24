@@ -4,8 +4,6 @@ import Auth from '@aws-amplify/auth';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {Redirect, Route, Switch, useHistory, useRouteMatch} from 'react-router-dom';
 
-import {getArrayOfUniqueValueByProperty} from '../../utilities/arrays';
-import {createFilterToFetchSpecificItemsOnly} from '../../utilities/strings';
 import SideMenu from './Menu/SideMenu';
 import {useCookies} from 'react-cookie';
 import * as queries from '../../graphql/queries';
@@ -35,6 +33,7 @@ import {
   removeLocalStorageData,
   setLocalStorageData,
 } from '../../utilities/localStorage';
+import EmojiFeedback from '../General/EmojiFeedback';
 
 const Classroom = lazy(() => import('./Classroom/Classroom'));
 const Anthology = lazy(() => import('./Anthology/Anthology'));
@@ -46,7 +45,7 @@ type userObject = {
   [key: string]: any;
 };
 
-export interface ICompletedLessons{
+export interface ICompletedLessons {
   lessonID: string;
   time: string;
 }
@@ -84,172 +83,6 @@ export interface ClassroomControlProps extends DashboardProps {
   children?: React.ReactNode;
   [key: string]: any;
 }
-
-const emojiList = [
-  {
-    emoji: '😠',
-    link: 'angry',
-    id: '0',
-    name: 'Angry',
-  },
-  {
-    emoji: '😞',
-    link: 'sad',
-    id: '1',
-    name: 'Sad',
-  },
-  {
-    emoji: '😐',
-    link: 'neutral',
-    id: '1',
-    name: 'Neutral',
-  },
-
-  {
-    emoji: '🙂',
-    link: 'happy',
-    id: '3',
-    name: 'Happy',
-  },
-  {
-    emoji: '🤩',
-    link: 'excited',
-    id: '3',
-    name: 'Excited',
-  },
-];
-const EmojiFeedback = ({
-  justLoggedIn,
-  greetQuestion,
-  onSave,
-}: {
-  justLoggedIn: boolean;
-  onSave: (response: string) => void;
-  greetQuestion: {question: string};
-}) => {
-  const onSubmit = () => {
-    setShowGreetings(false);
-    onSave(selectedEmoji.emoji);
-  };
-
-  const [selectedEmoji, setSelectedEmoji] = useState({id: '', emoji: '', name: ''});
-  const [showGreetings, setShowGreetings] = useState(justLoggedIn);
-  // const [range, setRange] = useState(5);
-  // const showRangeSlider = selectedEmoji.name !== '';
-  const DEFAULT_QUESTION = 'How are you feeling today?'; // Fallback question
-  const showContinueButton = selectedEmoji.name !== '';
-  return (
-    showGreetings && (
-      <Modal
-        intenseOpacity
-        closeAction={() => setShowGreetings(false)}
-        closeOnBackdrop
-        showHeader={false}
-        showHeaderBorder={false}
-        showFooter={false}>
-        <div
-          style={{minHeight: '10rem'}}
-          className={` flex relative items-center min-w-132 justify-center flex-col`}>
-          <p className="w-auto mb-6 text-2xl font-semibold">
-            {greetQuestion?.question || DEFAULT_QUESTION}
-          </p>
-          <div className="grid grid-cols-5">
-            {emojiList.map(
-              ({
-                name,
-                emoji,
-                id,
-                link,
-              }: {
-                link: string;
-                emoji: string;
-                name: string;
-                id: string;
-              }) => (
-                <Tooltip key={id} text={name} placement="bottom">
-                  {link ? (
-                    <div
-                      onClick={() => setSelectedEmoji({emoji, id, name})}
-                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center feedback-emoji ${
-                        selectedEmoji.id === id ? 'selected' : ''
-                      }`}>
-                      <img
-                        src={`/media/src/assets/images/emojis/${link}.gif`}
-                        alt={name}
-                        className="h-20 w-20"
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => setSelectedEmoji({emoji, id, name})}
-                      className={`mx-3 w-auto cursor-pointer transition-all duration-300 flex items-center justify-center text-5xl feedback-emoji ${
-                        selectedEmoji.id === id ? 'selected' : ''
-                      }`}>
-                      {emoji}
-                    </div>
-                  )}
-                </Tooltip>
-              )
-            )}
-          </div>
-          {/* <div className={`emotion_range  ${showRangeSlider ? 'show mt-4 p-2' : ''} `}>
-            <p
-              className={`${
-                showRangeSlider ? 'mb-1' : 'hidden'
-              }  w-auto text-dark font-medium`}>
-              How much {selectedEmoji.name} you are:
-            </p>
-            {showRangeSlider && (
-              <div className="border-0 p-2 border-gray-200 rounded-md flex items-center justify-center">
-                <input
-                  type="range"
-                  min="1"
-                  max="10"
-                  value={range}
-                  onChange={(e) => setRange(e.target.valueAsNumber)}
-                  className="slider"
-                  id="myRange"
-                />
-                <label className="w-7 h-7 text-gray-400 ml-4">{range}</label>
-              </div>
-            )}
-          </div>
-          {showRangeSlider && (
-            <div className={`mt-2 flex items-center justify-between`}>
-              <p
-                onClick={() => setShowGreetings(false)}
-                className={`w-auto cursor-pointer text-sm px-1 py-0.5 text-gray-400 hover:text-${getThemeColor()}-500 transition-all  duration-150`}>
-                skip for now
-              </p>
-              {showRangeSlider ? (
-                <p
-                  onClick={onSave}
-                  className={`w-auto cursor-pointer text-sm px-2 py-0.5 text-white bg-${getThemeColor()}-500 hover:bg-${getThemeColor()}-700 transition-all rounded-md  duration-150`}>
-                  save
-                </p>
-              ) : (
-                <div className="w-auto" />
-              )}
-            </div>
-          )} */}
-
-          <div
-            style={{bottom: '-1.7rem'}}
-            className="flex items-center justify-center absolute right-0 left-0">
-            <button
-              onClick={() => onSubmit()}
-              style={{background: '#333333'}}
-              className={`h-8 w-24 rounded text-white  p-1 py-0.5 mt-2 transition-all continue_btn ${
-                showContinueButton ? 'show' : 'hide'
-              }`}>
-              Submit
-            </button>
-          </div>
-        </div>
-      </Modal>
-    )
-  );
-};
 
 const Dashboard = (props: DashboardProps) => {
   const {updateAuthState, justLoggedIn} = props;
@@ -821,6 +654,8 @@ const Dashboard = (props: DashboardProps) => {
 
   return (
     <div className="relative h-screen flex overflow-hidden container_background">
+      <EmojiFeedback justLoggedIn={justLoggedIn} />
+
       {/* {state.user.role === 'ST' && (
         <EmojiFeedback
           greetQuestion={greetQuestion}
