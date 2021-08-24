@@ -13522,3 +13522,372 @@ export const deleteUniversalLessonFeedback = /* GraphQL */ `
     }
   }
 `;
+export const createStudentConnections = /* GraphQL */ `
+  mutation CreateStudentConnections(
+    $input: CreateStudentConnectionsInput!
+    $condition: ModelStudentConnectionsConditionInput
+  ) {
+    createStudentConnections(input: $input, condition: $condition) {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateStudentConnections = /* GraphQL */ `
+  mutation UpdateStudentConnections(
+    $input: UpdateStudentConnectionsInput!
+    $condition: ModelStudentConnectionsConditionInput
+  ) {
+    updateStudentConnections(input: $input, condition: $condition) {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteStudentConnections = /* GraphQL */ `
+  mutation DeleteStudentConnections(
+    $input: DeleteStudentConnectionsInput!
+    $condition: ModelStudentConnectionsConditionInput
+  ) {
+    deleteStudentConnections(input: $input, condition: $condition) {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createPersonSentiments = /* GraphQL */ `
+  mutation CreatePersonSentiments(
+    $input: CreatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    createPersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updatePersonSentiments = /* GraphQL */ `
+  mutation UpdatePersonSentiments(
+    $input: UpdatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    updatePersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deletePersonSentiments = /* GraphQL */ `
+  mutation DeletePersonSentiments(
+    $input: DeletePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    deletePersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;

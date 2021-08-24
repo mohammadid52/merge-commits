@@ -12895,3 +12895,354 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
     }
   }
 `;
+export const onCreateStudentConnections = /* GraphQL */ `
+  subscription OnCreateStudentConnections {
+    onCreateStudentConnections {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStudentConnections = /* GraphQL */ `
+  subscription OnUpdateStudentConnections {
+    onUpdateStudentConnections {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStudentConnections = /* GraphQL */ `
+  subscription OnDeleteStudentConnections {
+    onDeleteStudentConnections {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePersonSentiments = /* GraphQL */ `
+  subscription OnCreatePersonSentiments {
+    onCreatePersonSentiments {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePersonSentiments = /* GraphQL */ `
+  subscription OnUpdatePersonSentiments {
+    onUpdatePersonSentiments {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePersonSentiments = /* GraphQL */ `
+  subscription OnDeletePersonSentiments {
+    onDeletePersonSentiments {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
