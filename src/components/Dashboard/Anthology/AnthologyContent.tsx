@@ -16,7 +16,9 @@ interface ContentCardProps {
   viewEditMode?: ViewEditMode;
   handleEditToggle?: (
     editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
-    dataID: string
+    dataID: string,
+    option?: number | 0,
+    recordID?: string
   ) => void;
   handleEditUpdate?: (e: any) => void;
   updateJournalContent?: (html: string, targetType: string) => void;
@@ -25,7 +27,6 @@ interface ContentCardProps {
   currentContentObj?: UniversalJournalData;
   content?: UniversalJournalData[];
   onCancel?: any;
-  getContentObjIndex?: (contentObj: any) => number;
 }
 
 const AnthologyContent = (props: ContentCardProps) => {
@@ -39,7 +40,6 @@ const AnthologyContent = (props: ContentCardProps) => {
     createTemplate,
     currentContentObj,
     content,
-    getContentObjIndex,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
@@ -222,7 +222,7 @@ const AnthologyContent = (props: ContentCardProps) => {
               {viewEditMode.mode === 'create' &&
               viewEditMode.dataID === createTemplate.id ? (
                 <Buttons
-                  onClick={() => handleEditToggle('', '')}
+                  onClick={() => handleEditToggle('', '', 0, '')}
                   label={anthologyDict[userLanguage].ACTIONS.CANCEL}
                   transparent
                   btnClass="mr-2"
@@ -247,7 +247,6 @@ const AnthologyContent = (props: ContentCardProps) => {
             editModeView={editModeView}
             viewEditMode={viewEditMode}
             handleEditToggle={handleEditToggle}
-            getContentObjIndex={getContentObjIndex}
             contentLen={content.length}
             idx={idx}
             contentObj={

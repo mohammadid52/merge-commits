@@ -41,7 +41,7 @@ const useStudentTimer = () => {
 
   // save intervals
   const VIEWED_INTERVAL = 2000;
-  const STANDARD_INTERVAL = 8000;
+  const STANDARD_INTERVAL = 6000;
 
   useEffect(() => {
     if (lessonState.updated && !savePending) {
@@ -131,6 +131,8 @@ const useStudentTimer = () => {
           let data = {
             id: currentIdObj.id,
             pageData: lessonState.studentData[currentIdObj.pageIdx],
+            hasExerciseData: lessonState?.exerciseData[currentIdObj.pageIdx]?.length > 0,
+            exerciseData: lessonState?.exerciseData[currentIdObj.pageIdx],
           };
 
           try {

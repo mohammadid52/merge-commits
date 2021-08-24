@@ -93,14 +93,24 @@ export interface UniversalLessonStudentData {
   universalLessonPageID: string;
   studentAuthID: string;
   studentID: string;
+  studentEmail?: string;
   currentLocation: string;
   lessonProgress: string;
   pageData: StudentPageInput[];
+  exerciseData?: StudentExerciseData[];
+  updatedAt?: string;
+  createdAt?: string;
 }
 export interface StudentPageInput {
   domID: string;
   input: string[];
   comments?: TeacherStudentComments[];
+}
+
+export interface StudentExerciseData {
+  id: string;
+  entryData?: {domID: string; input: string}[];
+  feedbacks?: string[];
 }
 
 export interface TeacherStudentComments {
@@ -121,4 +131,5 @@ export interface UniversalJournalData {
   entryData?: {domID: string; type: string; input: string}[];
   updatedAt?: any;
   createdAt?: any;
+  recordID?: string;
 }
