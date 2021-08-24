@@ -48,7 +48,7 @@ const InstitutionsHome: React.FC<DashboardProps> = (props: DashboardProps) => {
   }, [state.user.role]);
 
   return (
-    <div className={`w-full h-full p-8 flex justify-center`}>
+    <div className={`w-full h-full px-2 py-8 md:p-8 flex justify-center`}>
       <Switch>
         <Route
           exact
