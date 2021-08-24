@@ -192,7 +192,6 @@ const Anthology = () => {
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
   const listUniversalJournalData = async () => {
-    const {lessonID} = urlParams;
     const user = await Auth.currentAuthenticatedUser();
     const studentAuthId = user.username;
 
@@ -249,8 +248,6 @@ const Anthology = () => {
 
   const updateJournalData = async () => {
     const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
 
     try {
       const input = {
@@ -437,6 +434,10 @@ const Anthology = () => {
       createTemplate={journalEntryData}
       currentContentObj={journalEntryData}
       content={subSection !== 'Work' ? filteredJournalContent : allExerciseData}
+      allUniversalJournalData={allUniversalJournalData}
+      setAllUniversalJournalData={setAllUniversalJournalData}
+      allStudentData={allStudentData}
+      setAllStudentData={setAllStudentData}
     />
   );
 

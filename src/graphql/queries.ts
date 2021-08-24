@@ -167,6 +167,8 @@ export const getInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -587,6 +589,8 @@ export const getRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
       createdAt
       updatedAt
     }
@@ -699,6 +703,8 @@ export const listRooms = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -814,6 +820,8 @@ export const getRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -893,6 +901,8 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -1003,6 +1013,8 @@ export const getClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -4563,6 +4575,8 @@ export const getPersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -4667,6 +4681,8 @@ export const listPersonLocations = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -5039,6 +5055,8 @@ export const getAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -5155,6 +5173,8 @@ export const listAttendances = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -5884,6 +5904,259 @@ export const listUniversalLessonFeedbacks = /* GraphQL */ `
     }
   }
 `;
+export const getStudentConnections = /* GraphQL */ `
+  query GetStudentConnections($id: ID!) {
+    getStudentConnections(id: $id) {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listStudentConnectionss = /* GraphQL */ `
+  query ListStudentConnectionss(
+    $filter: ModelStudentConnectionsFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listStudentConnectionss(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        fromEmail
+        fromAuthID
+        toEmail
+        toAuthID
+        remarks
+        fromStudent {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        toStudent {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getPersonSentiments = /* GraphQL */ `
+  query GetPersonSentiments($personAuthID: String!, $date: AWSDate!) {
+    getPersonSentiments(personAuthID: $personAuthID, date: $date) {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonSentimentss = /* GraphQL */ `
+  query ListPersonSentimentss(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelPersonSentimentsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonSentimentss(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        personAuthID
+        personEmail
+        person {
+          id
+          authId
+          status
+          email
+          role
+          type
+          firstName
+          preferredName
+          lastName
+          externalId
+          grade
+          onBoardSurvey
+          offBoardSurvey
+          phone
+          birthdate
+          image
+          language
+          filters
+          lastLoggedIn
+          lastLoggedOut
+          onDemand
+          sentiments
+          passcode
+          createdAt
+          updatedAt
+        }
+        date
+        time
+        responseText
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userById = /* GraphQL */ `
   query UserById(
     $id: ID
@@ -6159,6 +6432,8 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -6287,6 +6562,8 @@ export const attendanceByStudent = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }

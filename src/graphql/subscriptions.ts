@@ -218,6 +218,8 @@ export const onChangePersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -833,6 +835,8 @@ export const onChangeRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
       createdAt
       updatedAt
     }
@@ -1042,6 +1046,8 @@ export const onCreateInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -1163,6 +1169,8 @@ export const onUpdateInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -1284,6 +1292,8 @@ export const onDeleteInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -1890,6 +1900,8 @@ export const onCreateRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
       createdAt
       updatedAt
     }
@@ -2059,6 +2071,8 @@ export const onUpdateRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
       createdAt
       updatedAt
     }
@@ -2228,6 +2242,8 @@ export const onDeleteRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
       createdAt
       updatedAt
     }
@@ -2341,6 +2357,8 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -2487,6 +2505,8 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -2633,6 +2653,8 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -2744,6 +2766,8 @@ export const onCreateClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -2841,6 +2865,8 @@ export const onUpdateClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -2938,6 +2964,8 @@ export const onDeleteClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -10394,6 +10422,8 @@ export const onCreatePersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -10610,6 +10640,8 @@ export const onUpdatePersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -10826,6 +10858,8 @@ export const onDeletePersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -11247,6 +11281,8 @@ export const onCreateAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -11491,6 +11527,8 @@ export const onUpdateAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -11735,6 +11773,8 @@ export const onDeleteAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -12890,6 +12930,357 @@ export const onDeleteUniversalLessonFeedback = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateStudentConnections = /* GraphQL */ `
+  subscription OnCreateStudentConnections {
+    onCreateStudentConnections {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateStudentConnections = /* GraphQL */ `
+  subscription OnUpdateStudentConnections {
+    onUpdateStudentConnections {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteStudentConnections = /* GraphQL */ `
+  subscription OnDeleteStudentConnections {
+    onDeleteStudentConnections {
+      id
+      fromEmail
+      fromAuthID
+      toEmail
+      toAuthID
+      remarks
+      fromStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      toStudent {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreatePersonSentiments = /* GraphQL */ `
+  subscription OnCreatePersonSentiments {
+    onCreatePersonSentiments {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdatePersonSentiments = /* GraphQL */ `
+  subscription OnUpdatePersonSentiments {
+    onUpdatePersonSentiments {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeletePersonSentiments = /* GraphQL */ `
+  subscription OnDeletePersonSentiments {
+    onDeletePersonSentiments {
+      personAuthID
+      personEmail
+      person {
+        id
+        authId
+        status
+        email
+        role
+        type
+        firstName
+        preferredName
+        lastName
+        externalId
+        grade
+        onBoardSurvey
+        offBoardSurvey
+        phone
+        birthdate
+        image
+        language
+        filters
+        lastLoggedIn
+        lastLoggedOut
+        onDemand
+        sentiments
+        passcode
+        classes {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      date
+      time
+      responseText
       createdAt
       updatedAt
     }
