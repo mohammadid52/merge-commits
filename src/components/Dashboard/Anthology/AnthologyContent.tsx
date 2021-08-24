@@ -29,6 +29,8 @@ interface ContentCardProps {
   createTemplate?: any;
   currentContentObj?: UniversalJournalData;
   content?: UniversalJournalData[];
+  allUniversalJournalData?: UniversalJournalData[];
+  setAllUniversalJournalData?: any;
   allStudentData?: UniversalLessonStudentData[];
   setAllStudentData?: any;
   onCancel?: any;
@@ -47,6 +49,8 @@ const AnthologyContent = (props: ContentCardProps) => {
     content,
     allStudentData,
     setAllStudentData,
+    allUniversalJournalData,
+    setAllUniversalJournalData,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
@@ -260,6 +264,8 @@ const AnthologyContent = (props: ContentCardProps) => {
             contentObj={
               currentContentObj.id === contentObj.id ? currentContentObj : contentObj
             }
+            allUniversalJournalData={allUniversalJournalData}
+            setAllUniversalJournalData={setAllUniversalJournalData}
             allStudentData={allStudentData}
             setAllStudentData={setAllStudentData}
           />

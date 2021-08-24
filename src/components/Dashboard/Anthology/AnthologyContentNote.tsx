@@ -22,6 +22,8 @@ const SingleNote = ({
   contentObj,
   allStudentData,
   setAllStudentData,
+  allUniversalJournalData,
+  setAllUniversalJournalData,
 }: any) => {
   const {theme, clientKey, userLanguage} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
@@ -144,7 +146,7 @@ const SingleNote = ({
               {/**
                *  section:  FEEDBACK
                */}
-              {subSection === 'Work' && (
+              {subSection !== 'Journal' && (
                 <div
                   onClick={() => setShowComments(!showComments)}
                   className={`${
@@ -173,11 +175,14 @@ const SingleNote = ({
             <div className="border-t-0 border-gray-200 mt-4">
               <Feedbacks
                 key={contentObj.id}
-                feedbackData={feedbackData}
-                loadingComments={loadingComments}
                 item={contentObj}
+                allUniversalJournalData={allUniversalJournalData}
+                setAllUniversalJournalData={setAllUniversalJournalData}
                 allStudentData={allStudentData}
                 setAllStudentData={setAllStudentData}
+                subSection={subSection}
+                feedbackData={feedbackData}
+                loadingComments={loadingComments}
                 showComments={showComments}
                 setShowComments={setShowComments}
                 fileObject={fileObject}

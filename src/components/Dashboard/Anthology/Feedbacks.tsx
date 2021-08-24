@@ -22,14 +22,17 @@ import EmojiPicker from 'emoji-picker-react';
 const Feedbacks = ({
   showComments,
   item,
+  allStudentData,
+  setAllStudentData,
+  allUniversalJournalData,
+  setAllUniversalJournalData,
+  subSection,
   feedbackData,
   setFeedbackData,
   loadingComments,
   idx,
   fileObject,
   setFileObject,
-  allStudentData,
-  setAllStudentData,
 }: any) => {
   const {state, clientKey, userLanguage} = useContext(GlobalContext);
 
@@ -144,7 +147,7 @@ const Feedbacks = ({
       (record: any) => record.id === item.recordID
     );
 
-    let newExerciseFeedback = {
+    const newExerciseFeedback = {
       exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
         if (exercise.id === item.id) {
           return {...exercise, feedbacks: newFeedBackIds};
@@ -154,7 +157,7 @@ const Feedbacks = ({
       }),
     };
 
-    let mergedStudentData = allStudentData.map((dataRecord: any) => {
+    const mergedStudentData = allStudentData.map((dataRecord: any) => {
       if (dataRecord.id === selectStudentDataRecord.id) {
         return {...dataRecord, exerciseData: newExerciseFeedback.exerciseData};
       } else {
@@ -163,7 +166,7 @@ const Feedbacks = ({
     });
 
     try {
-      let updatedStudentData: any = await API.graphql(
+      const updatedStudentData: any = await API.graphql(
         graphqlOperation(mutations.updateUniversalLessonStudentData, {
           input: {
             id: selectStudentDataRecord.id,
@@ -174,6 +177,34 @@ const Feedbacks = ({
       setAllStudentData(mergedStudentData);
     } catch (e) {
       console.error('error updating exercise feedbacks- ', e);
+    } finally {
+      //
+    }
+  };
+
+  // ~~~~~~~ DB-UPDATE JOURNAL ENTRY ~~~~~~~ //
+
+  const updateJournalFeedback = async (newFeedBackIds: string[]) => {
+    const mergedJournalData = allUniversalJournalData.map((dataRecord: any) => {
+      if (dataRecord.id === item.id) {
+        return {...dataRecord, feedbacks: newFeedBackIds};
+      } else {
+        return dataRecord;
+      }
+    });
+
+    try {
+      const updateJournalData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalJournalData, {
+          input: {
+            id: item.id,
+            feedbacks: newFeedBackIds,
+          },
+        })
+      );
+      setAllUniversalJournalData(mergedJournalData);
+    } catch (e) {
+      console.error('error updating journal feedbacks - ', e);
     } finally {
       //
     }
@@ -228,9 +259,13 @@ const Feedbacks = ({
         newFeedbacks.push(commentData.id);
       }
 
-      await updateExerciseFeedback(newFeedbacks);
+      if (subSection === 'Work') {
+        await updateExerciseFeedback(newFeedbacks);
+      } else {
+        await updateJournalFeedback(newFeedbacks);
+      }
 
-      const feedbackData: any = results.data.updateStudentData;
+      // const feedbackData: any = results.data.updateStudentData;
       // onSuccessCB(feedbackData?.anthologyContent?.feedbacks);
     } catch (error) {
       console.error('error @createAnthologyComment: ', error);
@@ -248,7 +283,11 @@ const Feedbacks = ({
           ? item.feedbacks.filter((feedbackId: string) => feedbackId !== id)
           : [];
 
-      await updateExerciseFeedback(newFeedbacks);
+      if (subSection === 'Work') {
+        await updateExerciseFeedback(newFeedbacks);
+      } else {
+        await updateJournalFeedback(newFeedbacks);
+      }
     } catch (e) {
       console.error('error deleting comment - ', e);
     }
