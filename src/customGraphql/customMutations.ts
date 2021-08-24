@@ -1162,21 +1162,34 @@ export const updateUniversalSyllabusLessonSequence = /* GraphQL */ `
   }
 `;
 
-/**
- * This mutation is reduced format of original updatePerson mutaion.
- * It will update sentiments and only return updated sentiments. NO UNNECESSARY FIELDS
- */
 export const updatePersonSentiments = /* GraphQL */ `
-  mutation UpdatePerson(
-    $input: UpdatePersonInput!
-    $condition: ModelPersonConditionInput
+  mutation UpdatePersonSentiments(
+    $input: UpdatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
   ) {
-    updatePerson(input: $input, condition: $condition) {
-      id
-      authId
-      lastLoggedIn
-      lastLoggedOut
-      sentiments
+    updatePersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const createPersonSentiments = /* GraphQL */ `
+  mutation CreatePersonSentiments(
+    $input: CreatePersonSentimentsInput!
+    $condition: ModelPersonSentimentsConditionInput
+  ) {
+    createPersonSentiments(input: $input, condition: $condition) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
       createdAt
       updatedAt
     }

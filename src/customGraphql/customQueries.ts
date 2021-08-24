@@ -3674,3 +3674,47 @@ export const getCurriculumBasicInfo = /* GraphQL */ `
     }
   }
 `;
+
+export const getPersonSentiments = /* GraphQL */ `
+  query GetPersonSentiments($personAuthID: String!, $date: AWSDate!) {
+    getPersonSentiments(personAuthID: $personAuthID, date: $date) {
+      personAuthID
+      personEmail
+      date
+      time
+      responseText
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listPersonSentimentss = /* GraphQL */ `
+  query ListPersonSentimentss(
+    $personAuthID: String
+    $date: ModelStringKeyConditionInput
+    $filter: ModelPersonSentimentsFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listPersonSentimentss(
+      personAuthID: $personAuthID
+      date: $date
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        personAuthID
+        personEmail
+        date
+        time
+        responseText
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;

@@ -18,15 +18,10 @@ import NoticeboardAdmin from './NoticeboardAdmin/NoticeboardAdmin';
 import Noticebar from '../Noticebar/Noticebar';
 import Home from './Home/Home';
 import HomeForTeachers from './Home/HomeForTeachers';
-import FloatingSideMenu from './FloatingSideMenu/FloatingSideMenu';
 import ErrorBoundary from '../Error/ErrorBoundary';
 import Csv from './Csv/Csv';
-import {useParams} from 'react-router';
 import UniversalLessonBuilder from '../Lesson/UniversalLessonBuilder/UniversalLessonBuilder';
 import {UniversalLessonBuilderProvider} from '../../contexts/UniversalLessonBuilderContext';
-import Modal from '../Atoms/Modal';
-import Tooltip from '../Atoms/Tooltip';
-import axios from 'axios';
 import usePrevious from '../../customHooks/previousProps';
 import {
   getLocalStorageData,
