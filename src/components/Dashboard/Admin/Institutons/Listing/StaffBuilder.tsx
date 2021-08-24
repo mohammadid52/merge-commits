@@ -306,7 +306,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
     <div className="pb-8 flex m-auto justify-center">
       <div className="">
         <PageWrapper defaultClass="">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8 ">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 text-center pb-8">
             {instName?.toUpperCase()} {dictionary['TITLE']}
           </h3>
           <div className="flex justify-end">
@@ -326,7 +326,7 @@ const StaffBuilder = (props: StaffBuilderProps) => {
           </div>
 
           {showAddSection ? (
-            <div className="flex items-center w-6/10 m-auto px-2 mb-8">
+            <div className="flex items-center w-full md:w-6/10 m-auto px-2 mb-8">
               <SelectorWithAvatar
                 imageFromS3={false}
                 selectedItem={newMember}

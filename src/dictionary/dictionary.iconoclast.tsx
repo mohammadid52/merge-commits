@@ -1,11 +1,13 @@
 // Authentication pages
 const AuthDict: any = {
-  EN:{
-    VERIFY_EMAIL: 'Verify Email'
+  EN: {
+    VERIFY_EMAIL: 'Verify Email',
+    LOGIN: 'Log In',
   },
-  ES:{
-    VERIFY_EMAIL: 'TBD'
-  }
+  ES: {
+    VERIFY_EMAIL: 'TBD',
+    LOGIN: 'TBD',
+  },
 };
 
 // Buttons
@@ -48,10 +50,12 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'Institution Management',
     ADD_INSTITUTION: 'Add New Institute',
     INSTITUTION_INFO: 'Institute Info',
+    INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
     CLASSROOMS: 'Classrooms',
+    CLASSROOM: 'Classroom',
     CLASSES: 'Classes',
     EDITCLASS: 'Edit Class',
     EDITCURRICULUM: 'Edit Curriculm',
@@ -77,7 +81,7 @@ const BreadcrumsTitles: any = {
     STUDENTS: 'Students',
     STUDENTS_NOTEBOOK: 'Students Notebook',
     ADD_NEW_LESSON_PLAN: 'Add new lesson plan',
-    LOADING:"Loading..."
+    LOADING: 'Loading...',
   },
   ES: {
     HOME: 'CASA',
@@ -86,9 +90,12 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'TBD',
     ADD_INSTITUTION: 'TBD',
     INSTITUTION_INFO: 'TBD',
+    INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
+    CLASSROOMS: 'TBD',
+    CLASSROOM: 'TBD',
     EDITCLASS: 'TBD',
     EDITCURRICULUM: 'TBD',
     EDITCLASSROOM: 'TBD',
@@ -868,6 +875,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'Institute name is required.',
+      typerequired: 'Institute type is required.',
       unabletoupdate: 'Unable to update institute details. Please try again later.',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting institute image.',
@@ -904,6 +912,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'TBD',
+      typerequired: 'TBD',
       unabletoupdate: 'TBD',
       uploaderr: 'TBD',
       deleterr: 'TBD',
@@ -1510,7 +1519,7 @@ const curricularviewdict: any = {
 
 const CHECKPOINTSDICT: any = {
   EN: {
-    TITLE: 'CURRICULAR CHECKPOINTS',
+    TITLE: 'Demographics & Information (Curricular)',
     INFO: 'This curricular does not have any checkpoints yet. Please create a new one.',
     FETCH: 'Fetching Data Please wait...',
     BUTTON: {
@@ -2271,6 +2280,7 @@ const RegistrationDict: any = {
     lastplaceholder: 'Doe',
     email: 'Email',
     emailplaceholder: 'email@email.com',
+    GROUP_PLACEHOLDER: 'Select group for student',
     button: {
       submit: 'Submit',
     },
@@ -2284,6 +2294,8 @@ const RegistrationDict: any = {
       userrol: "User's role cannot be blank",
       loading: 'Loading...',
       institution: 'Institution cannot be blank',
+      GROUP_NO_OPTION: 'Select class first',
+      ROLE_NO_OPTION: 'Select role first',
     },
   },
   ES: {

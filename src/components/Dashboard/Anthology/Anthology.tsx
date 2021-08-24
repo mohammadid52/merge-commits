@@ -7,6 +7,7 @@ import useDictionary from '../../../customHooks/dictionary';
 
 import * as queries from '../../../graphql/queries';
 import * as mutations from '../../../graphql/mutations';
+import * as customQueries from '../../../customGraphql/customQueries';
 
 import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 import UnderlinedTabs from '../../Atoms/UnderlinedTabs';
@@ -15,7 +16,11 @@ import Buttons from '../../Atoms/Buttons';
 import HeroBanner from '../../Header/HeroBanner';
 import AnthologyContent from './AnthologyContent';
 import {getAsset} from '../../../assets';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  StudentExerciseData,
+  UniversalJournalData,
+  UniversalLessonStudentData,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import {nanoid} from 'nanoid';
 import {Auth} from '@aws-amplify/auth';
 import {useParams} from 'react-router-dom';
@@ -23,7 +28,8 @@ import {useParams} from 'react-router-dom';
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
   dataID: string;
-  option: number;
+  option?: number;
+  recordID?: string;
 };
 
 const Anthology = () => {
@@ -46,16 +52,108 @@ const Anthology = () => {
   }, []);
 
   // ##################################################################### //
-  // ######################## LOADED STUDENT DATA ######################## //
+  // ##################### CRUD STUDENT EXERCISE DATA #################### //
   // ##################################################################### //
 
-  /**
-   * This section is currently emptied out because
-   * the data-structure for student data is different
-   * Now it follows the UniversalLessonStudentData structure
-   */
+  // ~~~~~~~~~~~~~~~ STORAGE ~~~~~~~~~~~~~~~ //
+  const [allStudentData, setAllStudentData] = useState<UniversalLessonStudentData[]>([]);
+  const [allExerciseData, setAllExerciseData] = useState<UniversalJournalData[]>([]);
 
-  const [loadingContent, setLoadingContent] = useState(false);
+  // ~~~~~~~~~~~~~~~~~ GET ~~~~~~~~~~~~~~~~~ //
+  const [studentDataLoaded, setStudentDataLoaded] = useState<boolean>(false);
+
+  const getStudentData = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    // console.log('getOrCreateData - user - ', user);
+
+    try {
+      const listFilter = {
+        filter: {
+          studentAuthID: {eq: studentAuthId},
+          hasExerciseData: {eq: true},
+        },
+      };
+
+      const studentData: any = await API.graphql(
+        graphqlOperation(customQueries.listUniversalLessonStudentDatas, listFilter)
+      );
+      // existing student rows
+      const studentDataRows = studentData.data.listUniversalLessonStudentDatas.items;
+      if (studentDataRows?.length > 0) {
+        setAllStudentData(studentDataRows);
+      }
+      setStudentDataLoaded(true);
+    } catch (e) {
+      //
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    // TODO: adding entrydata type with an additional map is bad coding...
+    if (allStudentData.length > 0) {
+      const allExerciseEntryData = allStudentData.reduce(
+        (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
+          const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
+            return {
+              id: exercise.id,
+              studentID: val.studentID,
+              studentAuthID: val.studentAuthID,
+              studentEmail: val.studentEmail,
+              feedbacks: exercise.feedbacks || [],
+              entryData: exercise.entryData.map((entry: any) => {
+                return {
+                  ...entry,
+                  type: entry.domID.includes('title') ? 'header' : 'content',
+                };
+              }),
+              recordID: val.id,
+              updatedAt: val?.updatedAt,
+            };
+          });
+          return [...acc, ...adaptedExerciseEntries];
+        },
+        []
+      );
+      setAllExerciseData(allExerciseEntryData);
+    }
+  }, [allStudentData]);
+
+  const updateStudentData = async () => {
+    const user = await Auth.currentAuthenticatedUser();
+    const studentAuthId = user.username;
+    const email = user.attributes.email;
+
+    const selectStudentDataRecord = allStudentData.find(
+      (record: any) => record.id === journalEntryData.recordID
+    );
+
+    try {
+      let newExerciseData = {
+        id: selectStudentDataRecord.id,
+        exerciseData: selectStudentDataRecord.exerciseData.map((exercise: any) => {
+          if (exercise.id === journalEntryData.id) {
+            return {...exercise, entryData: journalEntryData.entryData};
+          } else {
+            return exercise;
+          }
+        }),
+      };
+
+      let updatedStudentData: any = await API.graphql(
+        graphqlOperation(mutations.updateUniversalLessonStudentData, {
+          input: newExerciseData,
+        })
+      );
+    } catch (e) {
+      console.error('error updating writing exercise - ', e);
+    } finally {
+      //
+    }
+  };
 
   // ##################################################################### //
   // ##################### CRUD JOURNAL & CLASS NOTES #################### //
@@ -94,7 +192,6 @@ const Anthology = () => {
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
   const listUniversalJournalData = async () => {
-    const {lessonID} = urlParams;
     const user = await Auth.currentAuthenticatedUser();
     const studentAuthId = user.username;
 
@@ -151,8 +248,6 @@ const Anthology = () => {
 
   const updateJournalData = async () => {
     const user = await Auth.currentAuthenticatedUser();
-    const studentAuthId = user.username;
-    const email = user.attributes.email;
 
     try {
       const input = {
@@ -188,7 +283,9 @@ const Anthology = () => {
 
   // ~~~~~~~~~~~~~ UPDATE NOTES ~~~~~~~~~~~~ //
   const selectJournalData = async () => {
-    const selectExisting = allUniversalJournalData.find(
+    const selectSource =
+      subSection !== 'Work' ? allUniversalJournalData : allExerciseData;
+    const selectExisting = selectSource.find(
       (journalObj: any) => journalObj.id === viewEditMode.dataID
     );
     setJournalEntryData({
@@ -198,6 +295,8 @@ const Anthology = () => {
       studentEmail: selectExisting.studentEmail,
       feedbacks: selectExisting.feedbacks,
       entryData: selectExisting.entryData,
+      recordID: selectExisting?.recordID,
+      updatedAt: selectExisting?.updatedAt,
     });
   };
 
@@ -224,14 +323,21 @@ const Anthology = () => {
     mode: '',
     dataID: '',
     option: 0,
+    recordID: '',
   });
 
   const handleEditToggle = (
     editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | 'delete' | '',
     dataID: string,
-    option?: number
+    option?: number,
+    recordID?: string
   ) => {
-    setViewEditMode({mode: editMode, dataID: dataID, option: option | 0});
+    setViewEditMode({
+      mode: editMode,
+      dataID: dataID,
+      option: option || 0,
+      recordID: recordID || '',
+    });
   };
 
   const handleResetJournalEntry = async () => {
@@ -258,25 +364,40 @@ const Anthology = () => {
   };
 
   // UseEffect for monitoring save/create new changes and calling functions
+
+  // TODO: functions need renaming so that
   useEffect(() => {
     const manageSaveAndCreate = async () => {
-      if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
-        await selectJournalData();
-      } else if (viewEditMode.mode === 'save') {
-        await handleResetJournalEntry();
-        await updateJournalData();
-        await listUniversalJournalData();
-      } else if (viewEditMode.mode === 'savenew') {
-        await createJournalData();
-        await handleResetJournalEntry();
-        await listUniversalJournalData();
-      } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
-        await deleteJournalData();
-        await listUniversalJournalData();
-      } else if (viewEditMode.mode === '') {
-        await handleResetJournalEntry();
+      if (subSection !== 'Work') {
+        if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+          await selectJournalData();
+        } else if (viewEditMode.mode === 'save') {
+          await handleResetJournalEntry();
+          await updateJournalData();
+          await listUniversalJournalData();
+        } else if (viewEditMode.mode === 'savenew') {
+          await createJournalData();
+          await handleResetJournalEntry();
+          await listUniversalJournalData();
+        } else if (viewEditMode.mode === 'delete' && viewEditMode.option === 1) {
+          await deleteJournalData();
+          await listUniversalJournalData();
+        } else if (viewEditMode.mode === '') {
+          await handleResetJournalEntry();
+        }
+      } else {
+        if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+          await selectJournalData();
+        } else if (viewEditMode.mode === 'save') {
+          await handleResetJournalEntry();
+          await updateStudentData();
+          await getStudentData();
+        } else if (viewEditMode.mode === '') {
+          await handleResetJournalEntry();
+        }
       }
     };
+
     manageSaveAndCreate();
   }, [viewEditMode]);
 
@@ -286,7 +407,7 @@ const Anthology = () => {
   const [tab, setTab] = useState(0);
   const [subSection, setSubSection] = useState<string>('Journal');
 
-  const filteredContent =
+  const filteredJournalContent =
     allUniversalJournalData?.length > 0
       ? allUniversalJournalData.reduce(
           (acc: UniversalJournalData[], data: UniversalJournalData) => {
@@ -312,8 +433,11 @@ const Anthology = () => {
       subSection={subSection}
       createTemplate={journalEntryData}
       currentContentObj={journalEntryData}
-      content={subSection !== 'Work' ? filteredContent : []}
-      getContentObjIndex={() => 0}
+      content={subSection !== 'Work' ? filteredJournalContent : allExerciseData}
+      allUniversalJournalData={allUniversalJournalData}
+      setAllUniversalJournalData={setAllUniversalJournalData}
+      allStudentData={allStudentData}
+      setAllStudentData={setAllStudentData}
     />
   );
 
@@ -362,6 +486,18 @@ const Anthology = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (subSection === 'Journal' || subSection === 'Notes') {
+      if (!universalJournalDataLoaded) {
+        listUniversalJournalData();
+      }
+    } else {
+      if (!studentDataLoaded) {
+        getStudentData();
+      }
+    }
+  }, [subSection]);
 
   return (
     <React.Fragment>

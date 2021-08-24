@@ -13,9 +13,12 @@ import axios from 'axios';
 import * as queries from '../../graphql/queries';
 import * as customMutations from '../../customGraphql/customMutations';
 import useDictionary from '../../customHooks/dictionary';
+import useDeviceDetect from '../../customHooks/deviceDetect';
 import {GlobalContext} from '../../contexts/GlobalContext';
 import {getAsset} from '../../assets';
 import {createUserUrl} from '../../utilities/urls';
+
+import BrowserAlert from '../General/BrowserAlert';
 
 interface LoginProps {
   setJustLoggedIn?: any;
@@ -23,6 +26,10 @@ interface LoginProps {
 }
 
 const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
+  const {browser: detectedBrowser} = useDeviceDetect();
+  const [openAlertBrowser, setOpenAlertBrowser] = useState<boolean>(
+    detectedBrowser === 'Safari'
+  );
   const [isToggled, setIsToggled] = useState<boolean>(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const history = useHistory();
@@ -341,7 +348,11 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
               <>
                 <div
                   className={`text-center mb-4 leading-5 text-lg font-semibold text-gray-800`}>
-                  <p>{AuthDict[userLanguage].VERIFY_EMAIL} </p>
+                  <p>
+                    {showPasswordField
+                      ? AuthDict[userLanguage].LOGIN
+                      : AuthDict[userLanguage].VERIFY_EMAIL}{' '}
+                  </p>
                 </div>
                 <div className="h-auto flex-grow flex flex-col justify-center">
                   <div className="w-full mb-2 flex flex-col justify-around items-center">
@@ -541,6 +552,16 @@ const Login = ({updateAuthState, setJustLoggedIn}: LoginProps) => {
             'authBackground'
           )} bg-cover bg-center`}></div>
       </div>
+      {openAlertBrowser && (
+        <BrowserAlert
+          alert={openAlertBrowser}
+          closeTab={() => {
+            window.open('', '_parent', '');
+            window.close();
+          }}
+          onContinue={() => setOpenAlertBrowser(false)}
+        />
+      )}
     </div>
   );
 };
