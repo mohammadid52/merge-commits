@@ -437,6 +437,8 @@ const Anthology = () => {
       createTemplate={journalEntryData}
       currentContentObj={journalEntryData}
       content={subSection !== 'Work' ? filteredJournalContent : allExerciseData}
+      allStudentData={allStudentData}
+      setAllStudentData={setAllStudentData}
     />
   );
 
