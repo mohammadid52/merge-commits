@@ -116,6 +116,11 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
         show: true,
         errorMsg: InstitutionEditDict[userLanguage]['messages']['namerequired'],
       });
+    } else if (!editFormValues.type) {
+      setError({
+        show: true,
+        errorMsg: InstitutionEditDict[userLanguage]['messages']['typerequired'],
+      });
     } else {
       removeErrorMSg();
       try {
@@ -134,7 +139,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
           isServiceProvider: editFormValues.isServiceProvider,
         };
 
-        const updatedList = await API.graphql(graphqlOperation(customMutations.updateInstitution, { input: input }));
+        const updatedList = await API.graphql(
+          graphqlOperation(customMutations.updateInstitution, {input: input})
+        );
         instEditPrps.toggleUpdateState();
         history.goBack();
       } catch {
@@ -379,7 +386,9 @@ const InstitutionEdit = (instEditPrps: InstitutionEditProps) => {
               <div className="sm:col-span-6 px-3 py-4">
                 <div className="w-3/10">
                   <Selector
+                    isRequired
                     selectedItem={type}
+                    label={InstitutionEditDict[userLanguage]['FORM']['INSTITUTION_TYPE']}
                     placeholder={InstitutionEditDict[userLanguage]['FORM']['INSTITUTION_TYPE']}
                     list={institutionTypeList}
                     onChange={onTypeSelect}

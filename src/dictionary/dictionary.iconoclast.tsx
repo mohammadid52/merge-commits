@@ -50,6 +50,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'Institution Management',
     ADD_INSTITUTION: 'Add New Institute',
     INSTITUTION_INFO: 'Institute Info',
+    INSTITUTION_GENERAL_INFO: 'General Information',
     Class_Creation: 'Class Creation',
     CURRICULARBUILDER: 'New Curriculum',
     CLASSROOM_CREATION: 'Classroom Creation',
@@ -89,6 +90,7 @@ const BreadcrumsTitles: any = {
     INSTITUTION_MANAGEMENT: 'TBD',
     ADD_INSTITUTION: 'TBD',
     INSTITUTION_INFO: 'TBD',
+    INSTITUTION_GENERAL_INFO: 'TBD',
     Class_Creation: 'TBD',
     CURRICULARBUILDER: 'TBD',
     CLASSROOM_CREATION: 'TBD',
@@ -873,6 +875,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'Institute name is required.',
+      typerequired: 'Institute type is required.',
       unabletoupdate: 'Unable to update institute details. Please try again later.',
       uploaderr: 'Unable to upload image. Please try again later. ',
       deleterr: 'Error in deleting institute image.',
@@ -909,6 +912,7 @@ const InstitutionEditDict: any = {
     },
     messages: {
       namerequired: 'TBD',
+      typerequired: 'TBD',
       unabletoupdate: 'TBD',
       uploaderr: 'TBD',
       deleterr: 'TBD',

@@ -96,10 +96,20 @@ const Institution = (props: InstitutionProps) => {
     },
     {
       title: institutionData.name,
-      url: `${location.pathname}${location.search}`,
-      last: true,
+      url:
+        currentPath !== 'edit'
+          ? `${location.pathname}${location.search}`
+          : `/dashboard/manage-institutions/institution?id=${urlQueryParams.id}`,
+      last: currentPath !== 'edit',
     },
-  ];
+    currentPath === 'edit'
+      ? {
+          title: BreadcrumsTitles[userLanguage]['INSTITUTION_GENERAL_INFO'],
+          url: `${location.pathname}${location.search}`,
+          last: true,
+        }
+      : null,
+  ].filter(Boolean);
 
   const toggleUpdateState = () => {
     setISNewUpdate(!isNewUpdate);
