@@ -167,6 +167,8 @@ export const getInstitution = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -587,6 +589,8 @@ export const getRoom = /* GraphQL */ `
         groupName
         groupIDs
       }
+      weekDay
+      conferenceCallLink
       createdAt
       updatedAt
     }
@@ -699,6 +703,8 @@ export const listRooms = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -814,6 +820,8 @@ export const getRoomCoTeachers = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -893,6 +901,8 @@ export const listRoomCoTeacherss = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -1003,6 +1013,8 @@ export const getClass = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -4563,6 +4575,8 @@ export const getPersonLocation = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -4667,6 +4681,8 @@ export const listPersonLocations = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -5039,6 +5055,8 @@ export const getAttendance = /* GraphQL */ `
           groupName
           groupIDs
         }
+        weekDay
+        conferenceCallLink
         createdAt
         updatedAt
       }
@@ -5155,6 +5173,8 @@ export const listAttendances = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -6412,6 +6432,8 @@ export const personLocationBySyllabusLesson = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }
@@ -6540,6 +6562,8 @@ export const attendanceByStudent = /* GraphQL */ `
           activeLessons
           partnerSize
           partnerOption
+          weekDay
+          conferenceCallLink
           createdAt
           updatedAt
         }

@@ -142,6 +142,8 @@ type Room
   partnerOption: String
   partnerGroups: [partnerGroups]
   proficiencyGroups: [proficiencyGroups]
+  weekDay: String
+  conferenceCallLink: String
 }
 
 type partnerGroups {
