@@ -9,7 +9,10 @@ import RichTextEditor from '../../Atoms/RichTextEditor';
 import Buttons from '../../Atoms/Buttons';
 
 import SingleNote from './AnthologyContentNote';
-import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import {
+  UniversalJournalData,
+  UniversalLessonStudentData,
+} from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
 
 interface ContentCardProps {
@@ -26,6 +29,10 @@ interface ContentCardProps {
   createTemplate?: any;
   currentContentObj?: UniversalJournalData;
   content?: UniversalJournalData[];
+  allUniversalJournalData?: UniversalJournalData[];
+  setAllUniversalJournalData?: any;
+  allStudentData?: UniversalLessonStudentData[];
+  setAllStudentData?: any;
   onCancel?: any;
 }
 
@@ -40,6 +47,10 @@ const AnthologyContent = (props: ContentCardProps) => {
     createTemplate,
     currentContentObj,
     content,
+    allStudentData,
+    setAllStudentData,
+    allUniversalJournalData,
+    setAllUniversalJournalData,
   } = props;
   const {state, theme, userLanguage, clientKey} = useContext(GlobalContext);
   const {anthologyDict} = useDictionary(clientKey);
@@ -242,17 +253,21 @@ const AnthologyContent = (props: ContentCardProps) => {
       {content.length > 0 ? (
         content.map((contentObj: UniversalJournalData, idx: number) => (
           <SingleNote
+            idx={idx}
+            subSection={subSection}
             onCancel={onCancel}
             viewModeView={viewModeView}
             editModeView={editModeView}
             viewEditMode={viewEditMode}
             handleEditToggle={handleEditToggle}
             contentLen={content.length}
-            idx={idx}
             contentObj={
               currentContentObj.id === contentObj.id ? currentContentObj : contentObj
             }
-            subSection={subSection}
+            allUniversalJournalData={allUniversalJournalData}
+            setAllUniversalJournalData={setAllUniversalJournalData}
+            allStudentData={allStudentData}
+            setAllStudentData={setAllStudentData}
           />
         ))
       ) : (
