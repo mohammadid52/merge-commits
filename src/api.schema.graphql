@@ -1158,6 +1158,17 @@ type StudentConnections @model {
   toStudent: Person @connection(fields: ["toEmail", "toAuthID"])
 }
 
+type PersonSentiments 
+  @model
+  @key(fields: ["personAuthID", "date"]) {
+  personAuthID: String!
+  personEmail: String!
+  person: Person @connection(fields: ["personEmail", "personAuthID"])
+  date: AWSDate!
+  time: AWSTime!
+  responseText: String
+}
+
 type Subscription {
   onChangePersonLocation(syllabusLessonID: ID!, lessonID: ID!, roomID: ID!): PersonLocation
     @aws_subscribe(mutations: [
