@@ -18,6 +18,7 @@ const TabView = ({
   updateJournalContent,
   mainSection,
   sectionRoomID,
+  sectionTitle,
   subSection,
   setSubSection,
   tab,
@@ -41,7 +42,11 @@ const TabView = ({
           (acc: UniversalJournalData[], data: UniversalJournalData) => {
             if (subSection === 'Journal' && data.type === 'journal-entry') {
               return [...acc, data];
-            } else if (subSection === 'Notes' && data.type === 'class-note') {
+            } else if (
+              subSection === 'Notes' &&
+              data.type === 'class-note' &&
+              data.roomID === sectionRoomID
+            ) {
               return [...acc, data];
             } else {
               return acc;
@@ -114,6 +119,22 @@ const TabView = ({
     setSubSection(tabSubSection);
   };
 
+  const getTitle = () => {
+    if (sectionTitle !== '') {
+      if (mainSection === 'Class') {
+        return anthologyDict[userLanguage].TITLE + ' : ' + sectionTitle;
+      } else {
+        return sectionTitle;
+      }
+    } else {
+      return (
+        anthologyDict[userLanguage].TITLE +
+        ' : ' +
+        anthologyDict[userLanguage].NO_SELECTED
+      );
+    }
+  };
+
   return (
     <>
       <SectionTitleV3
@@ -132,7 +153,7 @@ const TabView = ({
             />
           )
         }
-        title={anthologyDict[userLanguage].TITLE}
+        title={getTitle()}
       />
       <div className={` min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
         <AnthologyUnderlinedTabs

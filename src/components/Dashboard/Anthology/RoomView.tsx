@@ -8,10 +8,15 @@ import RoomViewCard from './RoomView/RoomViewCard';
 
 interface IRoomViewProps {
   roomIdList: string[];
-  handleSectionSelect?: (section: string, roomIdString: string) => void;
+  sectionRoomID?: string;
+  handleSectionSelect?: (
+    section: string,
+    roomIdString: string,
+    roomName?: string
+  ) => void;
 }
 
-const RoomView = ({roomIdList, handleSectionSelect}: IRoomViewProps) => {
+const RoomView = ({roomIdList, sectionRoomID, handleSectionSelect}: IRoomViewProps) => {
   const {state} = useContext(GlobalContext);
 
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
@@ -59,6 +64,7 @@ const RoomView = ({roomIdList, handleSectionSelect}: IRoomViewProps) => {
                 <RoomViewCard
                   key={`notebook-${idx}`}
                   roomID={item.id}
+                  sectionRoomID={sectionRoomID}
                   handleSectionSelect={handleSectionSelect}
                   roomName={roomName}
                   bannerImage={bannerImage}
@@ -75,32 +81,32 @@ const RoomView = ({roomIdList, handleSectionSelect}: IRoomViewProps) => {
   useEffect(() => {
     const mappedCardsOutput = mapNotebookRoomCards();
     mappedCardsOutput.then((roomCards: any) => setMappedNotebookRoomCards(roomCards));
-  }, [filteredRooms]);
+  }, [filteredRooms, sectionRoomID]);
 
   return (
     <>
-      <ContentCard hasBackground={false} additionalClass="shadow bg-white rounded-b-lg">
-        <div className="relative">
-          <div className="relative max-w-7xl mx-auto">
-            <div
-              // #ts-ignores
-              style={{
-                transition: 'width 2s',
-                transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
-              }}
-              className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid px-6 gap-5 lg:grid-cols-3 md:grid-cols-2 lg:max-w-none">
-              {mappedNotebookRoomCards &&
-                mappedNotebookRoomCards.length > 0 &&
-                mappedNotebookRoomCards}
-              <RoomViewCard
-                roomName={'Journal Entries & Sentiment'}
-                handleSectionSelect={handleSectionSelect}
-                type={'Private Journal'}
-              />
-            </div>
+      <div className="relative">
+        <div className="relative mx-auto">
+          <div
+            // #ts-ignores
+            style={{
+              transition: 'width 2s',
+              transitionTimingFunction: 'cubic-bezier(0.1, 0.7, 1, 0.1)',
+            }}
+            className="mt-0 max-w-lg mx-auto pt-6 pb-6 grid gap-5 lg:grid-cols-5 md:grid-cols-4 lg:max-w-none">
+            {mappedNotebookRoomCards &&
+              mappedNotebookRoomCards.length > 0 &&
+              mappedNotebookRoomCards}
+            <RoomViewCard
+              roomID={''}
+              sectionRoomID={''}
+              roomName={'Journal Entries & Sentiment'}
+              handleSectionSelect={handleSectionSelect}
+              type={'Private Journal'}
+            />
           </div>
         </div>
-      </ContentCard>
+      </div>
     </>
   );
 };

@@ -110,11 +110,10 @@ const Anthology = () => {
     }
   };
 
-  useEffect(() => {
-    // TODO: adding entrydata type with an additional map is bad coding...
-    if (allStudentData.length > 0) {
-      const allExerciseEntryData = allStudentData.reduce(
-        (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
+  const reduceRoomExerciseData = (roomID: string) => {
+    const allExerciseEntryData = allStudentData.reduce(
+      (acc: UniversalJournalData[], val: UniversalLessonStudentData) => {
+        if (val.roomID === roomID) {
           const adaptedExerciseEntries = val.exerciseData.map((exercise: any) => {
             return {
               id: exercise.id,
@@ -133,12 +132,14 @@ const Anthology = () => {
             };
           });
           return [...acc, ...adaptedExerciseEntries];
-        },
-        []
-      );
-      setAllExerciseData(allExerciseEntryData);
-    }
-  }, [allStudentData]);
+        } else {
+          return acc;
+        }
+      },
+      []
+    );
+    setAllExerciseData(allExerciseEntryData);
+  };
 
   const updateStudentData = async () => {
     const selectStudentDataRecord = allStudentData.find(
@@ -434,10 +435,20 @@ const Anthology = () => {
   // ####################### DISPLAY CONTENT LOGIC ####################### //
   // ##################################################################### //
 
-  const [mainSection, setMainSection] = useState<string>('Class');
+  const [mainSection, setMainSection] = useState<string>('');
   const [sectionRoomID, setSectionRoomID] = useState<string>('');
-  const [subSection, setSubSection] = useState<string>('Notes');
+  const [sectionTitle, setSectionTitle] = useState<string>('');
+  const [subSection, setSubSection] = useState<string>('');
   const [tab, setTab] = useState<number>(0);
+
+  // ~~~~~~ FILTER ROOM EXERCISE DATA ~~~~~~ //
+
+  useEffect(() => {
+    // TODO: adding entrydata type with an additional map is bad coding...
+    if (allStudentData.length > 0 && sectionRoomID !== '') {
+      reduceRoomExerciseData(sectionRoomID);
+    }
+  }, [allStudentData, sectionRoomID]);
 
   // ~~~~~~~~~~~~~~ ROOM CARDS ~~~~~~~~~~~~~ //
 
@@ -462,15 +473,21 @@ const Anthology = () => {
     }
   }, [allStudentData, allUniversalJournalData]);
 
-  const handleSectionSelect = (section: string, roomIdString: string) => {
+  const handleSectionSelect = (
+    section: string,
+    roomIdString: string,
+    roomName?: string
+  ) => {
     if (section === 'Class Notebook') {
       setMainSection('Class');
       setSectionRoomID(roomIdString);
+      setSectionTitle(roomName);
       setSubSection('Work');
       setTab(0);
     } else {
       setMainSection('Private');
       setSectionRoomID('');
+      setSectionTitle('Private Journal');
       setSubSection('Journal');
       setTab(0);
     }
@@ -490,13 +507,18 @@ const Anthology = () => {
         </div>
 
         <div className="mx-auto max-w-256">
-          <RoomView roomIdList={roomCardIds} handleSectionSelect={handleSectionSelect} />
+          <RoomView
+            roomIdList={roomCardIds}
+            sectionRoomID={sectionRoomID}
+            handleSectionSelect={handleSectionSelect}
+          />
           <TabView
             viewEditMode={viewEditMode}
             handleEditToggle={handleEditToggle}
             updateJournalContent={updateJournalDataContent}
             mainSection={mainSection}
             sectionRoomID={sectionRoomID}
+            sectionTitle={sectionTitle}
             subSection={subSection}
             setSubSection={setSubSection}
             tab={tab}

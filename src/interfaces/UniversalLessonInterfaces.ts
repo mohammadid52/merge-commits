@@ -91,6 +91,7 @@ export interface UniversalLessonStudentData {
   id: string;
   universalLessonID: string;
   universalLessonPageID: string;
+  roomID?: string;
   studentAuthID: string;
   studentID: string;
   studentEmail?: string;
