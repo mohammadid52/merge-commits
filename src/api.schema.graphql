@@ -144,6 +144,14 @@ type Room
   proficiencyGroups: [proficiencyGroups]
   weekDay: String
   conferenceCallLink: String
+  lessonImpactLog: [ImpactLogEntry]
+}
+
+type ImpactLogEntry {
+  impactDate: AWSDate
+  reasonComment: String
+  lessonImpact: Int
+  adjustment: String
 }
 
 type partnerGroups {

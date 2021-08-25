@@ -220,6 +220,12 @@ export const onChangePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -838,6 +844,12 @@ export const onChangeRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -1903,6 +1915,12 @@ export const onCreateRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -2074,6 +2092,12 @@ export const onUpdateRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -2245,6 +2269,12 @@ export const onDeleteRoom = /* GraphQL */ `
       }
       weekDay
       conferenceCallLink
+      lessonImpactLog {
+        impactDate
+        reasonComment
+        lessonImpact
+        adjustment
+      }
       createdAt
       updatedAt
     }
@@ -2360,6 +2390,12 @@ export const onCreateRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2508,6 +2544,12 @@ export const onUpdateRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -2656,6 +2698,12 @@ export const onDeleteRoomCoTeachers = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10425,6 +10473,12 @@ export const onCreatePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10643,6 +10697,12 @@ export const onUpdatePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -10861,6 +10921,12 @@ export const onDeletePersonLocation = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11284,6 +11350,12 @@ export const onCreateAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11530,6 +11602,12 @@ export const onUpdateAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
@@ -11776,6 +11854,12 @@ export const onDeleteAttendance = /* GraphQL */ `
         }
         weekDay
         conferenceCallLink
+        lessonImpactLog {
+          impactDate
+          reasonComment
+          lessonImpact
+          adjustment
+        }
         createdAt
         updatedAt
       }
