@@ -129,6 +129,8 @@ export interface UniversalJournalData {
   type?: string;
   feedbacks?: string[];
   entryData?: {domID: string; type: string; input: string}[];
+  roomID?: string;
+  syllabusLessonID?: string;
   updatedAt?: any;
   createdAt?: any;
   recordID?: string;

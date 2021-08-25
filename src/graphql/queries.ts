@@ -5395,6 +5395,7 @@ export const getUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -5443,6 +5444,7 @@ export const listUniversalLessonStudentDatas = /* GraphQL */ `
         studentID
         studentAuthID
         studentEmail
+        roomID
         currentLocation
         lessonProgress
         pageData {
@@ -5476,7 +5478,9 @@ export const getUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -5510,7 +5514,9 @@ export const listUniversalJournalDatas = /* GraphQL */ `
         }
         feedbacks
         lessonID
+        syllabusLessonID
         lessonType
+        roomID
         createdAt
         updatedAt
       }

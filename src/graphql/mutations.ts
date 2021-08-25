@@ -12659,6 +12659,7 @@ export const createUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12697,6 +12698,7 @@ export const updateUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12735,6 +12737,7 @@ export const deleteUniversalLessonStudentData = /* GraphQL */ `
       studentID
       studentAuthID
       studentEmail
+      roomID
       currentLocation
       lessonProgress
       pageData {
@@ -12778,7 +12781,9 @@ export const createUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -12802,7 +12807,9 @@ export const updateUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
@@ -12826,7 +12833,9 @@ export const deleteUniversalJournalData = /* GraphQL */ `
       }
       feedbacks
       lessonID
+      syllabusLessonID
       lessonType
+      roomID
       createdAt
       updatedAt
     }
