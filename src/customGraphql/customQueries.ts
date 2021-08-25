@@ -790,7 +790,10 @@ export const getRoom = /* GraphQL */ `
       filters
       location
       startDate
+      endDate
       startTime
+      endTime
+      frequency
       length
       repeat
       notes

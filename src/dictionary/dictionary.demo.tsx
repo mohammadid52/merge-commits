@@ -1507,6 +1507,65 @@ const RoomEDITdict: any = {
     },
   },
 };
+
+const RoomDetailsDict: any = {
+  EN: {
+    COURSE_DETAILS: 'Course Details',
+    COURSE_FREQUENCY: 'Course Frequency',
+    SUBJECT_PROFICIENCY: 'Subject Proficiency',
+    COURSE_PARTNERS: 'Course Partners',
+  },
+  ES: {
+    COURSE_DETAILS: 'TBD',
+    COURSE_FREQUENCY: 'TBD',
+    SUBJECT_PROFICIENCY: 'TBD',
+    COURSE_PARTNERS: 'TBD',
+  },
+};
+
+const CourseScheduleDict: any = {
+  EN: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'Start date',
+      END_DATE: 'End date',
+      START_TIME: 'Start Time',
+      END_TIME: 'End Time',
+      WEEK_DAY: 'Week Day',
+      FREQUENCY: 'Frequency',
+      CONFERENCE_CALL_LINK: 'Conference call link',
+      LOCATION: 'Location',
+      ADDITIONAL_NOTES: 'Additional Notes',
+    },
+    MESSAGES: {
+      START_DATE: 'Start date is required',
+      END_DATE: 'End date is required',
+      START_TIME: 'Start time is required',
+      END_TIME: 'End time is required',
+    },
+  },
+  ES: {
+    HEADING: 'Schedule',
+    PLACEHOLDERS: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      START_TIME: 'TBD',
+      END_TIME: 'TBD',
+      WEEK_DAY: 'TBD',
+      FREQUENCY: 'TBD',
+      CONFERENCE_CALL_LINK: 'TBD',
+      LOCATION: 'TBD',
+      ADDITIONAL_NOTES: 'TBD',
+    },
+    MESSAGES: {
+      START_DATE: 'TBD',
+      END_DATE: 'TBD',
+      startTime: 'TBD',
+      endTime: 'TBD',
+    },
+  },
+};
+
 const curricularviewdict: any = {
   EN: {
     TITLE: 'Curriculum Builder',
@@ -3445,6 +3504,8 @@ export {
   RoomBuilderdict,
   EditCurriculardict,
   RoomEDITdict,
+  RoomDetailsDict,
+  CourseScheduleDict,
   curricularviewdict,
   CHECKPOINTSDICT,
   LEARINGOBJECTIVEDICT,

@@ -430,3 +430,21 @@ export const groupOptions: any = [
   {id: 2, name: 'Black'},
   {id: 3, name: 'Red'},
 ];
+
+export const frequencyOptions: any = [
+  {id: 1, name: 'One Time'},
+  {id: 2, name: 'Weekly'},
+  {id: 3, name: 'Bi-weekly'},
+  {id: 3, name: 'Monthly'},
+  {id: 3, name: 'Trimestral'},
+  {id: 3, name: 'Quarterly'},
+  {id: 3, name: 'Semestral'},
+];
+
+export const weekdaysOption: any = [
+  {id: 1, name: 'Monday'},
+  {id: 2, name: 'Tuesday'},
+  {id: 3, name: 'Wednesday'},
+  {id: 4, name: 'Thursday'},
+  {id: 5, name: 'Friday'},
+];
