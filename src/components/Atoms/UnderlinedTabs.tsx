@@ -20,24 +20,23 @@ interface TabsProps {
   updateTab?: Function;
   tabs: ITabElementProps[];
   hideTooltip?: boolean;
+  handleTabSelect?: (index: number, tabSubSection: string) => void;
+  mainSection?: string;
 }
 
 const UnderlinedTabs = (props: TabsProps) => {
-  const {tabs, activeTab, hideTooltip} = props;
+  const {tabs, activeTab, hideTooltip, handleTabSelect, mainSection} = props;
   const {theme, clientKey} = useContext(GlobalContext);
   const themeColor = getAsset(clientKey, 'themeClassName');
-  const [openTab, setOpenTab] = useState<number>(0);
 
-  const changeActiveTab = (tab: number, e: React.MouseEvent<Element>) => {
-    setOpenTab(tab);
-    if ('updateTab' in props) {
-      props.updateTab(tab, e);
-    }
+  const changeActiveTab = (tab: number) => {
+    handleTabSelect(tab, tabs[tab].id);
   };
 
-  useEffect(() => {
-    setOpenTab(activeTab);
-  }, [activeTab]);
+  // useEffect(() => {
+  //   changeActiveTab(0);
+  // }, [mainSection]);
+
   const renderButtonText = (tab: any) => {
     return (
       <div id={tab.id} className="flex items-center w-auto">
@@ -60,14 +59,14 @@ const UnderlinedTabs = (props: TabsProps) => {
           <div key={key} className="relative">
             <button
               onClick={(e) => {
-                changeActiveTab(tab.index, e);
+                changeActiveTab(tab.index);
               }}
               id={tab.id}
               className={`font-bold uppercase bg-white text-xs p-3 px-8 sm:px-4 border-b-2 flex items-center h-full justify-center ${
                 tab.disabled
                   ? 'cursor-not-allowed opacity-50 bg-gray-500 text-gray-200 border'
                   : `hover:${theme.borderColor[themeColor]} ${theme.outlineNone} ${
-                      openTab === tab.index
+                      activeTab === tab.index
                         ? `bg-gray-100 ${theme.borderColor[themeColor]}`
                         : ''
                     }`
@@ -104,8 +103,10 @@ const UnderlinedTabs = (props: TabsProps) => {
         ))}
       </div>
       {tabs.map((tab, key) => (
-        <div key={key} className={`w-full ${openTab !== tab.index ? 'hidden' : 'block'}`}>
-          {openTab === tab.index ? <>{tab.content}</> : null}
+        <div
+          key={key}
+          className={`w-full ${activeTab !== tab.index ? 'hidden' : 'block'}`}>
+          {activeTab === tab.index ? <>{tab.content}</> : null}
         </div>
       ))}
     </div>
