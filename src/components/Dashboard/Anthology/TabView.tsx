@@ -10,6 +10,7 @@ import Buttons from '../../Atoms/Buttons';
 
 import AnthologyContent, {ContentCardProps} from './AnthologyContent';
 import {UniversalJournalData} from '../../../interfaces/UniversalLessonInterfaces';
+import AnthologyUnderlinedTabs from './AnthologyUnderlinedTabs';
 
 const TabView = ({
   viewEditMode,
@@ -134,7 +135,7 @@ const TabView = ({
         title={anthologyDict[userLanguage].TITLE}
       />
       <div className={` min-h-48 pb-4 overflow-hidden bg-white rounded-lg shadow mb-4`}>
-        <UnderlinedTabs
+        <AnthologyUnderlinedTabs
           hideTooltip
           activeTab={tab}
           mainSection={mainSection}

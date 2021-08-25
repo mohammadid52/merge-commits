@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {IconContext} from 'react-icons/lib/esm/iconContext';
-import {GlobalContext} from '../../contexts/GlobalContext';
-import {getAsset} from '../../assets';
-import Tooltip from './Tooltip';
+import {GlobalContext} from '../../../contexts/GlobalContext';
+import {getAsset} from '../../../assets';
+import Tooltip from '../../Atoms/Tooltip';
 
 export interface ITabElementProps {
   id?: string;
