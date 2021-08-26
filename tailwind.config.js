@@ -709,7 +709,7 @@ module.exports = {
         'elem-dark': '0 2px 4px black',
         'elem-semi-dark': '0 2px 4px #2f2f2f',
         'elem-light': '3px 3px 5px darkgray',
-        map: '5px -1px 8px #1A202C',
+        map: '0px 4px 8px rgba(0, 0, 0, 0.6)',
         'inner-dark': 'inset 0 2px 4px black',
         gray: '0px 0px 10px 4px #e2e8f0',
         grayscale: '0px 0px 10px 4px #fdfdfd',
