@@ -26,6 +26,7 @@ import RoomView from './RoomView';
 import EmptyViewWrapper from './EmptyViewWrapper';
 import {IconContext} from 'react-icons/lib';
 import usePrevious from '../../../customHooks/previousProps';
+import SectionTitleV3 from '../../Atoms/SectionTitleV3';
 
 export type ViewEditMode = {
   mode: 'view' | 'edit' | 'save' | 'create' | 'savenew' | 'delete' | '';
@@ -243,15 +244,15 @@ const Anthology = () => {
   };
 
   const createJournalData = async () => {
+    const input = {
+      studentID: journalEntryData.studentID,
+      studentAuthID: journalEntryData.studentAuthID,
+      studentEmail: journalEntryData.studentEmail,
+      type: journalEntryData.type,
+      entryData: journalEntryData.entryData,
+    };
+    // console.log('create input - ', input);
     try {
-      const input = {
-        studentID: journalEntryData.studentID,
-        studentAuthID: journalEntryData.studentAuthID,
-        studentEmail: journalEntryData.studentEmail,
-        type: journalEntryData.type,
-        entryData: journalEntryData.entryData,
-      };
-
       const newJournalData: any = await API.graphql(
         graphqlOperation(mutations.createUniversalJournalData, {input})
       );
@@ -378,7 +379,7 @@ const Anthology = () => {
       id: '',
       studentID: state.user.authId,
       studentAuthID: state.user.authId,
-      studentEmail: state.user.studentEmail,
+      studentEmail: state.user.email,
       type: 'journal-entry',
       feedbacks: [''],
       entryData: [
@@ -402,7 +403,9 @@ const Anthology = () => {
   useEffect(() => {
     const manageSaveAndCreate = async () => {
       if (subSection !== 'Work') {
-        if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
+        if (viewEditMode.mode === 'create') {
+          await handleResetJournalEntry();
+        } else if (viewEditMode.mode === 'edit' && viewEditMode.dataID !== '') {
           await selectJournalData();
         } else if (viewEditMode.mode === 'save') {
           await handleResetJournalEntry();

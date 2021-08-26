@@ -148,7 +148,7 @@ const TabView = ({
       <div
         className={`w-full h-14 leading-6 text-gray-900 flex flex-row justify-between items-center`}>
         <div
-          className={`shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
+          className={`border-b-0 border-gray-200 shadow px-4 w-auto bg-white rounded-t-lg h-full flex flex-row justify-start items-center`}>
           <IconContext.Provider
             value={{
               className: `relative`,
