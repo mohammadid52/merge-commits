@@ -15,7 +15,7 @@ import {
 } from '../../../interfaces/UniversalLessonInterfaces';
 import {dateFromServer} from '../../../utilities/time';
 
-interface ContentCardProps {
+export interface ContentCardProps {
   viewEditMode?: ViewEditMode;
   handleEditToggle?: (
     editMode: 'view' | 'edit' | 'create' | 'save' | 'savenew' | '',
@@ -25,14 +25,21 @@ interface ContentCardProps {
   ) => void;
   handleEditUpdate?: (e: any) => void;
   updateJournalContent?: (html: string, targetType: string) => void;
+  mainSection?: string;
+  sectionRoomID?: string;
+  sectionTitle?: string;
   subSection?: string;
+  setSubSection?: any;
+  tab?: any;
+  setTab?: any;
   createTemplate?: any;
   currentContentObj?: UniversalJournalData;
   content?: UniversalJournalData[];
-  allUniversalJournalData?: UniversalJournalData[];
-  setAllUniversalJournalData?: any;
   allStudentData?: UniversalLessonStudentData[];
   setAllStudentData?: any;
+  allExerciseData?: any[];
+  allUniversalJournalData?: UniversalJournalData[];
+  setAllUniversalJournalData?: any;
   onCancel?: any;
 }
 

@@ -511,6 +511,7 @@ const LessonApp = () => {
         studentID: authId,
         studentAuthID: authId,
         studentEmail: email,
+        roomID: getRoomData.id,
         currentLocation: indexOfPage,
         lessonProgress: '0',
         pageData: lessonState.studentData[indexOfPage],

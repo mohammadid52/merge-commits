@@ -3,9 +3,11 @@ import API, {graphqlOperation} from '@aws-amplify/api';
 import * as mutations from '../graphql/mutations';
 import {Auth} from '@aws-amplify/auth';
 import {GlobalContext} from '../contexts/GlobalContext';
+import {getLocalStorageData} from '../utilities/localStorage';
 
 const useStudentTimer = () => {
   const {state, dispatch, lessonState, lessonDispatch} = useContext(GlobalContext);
+  const getRoomData = getLocalStorageData('room_info');
 
   // ##################################################################### //
   // ###################### TEACHER VIEWING TRIGGER ###################### //
@@ -133,6 +135,7 @@ const useStudentTimer = () => {
             pageData: lessonState.studentData[currentIdObj.pageIdx],
             hasExerciseData: lessonState?.exerciseData[currentIdObj.pageIdx]?.length > 0,
             exerciseData: lessonState?.exerciseData[currentIdObj.pageIdx],
+            roomID: getRoomData.id,
           };
 
           try {
