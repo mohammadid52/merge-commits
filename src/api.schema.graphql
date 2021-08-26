@@ -150,7 +150,7 @@ type Room
 type ImpactLogEntry {
   impactDate: AWSDate
   reasonComment: String
-  lessonImpact: Int
+  lessonImpact: Float
   adjustment: String
 }
 
@@ -1178,6 +1178,7 @@ type PersonSentiments @model @key(fields: ["personAuthID", "date"]) {
   date: AWSDate!
   time: AWSTime!
   responseText: String
+  backstory: String
 }
 
 type Subscription {
